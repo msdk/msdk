@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.github.msdevkit</groupId>
+	<artifactId>msdk</artifactId>
+	<version>1.0</version>
+	<packaging>pom</packaging>
+	<name>Mass Spectrometry Development Kit (MSDK)</name>
+	<description>A java library for the development of mass spectrometry-related algorithms.</description>
+	<modules>
+		<module>msdk-data</module>
+		<module>msdk-io</module>
+		<module>msdk-rawdata</module>
+	</modules>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<cdk.version>1.5.10</cdk.version>
+		<junit.version>4.12</junit.version>
+		<guava.version>18.0</guava.version>
+	</properties>
+
+	<licenses>
+		<license>
+			<name>GNU LGPL 2.1 or later</name>
+			<url>http://www.gnu.org/licenses/lgpl.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>https://github.com/msdevkit/msdk</url>
+		<connection>scm:git:git://github.com/msdevkit/msdk.git</connection>
+		<developerConnection>scm:git:git@github.com/msdevkit/msdk.git</developerConnection>
+	</scm>
+
+	<developers>
+		<developer>
+			<name>Tomas Pluskal</name>
+		</developer>
+	</developers>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
