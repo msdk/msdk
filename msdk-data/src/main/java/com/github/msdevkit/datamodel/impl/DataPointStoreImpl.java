@@ -58,27 +58,20 @@ abstract class DataPointStoreImpl {
     DataPointStoreImpl() {
 
 	try {
-	    tmpDataFileName = File.createTempFile("mzmine", ".tmp");
+	    tmpDataFileName = File.createTempFile("msdk", ".tmp");
 	    tmpDataFile = new RandomAccessFile(tmpDataFileName, "rw");
 
 	    /*
-	     * Locks the temporary file so it is not removed when another
-	     * instance of MZmine is starting. Lock will be automatically
-	     * released when this instance of MZmine exits.
+	     * Locks the temporary file.
 	     */
 	    FileChannel fileChannel = tmpDataFile.getChannel();
 	    fileChannel.lock();
 
-	    /*
-	     * Unfortunately, deleteOnExit() doesn't work on Windows, see JDK
-	     * bug #4171239. We will try to remove the temporary files in a
-	     * shutdown hook registered in the main.ShutDownHook class.
-	     */
 	    tmpDataFileName.deleteOnExit();
 
 	} catch (IOException e) {
 	    throw new RuntimeException(
-		    "I/O error while creating a new MZmine object", e);
+		    "I/O error while creating a new MSDK object", e);
 	}
 
 	byteBuffer = ByteBuffer.allocate(20000);

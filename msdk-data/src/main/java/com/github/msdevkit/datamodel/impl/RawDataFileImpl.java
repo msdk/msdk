@@ -130,9 +130,4 @@ class RawDataFileImpl extends DataPointStoreImpl implements RawDataFile {
 	return null;
     }
 
-    @Override
-    public RawDataFile getOriginalRawDataFile() {
-	return originalRawDataFile;
-    }
-
 }

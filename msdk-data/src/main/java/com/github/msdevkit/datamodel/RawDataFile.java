@@ -100,14 +100,6 @@ public interface RawDataFile {
     Range<Double> getRawDataRTRange(@Nonnull Integer msLevel);
 
     /**
-     * Returns the original file that was imported into MZmine. After import,
-     * the file returns itself. Once processed by filtration, centroiding etc.,
-     * newly created files return the link to the original file.
-     */
-    @Nonnull
-    RawDataFile getOriginalRawDataFile();
-
-    /**
      * Remove all data associated to this file from the disk.
      */
     void dispose();
