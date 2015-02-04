@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 
 import com.github.msdevkit.datamodel.MsScan;
 import com.github.msdevkit.datamodel.RawDataFile;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Range;
 
 /**
@@ -47,45 +48,45 @@ class RawDataFileImpl extends DataPointStoreImpl implements RawDataFile {
     }
 
     @Override
-    public String getName() {
+    public @Nonnull String getName() {
 	// TODO Auto-generated method stub
-	return null;
+	return "";
     }
 
     @Override
-    public void setName(String name) {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void addScan(MsScan scan) {
+    public void setName(@Nonnull String name) {
 	// TODO Auto-generated method stub
 
     }
 
     @Override
-    public void removeScan(MsScan scan) {
+    public void addScan(@Nonnull MsScan scan) {
 	// TODO Auto-generated method stub
 
     }
 
     @Override
-    public List<MsScan> getScans() {
+    public void removeScan(@Nonnull MsScan scan) {
 	// TODO Auto-generated method stub
-	return null;
+
     }
 
     @Override
-    public List<MsScan> getScans(Integer msLevel, Range<Double> rtRange) {
+    public @Nonnull List<MsScan> getScans() {
 	// TODO Auto-generated method stub
-	return null;
+	return Lists.newArrayList();
     }
 
     @Override
-    public List<Integer> getMSLevels() {
+    public @Nonnull List<MsScan> getScans(@Nonnull Integer msLevel, @Nonnull Range<Double> rtRange) {
 	// TODO Auto-generated method stub
-	return null;
+	return Lists.newArrayList();
+    }
+
+    @Override
+    public @Nonnull List<Integer> getMSLevels() {
+	// TODO Auto-generated method stub
+	return Lists.newArrayList();
     }
 
     @Override
@@ -95,39 +96,39 @@ class RawDataFileImpl extends DataPointStoreImpl implements RawDataFile {
     }
 
     @Override
-    public Range<Double> getRawDataMZRange() {
+    public @Nonnull Range<Double> getRawDataMZRange() {
 	// TODO Auto-generated method stub
-	return null;
+	return Range.all();
     }
 
     @Override
-    public Range<Double> getRawDataScanRange() {
+    public @Nonnull Range<Double> getRawDataScanRange() {
 	// TODO Auto-generated method stub
-	return null;
+	return Range.all();
     }
 
     @Override
-    public Range<Double> getRawDataRTRange() {
+    public @Nonnull Range<Double> getRawDataRTRange() {
 	// TODO Auto-generated method stub
-	return null;
+	return Range.all();
     }
 
     @Override
-    public Range<Double> getRawDataMZRange(Integer msLevel) {
+    public @Nonnull Range<Double> getRawDataMZRange(@Nonnull Integer msLevel) {
 	// TODO Auto-generated method stub
-	return null;
+	return Range.all();
     }
 
     @Override
-    public Range<Double> getRawDataScanRange(Integer msLevel) {
+    public @Nonnull Range<Double> getRawDataScanRange(@Nonnull Integer msLevel) {
 	// TODO Auto-generated method stub
-	return null;
+	return Range.all();
     }
 
     @Override
-    public Range<Double> getRawDataRTRange(Integer msLevel) {
+    public @Nonnull Range<Double> getRawDataRTRange(@Nonnull Integer msLevel) {
 	// TODO Auto-generated method stub
-	return null;
+	return Range.all();
     }
 
 }

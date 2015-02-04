@@ -22,6 +22,7 @@
 
 package com.github.msdevkit.datamodel.impl;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.github.msdevkit.datamodel.ChromatographyData;
@@ -82,9 +83,9 @@ public class MsMsScanImpl extends MsScanImpl implements MsMsScan {
     }
 
     @Override
-    public MassSpectrumType getSpectrumType() {
+    public @Nonnull MassSpectrumType getSpectrumType() {
 	// TODO Auto-generated method stub
-	return null;
+	return MassSpectrumType.CENTROIDED;
     }
 
     @Override
@@ -100,7 +101,7 @@ public class MsMsScanImpl extends MsScanImpl implements MsMsScan {
     }
 
     @Override
-    public void setPrecursorMz(Double precursorMZ) {
+    public void setPrecursorMz(@Nullable Double precursorMZ) {
 	// TODO Auto-generated method stub
 
     }

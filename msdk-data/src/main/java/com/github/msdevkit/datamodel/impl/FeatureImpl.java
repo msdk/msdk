@@ -23,6 +23,7 @@
 package com.github.msdevkit.datamodel.impl;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.github.msdevkit.datamodel.ChromatographyData;
 import com.github.msdevkit.datamodel.DataPoint;
@@ -51,7 +52,7 @@ public class FeatureImpl implements Feature {
     private double mz, rt, height, area;
 
     // Boundaries of the peak raw data points
-    private Range<Double> rtRange, mzRange, intensityRange;
+    private @Nonnull Range<Double> rtRange, mzRange, intensityRange;
 
     // Number of representative scan
     private int representativeScan;
@@ -64,14 +65,18 @@ public class FeatureImpl implements Feature {
     private IsotopePattern isotopePattern;
     private int charge = 0;
 
+    @SuppressWarnings("null")
     FeatureImpl() {
+	this.rtRange=Range.all();
+	this.mzRange=Range.all();
+	this.intensityRange=Range.all();
     }
 
     /**
      * Initializes a new peak using given values
      * 
      */
-    public FeatureImpl(RawDataFile dataFile, double MZ, double RT,
+     FeatureImpl(RawDataFile dataFile, double MZ, double RT,
 	    double height, double area, int[] scanNumbers,
 	    DataPoint[] dataPointsPerScan, FeatureType peakStatus,
 	    int representativeScan, int fragmentScanNumber,
@@ -145,36 +150,36 @@ public class FeatureImpl implements Feature {
     }
 
     @Override
-    public void setIsotopePattern(@Nonnull IsotopePattern isotopePattern) {
+    public void setIsotopePattern(@Nullable IsotopePattern isotopePattern) {
 	this.isotopePattern = isotopePattern;
     }
 
     @Override
-    public PeakListRow getParentPeakListRow() {
+    public @Nonnull PeakListRow getParentPeakListRow() {
 	// TODO Auto-generated method stub
-	return null;
+	return MSDKObjectBuilder.getPeakListRow();
     }
 
     @Override
-    public FeatureType getFeatureType() {
+    public @Nonnull FeatureType getFeatureType() {
 	// TODO Auto-generated method stub
-	return null;
+	return FeatureType.DETECTED;
     }
 
     @Override
-    public void setFeatureType(FeatureType newStatus) {
+    public void setFeatureType(@Nonnull FeatureType newStatus) {
 	// TODO Auto-generated method stub
 
     }
 
     @Override
-    public Double getMZ() {
+    public @Nonnull Double getMZ() {
 	// TODO Auto-generated method stub
-	return null;
+	return 0.0;
     }
 
     @Override
-    public void setMZ(Double newMZ) {
+    public void setMZ(@Nonnull Double newMZ) {
 	// TODO Auto-generated method stub
 
     }
@@ -186,19 +191,19 @@ public class FeatureImpl implements Feature {
     }
 
     @Override
-    public void setChromatographyData(ChromatographyData chromData) {
+    public void setChromatographyData(@Nullable ChromatographyData chromData) {
 	// TODO Auto-generated method stub
 
     }
 
     @Override
-    public Double getHeight() {
+    public @Nonnull Double getHeight() {
 	// TODO Auto-generated method stub
-	return null;
+	return 0.0;
     }
 
     @Override
-    public void setHeight(Double newHeight) {
+    public void setHeight(@Nonnull Double newHeight) {
 	// TODO Auto-generated method stub
 
     }
@@ -210,7 +215,7 @@ public class FeatureImpl implements Feature {
     }
 
     @Override
-    public void setArea(Double newArea) {
+    public void setArea(@Nullable Double newArea) {
 	// TODO Auto-generated method stub
 
     }
@@ -222,7 +227,7 @@ public class FeatureImpl implements Feature {
     }
 
     @Override
-    public void setFeatureShape(FeatureShape rawData) {
+    public void setFeatureShape(@Nullable FeatureShape rawData) {
 	// TODO Auto-generated method stub
 
     }
@@ -234,7 +239,7 @@ public class FeatureImpl implements Feature {
     }
 
     @Override
-    public void setCharge(Integer charge) {
+    public void setCharge(@Nullable Integer charge) {
 	// TODO Auto-generated method stub
 
     }

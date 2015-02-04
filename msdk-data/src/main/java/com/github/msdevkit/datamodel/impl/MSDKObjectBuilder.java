@@ -32,6 +32,7 @@ import com.github.msdevkit.datamodel.IsotopePattern;
 import com.github.msdevkit.datamodel.MsMsScan;
 import com.github.msdevkit.datamodel.MsScan;
 import com.github.msdevkit.datamodel.PeakList;
+import com.github.msdevkit.datamodel.PeakListRow;
 import com.github.msdevkit.datamodel.PeakListRowAnnotation;
 import com.github.msdevkit.datamodel.RawDataFile;
 
@@ -68,14 +69,20 @@ public class MSDKObjectBuilder {
 	return new IsotopePatternImpl((DataPointStoreImpl) peakList);
     }
 
-    public static final @Nonnull PeakListRowAnnotation getPeakListRowAnnotation() {
-	return new PeakListRowAnnotationImpl();
-    }
-
     public static final @Nonnull PeakList getPeakList() {
 	return new PeakListImpl();
     }
 
+    public static final @Nonnull PeakListRow getPeakListRow() {
+	return new PeakListRowImpl();
+    }
+
+    
+    public static final @Nonnull PeakListRowAnnotation getPeakListRowAnnotation() {
+	return new PeakListRowAnnotationImpl();
+    }
+
+    
     public static final @Nonnull RawDataFile getRawDataFile() {
 	return new RawDataFileImpl();
     }

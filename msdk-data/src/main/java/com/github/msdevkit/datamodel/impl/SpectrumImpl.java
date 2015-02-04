@@ -142,7 +142,7 @@ abstract class SpectrumImpl implements MassSpectrum {
     }
 
     @Override
-    public MassSpectrumType getSpectrumType() {
+    public @Nonnull MassSpectrumType getSpectrumType() {
 	return spectrumType;
     }
 

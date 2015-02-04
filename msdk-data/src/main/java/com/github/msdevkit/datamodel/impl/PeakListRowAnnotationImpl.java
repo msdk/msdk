@@ -24,6 +24,8 @@ package com.github.msdevkit.datamodel.impl;
 
 import java.net.URL;
 
+import javax.annotation.Nullable;
+
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IMolecularFormula;
 
@@ -41,7 +43,7 @@ public class PeakListRowAnnotationImpl implements PeakListRowAnnotation {
     }
 
     @Override
-    public void setChemicalStructure(IAtomContainer structure) {
+    public void setChemicalStructure(@Nullable IAtomContainer structure) {
 	// TODO Auto-generated method stub
 
     }
@@ -53,7 +55,7 @@ public class PeakListRowAnnotationImpl implements PeakListRowAnnotation {
     }
 
     @Override
-    public void setFormula(IMolecularFormula formula) {
+    public void setFormula(@Nullable IMolecularFormula formula) {
 	// TODO Auto-generated method stub
 
     }
@@ -65,7 +67,7 @@ public class PeakListRowAnnotationImpl implements PeakListRowAnnotation {
     }
 
     @Override
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
 	// TODO Auto-generated method stub
 
     }
@@ -77,7 +79,7 @@ public class PeakListRowAnnotationImpl implements PeakListRowAnnotation {
     }
 
     @Override
-    public void setIdentificationMethod(String idMethod) {
+    public void setIdentificationMethod(@Nullable String idMethod) {
 	// TODO Auto-generated method stub
 
     }
@@ -89,7 +91,7 @@ public class PeakListRowAnnotationImpl implements PeakListRowAnnotation {
     }
 
     @Override
-    public void setDataBaseId(String dbId) {
+    public void setDataBaseId(@Nullable String dbId) {
 	// TODO Auto-generated method stub
 
     }
@@ -101,7 +103,7 @@ public class PeakListRowAnnotationImpl implements PeakListRowAnnotation {
     }
 
     @Override
-    public void setAccessionURL(URL dbURL) {
+    public void setAccessionURL(@Nullable URL dbURL) {
 	// TODO Auto-generated method stub
 
     }

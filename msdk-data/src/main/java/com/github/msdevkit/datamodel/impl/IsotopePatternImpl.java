@@ -23,6 +23,7 @@
 package com.github.msdevkit.datamodel.impl;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.openscience.cdk.interfaces.IMolecularFormula;
 
@@ -57,9 +58,9 @@ public class IsotopePatternImpl extends SpectrumImpl implements IsotopePattern {
     }
 
     @Override
-    public IsotopePatternType getType() {
+    public @Nonnull IsotopePatternType getType() {
 	// TODO Auto-generated method stub
-	return null;
+	return IsotopePatternType.DETECTED;
     }
 
     @Override
@@ -69,7 +70,7 @@ public class IsotopePatternImpl extends SpectrumImpl implements IsotopePattern {
     }
 
     @Override
-    public void setChemicalFormula(IMolecularFormula formula) {
+    public void setChemicalFormula(@Nullable IMolecularFormula formula) {
 	// TODO Auto-generated method stub
 
     }

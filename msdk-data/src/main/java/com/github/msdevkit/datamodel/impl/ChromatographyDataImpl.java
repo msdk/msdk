@@ -22,6 +22,8 @@
 
 package com.github.msdevkit.datamodel.impl;
 
+import javax.annotation.Nullable;
+
 import com.github.msdevkit.datamodel.ChromatographyData;
 
 public class ChromatographyDataImpl implements ChromatographyData {
@@ -41,7 +43,7 @@ public class ChromatographyDataImpl implements ChromatographyData {
      *            the retentionTime to set
      */
     @Override
-    public void setRetentionTime(Double retentionTime) {
+    public void setRetentionTime(@Nullable Double retentionTime) {
 	this.retentionTime = retentionTime;
     }
 
@@ -58,7 +60,7 @@ public class ChromatographyDataImpl implements ChromatographyData {
      *            the secondaryRetentionTime to set
      */
     @Override
-    public void setSecondaryRetentionTime(Double secondaryRetentionTime) {
+    public void setSecondaryRetentionTime(@Nullable Double secondaryRetentionTime) {
 	this.secondaryRetentionTime = secondaryRetentionTime;
     }
 
@@ -75,7 +77,7 @@ public class ChromatographyDataImpl implements ChromatographyData {
      *            the ionDriftTime to set
      */
     @Override
-    public void setIonDriftTime(Double ionDriftTime) {
+    public void setIonDriftTime(@Nullable Double ionDriftTime) {
 	this.ionDriftTime = ionDriftTime;
     }
 

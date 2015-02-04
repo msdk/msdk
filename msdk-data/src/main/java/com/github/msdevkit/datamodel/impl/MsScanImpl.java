@@ -22,11 +22,11 @@
 
 package com.github.msdevkit.datamodel.impl;
 
-import java.text.Format;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.github.msdevkit.datamodel.ChromatographyData;
 import com.github.msdevkit.datamodel.MsMsScan;
@@ -55,12 +55,12 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
      * @see com.github.msdevkit.datamodel.MsScan#getScanNumber()
      */
     @Override
-    public Integer getScanNumber() {
+    public @Nonnull Integer getScanNumber() {
 	return scanNumber;
     }
 
     @Override
-    public void setScanNumber(Integer scanNumber) {
+    public void setScanNumber(@Nonnull Integer scanNumber) {
 	this.scanNumber = scanNumber;
     }
 
@@ -117,7 +117,7 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
     }
 
     @Override
-    public void setChromatographyData(ChromatographyData chromData) {
+    public void setChromatographyData(@Nullable ChromatographyData chromData) {
 	this.chromData = chromData;
     }
 

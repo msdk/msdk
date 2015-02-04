@@ -25,6 +25,8 @@ package com.github.msdevkit.datamodel.impl;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
+
 import com.github.msdevkit.datamodel.PeakList;
 import com.github.msdevkit.datamodel.PeakListColumn;
 import com.github.msdevkit.datamodel.PeakListRow;
@@ -35,9 +37,9 @@ import com.github.msdevkit.datamodel.PeakListRow;
 public class PeakListRowImpl implements PeakListRow {
 
     @Override
-    public PeakList getParentPeakList() {
+    public @Nonnull PeakList getParentPeakList() {
 	// TODO Auto-generated method stub
-	return null;
+	return MSDKObjectBuilder.getPeakList();
     }
 
     @Override
