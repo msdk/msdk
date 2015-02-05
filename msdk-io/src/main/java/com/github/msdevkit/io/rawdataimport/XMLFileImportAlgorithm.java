@@ -40,7 +40,6 @@ import uk.ac.ebi.pride.tools.jmzreader.model.Param;
 import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
 import uk.ac.ebi.pride.tools.jmzreader.model.impl.CvParam;
 import uk.ac.ebi.pride.tools.jmzreader.model.impl.ParamGroup;
-import uk.ac.ebi.pride.tools.jmzreader.model.impl.UserParam;
 import uk.ac.ebi.pride.tools.mzdata_parser.MzDataFile;
 import uk.ac.ebi.pride.tools.mzml_wrapper.MzMlWrapper;
 import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLFile;
@@ -212,18 +211,17 @@ public class XMLFileImportAlgorithm implements MSDKAlgorithm<RawDataFile> {
 	ParamGroup params = spectrum.getAdditional();
 
 	ParamGroup additional = spectrum.getAdditional();
-	// access all cvParams in the ParamGroup
+	/*
+	
 	for (CvParam cvParam : additional.getCvParams()) {
-	    // process the additional information
-	    System.out.println(cvParam.getAccession() + " - "
+	    System.out.println("CV PARAM "+ cvParam.getAccession() + " - "
 		    + cvParam.getName() + " = " + cvParam.getValue());
 	}
-	// access all userParams in the ParamGroup
 	for (UserParam userParam : additional.getUserParams()) {
-	    // process the information
-	    System.out.println(userParam.getName() + " = "
+	    System.out.println("USER PARAM "+ userParam.getName() + " = "
 		    + userParam.getValue());
 	}
+	*/
 
 	List<CvParam> cvParams = params.getCvParams();
 	List<Param> paramsList = params.getParams();
