@@ -34,7 +34,7 @@ import com.github.msdevkit.datamodel.RawDataFileType;
 /**
  * Detector of raw data file format
  */
-public class RawDataFileTypeDetectionAlgorithm implements
+public class FileTypeDetectionAlgorithm implements
 	MSDKAlgorithm<RawDataFileType> {
 
     /*
@@ -74,7 +74,7 @@ public class RawDataFileTypeDetectionAlgorithm implements
      * @return Detected file type or null if the file is not of any supported
      *         type
      */
-    public RawDataFileTypeDetectionAlgorithm(@Nonnull File fileName) {
+    public FileTypeDetectionAlgorithm(@Nonnull File fileName) {
 	this.fileName = fileName;
     }
 

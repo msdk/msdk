@@ -73,12 +73,12 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
     }
 
     @Override
-    public @Nonnull Integer getMSLevel() {
+    public @Nullable Integer getMSLevel() {
 	return msLevel;
     }
 
     @Override
-    public void setMSLevel(@Nonnull Integer msLevel) {
+    public void setMSLevel(@Nullable Integer msLevel) {
 	this.msLevel = msLevel;
     }
 

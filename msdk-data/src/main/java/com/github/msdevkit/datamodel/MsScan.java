@@ -59,10 +59,10 @@ public interface MsScan extends MassSpectrum {
      * 
      * @return MS level
      */
-    @Nonnull
+    @Nullable
     Integer getMSLevel();
 
-    void setMSLevel(@Nonnull Integer msLevel);
+    void setMSLevel(@Nullable Integer msLevel);
 
     /**
      * Returns the sum of intensities of all data points.

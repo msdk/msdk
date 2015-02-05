@@ -24,6 +24,7 @@ package com.github.msdevkit.io.rawdataimport;
 
 import java.io.File;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.github.msdevkit.MSDKAlgorithm;
@@ -38,11 +39,15 @@ import com.github.msdevkit.datamodel.RawDataFileType;
  */
 public class RawDataFileImportAlgorithm implements MSDKAlgorithm<RawDataFile> {
 
-    private final File sourceFile;
+    private final @Nonnull File sourceFile;
     private boolean canceled = false;
     MSDKAlgorithm<RawDataFile> parser = null;
 
-    public RawDataFileImportAlgorithm(File sourceFile) {
+    /**
+     * 
+     * @param sourceFile
+     */
+    public RawDataFileImportAlgorithm(@Nonnull File sourceFile) {
 	this.sourceFile = sourceFile;
     }
 
@@ -52,10 +57,14 @@ public class RawDataFileImportAlgorithm implements MSDKAlgorithm<RawDataFile> {
     @Override
     public void execute() throws MSDKException {
 
-	RawDataFileTypeDetectionAlgorithm typeDetector = new RawDataFileTypeDetectionAlgorithm(
+	FileTypeDetectionAlgorithm typeDetector = new FileTypeDetectionAlgorithm(
 		sourceFile);
 	typeDetector.execute();
 	RawDataFileType fileType = typeDetector.getResult();
+
+	if (fileType == null)
+	    throw new MSDKException("Unsupported file type of file "
+		    + sourceFile);
 
 	if (canceled)
 	    return;
