@@ -1,11 +1,61 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.github.msdevkit</groupId>
-    <artifactId>msdk</artifactId>
-    <version>1.0</version>
-  </parent>
-  <artifactId>msdk-io</artifactId>
-  <name>MSDK - IO</name>
-  <description>Data import and export algorithms for MSDK</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.github.msdevkit</groupId>
+		<artifactId>msdk</artifactId>
+		<version>1.0</version>
+	</parent>
+	<artifactId>msdk-io</artifactId>
+	<name>MSDK - IO</name>
+	<description>Data import and export algorithms for MSDK</description>
+
+	<repositories>
+		<repository>
+			<!-- jmzreader repository -->
+			<id>ebi-repo</id>
+			<name>The EBI Maven repository</name>
+			<url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.github.msdevkit</groupId>
+			<artifactId>msdk-data</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.ac.ebi.pride.tools</groupId>
+			<artifactId>jmzreader</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.ac.ebi.pride.tools</groupId>
+			<artifactId>mzxml-parser</artifactId>
+			<version>1.3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.ac.ebi.pride.tools</groupId>
+			<artifactId>mzdata-parser</artifactId>
+			<version>1.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.ac.ebi.pride.tools</groupId>
+			<artifactId>mzml-wrapper</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.ac.ebi.jmzml</groupId>
+			<artifactId>jmzml</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
 </project>
