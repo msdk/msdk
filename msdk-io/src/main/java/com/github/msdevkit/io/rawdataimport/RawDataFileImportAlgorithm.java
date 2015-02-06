@@ -31,6 +31,7 @@ import com.github.msdevkit.MSDKAlgorithm;
 import com.github.msdevkit.MSDKException;
 import com.github.msdevkit.datamodel.RawDataFile;
 import com.github.msdevkit.datamodel.RawDataFileType;
+import com.github.msdevkit.io.rawdataimport.xmlbased.XMLFileImportAlgorithm;
 
 /**
  * This class detects the type of the given data file using the

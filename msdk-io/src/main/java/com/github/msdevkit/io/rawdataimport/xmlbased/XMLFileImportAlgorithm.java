@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.github.msdevkit.io.rawdataimport;
+package com.github.msdevkit.io.rawdataimport.xmlbased;
 
 import java.io.File;
 import java.util.Arrays;
