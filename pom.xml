@@ -1,12 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.github.msdevkit</groupId>
+	<groupId>io.github.msdk</groupId>
 	<artifactId>msdk</artifactId>
-	<version>1.0</version>
+	<version>0.1</version>
 	<packaging>pom</packaging>
+
 	<name>Mass Spectrometry Development Kit (MSDK)</name>
 	<description>A java library for the development of mass spectrometry-related algorithms.</description>
+	<url>https://msdk.github.io</url>
+
 	<modules>
 		<module>msdk-data</module>
 		<module>msdk-io</module>
@@ -23,21 +26,37 @@
 
 	<licenses>
 		<license>
-			<name>GNU LGPL 2.1 or later</name>
-			<url>http://www.gnu.org/licenses/lgpl.html</url>
+			<name>GNU Lesser General Public License (LGPL) 2.1</name>
+			<url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
+			<distribution>repo</distribution>
+		</license>
+		<license>
+			<name>Eclipse Public License (EPL) 1.0</name>
+			<url>http://www.eclipse.org/org/documents/epl-v10.php</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
 
+	<mailingLists>
+		<mailingList>
+			<name>msdk-devel</name>
+			<subscribe>msdk-devel+subscribe@googlegroups.com</subscribe>
+			<unsubscribe>msdk-devel+unsubscribe@googlegroups.com</unsubscribe>
+			<post>msdk-devel@googlegroups.com</post>
+			<archive>https://groups.google.com/forum/#!forum/msdk-devel</archive>
+		</mailingList>
+	</mailingLists>
+
 	<scm>
-		<url>https://github.com/msdevkit/msdk</url>
-		<connection>scm:git:git://github.com/msdevkit/msdk.git</connection>
-		<developerConnection>scm:git:git@github.com/msdevkit/msdk.git</developerConnection>
+		<url>https://github.com/msdk/msdk</url>
+		<connection>scm:git:git://github.com/msdk/msdk.git</connection>
+		<developerConnection>scm:git:git@github.com/msdk/msdk.git</developerConnection>
 	</scm>
 
 	<developers>
 		<developer>
-			<name>Tomas Pluskal</name>
+			<name>Tomáš Pluskal</name>
+			<email>plusik@gmail.com</email>
 		</developer>
 	</developers>
 
@@ -46,7 +65,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.2</version>
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
@@ -55,4 +74,5 @@
 			</plugin>
 		</plugins>
 	</build>
+	
 </project>
