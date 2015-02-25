@@ -12,18 +12,15 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.util;
 
-public interface Sample {
+/**
+ * Represents a direction for sorting.
+ */
+public enum SortingDirection {
 
-    /**
-     * @return Short descriptive name
-     */
-    String getName();
+    ASCENDING,
 
-    /**
-     * Change the name
-     */
-    void setName(String name);
+    DESCENDING
 
 }

@@ -19,22 +19,10 @@ package io.github.msdk.datamodel;
  */
 public enum PolarityType {
 
-    POSITIVE(+1), //
-    NEGATIVE(-1), //
-    NEUTRAL(0), //
-    UNKNOWN(0);
+    POSITIVE,
 
-    private final int sign;
+    NEGATIVE,
 
-    PolarityType(int sign) {
-	this.sign = sign;
-    }
+    UNKNOWN;
 
-    /**
-     * @return +1 for positive polarity, -1 for negative polarity, and 0 for
-     *         neutral or unknown polarity.
-     */
-    public int getSign() {
-	return sign;
-    }
 }

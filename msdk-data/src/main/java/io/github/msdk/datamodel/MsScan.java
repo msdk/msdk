@@ -14,68 +14,102 @@
 
 package io.github.msdk.datamodel;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
 /**
- * Represent one MS spectrum in a raw data file.
+ * Represents a single MS scan in a raw data file. This interface extends
+ * MassSpectrum, therefore the actual data points can be accessed through the
+ * inherited methods of MassSpectrum.
  */
-public interface MsScan extends MassSpectrum {
+public interface MsScan extends MassSpectrum, Cloneable {
 
     /**
+     * Returns the raw data file that contains this scan. Each MsScan must be
+     * associated with a RawDataFile from the moment its instance is created,
+     * and this association cannot change. Note that the MsScan will not appear
+     * in the list returned by RawDataFile.getScans() unless it is explicitly
+     * added by RawDataFile.addScan().
      * 
-     * @return RawDataFile containing this Scan
+     * @return RawDataFile containing this MsScan.
+     * @see RawDataFile
      */
     @Nonnull
     RawDataFile getDataFile();
 
-    @Nullable
-    ChromatographyData getChromatographyData();
-
-    void setChromatographyData(@Nullable ChromatographyData chromData);
-
     /**
+     * Returns the number of this scan, represented by an integer, typically
+     * positive. In most cases, the scan number will be unique within the file.
+     * However, the data model does not guarantee that, and some cases might
+     * thus exist where multiple scans with the same number are present in the
+     * file.
      * 
      * @return Scan number
      */
     @Nonnull
     Integer getScanNumber();
 
+    /**
+     * Returns the chromatography data associated with this scan. Null is
+     * returned if no chromatography data is available.
+     * 
+     * @return Associated chromatography data.
+     */
+    @Nullable
+    ChromatographyData getChromatographyData();
+
+    /**
+     * Updates the associated chromatography data.
+     * 
+     * @param chromData
+     */
+    void setChromatographyData(@Nullable ChromatographyData chromData);
+
+    /**
+     * Updates the scan number.
+     * 
+     * @param scanNumber
+     *            New scan number.
+     */
     void setScanNumber(@Nonnull Integer scanNumber);
 
     /**
      * 
      * @return MS level
      */
-    @Nullable
-    Integer getMSLevel();
-
-    void setMSLevel(@Nullable Integer msLevel);
+    @Nonnull
+    MsFunction getMsFunction();
 
     /**
-     * Returns the sum of intensities of all data points.
-     * 
-     * @return Total ion current
-     */
-    double getTIC();
-
-    /**
+     * This is different from MassSpectrum.getMzRange() - EXPLAIN
      * @return the actual scanning range of the instrument
      */
-    Range<Double> getScanRange();
+    @Nullable
+    Range<Double> getScanningRange();
 
+    /**
+     * 
+     * @param newScanRange
+     */
+    void setScanRange(@Nullable Range<Double> newScanRange);
+
+    /**
+     * If unknown, PolarityType.UNKNOWN is returned.
+     * 
+     * @return
+     */
     @Nonnull
     PolarityType getPolarity();
 
+    void setPolarity(@Nonnull PolarityType newPolarity);
+
     /**
+     * Returns a deep clone of this object.
      * 
-     * @return array of fragment scans, or null if there are none
+     * @return A clone.
      */
-    @Nonnull
-    List<MsMsScan> getFragmentScans();
+    MsScan clone();
 
 }

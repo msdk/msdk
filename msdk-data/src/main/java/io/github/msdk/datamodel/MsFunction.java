@@ -16,31 +16,30 @@ package io.github.msdk.datamodel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 /**
- * 
+ * Represents a 
+ * Is immutable
  */
-public interface FeatureDataPoint extends DataPoint {
+@Immutable
+public interface MsFunction {
 
     /**
-     * 
-     * @return
-     */
-    @Nullable
-    MsScan getScan();
-
-    /**
+     * Returns the name of this MS function. In Thermo files, this might be In
+     * Waters files, this might be
      * 
      * @return
      */
     @Nonnull
-    Integer getScanNumber();
+    String getName();
 
     /**
+     * Returns null if unknown.
      * 
-     * @return
+     * @return MS level
      */
     @Nullable
-    ChromatographyData getChromatographyData();
+    Integer getMsLevel();
 
 }

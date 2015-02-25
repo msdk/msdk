@@ -29,7 +29,10 @@ public interface RawDataFile {
     /**
      * Returns the name of this data file (can be a descriptive name, not
      * necessarily the original file name)
+     * 
+     * @return
      */
+
     @Nonnull
     String getName();
 
@@ -38,10 +41,26 @@ public interface RawDataFile {
      */
     void setName(@Nonnull String name);
 
+    @Nonnull
+    List<MsFunction> getMsFunctions();
+
+    /**
+     * 
+     */
     void addScan(@Nonnull MsScan scan);
 
+    /**
+     * 
+     * @param scan
+     */
     void removeScan(@Nonnull MsScan scan);
 
+    /**
+     * 
+     * @return
+     */
+    int getNumberOfScans();
+    
     /**
      * Returns an immutable list of all scans. The list can be safely iterated
      * on, as it cannot be modified by another thread.
@@ -50,34 +69,56 @@ public interface RawDataFile {
     List<MsScan> getScans();
 
     /**
+     * 
+     * @param function
+     * @return
+     */
+    @Nonnull
+    List<MsScan> getScans(MsFunction function);
+
+
+
+    /**
      * Returns an immutable list of all scans. The list can be safely iterated
-     * on, as it cannot be modified by another thread.
+     * over, as it cannot be modified by another thread.
      */
     @Nonnull
-    List<MsScan> getScans(@Nonnull Integer msLevel,
-	    @Nonnull Range<Double> rtRange);
-
+    List<MsScan> getScans(
+	    @Nonnull Range<ChromatographyData> chromatographyRange);
+    
     /**
-     * Returns immutable list of MS levels of scans in this file. Items in the
-     * list are sorted in ascending order.
+     * Returns an immutable list of all scans. The list can be safely iterated
+     * over, as it cannot be modified by another thread.
      */
     @Nonnull
-    List<Integer> getMSLevels();
+    List<MsScan> getScans(@Nonnull MsFunction function,
+	    @Nonnull Range<ChromatographyData> chromatographyRange);
 
     /**
+     * Important: index != scan number. Index is unique, 1-based index in the
+     * file. If a scan is removed from the file, the index of other scans
+     * automatically shifts.
      * 
      * @param scan
      *            Desired scan number
      * @return Desired scan, or null if no scan exists with that number
      */
     @Nullable
-    MsScan getScan(int scanNumber);
+    MsScan getScanByIndex(Integer index);
 
+    /**
+     * 
+     * @return
+     */
     @Nonnull
-    Range<Double> getRawDataMZRange();
+    Range<Double> getRawDataMzRange();
 
+    /**
+     * 
+     * @return
+     */
     @Nonnull
-    Range<Double> getRawDataScanRange();
+    Range<Double> getRawDataScanningRange();
 
     @Nonnull
     Range<Double> getRawDataRTRange();
@@ -92,7 +133,9 @@ public interface RawDataFile {
     Range<Double> getRawDataRTRange(@Nonnull Integer msLevel);
 
     /**
-     * Remove all data associated to this file from the disk.
+     * Remove all data associated with this file from the disk. After this
+     * method is called, any subsequent method calls on this object will throw
+     * IllegalStateException.
      */
     void dispose();
 }

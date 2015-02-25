@@ -14,8 +14,7 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.ChromatographyData;
-import io.github.msdk.datamodel.MassSpectrumType;
+import io.github.msdk.datamodel.MsMsExperimentType;
 import io.github.msdk.datamodel.MsMsScan;
 import io.github.msdk.datamodel.MsScan;
 import io.github.msdk.datamodel.RawDataFile;
@@ -40,55 +39,15 @@ public class MsMsScanImpl extends MsScanImpl implements MsMsScan {
     }
 
     @Override
-    public int getPrecursorCharge() {
-	return precursorCharge;
-    }
-
-    @Override
-    public void setPrecursorCharge(int precursorCharge) {
-	this.precursorCharge = precursorCharge;
-    }
-
-    @Override
-    public MsScan getParentScan() {
-	return parentScan;
-    }
-
-    @Override
-    public void setParentScan(@Nullable MsScan parentScan) {
-	this.parentScan = parentScan;
-    }
-
-    @Override
-    public double getActivationEnergy() {
-	return activationEnergy;
-    }
-
-    @Override
-    public void setActivationEnergy(double activationEnergy) {
-	this.activationEnergy = activationEnergy;
-    }
-
-    @Override
-    public ChromatographyData getChromatographyData() {
+    @Nonnull
+    public Double getTIC() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public @Nonnull MassSpectrumType getSpectrumType() {
-	// TODO Auto-generated method stub
-	return MassSpectrumType.CENTROIDED;
-    }
-
-    @Override
+    @Nullable
     public Double getPrecursorMz() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    @Override
-    public Range<Double> getIsolationWidth() {
 	// TODO Auto-generated method stub
 	return null;
     }
@@ -96,7 +55,61 @@ public class MsMsScanImpl extends MsScanImpl implements MsMsScan {
     @Override
     public void setPrecursorMz(@Nullable Double precursorMZ) {
 	// TODO Auto-generated method stub
-
+	
     }
+
+    @Override
+    @Nullable
+    public Range<Double> getIsolationWidth() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setIsolationWidth(@Nullable Range<Double> isolationWidth) {
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    @Nullable
+    public Double getActivationEnergy() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setActivationEnergy(@Nullable Double activationEnergy) {
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    @Nullable
+    public Integer getPrecursorCharge() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setPrecursorCharge(@Nullable Integer charge) {
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    @Nonnull
+    public MsMsExperimentType getExperimentType() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setExperimentType(@Nonnull MsMsExperimentType newType) {
+	// TODO Auto-generated method stub
+	
+    }
+
+
 
 }

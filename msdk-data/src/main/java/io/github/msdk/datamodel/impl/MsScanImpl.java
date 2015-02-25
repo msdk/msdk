@@ -44,75 +44,6 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
 	this.fragmentScans = new ArrayList<MsMsScan>();
     }
 
-    /**
-     * @see io.github.msdk.datamodel.MsScan#getScanNumber()
-     */
-    @Override
-    public @Nonnull Integer getScanNumber() {
-	return scanNumber;
-    }
-
-    @Override
-    public void setScanNumber(@Nonnull Integer scanNumber) {
-	this.scanNumber = scanNumber;
-    }
-
-    /**
-     * @param scanNumber
-     *            The scanNumber to set.
-     */
-    public void setScanNumber(int scanNumber) {
-	this.scanNumber = scanNumber;
-    }
-
-    @Override
-    public @Nullable Integer getMSLevel() {
-	return msLevel;
-    }
-
-    @Override
-    public void setMSLevel(@Nullable Integer msLevel) {
-	this.msLevel = msLevel;
-    }
-
-    /**
-     * @see io.github.msdk.datamodel.MsScan#getFragmentScanNumbers()
-     */
-    @Override
-    public @Nonnull List<MsMsScan> getFragmentScans() {
-	return fragmentScans;
-    }
-
-    @Override
-    public @Nonnull RawDataFile getDataFile() {
-	return dataFile;
-    }
-
-    @Override
-    public @Nonnull PolarityType getPolarity() {
-	return PolarityType.UNKNOWN;
-    }
-
-    @Override
-    public Range<Double> getScanRange() {
-	return null;
-    }
-
-    @Override
-    public double getTIC() {
-	// TODO Auto-generated method stub
-	return 0;
-    }
-
-    @Override
-    public ChromatographyData getChromatographyData() {
-	return chromData;
-    }
-
-    @Override
-    public void setChromatographyData(@Nullable ChromatographyData chromData) {
-	this.chromData = chromData;
-    }
 
     @Override
     public String toString() {
@@ -136,5 +67,82 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
 	}
 
 	return buf.toString();
+    }
+
+
+    @Override
+    @Nonnull
+    public RawDataFile getDataFile() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+
+    @Override
+    @Nullable
+    public ChromatographyData getChromatographyData() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+
+    @Override
+    public void setChromatographyData(@Nullable ChromatographyData chromData) {
+	// TODO Auto-generated method stub
+	
+    }
+
+
+    @Override
+    @Nonnull
+    public Integer getScanNumber() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+
+    @Override
+    public void setScanNumber(@Nonnull Integer scanNumber) {
+	// TODO Auto-generated method stub
+	
+    }
+
+
+    @Override
+    @Nullable
+    public Integer getMSLevel() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+
+    @Override
+    public void setMSLevel(@Nullable Integer msLevel) {
+	// TODO Auto-generated method stub
+	
+    }
+
+
+    @Override
+    @Nonnull
+    public Double getTIC() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+
+    @Override
+    @Nullable
+    public Range<Double> getScanRange() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+
+    @Override
+    @Nonnull
+    public PolarityType getPolarity() {
+	// TODO Auto-generated method stub
+	return null;
     }
 }

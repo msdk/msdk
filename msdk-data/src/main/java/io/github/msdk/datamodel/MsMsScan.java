@@ -14,47 +14,93 @@
 
 package io.github.msdk.datamodel;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
 /**
- * Represent one MS/MS spectrum in a raw data file.
+ * Represents a single fragmentation (MS/MS) scan in a raw data file.
  */
 public interface MsMsScan extends MsScan {
 
     /**
+     * Returns the precursor m/z range, that is the m/z range of ions that were
+     * fragmented. Null is returned if the precursor information is not
+     * specified in the data.
      * 
-     * @return parent scan or null if there is no parent scan
+     * @return Precursor m/z range, or null.
      */
     @Nullable
-    MsScan getParentScan();
-
-    void setParentScan(@Nullable MsScan parentScan);
+    Range<Double> getPrecursorMzRange();
 
     /**
-     * Null means the precursor is not specified in the data
+     * Updates the precursor m/z range.
      * 
-     * @return Precursor m/z
+     * @param precursorMzRange
+     *            New precursor m/z range.
      */
-    @Nullable
-    Double getPrecursorMz();
-
-    @Nullable
-    Range<Double> getIsolationWidth();
-
-    double getActivationEnergy();
-
-    void setPrecursorMz(@Nullable Double precursorMZ);
-
-    void setActivationEnergy(double activationEnergy);
+    void setPrecursorMzRange(@Nullable Range<Double> precursorMzRange);
 
     /**
+     * Returns the precursor charge. This only makes sense for MS/MS scans that
+     * fragment a single precursor ion. Null is returned if the charge is
+     * unknown or if the MS/MS scan targets multiple ions (such as DIA scan).
+     * Charge is always represented by a positive integer.
      * 
-     * @return Precursor charge or 0 if charge is unknown
+     * @return Precursor charge, or null.
      */
-    int getPrecursorCharge();
+    @Nullable
+    Integer getPrecursorCharge();
 
-    void setPrecursorCharge(int charge);
+    /**
+     * Updates the precursor charge.
+     * 
+     * @param charge
+     *            New charge (must be positive integer or null).
+     */
+    void setPrecursorCharge(@Nullable Integer charge);
+
+    /**
+     * Returns the type of the MS/MS experiment for this scan. If unknown,
+     * MsMsExperimentType.UNKNOWN is returned.
+     * 
+     * @return MS/MS experiment type
+     */
+    @Nonnull
+    MsMsExperimentType getMsMsExperimentType();
+
+    /**
+     * Updates the MS/MS experiment type.
+     * 
+     * @param newType
+     *            New MS/MS experiment type.
+     */
+    void setMsMsExperimentType(@Nonnull MsMsExperimentType newType);
+
+    /**
+     * Returns the activation energy applied for this MS/MS scan. This value has
+     * no dimension, its meaning depends on instrument. Null is returned if
+     * unknown.
+     * 
+     * @return MS/MS activation energy, or null.
+     */
+    @Nullable
+    Double getActivationEnergy();
+
+    /**
+     * Updates the MS/MS activation energy.
+     * 
+     * @param activationEnergy
+     *            New activation energy.
+     */
+    void setActivationEnergy(@Nullable Double activationEnergy);
+
+    /**
+     * Returns a deep clone of this object.
+     * 
+     * @return A clone.
+     */
+    MsMsScan clone();
 
 }

@@ -17,29 +17,32 @@ package io.github.msdk;
 import javax.annotation.Nullable;
 
 /**
- * 
+ * This interface represents a method or algorithm of MSDK.
  *
  * @param <ResultType>
+ *            Type of object that represents the result of this method. If the
+ *            method has no result, Void can be used as a special case.
  */
 public interface MSDKMethod<ResultType> {
 
     /**
      * Returns a number in the interval 0.0 to 1.0, representing the portion of
-     * the algorithm that has completed.
+     * the task that has completed.
      */
     double getFinishedPercentage();
 
     /**
      * Performs the algorithm.
      * 
-     * @throws Exception
+     * @throws MSDKException
      *             On any error
+     * @return the result of this algorithm, or null
      */
     @Nullable
     ResultType execute() throws MSDKException;
 
     /**
-     * Returns the result of this algorithm, if it exists.
+     * Returns the result of this algorithm, or null.
      */
     @Nullable
     ResultType getResult();

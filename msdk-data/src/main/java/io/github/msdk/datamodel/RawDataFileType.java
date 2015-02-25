@@ -15,17 +15,22 @@
 package io.github.msdk.datamodel;
 
 /**
- * Enum of supported data file formats
+ * Enum of supported raw data file formats
  */
 public enum RawDataFileType {
 
-    MZML, //
-    MZXML, //
-    MZDATA, //
-    NETCDF, //
-    THERMO_RAW, //
-    WATERS_RAW, //
-    AGILENT_CSV, //
-    UNSUPPORTED
+    MZML,
+
+    MZXML,
+
+    MZDATA,
+
+    NETCDF,
+
+    THERMO_RAW,
+
+    WATERS_RAW,
+
+    UNKNOWN
 
 }

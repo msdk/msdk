@@ -17,9 +17,9 @@ package io.github.msdk.datamodel.impl;
 import io.github.msdk.datamodel.DataPoint;
 import io.github.msdk.datamodel.MassSpectrum;
 import io.github.msdk.datamodel.MassSpectrumType;
-import io.github.msdk.datamodel.util.DataPointSorter;
-import io.github.msdk.datamodel.util.SortingDirection;
-import io.github.msdk.datamodel.util.SortingProperty;
+import io.github.msdk.util.DataPointSorter;
+import io.github.msdk.util.SortingDirection;
+import io.github.msdk.util.SortingProperty;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -123,7 +123,7 @@ abstract class SpectrumImpl implements MassSpectrum {
 	// Sort the data points by m/z, because getDataPoints() guarantees the
 	// returned array is sorted by m/z
 	Arrays.sort(newDataPoints, new DataPointSorter(SortingProperty.MZ,
-		SortingDirection.Ascending));
+		SortingDirection.ASCENDING));
 
 	dataStoreId = dataPointStore.storeDataPoints(newDataPoints);
 

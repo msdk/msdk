@@ -12,28 +12,14 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.util;
 
-public enum FeatureType {
+public enum SortingProperty {
 
-    /**
-     * Unknown type
-     */
-    UNKNOWN,
+    MZ,
 
-    /**
-     * Peak was found in primary peak picking
-     */
-    DETECTED,
+    RETENTION_TIME,
 
-    /**
-     * Peak was estimated in secondary peak picking (gap filling)
-     */
-    ESTIMATED,
-
-    /**
-     * Peak was defined manually
-     */
-    MANUAL
+    INTENSITY;
 
 }

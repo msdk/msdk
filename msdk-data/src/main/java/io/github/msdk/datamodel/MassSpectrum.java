@@ -14,44 +14,63 @@
 
 package io.github.msdk.datamodel;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
 /**
- * Represents any kind of mass spectrum. For example, a single scan in raw MS
- * data, a predicted isotope pattern etc.
+ * A mass spectrum. This is a base interface typically extended by other,
+ * specialized interfaces. It may represent a single scan in raw MS data, a
+ * calculated isotope pattern, a predicted fragmentation spectrum of a molecule,
+ * etc.
  */
 public interface MassSpectrum {
 
     /**
-     * Returns the m/z range of this Scan. Never returns null.
+     * Returns the m/z range of this mass spectrum (minimum and maximum m/z
+     * values, inclusive).
      * 
-     * @return m/z range of this Scan
+     * @return m/z range of this mass spectrum
      */
     @Nonnull
     Range<Double> getMzRange();
 
     /**
-     * Returns the top intensity data point. May return null if there are no
-     * data points in this spectrum.
+     * Returns the top intensity data point, also called "base peak". May return
+     * null if there are no data points in this spectrum.
      * 
-     * @return Base peak
+     * @return Highest data point
      */
     @Nullable
     DataPoint getHighestDataPoint();
 
     /**
+     * Returns the sum of intensities of all data points (total ion current or
+     * TIC).
      * 
-     * @return True if the spectrum is centroided
+     * @return Total ion current.
+     */
+    @Nonnull
+    Double getTIC();
+
+    /**
+     * Returns the type of this mass spectrum. For spectra that are loaded from
+     * raw data files, the type is automatically detected. For calculated
+     * spectra, the type depends on the method of calculation.
+     * 
+     * @return Spectrum type (profile, centroided, thresholded)
      */
     @Nonnull
     MassSpectrumType getSpectrumType();
 
     /**
+     * Updates the type of this mass spectrum.
      * 
-     * @return True if the spectrum is centroided
+     * @param spectrumType
+     *            New spectrum type.
      */
     void setSpectrumType(@Nonnull MassSpectrumType spectrumType);
 
@@ -61,41 +80,45 @@ public interface MassSpectrum {
     int getNumberOfDataPoints();
 
     /**
-     * Returns data points of this spectrum, always sorted in m/z order.
+     * Returns data points of this spectrum, sorted in m/z order.
      * 
-     * This method may need to read data from disk, therefore it may be quite
-     * slow. Modules should be aware of that and cache the data points if
-     * necessary.
-     * 
-     * @return Data points (m/z and intensity pairs) of this scan
-     */
-    @Nonnull
-    DataPoint[] getDataPoints();
-
-    void setDataPoints(@Nonnull DataPoint newDataPoints[]);
-
-    /**
-     * Returns data points in given m/z range, sorted in m/z order.
-     * 
-     * This method may need to read data from disk, therefore it may be quite
-     * slow. Modules should be aware of that and cache the data points if
-     * necessary.
+     * Note: this method may need to read data from disk, therefore it may be
+     * quite slow.
      * 
      * @return Data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    DataPoint[] getDataPointsByMass(@Nonnull Range<Double> mzRange);
+    List<DataPoint> getDataPoints();
+
+    /**
+     * Updates the data points of this mass spectrum. The method will sort the
+     * 
+     * @param newDataPoints
+     *            New data points
+     */
+    void setDataPoints(@Nonnull List<DataPoint> newDataPoints);
+
+    /**
+     * Returns data points in given m/z range, sorted in m/z order.
+     * 
+     * Note: this method may need to read data from disk, therefore it may be
+     * quite slow.
+     * 
+     * @return Data points (m/z and intensity pairs) of this spectrum
+     */
+    @Nonnull
+    List<DataPoint> getDataPointsByMass(@Nonnull Range<Double> mzRange);
 
     /**
      * Returns data points over given intensity, sorted in m/z order.
      * 
-     * This method may need to read data from disk, therefore it may be quite
-     * slow. Modules should be aware of that and cache the data points if
-     * necessary.
+     * Note: this method may need to read data from disk, therefore it may be
+     * quite slow.
      * 
-     * @return Data points (m/z and intensity pairs) of this Spectrum
+     * @return Data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    DataPoint[] getDataPointsOverIntensity(double intensity);
+    List<DataPoint> getDataPointsByIntensity(
+	    @Nonnull Range<Double> intensityRange);
 
 }

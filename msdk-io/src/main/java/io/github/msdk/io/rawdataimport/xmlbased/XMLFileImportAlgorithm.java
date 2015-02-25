@@ -24,10 +24,10 @@ import io.github.msdk.datamodel.MsScan;
 import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.datamodel.RawDataFileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.util.DataPointSorter;
-import io.github.msdk.datamodel.util.SortingDirection;
-import io.github.msdk.datamodel.util.SortingProperty;
 import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
+import io.github.msdk.util.DataPointSorter;
+import io.github.msdk.util.SortingDirection;
+import io.github.msdk.util.SortingProperty;
 
 import java.io.File;
 import java.util.Arrays;
@@ -259,7 +259,7 @@ public class XMLFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 	    i++;
 	}
 	Arrays.sort(dataPoints, new DataPointSorter(SortingProperty.MZ,
-		SortingDirection.Ascending));
+		SortingDirection.ASCENDING));
 	return dataPoints;
 
     }

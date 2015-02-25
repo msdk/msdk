@@ -98,10 +98,6 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
 	    return RawDataFileType.UNSUPPORTED;
 	}
 
-	if (fileName.getName().toLowerCase().endsWith(".csv")) {
-	    return RawDataFileType.AGILENT_CSV;
-	}
-
 	// Read the first 1kB of the file into a String
 	InputStreamReader reader = new InputStreamReader(new FileInputStream(
 		fileName), "ISO-8859-1");

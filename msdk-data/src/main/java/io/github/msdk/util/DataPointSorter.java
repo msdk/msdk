@@ -12,16 +12,14 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.util;
+package io.github.msdk.util;
 
 import io.github.msdk.datamodel.DataPoint;
 
 import java.util.Comparator;
 
 /**
- * This class implements Comparator class to provide a comparison between two
- * DataPoints.
- * 
+ * This class implements a Comparator for two DataPoints.
  */
 public class DataPointSorter implements Comparator<DataPoint> {
 
@@ -48,12 +46,12 @@ public class DataPointSorter implements Comparator<DataPoint> {
 	    if (result == 0)
 		result = Double.compare(dp1.getIntensity(), dp2.getIntensity());
 
-	    if (direction == SortingDirection.Ascending)
+	    if (direction == SortingDirection.ASCENDING)
 		return result;
 	    else
 		return -result;
 
-	case Intensity:
+	case INTENSITY:
 	    result = Double.compare(dp1.getIntensity(), dp2.getIntensity());
 
 	    // If the data points have same intensity, we do a second comparison
@@ -62,7 +60,7 @@ public class DataPointSorter implements Comparator<DataPoint> {
 	    if (result == 0)
 		result = Double.compare(dp1.getMz(), dp2.getMz());
 
-	    if (direction == SortingDirection.Ascending)
+	    if (direction == SortingDirection.ASCENDING)
 		return result;
 	    else
 		return -result;

@@ -15,36 +15,44 @@
 package io.github.msdk.datamodel;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 /**
- * This class represents the chromatography information of each MS scan or
+ * This class represents the chromatography information of an MS scan or a
  * detected feature (peak).
+ * IMMUTABLE!
+ * IMPLEMENTS COMPARABLE to allow Range use
  */
-public interface ChromatographyData {
+@Immutable
+public interface ChromatographyData extends Comparable<ChromatographyData> {
 
     /**
-     * @return Retention time in minutes
+     * Returns retention time in minutes, or null if no retention time is
+     * defined.
+     * 
+     * @return Retention time in minutes, or null.
      */
     @Nullable
     Double getRetentionTime();
 
-    void setRetentionTime(@Nullable Double retentionTime);
-
     /**
-     * @return Secondary retention time in minutes (for two-dimensional
-     *         separations such as GCxGC-MS).
+     * Returns secondary retention time in minutes (for two-dimensional
+     * separations such as GCxGC-MS), or null if no secondary retention time is
+     * defined.
+     * 
+     * @return Secondary retention time in minutes .
      */
     @Nullable
     Double getSecondaryRetentionTime();
 
-    void setSecondaryRetentionTime(@Nullable Double retentionTime);
-
     /**
-     * @return Drift time in ms, for ion mobility experiments.
+     * 
+     * Returns ion drift time in ms (for ion mobility experiments), or null if
+     * no drift time is defined.
+     * 
+     * @return Drift time in ms.
      */
     @Nullable
     Double getIonDriftTime();
-
-    void setIonDriftTime(@Nullable Double driftTime);
 
 }
