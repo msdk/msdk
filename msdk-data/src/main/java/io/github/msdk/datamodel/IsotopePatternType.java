@@ -17,14 +17,14 @@ package io.github.msdk.datamodel;
 public enum IsotopePatternType {
 
     /**
-     * Isotope pattern was detected by isotope grouper
+     * Isotope pattern was detected 
      */
     DETECTED,
 
     /**
-     * Isotope pattern was predicted by Isotope pattern calculator
+     * Isotope pattern was calculated
      */
-    PREDICTED,
+    CALCULATED,
 
     /**
      * Unknown or undefined status.
