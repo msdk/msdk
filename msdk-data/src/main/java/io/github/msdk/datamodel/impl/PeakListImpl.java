@@ -14,16 +14,16 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.PeakList;
-import io.github.msdk.datamodel.PeakListRow;
-import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.peaklists.IPeakList;
+import io.github.msdk.datamodel.peaklists.IPeakListRow;
+import io.github.msdk.datamodel.rawdata.IRawDataFile;
 
 import java.util.List;
 
 /**
  * Simple implementation of the PeakList interface.
  */
-public class PeakListImpl extends DataPointStoreImpl implements PeakList {
+public class PeakListImpl extends DataPointStoreImpl implements IPeakList {
 
     @Override
     public String getName() {
@@ -44,19 +44,19 @@ public class PeakListImpl extends DataPointStoreImpl implements PeakList {
     }
 
     @Override
-    public RawDataFile[] getRawDataFiles() {
+    public List<IRawDataFile> getRawDataFiles() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public boolean hasRawDataFile(RawDataFile file) {
+    public boolean hasRawDataFile(IRawDataFile file) {
 	// TODO Auto-generated method stub
 	return false;
     }
 
     @Override
-    public RawDataFile getRawDataFile(int position) {
+    public IRawDataFile getRawDataFile(int position) {
 	// TODO Auto-generated method stub
 	return null;
     }
@@ -68,21 +68,22 @@ public class PeakListImpl extends DataPointStoreImpl implements PeakList {
     }
 
     @Override
-    public List<PeakListRow> getRows() {
+    public List<IPeakListRow> getRows() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public void addRow(PeakListRow row) {
+    public void addRow(IPeakListRow row) {
 	// TODO Auto-generated method stub
-
+	
     }
 
     @Override
-    public void removeRow(PeakListRow row) {
+    public void removeRow(IPeakListRow row) {
 	// TODO Auto-generated method stub
-
+	
     }
+
 
 }

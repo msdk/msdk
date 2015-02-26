@@ -18,7 +18,7 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.IDataPoint;
 import io.github.msdk.datamodel.rawdata.IMassSpectrum;
-import io.github.msdk.datamodel.rawdata.IMassSpectrumType;
+import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,10 +32,10 @@ import javax.annotation.Nullable;
  * as described in the code comments.
  */
 public class SpectrumTypeDetectionAlgorithm implements
-	MSDKMethod<IMassSpectrumType> {
+	MSDKMethod<MassSpectrumType> {
 
     private @Nonnull IMassSpectrum inputSpectrum;
-    private @Nullable IMassSpectrumType result = null;
+    private @Nullable MassSpectrumType result = null;
     private double finishedPercentage = 0.0;
     private boolean canceled = false;
 
@@ -49,7 +49,7 @@ public class SpectrumTypeDetectionAlgorithm implements
     }
 
     @Override
-    public IMassSpectrumType execute() throws MSDKException {
+    public MassSpectrumType execute() throws MSDKException {
 	IDataPoint dataPoints[] = inputSpectrum.getDataPoints();
 	result = detectSpectrumType(dataPoints);
 	finishedPercentage = 1.0;
@@ -57,7 +57,7 @@ public class SpectrumTypeDetectionAlgorithm implements
     }
 
     @Override
-    public IMassSpectrumType getResult() {
+    public MassSpectrumType getResult() {
 	return result;
     }
 
@@ -66,11 +66,11 @@ public class SpectrumTypeDetectionAlgorithm implements
 	this.canceled = true;
     }
 
-    private IMassSpectrumType detectSpectrumType(@Nonnull IDataPoint[] dataPoints) {
+    private MassSpectrumType detectSpectrumType(@Nonnull IDataPoint[] dataPoints) {
 
 	// If the spectrum has less than 5 data points, it should be centroided.
 	if (dataPoints.length < 5)
-	    return IMassSpectrumType.CENTROIDED;
+	    return MassSpectrumType.CENTROIDED;
 
 	// Go through the data points and find the highest one
 	double maxIntensity = 0.0;
@@ -80,7 +80,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 	    // If the spectrum contains data points of zero intensity, it should
 	    // be in profile mode
 	    if (dataPoints[i].getIntensity() == 0.0) {
-		return IMassSpectrumType.PROFILE;
+		return MassSpectrumType.PROFILE;
 	    }
 
 	    // Let's ignore the first and the last data point, because
@@ -130,7 +130,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 	    // and its neighbor. If not, the spectrum should be centroided.
 	    if ((currentMzDifference < 0.8 * topMzDifference)
 		    || (currentMzDifference > 1.25 * topMzDifference)) {
-		return IMassSpectrumType.CENTROIDED;
+		return MassSpectrumType.CENTROIDED;
 	    }
 
 	}
@@ -151,7 +151,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 		.abs(dataPoints[topDataPointIndex - 1].getMz()
 			- dataPoints[topDataPointIndex + 1].getMz());
 	if (mzDifferenceTopThree > 0.1)
-	    return IMassSpectrumType.CENTROIDED;
+	    return MassSpectrumType.CENTROIDED;
 
 	// Finally, we check the data points on the left and on the right of the
 	// top one. If the spectrum is continuous (thresholded), their intensity
@@ -165,7 +165,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 		.getIntensity();
 	if ((leftDataPointIntensity < thirdMaxIntensity)
 		|| (rightDataPointIntensity < thirdMaxIntensity))
-	    return IMassSpectrumType.CENTROIDED;
+	    return MassSpectrumType.CENTROIDED;
 
 	// Check if canceled
 	if (canceled)
@@ -173,7 +173,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 
 	// If we could not find any sign that the spectrum is centroided, we
 	// conclude it should be thresholded.
-	return IMassSpectrumType.THRESHOLDED;
+	return MassSpectrumType.THRESHOLDED;
     }
 
 }

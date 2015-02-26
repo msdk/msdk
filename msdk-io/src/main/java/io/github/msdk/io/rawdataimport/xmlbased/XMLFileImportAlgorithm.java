@@ -19,11 +19,11 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.IDataPoint;
 import io.github.msdk.datamodel.rawdata.IChromatographyData;
-import io.github.msdk.datamodel.rawdata.IMassSpectrumType;
+import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 import io.github.msdk.datamodel.rawdata.IMsMsScan;
 import io.github.msdk.datamodel.rawdata.IMsScan;
 import io.github.msdk.datamodel.rawdata.IRawDataFile;
-import io.github.msdk.datamodel.rawdata.IRawDataFileType;
+import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.SortingDirection;
@@ -61,7 +61,7 @@ public class XMLFileImportAlgorithm implements MSDKMethod<IRawDataFile> {
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     private final File sourceFile;
-    private final IRawDataFileType fileType;
+    private final RawDataFileType fileType;
     private boolean canceled = false;
 
     private IRawDataFile newRawFile;
@@ -70,7 +70,7 @@ public class XMLFileImportAlgorithm implements MSDKMethod<IRawDataFile> {
 
     private Map<String, Integer> scanIdTable = new Hashtable<String, Integer>();
 
-    public XMLFileImportAlgorithm(File sourceFile, IRawDataFileType fileType) {
+    public XMLFileImportAlgorithm(File sourceFile, RawDataFileType fileType) {
 	this.sourceFile = sourceFile;
 	this.fileType = fileType;
     }
@@ -158,7 +158,7 @@ public class XMLFileImportAlgorithm implements MSDKMethod<IRawDataFile> {
 	    SpectrumTypeDetectionAlgorithm detector = new SpectrumTypeDetectionAlgorithm(
 		    scan);
 	    detector.execute();
-	    IMassSpectrumType spectrumType = detector.getResult();
+	    MassSpectrumType spectrumType = detector.getResult();
 	    scan.setSpectrumType(spectrumType);
 
 	    // Add the scan to the final raw data file

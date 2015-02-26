@@ -30,7 +30,7 @@ public interface IIsotopePattern extends IMassSpectrum {
      * Returns the isotope pattern type.
      */
     @Nonnull
-    IIsotopePatternType getType();
+    IsotopePatternType getType();
 
     /**
      * Returns a description of this isotope pattern (formula, etc.)

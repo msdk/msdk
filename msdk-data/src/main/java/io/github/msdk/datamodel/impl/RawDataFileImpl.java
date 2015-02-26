@@ -14,13 +14,17 @@
 
 package io.github.msdk.datamodel.impl;
 
+import io.github.msdk.datamodel.rawdata.IChromatographyData;
+import io.github.msdk.datamodel.rawdata.IMsFunction;
 import io.github.msdk.datamodel.rawdata.IMsScan;
 import io.github.msdk.datamodel.rawdata.IRawDataFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Range;
@@ -71,57 +75,54 @@ class RawDataFileImpl extends DataPointStoreImpl implements IRawDataFile {
     }
 
     @Override
-    public @Nonnull List<IMsScan> getScans(@Nonnull Integer msLevel, @Nonnull Range<Double> rtRange) {
-	// TODO Auto-generated method stub
-	return Lists.newArrayList();
-    }
-
-    @Override
-    public @Nonnull List<Integer> getMSLevels() {
-	// TODO Auto-generated method stub
-	return Lists.newArrayList();
-    }
-
-    @Override
-    public IMsScan getScan(int scanNumber) {
+    @Nullable
+    public File getOriginalFile() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public @Nonnull Range<Double> getRawDataMZRange() {
+    public void setOriginalFile(@Nullable File newOriginalFile) {
 	// TODO Auto-generated method stub
-	return Range.all();
+	
     }
 
     @Override
-    public @Nonnull Range<Double> getRawDataScanRange() {
+    @Nonnull
+    public List<IMsFunction> getMsFunctions() {
 	// TODO Auto-generated method stub
-	return Range.all();
+	return null;
     }
 
     @Override
-    public @Nonnull Range<Double> getRawDataRTRange() {
+    public int getNumberOfScans() {
 	// TODO Auto-generated method stub
-	return Range.all();
+	return 0;
     }
 
     @Override
-    public @Nonnull Range<Double> getRawDataMZRange(@Nonnull Integer msLevel) {
+    @Nonnull
+    public List<IMsScan> getScans(IMsFunction function) {
 	// TODO Auto-generated method stub
-	return Range.all();
+	return null;
     }
 
     @Override
-    public @Nonnull Range<Double> getRawDataScanRange(@Nonnull Integer msLevel) {
+    @Nonnull
+    public List<IMsScan> getScans(
+	    @Nonnull Range<IChromatographyData> chromatographyRange) {
 	// TODO Auto-generated method stub
-	return Range.all();
+	return null;
     }
 
     @Override
-    public @Nonnull Range<Double> getRawDataRTRange(@Nonnull Integer msLevel) {
+    @Nonnull
+    public List<IMsScan> getScans(@Nonnull IMsFunction function,
+	    @Nonnull Range<IChromatographyData> chromatographyRange) {
 	// TODO Auto-generated method stub
-	return Range.all();
+	return null;
     }
+
+
 
 }

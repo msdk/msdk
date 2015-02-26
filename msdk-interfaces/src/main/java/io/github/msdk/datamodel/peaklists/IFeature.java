@@ -41,12 +41,12 @@ public interface IFeature {
      * @return The status of this feature.
      */
     @Nonnull
-    IFeatureType getFeatureType();
+    FeatureType getFeatureType();
 
     /**
      * Sets a new status of this feature.
      */
-    void setFeatureType(@Nonnull IFeatureType newStatus);
+    void setFeatureType(@Nonnull FeatureType newStatus);
 
     /**
      * @return m/z value of this feature. The m/z value might be different from

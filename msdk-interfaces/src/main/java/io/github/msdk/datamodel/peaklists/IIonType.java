@@ -14,7 +14,7 @@
 
 package io.github.msdk.datamodel.peaklists;
 
-import io.github.msdk.datamodel.rawdata.IPolarityType;
+import io.github.msdk.datamodel.rawdata.PolarityType;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -26,7 +26,7 @@ public interface IIonType {
      */
     int getName();
 
-    IPolarityType getPolarity();
+    PolarityType getPolarity();
 
     int getNumberOfMolecules();
 

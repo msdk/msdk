@@ -16,8 +16,6 @@ package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.rawdata.IChromatographyData;
 
-import javax.annotation.Nullable;
-
 public class ChromatographyDataImpl implements IChromatographyData {
 
     private Double retentionTime, secondaryRetentionTime, ionDriftTime;
@@ -31,29 +29,11 @@ public class ChromatographyDataImpl implements IChromatographyData {
     }
 
     /**
-     * @param retentionTime
-     *            the retentionTime to set
-     */
-    @Override
-    public void setRetentionTime(@Nullable Double retentionTime) {
-	this.retentionTime = retentionTime;
-    }
-
-    /**
      * @return the secondaryRetentionTime
      */
     @Override
     public Double getSecondaryRetentionTime() {
 	return secondaryRetentionTime;
-    }
-
-    /**
-     * @param secondaryRetentionTime
-     *            the secondaryRetentionTime to set
-     */
-    @Override
-    public void setSecondaryRetentionTime(@Nullable Double secondaryRetentionTime) {
-	this.secondaryRetentionTime = secondaryRetentionTime;
     }
 
     /**
@@ -64,13 +44,10 @@ public class ChromatographyDataImpl implements IChromatographyData {
 	return ionDriftTime;
     }
 
-    /**
-     * @param ionDriftTime
-     *            the ionDriftTime to set
-     */
     @Override
-    public void setIonDriftTime(@Nullable Double ionDriftTime) {
-	this.ionDriftTime = ionDriftTime;
+    public int compareTo(IChromatographyData o) {
+	// TODO Auto-generated method stub
+	return 0;
     }
 
 }

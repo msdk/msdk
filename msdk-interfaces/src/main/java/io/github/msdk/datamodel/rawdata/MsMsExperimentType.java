@@ -14,12 +14,10 @@
 
 package io.github.msdk.datamodel.rawdata;
 
-public enum IMsMsExperimentType {
-
-    /**
-     * Unknown MS/MS experiment type
-     */
-    UNKNOWN,
+/**
+ * Represents the type of MS/MS experiment.
+ */
+public enum MsMsExperimentType {
 
     /**
      * Collision-induced dissociation
@@ -39,6 +37,11 @@ public enum IMsMsExperimentType {
     /**
      * Electron transfer dissociation
      */
-    ETD
+    ETD,
+
+    /**
+     * Unknown MS/MS experiment type
+     */
+    UNKNOWN;
 
 }

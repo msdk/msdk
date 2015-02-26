@@ -30,41 +30,14 @@ import com.google.common.collect.Range;
 public interface IMassSpectrum {
 
     /**
-     * Returns the m/z range of this mass spectrum (minimum and maximum m/z
-     * values, inclusive).
-     * 
-     * @return m/z range of this mass spectrum
-     */
-    @Nonnull
-    Range<Double> getMzRange();
-
-    /**
-     * Returns the top intensity data point, also called "base peak". May return
-     * null if there are no data points in this spectrum.
-     * 
-     * @return Highest data point
-     */
-    @Nullable
-    IDataPoint getHighestDataPoint();
-
-    /**
-     * Returns the sum of intensities of all data points (total ion current or
-     * TIC).
-     * 
-     * @return Total ion current.
-     */
-    @Nonnull
-    Double getTIC();
-
-    /**
      * Returns the type of this mass spectrum. For spectra that are loaded from
-     * raw data files, the type is automatically detected. For calculated
+     * raw data files, the type is detected automatically. For calculated
      * spectra, the type depends on the method of calculation.
      * 
      * @return Spectrum type (profile, centroided, thresholded)
      */
     @Nonnull
-    IMassSpectrumType getSpectrumType();
+    MassSpectrumType getSpectrumType();
 
     /**
      * Updates the type of this mass spectrum.
@@ -72,7 +45,7 @@ public interface IMassSpectrum {
      * @param spectrumType
      *            New spectrum type.
      */
-    void setSpectrumType(@Nonnull IMassSpectrumType spectrumType);
+    void setSpectrumType(@Nonnull MassSpectrumType spectrumType);
 
     /**
      * @return Number of m/z and intensity data points.
@@ -128,7 +101,10 @@ public interface IMassSpectrum {
 	    @Nonnull Range<Double> intensityRange);
 
     /**
-     * Updates the data points of this mass spectrum.
+     * Updates the data points of this mass spectrum. If this IMassSpectrum has
+     * been added to a raw data file or a peak list, the data points will be
+     * immediately stored in a temporary file. Therefore, the IDataPointList in
+     * the parameter can be reused for other purposes.
      * 
      * Note: this method may need to write data to disk, therefore it may be
      * quite slow.
@@ -137,4 +113,32 @@ public interface IMassSpectrum {
      *            New data points
      */
     void setDataPoints(@Nonnull IDataPointList newDataPoints);
+
+    /**
+     * Returns the m/z range of this mass spectrum (minimum and maximum m/z
+     * values of all data points, inclusive).
+     * 
+     * @return m/z range of this mass spectrum
+     */
+    @Nonnull
+    Range<Double> getMzRange();
+
+    /**
+     * Returns the top intensity data point, also called "base peak". May return
+     * null if there are no data points in this spectrum.
+     * 
+     * @return Highest data point
+     */
+    @Nullable
+    IDataPoint getHighestDataPoint();
+
+    /**
+     * Returns the sum of intensities of all data points (total ion current or
+     * TIC).
+     * 
+     * @return Total ion current.
+     */
+    @Nonnull
+    Double getTIC();
+
 }

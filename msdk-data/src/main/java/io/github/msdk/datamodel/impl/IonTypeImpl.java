@@ -14,13 +14,13 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.IonType;
-import io.github.msdk.datamodel.PolarityType;
+import io.github.msdk.datamodel.peaklists.IIonType;
+import io.github.msdk.datamodel.rawdata.PolarityType;
 
 /**
  *
  */
-class IonTypeImpl implements IonType {
+class IonTypeImpl implements IIonType {
 
     @Override
     public int getName() {

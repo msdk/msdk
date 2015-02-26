@@ -22,7 +22,7 @@ import com.google.common.collect.Range;
 /**
  * Represents a single fragmentation (MS/MS) scan in a raw data file.
  */
-public interface IMsMsScan extends IMsScan {
+public interface IMsMsScan extends IMsScan, Cloneable {
 
     /**
      * Returns the precursor m/z range, that is the m/z range of ions that were
@@ -68,7 +68,7 @@ public interface IMsMsScan extends IMsScan {
      * @return MS/MS experiment type
      */
     @Nonnull
-    IMsMsExperimentType getMsMsExperimentType();
+    MsMsExperimentType getMsMsExperimentType();
 
     /**
      * Updates the MS/MS experiment type.
@@ -76,11 +76,11 @@ public interface IMsMsScan extends IMsScan {
      * @param newType
      *            New MS/MS experiment type.
      */
-    void setMsMsExperimentType(@Nonnull IMsMsExperimentType newType);
+    void setMsMsExperimentType(@Nonnull MsMsExperimentType newType);
 
     /**
      * Returns the activation energy applied for this MS/MS scan. This value has
-     * no dimension, its meaning depends on instrument. Null is returned if
+     * no dimension and its meaning depends on instrument. Null is returned if
      * unknown.
      * 
      * @return MS/MS activation energy, or null.

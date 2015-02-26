@@ -19,9 +19,12 @@ import javax.annotation.concurrent.Immutable;
 
 /**
  * This class represents the chromatography information of an MS scan or a
- * detected feature (peak).
- * IMMUTABLE!
- * IMPLEMENTS COMPARABLE to allow Range use
+ * detected feature (peak). For convenience, this interface is immutable, so it
+ * can be passed by reference and safely used by multiple threads. This
+ * interface also extends Comparable, so we can use the Range class to define
+ * ranges of retention times etc. The comparator method should compare two
+ * instances by retention time, secondary retention time, and drift time in this
+ * order.
  */
 @Immutable
 public interface IChromatographyData extends Comparable<IChromatographyData> {
@@ -40,17 +43,16 @@ public interface IChromatographyData extends Comparable<IChromatographyData> {
      * separations such as GCxGC-MS), or null if no secondary retention time is
      * defined.
      * 
-     * @return Secondary retention time in minutes .
+     * @return Secondary retention time in minutes, or null.
      */
     @Nullable
     Double getSecondaryRetentionTime();
 
     /**
-     * 
      * Returns ion drift time in ms (for ion mobility experiments), or null if
      * no drift time is defined.
      * 
-     * @return Drift time in ms.
+     * @return Drift time in ms, or null.
      */
     @Nullable
     Double getIonDriftTime();

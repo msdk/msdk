@@ -14,9 +14,9 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.PeakList;
-import io.github.msdk.datamodel.PeakListColumn;
-import io.github.msdk.datamodel.PeakListRow;
+import io.github.msdk.datamodel.peaklists.IPeakList;
+import io.github.msdk.datamodel.peaklists.IPeakListColumn;
+import io.github.msdk.datamodel.peaklists.IPeakListRow;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,12 +26,12 @@ import javax.annotation.Nonnull;
 /**
  * Implementation of PeakListRow
  */
-public class PeakListRowImpl implements PeakListRow {
+public class PeakListRowImpl implements IPeakListRow {
 
     @Override
-    public @Nonnull PeakList getParentPeakList() {
+    public @Nonnull IPeakList getParentPeakList() {
 	// TODO Auto-generated method stub
-	return MSDKObjectBuilder.getPeakList();
+	return null;
     }
 
     @Override
@@ -47,13 +47,13 @@ public class PeakListRowImpl implements PeakListRow {
     }
 
     @Override
-    public <DataType> List<PeakListColumn<DataType>> getColumns() {
+    public <DataType> List<IPeakListColumn<DataType>> getColumns() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public <DataType> Optional<DataType> getData(PeakListColumn<DataType> column) {
+    public <DataType> Optional<DataType> getData(IPeakListColumn<DataType> column) {
 	// TODO Auto-generated method stub
 	return Optional.empty();
     }

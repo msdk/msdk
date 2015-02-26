@@ -14,6 +14,7 @@
 
 package io.github.msdk.datamodel.rawdata;
 
+import java.io.File;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -22,115 +23,127 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Range;
 
 /**
- * Raw data file
+ * Raw data file, typically obtained by loading data from one of the supported
+ * file formats. A raw data file is a collection of scans (MsScan). In MSDK,
+ * each raw data file also provides storage space in a temporary file. This
+ * storage is used to keep the data points values.
+ * 
+ * @see MsScan
  */
 public interface IRawDataFile {
 
     /**
-     * Returns the name of this data file (can be a descriptive name, not
-     * necessarily the original file name)
+     * Returns the name of this data file. This can be any descriptive name, not
+     * necessarily the original file name.
      * 
-     * @return
+     * @return Raw data file name
      */
-
     @Nonnull
     String getName();
 
     /**
-     * Change the name of this data file
+     * Updates the name of this raw data file.
+     * 
+     * @param name
+     *            New name
      */
     void setName(@Nonnull String name);
 
+    /**
+     * Returns the original filename where the file was loaded from, or null if
+     * this file was created by MSDK.
+     * 
+     * @return Original filename.
+     */
+    @Nullable
+    File getOriginalFile();
+
+    /**
+     * Updates the original filename.
+     * 
+     * @param newOriginalFile
+     *            New original filename.
+     */
+    void setOriginalFile(@Nullable File newOriginalFile);
+
+    /**
+     * Returns all MS functions found in this raw data file.
+     * 
+     * @return A list of MS functions.
+     */
     @Nonnull
     List<IMsFunction> getMsFunctions();
 
     /**
+     * Adds a new scan to this file.
      * 
+     * @param scan
+     *            Scan to add.
      */
     void addScan(@Nonnull IMsScan scan);
 
     /**
+     * Removes a scan from this file.
      * 
      * @param scan
+     *            Scan to remove.
      */
     void removeScan(@Nonnull IMsScan scan);
 
     /**
+     * Returns the total number of scans in this file.
      * 
-     * @return
+     * @return Number of scans.
      */
     int getNumberOfScans();
-    
+
     /**
      * Returns an immutable list of all scans. The list can be safely iterated
-     * on, as it cannot be modified by another thread.
+     * over, as it cannot be modified by another thread.
+     * 
+     * @return A list of all scans.
      */
     @Nonnull
     List<IMsScan> getScans();
 
     /**
+     * Returns an immutable list of all scans of a given MS function. The list
+     * can be safely iterated over, as it cannot be modified by another thread.
      * 
      * @param function
-     * @return
+     *            The scans of this function will be returned.
+     * @return A list of matching scans.
      */
     @Nonnull
     List<IMsScan> getScans(IMsFunction function);
 
-
-
     /**
-     * Returns an immutable list of all scans. The list can be safely iterated
-     * over, as it cannot be modified by another thread.
+     * Returns an immutable list of all scans in a given retention time range.
+     * The list can be safely iterated over, as it cannot be modified by another
+     * thread.
+     * 
+     * @param chromatographyRange
+     *            Range of retention times.
+     * @return A list of matching scans.
      */
     @Nonnull
     List<IMsScan> getScans(
 	    @Nonnull Range<IChromatographyData> chromatographyRange);
-    
+
     /**
-     * Returns an immutable list of all scans. The list can be safely iterated
-     * over, as it cannot be modified by another thread.
+     * Returns an immutable list of all scans of a given MS function and in a
+     * given retention time range. The list can be safely iterated over, as it
+     * cannot be modified by another thread.
+     * 
+     * @param function
+     *            The scans of this function will be returned.
+     * @param chromatographyRange
+     *            Range of retention times.
+     * @return A list of matching scans.
      */
     @Nonnull
     List<IMsScan> getScans(@Nonnull IMsFunction function,
 	    @Nonnull Range<IChromatographyData> chromatographyRange);
-
-    /**
-     * Important: index != scan number. Index is unique, 1-based index in the
-     * file. If a scan is removed from the file, the index of other scans
-     * automatically shifts.
-     * 
-     * @param scan
-     *            Desired scan number
-     * @return Desired scan, or null if no scan exists with that number
-     */
-    @Nullable
-    IMsScan getScanByIndex(Integer index);
-
-    /**
-     * 
-     * @return
-     */
-    @Nonnull
-    Range<Double> getRawDataMzRange();
-
-    /**
-     * 
-     * @return
-     */
-    @Nonnull
-    Range<Double> getRawDataScanningRange();
-
-    @Nonnull
-    Range<Double> getRawDataRTRange();
-
-    @Nonnull
-    Range<Double> getRawDataMZRange(@Nonnull Integer msLevel);
-
-    @Nonnull
-    Range<Double> getRawDataScanRange(@Nonnull Integer msLevel);
-
-    @Nonnull
-    Range<Double> getRawDataRTRange(@Nonnull Integer msLevel);
 
     /**
      * Remove all data associated with this file from the disk. After this
@@ -138,4 +151,5 @@ public interface IRawDataFile {
      * IllegalStateException.
      */
     void dispose();
+
 }

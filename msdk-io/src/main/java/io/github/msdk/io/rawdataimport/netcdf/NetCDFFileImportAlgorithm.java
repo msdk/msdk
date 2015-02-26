@@ -19,7 +19,7 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.IDataPoint;
 import io.github.msdk.datamodel.rawdata.IChromatographyData;
-import io.github.msdk.datamodel.rawdata.IMassSpectrumType;
+import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 import io.github.msdk.datamodel.rawdata.IMsScan;
 import io.github.msdk.datamodel.rawdata.IRawDataFile;
 import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
@@ -399,7 +399,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<IRawDataFile> {
 	SpectrumTypeDetectionAlgorithm detector = new SpectrumTypeDetectionAlgorithm(
 		scan);
 	detector.execute();
-	IMassSpectrumType spectrumType = detector.getResult();
+	MassSpectrumType spectrumType = detector.getResult();
 	scan.setSpectrumType(spectrumType);
 
 	IChromatographyData chromData = MSDKObjectBuilder

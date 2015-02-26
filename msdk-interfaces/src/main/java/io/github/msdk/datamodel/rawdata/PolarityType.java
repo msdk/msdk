@@ -12,23 +12,17 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.peaklists;
+package io.github.msdk.datamodel.rawdata;
 
-public enum IIsotopePatternType {
+/**
+ * Represents the polarity of ionization.
+ */
+public enum PolarityType {
 
-    /**
-     * Isotope pattern was detected 
-     */
-    DETECTED,
+    POSITIVE,
 
-    /**
-     * Isotope pattern was calculated
-     */
-    CALCULATED,
+    NEGATIVE,
 
-    /**
-     * Unknown or undefined status.
-     */
     UNKNOWN;
 
 }

@@ -18,9 +18,8 @@ import javax.annotation.concurrent.Immutable;
 
 /**
  * A single data point of a mass spectrum (a pair of m/z and intensity values).
- * DataPoints are immutable once created, to allow passing them by reference,
- * instead of cloning each data point instance when passing them between MSDK
- * modules.
+ * For convenience, this interface is immutable, so it can be passed by
+ * reference and safely used by multiple threads.
  */
 @Immutable
 public interface IDataPoint {

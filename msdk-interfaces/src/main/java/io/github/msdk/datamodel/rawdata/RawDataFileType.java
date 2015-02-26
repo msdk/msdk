@@ -17,7 +17,7 @@ package io.github.msdk.datamodel.rawdata;
 /**
  * Enum of supported raw data file formats
  */
-public enum IRawDataFileType {
+public enum RawDataFileType {
 
     MZML,
 

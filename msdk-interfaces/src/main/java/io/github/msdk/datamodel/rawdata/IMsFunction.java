@@ -19,25 +19,32 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Represents a 
- * Is immutable
+ * Represents one MS function, such as "Full scan", "MS/MS", "MS3", "SIM",
+ * "MRM", etc. Typically, a single raw data file may contain scans of different
+ * functions. The name of the function is instrument-dependent. For convenience,
+ * this interface is immutable, so it can be passed by reference and safely used
+ * by multiple threads.
  */
 @Immutable
 public interface IMsFunction {
 
     /**
-     * Returns the name of this MS function. In Thermo files, this might be In
-     * Waters files, this might be
+     * Returns the name of this MS function. For example, in Thermo raw files,
+     * this might look like "Full ms", "ms2", or "sim", etc. In Waters raw
+     * files, it might look like "MS", "MRM", "TOFD", etc. The value depends on
+     * instrument and experiment configuration.
      * 
-     * @return
+     * @return Non-null name of this MS function.
      */
     @Nonnull
     String getName();
 
     /**
-     * Returns null if unknown.
+     * Returns the MS level of this function, if it is known. 1 means no
+     * fragmentation, 2 means MS/MS, 3 means MS3 and so on. Returns null if the
+     * MS level is unknown.
      * 
-     * @return MS level
+     * @return MS level, or null.
      */
     @Nullable
     Integer getMsLevel();

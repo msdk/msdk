@@ -12,28 +12,18 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.peaklists;
+package io.github.msdk;
 
-public enum IFeatureType {
+public class MSDKRuntimeException extends RuntimeException {
 
-    /**
-     * Unknown type
-     */
-    UNKNOWN,
+    private static final long serialVersionUID = 1L;
 
-    /**
-     * Peak was found in primary peak picking
-     */
-    DETECTED,
+    public MSDKRuntimeException(String msg) {
+	super(msg);
+    }
 
-    /**
-     * Peak was estimated in secondary peak picking (gap filling)
-     */
-    ESTIMATED,
-
-    /**
-     * Peak was defined manually
-     */
-    MANUAL
+    public MSDKRuntimeException(Throwable exception) {
+	super(exception);
+    }
 
 }

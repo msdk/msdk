@@ -14,32 +14,34 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.ChromatographyData;
-import io.github.msdk.datamodel.DataPoint;
-import io.github.msdk.datamodel.Feature;
-import io.github.msdk.datamodel.FeatureShape;
-import io.github.msdk.datamodel.FeatureType;
-import io.github.msdk.datamodel.IsotopePattern;
-import io.github.msdk.datamodel.PeakListRow;
-import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.peaklists.FeatureType;
+import io.github.msdk.datamodel.peaklists.IFeature;
+import io.github.msdk.datamodel.peaklists.IFeatureShape;
+import io.github.msdk.datamodel.peaklists.IIsotopePattern;
+import io.github.msdk.datamodel.peaklists.IPeakListRow;
+import io.github.msdk.datamodel.rawdata.IChromatographyData;
+import io.github.msdk.datamodel.rawdata.IDataPoint;
+import io.github.msdk.datamodel.rawdata.IRawDataFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.openscience.cdk.formula.IsotopePattern;
 
 import com.google.common.collect.Range;
 
 /**
  * This class is a simple implementation of the peak interface.
  */
-public class FeatureImpl implements Feature {
+public class FeatureImpl implements IFeature {
 
     private @Nonnull FeatureType peakStatus = FeatureType.UNKNOWN;
-    private RawDataFile dataFile;
+    private IRawDataFile dataFile;
 
     // Scan numbers
     private int scanNumbers[];
 
-    private DataPoint dataPointsPerScan[];
+    private IDataPoint dataPointsPerScan[];
 
     // M/Z, RT, Height and Area
     private double mz, rt, height, area;
@@ -69,9 +71,9 @@ public class FeatureImpl implements Feature {
      * Initializes a new peak using given values
      * 
      */
-     FeatureImpl(RawDataFile dataFile, double MZ, double RT,
+     FeatureImpl(IRawDataFile dataFile, double MZ, double RT,
 	    double height, double area, int[] scanNumbers,
-	    DataPoint[] dataPointsPerScan, FeatureType peakStatus,
+	    IDataPoint[] dataPointsPerScan, FeatureType peakStatus,
 	    int representativeScan, int fragmentScanNumber,
 	    Range<Double> rtRange, Range<Double> mzRange,
 	    Range<Double> intensityRange) {
@@ -137,57 +139,6 @@ public class FeatureImpl implements Feature {
 	return fragmentScanNumber;
     }
 
-    @Override
-    public IsotopePattern getIsotopePattern() {
-	return isotopePattern;
-    }
-
-    @Override
-    public void setIsotopePattern(@Nullable IsotopePattern isotopePattern) {
-	this.isotopePattern = isotopePattern;
-    }
-
-    @Override
-    public @Nonnull PeakListRow getParentPeakListRow() {
-	// TODO Auto-generated method stub
-	return MSDKObjectBuilder.getPeakListRow();
-    }
-
-    @Override
-    public @Nonnull FeatureType getFeatureType() {
-	// TODO Auto-generated method stub
-	return FeatureType.DETECTED;
-    }
-
-    @Override
-    public void setFeatureType(@Nonnull FeatureType newStatus) {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public @Nonnull Double getMZ() {
-	// TODO Auto-generated method stub
-	return 0.0;
-    }
-
-    @Override
-    public void setMZ(@Nonnull Double newMZ) {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public ChromatographyData getChromatographyData() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    @Override
-    public void setChromatographyData(@Nullable ChromatographyData chromData) {
-	// TODO Auto-generated method stub
-
-    }
 
     @Override
     public @Nonnull Double getHeight() {
@@ -214,13 +165,13 @@ public class FeatureImpl implements Feature {
     }
 
     @Override
-    public FeatureShape getFeatureShape() {
+    public IFeatureShape getFeatureShape() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public void setFeatureShape(@Nullable FeatureShape rawData) {
+    public void setFeatureShape(@Nullable IFeatureShape rawData) {
 	// TODO Auto-generated method stub
 
     }
@@ -235,6 +186,65 @@ public class FeatureImpl implements Feature {
     public void setCharge(@Nullable Integer charge) {
 	// TODO Auto-generated method stub
 
+    }
+
+    @Override
+    @Nonnull
+    public IPeakListRow getParentPeakListRow() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    @Nonnull
+    public FeatureType getFeatureType() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setFeatureType(@Nonnull FeatureType newStatus) {
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    @Nonnull
+    public Double getMZ() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setMZ(@Nonnull Double newMZ) {
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    @Nullable
+    public IChromatographyData getChromatographyData() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setChromatographyData(@Nullable IChromatographyData chromData) {
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    @Nullable
+    public IIsotopePattern getIsotopePattern() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setIsotopePattern(@Nullable IIsotopePattern isotopePattern) {
+	// TODO Auto-generated method stub
+	
     }
 
 }

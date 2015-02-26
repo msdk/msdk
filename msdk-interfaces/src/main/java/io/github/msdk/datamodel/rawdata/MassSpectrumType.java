@@ -20,23 +20,23 @@ package io.github.msdk.datamodel.rawdata;
  * Spectrometry Proteomics. Molecular & Cellular Proteomics, 11(12), 1612–1621.
  * doi:10.1074/mcp.R112.019695
  */
-public enum IMassSpectrumType {
+public enum MassSpectrumType {
 
     /**
-     * Continuous (profile) mass spectrum. Continuous stream of connected data
+     * Profile (continuous) mass spectrum. Continuous stream of connected data
      * points forms a spectrum consisting of individual peaks. Peaks represent
      * detected ions. Each peak consists of multiple data points.
      */
     PROFILE,
 
     /**
-     * Thresholded mass spectrum = same as profile, but data points below
-     * certain intensity threshold are removed.
+     * Thresholded mass spectrum. Same as profile, but data points below certain
+     * intensity threshold are removed.
      */
     THRESHOLDED,
 
     /**
-     * Centroided mass spectrum = discrete data points, one for each detected
+     * Centroided mass spectrum. Contains discrete data points, one for each
      * ion.
      */
     CENTROIDED;

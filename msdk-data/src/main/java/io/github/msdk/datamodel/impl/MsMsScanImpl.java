@@ -14,10 +14,10 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.rawdata.IMsMsExperimentType;
 import io.github.msdk.datamodel.rawdata.IMsMsScan;
 import io.github.msdk.datamodel.rawdata.IMsScan;
 import io.github.msdk.datamodel.rawdata.IRawDataFile;
+import io.github.msdk.datamodel.rawdata.MsMsExperimentType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,32 +47,6 @@ public class MsMsScanImpl extends MsScanImpl implements IMsMsScan {
 
     @Override
     @Nullable
-    public Double getPrecursorMz() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    @Override
-    public void setPrecursorMz(@Nullable Double precursorMZ) {
-	// TODO Auto-generated method stub
-	
-    }
-
-    @Override
-    @Nullable
-    public Range<Double> getIsolationWidth() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    @Override
-    public void setIsolationWidth(@Nullable Range<Double> isolationWidth) {
-	// TODO Auto-generated method stub
-	
-    }
-
-    @Override
-    @Nullable
     public Double getActivationEnergy() {
 	// TODO Auto-generated method stub
 	return null;
@@ -97,17 +71,37 @@ public class MsMsScanImpl extends MsScanImpl implements IMsMsScan {
 	
     }
 
+
     @Override
-    @Nonnull
-    public IMsMsExperimentType getExperimentType() {
+    @Nullable
+    public Range<Double> getPrecursorMzRange() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public void setExperimentType(@Nonnull IMsMsExperimentType newType) {
+    public void setPrecursorMzRange(@Nullable Range<Double> precursorMzRange) {
 	// TODO Auto-generated method stub
 	
+    }
+
+    @Override
+    @Nonnull
+    public MsMsExperimentType getMsMsExperimentType() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setMsMsExperimentType(@Nonnull MsMsExperimentType newType) {
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    public IMsMsScan clone() {
+	// TODO Auto-generated method stub
+	return null;
     }
 
 
