@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
  * resized dynamically, as in ArrayList. It provides all List methods, therefore
  * it supports iteration. Furthermore, it provides direct access to the
  * underlying buffer arrays, for more efficient data handling operations.
+ * IDataPointList always keeps the data points sorted in the m/z order.
  * 
  * This data structure is not thread-safe.
  */
@@ -58,7 +59,8 @@ public interface IDataPointList extends List<IDataPoint> {
 
     /**
      * Sets the internal buffers to given arrays. The arrays will be referenced
-     * directly without cloning.
+     * directly without cloning. The m/z buffer contents must be sorted in
+     * ascending order.
      * 
      * @param mzBuffer
      *            New m/z buffer

@@ -80,7 +80,7 @@ public interface IMassSpectrum {
     int getNumberOfDataPoints();
 
     /**
-     * Returns data points of this spectrum, sorted in m/z order.
+     * Returns data points of this spectrum.
      * 
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
@@ -88,15 +88,21 @@ public interface IMassSpectrum {
      * @return Data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    List<IDataPoint> getDataPoints();
+    IDataPointList getDataPoints();
 
     /**
-     * Updates the data points of this mass spectrum. The method will sort the
+     * Loads the data points of this spectrum into the given IDataPointList. If
+     * the IDataPointList is not empty, it is cleared first. This method allows
+     * the internal arrays of the IDataPointList to be reused for loading
+     * multiple spectra.
      * 
-     * @param newDataPoints
-     *            New data points
+     * Note: this method may need to read data from disk, therefore it may be
+     * quite slow.
+     * 
+     * @param list
+     *            IDataPointList into which the data points should be loaded
      */
-    void setDataPoints(@Nonnull List<IDataPoint> newDataPoints);
+    void getDataPoints(IDataPointList list);
 
     /**
      * Returns data points in given m/z range, sorted in m/z order.
@@ -107,7 +113,7 @@ public interface IMassSpectrum {
      * @return Data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    List<IDataPoint> getDataPointsByMass(@Nonnull Range<Double> mzRange);
+    IDataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange);
 
     /**
      * Returns data points over given intensity, sorted in m/z order.
@@ -121,4 +127,14 @@ public interface IMassSpectrum {
     List<IDataPoint> getDataPointsByIntensity(
 	    @Nonnull Range<Double> intensityRange);
 
+    /**
+     * Updates the data points of this mass spectrum.
+     * 
+     * Note: this method may need to write data to disk, therefore it may be
+     * quite slow.
+     * 
+     * @param newDataPoints
+     *            New data points
+     */
+    void setDataPoints(@Nonnull IDataPointList newDataPoints);
 }
