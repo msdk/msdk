@@ -15,7 +15,6 @@
 package io.github.msdk.datamodel.peaklists;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
@@ -48,6 +47,6 @@ public interface IPeakListRow {
     /**
      * 
      */
-    <DataType> Optional<DataType> getData(IPeakListColumn<DataType> column);
+    <DataType> DataType getData(IPeakListColumn<DataType> column);
 
 }
