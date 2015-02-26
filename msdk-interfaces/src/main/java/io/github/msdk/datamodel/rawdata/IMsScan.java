@@ -21,8 +21,8 @@ import com.google.common.collect.Range;
 
 /**
  * Represents a single MS scan in a raw data file. This interface extends
- * MassSpectrum, therefore the actual data points can be accessed through the
- * inherited methods of MassSpectrum.
+ * IMassSpectrum, therefore the actual data points can be accessed through the
+ * inherited methods of IMassSpectrum.
  * 
  * If the scan is not added to any file, its data points are stored in memory.
  * However, once the scan is added into a raw data file by calling
