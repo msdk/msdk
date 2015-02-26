@@ -22,6 +22,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-interfaces</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-data</artifactId>
 			<version>${project.version}</version>
 		</dependency>

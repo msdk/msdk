@@ -14,8 +14,8 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.MsScan;
-import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.rawdata.IMsScan;
+import io.github.msdk.datamodel.rawdata.IRawDataFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +28,16 @@ import com.google.common.collect.Range;
 /**
  * RawDataFile implementation.
  */
-class RawDataFileImpl extends DataPointStoreImpl implements RawDataFile {
+class RawDataFileImpl extends DataPointStoreImpl implements IRawDataFile {
 
     private @Nonnull String rawDataFileName;
-    private @Nonnull RawDataFile originalRawDataFile;
-    private final List<MsScan> scans;
+    private @Nonnull IRawDataFile originalRawDataFile;
+    private final List<IMsScan> scans;
 
     RawDataFileImpl() {
 	rawDataFileName = "New file";
 	originalRawDataFile = this;
-	scans = new ArrayList<MsScan>();
+	scans = new ArrayList<IMsScan>();
     }
 
     @Override
@@ -53,25 +53,25 @@ class RawDataFileImpl extends DataPointStoreImpl implements RawDataFile {
     }
 
     @Override
-    public void addScan(@Nonnull MsScan scan) {
+    public void addScan(@Nonnull IMsScan scan) {
 	// TODO Auto-generated method stub
 
     }
 
     @Override
-    public void removeScan(@Nonnull MsScan scan) {
+    public void removeScan(@Nonnull IMsScan scan) {
 	// TODO Auto-generated method stub
 
     }
 
     @Override
-    public @Nonnull List<MsScan> getScans() {
+    public @Nonnull List<IMsScan> getScans() {
 	// TODO Auto-generated method stub
 	return Lists.newArrayList();
     }
 
     @Override
-    public @Nonnull List<MsScan> getScans(@Nonnull Integer msLevel, @Nonnull Range<Double> rtRange) {
+    public @Nonnull List<IMsScan> getScans(@Nonnull Integer msLevel, @Nonnull Range<Double> rtRange) {
 	// TODO Auto-generated method stub
 	return Lists.newArrayList();
     }
@@ -83,7 +83,7 @@ class RawDataFileImpl extends DataPointStoreImpl implements RawDataFile {
     }
 
     @Override
-    public MsScan getScan(int scanNumber) {
+    public IMsScan getScan(int scanNumber) {
 	// TODO Auto-generated method stub
 	return null;
     }

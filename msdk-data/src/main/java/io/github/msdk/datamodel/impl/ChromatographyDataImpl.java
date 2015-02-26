@@ -14,11 +14,11 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.ChromatographyData;
+import io.github.msdk.datamodel.rawdata.IChromatographyData;
 
 import javax.annotation.Nullable;
 
-public class ChromatographyDataImpl implements ChromatographyData {
+public class ChromatographyDataImpl implements IChromatographyData {
 
     private Double retentionTime, secondaryRetentionTime, ionDriftTime;
 

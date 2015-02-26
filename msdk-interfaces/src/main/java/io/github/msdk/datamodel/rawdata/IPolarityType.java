@@ -12,12 +12,12 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.rawdata;
 
 /**
  * Represents the polarity of ionization.
  */
-public enum PolarityType {
+public enum IPolarityType {
 
     POSITIVE,
 

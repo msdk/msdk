@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.rawdata;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -24,7 +24,7 @@ import javax.annotation.concurrent.Immutable;
  * IMPLEMENTS COMPARABLE to allow Range use
  */
 @Immutable
-public interface ChromatographyData extends Comparable<ChromatographyData> {
+public interface IChromatographyData extends Comparable<IChromatographyData> {
 
     /**
      * Returns retention time in minutes, or null if no retention time is

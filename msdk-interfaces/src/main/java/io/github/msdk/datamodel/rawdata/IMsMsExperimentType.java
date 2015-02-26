@@ -12,9 +12,9 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.rawdata;
 
-public enum MsMsExperimentType {
+public enum IMsMsExperimentType {
 
     /**
      * Unknown MS/MS experiment type

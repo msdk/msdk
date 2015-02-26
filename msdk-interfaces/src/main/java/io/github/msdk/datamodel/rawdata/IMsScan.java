@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.rawdata;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,7 +24,7 @@ import com.google.common.collect.Range;
  * MassSpectrum, therefore the actual data points can be accessed through the
  * inherited methods of MassSpectrum.
  */
-public interface MsScan extends MassSpectrum, Cloneable {
+public interface IMsScan extends IMassSpectrum, Cloneable {
 
     /**
      * Returns the raw data file that contains this scan. Each MsScan must be
@@ -34,10 +34,10 @@ public interface MsScan extends MassSpectrum, Cloneable {
      * added by RawDataFile.addScan().
      * 
      * @return RawDataFile containing this MsScan.
-     * @see RawDataFile
+     * @see IRawDataFile
      */
     @Nonnull
-    RawDataFile getDataFile();
+    IRawDataFile getDataFile();
 
     /**
      * Returns the number of this scan, represented by an integer, typically
@@ -58,14 +58,14 @@ public interface MsScan extends MassSpectrum, Cloneable {
      * @return Associated chromatography data.
      */
     @Nullable
-    ChromatographyData getChromatographyData();
+    IChromatographyData getChromatographyData();
 
     /**
      * Updates the associated chromatography data.
      * 
      * @param chromData
      */
-    void setChromatographyData(@Nullable ChromatographyData chromData);
+    void setChromatographyData(@Nullable IChromatographyData chromData);
 
     /**
      * Updates the scan number.
@@ -80,7 +80,7 @@ public interface MsScan extends MassSpectrum, Cloneable {
      * @return MS level
      */
     @Nonnull
-    MsFunction getMsFunction();
+    IMsFunction getMsFunction();
 
     /**
      * This is different from MassSpectrum.getMzRange() - EXPLAIN
@@ -101,15 +101,15 @@ public interface MsScan extends MassSpectrum, Cloneable {
      * @return
      */
     @Nonnull
-    PolarityType getPolarity();
+    IPolarityType getPolarity();
 
-    void setPolarity(@Nonnull PolarityType newPolarity);
+    void setPolarity(@Nonnull IPolarityType newPolarity);
 
     /**
      * Returns a deep clone of this object.
      * 
      * @return A clone.
      */
-    MsScan clone();
+    IMsScan clone();
 
 }

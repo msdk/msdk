@@ -16,9 +16,9 @@ package io.github.msdk.io.spectrumtypedetection;
 
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.DataPoint;
-import io.github.msdk.datamodel.MassSpectrum;
-import io.github.msdk.datamodel.MassSpectrumType;
+import io.github.msdk.datamodel.rawdata.IDataPoint;
+import io.github.msdk.datamodel.rawdata.IMassSpectrum;
+import io.github.msdk.datamodel.rawdata.IMassSpectrumType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,14 +32,14 @@ import javax.annotation.Nullable;
  * as described in the code comments.
  */
 public class SpectrumTypeDetectionAlgorithm implements
-	MSDKMethod<MassSpectrumType> {
+	MSDKMethod<IMassSpectrumType> {
 
-    private @Nonnull MassSpectrum inputSpectrum;
-    private @Nullable MassSpectrumType result = null;
+    private @Nonnull IMassSpectrum inputSpectrum;
+    private @Nullable IMassSpectrumType result = null;
     private double finishedPercentage = 0.0;
     private boolean canceled = false;
 
-    public SpectrumTypeDetectionAlgorithm(@Nonnull MassSpectrum inputSpectrum) {
+    public SpectrumTypeDetectionAlgorithm(@Nonnull IMassSpectrum inputSpectrum) {
 	this.inputSpectrum = inputSpectrum;
     }
 
@@ -49,15 +49,15 @@ public class SpectrumTypeDetectionAlgorithm implements
     }
 
     @Override
-    public MassSpectrumType execute() throws MSDKException {
-	DataPoint dataPoints[] = inputSpectrum.getDataPoints();
+    public IMassSpectrumType execute() throws MSDKException {
+	IDataPoint dataPoints[] = inputSpectrum.getDataPoints();
 	result = detectSpectrumType(dataPoints);
 	finishedPercentage = 1.0;
 	return result;
     }
 
     @Override
-    public MassSpectrumType getResult() {
+    public IMassSpectrumType getResult() {
 	return result;
     }
 
@@ -66,11 +66,11 @@ public class SpectrumTypeDetectionAlgorithm implements
 	this.canceled = true;
     }
 
-    private MassSpectrumType detectSpectrumType(@Nonnull DataPoint[] dataPoints) {
+    private IMassSpectrumType detectSpectrumType(@Nonnull IDataPoint[] dataPoints) {
 
 	// If the spectrum has less than 5 data points, it should be centroided.
 	if (dataPoints.length < 5)
-	    return MassSpectrumType.CENTROIDED;
+	    return IMassSpectrumType.CENTROIDED;
 
 	// Go through the data points and find the highest one
 	double maxIntensity = 0.0;
@@ -80,7 +80,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 	    // If the spectrum contains data points of zero intensity, it should
 	    // be in profile mode
 	    if (dataPoints[i].getIntensity() == 0.0) {
-		return MassSpectrumType.PROFILE;
+		return IMassSpectrumType.PROFILE;
 	    }
 
 	    // Let's ignore the first and the last data point, because
@@ -130,7 +130,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 	    // and its neighbor. If not, the spectrum should be centroided.
 	    if ((currentMzDifference < 0.8 * topMzDifference)
 		    || (currentMzDifference > 1.25 * topMzDifference)) {
-		return MassSpectrumType.CENTROIDED;
+		return IMassSpectrumType.CENTROIDED;
 	    }
 
 	}
@@ -151,7 +151,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 		.abs(dataPoints[topDataPointIndex - 1].getMz()
 			- dataPoints[topDataPointIndex + 1].getMz());
 	if (mzDifferenceTopThree > 0.1)
-	    return MassSpectrumType.CENTROIDED;
+	    return IMassSpectrumType.CENTROIDED;
 
 	// Finally, we check the data points on the left and on the right of the
 	// top one. If the spectrum is continuous (thresholded), their intensity
@@ -165,7 +165,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 		.getIntensity();
 	if ((leftDataPointIntensity < thirdMaxIntensity)
 		|| (rightDataPointIntensity < thirdMaxIntensity))
-	    return MassSpectrumType.CENTROIDED;
+	    return IMassSpectrumType.CENTROIDED;
 
 	// Check if canceled
 	if (canceled)
@@ -173,7 +173,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 
 	// If we could not find any sign that the spectrum is centroided, we
 	// conclude it should be thresholded.
-	return MassSpectrumType.THRESHOLDED;
+	return IMassSpectrumType.THRESHOLDED;
     }
 
 }

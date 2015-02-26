@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.rawdata;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -23,7 +23,7 @@ import javax.annotation.concurrent.Immutable;
  * modules.
  */
 @Immutable
-public interface DataPoint {
+public interface IDataPoint {
 
     /**
      * Returns the m/z value of this data point.

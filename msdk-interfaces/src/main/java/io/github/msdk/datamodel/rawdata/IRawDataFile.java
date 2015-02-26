@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.rawdata;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ import com.google.common.collect.Range;
 /**
  * Raw data file
  */
-public interface RawDataFile {
+public interface IRawDataFile {
 
     /**
      * Returns the name of this data file (can be a descriptive name, not
@@ -42,18 +42,18 @@ public interface RawDataFile {
     void setName(@Nonnull String name);
 
     @Nonnull
-    List<MsFunction> getMsFunctions();
+    List<IMsFunction> getMsFunctions();
 
     /**
      * 
      */
-    void addScan(@Nonnull MsScan scan);
+    void addScan(@Nonnull IMsScan scan);
 
     /**
      * 
      * @param scan
      */
-    void removeScan(@Nonnull MsScan scan);
+    void removeScan(@Nonnull IMsScan scan);
 
     /**
      * 
@@ -66,7 +66,7 @@ public interface RawDataFile {
      * on, as it cannot be modified by another thread.
      */
     @Nonnull
-    List<MsScan> getScans();
+    List<IMsScan> getScans();
 
     /**
      * 
@@ -74,7 +74,7 @@ public interface RawDataFile {
      * @return
      */
     @Nonnull
-    List<MsScan> getScans(MsFunction function);
+    List<IMsScan> getScans(IMsFunction function);
 
 
 
@@ -83,16 +83,16 @@ public interface RawDataFile {
      * over, as it cannot be modified by another thread.
      */
     @Nonnull
-    List<MsScan> getScans(
-	    @Nonnull Range<ChromatographyData> chromatographyRange);
+    List<IMsScan> getScans(
+	    @Nonnull Range<IChromatographyData> chromatographyRange);
     
     /**
      * Returns an immutable list of all scans. The list can be safely iterated
      * over, as it cannot be modified by another thread.
      */
     @Nonnull
-    List<MsScan> getScans(@Nonnull MsFunction function,
-	    @Nonnull Range<ChromatographyData> chromatographyRange);
+    List<IMsScan> getScans(@Nonnull IMsFunction function,
+	    @Nonnull Range<IChromatographyData> chromatographyRange);
 
     /**
      * Important: index != scan number. Index is unique, 1-based index in the
@@ -104,7 +104,7 @@ public interface RawDataFile {
      * @return Desired scan, or null if no scan exists with that number
      */
     @Nullable
-    MsScan getScanByIndex(Integer index);
+    IMsScan getScanByIndex(Integer index);
 
     /**
      * 

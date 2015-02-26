@@ -14,9 +14,9 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.DataPoint;
-import io.github.msdk.datamodel.MassSpectrum;
-import io.github.msdk.datamodel.MassSpectrumType;
+import io.github.msdk.datamodel.rawdata.IDataPoint;
+import io.github.msdk.datamodel.rawdata.IMassSpectrum;
+import io.github.msdk.datamodel.rawdata.IMassSpectrumType;
 import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.SortingDirection;
 import io.github.msdk.util.SortingProperty;
@@ -33,15 +33,15 @@ import com.google.common.collect.Range;
  * Simple implementation of the MassSpectrum interface, which stores its data in
  * a data store.
  */
-abstract class SpectrumImpl implements MassSpectrum {
+abstract class SpectrumImpl implements IMassSpectrum {
 
     private final @Nonnull DataPointStoreImpl dataPointStore;
 
     private int dataStoreId = -1;
     private int numberOfDataPoints;
     private @Nonnull Range<Double> mzRange;
-    private MassSpectrumType spectrumType;
-    private DataPoint highestDataPoint;
+    private IMassSpectrumType spectrumType;
+    private IDataPoint highestDataPoint;
 
     SpectrumImpl(@Nonnull DataPointStoreImpl dataPointStore) {
 	this.dataPointStore = dataPointStore;
@@ -56,7 +56,7 @@ abstract class SpectrumImpl implements MassSpectrum {
 
     @Override
     @Nullable
-    public DataPoint getHighestDataPoint() {
+    public IDataPoint getHighestDataPoint() {
 	return highestDataPoint;
     }
 
@@ -66,15 +66,15 @@ abstract class SpectrumImpl implements MassSpectrum {
     }
 
     @Override
-    public synchronized @Nonnull DataPoint[] getDataPoints() {
-	DataPoint storedData[] = dataPointStore.readDataPoints(dataStoreId);
+    public synchronized @Nonnull IDataPoint[] getDataPoints() {
+	IDataPoint storedData[] = dataPointStore.readDataPoints(dataStoreId);
 	return storedData;
     }
 
     @Override
     @Nonnull
-    public DataPoint[] getDataPointsByMass(@Nonnull Range<Double> mzRange) {
-	final DataPoint[] dataPoints = getDataPoints();
+    public IDataPoint[] getDataPointsByMass(@Nonnull Range<Double> mzRange) {
+	final IDataPoint[] dataPoints = getDataPoints();
 	int startIndex, endIndex;
 	for (startIndex = 0; startIndex < dataPoints.length; startIndex++) {
 	    if (dataPoints[startIndex].getMz() >= mzRange.lowerEndpoint())
@@ -86,7 +86,7 @@ abstract class SpectrumImpl implements MassSpectrum {
 		break;
 	}
 
-	DataPoint pointsWithinRange[] = new DataPoint[endIndex - startIndex];
+	IDataPoint pointsWithinRange[] = new IDataPoint[endIndex - startIndex];
 
 	// Copy the relevant points
 	System.arraycopy(dataPoints, startIndex, pointsWithinRange, 0, endIndex
@@ -97,23 +97,23 @@ abstract class SpectrumImpl implements MassSpectrum {
 
     @Override
     @Nonnull
-    public DataPoint[] getDataPointsOverIntensity(double intensity) {
-	DataPoint[] dataPoints = getDataPoints();
+    public IDataPoint[] getDataPointsOverIntensity(double intensity) {
+	IDataPoint[] dataPoints = getDataPoints();
 	int index;
-	ArrayList<DataPoint> points = new ArrayList<DataPoint>();
+	ArrayList<IDataPoint> points = new ArrayList<IDataPoint>();
 
 	for (index = 0; index < dataPoints.length; index++) {
 	    if (dataPoints[index].getIntensity() >= intensity)
 		points.add(dataPoints[index]);
 	}
 
-	DataPoint pointsOverIntensity[] = points.toArray(new DataPoint[0]);
+	IDataPoint pointsOverIntensity[] = points.toArray(new IDataPoint[0]);
 
 	return pointsOverIntensity;
     }
 
     @Override
-    public synchronized void setDataPoints(@Nonnull DataPoint[] newDataPoints) {
+    public synchronized void setDataPoints(@Nonnull IDataPoint[] newDataPoints) {
 
 	// Remove previous data, if any
 	if (dataStoreId != -1) {
@@ -135,12 +135,12 @@ abstract class SpectrumImpl implements MassSpectrum {
     }
 
     @Override
-    public @Nonnull MassSpectrumType getSpectrumType() {
+    public @Nonnull IMassSpectrumType getSpectrumType() {
 	return spectrumType;
     }
 
     @Override
-    public void setSpectrumType(@Nonnull MassSpectrumType spectrumType) {
+    public void setSpectrumType(@Nonnull IMassSpectrumType spectrumType) {
 	this.spectrumType = spectrumType;
     }
 

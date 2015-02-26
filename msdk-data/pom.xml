@@ -7,29 +7,14 @@
 		<version>0.1</version>
 	</parent>
 	<artifactId>msdk-data</artifactId>
-	<name>Data model for MSDK</name>
+	<name>MSDK - Data</name>
+	<description>Basic implementations for MSDK data model interfaces</description>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.openscience.cdk</groupId>
-			<artifactId>cdk-formula</artifactId>
-			<version>${cdk.version}</version>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-interfaces</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 

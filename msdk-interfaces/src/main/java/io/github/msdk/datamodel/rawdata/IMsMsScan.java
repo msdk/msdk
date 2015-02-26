@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.rawdata;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,7 +22,7 @@ import com.google.common.collect.Range;
 /**
  * Represents a single fragmentation (MS/MS) scan in a raw data file.
  */
-public interface MsMsScan extends MsScan {
+public interface IMsMsScan extends IMsScan {
 
     /**
      * Returns the precursor m/z range, that is the m/z range of ions that were
@@ -68,7 +68,7 @@ public interface MsMsScan extends MsScan {
      * @return MS/MS experiment type
      */
     @Nonnull
-    MsMsExperimentType getMsMsExperimentType();
+    IMsMsExperimentType getMsMsExperimentType();
 
     /**
      * Updates the MS/MS experiment type.
@@ -76,7 +76,7 @@ public interface MsMsScan extends MsScan {
      * @param newType
      *            New MS/MS experiment type.
      */
-    void setMsMsExperimentType(@Nonnull MsMsExperimentType newType);
+    void setMsMsExperimentType(@Nonnull IMsMsExperimentType newType);
 
     /**
      * Returns the activation energy applied for this MS/MS scan. This value has
@@ -101,6 +101,6 @@ public interface MsMsScan extends MsScan {
      * 
      * @return A clone.
      */
-    MsMsScan clone();
+    IMsMsScan clone();
 
 }

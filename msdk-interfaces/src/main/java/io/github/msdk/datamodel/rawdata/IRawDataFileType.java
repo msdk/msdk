@@ -12,12 +12,12 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.rawdata;
 
 /**
  * Enum of supported raw data file formats
  */
-public enum RawDataFileType {
+public enum IRawDataFileType {
 
     MZML,
 

@@ -16,7 +16,7 @@ package io.github.msdk.io.rawdataimport;
 
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.RawDataFileType;
+import io.github.msdk.datamodel.rawdata.IRawDataFileType;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 /**
  * Detector of raw data file format
  */
-public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
+public class FileTypeDetectionAlgorithm implements MSDKMethod<IRawDataFileType> {
 
     /*
      * See
@@ -60,7 +60,7 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
 	    'n', 0 });
 
     private @Nonnull File fileName;
-    private @Nullable RawDataFileType result = null;
+    private @Nullable IRawDataFileType result = null;
     private double finishedPercentage = 0.0;
 
     /**
@@ -73,7 +73,7 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
     }
 
     @Override
-    public RawDataFileType execute() throws MSDKException {
+    public IRawDataFileType execute() throws MSDKException {
 
 	try {
 	    result = detectDataFileType(fileName);
@@ -85,17 +85,17 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
 
     }
 
-    private RawDataFileType detectDataFileType(File fileName)
+    private IRawDataFileType detectDataFileType(File fileName)
 	    throws IOException {
 
 	if (fileName.isDirectory()) {
 	    // To check for Waters .raw directory, we look for _FUNC[0-9]{3}.DAT
 	    for (File f : fileName.listFiles()) {
 		if (f.isFile() && f.getName().matches("_FUNC[0-9]{3}.DAT"))
-		    return RawDataFileType.WATERS_RAW;
+		    return IRawDataFileType.WATERS_RAW;
 	    }
 	    // We don't recognize any other directory type than Waters
-	    return RawDataFileType.UNSUPPORTED;
+	    return IRawDataFileType.UNSUPPORTED;
 	}
 
 	// Read the first 1kB of the file into a String
@@ -107,23 +107,23 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
 	String fileHeader = new String(buffer);
 
 	if (fileHeader.startsWith(THERMO_HEADER)) {
-	    return RawDataFileType.THERMO_RAW;
+	    return IRawDataFileType.THERMO_RAW;
 	}
 
 	if (fileHeader.startsWith(CDF_HEADER)) {
-	    return RawDataFileType.NETCDF;
+	    return IRawDataFileType.NETCDF;
 	}
 
 	if (fileHeader.contains(MZML_HEADER))
-	    return RawDataFileType.MZML;
+	    return IRawDataFileType.MZML;
 
 	if (fileHeader.contains(MZDATA_HEADER))
-	    return RawDataFileType.MZDATA;
+	    return IRawDataFileType.MZDATA;
 
 	if (fileHeader.contains(MZXML_HEADER))
-	    return RawDataFileType.MZXML;
+	    return IRawDataFileType.MZXML;
 
-	return RawDataFileType.UNSUPPORTED;
+	return IRawDataFileType.UNSUPPORTED;
 
     }
 
@@ -134,7 +134,7 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
 
     @Override
     @Nullable
-    public RawDataFileType getResult() {
+    public IRawDataFileType getResult() {
 	return result;
     }
 

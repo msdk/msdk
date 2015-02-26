@@ -16,8 +16,8 @@ package io.github.msdk.io.rawdataimport;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.RawDataFile;
-import io.github.msdk.datamodel.RawDataFileType;
+import io.github.msdk.datamodel.rawdata.IRawDataFile;
+import io.github.msdk.datamodel.rawdata.IRawDataFileType;
 import io.github.msdk.io.rawdataimport.xmlbased.XMLFileImportAlgorithm;
 
 import java.io.File;
@@ -30,12 +30,12 @@ import javax.annotation.Nullable;
  * RawDataFileTypeDetectionAlgorithm and then imports the raw data by performing
  * the right import algorithm.
  */
-public class RawDataFileImportAlgorithm implements MSDKMethod<RawDataFile> {
+public class RawDataFileImportAlgorithm implements MSDKMethod<IRawDataFile> {
 
     private final @Nonnull File sourceFile;
-    private RawDataFile result;
+    private IRawDataFile result;
     private boolean canceled = false;
-    MSDKMethod<RawDataFile> parser = null;
+    MSDKMethod<IRawDataFile> parser = null;
 
     /**
      * 
@@ -49,11 +49,11 @@ public class RawDataFileImportAlgorithm implements MSDKMethod<RawDataFile> {
      * @throws MSDKException
      */
     @Override
-    public RawDataFile execute() throws MSDKException {
+    public IRawDataFile execute() throws MSDKException {
 
 	FileTypeDetectionAlgorithm typeDetector = new FileTypeDetectionAlgorithm(
 		sourceFile);
-	RawDataFileType fileType = typeDetector.execute();
+	IRawDataFileType fileType = typeDetector.execute();
 
 	if (fileType == null)
 	    throw new MSDKException("Unsupported file type of file "
@@ -86,7 +86,7 @@ public class RawDataFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 
     @Override
     @Nullable
-    public RawDataFile getResult() {
+    public IRawDataFile getResult() {
 	return result;
     }
 

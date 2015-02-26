@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
-import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.rawdata.IRawDataFile;
 import io.github.msdk.io.rawdataimport.RawDataFileImportAlgorithm;
 
 import java.io.File;
@@ -119,7 +119,7 @@ public class RawDataimportTest {
 	RawDataFileImportAlgorithm importer = new RawDataFileImportAlgorithm(
 		inputFile);
 	importer.execute();
-	RawDataFile rawFile = importer.getResult();
+	IRawDataFile rawFile = importer.getResult();
 
 	assertNotNull(rawFile);
 	assertNotEquals(rawFile.getScans().size(), 0);

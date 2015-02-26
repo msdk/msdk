@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.rawdata;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ import com.google.common.collect.Range;
  * calculated isotope pattern, a predicted fragmentation spectrum of a molecule,
  * etc.
  */
-public interface MassSpectrum {
+public interface IMassSpectrum {
 
     /**
      * Returns the m/z range of this mass spectrum (minimum and maximum m/z
@@ -45,7 +45,7 @@ public interface MassSpectrum {
      * @return Highest data point
      */
     @Nullable
-    DataPoint getHighestDataPoint();
+    IDataPoint getHighestDataPoint();
 
     /**
      * Returns the sum of intensities of all data points (total ion current or
@@ -64,7 +64,7 @@ public interface MassSpectrum {
      * @return Spectrum type (profile, centroided, thresholded)
      */
     @Nonnull
-    MassSpectrumType getSpectrumType();
+    IMassSpectrumType getSpectrumType();
 
     /**
      * Updates the type of this mass spectrum.
@@ -72,7 +72,7 @@ public interface MassSpectrum {
      * @param spectrumType
      *            New spectrum type.
      */
-    void setSpectrumType(@Nonnull MassSpectrumType spectrumType);
+    void setSpectrumType(@Nonnull IMassSpectrumType spectrumType);
 
     /**
      * @return Number of m/z and intensity data points.
@@ -88,7 +88,7 @@ public interface MassSpectrum {
      * @return Data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    List<DataPoint> getDataPoints();
+    List<IDataPoint> getDataPoints();
 
     /**
      * Updates the data points of this mass spectrum. The method will sort the
@@ -96,7 +96,7 @@ public interface MassSpectrum {
      * @param newDataPoints
      *            New data points
      */
-    void setDataPoints(@Nonnull List<DataPoint> newDataPoints);
+    void setDataPoints(@Nonnull List<IDataPoint> newDataPoints);
 
     /**
      * Returns data points in given m/z range, sorted in m/z order.
@@ -107,7 +107,7 @@ public interface MassSpectrum {
      * @return Data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    List<DataPoint> getDataPointsByMass(@Nonnull Range<Double> mzRange);
+    List<IDataPoint> getDataPointsByMass(@Nonnull Range<Double> mzRange);
 
     /**
      * Returns data points over given intensity, sorted in m/z order.
@@ -118,7 +118,7 @@ public interface MassSpectrum {
      * @return Data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    List<DataPoint> getDataPointsByIntensity(
+    List<IDataPoint> getDataPointsByIntensity(
 	    @Nonnull Range<Double> intensityRange);
 
 }

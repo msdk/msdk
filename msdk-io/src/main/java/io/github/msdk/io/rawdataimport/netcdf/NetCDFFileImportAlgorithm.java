@@ -16,12 +16,12 @@ package io.github.msdk.io.rawdataimport.netcdf;
 
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.ChromatographyData;
-import io.github.msdk.datamodel.DataPoint;
-import io.github.msdk.datamodel.MassSpectrumType;
-import io.github.msdk.datamodel.MsScan;
-import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.rawdata.IDataPoint;
+import io.github.msdk.datamodel.rawdata.IChromatographyData;
+import io.github.msdk.datamodel.rawdata.IMassSpectrumType;
+import io.github.msdk.datamodel.rawdata.IMsScan;
+import io.github.msdk.datamodel.rawdata.IRawDataFile;
 import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
 import java.io.File;
@@ -40,7 +40,7 @@ import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 
-public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
+public class NetCDFFileImportAlgorithm implements MSDKMethod<IRawDataFile> {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -53,7 +53,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
     private Hashtable<Integer, Double> scansRetentionTimes;
 
     private final @Nonnull File sourceFile;
-    private RawDataFile newRawFile;
+    private IRawDataFile newRawFile;
     private boolean canceled = false;
 
     private Variable massValueVariable, intensityValueVariable;
@@ -67,7 +67,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
     }
 
     @Override
-    public RawDataFile execute() throws MSDKException {
+    public IRawDataFile execute() throws MSDKException {
 
 	logger.info("Started parsing file " + sourceFile);
 
@@ -83,7 +83,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 	    readVariables();
 
 	    // Parse scans
-	    MsScan buildingScan;
+	    IMsScan buildingScan;
 	    while ((buildingScan = readNextScan()) != null) {
 
 		// Check if cancel is requested
@@ -328,9 +328,9 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
      * 
      * @throws MSDKException
      */
-    private MsScan readNextScan() throws IOException, MSDKException {
+    private IMsScan readNextScan() throws IOException, MSDKException {
 
-	MsScan scan = MSDKObjectBuilder.getMsScan(newRawFile);
+	IMsScan scan = MSDKObjectBuilder.getMsScan(newRawFile);
 
 	// Set scan number
 	scanNum++;
@@ -381,7 +381,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 
 	int arrayLength = massValueArray.getShape()[0];
 
-	DataPoint dataPoints[] = new DataPoint[arrayLength];
+	IDataPoint dataPoints[] = new IDataPoint[arrayLength];
 
 	for (int j = 0; j < arrayLength; j++) {
 	    Index massIndex0 = massValuesIndex.set0(j);
@@ -399,10 +399,10 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 	SpectrumTypeDetectionAlgorithm detector = new SpectrumTypeDetectionAlgorithm(
 		scan);
 	detector.execute();
-	MassSpectrumType spectrumType = detector.getResult();
+	IMassSpectrumType spectrumType = detector.getResult();
 	scan.setSpectrumType(spectrumType);
 
-	ChromatographyData chromData = MSDKObjectBuilder
+	IChromatographyData chromData = MSDKObjectBuilder
 		.getChromatographyData();
 	chromData.setRetentionTime(retentionTime);
 
@@ -412,7 +412,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 
     @Override
     @Nullable
-    public RawDataFile getResult() {
+    public IRawDataFile getResult() {
 	return newRawFile;
     }
 

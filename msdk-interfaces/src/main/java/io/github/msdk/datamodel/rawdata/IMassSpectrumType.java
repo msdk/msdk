@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.rawdata;
 
 /**
  * Defines a type of the mass spectrum. For exact definition of the different
@@ -20,7 +20,7 @@ package io.github.msdk.datamodel;
  * Spectrometry Proteomics. Molecular & Cellular Proteomics, 11(12), 1612–1621.
  * doi:10.1074/mcp.R112.019695
  */
-public enum MassSpectrumType {
+public enum IMassSpectrumType {
 
     /**
      * Continuous (profile) mass spectrum. Continuous stream of connected data

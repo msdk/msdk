@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.rawdata;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,7 +23,7 @@ import javax.annotation.concurrent.Immutable;
  * Is immutable
  */
 @Immutable
-public interface MsFunction {
+public interface IMsFunction {
 
     /**
      * Returns the name of this MS function. In Thermo files, this might be In
