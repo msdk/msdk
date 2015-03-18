@@ -15,7 +15,8 @@
 		<module>msdk-io</module>
 		<module>msdk-rawdata</module>
 		<module>msdk-interfaces</module>
-	</modules>
+        <module>mdk-mona</module>
+    </modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

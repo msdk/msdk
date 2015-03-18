@@ -31,6 +31,8 @@ public enum RawDataFileType {
 
     WATERS_RAW,
 
-    UNKNOWN
+    UNKNOWN,
+
+    UNSUPPORTED
 
 }
