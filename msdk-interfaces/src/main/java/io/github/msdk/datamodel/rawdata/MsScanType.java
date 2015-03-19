@@ -15,47 +15,33 @@
 package io.github.msdk.datamodel.rawdata;
 
 /**
- * Represents the type of MS/MS experiment.
+ * Represents the type of MS scan.
  * 
  * See also K. K. Murray, R. K. Boyd, M. N. Eberlin, G. J. Langley, L. Li and Y.
  * Naito, Definitions of Terms Relating to Mass Spectrometry (IUPAC
  * Recommendations 2013) Pure Appl. Chem. 2013, 85, 1515-1609.
  */
-public enum MsMsExperimentType {
+public enum MsScanType {
 
     /**
-     * Collision-induced dissociation.
+     * Full MS scan.
      */
-    CID,
+    FULLMS,
 
     /**
-     * Higher-energy C-trap dissociation.
+     * Fragmentation (tandem MS, or MS/MS) scan.
      */
-    HCD,
+    MSMS,
 
     /**
-     * Electron-capture dissociation.
+     * Single ion monitoring (SIM) scan. This scan isolates a narrow range of
+     * m/z values before scanning, thus increasing the sensitivity in this
+     * range.
      */
-    ECD,
+    SIM,
 
     /**
-     * Electron-transfer dissociation.
-     */
-    ETD,
-
-    /**
-     * Electron-transfer and higher-energy collision dissociation.
-     */
-    ETHCD,
-
-    /**
-     * Ultraviolet photodissociation.
-     */
-    UVPD,
-
-    /**
-     * Unknown MS/MS experiment type.
+     * Unknown MS scan type.
      */
     UNKNOWN;
-
 }

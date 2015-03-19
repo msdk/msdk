@@ -91,6 +91,23 @@ public interface IMsScan extends IMassSpectrum, Cloneable {
     void setMsFunction(@Nonnull IMsFunction newFunction);
 
     /**
+     * Returns the type of the MS scan. If unknown, MsScanType.UNKNOWN is
+     * returned.
+     * 
+     * @return MS scan type
+     */
+    @Nonnull
+    MsScanType getMsScanType();
+
+    /**
+     * Updates the MS scan type.
+     * 
+     * @param newType
+     *            New MS scan type.
+     */
+    void setMsScanType(@Nonnull MsScanType newType);
+
+    /**
      * Returns the chromatography data (retention time, etc.) associated with
      * this scan. Null is returned if no chromatography data is available.
      * 
