@@ -14,12 +14,14 @@
 
 package io.github.msdk.datamodel.peaklists;
 
-public enum FeatureType {
+/* 
+ * WARNING: the interfaces in this package are still under construction
+ */
 
-    /**
-     * Unknown type
-     */
-    UNKNOWN,
+/**
+ * 
+ */
+public enum FeatureType {
 
     /**
      * Peak was found in primary peak picking
@@ -34,6 +36,11 @@ public enum FeatureType {
     /**
      * Peak was defined manually
      */
-    MANUAL
+    MANUAL,
+
+    /**
+     * Unknown type
+     */
+    UNKNOWN;
 
 }

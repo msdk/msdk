@@ -24,6 +24,10 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
+/* 
+ * WARNING: the interfaces in this package are still under construction
+ */
+
 /**
  * A class representing shape (data points) of a detected feature.
  */
@@ -58,8 +62,8 @@ public interface FeatureShape {
 
     /**
      * This method returns m/z and intensity of this peak in a given scan. This
-     * m/z and intensity does not need to match any actual raw data point (e.g.
-     * in continuous spectra, the m/z value may be calculated from the data
+     * m/z and intensity does not need to match any actual raw data point (e.g.,
+     * in profile mode spectra, the m/z value may be calculated from the data
      * points forming the m/z signal).
      */
     @Nonnull
@@ -77,7 +81,7 @@ public interface FeatureShape {
      * this peak
      */
     @Nonnull
-    Range<Double> getRawDataPointsMZRange();
+    Range<Double> getRawDataPointsMzRange();
 
     /**
      * Returns the range of intensity values of all raw data points used to

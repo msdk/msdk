@@ -19,7 +19,12 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/* 
+ * WARNING: the interfaces in this package are still under construction
+ */
+
 /**
+ * 
  * A detected feature, characterized mainly by its m/z value, retention time,
  * height and area. The term "feature" is synonymous to "chromatographic peak",
  * or "isotope trace". A single compound analyzed by MS can produce many
@@ -53,35 +58,35 @@ public interface Feature {
      *         the raw m/z data points.
      */
     @Nonnull
-    Double getMZ();
+    Double getMz();
 
     /**
      * Sets new m/z value of this feature.
      */
-    void setMZ(@Nonnull Double newMZ);
+    void setMz(@Nonnull Double newMZ);
 
     /**
      * @return The retention time of this feature.
      */
     @Nullable
-    ChromatographyInfo getChromatographyData();
+    ChromatographyInfo getChromatographyInfo();
 
     /**
      * Sets new retention time to this feature.
      */
-    void setChromatographyData(@Nullable ChromatographyInfo chromData);
+    void setChromatographyInfo(@Nullable ChromatographyInfo chromData);
 
     /**
      * @return The height of this feature. The height might be different from
-     *         the raw data point intensities (e.g. normalized).
+     *         the raw data point intensities (e.g., normalized).
      */
     @Nonnull
-    Double getHeight();
+    Float getHeight();
 
     /**
      * Sets new height to this feature.
      */
-    void setHeight(@Nonnull Double newHeight);
+    void setHeight(@Nonnull Float newHeight);
 
     /**
      * @return The area of this feature. The area might be different from the
@@ -89,12 +94,12 @@ public interface Feature {
      *         in case data has no RT dimension.
      */
     @Nullable
-    Double getArea();
+    Float getArea();
 
     /**
      * Sets new area to this feature.
      */
-    void setArea(@Nullable Double newArea);
+    void setArea(@Nullable Float newArea);
 
     /**
      * @return Raw data file where this peak is present, or null if this peak is

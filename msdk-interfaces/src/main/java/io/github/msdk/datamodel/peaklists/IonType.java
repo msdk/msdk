@@ -18,6 +18,14 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 
 import javax.annotation.concurrent.Immutable;
 
+/* 
+ * WARNING: the interfaces in this package are still under construction
+ */
+
+/**
+ * 
+ *
+ */
 @Immutable
 public interface IonType {
 

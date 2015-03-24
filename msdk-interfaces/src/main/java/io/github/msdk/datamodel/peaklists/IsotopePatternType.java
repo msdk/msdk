@@ -14,6 +14,14 @@
 
 package io.github.msdk.datamodel.peaklists;
 
+/* 
+ * WARNING: the interfaces in this package are still under construction
+ */
+
+/**
+ * 
+ *
+ */
 public enum IsotopePatternType {
 
     /**

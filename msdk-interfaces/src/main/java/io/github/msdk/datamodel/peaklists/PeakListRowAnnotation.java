@@ -21,6 +21,10 @@ import javax.annotation.Nullable;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IMolecularFormula;
 
+/* 
+ * WARNING: the interfaces in this package are still under construction
+ */
+
 /**
  * Annotation of a detected feature with a chemical structure, formula, or
  * textual description.

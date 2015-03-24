@@ -137,55 +137,6 @@ public class FeatureImpl implements Feature {
 	return fragmentScanNumber;
     }
 
-
-    @Override
-    public @Nonnull Double getHeight() {
-	// TODO Auto-generated method stub
-	return 0.0;
-    }
-
-    @Override
-    public void setHeight(@Nonnull Double newHeight) {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public Double getArea() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    @Override
-    public void setArea(@Nullable Double newArea) {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public FeatureShape getFeatureShape() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    @Override
-    public void setFeatureShape(@Nullable FeatureShape rawData) {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public Integer getCharge() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    @Override
-    public void setCharge(@Nullable Integer charge) {
-	// TODO Auto-generated method stub
-
-    }
-
     @Override
     @Nonnull
     public PeakListRow getParentPeakListRow() {
@@ -208,26 +159,65 @@ public class FeatureImpl implements Feature {
 
     @Override
     @Nonnull
-    public Double getMZ() {
+    public Double getMz() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public void setMZ(@Nonnull Double newMZ) {
+    public void setMz(@Nonnull Double newMZ) {
 	// TODO Auto-generated method stub
 	
     }
 
     @Override
     @Nullable
-    public ChromatographyInfo getChromatographyData() {
+    public ChromatographyInfo getChromatographyInfo() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public void setChromatographyData(@Nullable ChromatographyInfo chromData) {
+    public void setChromatographyInfo(@Nullable ChromatographyInfo chromData) {
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    @Nonnull
+    public Float getHeight() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setHeight(@Nonnull Float newHeight) {
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    @Nullable
+    public Float getArea() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setArea(@Nullable Float newArea) {
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    @Nullable
+    public FeatureShape getFeatureShape() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setFeatureShape(@Nullable FeatureShape rawData) {
 	// TODO Auto-generated method stub
 	
     }
@@ -244,5 +234,19 @@ public class FeatureImpl implements Feature {
 	// TODO Auto-generated method stub
 	
     }
+
+    @Override
+    @Nullable
+    public Integer getCharge() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setCharge(@Nullable Integer charge) {
+	// TODO Auto-generated method stub
+	
+    }
+
 
 }

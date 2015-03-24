@@ -17,6 +17,15 @@ package io.github.msdk.datamodel.peaklists;
 import javax.annotation.Nonnull;
 import javax.swing.table.TableCellRenderer;
 
+/* 
+ * WARNING: the interfaces in this package are still under construction
+ */
+
+/**
+ * 
+ *
+ * @param <DataType>
+ */
 public interface PeakListColumn<DataType> {
 
     /**

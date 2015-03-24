@@ -21,6 +21,10 @@ import javax.annotation.Nullable;
 
 import org.openscience.cdk.interfaces.IMolecularFormula;
 
+/* 
+ * WARNING: the interfaces in this package are still under construction
+ */
+
 /**
  * This interface defines an isotope pattern which can be attached to a feature
  */

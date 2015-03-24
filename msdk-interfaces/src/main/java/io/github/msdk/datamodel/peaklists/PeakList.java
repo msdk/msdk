@@ -18,6 +18,10 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 import java.util.List;
 
+/* 
+ * WARNING: the interfaces in this package are still under construction
+ */
+
 /**
  * 
  */
