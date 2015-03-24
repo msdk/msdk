@@ -14,11 +14,11 @@
 
 package io.github.msdk.io.rawdataimport.netcdf;
 
-import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKException;
+import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -337,7 +337,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 	scan.setScanNumber(scanNum);
 
 	// NetCDF only supports MS level 1
-	scan.setMSLevel(1);
+	// scan.setMSLevel(1);
 
 	// Get scan starting position and length
 	int[] scanStartPosition = new int[1];
@@ -391,7 +391,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 		    * massValueScaleFactor;
 	    double intensity = intensityValueArray.getDouble(intensityIndex0)
 		    * intensityValueScaleFactor;
-	    dataPoints[j] = MSDKObjectBuilder.getDataPoint(mz, intensity);
+	   // dataPoints[j] = MSDKObjectBuilder.getDataPoint(mz, intensity);
 
 	}
 
@@ -404,7 +404,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 
 	ChromatographyInfo chromData = MSDKObjectBuilder
 		.getChromatographyData();
-	chromData.setRetentionTime(retentionTime);
+	// chromData.setRetentionTime(retentionTime);
 
 	return scan;
 
@@ -417,8 +417,8 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
     }
 
     @Override
-    public double getFinishedPercentage() {
-	return totalScans == 0 ? 0.0 : (double) parsedScans / totalScans;
+    public Float getFinishedPercentage() {
+	return totalScans == 0 ? null : (float) parsedScans / totalScans;
     }
 
     @Override

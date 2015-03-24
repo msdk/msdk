@@ -17,14 +17,14 @@ package io.github.msdk.datamodel.impl;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.FragmentationInfo;
+import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
-import io.github.msdk.datamodel.rawdata.MsMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -40,14 +40,11 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
     private final RawDataFile dataFile;
     private Integer scanNumber, msLevel;
     private ChromatographyInfo chromData;
-    private final List<MsMsScan> fragmentScans;
 
     public MsScanImpl(@Nonnull RawDataFile dataFile) {
 	super((RawDataFileImpl) dataFile);
 	this.dataFile = dataFile;
-	this.fragmentScans = new ArrayList<MsMsScan>();
     }
-
 
     @Override
     public String toString() {
@@ -57,7 +54,7 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
 	buf.append(" @");
 	// buf.append(rtFormat.format(getRetentionTime()));
 	buf.append(" MS");
-//	buf.append(getMSLevel());
+	// buf.append(getMSLevel());
 	switch (getSpectrumType()) {
 	case CENTROIDED:
 	    buf.append(" c");
@@ -73,13 +70,11 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
 	return buf.toString();
     }
 
-
     @Override
     public void getDataPoints(DataPointList list) {
 	// TODO Auto-generated method stub
-	
-    }
 
+    }
 
     @Override
     @Nonnull
@@ -89,21 +84,11 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
 	return null;
     }
 
-
     @Override
     public void setDataPoints(@Nonnull DataPointList newDataPoints) {
 	// TODO Auto-generated method stub
-	
+
     }
-
-
-    @Override
-    @Nonnull
-    public Double getTIC() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
 
     @Override
     @Nullable
@@ -112,13 +97,11 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
 	return null;
     }
 
-
     @Override
     public void setRawDataFile(@Nonnull RawDataFile newDataFile) {
 	// TODO Auto-generated method stub
-	
-    }
 
+    }
 
     @Override
     @Nonnull
@@ -127,13 +110,11 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
 	return null;
     }
 
-
     @Override
     public void setScanNumber(@Nonnull Integer scanNumber) {
 	// TODO Auto-generated method stub
-	
-    }
 
+    }
 
     @Override
     @Nonnull
@@ -142,28 +123,11 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
 	return null;
     }
 
-
     @Override
     public void setMsFunction(@Nonnull MsFunction newFunction) {
 	// TODO Auto-generated method stub
-	
+
     }
-
-
-    @Override
-    @Nullable
-    public ChromatographyInfo getChromatographyData() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-
-    @Override
-    public void setChromatographyData(@Nullable ChromatographyInfo chromData) {
-	// TODO Auto-generated method stub
-	
-    }
-
 
     @Override
     @Nullable
@@ -172,13 +136,11 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
 	return null;
     }
 
-
     @Override
     public void setScanningRange(@Nullable Range<Double> newScanRange) {
 	// TODO Auto-generated method stub
-	
-    }
 
+    }
 
     @Override
     @Nonnull
@@ -187,20 +149,17 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
 	return null;
     }
 
-
     @Override
     public void setPolarity(@Nonnull PolarityType newPolarity) {
 	// TODO Auto-generated method stub
-	
-    }
 
+    }
 
     @Override
     public MsScan clone() {
 	// TODO Auto-generated method stub
 	return null;
     }
-
 
     @Override
     @Nonnull
@@ -209,12 +168,51 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
 	return null;
     }
 
-
     @Override
     public void setMsScanType(@Nonnull MsScanType newType) {
 	// TODO Auto-generated method stub
-	
+
     }
 
+    @Override
+    @Nullable
+    public ChromatographyInfo getChromatographyInfo() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setChromatographyInfo(@Nullable ChromatographyInfo chromData) {
+	// TODO Auto-generated method stub
+
+    }
+
+    @Override
+    @Nullable
+    public FragmentationInfo getSourceInducedFragmentation() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void setSourceInducedFragmentation(
+	    @Nullable FragmentationInfo newFragmentationInfo) {
+	// TODO Auto-generated method stub
+
+    }
+
+    @Override
+    @Nonnull
+    public List<IsolationInfo> getIsolations() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    @Nonnull
+    public Float getTIC() {
+	// TODO Auto-generated method stub
+	return null;
+    }
 
 }

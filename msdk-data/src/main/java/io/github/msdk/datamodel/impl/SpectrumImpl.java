@@ -33,7 +33,6 @@ abstract class SpectrumImpl implements MassSpectrum {
     private final @Nonnull DataPointStoreImpl dataPointStore;
 
     private int dataStoreId = -1;
-    private int numberOfDataPoints;
     private @Nonnull Range<Double> mzRange;
     private MassSpectrumType spectrumType;
     private DataPoint highestDataPoint;
@@ -56,11 +55,6 @@ abstract class SpectrumImpl implements MassSpectrum {
     }
 
     @Override
-    public int getNumberOfDataPoints() {
-	return numberOfDataPoints;
-    }
-
-    @Override
     public synchronized @Nonnull DataPointList getDataPoints() {
 	DataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
 	return storedData;
@@ -71,8 +65,6 @@ abstract class SpectrumImpl implements MassSpectrum {
     public DataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange) {
 	return null;
     }
-
-   
 
     @Override
     public @Nonnull MassSpectrumType getSpectrumType() {

@@ -26,19 +26,20 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 class DataPointImpl implements DataPoint {
 
-    private double mz, intensity;
+    private double mz;
+    private float intensity;
 
     /**
      * @param mz
      * @param intensity
      */
-    DataPointImpl(double mz, double intensity) {
+    DataPointImpl(double mz, float intensity) {
 	this.mz = mz;
 	this.intensity = intensity;
     }
 
     @Override
-    public double getIntensity() {
+    public float getIntensity() {
 	return intensity;
     }
 

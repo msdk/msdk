@@ -18,13 +18,13 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 public class ChromatographyDataImpl implements ChromatographyInfo {
 
-    private Double retentionTime, secondaryRetentionTime, ionDriftTime;
+    private Float retentionTime, secondaryRetentionTime, ionDriftTime;
 
     /**
      * @return the retentionTime
      */
     @Override
-    public Double getRetentionTime() {
+    public Float getRetentionTime() {
 	return retentionTime;
     }
 
@@ -32,7 +32,7 @@ public class ChromatographyDataImpl implements ChromatographyInfo {
      * @return the secondaryRetentionTime
      */
     @Override
-    public Double getSecondaryRetentionTime() {
+    public Float getSecondaryRetentionTime() {
 	return secondaryRetentionTime;
     }
 
@@ -40,7 +40,7 @@ public class ChromatographyDataImpl implements ChromatographyInfo {
      * @return the ionDriftTime
      */
     @Override
-    public Double getIonDriftTime() {
+    public Float getIonDriftTime() {
 	return ionDriftTime;
     }
 

@@ -61,7 +61,7 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
 
     private @Nonnull File fileName;
     private @Nullable RawDataFileType result = null;
-    private double finishedPercentage = 0.0;
+    private Float finishedPercentage = null;
 
     /**
      * 
@@ -80,7 +80,7 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
 	} catch (IOException e) {
 	    throw new MSDKException(e);
 	}
-	finishedPercentage = 1.0;
+	finishedPercentage = 1f;
 	return result;
 
     }
@@ -128,7 +128,7 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
     }
 
     @Override
-    public double getFinishedPercentage() {
+    public Float getFinishedPercentage() {
 	return finishedPercentage;
     }
 

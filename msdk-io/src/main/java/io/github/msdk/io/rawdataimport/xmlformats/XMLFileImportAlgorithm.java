@@ -14,13 +14,12 @@
 
 package io.github.msdk.io.rawdataimport.xmlformats;
 
-import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKException;
+import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
-import io.github.msdk.datamodel.rawdata.MsMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
@@ -123,20 +122,11 @@ public class XMLFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 	    // Create a new MsScan or MsMsScan instance depending on the MS
 	    // level
 	    Integer msLevel = spectrum.getMsLevel();
-	    MsScan scan;
+	    MsScan scan= MSDKObjectBuilder.getMsScan(newRawFile);
 	    if ((msLevel != null) && (msLevel > 1)) {
-		MsMsScan msMsScan = MSDKObjectBuilder.getMsMsScan(newRawFile);
-		scan = msMsScan;
-		Double precursorMz = spectrum.getPrecursorMZ();
-		msMsScan.setPrecursorMz(precursorMz);
-		Integer precursorCharge = spectrum.getPrecursorCharge();
-		msMsScan.setPrecursorCharge(precursorCharge);
-	    } else {
-		scan = MSDKObjectBuilder.getMsScan(newRawFile);
 	    }
 
 	    // Store the scan MS level
-	    scan.setMSLevel(msLevel);
 
 	    // Store the scan number
 	    String scanId = spectrum.getId();
@@ -148,11 +138,10 @@ public class XMLFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 
 	    // Store the chromatography data
 	    ChromatographyInfo chromData = extractChromatographyData(spectrum);
-	    scan.setChromatographyData(chromData);
 
 	    // Store the scan data points
 	    DataPoint dataPoints[] = extractDataPoints(spectrum);
-	    scan.setDataPoints(dataPoints);
+	    // scan.setDataPoints(dataPoints);
 
 	    // Auto-detect whether this scan is centroided
 	    SpectrumTypeDetectionAlgorithm detector = new SpectrumTypeDetectionAlgorithm(
@@ -240,7 +229,7 @@ public class XMLFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 		}
 		final ChromatographyInfo newChromData = MSDKObjectBuilder
 			.getChromatographyData();
-		newChromData.setRetentionTime(retentionTime);
+		// newChromData.setRetentionTime(retentionTime);
 		return newChromData;
 
 	    }
@@ -254,7 +243,7 @@ public class XMLFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 	DataPoint dataPoints[] = new DataPoint[jmzreaderPeakList.size()];
 	int i = 0;
 	for (Double mz : jmzreaderPeakList.keySet()) {
-	    Double intensity = jmzreaderPeakList.get(mz);
+	    float intensity = jmzreaderPeakList.get(mz).floatValue();
 	    dataPoints[i] = MSDKObjectBuilder.getDataPoint(mz, intensity);
 	    i++;
 	}
@@ -283,8 +272,8 @@ public class XMLFileImportAlgorithm implements MSDKMethod<RawDataFile> {
     }
 
     @Override
-    public double getFinishedPercentage() {
-	return totalScans == 0 ? 0 : (double) parsedScans / totalScans;
+    public Float getFinishedPercentage() {
+	return totalScans == 0 ? null : (float) parsedScans / totalScans;
     }
 
     @Override

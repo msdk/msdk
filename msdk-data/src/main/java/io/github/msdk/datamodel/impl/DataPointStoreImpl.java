@@ -154,11 +154,12 @@ abstract class DataPointStoreImpl {
 	DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
 
 	DataPoint dataPoints[] = new DataPoint[numOfDataPoints];
-	double mz, intensity;
+	double mz;
+	float intensity;
 
 	for (int i = 0; i < numOfDataPoints; i++) {
 	    mz = dblBuffer.get();
-	    intensity = dblBuffer.get();
+	    intensity = (float) dblBuffer.get();
 	    dataPoints[i] = MSDKObjectBuilder.getDataPoint(mz, intensity);
 	}
 

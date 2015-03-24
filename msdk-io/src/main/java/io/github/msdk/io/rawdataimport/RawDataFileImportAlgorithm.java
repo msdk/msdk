@@ -78,9 +78,9 @@ public class RawDataFileImportAlgorithm implements MSDKMethod<RawDataFile> {
     }
 
     @Override
-    public double getFinishedPercentage() {
+    public Float getFinishedPercentage() {
 	if (parser == null)
-	    return 0.0;
+	    return null;
 	return parser.getFinishedPercentage();
     }
 

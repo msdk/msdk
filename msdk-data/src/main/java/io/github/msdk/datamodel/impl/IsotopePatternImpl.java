@@ -109,7 +109,7 @@ public class IsotopePatternImpl extends SpectrumImpl implements IsotopePattern {
 
     @Override
     @Nonnull
-    public Double getTIC() {
+    public Float getTIC() {
 	// TODO Auto-generated method stub
 	return null;
     }

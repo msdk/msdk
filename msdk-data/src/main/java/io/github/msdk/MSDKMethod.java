@@ -26,10 +26,13 @@ import javax.annotation.Nullable;
 public interface MSDKMethod<ResultType> {
 
     /**
-     * Returns a number in the interval 0.0 to 1.0, representing the portion of
-     * the task that has completed.
+     * Returns a number in the interval 0 to 1.0, representing the portion of
+     * the task that has completed, or null if the algorithm has not yet
+     * started.
+     * 
+     * @return Finished percentage (0.0 to 1.0, inclusive), or null.
      */
-    double getFinishedPercentage();
+    Float getFinishedPercentage();
 
     /**
      * Performs the algorithm.

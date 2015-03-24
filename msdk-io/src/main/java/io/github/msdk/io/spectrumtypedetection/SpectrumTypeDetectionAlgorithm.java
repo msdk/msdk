@@ -36,7 +36,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 
     private @Nonnull MassSpectrum inputSpectrum;
     private @Nullable MassSpectrumType result = null;
-    private double finishedPercentage = 0.0;
+    private Float finishedPercentage = null;
     private boolean canceled = false;
 
     public SpectrumTypeDetectionAlgorithm(@Nonnull MassSpectrum inputSpectrum) {
@@ -44,7 +44,7 @@ public class SpectrumTypeDetectionAlgorithm implements
     }
 
     @Override
-    public double getFinishedPercentage() {
+    public Float getFinishedPercentage() {
 	return finishedPercentage;
     }
 
@@ -52,7 +52,7 @@ public class SpectrumTypeDetectionAlgorithm implements
     public MassSpectrumType execute() throws MSDKException {
 	DataPointList dataPoints = inputSpectrum.getDataPoints();
 	result = detectSpectrumType(dataPoints);
-	finishedPercentage = 1.0;
+	finishedPercentage = 1f;
 	return result;
     }
 
@@ -103,7 +103,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 	// Check if canceled
 	if (canceled)
 	    return null;
-	finishedPercentage = 0.3;
+	finishedPercentage = 0.3f;
 
 	// Now we have the index of the top data point (except the first and
 	// the last). We also know the spectrum has at least 5 data points.
@@ -143,7 +143,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 	// Check if canceled
 	if (canceled)
 	    return null;
-	finishedPercentage = 0.7;
+	finishedPercentage = 0.7f;
 
 	// The previous check will detect most of the centroided spectra, but
 	// there is a catch: some centroided spectra were produced by binning,
