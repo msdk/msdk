@@ -36,28 +36,36 @@ public enum RawDataFileType {
     MZ5,
 
     /**
-     * mzXML format. See Pedrioli PG, Eng JK, Hubley R, Vogelzang M, Deutsch EW,
-     * Raught B, Pratt B, Nilsson E, Angeletti RH, Apweiler R, Cheung K,
-     * Costello CE, Hermjakob H, Huang S, Julian RK, Kapp E, McComb ME, Oliver
-     * SG, Omenn G, Paton NW, Simpson R, Smith R, Taylor CF, Zhu W, Aebersold R
-     * (2004) A common open representation of mass spectrometry data and its
-     * application to proteomics research, Nat. Biotechnol. 22(11):1459–66.
-     * doi:10.1038/nbt1031
+     * mzXML format, now deprecated in favor of mzML. See Pedrioli PG, Eng JK,
+     * Hubley R, Vogelzang M, Deutsch EW, Raught B, Pratt B, Nilsson E,
+     * Angeletti RH, Apweiler R, Cheung K, Costello CE, Hermjakob H, Huang S,
+     * Julian RK, Kapp E, McComb ME, Oliver SG, Omenn G, Paton NW, Simpson R,
+     * Smith R, Taylor CF, Zhu W, Aebersold R (2004) A common open
+     * representation of mass spectrometry data and its application to
+     * proteomics research, Nat. Biotechnol. 22(11):1459–66. doi:10.1038/nbt1031
      */
     MZXML,
 
     /**
-     * mzData format (now deprecated). See Orchard S, Montechi-Palazzi L,
-     * Deutsch EW, Binz PA, Jones AR, Paton N, Pizarro A, Creasy DM, Wojcik J,
-     * Hermjakob H (2007) Five years of progress in the Standardization of
-     * Proteomics Data 4(th) Annual Spring Workshop of the HUPO-Proteomics
-     * Standards Initiative April 23–25, 2007 Ecole Nationale Supérieure (ENS),
-     * Lyon, France, Proteomics 7(19):3436–40. doi:10.1002/pmic.200700658
+     * mzData format, now deprecated in favor of mzML. See Orchard S,
+     * Montechi-Palazzi L, Deutsch EW, Binz PA, Jones AR, Paton N, Pizarro A,
+     * Creasy DM, Wojcik J, Hermjakob H (2007) Five years of progress in the
+     * Standardization of Proteomics Data 4(th) Annual Spring Workshop of the
+     * HUPO-Proteomics Standards Initiative April 23–25, 2007 Ecole Nationale
+     * Supérieure (ENS), Lyon, France, Proteomics 7(19):3436–40.
+     * doi:10.1002/pmic.200700658
      */
     MZDATA,
 
     /**
-     * NetCDF (ANDI-MS) format, commonly used for GC-MS data.
+     * NetCDF (ANDI-MS) format, commonly used for GC-MS data. See the following
+     * standards
+     * 
+     * ASTM E1947, Standard Specification for Analytical Data Interchange
+     * Protocol for Chromatographic Data. doi:10.1520/E1947-98R14
+     * 
+     * ASTM E1948, Standard Guide for Analytical Data Interchange Protocol for
+     * Chromatographic Data. doi:10.1520/E1948-98R14
      */
     NETCDF,
 
