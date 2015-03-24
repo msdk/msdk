@@ -29,6 +29,13 @@ public enum RawDataFileType {
     MZML,
 
     /**
+     * mz5 format, based on HDF5. See Wilhelm M, Kirchner M, Steen JA, Steen H
+     * (2012) mz5: space- and time-efficient storage of mass spectrometry data
+     * sets, Mol Cell Proteomics 11(1):O111.011379. doi:10.1074/mcp.O111.011379
+     */
+    MZ5,
+
+    /**
      * mzXML format. See Pedrioli PG, Eng JK, Hubley R, Vogelzang M, Deutsch EW,
      * Raught B, Pratt B, Nilsson E, Angeletti RH, Apweiler R, Cheung K,
      * Costello CE, Hermjakob H, Huang S, Julian RK, Kapp E, McComb ME, Oliver
