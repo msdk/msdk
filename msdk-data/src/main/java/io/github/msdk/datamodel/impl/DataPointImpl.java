@@ -38,12 +38,12 @@ class DataPointImpl implements IDataPoint {
     }
 
     @Override
-    public double getIntensity() {
+    public Double getIntensity() {
 	return intensity;
     }
 
     @Override
-    public double getMz() {
+    public Double getMz() {
 	return mz;
     }
 

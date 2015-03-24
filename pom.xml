@@ -12,9 +12,10 @@
 
 	<modules>
 		<module>msdk-data</module>
-		<module>msdk-io</module>
+<!--		<module>msdk-io</module> -->
 		<module>msdk-rawdata</module>
 		<module>msdk-interfaces</module>
+        <module>msdk-query</module>
         <module>mdk-mona</module>
     </modules>
 
@@ -60,6 +61,11 @@
 			<name>Tomáš Pluskal</name>
 			<email>plusik@gmail.com</email>
 		</developer>
+        <developer>
+            <name>Gert Wohlgemuth</name>
+            <email>berlinguyinca@gmail.com</email>
+        </developer>
+
 	</developers>
 
 	<build>

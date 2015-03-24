@@ -29,13 +29,13 @@ public interface IDataPoint {
      * 
      * @return Data point m/z
      */
-    double getMz();
+    Double getMz();
 
     /**
      * Returns the intensity value of this data point.
      * 
      * @return Data point intensity.
      */
-    double getIntensity();
+    Double getIntensity();
 
 }

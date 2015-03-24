@@ -1,0 +1,301 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://mona.fiehnlab.ucdavis.edu",
+  "type": "object",
+  "properties": {
+    "biologicalCompound": {
+      "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound",
+      "type": "object",
+      "properties": {
+        "comments": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound/comments",
+          "type": "array",
+          "items": {}
+        },
+        "id": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound/id",
+          "type": "integer"
+        },
+        "inchi": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound/inchi",
+          "type": "string"
+        },
+        "inchiKey": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound/inchiKey",
+          "type": "string"
+        },
+        "lastUpdated": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound/lastUpdated",
+          "type": "string"
+        },
+        "metaData": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound/metaData",
+          "type": "array",
+          "items": {}
+        },
+        "molFile": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound/molFile",
+          "type": "string"
+        },
+        "names": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound/names",
+          "type": "array",
+          "items": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound/names/0",
+            "type": "object",
+            "properties": {
+              "lastUpdated": {
+                "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound/names/0/lastUpdated",
+                "type": "string"
+              },
+              "name": {
+                "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound/names/0/name",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "tags": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound/tags",
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "comments",
+        "id",
+        "inchi",
+        "inchiKey",
+        "lastUpdated",
+        "metaData",
+        "molFile",
+        "names",
+        "tags"
+      ]
+    },
+    "chemicalCompound": {
+      "id": "http://mona.fiehnlab.ucdavis.edu/chemicalCompound",
+      "type": "object",
+      "properties": {
+        "comments": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/chemicalCompound/comments",
+          "type": "array",
+          "items": {}
+        },
+        "id": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/chemicalCompound/id",
+          "type": "integer"
+        },
+        "inchi": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/chemicalCompound/inchi",
+          "type": "string"
+        },
+        "inchiKey": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/chemicalCompound/inchiKey",
+          "type": "string"
+        },
+        "lastUpdated": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/chemicalCompound/lastUpdated",
+          "type": "string"
+        },
+        "metaData": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/chemicalCompound/metaData",
+          "type": "array",
+          "items": {}
+        },
+        "molFile": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/chemicalCompound/molFile",
+          "type": "string"
+        },
+        "names": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/chemicalCompound/names",
+          "type": "array",
+          "items": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/chemicalCompound/names/0",
+            "type": "object",
+            "properties": {
+              "lastUpdated": {
+                "id": "http://mona.fiehnlab.ucdavis.edu/chemicalCompound/names/0/lastUpdated",
+                "type": "string"
+              },
+              "name": {
+                "id": "http://mona.fiehnlab.ucdavis.edu/chemicalCompound/names/0/name",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "tags": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/chemicalCompound/tags",
+          "type": "array",
+          "items": {}
+        }
+      }
+    },
+    "comments": {
+      "id": "http://mona.fiehnlab.ucdavis.edu/comments",
+      "type": "array",
+      "items": {}
+    },
+    "id": {
+      "id": "http://mona.fiehnlab.ucdavis.edu/id",
+      "type": "integer"
+    },
+    "lastUpdated": {
+      "id": "http://mona.fiehnlab.ucdavis.edu/lastUpdated",
+      "type": "string"
+    },
+    "metaData": {
+      "id": "http://mona.fiehnlab.ucdavis.edu/metaData",
+      "type": "array",
+      "items": {
+        "id": "http://mona.fiehnlab.ucdavis.edu/metaData/24",
+        "type": "object",
+        "properties": {
+          "category": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/metaData/24/category",
+            "type": "string"
+          },
+          "computed": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/metaData/24/computed",
+            "type": "boolean"
+          },
+          "dateCreated": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/metaData/24/dateCreated",
+            "type": "string"
+          },
+          "lastUpdated": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/metaData/24/lastUpdated",
+            "type": "string"
+          },
+          "name": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/metaData/24/name",
+            "type": "string"
+          },
+          "reasonForSuspicion": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/metaData/24/reasonForSuspicion",
+            "type": "string"
+          },
+          "suspect": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/metaData/24/suspect",
+            "type": "boolean"
+          },
+          "type": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/metaData/24/type",
+            "type": "string"
+          },
+          "unit": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/metaData/24/unit",
+            "type": "null"
+          },
+          "value": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/metaData/24/value",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "predictedCompound": {
+      "id": "http://mona.fiehnlab.ucdavis.edu/predictedCompound",
+      "type": "null"
+    },
+    "spectrum": {
+      "id": "http://mona.fiehnlab.ucdavis.edu/spectrum",
+      "type": "string"
+    },
+    "submitter": {
+      "id": "http://mona.fiehnlab.ucdavis.edu/submitter",
+      "type": "object",
+      "properties": {
+        "accountEnabled": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/submitter/accountEnabled",
+          "type": "boolean"
+        },
+        "accountExpired": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/submitter/accountExpired",
+          "type": "boolean"
+        },
+        "accountLocked": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/submitter/accountLocked",
+          "type": "boolean"
+        },
+        "authorities": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/submitter/authorities",
+          "type": "array",
+          "items": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/submitter/authorities/1",
+            "type": "object",
+            "properties": {
+              "class": {
+                "id": "http://mona.fiehnlab.ucdavis.edu/submitter/authorities/1/class",
+                "type": "string"
+              },
+              "id": {
+                "id": "http://mona.fiehnlab.ucdavis.edu/submitter/authorities/1/id",
+                "type": "integer"
+              },
+              "authority": {
+                "id": "http://mona.fiehnlab.ucdavis.edu/submitter/authorities/1/authority",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "emailAddress": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/submitter/emailAddress",
+          "type": "string"
+        },
+        "firstName": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/submitter/firstName",
+          "type": "string"
+        },
+        "id": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/submitter/id",
+          "type": "integer"
+        },
+        "institution": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/submitter/institution",
+          "type": "string"
+        },
+        "lastName": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/submitter/lastName",
+          "type": "string"
+        },
+        "passwordExpired": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/submitter/passwordExpired",
+          "type": "boolean"
+        }
+      }
+    },
+    "tags": {
+      "id": "http://mona.fiehnlab.ucdavis.edu/tags",
+      "type": "array",
+      "items": {
+        "id": "http://mona.fiehnlab.ucdavis.edu/tags/1",
+        "type": "object",
+        "properties": {
+          "ruleBased": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/tags/1/ruleBased",
+            "type": "boolean"
+          },
+          "text": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/tags/1/text",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "biologicalCompound",
+    "chemicalCompound",
+    "comments",
+    "id",
+    "lastUpdated",
+    "metaData",
+    "predictedCompound",
+    "spectrum",
+    "submitter",
+    "tags"
+  ]
+}
