@@ -30,7 +30,7 @@ import com.google.common.collect.Range;
  * 
  * @see MsScan
  */
-public interface IRawDataFile {
+public interface RawDataFile {
 
     /**
      * Returns the name of this data file. This can be any descriptive name, not
@@ -72,7 +72,7 @@ public interface IRawDataFile {
      * @return A list of MS functions.
      */
     @Nonnull
-    List<IMsFunction> getMsFunctions();
+    List<MsFunction> getMsFunctions();
 
     /**
      * Adds a new scan to this file.
@@ -80,7 +80,7 @@ public interface IRawDataFile {
      * @param scan
      *            Scan to add.
      */
-    void addScan(@Nonnull IMsScan scan);
+    void addScan(@Nonnull MsScan scan);
 
     /**
      * Removes a scan from this file.
@@ -88,7 +88,7 @@ public interface IRawDataFile {
      * @param scan
      *            Scan to remove.
      */
-    void removeScan(@Nonnull IMsScan scan);
+    void removeScan(@Nonnull MsScan scan);
 
     /**
      * Returns the total number of scans in this file.
@@ -104,7 +104,7 @@ public interface IRawDataFile {
      * @return A list of all scans.
      */
     @Nonnull
-    List<IMsScan> getScans();
+    List<MsScan> getScans();
 
     /**
      * Returns an immutable list of all scans of a given MS function. The list
@@ -115,7 +115,7 @@ public interface IRawDataFile {
      * @return A list of matching scans.
      */
     @Nonnull
-    List<IMsScan> getScans(IMsFunction function);
+    List<MsScan> getScans(MsFunction function);
 
     /**
      * Returns an immutable list of all scans in a given retention time range.
@@ -127,8 +127,7 @@ public interface IRawDataFile {
      * @return A list of matching scans.
      */
     @Nonnull
-    List<IMsScan> getScans(
-	    @Nonnull Range<IChromatographyData> chromatographyRange);
+    List<MsScan> getScans(@Nonnull Range<ChromatographyInfo> chromatographyRange);
 
     /**
      * Returns an immutable list of all scans of a given MS function and in a
@@ -142,8 +141,8 @@ public interface IRawDataFile {
      * @return A list of matching scans.
      */
     @Nonnull
-    List<IMsScan> getScans(@Nonnull IMsFunction function,
-	    @Nonnull Range<IChromatographyData> chromatographyRange);
+    List<MsScan> getScans(@Nonnull MsFunction function,
+	    @Nonnull Range<ChromatographyInfo> chromatographyRange);
 
     /**
      * Remove all data associated with this file from the disk. After this

@@ -14,10 +14,10 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.rawdata.IMsMsScan;
-import io.github.msdk.datamodel.rawdata.IMsScan;
-import io.github.msdk.datamodel.rawdata.IRawDataFile;
-import io.github.msdk.datamodel.rawdata.MsMsExperimentType;
+import io.github.msdk.datamodel.rawdata.MsMsScan;
+import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.rawdata.FragmentationType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,14 +27,14 @@ import com.google.common.collect.Range;
 /**
  * Simple implementation of the Scan interface.
  */
-public class MsMsScanImpl extends MsScanImpl implements IMsMsScan {
+public class MsMsScanImpl extends MsScanImpl implements MsMsScan {
 
-    private IMsScan parentScan;
+    private MsScan parentScan;
     private Double precursorMZ;
     private Integer precursorCharge;
     private Double activationEnergy;
 
-    public MsMsScanImpl(IRawDataFile dataFile) {
+    public MsMsScanImpl(RawDataFile dataFile) {
 	super(dataFile);
     }
 
@@ -87,19 +87,19 @@ public class MsMsScanImpl extends MsScanImpl implements IMsMsScan {
 
     @Override
     @Nonnull
-    public MsMsExperimentType getMsMsExperimentType() {
+    public FragmentationType getMsMsExperimentType() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public void setMsMsExperimentType(@Nonnull MsMsExperimentType newType) {
+    public void setMsMsExperimentType(@Nonnull FragmentationType newType) {
 	// TODO Auto-generated method stub
 	
     }
 
     @Override
-    public IMsMsScan clone() {
+    public MsMsScan clone() {
 	// TODO Auto-generated method stub
 	return null;
     }

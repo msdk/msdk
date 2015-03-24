@@ -18,22 +18,35 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.collect.Range;
+
 /**
  * This interface provides a convenient data structure for storing large amount
- * of data points in mass spectra. Internally, it is implemented by two double[]
- * arrays, one for m/z values and one for intensity values. The arrays can be
- * resized dynamically, as in ArrayList. It provides all List methods, therefore
- * it supports iteration. Furthermore, it provides direct access to the
- * underlying buffer arrays, for more efficient data handling operations.
- * IDataPointList always keeps the data points sorted in the m/z order.
+ * of data points in mass spectra. Internally, it is implemented by two arrays,
+ * one for m/z values (double[]) and one for intensity values (float[]). The
+ * arrays are resized dynamically, as in ArrayList. It provides all List
+ * methods, therefore it supports iteration. Furthermore, it provides direct
+ * access to the underlying buffer arrays, for more efficient data handling
+ * operations. The access through these arrays is always preferred, as iteration
+ * via the List interface has to create a new DataPoint instance for each
+ * visited data point. DataPointList always keeps the data points sorted in the
+ * m/z order.
  * 
  * This data structure is not thread-safe.
  */
-public interface IDataPointList extends List<IDataPoint> {
+public interface DataPointList extends List<DataPoint> {
+
+    /**
+     * Returns the range of m/z values in this DataPointList.
+     * 
+     * @return Range of m/z values in this DataPointList
+     */
+    @Nonnull
+    Range<Double> getMzRange();
 
     /**
      * Returns the current m/z buffer array. The size of the array might be
-     * larger than the actual size of this IDataPointList, therefore data
+     * larger than the actual size of this DataPointList, therefore data
      * operations should always use the size returned by the size() method and
      * not the length of the returned array. The returned array reflects only
      * the current state of this list - if more data points are added, the
@@ -46,7 +59,7 @@ public interface IDataPointList extends List<IDataPoint> {
 
     /**
      * Returns the current intensity buffer array. The size of the array might
-     * be larger than the actual size of this IDataPointList, therefore data
+     * be larger than the actual size of this DataPointList, therefore data
      * operations should always use the size returned by the size() method and
      * not the length of the returned array. The returned array reflects only
      * the current state of this list - if more data points are added, the
@@ -55,7 +68,7 @@ public interface IDataPointList extends List<IDataPoint> {
      * @return Current intensity buffer
      */
     @Nonnull
-    double[] getIntensityBuffer();
+    float[] getIntensityBuffer();
 
     /**
      * Sets the internal buffers to given arrays. The arrays will be referenced
@@ -72,4 +85,5 @@ public interface IDataPointList extends List<IDataPoint> {
      */
     void setBuffers(@Nonnull double[] mzBuffer,
 	    @Nonnull double[] intensityBuffer, int size);
+
 }

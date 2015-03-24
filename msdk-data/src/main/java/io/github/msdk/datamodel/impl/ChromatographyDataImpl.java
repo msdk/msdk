@@ -14,9 +14,9 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.rawdata.IChromatographyData;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
-public class ChromatographyDataImpl implements IChromatographyData {
+public class ChromatographyDataImpl implements ChromatographyInfo {
 
     private Double retentionTime, secondaryRetentionTime, ionDriftTime;
 
@@ -45,7 +45,7 @@ public class ChromatographyDataImpl implements IChromatographyData {
     }
 
     @Override
-    public int compareTo(IChromatographyData o) {
+    public int compareTo(ChromatographyInfo o) {
 	// TODO Auto-generated method stub
 	return 0;
     }

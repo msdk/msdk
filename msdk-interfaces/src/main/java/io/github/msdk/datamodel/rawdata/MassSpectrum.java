@@ -22,12 +22,12 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Range;
 
 /**
- * A mass spectrum. This is a base interface typically extended by other,
+ * A mass spectrum. This is a base interface typically extended by other, more
  * specialized interfaces. It may represent a single scan in raw MS data, a
  * calculated isotope pattern, a predicted fragmentation spectrum of a molecule,
  * etc.
  */
-public interface IMassSpectrum {
+public interface MassSpectrum {
 
     /**
      * Returns the type of this mass spectrum. For spectra that are loaded from
@@ -48,11 +48,6 @@ public interface IMassSpectrum {
     void setSpectrumType(@Nonnull MassSpectrumType spectrumType);
 
     /**
-     * @return Number of m/z and intensity data points.
-     */
-    int getNumberOfDataPoints();
-
-    /**
      * Returns data points of this spectrum.
      * 
      * Note: this method may need to read data from disk, therefore it may be
@@ -61,21 +56,21 @@ public interface IMassSpectrum {
      * @return Data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    IDataPointList getDataPoints();
+    DataPointList getDataPoints();
 
     /**
-     * Loads the data points of this spectrum into the given IDataPointList. If
-     * the IDataPointList is not empty, it is cleared first. This method allows
-     * the internal arrays of the IDataPointList to be reused for loading
+     * Loads the data points of this spectrum into the given DataPointList. If
+     * the DataPointList is not empty, it is cleared first. This method allows
+     * the internal arrays of the DataPointList to be reused for loading
      * multiple spectra.
      * 
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
      * 
      * @param list
-     *            IDataPointList into which the data points should be loaded
+     *            DataPointList into which the data points should be loaded
      */
-    void getDataPoints(IDataPointList list);
+    void getDataPoints(DataPointList list);
 
     /**
      * Returns data points in given m/z range, sorted in m/z order.
@@ -86,7 +81,7 @@ public interface IMassSpectrum {
      * @return Data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    IDataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange);
+    DataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange);
 
     /**
      * Returns data points over given intensity, sorted in m/z order.
@@ -97,13 +92,13 @@ public interface IMassSpectrum {
      * @return Data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    List<IDataPoint> getDataPointsByIntensity(
+    List<DataPoint> getDataPointsByIntensity(
 	    @Nonnull Range<Double> intensityRange);
 
     /**
-     * Updates the data points of this mass spectrum. If this IMassSpectrum has
+     * Updates the data points of this mass spectrum. If this MassSpectrum has
      * been added to a raw data file or a peak list, the data points will be
-     * immediately stored in a temporary file. Therefore, the IDataPointList in
+     * immediately stored in a temporary file. Therefore, the DataPointList in
      * the parameter can be reused for other purposes.
      * 
      * Note: this method may need to write data to disk, therefore it may be
@@ -112,7 +107,7 @@ public interface IMassSpectrum {
      * @param newDataPoints
      *            New data points
      */
-    void setDataPoints(@Nonnull IDataPointList newDataPoints);
+    void setDataPoints(@Nonnull DataPointList newDataPoints);
 
     /**
      * Returns the m/z range of this mass spectrum (minimum and maximum m/z
@@ -130,7 +125,7 @@ public interface IMassSpectrum {
      * @return Highest data point
      */
     @Nullable
-    IDataPoint getHighestDataPoint();
+    DataPoint getHighestDataPoint();
 
     /**
      * Returns the sum of intensities of all data points (total ion current or
@@ -139,6 +134,6 @@ public interface IMassSpectrum {
      * @return Total ion current.
      */
     @Nonnull
-    Double getTIC();
+    Float getTIC();
 
 }

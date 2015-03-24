@@ -17,7 +17,7 @@ package io.github.msdk.datamodel.peaklists;
 import javax.annotation.Nonnull;
 import javax.swing.table.TableCellRenderer;
 
-public interface IPeakListColumn<DataType> {
+public interface PeakListColumn<DataType> {
 
     /**
      * @return Short descriptive name for the peak list column

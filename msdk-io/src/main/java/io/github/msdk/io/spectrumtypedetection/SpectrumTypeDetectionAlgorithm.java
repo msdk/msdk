@@ -14,10 +14,10 @@
 
 package io.github.msdk.io.spectrumtypedetection;
 
-import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.rawdata.IDataPoint;
-import io.github.msdk.datamodel.rawdata.IMassSpectrum;
+import io.github.msdk.MSDKMethod;
+import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.MassSpectrum;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 
 import javax.annotation.Nonnull;
@@ -34,12 +34,12 @@ import javax.annotation.Nullable;
 public class SpectrumTypeDetectionAlgorithm implements
 	MSDKMethod<MassSpectrumType> {
 
-    private @Nonnull IMassSpectrum inputSpectrum;
+    private @Nonnull MassSpectrum inputSpectrum;
     private @Nullable MassSpectrumType result = null;
     private double finishedPercentage = 0.0;
     private boolean canceled = false;
 
-    public SpectrumTypeDetectionAlgorithm(@Nonnull IMassSpectrum inputSpectrum) {
+    public SpectrumTypeDetectionAlgorithm(@Nonnull MassSpectrum inputSpectrum) {
 	this.inputSpectrum = inputSpectrum;
     }
 
@@ -50,7 +50,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 
     @Override
     public MassSpectrumType execute() throws MSDKException {
-	IDataPoint dataPoints[] = inputSpectrum.getDataPoints();
+	DataPointList dataPoints = inputSpectrum.getDataPoints();
 	result = detectSpectrumType(dataPoints);
 	finishedPercentage = 1.0;
 	return result;
@@ -66,31 +66,36 @@ public class SpectrumTypeDetectionAlgorithm implements
 	this.canceled = true;
     }
 
-    private MassSpectrumType detectSpectrumType(@Nonnull IDataPoint[] dataPoints) {
+    private MassSpectrumType detectSpectrumType(
+	    @Nonnull DataPointList dataPoints) {
 
 	// If the spectrum has less than 5 data points, it should be centroided.
-	if (dataPoints.length < 5)
+	if (dataPoints.size() < 5)
 	    return MassSpectrumType.CENTROIDED;
 
 	// Go through the data points and find the highest one
-	double maxIntensity = 0.0;
+	float maxIntensity = 0f;
 	int topDataPointIndex = 0;
-	for (int i = 0; i < dataPoints.length; i++) {
+
+	final double mzValues[] = dataPoints.getMzBuffer();
+	final float intensityValues[] = dataPoints.getIntensityBuffer();
+
+	for (int i = 0; i < dataPoints.size(); i++) {
 
 	    // If the spectrum contains data points of zero intensity, it should
 	    // be in profile mode
-	    if (dataPoints[i].getIntensity() == 0.0) {
+	    if (intensityValues[i] == 0.0) {
 		return MassSpectrumType.PROFILE;
 	    }
 
 	    // Let's ignore the first and the last data point, because
 	    // that would complicate our following checks
-	    if ((i == 0) || (i == dataPoints.length - 1))
+	    if ((i == 0) || (i == dataPoints.size() - 1))
 		continue;
 
 	    // Update the maxDataPointIndex accordingly
-	    if (dataPoints[i].getIntensity() > maxIntensity) {
-		maxIntensity = dataPoints[i].getIntensity();
+	    if (intensityValues[i] > maxIntensity) {
+		maxIntensity = intensityValues[i];
 		topDataPointIndex = i;
 	    }
 	}
@@ -103,13 +108,13 @@ public class SpectrumTypeDetectionAlgorithm implements
 	// Now we have the index of the top data point (except the first and
 	// the last). We also know the spectrum has at least 5 data points.
 	assert topDataPointIndex > 0;
-	assert topDataPointIndex < dataPoints.length - 1;
-	assert dataPoints.length >= 5;
+	assert topDataPointIndex < dataPoints.size() - 1;
+	assert dataPoints.size() >= 5;
 
 	// Calculate the m/z difference between the top data point and the
 	// previous one
-	final double topMzDifference = Math.abs(dataPoints[topDataPointIndex]
-		.getMz() - dataPoints[topDataPointIndex - 1].getMz());
+	final double topMzDifference = Math.abs(mzValues[topDataPointIndex]
+		- mzValues[topDataPointIndex - 1]);
 
 	// For 5 data points around the top one (with the top one in the
 	// center), we check the distribution of the m/z values. If the spectrum
@@ -119,11 +124,11 @@ public class SpectrumTypeDetectionAlgorithm implements
 	for (int i = topDataPointIndex - 2; i < topDataPointIndex + 2; i++) {
 
 	    // Check if the index is within acceptable range
-	    if ((i < 1) || (i > dataPoints.length - 1))
+	    if ((i < 1) || (i > dataPoints.size() - 1))
 		continue;
 
-	    final double currentMzDifference = Math.abs(dataPoints[i].getMz()
-		    - dataPoints[i - 1].getMz());
+	    final double currentMzDifference = Math.abs(mzValues[i]
+		    - mzValues[i - 1]);
 
 	    // Check if the m/z distance of the pair of consecutive data points
 	    // falls within 25% tolerance of the distance of the top data point
@@ -148,8 +153,8 @@ public class SpectrumTypeDetectionAlgorithm implements
 	// consecutive data points (with the top one in the middle). If it goes
 	// above 0.1, the spectrum should be centroided.
 	final double mzDifferenceTopThree = Math
-		.abs(dataPoints[topDataPointIndex - 1].getMz()
-			- dataPoints[topDataPointIndex + 1].getMz());
+		.abs(mzValues[topDataPointIndex - 1]
+			- mzValues[topDataPointIndex + 1]);
 	if (mzDifferenceTopThree > 0.1)
 	    return MassSpectrumType.CENTROIDED;
 
@@ -159,10 +164,8 @@ public class SpectrumTypeDetectionAlgorithm implements
 	// their intensity is above 1/3 of the top data point. If not, the
 	// spectrum should be centroided.
 	final double thirdMaxIntensity = maxIntensity / 3;
-	final double leftDataPointIntensity = dataPoints[topDataPointIndex - 1]
-		.getIntensity();
-	final double rightDataPointIntensity = dataPoints[topDataPointIndex + 1]
-		.getIntensity();
+	final double leftDataPointIntensity = intensityValues[topDataPointIndex - 1];
+	final double rightDataPointIntensity = intensityValues[topDataPointIndex + 1];
 	if ((leftDataPointIntensity < thirdMaxIntensity)
 		|| (rightDataPointIntensity < thirdMaxIntensity))
 	    return MassSpectrumType.CENTROIDED;

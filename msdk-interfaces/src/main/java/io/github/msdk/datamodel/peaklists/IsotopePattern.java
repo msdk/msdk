@@ -14,7 +14,7 @@
 
 package io.github.msdk.datamodel.peaklists;
 
-import io.github.msdk.datamodel.rawdata.IMassSpectrum;
+import io.github.msdk.datamodel.rawdata.MassSpectrum;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,7 +24,7 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 /**
  * This interface defines an isotope pattern which can be attached to a feature
  */
-public interface IIsotopePattern extends IMassSpectrum {
+public interface IsotopePattern extends MassSpectrum {
 
     /**
      * Returns the isotope pattern type.

@@ -14,6 +14,8 @@
 
 package io.github.msdk.datamodel.rawdata;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -27,33 +29,33 @@ import com.google.common.collect.Range;
  * If the scan is not added to any file, its data points are stored in memory.
  * However, once the scan is added into a raw data file by calling
  * setRawDataFile(), its data points will be stored in a temporary file that
- * belongs to that IRawDataFile. When IRawDataFile.dispose() is called, the data
- * points are discarded so the IMsScan instance cannot be used anymore.
+ * belongs to that RawDataFile. When RawDataFile.dispose() is called, the data
+ * points are discarded so the MsScan instance cannot be used anymore.
  */
-public interface IMsScan extends IMassSpectrum, Cloneable {
+public interface MsScan extends MassSpectrum, Cloneable {
 
     /**
      * Returns the raw data file that contains this scan. This might return null
      * when the scan is created, but once the scan is added to the raw data file
-     * by calling IRawDataFile.addScan(), the IRawDataFile automatically calls
-     * the IMsScan.setRawDataFile() method to update this reference.
+     * by calling RawDataFile.addScan(), the RawDataFile automatically calls the
+     * MsScan.setRawDataFile() method to update this reference.
      * 
-     * @return IRawDataFile containing this MsScan, or null.
-     * @see IRawDataFile
+     * @return RawDataFile containing this MsScan, or null.
+     * @see RawDataFile
      */
     @Nullable
-    IRawDataFile getRawDataFile();
+    RawDataFile getRawDataFile();
 
     /**
      * Updates the raw data file reference. This method can be called only once.
      * Any subsequent calls will throw the IllegalOperationException.
      * 
      * @param newDataFile
-     *            New IRawDataFile reference.
+     *            New RawDataFile reference.
      * @throws IllegalOperationException
      *             If the reference to the raw data file has already been set.
      */
-    void setRawDataFile(@Nonnull IRawDataFile newDataFile);
+    void setRawDataFile(@Nonnull RawDataFile newDataFile);
 
     /**
      * Returns the number of this scan, represented by an integer, typically
@@ -80,7 +82,7 @@ public interface IMsScan extends IMassSpectrum, Cloneable {
      * @return MS function.
      */
     @Nonnull
-    IMsFunction getMsFunction();
+    MsFunction getMsFunction();
 
     /**
      * Updates the MS function of this scan.
@@ -88,7 +90,7 @@ public interface IMsScan extends IMassSpectrum, Cloneable {
      * @param newFunction
      *            New MS function.
      */
-    void setMsFunction(@Nonnull IMsFunction newFunction);
+    void setMsFunction(@Nonnull MsFunction newFunction);
 
     /**
      * Returns the type of the MS scan. If unknown, MsScanType.UNKNOWN is
@@ -114,14 +116,14 @@ public interface IMsScan extends IMassSpectrum, Cloneable {
      * @return Associated chromatography data.
      */
     @Nullable
-    IChromatographyData getChromatographyData();
+    ChromatographyInfo getChromatographyInfo();
 
     /**
      * Updates the associated chromatography data.
      * 
      * @param chromData
      */
-    void setChromatographyData(@Nullable IChromatographyData chromData);
+    void setChromatographyInfo(@Nullable ChromatographyInfo chromData);
 
     /**
      * Returns the scanning range of the instrument. Note that this value is
@@ -165,10 +167,39 @@ public interface IMsScan extends IMassSpectrum, Cloneable {
     void setPolarity(@Nonnull PolarityType newPolarity);
 
     /**
+     * Returns the fragmentation parameters of ion source-induced fragmentation,
+     * or null if no such information is known.
+     * 
+     * @return Fragmentation info of ion source-induced fragmentation, or null.
+     */
+    @Nullable
+    FragmentationInfo getSourceInducedFragmentation();
+
+    /**
+     * Updates the fragmentation parameters of ion source-induced fragmentation.
+     * 
+     * @param newFragmentationInfo
+     *            New fragmentation parameters.
+     */
+    void setSourceInducedFragmentation(
+	    @Nullable FragmentationInfo newFragmentationInfo);
+
+    /**
+     * Returns a list of isolations performed for this scan. These isolations
+     * may also include fragmentations (tandem MS).
+     * 
+     * @return A mutable list of isolations. New isolation items can be added to
+     *         this list.
+     */
+    @Nonnull
+    List<IsolationInfo> getIsolations();
+
+    /**
      * Returns a deep clone of this object.
      * 
-     * @return A clone.
+     * @return A clone of this MsScan.
      */
-    IMsScan clone();
+    @Nonnull
+    MsScan clone();
 
 }

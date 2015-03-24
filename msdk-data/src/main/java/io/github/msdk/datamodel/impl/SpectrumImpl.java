@@ -14,9 +14,9 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.rawdata.IDataPoint;
-import io.github.msdk.datamodel.rawdata.IDataPointList;
-import io.github.msdk.datamodel.rawdata.IMassSpectrum;
+import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.MassSpectrum;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 
 import javax.annotation.Nonnull;
@@ -28,7 +28,7 @@ import com.google.common.collect.Range;
  * Simple implementation of the MassSpectrum interface, which stores its data in
  * a data store.
  */
-abstract class SpectrumImpl implements IMassSpectrum {
+abstract class SpectrumImpl implements MassSpectrum {
 
     private final @Nonnull DataPointStoreImpl dataPointStore;
 
@@ -36,7 +36,7 @@ abstract class SpectrumImpl implements IMassSpectrum {
     private int numberOfDataPoints;
     private @Nonnull Range<Double> mzRange;
     private MassSpectrumType spectrumType;
-    private IDataPoint highestDataPoint;
+    private DataPoint highestDataPoint;
 
     SpectrumImpl(@Nonnull DataPointStoreImpl dataPointStore) {
 	this.dataPointStore = dataPointStore;
@@ -51,7 +51,7 @@ abstract class SpectrumImpl implements IMassSpectrum {
 
     @Override
     @Nullable
-    public IDataPoint getHighestDataPoint() {
+    public DataPoint getHighestDataPoint() {
 	return highestDataPoint;
     }
 
@@ -61,14 +61,14 @@ abstract class SpectrumImpl implements IMassSpectrum {
     }
 
     @Override
-    public synchronized @Nonnull IDataPointList getDataPoints() {
-	IDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
+    public synchronized @Nonnull DataPointList getDataPoints() {
+	DataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
 	return storedData;
     }
 
     @Override
     @Nonnull
-    public IDataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange) {
+    public DataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange) {
 	return null;
     }
 

@@ -14,11 +14,11 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.rawdata.IDataPoint;
-import io.github.msdk.datamodel.rawdata.IChromatographyData;
-import io.github.msdk.datamodel.rawdata.IMsMsScan;
-import io.github.msdk.datamodel.rawdata.IMsScan;
-import io.github.msdk.datamodel.rawdata.IRawDataFile;
+import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.MsMsScan;
+import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 import javax.annotation.Nonnull;
 
@@ -27,34 +27,34 @@ import javax.annotation.Nonnull;
  */
 public class MSDKObjectBuilder {
 
-    public static final @Nonnull IDataPoint getDataPoint(double mz,
+    public static final @Nonnull DataPoint getDataPoint(double mz,
 	    double intensity) {
 	return new DataPointImpl(mz, intensity);
     }
 
-    public static final @Nonnull IDataPoint[] getDataPointArray(
+    public static final @Nonnull DataPoint[] getDataPointArray(
 	    final double mz[], final double intensities[]) {
 	assert mz.length == intensities.length;
-	final IDataPoint dpArray[] = new IDataPoint[mz.length];
+	final DataPoint dpArray[] = new DataPoint[mz.length];
 	for (int i = 0; i < mz.length; i++)
 	    dpArray[i] = new DataPointImpl(mz[i], intensities[i]);
 	return dpArray;
     }
 
-    public static final @Nonnull IRawDataFile getRawDataFile() {
+    public static final @Nonnull RawDataFile getRawDataFile() {
 	return new RawDataFileImpl();
     }
 
-    public static final @Nonnull IMsScan getMsScan(@Nonnull IRawDataFile dataFile) {
+    public static final @Nonnull MsScan getMsScan(@Nonnull RawDataFile dataFile) {
 	return new MsScanImpl(dataFile);
     }
 
-    public static final @Nonnull IMsMsScan getMsMsScan(
-	    @Nonnull IRawDataFile dataFile) {
+    public static final @Nonnull MsMsScan getMsMsScan(
+	    @Nonnull RawDataFile dataFile) {
 	return new MsMsScanImpl(dataFile);
     }
 
-    public static final @Nonnull IChromatographyData getChromatographyData() {
+    public static final @Nonnull ChromatographyInfo getChromatographyData() {
 	return new ChromatographyDataImpl();
     }
 

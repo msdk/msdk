@@ -14,10 +14,10 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.rawdata.IChromatographyData;
-import io.github.msdk.datamodel.rawdata.IMsFunction;
-import io.github.msdk.datamodel.rawdata.IMsScan;
-import io.github.msdk.datamodel.rawdata.IRawDataFile;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.MsFunction;
+import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,16 +32,16 @@ import com.google.common.collect.Range;
 /**
  * RawDataFile implementation.
  */
-class RawDataFileImpl extends DataPointStoreImpl implements IRawDataFile {
+class RawDataFileImpl extends DataPointStoreImpl implements RawDataFile {
 
     private @Nonnull String rawDataFileName;
-    private @Nonnull IRawDataFile originalRawDataFile;
-    private final List<IMsScan> scans;
+    private @Nonnull RawDataFile originalRawDataFile;
+    private final List<MsScan> scans;
 
     RawDataFileImpl() {
 	rawDataFileName = "New file";
 	originalRawDataFile = this;
-	scans = new ArrayList<IMsScan>();
+	scans = new ArrayList<MsScan>();
     }
 
     @Override
@@ -57,19 +57,19 @@ class RawDataFileImpl extends DataPointStoreImpl implements IRawDataFile {
     }
 
     @Override
-    public void addScan(@Nonnull IMsScan scan) {
+    public void addScan(@Nonnull MsScan scan) {
 	// TODO Auto-generated method stub
 
     }
 
     @Override
-    public void removeScan(@Nonnull IMsScan scan) {
+    public void removeScan(@Nonnull MsScan scan) {
 	// TODO Auto-generated method stub
 
     }
 
     @Override
-    public @Nonnull List<IMsScan> getScans() {
+    public @Nonnull List<MsScan> getScans() {
 	// TODO Auto-generated method stub
 	return Lists.newArrayList();
     }
@@ -89,7 +89,7 @@ class RawDataFileImpl extends DataPointStoreImpl implements IRawDataFile {
 
     @Override
     @Nonnull
-    public List<IMsFunction> getMsFunctions() {
+    public List<MsFunction> getMsFunctions() {
 	// TODO Auto-generated method stub
 	return null;
     }
@@ -102,23 +102,23 @@ class RawDataFileImpl extends DataPointStoreImpl implements IRawDataFile {
 
     @Override
     @Nonnull
-    public List<IMsScan> getScans(IMsFunction function) {
+    public List<MsScan> getScans(MsFunction function) {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
     @Nonnull
-    public List<IMsScan> getScans(
-	    @Nonnull Range<IChromatographyData> chromatographyRange) {
+    public List<MsScan> getScans(
+	    @Nonnull Range<ChromatographyInfo> chromatographyRange) {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
     @Nonnull
-    public List<IMsScan> getScans(@Nonnull IMsFunction function,
-	    @Nonnull Range<IChromatographyData> chromatographyRange) {
+    public List<MsScan> getScans(@Nonnull MsFunction function,
+	    @Nonnull Range<ChromatographyInfo> chromatographyRange) {
 	// TODO Auto-generated method stub
 	return null;
     }

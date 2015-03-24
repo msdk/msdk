@@ -19,7 +19,7 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 import javax.annotation.concurrent.Immutable;
 
 @Immutable
-public interface IIonType {
+public interface IonType {
 
     /**
      * @return Name of ionization type, such as [M+2H]2+

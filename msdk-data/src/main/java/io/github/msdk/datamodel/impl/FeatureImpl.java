@@ -15,13 +15,13 @@
 package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.peaklists.FeatureType;
-import io.github.msdk.datamodel.peaklists.IFeature;
-import io.github.msdk.datamodel.peaklists.IFeatureShape;
-import io.github.msdk.datamodel.peaklists.IIsotopePattern;
-import io.github.msdk.datamodel.peaklists.IPeakListRow;
-import io.github.msdk.datamodel.rawdata.IChromatographyData;
-import io.github.msdk.datamodel.rawdata.IDataPoint;
-import io.github.msdk.datamodel.rawdata.IRawDataFile;
+import io.github.msdk.datamodel.peaklists.Feature;
+import io.github.msdk.datamodel.peaklists.FeatureShape;
+import io.github.msdk.datamodel.peaklists.IsotopePattern;
+import io.github.msdk.datamodel.peaklists.PeakListRow;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,15 +33,15 @@ import com.google.common.collect.Range;
 /**
  * This class is a simple implementation of the peak interface.
  */
-public class FeatureImpl implements IFeature {
+public class FeatureImpl implements Feature {
 
     private @Nonnull FeatureType peakStatus = FeatureType.UNKNOWN;
-    private IRawDataFile dataFile;
+    private RawDataFile dataFile;
 
     // Scan numbers
     private int scanNumbers[];
 
-    private IDataPoint dataPointsPerScan[];
+    private DataPoint dataPointsPerScan[];
 
     // M/Z, RT, Height and Area
     private double mz, rt, height, area;
@@ -71,9 +71,9 @@ public class FeatureImpl implements IFeature {
      * Initializes a new peak using given values
      * 
      */
-     FeatureImpl(IRawDataFile dataFile, double MZ, double RT,
+     FeatureImpl(RawDataFile dataFile, double MZ, double RT,
 	    double height, double area, int[] scanNumbers,
-	    IDataPoint[] dataPointsPerScan, FeatureType peakStatus,
+	    DataPoint[] dataPointsPerScan, FeatureType peakStatus,
 	    int representativeScan, int fragmentScanNumber,
 	    Range<Double> rtRange, Range<Double> mzRange,
 	    Range<Double> intensityRange) {
@@ -165,13 +165,13 @@ public class FeatureImpl implements IFeature {
     }
 
     @Override
-    public IFeatureShape getFeatureShape() {
+    public FeatureShape getFeatureShape() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public void setFeatureShape(@Nullable IFeatureShape rawData) {
+    public void setFeatureShape(@Nullable FeatureShape rawData) {
 	// TODO Auto-generated method stub
 
     }
@@ -190,7 +190,7 @@ public class FeatureImpl implements IFeature {
 
     @Override
     @Nonnull
-    public IPeakListRow getParentPeakListRow() {
+    public PeakListRow getParentPeakListRow() {
 	// TODO Auto-generated method stub
 	return null;
     }
@@ -223,26 +223,26 @@ public class FeatureImpl implements IFeature {
 
     @Override
     @Nullable
-    public IChromatographyData getChromatographyData() {
+    public ChromatographyInfo getChromatographyData() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public void setChromatographyData(@Nullable IChromatographyData chromData) {
+    public void setChromatographyData(@Nullable ChromatographyInfo chromData) {
 	// TODO Auto-generated method stub
 	
     }
 
     @Override
     @Nullable
-    public IIsotopePattern getIsotopePattern() {
+    public IsotopePattern getIsotopePattern() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public void setIsotopePattern(@Nullable IIsotopePattern isotopePattern) {
+    public void setIsotopePattern(@Nullable IsotopePattern isotopePattern) {
 	// TODO Auto-generated method stub
 	
     }

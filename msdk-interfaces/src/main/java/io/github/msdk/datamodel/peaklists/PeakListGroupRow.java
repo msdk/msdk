@@ -22,9 +22,9 @@ import javax.annotation.Nonnull;
  * 
  * 
  */
-public interface IPeakListGroupRow extends IPeakListRow {
+public interface PeakListGroupRow extends PeakListRow {
 
     @Nonnull
-    List<IPeakListRow> getIndividualRows();
+    List<PeakListRow> getIndividualRows();
 
 }

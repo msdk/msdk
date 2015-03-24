@@ -14,7 +14,7 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.peaklists.IPeakListRowAnnotation;
+import io.github.msdk.datamodel.peaklists.PeakListRowAnnotation;
 
 import java.net.URL;
 
@@ -26,7 +26,7 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 /**
  * Simple PeakIdentity implementation;
  */
-public class PeakListRowAnnotationImpl implements IPeakListRowAnnotation {
+public class PeakListRowAnnotationImpl implements PeakListRowAnnotation {
 
     @Override
     public IAtomContainer getChemicalStructure() {

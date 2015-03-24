@@ -14,7 +14,7 @@
 
 package io.github.msdk.datamodel.peaklists;
 
-public interface ISample {
+public interface Sample {
 
     /**
      * @return Short descriptive name

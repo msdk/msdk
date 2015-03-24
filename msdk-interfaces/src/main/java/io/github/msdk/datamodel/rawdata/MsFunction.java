@@ -26,7 +26,7 @@ import javax.annotation.concurrent.Immutable;
  * by multiple threads.
  */
 @Immutable
-public interface IMsFunction {
+public interface MsFunction {
 
     /**
      * Returns the name of this MS function. For example, in Thermo raw files,

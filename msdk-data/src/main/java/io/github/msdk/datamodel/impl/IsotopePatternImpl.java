@@ -14,10 +14,10 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.peaklists.IIsotopePattern;
+import io.github.msdk.datamodel.peaklists.IsotopePattern;
 import io.github.msdk.datamodel.peaklists.IsotopePatternType;
-import io.github.msdk.datamodel.rawdata.IDataPoint;
-import io.github.msdk.datamodel.rawdata.IDataPointList;
+import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.DataPointList;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ import com.google.common.collect.Range;
 /**
  * Simple implementation of IsotopePattern interface
  */
-public class IsotopePatternImpl extends SpectrumImpl implements IIsotopePattern {
+public class IsotopePatternImpl extends SpectrumImpl implements IsotopePattern {
 
     private @Nonnull IsotopePatternType status = IsotopePatternType.UNKNOWN;
     private @Nonnull String description = "";
@@ -75,34 +75,34 @@ public class IsotopePatternImpl extends SpectrumImpl implements IIsotopePattern 
 
     @Override
 //    @Nonnull
-    public IDataPointList getDataPoints() {
+    public DataPointList getDataPoints() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public void getDataPoints(IDataPointList list) {
+    public void getDataPoints(DataPointList list) {
 	// TODO Auto-generated method stub
 	
     }
 
     @Override
 //    @Nonnull
-    public IDataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange) {
+    public DataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange) {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
   //  @Nonnull
-    public List<IDataPoint> getDataPointsByIntensity(
+    public List<DataPoint> getDataPointsByIntensity(
 	    @Nonnull Range<Double> intensityRange) {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public void setDataPoints(@Nonnull IDataPointList newDataPoints) {
+    public void setDataPoints(@Nonnull DataPointList newDataPoints) {
 	// TODO Auto-generated method stub
 	
     }

@@ -14,14 +14,15 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.rawdata.IChromatographyData;
-import io.github.msdk.datamodel.rawdata.IDataPoint;
-import io.github.msdk.datamodel.rawdata.IDataPointList;
-import io.github.msdk.datamodel.rawdata.IMsFunction;
-import io.github.msdk.datamodel.rawdata.IMsMsScan;
-import io.github.msdk.datamodel.rawdata.IMsScan;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.MsFunction;
+import io.github.msdk.datamodel.rawdata.MsMsScan;
+import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
-import io.github.msdk.datamodel.rawdata.IRawDataFile;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,17 +35,17 @@ import com.google.common.collect.Range;
 /**
  * Simple implementation of the Scan interface.
  */
-public class MsScanImpl extends SpectrumImpl implements IMsScan {
+public class MsScanImpl extends SpectrumImpl implements MsScan {
 
-    private final IRawDataFile dataFile;
+    private final RawDataFile dataFile;
     private Integer scanNumber, msLevel;
-    private IChromatographyData chromData;
-    private final List<IMsMsScan> fragmentScans;
+    private ChromatographyInfo chromData;
+    private final List<MsMsScan> fragmentScans;
 
-    public MsScanImpl(@Nonnull IRawDataFile dataFile) {
+    public MsScanImpl(@Nonnull RawDataFile dataFile) {
 	super((RawDataFileImpl) dataFile);
 	this.dataFile = dataFile;
-	this.fragmentScans = new ArrayList<IMsMsScan>();
+	this.fragmentScans = new ArrayList<MsMsScan>();
     }
 
 
@@ -74,7 +75,7 @@ public class MsScanImpl extends SpectrumImpl implements IMsScan {
 
 
     @Override
-    public void getDataPoints(IDataPointList list) {
+    public void getDataPoints(DataPointList list) {
 	// TODO Auto-generated method stub
 	
     }
@@ -82,7 +83,7 @@ public class MsScanImpl extends SpectrumImpl implements IMsScan {
 
     @Override
     @Nonnull
-    public List<IDataPoint> getDataPointsByIntensity(
+    public List<DataPoint> getDataPointsByIntensity(
 	    @Nonnull Range<Double> intensityRange) {
 	// TODO Auto-generated method stub
 	return null;
@@ -90,7 +91,7 @@ public class MsScanImpl extends SpectrumImpl implements IMsScan {
 
 
     @Override
-    public void setDataPoints(@Nonnull IDataPointList newDataPoints) {
+    public void setDataPoints(@Nonnull DataPointList newDataPoints) {
 	// TODO Auto-generated method stub
 	
     }
@@ -106,14 +107,14 @@ public class MsScanImpl extends SpectrumImpl implements IMsScan {
 
     @Override
     @Nullable
-    public IRawDataFile getRawDataFile() {
+    public RawDataFile getRawDataFile() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
 
     @Override
-    public void setRawDataFile(@Nonnull IRawDataFile newDataFile) {
+    public void setRawDataFile(@Nonnull RawDataFile newDataFile) {
 	// TODO Auto-generated method stub
 	
     }
@@ -136,14 +137,14 @@ public class MsScanImpl extends SpectrumImpl implements IMsScan {
 
     @Override
     @Nonnull
-    public IMsFunction getMsFunction() {
+    public MsFunction getMsFunction() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
 
     @Override
-    public void setMsFunction(@Nonnull IMsFunction newFunction) {
+    public void setMsFunction(@Nonnull MsFunction newFunction) {
 	// TODO Auto-generated method stub
 	
     }
@@ -151,14 +152,14 @@ public class MsScanImpl extends SpectrumImpl implements IMsScan {
 
     @Override
     @Nullable
-    public IChromatographyData getChromatographyData() {
+    public ChromatographyInfo getChromatographyData() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
 
     @Override
-    public void setChromatographyData(@Nullable IChromatographyData chromData) {
+    public void setChromatographyData(@Nullable ChromatographyInfo chromData) {
 	// TODO Auto-generated method stub
 	
     }
@@ -195,9 +196,24 @@ public class MsScanImpl extends SpectrumImpl implements IMsScan {
 
 
     @Override
-    public IMsScan clone() {
+    public MsScan clone() {
 	// TODO Auto-generated method stub
 	return null;
+    }
+
+
+    @Override
+    @Nonnull
+    public MsScanType getMsScanType() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+
+    @Override
+    public void setMsScanType(@Nonnull MsScanType newType) {
+	// TODO Auto-generated method stub
+	
     }
 
 

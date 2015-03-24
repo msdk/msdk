@@ -14,7 +14,7 @@
 
 package io.github.msdk.datamodel.peaklists;
 
-import io.github.msdk.datamodel.rawdata.IChromatographyData;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,13 +29,13 @@ import javax.annotation.Nullable;
  * One Feature belongs to exactly one PeakListRow.
  * 
  */
-public interface IFeature {
+public interface Feature {
 
     /**
      * @return
      */
     @Nonnull
-    IPeakListRow getParentPeakListRow();
+    PeakListRow getParentPeakListRow();
 
     /**
      * @return The status of this feature.
@@ -64,12 +64,12 @@ public interface IFeature {
      * @return The retention time of this feature.
      */
     @Nullable
-    IChromatographyData getChromatographyData();
+    ChromatographyInfo getChromatographyData();
 
     /**
      * Sets new retention time to this feature.
      */
-    void setChromatographyData(@Nullable IChromatographyData chromData);
+    void setChromatographyData(@Nullable ChromatographyInfo chromData);
 
     /**
      * @return The height of this feature. The height might be different from
@@ -101,24 +101,24 @@ public interface IFeature {
      *         not connected to any raw data.
      */
     @Nullable
-    IFeatureShape getFeatureShape();
+    FeatureShape getFeatureShape();
 
     /**
      * Assigns a raw data file to this feature.
      */
-    void setFeatureShape(@Nullable IFeatureShape rawData);
+    void setFeatureShape(@Nullable FeatureShape rawData);
 
     /**
      * Returns the isotope pattern of this peak or null if no pattern is
      * attached
      */
     @Nullable
-    IIsotopePattern getIsotopePattern();
+    IsotopePattern getIsotopePattern();
 
     /**
      * Sets the isotope pattern of this peak
      */
-    void setIsotopePattern(@Nullable IIsotopePattern isotopePattern);
+    void setIsotopePattern(@Nullable IsotopePattern isotopePattern);
 
     /**
      * Returns the charge of this feature. If the charge is unknown, returns

@@ -25,7 +25,7 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
  * Annotation of a detected feature with a chemical structure, formula, or
  * textual description.
  */
-public interface IPeakListRowAnnotation {
+public interface PeakListRowAnnotation {
 
     /**
      * @return Chemical structure of this annotation.

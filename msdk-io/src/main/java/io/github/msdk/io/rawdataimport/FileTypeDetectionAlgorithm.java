@@ -95,7 +95,7 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
 		    return RawDataFileType.WATERS_RAW;
 	    }
 	    // We don't recognize any other directory type than Waters
-	    return RawDataFileType.UNSUPPORTED;
+	    return null;
 	}
 
 	// Read the first 1kB of the file into a String
@@ -123,7 +123,7 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
 	if (fileHeader.contains(MZXML_HEADER))
 	    return RawDataFileType.MZXML;
 
-	return RawDataFileType.UNSUPPORTED;
+	return null;
 
     }
 

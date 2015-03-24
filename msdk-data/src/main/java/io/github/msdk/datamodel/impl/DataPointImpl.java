@@ -14,7 +14,7 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.rawdata.IDataPoint;
+import io.github.msdk.datamodel.rawdata.DataPoint;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -24,7 +24,7 @@ import javax.annotation.concurrent.Immutable;
  * reference.
  */
 @Immutable
-class DataPointImpl implements IDataPoint {
+class DataPointImpl implements DataPoint {
 
     private double mz, intensity;
 
@@ -49,9 +49,9 @@ class DataPointImpl implements IDataPoint {
 
     @Override
     public boolean equals(Object obj) {
-	if (!(obj instanceof IDataPoint))
+	if (!(obj instanceof DataPoint))
 	    return false;
-	IDataPoint dp = (IDataPoint) obj;
+	DataPoint dp = (DataPoint) obj;
 	return (this.mz == dp.getMz()) && (this.intensity == dp.getIntensity());
     }
 

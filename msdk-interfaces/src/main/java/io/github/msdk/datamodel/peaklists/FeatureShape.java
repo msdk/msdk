@@ -14,9 +14,8 @@
 
 package io.github.msdk.datamodel.peaklists;
 
-import io.github.msdk.datamodel.rawdata.IMsMsScan;
-import io.github.msdk.datamodel.rawdata.IMsScan;
-import io.github.msdk.datamodel.rawdata.IRawDataFile;
+import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 import java.util.List;
 
@@ -28,19 +27,19 @@ import com.google.common.collect.Range;
 /**
  * A class representing shape (data points) of a detected feature.
  */
-public interface IFeatureShape {
+public interface FeatureShape {
 
     /**
      * @return Raw data file where this feature is present, or null if this peak
      *         is not connected to any raw data.
      */
     @Nullable
-    IRawDataFile getDataFile();
+    RawDataFile getDataFile();
 
     /**
      * Assigns a raw data file to this feature.
      */
-    void setDataFile(@Nullable IRawDataFile dataFile);
+    void setDataFile(@Nullable RawDataFile dataFile);
 
     /**
      * @return The most representative scan of this feature (with highest signal
@@ -48,14 +47,14 @@ public interface IFeatureShape {
      *         data.
      */
     @Nonnull
-    IMsScan getRepresentativeScan();
+    MsScan getRepresentativeScan();
 
     /**
      * Returns the number of scan that represents the fragmentation of this peak
      * in MS2 level.
      */
     @Nullable
-    IMsMsScan getMostIntenseFragmentScan();
+    MsScan getMostIntenseFragmentScan();
 
     /**
      * This method returns m/z and intensity of this peak in a given scan. This
@@ -64,7 +63,7 @@ public interface IFeatureShape {
      * points forming the m/z signal).
      */
     @Nonnull
-    List<IFeatureDataPoint> getDataPoints();
+    List<FeatureDataPoint> getDataPoints();
 
     /**
      * Returns the retention time range of all raw data points used to detect

@@ -14,14 +14,14 @@
 
 package io.github.msdk.util;
 
-import io.github.msdk.datamodel.rawdata.IDataPoint;
+import io.github.msdk.datamodel.rawdata.DataPoint;
 
 import java.util.Comparator;
 
 /**
  * This class implements a Comparator for two DataPoints.
  */
-public class DataPointSorter implements Comparator<IDataPoint> {
+public class DataPointSorter implements Comparator<DataPoint> {
 
     private SortingProperty property;
     private SortingDirection direction;
@@ -31,7 +31,7 @@ public class DataPointSorter implements Comparator<IDataPoint> {
 	this.direction = direction;
     }
 
-    public int compare(IDataPoint dp1, IDataPoint dp2) {
+    public int compare(DataPoint dp1, DataPoint dp2) {
 
 	int result;
 

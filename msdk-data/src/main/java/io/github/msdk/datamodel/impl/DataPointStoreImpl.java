@@ -14,8 +14,8 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.rawdata.IDataPoint;
-import io.github.msdk.datamodel.rawdata.IDataPointList;
+import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.DataPointList;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,7 +78,7 @@ abstract class DataPointStoreImpl {
      * 
      * @return Storage ID for the newly stored data.
      */
-    synchronized int storeDataPoints(@Nonnull IDataPointList dataPoints) {
+    synchronized int storeDataPoints(@Nonnull DataPointList dataPoints) {
 
 	long currentOffset;
 	try {
@@ -100,7 +100,7 @@ abstract class DataPointStoreImpl {
 	    }
 
 	    DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
-	    for (IDataPoint dp : dataPoints) {
+	    for (DataPoint dp : dataPoints) {
 		dblBuffer.put(dp.getMz());
 		dblBuffer.put(dp.getIntensity());
 	    }
@@ -126,7 +126,7 @@ abstract class DataPointStoreImpl {
     /**
      * Reads the data points associated with given ID.
      */
-    synchronized @Nonnull IDataPointList readDataPoints(int ID) {
+    synchronized @Nonnull DataPointList readDataPoints(int ID) {
 
 	final Long currentOffset = dataPointsOffsets.get(ID);
 	final Integer numOfDataPoints = dataPointsLengths.get(ID);
@@ -153,7 +153,7 @@ abstract class DataPointStoreImpl {
 
 	DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
 
-	IDataPoint dataPoints[] = new IDataPoint[numOfDataPoints];
+	DataPoint dataPoints[] = new DataPoint[numOfDataPoints];
 	double mz, intensity;
 
 	for (int i = 0; i < numOfDataPoints; i++) {

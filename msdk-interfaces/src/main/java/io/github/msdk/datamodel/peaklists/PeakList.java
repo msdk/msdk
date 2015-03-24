@@ -14,14 +14,14 @@
 
 package io.github.msdk.datamodel.peaklists;
 
-import io.github.msdk.datamodel.rawdata.IRawDataFile;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 import java.util.List;
 
 /**
  * 
  */
-public interface IPeakList {
+public interface PeakList {
 
     /**
      * @return Short descriptive name for the peak list
@@ -41,12 +41,12 @@ public interface IPeakList {
     /**
      * Returns all raw data files participating in the peak list
      */
-    List<IRawDataFile> getRawDataFiles();
+    List<RawDataFile> getRawDataFiles();
 
     /**
      * Returns true if this peak list contains given file
      */
-    boolean hasRawDataFile(IRawDataFile file);
+    boolean hasRawDataFile(RawDataFile file);
 
     /**
      * Returns a raw data file
@@ -55,7 +55,7 @@ public interface IPeakList {
      *            Position of the raw data file in the matrix (running numbering
      *            from left 0,1,2,...)
      */
-    IRawDataFile getRawDataFile(int position);
+    RawDataFile getRawDataFile(int position);
 
     /**
      * Returns number of rows in the alignment result
@@ -65,18 +65,18 @@ public interface IPeakList {
     /**
      * Returns all peak list rows
      */
-    List<IPeakListRow> getRows();
+    List<PeakListRow> getRows();
 
     /**
      * Add a new row to the peak list
      */
-    void addRow(IPeakListRow row);
+    void addRow(PeakListRow row);
 
     /**
      * Removes a row from this peak list
      * 
      */
-    void removeRow(IPeakListRow row);
+    void removeRow(PeakListRow row);
 
     /**
      * Remove all data associated to this peak list from the disk.

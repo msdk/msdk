@@ -14,9 +14,9 @@
 
 package io.github.msdk.datamodel.peaklists;
 
-import io.github.msdk.datamodel.rawdata.IChromatographyData;
-import io.github.msdk.datamodel.rawdata.IDataPoint;
-import io.github.msdk.datamodel.rawdata.IMsScan;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.MsScan;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,14 +24,14 @@ import javax.annotation.Nullable;
 /**
  * 
  */
-public interface IFeatureDataPoint extends IDataPoint {
+public interface FeatureDataPoint extends DataPoint {
 
     /**
      * 
      * @return
      */
     @Nullable
-    IMsScan getScan();
+    MsScan getScan();
 
     /**
      * 
@@ -45,6 +45,6 @@ public interface IFeatureDataPoint extends IDataPoint {
      * @return
      */
     @Nullable
-    IChromatographyData getChromatographyData();
+    ChromatographyInfo getChromatographyData();
 
 }

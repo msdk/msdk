@@ -22,7 +22,7 @@ import javax.annotation.concurrent.Immutable;
  * reference and safely used by multiple threads.
  */
 @Immutable
-public interface IDataPoint {
+public interface DataPoint {
 
     /**
      * Returns the m/z value of this data point.
@@ -36,6 +36,6 @@ public interface IDataPoint {
      * 
      * @return Data point intensity.
      */
-    double getIntensity();
+    float getIntensity();
 
 }

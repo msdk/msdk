@@ -21,13 +21,13 @@ import javax.annotation.Nonnull;
 /**
  * 
  */
-public interface IPeakListRow {
+public interface PeakListRow {
 
     /**
      * @return
      */
     @Nonnull
-    IPeakList getParentPeakList();
+    PeakList getParentPeakList();
 
     /**
      * Returns ID of this row
@@ -42,11 +42,11 @@ public interface IPeakListRow {
     /**
      * Return peaks assigned to this row
      */
-    <DataType> List<IPeakListColumn<DataType>> getColumns();
+    <DataType> List<PeakListColumn<DataType>> getColumns();
 
     /**
      * 
      */
-    <DataType> DataType getData(IPeakListColumn<DataType> column);
+    <DataType> DataType getData(PeakListColumn<DataType> column);
 
 }
