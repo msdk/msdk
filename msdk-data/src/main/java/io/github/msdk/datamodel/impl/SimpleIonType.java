@@ -20,7 +20,7 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 /**
  *
  */
-class IonTypeImpl implements IonType {
+class SimpleIonType implements IonType {
 
     @Override
     public int getName() {

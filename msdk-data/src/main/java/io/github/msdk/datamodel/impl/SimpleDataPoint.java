@@ -24,16 +24,12 @@ import javax.annotation.concurrent.Immutable;
  * reference.
  */
 @Immutable
-class DataPointImpl implements DataPoint {
+class SimpleDataPoint implements DataPoint {
 
     private double mz;
     private float intensity;
 
-    /**
-     * @param mz
-     * @param intensity
-     */
-    DataPointImpl(double mz, float intensity) {
+    SimpleDataPoint(double mz, float intensity) {
 	this.mz = mz;
 	this.intensity = intensity;
     }

@@ -31,7 +31,7 @@ import com.google.common.collect.Range;
 /**
  * This class is a simple implementation of the peak interface.
  */
-public class FeatureImpl implements Feature {
+public class SimpleFeature implements Feature {
 
     private @Nonnull FeatureType peakStatus = FeatureType.UNKNOWN;
     private RawDataFile dataFile;
@@ -59,7 +59,7 @@ public class FeatureImpl implements Feature {
     private int charge = 0;
 
     @SuppressWarnings("null")
-    FeatureImpl() {
+    SimpleFeature() {
 	this.rtRange=Range.all();
 	this.mzRange=Range.all();
 	this.intensityRange=Range.all();
@@ -69,7 +69,7 @@ public class FeatureImpl implements Feature {
      * Initializes a new peak using given values
      * 
      */
-     FeatureImpl(RawDataFile dataFile, double MZ, double RT,
+     SimpleFeature(RawDataFile dataFile, double MZ, double RT,
 	    double height, double area, int[] scanNumbers,
 	    DataPoint[] dataPointsPerScan, FeatureType peakStatus,
 	    int representativeScan, int fragmentScanNumber,

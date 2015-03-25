@@ -28,16 +28,16 @@ import com.google.common.collect.Range;
  * Simple implementation of the MassSpectrum interface, which stores its data in
  * a data store.
  */
-abstract class SpectrumImpl implements MassSpectrum {
+abstract class AbstractSpectrum implements MassSpectrum {
 
-    private final @Nonnull DataPointStoreImpl dataPointStore;
+    private final @Nonnull DataPointStore dataPointStore;
 
     private int dataStoreId = -1;
     private @Nonnull Range<Double> mzRange;
     private MassSpectrumType spectrumType;
     private DataPoint highestDataPoint;
 
-    SpectrumImpl(@Nonnull DataPointStoreImpl dataPointStore) {
+    AbstractSpectrum(@Nonnull DataPointStore dataPointStore) {
 	this.dataPointStore = dataPointStore;
 	mzRange = Range.singleton(0d);
     }

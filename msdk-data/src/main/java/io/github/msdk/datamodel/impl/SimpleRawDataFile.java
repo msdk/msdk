@@ -32,13 +32,13 @@ import com.google.common.collect.Range;
 /**
  * RawDataFile implementation.
  */
-class RawDataFileImpl extends DataPointStoreImpl implements RawDataFile {
+class SimpleRawDataFile extends DataPointStore implements RawDataFile {
 
     private @Nonnull String rawDataFileName;
     private @Nonnull RawDataFile originalRawDataFile;
     private final List<MsScan> scans;
 
-    RawDataFileImpl() {
+    SimpleRawDataFile() {
 	rawDataFileName = "New file";
 	originalRawDataFile = this;
 	scans = new ArrayList<MsScan>();

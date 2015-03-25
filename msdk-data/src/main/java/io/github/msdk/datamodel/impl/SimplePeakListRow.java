@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * Implementation of PeakListRow
  */
-public class PeakListRowImpl implements PeakListRow {
+public class SimplePeakListRow implements PeakListRow {
 
     @Override
     public @Nonnull PeakList getParentPeakList() {

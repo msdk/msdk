@@ -84,6 +84,6 @@ public interface DataPointList extends List<DataPoint> {
      *            smaller than the actual length of the buffer arrays.
      */
     void setBuffers(@Nonnull double[] mzBuffer,
-	    @Nonnull double[] intensityBuffer, int size);
+	    @Nonnull float[] intensityBuffer, int size);
 
 }

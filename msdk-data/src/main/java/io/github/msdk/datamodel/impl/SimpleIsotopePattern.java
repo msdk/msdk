@@ -31,12 +31,12 @@ import com.google.common.collect.Range;
 /**
  * Simple implementation of IsotopePattern interface
  */
-public class IsotopePatternImpl extends SpectrumImpl implements IsotopePattern {
+public class SimpleIsotopePattern extends AbstractSpectrum implements IsotopePattern {
 
     private @Nonnull IsotopePatternType status = IsotopePatternType.UNKNOWN;
     private @Nonnull String description = "";
 
-    IsotopePatternImpl(@Nonnull DataPointStoreImpl dataPointStore) {
+    SimpleIsotopePattern(@Nonnull DataPointStore dataPointStore) {
 	super(dataPointStore);
     }
 

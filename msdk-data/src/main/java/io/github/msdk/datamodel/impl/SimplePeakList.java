@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Simple implementation of the PeakList interface.
  */
-public class PeakListImpl extends DataPointStoreImpl implements PeakList {
+public class SimplePeakList extends DataPointStore implements PeakList {
 
     @Override
     public String getName() {

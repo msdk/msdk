@@ -33,10 +33,10 @@ import javax.annotation.Nonnull;
  * Each RawDataFile and PeakList will use this mechanism to store their data
  * points on the disk, so these do not consume memory.
  * 
- * @see RawDataFileImpl
- * @see PeakListImpl
+ * @see SimpleRawDataFile
+ * @see SimplePeakList
  */
-abstract class DataPointStoreImpl {
+abstract class DataPointStore {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -48,7 +48,7 @@ abstract class DataPointStoreImpl {
     private final TreeMap<Integer, Integer> dataPointsLengths;
     private int lastStorageId = 0;
 
-    DataPointStoreImpl() {
+    DataPointStore() {
 
 	try {
 	    tmpDataFileName = File.createTempFile("msdk", ".tmp");

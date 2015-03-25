@@ -26,7 +26,7 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 /**
  * Simple PeakIdentity implementation;
  */
-public class PeakListRowAnnotationImpl implements PeakListRowAnnotation {
+public class SimplePeakListRowAnnotation implements PeakListRowAnnotation {
 
     @Override
     public IAtomContainer getChemicalStructure() {

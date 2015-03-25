@@ -28,19 +28,19 @@ public class MSDKObjectBuilder {
 
     public static final @Nonnull DataPoint getDataPoint(double mz,
 	    float intensity) {
-	return new DataPointImpl(mz, intensity);
+	return new SimpleDataPoint(mz, intensity);
     }
 
     public static final @Nonnull RawDataFile getRawDataFile() {
-	return new RawDataFileImpl();
+	return new SimpleRawDataFile();
     }
 
     public static final @Nonnull MsScan getMsScan(@Nonnull RawDataFile dataFile) {
-	return new MsScanImpl(dataFile);
+	return new SimpleMsScan(dataFile);
     }
 
     public static final @Nonnull ChromatographyInfo getChromatographyData() {
-	return new ChromatographyDataImpl();
+	return new SimpleChromatographyData();
     }
 
 }

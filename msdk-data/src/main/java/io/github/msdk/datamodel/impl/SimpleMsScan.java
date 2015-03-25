@@ -35,14 +35,14 @@ import com.google.common.collect.Range;
 /**
  * Simple implementation of the Scan interface.
  */
-public class MsScanImpl extends SpectrumImpl implements MsScan {
+public class SimpleMsScan extends AbstractSpectrum implements MsScan {
 
     private final RawDataFile dataFile;
     private Integer scanNumber, msLevel;
     private ChromatographyInfo chromData;
 
-    public MsScanImpl(@Nonnull RawDataFile dataFile) {
-	super((RawDataFileImpl) dataFile);
+    public SimpleMsScan(@Nonnull RawDataFile dataFile) {
+	super((SimpleRawDataFile) dataFile);
 	this.dataFile = dataFile;
     }
 

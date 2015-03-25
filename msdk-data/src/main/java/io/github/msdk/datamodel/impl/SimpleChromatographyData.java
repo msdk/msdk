@@ -16,7 +16,7 @@ package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
-public class ChromatographyDataImpl implements ChromatographyInfo {
+public class SimpleChromatographyData implements ChromatographyInfo {
 
     private Float retentionTime, secondaryRetentionTime, ionDriftTime;
 
