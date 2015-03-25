@@ -7,7 +7,7 @@
 		<version>0.1</version>
 	</parent>
 	<artifactId>msdk-rawdata</artifactId>
-	<name>MSDK raw data algorithms</name>
+	<name>MSDK - Raw data algorithms</name>
 
 	<dependencies>
 		<dependency>
