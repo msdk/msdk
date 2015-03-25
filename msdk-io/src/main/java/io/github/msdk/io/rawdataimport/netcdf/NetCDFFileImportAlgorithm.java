@@ -22,6 +22,7 @@ import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
 import java.io.File;
@@ -402,10 +403,10 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 	MassSpectrumType spectrumType = detector.getResult();
 	scan.setSpectrumType(spectrumType);
 
+        //TODO set correct separation type from global netCDF file attributes
 	ChromatographyInfo chromData = MSDKObjectBuilder
-		.getChromatographyData();
-	// chromData.setRetentionTime(retentionTime);
-
+		.getChromatographyInfo1D(SeparationType.GC, retentionTime.floatValue());
+        scan.setChromatographyInfo(chromData);
 	return scan;
 
     }

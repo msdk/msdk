@@ -15,10 +15,20 @@
 package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.SeparationType;
 
-public class SimpleChromatographyData implements ChromatographyInfo {
+public class SimpleChromatographyInfo implements ChromatographyInfo {
 
     private Float retentionTime, secondaryRetentionTime, ionDriftTime;
+    
+    private SeparationType separationType;
+
+    SimpleChromatographyInfo(Float retentionTime, Float secondaryRetentionTime, Float ionDriftTime, SeparationType separationType) {
+        this.retentionTime = retentionTime;
+        this.secondaryRetentionTime = secondaryRetentionTime;
+        this.ionDriftTime = ionDriftTime;
+        this.separationType = separationType;
+    }
 
     /**
      * @return the retentionTime
@@ -48,6 +58,11 @@ public class SimpleChromatographyData implements ChromatographyInfo {
     public int compareTo(ChromatographyInfo o) {
 	// TODO Auto-generated method stub
 	return 0;
+    }
+
+    @Override
+    public SeparationType getSeparationType() {
+        return separationType;
     }
 
 }
