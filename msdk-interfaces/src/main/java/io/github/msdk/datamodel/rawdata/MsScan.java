@@ -182,7 +182,7 @@ public interface MsScan extends MassSpectrum, Cloneable {
      *            New fragmentation parameters.
      */
     void setSourceInducedFragmentation(
-	    @Nullable FragmentationInfo newFragmentationInfo);
+            @Nullable FragmentationInfo newFragmentationInfo);
 
     /**
      * Returns a list of isolations performed for this scan. These isolations

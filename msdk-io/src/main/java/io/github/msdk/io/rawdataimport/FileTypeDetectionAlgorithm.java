@@ -56,8 +56,8 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
 
     // See "https://code.google.com/p/unfinnigan/wiki/FileHeader"
     private static final String THERMO_HEADER = String.valueOf(new char[] {
-	    0x01, 0xA1, 'F', 0, 'i', 0, 'n', 0, 'n', 0, 'i', 0, 'g', 0, 'a', 0,
-	    'n', 0 });
+            0x01, 0xA1, 'F', 0, 'i', 0, 'n', 0, 'n', 0, 'i', 0, 'g', 0, 'a', 0,
+            'n', 0 });
 
     private @Nonnull File fileName;
     private @Nullable RawDataFileType result = null;
@@ -69,78 +69,78 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
      *         type
      */
     public FileTypeDetectionAlgorithm(@Nonnull File fileName) {
-	this.fileName = fileName;
+        this.fileName = fileName;
     }
 
     @Override
     public RawDataFileType execute() throws MSDKException {
 
-	try {
-	    result = detectDataFileType(fileName);
-	} catch (IOException e) {
-	    throw new MSDKException(e);
-	}
-	finishedPercentage = 1f;
-	return result;
+        try {
+            result = detectDataFileType(fileName);
+        } catch (IOException e) {
+            throw new MSDKException(e);
+        }
+        finishedPercentage = 1f;
+        return result;
 
     }
 
     private RawDataFileType detectDataFileType(File fileName)
-	    throws IOException {
+            throws IOException {
 
-	if (fileName.isDirectory()) {
-	    // To check for Waters .raw directory, we look for _FUNC[0-9]{3}.DAT
-	    for (File f : fileName.listFiles()) {
-		if (f.isFile() && f.getName().matches("_FUNC[0-9]{3}.DAT"))
-		    return RawDataFileType.WATERS_RAW;
-	    }
-	    // We don't recognize any other directory type than Waters
-	    return null;
-	}
+        if (fileName.isDirectory()) {
+            // To check for Waters .raw directory, we look for _FUNC[0-9]{3}.DAT
+            for (File f : fileName.listFiles()) {
+                if (f.isFile() && f.getName().matches("_FUNC[0-9]{3}.DAT"))
+                    return RawDataFileType.WATERS_RAW;
+            }
+            // We don't recognize any other directory type than Waters
+            return null;
+        }
 
-	// Read the first 1kB of the file into a String
-	InputStreamReader reader = new InputStreamReader(new FileInputStream(
-		fileName), "ISO-8859-1");
-	char buffer[] = new char[1024];
-	reader.read(buffer);
-	reader.close();
-	String fileHeader = new String(buffer);
+        // Read the first 1kB of the file into a String
+        InputStreamReader reader = new InputStreamReader(new FileInputStream(
+                fileName), "ISO-8859-1");
+        char buffer[] = new char[1024];
+        reader.read(buffer);
+        reader.close();
+        String fileHeader = new String(buffer);
 
-	if (fileHeader.startsWith(THERMO_HEADER)) {
-	    return RawDataFileType.THERMO_RAW;
-	}
+        if (fileHeader.startsWith(THERMO_HEADER)) {
+            return RawDataFileType.THERMO_RAW;
+        }
 
-	if (fileHeader.startsWith(CDF_HEADER)) {
-	    return RawDataFileType.NETCDF;
-	}
+        if (fileHeader.startsWith(CDF_HEADER)) {
+            return RawDataFileType.NETCDF;
+        }
 
-	if (fileHeader.contains(MZML_HEADER))
-	    return RawDataFileType.MZML;
+        if (fileHeader.contains(MZML_HEADER))
+            return RawDataFileType.MZML;
 
-	if (fileHeader.contains(MZDATA_HEADER))
-	    return RawDataFileType.MZDATA;
+        if (fileHeader.contains(MZDATA_HEADER))
+            return RawDataFileType.MZDATA;
 
-	if (fileHeader.contains(MZXML_HEADER))
-	    return RawDataFileType.MZXML;
+        if (fileHeader.contains(MZXML_HEADER))
+            return RawDataFileType.MZXML;
 
-	return null;
+        return null;
 
     }
 
     @Override
     public Float getFinishedPercentage() {
-	return finishedPercentage;
+        return finishedPercentage;
     }
 
     @Override
     @Nullable
     public RawDataFileType getResult() {
-	return result;
+        return result;
     }
 
     @Override
     public void cancel() {
-	// This method is too fast to be canceled
+        // This method is too fast to be canceled
     }
 
 }

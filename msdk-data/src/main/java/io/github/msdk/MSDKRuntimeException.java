@@ -19,11 +19,11 @@ public class MSDKRuntimeException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public MSDKRuntimeException(String msg) {
-	super(msg);
+        super(msg);
     }
 
     public MSDKRuntimeException(Throwable exception) {
-	super(exception);
+        super(exception);
     }
 
 }

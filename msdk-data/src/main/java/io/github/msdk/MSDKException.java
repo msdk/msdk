@@ -19,11 +19,11 @@ public class MSDKException extends Exception {
     private static final long serialVersionUID = 1L;
 
     public MSDKException(String msg) {
-	super(msg);
+        super(msg);
     }
 
     public MSDKException(Throwable exception) {
-	super(exception);
+        super(exception);
     }
 
 }

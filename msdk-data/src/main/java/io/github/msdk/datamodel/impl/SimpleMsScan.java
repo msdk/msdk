@@ -42,177 +42,177 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     private ChromatographyInfo chromData;
 
     public SimpleMsScan(@Nonnull RawDataFile dataFile) {
-	super((SimpleRawDataFile) dataFile);
-	this.dataFile = dataFile;
+        super((SimpleRawDataFile) dataFile);
+        this.dataFile = dataFile;
     }
 
     @Override
     public String toString() {
-	StringBuffer buf = new StringBuffer();
-	buf.append("#");
-	buf.append(getScanNumber());
-	buf.append(" @");
-	// buf.append(rtFormat.format(getRetentionTime()));
-	buf.append(" MS");
-	// buf.append(getMSLevel());
-	switch (getSpectrumType()) {
-	case CENTROIDED:
-	    buf.append(" c");
-	    break;
-	case PROFILE:
-	    buf.append(" p");
-	    break;
-	case THRESHOLDED:
-	    buf.append(" t");
-	    break;
-	}
+        StringBuffer buf = new StringBuffer();
+        buf.append("#");
+        buf.append(getScanNumber());
+        buf.append(" @");
+        // buf.append(rtFormat.format(getRetentionTime()));
+        buf.append(" MS");
+        // buf.append(getMSLevel());
+        switch (getSpectrumType()) {
+        case CENTROIDED:
+            buf.append(" c");
+            break;
+        case PROFILE:
+            buf.append(" p");
+            break;
+        case THRESHOLDED:
+            buf.append(" t");
+            break;
+        }
 
-	return buf.toString();
+        return buf.toString();
     }
 
     @Override
     public void getDataPoints(DataPointList list) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     @Nonnull
     public List<DataPoint> getDataPointsByIntensity(
-	    @Nonnull Range<Double> intensityRange) {
-	// TODO Auto-generated method stub
-	return null;
+            @Nonnull Range<Double> intensityRange) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setDataPoints(@Nonnull DataPointList newDataPoints) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     @Nullable
     public RawDataFile getRawDataFile() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setRawDataFile(@Nonnull RawDataFile newDataFile) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     @Nonnull
     public Integer getScanNumber() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setScanNumber(@Nonnull Integer scanNumber) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     @Nonnull
     public MsFunction getMsFunction() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setMsFunction(@Nonnull MsFunction newFunction) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     @Nullable
     public Range<Double> getScanningRange() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setScanningRange(@Nullable Range<Double> newScanRange) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     @Nonnull
     public PolarityType getPolarity() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setPolarity(@Nonnull PolarityType newPolarity) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     public MsScan clone() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     @Nonnull
     public MsScanType getMsScanType() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setMsScanType(@Nonnull MsScanType newType) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     @Nullable
     public ChromatographyInfo getChromatographyInfo() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setChromatographyInfo(@Nullable ChromatographyInfo chromData) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     @Nullable
     public FragmentationInfo getSourceInducedFragmentation() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setSourceInducedFragmentation(
-	    @Nullable FragmentationInfo newFragmentationInfo) {
-	// TODO Auto-generated method stub
+            @Nullable FragmentationInfo newFragmentationInfo) {
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     @Nonnull
     public List<IsolationInfo> getIsolations() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     @Nonnull
     public Float getTIC() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

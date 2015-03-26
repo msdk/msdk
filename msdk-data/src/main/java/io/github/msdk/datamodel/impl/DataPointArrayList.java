@@ -37,163 +37,163 @@ class DataPointArrayList implements DataPointList {
 
     @Override
     public int size() {
-	return size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-	return size==0;
+        return size == 0;
     }
 
     @Override
     public boolean contains(Object o) {
-	// TODO Auto-generated method stub
-	return false;
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
     public Iterator<DataPoint> iterator() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Object[] toArray() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public <T> T[] toArray(T[] a) {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public boolean add(DataPoint e) {
-	// TODO Auto-generated method stub
-	return false;
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
     public boolean remove(Object o) {
-	// TODO Auto-generated method stub
-	return false;
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
     public boolean containsAll(Collection<?> c) {
-	// TODO Auto-generated method stub
-	return false;
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
     public boolean addAll(Collection<? extends DataPoint> c) {
-	// TODO Auto-generated method stub
-	return false;
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends DataPoint> c) {
-	// TODO Auto-generated method stub
-	return false;
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-	return false;
+        return false;
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-	// TODO Auto-generated method stub
-	return false;
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
     public void clear() {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     public DataPoint get(int index) {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public DataPoint set(int index, DataPoint element) {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void add(int index, DataPoint element) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     public DataPoint remove(int index) {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public int indexOf(Object o) {
-	// TODO Auto-generated method stub
-	return 0;
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     @Override
     public int lastIndexOf(Object o) {
-	// TODO Auto-generated method stub
-	return 0;
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     @Override
     public ListIterator<DataPoint> listIterator() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public ListIterator<DataPoint> listIterator(int index) {
-	return null;
+        return null;
     }
 
     @Override
     public List<DataPoint> subList(int fromIndex, int toIndex) {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     @Nonnull
     public Range<Double> getMzRange() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     @Nonnull
     public double[] getMzBuffer() {
-	return mzBuffer;
+        return mzBuffer;
     }
 
     @Override
     @Nonnull
     public float[] getIntensityBuffer() {
-	return intensityBuffer;
+        return intensityBuffer;
     }
 
     @Override
     public void setBuffers(@Nonnull double[] mzBuffer,
-	    @Nonnull float[] intensityBuffer, int size) {
-	this.mzBuffer = mzBuffer;
-	this.intensityBuffer = intensityBuffer;
-	this.size = size;
+            @Nonnull float[] intensityBuffer, int size) {
+        this.mzBuffer = mzBuffer;
+        this.intensityBuffer = intensityBuffer;
+        this.size = size;
     }
 
 }

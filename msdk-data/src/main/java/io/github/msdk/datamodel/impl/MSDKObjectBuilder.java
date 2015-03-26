@@ -39,26 +39,40 @@ public class MSDKObjectBuilder {
         return new SimpleMsScan(dataFile);
     }
 
-    public static final @Nonnull ChromatographyInfo getChromatographyInfo1D(SeparationType separationType, float rt1) {
+    public static final @Nonnull ChromatographyInfo getChromatographyInfo1D(
+            SeparationType separationType, float rt1) {
         return new SimpleChromatographyInfo(rt1, null, null, separationType);
     }
 
-    public static final @Nonnull ChromatographyInfo getChromatographyInfo2D(SeparationType separationType, float rt1, float rt2) {
+    public static final @Nonnull ChromatographyInfo getChromatographyInfo2D(
+            SeparationType separationType, float rt1, float rt2) {
         if (separationType.getFeatureDimensions() < 2) {
-            throw new IllegalArgumentException("2D ChromatographyInfo requires at least 2 feature dimensions. Provided separation type " + separationType + " has " + separationType.getFeatureDimensions());
+            throw new IllegalArgumentException(
+                    "2D ChromatographyInfo requires at least 2 feature dimensions. Provided separation type "
+                            + separationType
+                            + " has "
+                            + separationType.getFeatureDimensions());
         }
-        //TODO add further validation
+        // TODO add further validation
         return new SimpleChromatographyInfo(rt1, rt2, null, separationType);
     }
 
-    public static final @Nonnull ChromatographyInfo getImsInfo(SeparationType separationType, float rt1, float ionDriftTime) {
+    public static final @Nonnull ChromatographyInfo getImsInfo(
+            SeparationType separationType, float rt1, float ionDriftTime) {
         if (separationType.getFeatureDimensions() < 2) {
-            throw new IllegalArgumentException("2D ChromatographyInfo requires at least 2 feature dimensions. Provided separation type " + separationType + " has " + separationType.getFeatureDimensions());
+            throw new IllegalArgumentException(
+                    "2D ChromatographyInfo requires at least 2 feature dimensions. Provided separation type "
+                            + separationType
+                            + " has "
+                            + separationType.getFeatureDimensions());
         }
-        if(separationType!=SeparationType.IMS) {
-            throw new IllegalArgumentException("2D ChromatographyInfo for IMS separation requires IMS separation type. Provided separation type "+separationType);
+        if (separationType != SeparationType.IMS) {
+            throw new IllegalArgumentException(
+                    "2D ChromatographyInfo for IMS separation requires IMS separation type. Provided separation type "
+                            + separationType);
         }
-        return new SimpleChromatographyInfo(rt1, null, ionDriftTime, separationType);
+        return new SimpleChromatographyInfo(rt1, null, ionDriftTime,
+                separationType);
     }
 
 }

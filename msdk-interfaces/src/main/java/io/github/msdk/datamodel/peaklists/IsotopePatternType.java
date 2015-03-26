@@ -25,7 +25,7 @@ package io.github.msdk.datamodel.peaklists;
 public enum IsotopePatternType {
 
     /**
-     * Isotope pattern was detected 
+     * Isotope pattern was detected
      */
     DETECTED,
 
