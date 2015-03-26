@@ -29,30 +29,30 @@ public class SimplePeakListRow implements PeakListRow {
 
     @Override
     public @Nonnull PeakList getParentPeakList() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public int getId() {
-	// TODO Auto-generated method stub
-	return 0;
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     @Override
     public int getNumberOfColumns() {
-	// TODO Auto-generated method stub
-	return 0;
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     public <DataType> List<PeakListColumn<DataType>> getColumns() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     public <DataType> DataType getData(PeakListColumn<DataType> column) {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
