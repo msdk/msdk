@@ -16,17 +16,11 @@ package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.peaklists.IsotopePattern;
 import io.github.msdk.datamodel.peaklists.IsotopePatternType;
-import io.github.msdk.datamodel.rawdata.DataPoint;
-import io.github.msdk.datamodel.rawdata.DataPointList;
-
-import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.openscience.cdk.interfaces.IMolecularFormula;
-
-import com.google.common.collect.Range;
 
 /**
  * Simple implementation of IsotopePattern interface
@@ -70,40 +64,6 @@ public class SimpleIsotopePattern extends AbstractSpectrum implements
 
     @Override
     public void setChemicalFormula(@Nullable IMolecularFormula formula) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    // @Nonnull
-    public DataPointList getDataPoints() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void getDataPoints(DataPointList list) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    // @Nonnull
-    public DataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    // @Nonnull
-    public List<DataPoint> getDataPointsByIntensity(
-            @Nonnull Range<Double> intensityRange) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void setDataPoints(@Nonnull DataPointList newDataPoints) {
         // TODO Auto-generated method stub
 
     }

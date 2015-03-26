@@ -15,7 +15,7 @@
 package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.rawdata.DataPoint;
-import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.MassSpectrum;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,7 +78,7 @@ abstract class DataPointStore {
      * 
      * @return Storage ID for the newly stored data.
      */
-    synchronized int storeDataPoints(@Nonnull DataPointList dataPoints) {
+    synchronized int storeDataPoints(@Nonnull MassSpectrum dataPoints) {
 
         long currentOffset;
         try {
@@ -126,7 +126,7 @@ abstract class DataPointStore {
     /**
      * Reads the data points associated with given ID.
      */
-    synchronized @Nonnull DataPointList readDataPoints(int ID) {
+    synchronized @Nonnull MassSpectrum readDataPoints(int ID) {
 
         final Long currentOffset = dataPointsOffsets.get(ID);
         final Integer numOfDataPoints = dataPointsLengths.get(ID);

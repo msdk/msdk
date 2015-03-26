@@ -22,12 +22,25 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Range;
 
 /**
- * A mass spectrum. This is a base interface typically extended by other, more
+ * A basic mass spectrum interface, which can be extended by other, more
  * specialized interfaces. It may represent a single scan in raw MS data, a
  * calculated isotope pattern, a predicted fragmentation spectrum of a molecule,
  * etc.
+ * 
+ * This interface provides a convenient data structure for storing large amount
+ * of data points. Internally, it is implemented by two arrays, one for m/z
+ * values (double[]) and one for intensity values (float[]). The arrays are
+ * resized dynamically, as in ArrayList. It provides all List methods, therefore
+ * it supports iteration. Furthermore, it provides direct access to the
+ * underlying buffer arrays, for more efficient data handling operations. The
+ * access through these arrays is always preferred, as iteration via the List
+ * interface has to create a new DataPoint instance for each visited data point.
+ * DataPointList always keeps the data points sorted in the m/z order.
+ * 
+ * This data structure is not thread-safe.
+ * 
  */
-public interface MassSpectrum {
+public interface MassSpectrum extends List<DataPoint> {
 
     /**
      * Returns the type of this mass spectrum. For spectra that are loaded from
@@ -48,29 +61,46 @@ public interface MassSpectrum {
     void setSpectrumType(@Nonnull MassSpectrumType spectrumType);
 
     /**
-     * Returns data points of this spectrum.
+     * Returns the current m/z buffer array. The size of the array might be
+     * larger than the actual size of this DataPointList, therefore data
+     * operations should always use the size returned by the size() method and
+     * not the length of the returned array. The returned array reflects only
+     * the current state of this list - if more data points are added, the
+     * internal buffer might be replaced with a larger array.
      * 
-     * Note: this method may need to read data from disk, therefore it may be
-     * quite slow.
-     * 
-     * @return Data points (m/z and intensity pairs) of this spectrum
+     * @return Current m/z buffer
      */
     @Nonnull
-    DataPointList getDataPoints();
+    double[] getMzBuffer();
 
     /**
-     * Loads the data points of this spectrum into the given DataPointList. If
-     * the DataPointList is not empty, it is cleared first. This method allows
-     * the internal arrays of the DataPointList to be reused for loading
-     * multiple spectra.
+     * Returns the current intensity buffer array. The size of the array might
+     * be larger than the actual size of this DataPointList, therefore data
+     * operations should always use the size returned by the size() method and
+     * not the length of the returned array. The returned array reflects only
+     * the current state of this list - if more data points are added, the
+     * internal buffer might be replaced with a larger array.
      * 
-     * Note: this method may need to read data from disk, therefore it may be
-     * quite slow.
-     * 
-     * @param list
-     *            DataPointList into which the data points should be loaded
+     * @return Current intensity buffer
      */
-    void getDataPoints(DataPointList list);
+    @Nonnull
+    float[] getIntensityBuffer();
+
+    /**
+     * Sets the internal buffers to given arrays. The arrays will be referenced
+     * directly without cloning. The m/z buffer contents must be sorted in
+     * ascending order.
+     * 
+     * @param mzBuffer
+     *            New m/z buffer
+     * @param intensityBuffer
+     *            New intensity buffer
+     * @param size
+     *            Number of data point items in the buffers. This might be
+     *            smaller than the actual length of the buffer arrays.
+     */
+    void setBuffers(@Nonnull double[] mzBuffer,
+            @Nonnull float[] intensityBuffer, int size);
 
     /**
      * Returns data points in given m/z range, sorted in m/z order.
@@ -81,7 +111,7 @@ public interface MassSpectrum {
      * @return Data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    DataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange);
+    MassSpectrum getSubSpectrumByMass(@Nonnull Range<Double> mzRange);
 
     /**
      * Returns data points over given intensity, sorted in m/z order.
@@ -92,22 +122,7 @@ public interface MassSpectrum {
      * @return Data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    List<DataPoint> getDataPointsByIntensity(
-            @Nonnull Range<Double> intensityRange);
-
-    /**
-     * Updates the data points of this mass spectrum. If this MassSpectrum has
-     * been added to a raw data file or a peak list, the data points will be
-     * immediately stored in a temporary file. Therefore, the DataPointList in
-     * the parameter can be reused for other purposes.
-     * 
-     * Note: this method may need to write data to disk, therefore it may be
-     * quite slow.
-     * 
-     * @param newDataPoints
-     *            New data points
-     */
-    void setDataPoints(@Nonnull DataPointList newDataPoints);
+    MassSpectrum getSubSpectrumByIntensity(@Nonnull Range<Double> intensityRange);
 
     /**
      * Returns the m/z range of this mass spectrum (minimum and maximum m/z

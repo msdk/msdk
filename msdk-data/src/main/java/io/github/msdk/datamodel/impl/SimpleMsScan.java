@@ -15,8 +15,6 @@
 package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.DataPoint;
-import io.github.msdk.datamodel.rawdata.DataPointList;
 import io.github.msdk.datamodel.rawdata.FragmentationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
@@ -68,26 +66,6 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
         }
 
         return buf.toString();
-    }
-
-    @Override
-    public void getDataPoints(DataPointList list) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    @Nonnull
-    public List<DataPoint> getDataPointsByIntensity(
-            @Nonnull Range<Double> intensityRange) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void setDataPoints(@Nonnull DataPointList newDataPoints) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override

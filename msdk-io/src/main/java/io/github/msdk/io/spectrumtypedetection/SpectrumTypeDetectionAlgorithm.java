@@ -16,7 +16,6 @@ package io.github.msdk.io.spectrumtypedetection;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.rawdata.DataPointList;
 import io.github.msdk.datamodel.rawdata.MassSpectrum;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 
@@ -50,8 +49,7 @@ public class SpectrumTypeDetectionAlgorithm implements
 
     @Override
     public MassSpectrumType execute() throws MSDKException {
-        DataPointList dataPoints = inputSpectrum.getDataPoints();
-        result = detectSpectrumType(dataPoints);
+        result = detectSpectrumType(inputSpectrum);
         finishedPercentage = 1f;
         return result;
     }
@@ -67,7 +65,7 @@ public class SpectrumTypeDetectionAlgorithm implements
     }
 
     private MassSpectrumType detectSpectrumType(
-            @Nonnull DataPointList dataPoints) {
+            @Nonnull MassSpectrum dataPoints) {
 
         // If the spectrum has less than 5 data points, it should be centroided.
         if (dataPoints.size() < 5)
