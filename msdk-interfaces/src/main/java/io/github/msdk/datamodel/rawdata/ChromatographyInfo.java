@@ -55,5 +55,11 @@ public interface ChromatographyInfo extends Comparable<ChromatographyInfo> {
      */
     @Nullable
     Float getIonDriftTime();
+    
+    /**
+     * Returns the separation type used for separation of molecules.
+     * @return the seperation type. Returns {@link SeparationType#UNKNOWN} for unknown separations.
+     */
+    SeparationType getSeparationType();
 
 }

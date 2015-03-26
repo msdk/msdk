@@ -23,6 +23,7 @@ import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
+import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.SortingDirection;
@@ -227,9 +228,9 @@ public class XMLFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 		} else {
 		    retentionTime = Double.parseDouble(value) / 60d;
 		}
+                //TODO Update with specific code for separation method
 		final ChromatographyInfo newChromData = MSDKObjectBuilder
-			.getChromatographyData();
-		// newChromData.setRetentionTime(retentionTime);
+			.getChromatographyInfo1D(SeparationType.GC, (float)retentionTime);
 		return newChromData;
 
 	    }
