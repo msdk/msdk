@@ -30,37 +30,37 @@ class SimpleDataPoint implements DataPoint {
     private float intensity;
 
     SimpleDataPoint(double mz, float intensity) {
-	this.mz = mz;
-	this.intensity = intensity;
+        this.mz = mz;
+        this.intensity = intensity;
     }
 
     @Override
     public float getIntensity() {
-	return intensity;
+        return intensity;
     }
 
     @Override
     public double getMz() {
-	return mz;
+        return mz;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (!(obj instanceof DataPoint))
-	    return false;
-	DataPoint dp = (DataPoint) obj;
-	return (this.mz == dp.getMz()) && (this.intensity == dp.getIntensity());
+        if (!(obj instanceof DataPoint))
+            return false;
+        DataPoint dp = (DataPoint) obj;
+        return (this.mz == dp.getMz()) && (this.intensity == dp.getIntensity());
     }
 
     @Override
     public int hashCode() {
-	return (int) (this.mz + this.intensity);
+        return (int) (this.mz + this.intensity);
     }
 
     @Override
     public String toString() {
-	String str = "m/z: " + mz + ", intensity: " + intensity;
-	return str;
+        String str = "m/z: " + mz + ", intensity: " + intensity;
+        return str;
     }
 
 }
