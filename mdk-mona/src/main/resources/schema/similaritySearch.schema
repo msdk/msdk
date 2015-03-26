@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://mona.fiehnlab.ucdavis.edu",
+  "type": "object",
+  "properties": {
+    "result": {
+      "id": "http://mona.fiehnlab.ucdavis.edu/result",
+      "type": "array",
+      "items": {
+        "id": "http://mona.fiehnlab.ucdavis.edu/result/4",
+        "type": "object",
+        "properties": {
+          "id": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/result/4/id",
+            "type": "integer"
+          },
+          "similarity": {
+            "id": "http://mona.fiehnlab.ucdavis.edu/result/4/similarity",
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "similarity"
+        ]
+      },
+      "required": [
+        "4"
+      ]
+    },
+    "statistics": {
+      "id": "http://mona.fiehnlab.ucdavis.edu/statistics",
+      "type": "object",
+      "properties": {
+        "duration": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/statistics/duration",
+          "type": "integer"
+        }
+      }
+    },
+    "config": {
+      "id": "http://mona.fiehnlab.ucdavis.edu/config",
+      "type": "object",
+      "properties": {
+        "minSimilarity": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/config/minSimilarity",
+          "type": "integer"
+        },
+        "commonIonCount": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/config/commonIonCount",
+          "type": "integer"
+        },
+        "spectra": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/config/spectra",
+          "type": "integer"
+        },
+        "maxHits": {
+          "id": "http://mona.fiehnlab.ucdavis.edu/config/maxHits",
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "required": [
+    "result",
+    "statistics",
+    "config"
+  ]
+}
