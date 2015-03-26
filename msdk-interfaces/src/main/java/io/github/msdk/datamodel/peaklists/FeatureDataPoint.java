@@ -14,6 +14,13 @@
 
 package io.github.msdk.datamodel.peaklists;
 
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.MsScan;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /* 
  * WARNING: the interfaces in this package are still under construction
  */
@@ -21,26 +28,27 @@ package io.github.msdk.datamodel.peaklists;
 /**
  * 
  */
-public enum FeatureType {
+public interface FeatureDataPoint extends DataPoint {
 
     /**
-     * Peak was found in primary peak picking
+     * 
+     * @return
      */
-    DETECTED,
+    @Nullable
+    MsScan getScan();
 
     /**
-     * Peak was estimated in secondary peak picking (gap filling)
+     * 
+     * @return
      */
-    ESTIMATED,
+    @Nonnull
+    Integer getScanNumber();
 
     /**
-     * Peak was defined manually
+     * 
+     * @return
      */
-    MANUAL,
-
-    /**
-     * Unknown type
-     */
-    UNKNOWN;
+    @Nullable
+    ChromatographyInfo getChromatographyData();
 
 }

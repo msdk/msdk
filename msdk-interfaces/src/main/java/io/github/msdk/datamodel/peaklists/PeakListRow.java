@@ -14,29 +14,43 @@
 
 package io.github.msdk.datamodel.peaklists;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 /* 
  * WARNING: the interfaces in this package are still under construction
  */
 
 /**
  * 
- *
  */
-public enum IsotopePatternType {
+public interface PeakListRow {
 
     /**
-     * Isotope pattern was detected 
+     * @return
      */
-    DETECTED,
+    @Nonnull
+    PeakList getParentPeakList();
 
     /**
-     * Isotope pattern was calculated
+     * Returns ID of this row
      */
-    CALCULATED,
+    int getId();
 
     /**
-     * Unknown or undefined status.
+     * Returns number of peaks assigned to this row
      */
-    UNKNOWN;
+    int getNumberOfColumns();
+
+    /**
+     * Return peaks assigned to this row
+     */
+    <DataType> List<PeakListColumn<DataType>> getColumns();
+
+    /**
+     * 
+     */
+    <DataType> DataType getData(PeakListColumn<DataType> column);
 
 }

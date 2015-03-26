@@ -21,26 +21,16 @@ package io.github.msdk.datamodel.peaklists;
 /**
  * 
  */
-public enum FeatureType {
+public interface Sample {
 
     /**
-     * Peak was found in primary peak picking
+     * @return Short descriptive name
      */
-    DETECTED,
+    String getName();
 
     /**
-     * Peak was estimated in secondary peak picking (gap filling)
+     * Change the name
      */
-    ESTIMATED,
-
-    /**
-     * Peak was defined manually
-     */
-    MANUAL,
-
-    /**
-     * Unknown type
-     */
-    UNKNOWN;
+    void setName(String name);
 
 }

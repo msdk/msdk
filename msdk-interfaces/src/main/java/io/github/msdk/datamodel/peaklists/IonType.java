@@ -14,6 +14,10 @@
 
 package io.github.msdk.datamodel.peaklists;
 
+import io.github.msdk.datamodel.rawdata.PolarityType;
+
+import javax.annotation.concurrent.Immutable;
+
 /* 
  * WARNING: the interfaces in this package are still under construction
  */
@@ -22,21 +26,20 @@ package io.github.msdk.datamodel.peaklists;
  * 
  *
  */
-public enum IsotopePatternType {
+@Immutable
+public interface IonType {
 
     /**
-     * Isotope pattern was detected 
+     * @return Name of ionization type, such as [M+2H]2+
      */
-    DETECTED,
+    int getName();
 
-    /**
-     * Isotope pattern was calculated
-     */
-    CALCULATED,
+    PolarityType getPolarity();
 
-    /**
-     * Unknown or undefined status.
-     */
-    UNKNOWN;
+    int getNumberOfMolecules();
+
+    String getAdductFormula();
+
+    String getCharge();
 
 }

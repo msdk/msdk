@@ -14,6 +14,9 @@
 
 package io.github.msdk.datamodel.peaklists;
 
+import javax.annotation.Nonnull;
+import javax.swing.table.TableCellRenderer;
+
 /* 
  * WARNING: the interfaces in this package are still under construction
  */
@@ -21,22 +24,30 @@ package io.github.msdk.datamodel.peaklists;
 /**
  * 
  *
+ * @param <DataType>
  */
-public enum IsotopePatternType {
+public interface PeakListColumn<DataType> {
 
     /**
-     * Isotope pattern was detected 
+     * @return Short descriptive name for the peak list column
      */
-    DETECTED,
+    String getName();
 
     /**
-     * Isotope pattern was calculated
+     * Change the name of this peak list column
      */
-    CALCULATED,
+    void setName(String name);
 
     /**
-     * Unknown or undefined status.
+     * @return
      */
-    UNKNOWN;
+    @Nonnull
+    Class<DataType> getDataTypeClass();
+
+    /**
+     * 
+     */
+    @Nonnull
+    TableCellRenderer getTableCellRenderer();
 
 }

@@ -11,14 +11,13 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.rawdata.IDataPoint;
-import io.github.msdk.datamodel.rawdata.IChromatographyData;
-import io.github.msdk.datamodel.rawdata.IMsMsScan;
-import io.github.msdk.datamodel.rawdata.IMsScan;
-import io.github.msdk.datamodel.rawdata.IRawDataFile;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.rawdata.SeparationType;
 
 import javax.annotation.Nonnull;
 
@@ -27,35 +26,39 @@ import javax.annotation.Nonnull;
  */
 public class MSDKObjectBuilder {
 
-    public static final @Nonnull IDataPoint getDataPoint(double mz,
-	    double intensity) {
-	return new DataPointImpl(mz, intensity);
+    public static final @Nonnull DataPoint getDataPoint(double mz,
+            float intensity) {
+        return new SimpleDataPoint(mz, intensity);
     }
 
-    public static final @Nonnull IDataPoint[] getDataPointArray(
-	    final double mz[], final double intensities[]) {
-	assert mz.length == intensities.length;
-	final IDataPoint dpArray[] = new IDataPoint[mz.length];
-	for (int i = 0; i < mz.length; i++)
-	    dpArray[i] = new DataPointImpl(mz[i], intensities[i]);
-	return dpArray;
+    public static final @Nonnull RawDataFile getRawDataFile() {
+        return new SimpleRawDataFile();
     }
 
-    public static final @Nonnull IRawDataFile getRawDataFile() {
-	return new RawDataFileImpl();
+    public static final @Nonnull MsScan getMsScan(@Nonnull RawDataFile dataFile) {
+        return new SimpleMsScan(dataFile);
     }
 
-    public static final @Nonnull IMsScan getMsScan(@Nonnull IRawDataFile dataFile) {
-	return new MsScanImpl(dataFile);
+    public static final @Nonnull ChromatographyInfo getChromatographyInfo1D(SeparationType separationType, float rt1) {
+        return new SimpleChromatographyInfo(rt1, null, null, separationType);
     }
 
-    public static final @Nonnull IMsMsScan getMsMsScan(
-	    @Nonnull IRawDataFile dataFile) {
-	return new MsMsScanImpl(dataFile);
+    public static final @Nonnull ChromatographyInfo getChromatographyInfo2D(SeparationType separationType, float rt1, float rt2) {
+        if (separationType.getFeatureDimensions() < 2) {
+            throw new IllegalArgumentException("2D ChromatographyInfo requires at least 2 feature dimensions. Provided separation type " + separationType + " has " + separationType.getFeatureDimensions());
+        }
+        //TODO add further validation
+        return new SimpleChromatographyInfo(rt1, rt2, null, separationType);
     }
 
-    public static final @Nonnull IChromatographyData getChromatographyData() {
-	return new ChromatographyDataImpl();
+    public static final @Nonnull ChromatographyInfo getImsInfo(SeparationType separationType, float rt1, float ionDriftTime) {
+        if (separationType.getFeatureDimensions() < 2) {
+            throw new IllegalArgumentException("2D ChromatographyInfo requires at least 2 feature dimensions. Provided separation type " + separationType + " has " + separationType.getFeatureDimensions());
+        }
+        if(separationType!=SeparationType.IMS) {
+            throw new IllegalArgumentException("2D ChromatographyInfo for IMS separation requires IMS separation type. Provided separation type "+separationType);
+        }
+        return new SimpleChromatographyInfo(rt1, null, ionDriftTime, separationType);
     }
 
 }

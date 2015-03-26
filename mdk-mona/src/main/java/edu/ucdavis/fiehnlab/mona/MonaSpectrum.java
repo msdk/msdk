@@ -1,22 +1,19 @@
 package edu.ucdavis.fiehnlab.mona;
 
-import com.eclipsesource.json.JsonObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Range;
 import edu.ucdavis.fiehnlab.mona.pojo.Spectra;
-import edu.ucdavis.fiehnlab.mona.util.DataPoint;
-import io.github.msdk.datamodel.rawdata.IDataPoint;
-import io.github.msdk.datamodel.rawdata.IDataPointList;
-import io.github.msdk.datamodel.rawdata.IMassSpectrum;
+import edu.ucdavis.fiehnlab.mona.util.DataPointImpl;
+import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.MassSpectrum;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
-import edu.ucdavis.fiehnlab.mona.util.PointList;
+import edu.ucdavis.fiehnlab.mona.util.PointListImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -30,7 +27,7 @@ import java.util.logging.Logger;
  * Date: 3/17/15
  * Time: 2:39 PM
  */
-public class MonaSpectrum implements IMassSpectrum,IMonaConfiguration {
+public class MonaSpectrum implements MassSpectrum,MonaConfiguration {
 
     private Logger logger = Logger.getLogger("mona");
 
@@ -42,7 +39,7 @@ public class MonaSpectrum implements IMassSpectrum,IMonaConfiguration {
     /**
      * storage of dataPoints
      */
-    private IDataPointList dataPoints;
+    private DataPointList dataPoints;
 
     /**
      * build a new mona spectrum from the given record
@@ -77,12 +74,12 @@ public class MonaSpectrum implements IMassSpectrum,IMonaConfiguration {
         //convert to internal model
         for(String s : monaRecord.getSpectrum().split(" ")){
             String v[] = s.split(":");
-            addDataPoint(Double.parseDouble(v[0]),Double.parseDouble(v[1]));
+            addDataPoint(Double.parseDouble(v[0]),Float.parseFloat(v[1]));
         }
 
-        Collections.sort(dataPoints, new Comparator<IDataPoint>() {
+        Collections.sort(dataPoints, new Comparator<DataPoint>() {
             @Override
-            public int compare(IDataPoint o1, IDataPoint o2) {
+            public int compare(DataPoint o1, DataPoint o2) {
                 return o1.getMz().compareTo(o2.getMz());
             }
         });
@@ -95,11 +92,11 @@ public class MonaSpectrum implements IMassSpectrum,IMonaConfiguration {
      * @param mass
      * @param intensity
      */
-    protected void addDataPoint(Double mass, Double intensity){
+    protected void addDataPoint(Double mass, Float intensity){
         if(this.dataPoints == null){
-            this.dataPoints = new PointList();
+            this.dataPoints = new PointListImpl();
         }
-        this.dataPoints.add(new DataPoint(mass,intensity));
+        this.dataPoints.add(new DataPointImpl(mass,intensity));
     }
 
     @Nonnull
@@ -113,30 +110,26 @@ public class MonaSpectrum implements IMassSpectrum,IMonaConfiguration {
         this.spectrumType = spectrumType;
     }
 
-    @Override
-    public int getNumberOfDataPoints() {
-        return 0;
-    }
 
     @Nonnull
     @Override
-    public IDataPointList getDataPoints() {
+    public DataPointList getDataPoints() {
         return dataPoints;
     }
 
     @Override
-    public void getDataPoints(IDataPointList list) {
+    public void getDataPoints(DataPointList list) {
         list.clear();
-        for (IDataPoint dataPoint : dataPoints) {
+        for (DataPoint dataPoint : dataPoints) {
             list.add(dataPoint);
         }
     }
 
     @Nonnull
     @Override
-    public IDataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange) {
-        IDataPointList list = new PointList();
-        for(IDataPoint dataPoint : dataPoints){
+    public DataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange) {
+        DataPointList list = new PointListImpl();
+        for(DataPoint dataPoint : dataPoints){
             if(mzRange.contains(dataPoint.getMz())){
                 list.add(dataPoint);
             }
@@ -146,10 +139,10 @@ public class MonaSpectrum implements IMassSpectrum,IMonaConfiguration {
 
     @Nonnull
     @Override
-    public List<IDataPoint> getDataPointsByIntensity(@Nonnull Range<Double> intensityRange) {
+    public List<DataPoint> getDataPointsByIntensity(@Nonnull Range<Float> intensityRange) {
 
-        IDataPointList list = new PointList();
-        for(IDataPoint dataPoint : dataPoints){
+        DataPointList list = new PointListImpl();
+        for(DataPoint dataPoint : dataPoints){
             if(intensityRange.contains(dataPoint.getIntensity())){
                 list.add(dataPoint);
             }
@@ -158,7 +151,7 @@ public class MonaSpectrum implements IMassSpectrum,IMonaConfiguration {
     }
 
     @Override
-    public void setDataPoints(@Nonnull IDataPointList newDataPoints) {
+    public void setDataPoints(@Nonnull DataPointList newDataPoints) {
         this.dataPoints = newDataPoints;
     }
 
@@ -170,10 +163,10 @@ public class MonaSpectrum implements IMassSpectrum,IMonaConfiguration {
 
     @Nullable
     @Override
-    public IDataPoint getHighestDataPoint() {
-        IDataPoint point = null;
+    public DataPoint getHighestDataPoint() {
+        DataPoint point = null;
 
-        for (IDataPoint p : getDataPoints()) {
+        for (DataPoint p : getDataPoints()) {
             if (point == null) {
                 point = p;
             } else {
@@ -187,10 +180,10 @@ public class MonaSpectrum implements IMassSpectrum,IMonaConfiguration {
 
     @Nonnull
     @Override
-    public Double getTIC() {
-        Double tic = 0.0;
+    public Float getTIC() {
+        Float tic = 0.0F;
 
-        for (IDataPoint point : getDataPoints()) {
+        for (DataPoint point : getDataPoints()) {
             tic = point.getIntensity() + tic;
         }
         return tic;

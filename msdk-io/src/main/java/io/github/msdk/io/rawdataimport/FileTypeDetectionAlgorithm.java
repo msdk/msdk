@@ -61,7 +61,7 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
 
     private @Nonnull File fileName;
     private @Nullable RawDataFileType result = null;
-    private double finishedPercentage = 0.0;
+    private Float finishedPercentage = null;
 
     /**
      * 
@@ -80,7 +80,7 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
 	} catch (IOException e) {
 	    throw new MSDKException(e);
 	}
-	finishedPercentage = 1.0;
+	finishedPercentage = 1f;
 	return result;
 
     }
@@ -95,7 +95,7 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
 		    return RawDataFileType.WATERS_RAW;
 	    }
 	    // We don't recognize any other directory type than Waters
-	    return RawDataFileType.UNSUPPORTED;
+	    return null;
 	}
 
 	// Read the first 1kB of the file into a String
@@ -123,12 +123,12 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
 	if (fileHeader.contains(MZXML_HEADER))
 	    return RawDataFileType.MZXML;
 
-	return RawDataFileType.UNSUPPORTED;
+	return null;
 
     }
 
     @Override
-    public double getFinishedPercentage() {
+    public Float getFinishedPercentage() {
 	return finishedPercentage;
     }
 

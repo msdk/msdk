@@ -1,10 +1,10 @@
 package edu.ucdavis.fiehnlab.mona;
 
 import com.google.common.collect.Range;
-import edu.ucdavis.fiehnlab.mona.util.PointList;
-import io.github.msdk.datamodel.rawdata.IDataPoint;
-import io.github.msdk.datamodel.rawdata.IDataPointList;
-import io.github.msdk.datamodel.rawdata.IMassSpectrum;
+import edu.ucdavis.fiehnlab.mona.util.PointListImpl;
+import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.MassSpectrum;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 
 public class MonaSpectrumTest {
 
-    IMassSpectrum spectrum;
+    MassSpectrum spectrum;
 
     @org.junit.Before
     public void setUp() throws Exception {
@@ -47,13 +47,13 @@ public class MonaSpectrumTest {
     @org.junit.Test
     public void testGetDataPointsByIntensity() throws Exception {
 
-        List<IDataPoint> list = spectrum.getDataPointsByIntensity(Range.closed(0.6, 1.0));
+        List<DataPoint> list = spectrum.getDataPointsByIntensity(Range.closed(0.6F, 1.0F));
         assertTrue(list.size() == 4);
     }
 
     @org.junit.Test
     public void testSetDataPoints() throws Exception {
-        IDataPointList list = new PointList();
+        DataPointList list = new PointListImpl();
         spectrum.getDataPoints(list);
         assertTrue(list.size() == 5);
     }

@@ -1,7 +1,7 @@
 package edu.ucdavis.fiehnlab.mona;
 
-import io.github.msdk.datamodel.rawdata.IMassSpectrum;
-import io.github.msdk.query.ISearch;
+import io.github.msdk.datamodel.rawdata.MassSpectrum;
+import io.github.msdk.query.Search;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -11,19 +11,19 @@ import java.util.Iterator;
  * implementation of the search interface, with mona specific options
  * Created by Gert on 3/23/2015.
  */
-public class MonaSearch implements ISearch {
+public class MonaSearch implements Search {
     @Override
-    public IMassSpectrum findSpectrumById(long id) throws IOException {
+    public MassSpectrum findSpectrumById(long id) throws IOException {
         return new MonaSpectrum(id);
     }
 
     @Override
-    public Iterator<IMassSpectrum> findSpectrumByProperty(String propertyName, Serializable propertyValue) {
+    public Iterator<MassSpectrum> findSpectrumByProperty(String propertyName, Serializable propertyValue) {
         return null;
     }
 
     @Override
-    public Iterator<IMassSpectrum> findSimilarSpectra(IMassSpectrum compare, Double minSimilarity) {
+    public Iterator<MassSpectrum> findSimilarSpectra(MassSpectrum compare, Double minSimilarity) {
         return null;
     }
 }
