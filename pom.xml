@@ -15,9 +15,9 @@
 		<module>msdk-io</module>
 		<module>msdk-rawdata</module>
 		<module>msdk-interfaces</module>
-        <module>msdk-query</module>
-        <module>mdk-mona</module>
-    </modules>
+		<module>msdk-query</module>
+		<module>mdk-mona</module>
+	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -61,11 +61,22 @@
 			<name>Tomáš Pluskal</name>
 			<email>plusik@gmail.com</email>
 		</developer>
-        <developer>
-            <name>Gert Wohlgemuth</name>
-            <email>berlinguyinca@gmail.com</email>
-        </developer>
-
+		<developer>
+			<name>Gert Wohlgemuth</name>
+			<email>berlinguyinca@gmail.com</email>
+		</developer>
+		<developer>
+			<name>Nils Hoffmann</name>
+			<email>nhoffmann@netbeans.org</email>
+		</developer>
+		<developer>
+			<name>Richard A. Scheltema</name>
+			<email>R.A.Scheltema@uu.nl</email>
+		</developer>
+		<developer>
+			<name>Thomas F. Dyrlund</name>
+			<email>tfrd@steno.dk</email>
+		</developer>
 	</developers>
 
 	<build>
@@ -82,5 +93,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>
