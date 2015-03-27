@@ -60,40 +60,39 @@ public class SimpleFeature implements Feature {
 
     @SuppressWarnings("null")
     SimpleFeature() {
-	this.rtRange=Range.all();
-	this.mzRange=Range.all();
-	this.intensityRange=Range.all();
+        this.rtRange = Range.all();
+        this.mzRange = Range.all();
+        this.intensityRange = Range.all();
     }
 
     /**
      * Initializes a new peak using given values
      * 
      */
-     SimpleFeature(RawDataFile dataFile, double MZ, double RT,
-	    double height, double area, int[] scanNumbers,
-	    DataPoint[] dataPointsPerScan, FeatureType peakStatus,
-	    int representativeScan, int fragmentScanNumber,
-	    Range<Double> rtRange, Range<Double> mzRange,
-	    Range<Double> intensityRange) {
+    SimpleFeature(RawDataFile dataFile, double MZ, double RT, double height,
+            double area, int[] scanNumbers, DataPoint[] dataPointsPerScan,
+            FeatureType peakStatus, int representativeScan,
+            int fragmentScanNumber, Range<Double> rtRange,
+            Range<Double> mzRange, Range<Double> intensityRange) {
 
-	if (dataPointsPerScan.length == 0) {
-	    throw new IllegalArgumentException(
-		    "Cannot create a SimplePeak instance with no data points");
-	}
+        if (dataPointsPerScan.length == 0) {
+            throw new IllegalArgumentException(
+                    "Cannot create a SimplePeak instance with no data points");
+        }
 
-	this.dataFile = dataFile;
-	this.mz = MZ;
-	this.rt = RT;
-	this.height = height;
-	this.area = area;
-	this.scanNumbers = scanNumbers;
-	this.peakStatus = peakStatus;
-	this.representativeScan = representativeScan;
-	this.fragmentScanNumber = fragmentScanNumber;
-	this.rtRange = rtRange;
-	this.mzRange = mzRange;
-	this.intensityRange = intensityRange;
-	this.dataPointsPerScan = dataPointsPerScan;
+        this.dataFile = dataFile;
+        this.mz = MZ;
+        this.rt = RT;
+        this.height = height;
+        this.area = area;
+        this.scanNumbers = scanNumbers;
+        this.peakStatus = peakStatus;
+        this.representativeScan = representativeScan;
+        this.fragmentScanNumber = fragmentScanNumber;
+        this.rtRange = rtRange;
+        this.mzRange = mzRange;
+        this.intensityRange = intensityRange;
+        this.dataPointsPerScan = dataPointsPerScan;
 
     }
 
@@ -102,151 +101,150 @@ public class SimpleFeature implements Feature {
      */
     @Override
     public String toString() {
-	return super.toString();
+        return super.toString();
     }
 
     /**
      * @see io.github.msdk.datamodel.Feature#getRawDataPointsIntensityRange()
      */
     public @Nonnull Range<Double> getRawDataPointsIntensityRange() {
-	return intensityRange;
+        return intensityRange;
     }
 
     /**
      * @see io.github.msdk.datamodel.Feature#getRawDataPointsMZRange()
      */
     public @Nonnull Range<Double> getRawDataPointsMZRange() {
-	return mzRange;
+        return mzRange;
     }
 
     /**
      * @see io.github.msdk.datamodel.Feature#getRawDataPointsRTRange()
      */
     public @Nonnull Range<Double> getRawDataPointsRTRange() {
-	return rtRange;
+        return rtRange;
     }
 
     /**
      * @see io.github.msdk.datamodel.Feature#getRepresentativeScanNumber()
      */
     public int getRepresentativeScanNumber() {
-	return representativeScan;
+        return representativeScan;
     }
 
     public int getMostIntenseFragmentScanNumber() {
-	return fragmentScanNumber;
+        return fragmentScanNumber;
     }
 
     @Override
     @Nonnull
     public PeakListRow getParentPeakListRow() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     @Nonnull
     public FeatureType getFeatureType() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setFeatureType(@Nonnull FeatureType newStatus) {
-	// TODO Auto-generated method stub
-	
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     @Nonnull
     public Double getMz() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setMz(@Nonnull Double newMZ) {
-	// TODO Auto-generated method stub
-	
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     @Nullable
     public ChromatographyInfo getChromatographyInfo() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setChromatographyInfo(@Nullable ChromatographyInfo chromData) {
-	// TODO Auto-generated method stub
-	
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     @Nonnull
     public Float getHeight() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setHeight(@Nonnull Float newHeight) {
-	// TODO Auto-generated method stub
-	
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     @Nullable
     public Float getArea() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setArea(@Nullable Float newArea) {
-	// TODO Auto-generated method stub
-	
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     @Nullable
     public FeatureShape getFeatureShape() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setFeatureShape(@Nullable FeatureShape rawData) {
-	// TODO Auto-generated method stub
-	
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     @Nullable
     public IsotopePattern getIsotopePattern() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setIsotopePattern(@Nullable IsotopePattern isotopePattern) {
-	// TODO Auto-generated method stub
-	
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     @Nullable
     public Integer getCharge() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setCharge(@Nullable Integer charge) {
-	// TODO Auto-generated method stub
-	
-    }
+        // TODO Auto-generated method stub
 
+    }
 
 }

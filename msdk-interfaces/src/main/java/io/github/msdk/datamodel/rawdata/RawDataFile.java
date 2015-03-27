@@ -142,7 +142,7 @@ public interface RawDataFile {
      */
     @Nonnull
     List<MsScan> getScans(@Nonnull MsFunction function,
-	    @Nonnull Range<ChromatographyInfo> chromatographyRange);
+            @Nonnull Range<ChromatographyInfo> chromatographyRange);
 
     /**
      * Remove all data associated with this file from the disk. After this

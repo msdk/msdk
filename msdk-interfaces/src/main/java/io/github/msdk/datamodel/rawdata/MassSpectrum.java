@@ -93,7 +93,7 @@ public interface MassSpectrum {
      */
     @Nonnull
     List<DataPoint> getDataPointsByIntensity(
-	    @Nonnull Range<Float> intensityRange);
+            @Nonnull Range<Float> intensityRange);
 
     /**
      * Updates the data points of this mass spectrum. If this MassSpectrum has

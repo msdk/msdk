@@ -30,99 +30,101 @@ public class RawDataimportTest {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    @Ignore("not ready yet") @Test
+    @Ignore("not ready yet")
+    @Test
     public void testXMLFileImport() throws Exception {
 
-	File inputFiles[] = new File("src/test/resources/rawdataimport/xml")
-		.listFiles();
+        File inputFiles[] = new File("src/test/resources/rawdataimport/xml")
+                .listFiles();
 
-	assertNotNull(inputFiles);
-	assertNotEquals(0, inputFiles.length);
+        assertNotNull(inputFiles);
+        assertNotEquals(0, inputFiles.length);
 
-	int filesTested = 0;
-	for (File inputFile : inputFiles) {
-	    importFile(inputFile);
-	    filesTested++;
-	}
+        int filesTested = 0;
+        for (File inputFile : inputFiles) {
+            importFile(inputFile);
+            filesTested++;
+        }
 
-	// make sure we tested some files
-	assertTrue(filesTested > 0);
+        // make sure we tested some files
+        assertTrue(filesTested > 0);
     }
-    
-    @Ignore("not ready yet") @Test
+
+    @Ignore("not ready yet")
+    @Test
     public void testCDFFileImport() throws Exception {
 
-	File inputFiles[] = new File("src/test/resources/rawdataimport/netcdf")
-		.listFiles();
+        File inputFiles[] = new File("src/test/resources/rawdataimport/netcdf")
+                .listFiles();
 
-	assertNotNull(inputFiles);
-	assertNotEquals(0, inputFiles.length);
+        assertNotNull(inputFiles);
+        assertNotEquals(0, inputFiles.length);
 
-	int filesTested = 0;
-	for (File inputFile : inputFiles) {
-	    importFile(inputFile);
-	    filesTested++;
-	}
+        int filesTested = 0;
+        for (File inputFile : inputFiles) {
+            importFile(inputFile);
+            filesTested++;
+        }
 
-	// make sure we tested some files
-	assertTrue(filesTested > 0);
+        // make sure we tested some files
+        assertTrue(filesTested > 0);
     }
 
     @Test
     public void testThermoRawImport() throws Exception {
-	
-	// Run this test only on Windows
-	assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
-	File inputFiles[] = new File("src/test/resources/rawdataimport/thermo")
-		.listFiles();
+        // Run this test only on Windows
+        assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
-	assertNotNull(inputFiles);
-	assertNotEquals(0, inputFiles.length);
+        File inputFiles[] = new File("src/test/resources/rawdataimport/thermo")
+                .listFiles();
 
-	int filesTested = 0;
-	for (File inputFile : inputFiles) {
-	    importFile(inputFile);
-	    filesTested++;
-	}
+        assertNotNull(inputFiles);
+        assertNotEquals(0, inputFiles.length);
 
-	// make sure we tested some files
-	assertTrue(filesTested > 0);
+        int filesTested = 0;
+        for (File inputFile : inputFiles) {
+            importFile(inputFile);
+            filesTested++;
+        }
+
+        // make sure we tested some files
+        assertTrue(filesTested > 0);
     }
-    
+
     @Test
     public void testWatersRawImport() throws Exception {
 
-	// Run this test only on Windows
-	assumeTrue(System.getProperty("os.name").startsWith("Windows"));
+        // Run this test only on Windows
+        assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
-	File inputFiles[] = new File("src/test/resources/rawdataimport/waters")
-		.listFiles();
+        File inputFiles[] = new File("src/test/resources/rawdataimport/waters")
+                .listFiles();
 
-	assertNotNull(inputFiles);
-	assertNotEquals(0, inputFiles.length);
+        assertNotNull(inputFiles);
+        assertNotEquals(0, inputFiles.length);
 
-	int filesTested = 0;
-	for (File inputFile : inputFiles) {
-	    importFile(inputFile);
-	    filesTested++;
-	}
+        int filesTested = 0;
+        for (File inputFile : inputFiles) {
+            importFile(inputFile);
+            filesTested++;
+        }
 
-	// make sure we tested some files
-	// assertTrue(filesTested > 0);
+        // make sure we tested some files
+        // assertTrue(filesTested > 0);
     }
 
     private void importFile(File inputFile) throws Exception {
-	
-	logger.info("Checking import of file " + inputFile.getName());
 
-	RawDataFileImportAlgorithm importer = new RawDataFileImportAlgorithm(
-		inputFile);
-	importer.execute();
-	RawDataFile rawFile = importer.getResult();
+        logger.info("Checking import of file " + inputFile.getName());
 
-	assertNotNull(rawFile);
-	assertNotEquals(rawFile.getScans().size(), 0);
+        RawDataFileImportAlgorithm importer = new RawDataFileImportAlgorithm(
+                inputFile);
+        importer.execute();
+        RawDataFile rawFile = importer.getResult();
+
+        assertNotNull(rawFile);
+        assertNotEquals(rawFile.getScans().size(), 0);
 
     }
 }
