@@ -35,7 +35,6 @@ class SimpleDataPoint implements DataPoint {
     }
 
     @Override
-
     public Float getIntensity() {
         return intensity;
     }

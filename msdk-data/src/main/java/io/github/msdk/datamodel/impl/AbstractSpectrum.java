@@ -38,42 +38,42 @@ abstract class AbstractSpectrum implements MassSpectrum {
     private DataPoint highestDataPoint;
 
     AbstractSpectrum(@Nonnull DataPointStore dataPointStore) {
-	this.dataPointStore = dataPointStore;
-	mzRange = Range.singleton(0d);
+        this.dataPointStore = dataPointStore;
+        mzRange = Range.singleton(0d);
     }
 
     @Override
     @Nonnull
     public Range<Double> getMzRange() {
-	return mzRange;
+        return mzRange;
     }
 
     @Override
     @Nullable
     public DataPoint getHighestDataPoint() {
-	return highestDataPoint;
+        return highestDataPoint;
     }
 
     @Override
     public synchronized @Nonnull DataPointList getDataPoints() {
-	DataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
-	return storedData;
+        DataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
+        return storedData;
     }
 
     @Override
     @Nonnull
     public DataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange) {
-	return null;
+        return null;
     }
 
     @Override
     public @Nonnull MassSpectrumType getSpectrumType() {
-	return spectrumType;
+        return spectrumType;
     }
 
     @Override
     public void setSpectrumType(@Nonnull MassSpectrumType spectrumType) {
-	this.spectrumType = spectrumType;
+        this.spectrumType = spectrumType;
     }
 
 }

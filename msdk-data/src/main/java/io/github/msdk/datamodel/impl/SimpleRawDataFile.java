@@ -39,90 +39,88 @@ class SimpleRawDataFile extends DataPointStore implements RawDataFile {
     private final List<MsScan> scans;
 
     SimpleRawDataFile() {
-	rawDataFileName = "New file";
-	originalRawDataFile = this;
-	scans = new ArrayList<MsScan>();
+        rawDataFileName = "New file";
+        originalRawDataFile = this;
+        scans = new ArrayList<MsScan>();
     }
 
     @Override
     public @Nonnull String getName() {
-	// TODO Auto-generated method stub
-	return "";
+        // TODO Auto-generated method stub
+        return "";
     }
 
     @Override
     public void setName(@Nonnull String name) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void addScan(@Nonnull MsScan scan) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void removeScan(@Nonnull MsScan scan) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     public @Nonnull List<MsScan> getScans() {
-	// TODO Auto-generated method stub
-	return Lists.newArrayList();
+        // TODO Auto-generated method stub
+        return Lists.newArrayList();
     }
 
     @Override
     @Nullable
     public File getOriginalFile() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setOriginalFile(@Nullable File newOriginalFile) {
-	// TODO Auto-generated method stub
-	
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     @Nonnull
     public List<MsFunction> getMsFunctions() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public int getNumberOfScans() {
-	// TODO Auto-generated method stub
-	return 0;
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     @Override
     @Nonnull
     public List<MsScan> getScans(MsFunction function) {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     @Nonnull
     public List<MsScan> getScans(
-	    @Nonnull Range<ChromatographyInfo> chromatographyRange) {
-	// TODO Auto-generated method stub
-	return null;
+            @Nonnull Range<ChromatographyInfo> chromatographyRange) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     @Nonnull
     public List<MsScan> getScans(@Nonnull MsFunction function,
-	    @Nonnull Range<ChromatographyInfo> chromatographyRange) {
-	// TODO Auto-generated method stub
-	return null;
+            @Nonnull Range<ChromatographyInfo> chromatographyRange) {
+        // TODO Auto-generated method stub
+        return null;
     }
-
-
 
 }
