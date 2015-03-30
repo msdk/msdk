@@ -12,7 +12,17 @@
     <artifactId>msdk-mona</artifactId>
 
     <name>MSDK - MoNA</name>
-    <description>Simple implementation to the Massbank of America, REST api</description>
+    <description>
+        MassBank of America (MoNA), is an auto curating repository for storing, comparing and querying mass spectra of chemical compounds. It is metadata centric and it was designed to allow easy integration into other tools by utilize its REST based application programming interface.
+
+        At the current time it contains over 200k predicted and 40k unique experimental mass spectra and their associated metadata. The predicted spectra were obtained by utilizing the lipid blast library and the experimental spectra were acquired from 30 different facilities all over the world, including several major research facilities in the United States and Japan.
+
+        MoNA is utilizing the InChI Key as unique identifier for chemicals and is designed for easy scalability and expendability. This is realized by utilizing common applications like nginx, grails, AngularJS, postgresSQL and tomcat.
+
+        MoNA is currently integrated in applications like MSDial, BinBase, MZMine and the statistics package R. This was accomplished by utilizing its REST based API, which is also utilized by its main AngularJS based web interface. We consider MoNA to be highly useful for crosslinking mass spectra in publications, identification of unknowns and integration in data acquisition software.
+
+        This package provides you with access to the REST api of the main MoNA installation.
+    </description>
 
     <dependencies>
         <dependency>
