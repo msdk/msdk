@@ -2,6 +2,7 @@ package edu.ucdavis.fiehnlab.mona;
 
 import edu.ucdavis.fiehnlab.mona.pojo.Result;
 import edu.ucdavis.fiehnlab.mona.pojo.SimilaritySearch;
+import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.MassSpectrum;
 import io.github.msdk.query.Search;
 
@@ -13,7 +14,6 @@ import java.util.List;
 
 /**
  * implementation of the search interface, with mona specific options
- * Created by Gert on 3/23/2015.
  */
 public class MonaSearch implements Search {
     @Override
@@ -28,6 +28,18 @@ public class MonaSearch implements Search {
 
     @Override
     public Iterator<MassSpectrum> findSimilarSpectra(MassSpectrum compare, Double minSimilarity) {
+
+        StringBuffer spectraString = new StringBuffer();
+
+        for(DataPoint p :compare.getDataPoints()){
+            spectraString.append(p.getMz());
+            spectraString.append(":");
+            spectraString.append(p.getIntensity());
+            spectraString.append(" ");
+        }
+
+        spectraString.trimToSize();
+
 
         SimilaritySearch similaritySearch = new SimilaritySearch();
 
@@ -48,6 +60,11 @@ public class MonaSearch implements Search {
                 } catch (IOException e) {
                     throw new RuntimeException(e.getMessage(), e);
                 }
+            }
+
+            @Override
+            public void remove() {
+                resultIterator.remove();
             }
         };
 
