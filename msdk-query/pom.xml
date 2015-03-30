@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>MSDK-query</artifactId>
+    <name>MSDK - Query</name>
 
     <description>simple query interface to the MSDK system</description>
 
