@@ -42,7 +42,7 @@ public class RawDataFileImportAlgorithm implements MSDKMethod<RawDataFile> {
      * @param sourceFile
      */
     public RawDataFileImportAlgorithm(@Nonnull File sourceFile) {
-	this.sourceFile = sourceFile;
+        this.sourceFile = sourceFile;
     }
 
     /**
@@ -51,50 +51,50 @@ public class RawDataFileImportAlgorithm implements MSDKMethod<RawDataFile> {
     @Override
     public RawDataFile execute() throws MSDKException {
 
-	FileTypeDetectionAlgorithm typeDetector = new FileTypeDetectionAlgorithm(
-		sourceFile);
-	RawDataFileType fileType = typeDetector.execute();
+        FileTypeDetectionAlgorithm typeDetector = new FileTypeDetectionAlgorithm(
+                sourceFile);
+        RawDataFileType fileType = typeDetector.execute();
 
-	if (fileType == null)
-	    throw new MSDKException("Unsupported file type of file "
-		    + sourceFile);
+        if (fileType == null)
+            throw new MSDKException("Unsupported file type of file "
+                    + sourceFile);
 
-	if (canceled)
-	    return null;
-	switch (fileType) {
-	case MZML:
-	case MZXML:
-	case MZDATA:
-	    parser = new XMLFileImportAlgorithm(sourceFile, fileType);
-	    break;
-	default:
-	    throw new MSDKException("Unsupported file type of file "
-		    + sourceFile);
-	}
+        if (canceled)
+            return null;
+        switch (fileType) {
+        case MZML:
+        case MZXML:
+        case MZDATA:
+            parser = new XMLFileImportAlgorithm(sourceFile, fileType);
+            break;
+        default:
+            throw new MSDKException("Unsupported file type of file "
+                    + sourceFile);
+        }
 
-	result = parser.execute();
-	return result;
+        result = parser.execute();
+        return result;
 
     }
 
     @Override
     public Float getFinishedPercentage() {
-	if (parser == null)
-	    return null;
-	return parser.getFinishedPercentage();
+        if (parser == null)
+            return null;
+        return parser.getFinishedPercentage();
     }
 
     @Override
     @Nullable
     public RawDataFile getResult() {
-	return result;
+        return result;
     }
 
     @Override
     public void cancel() {
-	canceled = true;
-	if (parser != null)
-	    parser.cancel();
+        canceled = true;
+        if (parser != null)
+            parser.cancel();
     }
 
 }

@@ -20,10 +20,11 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 public class SimpleChromatographyInfo implements ChromatographyInfo {
 
     private Float retentionTime, secondaryRetentionTime, ionDriftTime;
-    
+
     private SeparationType separationType;
 
-    SimpleChromatographyInfo(Float retentionTime, Float secondaryRetentionTime, Float ionDriftTime, SeparationType separationType) {
+    SimpleChromatographyInfo(Float retentionTime, Float secondaryRetentionTime,
+            Float ionDriftTime, SeparationType separationType) {
         this.retentionTime = retentionTime;
         this.secondaryRetentionTime = secondaryRetentionTime;
         this.ionDriftTime = ionDriftTime;
@@ -35,7 +36,7 @@ public class SimpleChromatographyInfo implements ChromatographyInfo {
      */
     @Override
     public Float getRetentionTime() {
-	return retentionTime;
+        return retentionTime;
     }
 
     /**
@@ -43,7 +44,7 @@ public class SimpleChromatographyInfo implements ChromatographyInfo {
      */
     @Override
     public Float getSecondaryRetentionTime() {
-	return secondaryRetentionTime;
+        return secondaryRetentionTime;
     }
 
     /**
@@ -51,13 +52,13 @@ public class SimpleChromatographyInfo implements ChromatographyInfo {
      */
     @Override
     public Float getIonDriftTime() {
-	return ionDriftTime;
+        return ionDriftTime;
     }
 
     @Override
     public int compareTo(ChromatographyInfo o) {
-	// TODO Auto-generated method stub
-	return 0;
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     @Override

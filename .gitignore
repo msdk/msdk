@@ -4,6 +4,8 @@ target/
 .project
 .classpath
 **/*.iml
+**/*.ipr
+**/*.iws
 .idea/.name
 .idea/compiler.xml
 .idea/copyright/profiles_settings.xml

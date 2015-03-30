@@ -50,26 +50,26 @@ abstract class DataPointStore {
 
     DataPointStore() {
 
-	try {
-	    tmpDataFileName = File.createTempFile("msdk", ".tmp");
-	    tmpDataFile = new RandomAccessFile(tmpDataFileName, "rw");
+        try {
+            tmpDataFileName = File.createTempFile("msdk", ".tmp");
+            tmpDataFile = new RandomAccessFile(tmpDataFileName, "rw");
 
-	    /*
-	     * Locks the temporary file.
-	     */
-	    FileChannel fileChannel = tmpDataFile.getChannel();
-	    fileChannel.lock();
+            /*
+             * Locks the temporary file.
+             */
+            FileChannel fileChannel = tmpDataFile.getChannel();
+            fileChannel.lock();
 
-	    tmpDataFileName.deleteOnExit();
+            tmpDataFileName.deleteOnExit();
 
-	} catch (IOException e) {
-	    throw new RuntimeException(
-		    "I/O error while creating a new MSDK object", e);
-	}
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    "I/O error while creating a new MSDK object", e);
+        }
 
-	byteBuffer = ByteBuffer.allocate(20000);
-	dataPointsOffsets = new TreeMap<Integer, Long>();
-	dataPointsLengths = new TreeMap<Integer, Integer>();
+        byteBuffer = ByteBuffer.allocate(20000);
+        dataPointsOffsets = new TreeMap<Integer, Long>();
+        dataPointsLengths = new TreeMap<Integer, Integer>();
 
     }
 
@@ -80,46 +80,46 @@ abstract class DataPointStore {
      */
     synchronized int storeDataPoints(@Nonnull DataPointList dataPoints) {
 
-	long currentOffset;
-	try {
-	    currentOffset = tmpDataFile.length();
+        long currentOffset;
+        try {
+            currentOffset = tmpDataFile.length();
 
-	    final int numOfDataPoints = dataPoints.size();
+            final int numOfDataPoints = dataPoints.size();
 
-	    /*
-	     * Convert the data points into a byte array. Each double takes 8
-	     * bytes, so we get the current float offset by dividing the size of
-	     * the file by 8.
-	     */
-	    final int numOfBytes = numOfDataPoints * 2 * 8;
+            /*
+             * Convert the data points into a byte array. Each double takes 8
+             * bytes, so we get the current float offset by dividing the size of
+             * the file by 8.
+             */
+            final int numOfBytes = numOfDataPoints * 2 * 8;
 
-	    if (byteBuffer.capacity() < numOfBytes) {
-		byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
-	    } else {
-		byteBuffer.clear();
-	    }
+            if (byteBuffer.capacity() < numOfBytes) {
+                byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
+            } else {
+                byteBuffer.clear();
+            }
 
-	    DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
-	    for (DataPoint dp : dataPoints) {
-		dblBuffer.put(dp.getMz());
-		dblBuffer.put(dp.getIntensity());
-	    }
+            DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
+            for (DataPoint dp : dataPoints) {
+                dblBuffer.put(dp.getMz());
+                dblBuffer.put(dp.getIntensity());
+            }
 
-	    tmpDataFile.seek(currentOffset);
-	    tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
+            tmpDataFile.seek(currentOffset);
+            tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
 
-	    // Increase the storage ID
-	    lastStorageId++;
+            // Increase the storage ID
+            lastStorageId++;
 
-	    dataPointsOffsets.put(lastStorageId, currentOffset);
-	    dataPointsLengths.put(lastStorageId, numOfDataPoints);
+            dataPointsOffsets.put(lastStorageId, currentOffset);
+            dataPointsLengths.put(lastStorageId, numOfDataPoints);
 
-	} catch (IOException e) {
-	    e.printStackTrace();
-	    return -1;
-	}
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1;
+        }
 
-	return lastStorageId;
+        return lastStorageId;
 
     }
 
@@ -128,42 +128,42 @@ abstract class DataPointStore {
      */
     synchronized @Nonnull DataPointList readDataPoints(int ID) {
 
-	final Long currentOffset = dataPointsOffsets.get(ID);
-	final Integer numOfDataPoints = dataPointsLengths.get(ID);
+        final Long currentOffset = dataPointsOffsets.get(ID);
+        final Integer numOfDataPoints = dataPointsLengths.get(ID);
 
-	if ((currentOffset == null) || (numOfDataPoints == null)) {
-	    throw new RuntimeException("Unknown storage ID " + ID);
-	}
+        if ((currentOffset == null) || (numOfDataPoints == null)) {
+            throw new RuntimeException("Unknown storage ID " + ID);
+        }
 
-	final int numOfBytes = numOfDataPoints * 2 * 8;
+        final int numOfBytes = numOfDataPoints * 2 * 8;
 
-	if (byteBuffer.capacity() < numOfBytes) {
-	    byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
-	} else {
-	    byteBuffer.clear();
-	}
+        if (byteBuffer.capacity() < numOfBytes) {
+            byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
+        } else {
+            byteBuffer.clear();
+        }
 
-	try {
-	    tmpDataFile.seek(currentOffset);
-	    tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
-	} catch (IOException e) {
-	    e.printStackTrace();
-	    return null;
-	}
+        try {
+            tmpDataFile.seek(currentOffset);
+            tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
 
-	DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
+        DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
 
-	DataPoint dataPoints[] = new DataPoint[numOfDataPoints];
-	double mz;
-	float intensity;
+        DataPoint dataPoints[] = new DataPoint[numOfDataPoints];
+        double mz;
+        float intensity;
 
-	for (int i = 0; i < numOfDataPoints; i++) {
-	    mz = dblBuffer.get();
-	    intensity = (float) dblBuffer.get();
-	    dataPoints[i] = MSDKObjectBuilder.getDataPoint(mz, intensity);
-	}
+        for (int i = 0; i < numOfDataPoints; i++) {
+            mz = dblBuffer.get();
+            intensity = (float) dblBuffer.get();
+            dataPoints[i] = MSDKObjectBuilder.getDataPoint(mz, intensity);
+        }
 
-	return null;
+        return null;
 
     }
 
@@ -172,21 +172,21 @@ abstract class DataPointStore {
      * the data from disk, simply remove the reference to it.
      */
     synchronized void removeStoredDataPoints(long ID) {
-	dataPointsOffsets.remove(ID);
-	dataPointsLengths.remove(ID);
+        dataPointsOffsets.remove(ID);
+        dataPointsLengths.remove(ID);
     }
 
     public synchronized void dispose() {
-	if (!tmpDataFileName.exists())
-	    return;
-	try {
-	    tmpDataFile.close();
-	    tmpDataFileName.delete();
-	} catch (IOException e) {
-	    logger.warning("Could not close and remove temporary file "
-		    + tmpDataFileName + ": " + e.toString());
-	    e.printStackTrace();
-	}
+        if (!tmpDataFileName.exists())
+            return;
+        try {
+            tmpDataFile.close();
+            tmpDataFileName.delete();
+        } catch (IOException e) {
+            logger.warning("Could not close and remove temporary file "
+                    + tmpDataFileName + ": " + e.toString());
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -195,6 +195,6 @@ abstract class DataPointStore {
      */
     @Override
     protected void finalize() {
-	dispose();
+        dispose();
     }
 }
