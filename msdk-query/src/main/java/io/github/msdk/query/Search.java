@@ -38,5 +38,5 @@ public interface Search {
      * @return
      */
     @Nonnull
-    Iterator<MassSpectrum> findSimilarSpectra(MassSpectrum compare,Double minSimilarity);
+    Iterator<MassSpectrum> findSimilarSpectra(MassSpectrum compare,Integer minSimilarity);
 }

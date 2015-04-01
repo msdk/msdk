@@ -8,6 +8,6 @@ public interface MonaConfiguration {
     /**
      * oggicial mona repository url and endpoint
      */
-    public final static String MONA_URL = "http://mona.fiehnlab.ucdavis.edu/rest";
+    public final static String MONA_URL = "http://mona.fiehnlab.ucdavis.edu";
 
 }

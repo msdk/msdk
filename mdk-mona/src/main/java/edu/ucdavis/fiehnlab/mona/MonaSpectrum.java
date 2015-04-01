@@ -55,7 +55,7 @@ public class MonaSpectrum implements MassSpectrum,MonaConfiguration {
      */
     public MonaSpectrum(long id) throws IOException {
 
-        URL url = new URL(MONA_URL+"/spectra/"+id);
+        URL url = new URL(MONA_URL+"/rest/spectra/"+id);
 
         ObjectMapper mapper = new ObjectMapper();
         Spectra spectra = mapper.readValue(url.openStream(), Spectra.class);

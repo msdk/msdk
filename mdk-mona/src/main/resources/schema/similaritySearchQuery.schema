@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "spectra": {
+      "type": "string"
+    },
+    "minSimilarity": {
+      "type": "integer"
+    },
+    "commonIonCount": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "spectra",
+    "minSimilarity"
+  ]
+}
