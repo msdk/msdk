@@ -29,7 +29,7 @@ public interface Search {
      * @return
      */
     @Nonnull
-    Iterator<MassSpectrum> findSpectrumByProperty(String propertyName, Serializable propertyValue);
+    Iterator<MassSpectrum> findSpectrumByProperty(String propertyName, Serializable propertyValue) throws IOException;
 
     /**
      * searches for similar spectra
@@ -38,5 +38,5 @@ public interface Search {
      * @return
      */
     @Nonnull
-    Iterator<MassSpectrum> findSimilarSpectra(MassSpectrum compare,Integer minSimilarity);
+    Iterator<MassSpectrum> findSimilarSpectra(MassSpectrum compare,Integer minSimilarity) throws IOException;
 }

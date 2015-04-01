@@ -9,14 +9,13 @@ import java.util.Iterator;
 import static junit.framework.TestCase.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wohlgemuth
- * Date: 3/31/15
- * Time: 12:15 PM
  */
 public class MonaSearchTest {
 
-    private static final int TEST_ID = 3841762;
+    /**
+     * reference id to test
+     */
+    private static final long TEST_ID = 3841762;
 
     @Test
     public void testFindSpectrumById() throws Exception {
@@ -44,6 +43,24 @@ public class MonaSearchTest {
         int count = 0;
 
         while(result.hasNext()){
+            result.next();
+            count++;
+        }
+
+        assertTrue(count != 0);
+    }
+
+    @Test
+    public void testFindSimilarSpectraById() throws Exception {
+
+        MonaSearch search = new MonaSearch();
+
+        Iterator<MassSpectrum> result = search.findSimilarSpectra(TEST_ID, 900);
+
+        int count = 0;
+
+        while(result.hasNext()){
+            result.next();
             count++;
         }
 

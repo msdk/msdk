@@ -7,9 +7,8 @@ import edu.ucdavis.fiehnlab.mona.pojo.SimilaritySearchResult;
 import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.MassSpectrum;
 import io.github.msdk.query.Search;
-import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.filter.LoggingFilter;
-
+import org.glassfish.jersey.jackson.JacksonFeature;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -17,11 +16,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.io.IOException;
-
 import java.io.Serializable;
-import java.util.*;
+import java.util.Iterator;
 
 
 /**
@@ -38,11 +35,38 @@ public class MonaSearch implements Search, MonaConfiguration {
         return null;
     }
 
+    /**
+     * searches for similar spectra based on an existing mona id
+     * @param id
+     * @param minSimilarity
+     * @return
+     */
+    public Iterator<MassSpectrum> findSimilarSpectra(long id, Integer minSimilarity) throws IOException {
+        SimilaritySearchQuery query = new SimilaritySearchQuery();
+        query.setMinSimilarity(minSimilarity);
+        query.setSpectra(String.valueOf(id));
+        return getMassSpectrumIterator(query);
+    }
+
+    /**
+     * searches for similar spectra, based on the provided Spectrum
+     * @param compare
+     * @param minSimilarity
+     * @return
+     * @throws IOException
+     */
     @Override
-    public Iterator<MassSpectrum> findSimilarSpectra(MassSpectrum compare, Integer minSimilarity) {
+    public Iterator<MassSpectrum> findSimilarSpectra(MassSpectrum compare, Integer minSimilarity) throws IOException  {
         SimilaritySearchQuery query = buildQuery(compare, minSimilarity);
+        return getMassSpectrumIterator(query);
+    }
 
-
+    /**
+     * runs the actual query against the server and provides us with an iterator to access the results
+     * @param query
+     * @return
+     */
+    private Iterator<MassSpectrum> getMassSpectrumIterator(SimilaritySearchQuery query) throws IOException {
         //create a client and send data to the server
         final Client client = ClientBuilder.newBuilder().register(JacksonFeature.class).register(new LoggingFilter()).build();
 
