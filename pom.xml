@@ -16,7 +16,7 @@
 		<module>msdk-rawdata</module>
 		<module>msdk-interfaces</module>
 		<module>msdk-query</module>
-		<module>mdk-mona</module>
+		<module>msdk-mona</module>
 	</modules>
 
 	<properties>

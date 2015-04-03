@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>msdk</artifactId>
-        <groupId>io.github.msdk</groupId>
-        <version>0.1</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>msdk</artifactId>
+		<groupId>io.github.msdk</groupId>
+		<version>0.1</version>
+	</parent>
+	<artifactId>msdk-query</artifactId>
+	<modelVersion>4.0.0</modelVersion>
+	<name>MSDK - Query</name>
+	<description>Simple query interface to the MSDK system</description>
 
-    <artifactId>MSDK-query</artifactId>
-
-    <description>simple query interface to the MSDK system</description>
-
-    <dependencies>
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-interfaces</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-interfaces</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+	
 </project>
