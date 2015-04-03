@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>MSDK-query</artifactId>
+    <artifactId>msdk-query</artifactId>
 
     <description>simple query interface to the MSDK system</description>
 
