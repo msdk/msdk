@@ -9,8 +9,8 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 /**
- * simple query interface
- * Created by Gert on 3/23/2015.
+ * This provides the system with easy access to query data from external resources providing MassSpectra. Example ideas for implementation would be a MSP file based library, a third party REST service or other
+ * massspectral repositories
  */
 public interface Search {
 

@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
- * Created by Gert on 3/18/2015.
+ * Basic implementation of a data point list
  */
 public class PointListImpl extends ArrayList<DataPoint> implements DataPointList {
     @Nonnull

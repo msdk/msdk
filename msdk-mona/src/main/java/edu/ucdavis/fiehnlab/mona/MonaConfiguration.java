@@ -1,7 +1,7 @@
 package edu.ucdavis.fiehnlab.mona;
 
 /**
- * Created by Gert on 3/18/2015.
+ * a simple configuration interface for the MoNA system. It basically points you to the right endpoints, for it's web services
  */
 public interface MonaConfiguration {
 

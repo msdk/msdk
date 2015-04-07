@@ -22,7 +22,7 @@ import java.util.Iterator;
 
 
 /**
- * implementation of the search interface, with mona specific options
+ * MoNA specific implementation of the Search Interface
  */
 public class MonaSearch implements Search, MonaConfiguration {
     @Override
@@ -30,6 +30,12 @@ public class MonaSearch implements Search, MonaConfiguration {
         return new MonaSpectrum(id);
     }
 
+    /**
+     * returns a mass spectra by it's property name
+     * @param propertyName
+     * @param propertyValue
+     * @return
+     */
     @Override
     public Iterator<MassSpectrum> findSpectrumByProperty(String propertyName, Serializable propertyValue) {
         return null;
