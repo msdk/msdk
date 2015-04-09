@@ -1,14 +1,14 @@
 package edu.ucdavis.fiehnlab.mona;
 
-import com.google.common.collect.Range;
-import edu.ucdavis.fiehnlab.mona.util.PointListImpl;
+import static org.junit.Assert.assertTrue;
+import io.github.msdk.datamodel.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
 import io.github.msdk.datamodel.rawdata.MassSpectrum;
 
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import com.google.common.collect.Range;
 
 public class MonaSpectrumTest {
 
@@ -53,7 +53,7 @@ public class MonaSpectrumTest {
 
     @org.junit.Test
     public void testSetDataPoints() throws Exception {
-        DataPointList list = new PointListImpl();
+        DataPointList list = MSDKObjectBuilder.getDataPointList();
         spectrum.getDataPoints(list);
         assertTrue(list.size() == 5);
     }

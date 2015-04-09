@@ -77,6 +77,16 @@ public class MSDKObjectBuilder {
     }
 
     /**
+     * Creates a new DataPointList instance with no data points and initial
+     * capacity of 100.
+     * 
+     * @return New DataPointList
+     */
+    public static final @Nonnull DataPointList getDataPointList() {
+        return new DataPointArrayList(100);
+    }
+
+    /**
      * Creates a new DataPointList instance with no data points and given
      * initial capacity.
      * 

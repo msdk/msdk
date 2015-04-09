@@ -1,20 +1,12 @@
 package edu.ucdavis.fiehnlab.mona;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Range;
-import edu.ucdavis.fiehnlab.mona.pojo.Spectra;
-import edu.ucdavis.fiehnlab.mona.util.DataPointImpl;
+import io.github.msdk.datamodel.MSDKObjectBuilder;
 import io.github.msdk.datamodel.peaklists.PeakListRowAnnotation;
-import io.github.msdk.datamodel.rawdata.DataPointList;
 import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.DataPointList;
 import io.github.msdk.datamodel.rawdata.MassSpectrum;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
-import edu.ucdavis.fiehnlab.mona.util.PointListImpl;
-import org.openscience.cdk.interfaces.IAtomContainer;
-import org.openscience.cdk.interfaces.IMolecularFormula;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,6 +14,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.interfaces.IMolecularFormula;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Range;
+
+import edu.ucdavis.fiehnlab.mona.pojo.Spectra;
 
 /**
  * A basic MoNA record, which describes a MassBank of Northern America Spectra. This is a readonly entity and should not be modified by the software in any possible way
@@ -110,9 +113,10 @@ public class MonaSpectrum implements MassSpectrum,MonaConfiguration,PeakListRowA
      */
     protected void addDataPoint(Double mass, Float intensity){
         if(this.dataPoints == null){
-            this.dataPoints = new PointListImpl();
+            this.dataPoints = MSDKObjectBuilder.getDataPointList();
         }
-        this.dataPoints.add(new DataPointImpl(mass,intensity));
+        DataPoint newDataPoint = MSDKObjectBuilder.getDataPoint(mass, intensity);
+        this.dataPoints.add(newDataPoint);
     }
 
     @Nonnull
@@ -144,7 +148,7 @@ public class MonaSpectrum implements MassSpectrum,MonaConfiguration,PeakListRowA
     @Nonnull
     @Override
     public DataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange) {
-        DataPointList list = new PointListImpl();
+        DataPointList list = MSDKObjectBuilder.getDataPointList();
         for(DataPoint dataPoint : dataPoints){
             if(mzRange.contains(dataPoint.getMz())){
                 list.add(dataPoint);
@@ -157,7 +161,7 @@ public class MonaSpectrum implements MassSpectrum,MonaConfiguration,PeakListRowA
     @Override
     public List<DataPoint> getDataPointsByIntensity(@Nonnull Range<Float> intensityRange) {
 
-        DataPointList list = new PointListImpl();
+        DataPointList list = MSDKObjectBuilder.getDataPointList();
         for(DataPoint dataPoint : dataPoints){
             if(intensityRange.contains(dataPoint.getIntensity())){
                 list.add(dataPoint);
