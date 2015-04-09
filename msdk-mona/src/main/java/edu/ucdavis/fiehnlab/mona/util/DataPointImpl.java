@@ -3,8 +3,7 @@ package edu.ucdavis.fiehnlab.mona.util;
 import io.github.msdk.datamodel.rawdata.DataPoint;
 
 /**
- * simple impl
- * Created by Gert on 3/23/2015.
+ * Basic implementation of a DataPoint
  */
 public class DataPointImpl implements DataPoint {
 

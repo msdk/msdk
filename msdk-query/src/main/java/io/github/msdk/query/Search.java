@@ -9,8 +9,8 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 /**
- * simple query interface
- * Created by Gert on 3/23/2015.
+ * This provides the system with easy access to query data from external resources providing MassSpectra. Example ideas for implementation would be a MSP file based library, a third party REST service or other
+ * massspectral repositories
  */
 public interface Search {
 
@@ -29,7 +29,7 @@ public interface Search {
      * @return
      */
     @Nonnull
-    Iterator<MassSpectrum> findSpectrumByProperty(String propertyName, Serializable propertyValue);
+    Iterator<MassSpectrum> findSpectrumByProperty(String propertyName, Serializable propertyValue) throws IOException;
 
     /**
      * searches for similar spectra
@@ -38,5 +38,5 @@ public interface Search {
      * @return
      */
     @Nonnull
-    Iterator<MassSpectrum> findSimilarSpectra(MassSpectrum compare,Double minSimilarity);
+    Iterator<MassSpectrum> findSimilarSpectra(MassSpectrum compare,Integer minSimilarity) throws IOException;
 }

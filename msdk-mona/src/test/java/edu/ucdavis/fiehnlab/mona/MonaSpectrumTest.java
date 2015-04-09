@@ -8,7 +8,7 @@ import io.github.msdk.datamodel.rawdata.MassSpectrum;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class MonaSpectrumTest {
 
@@ -62,7 +62,7 @@ public class MonaSpectrumTest {
     public void testGetMzRange() throws Exception {
         Range<Double> range = spectrum.getMzRange();
         assertTrue(range.lowerEndpoint().equals(303.2200));
-        assertTrue(range.upperEndpoint().equals(864.56257));
+        assertTrue(range.upperEndpoint().equals(864.5626));
     }
 
     @org.junit.Test

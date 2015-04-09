@@ -1,14 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "http://mona.fiehnlab.ucdavis.edu",
   "type": "object",
   "properties": {
     "biologicalCompound": {
-      "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound",
       "type": "object",
       "properties": {
         "comments": {
-          "id": "http://mona.fiehnlab.ucdavis.edu/biologicalCompound/comments",
           "type": "array",
           "items": {}
         },

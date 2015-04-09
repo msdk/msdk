@@ -4,15 +4,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Range;
 import edu.ucdavis.fiehnlab.mona.pojo.Spectra;
 import edu.ucdavis.fiehnlab.mona.util.DataPointImpl;
+import io.github.msdk.datamodel.peaklists.PeakListRowAnnotation;
 import io.github.msdk.datamodel.rawdata.DataPointList;
 import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.MassSpectrum;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 import edu.ucdavis.fiehnlab.mona.util.PointListImpl;
+import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.interfaces.IMolecularFormula;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,14 +24,14 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * basic implementation of a Mona Mass Spectrum
- * <p/>
- * Created with IntelliJ IDEA.
- * User: wohlgemuth
- * Date: 3/17/15
- * Time: 2:39 PM
+ * A basic MoNA record, which describes a MassBank of Northern America Spectra. This is a readonly entity and should not be modified by the software in any possible way
  */
-public class MonaSpectrum implements MassSpectrum,MonaConfiguration {
+public class MonaSpectrum implements MassSpectrum,MonaConfiguration,PeakListRowAnnotation {
+
+    /**
+     * internal MoNa ID
+     */
+    private Long id;
 
     private Logger logger = Logger.getLogger("mona");
 
@@ -40,6 +44,11 @@ public class MonaSpectrum implements MassSpectrum,MonaConfiguration {
      * storage of dataPoints
      */
     private DataPointList dataPoints;
+
+    /**
+     * chemical structure of this compound
+     */
+    private IAtomContainer atomContainer;
 
     /**
      * build a new mona spectrum from the given record
@@ -55,7 +64,9 @@ public class MonaSpectrum implements MassSpectrum,MonaConfiguration {
      */
     public MonaSpectrum(long id) throws IOException {
 
-        URL url = new URL(MONA_URL+"/spectra/"+id);
+        this.id = id;
+
+        URL url = getAccessionURL();
 
         ObjectMapper mapper = new ObjectMapper();
         Spectra spectra = mapper.readValue(url.openStream(), Spectra.class);
@@ -84,7 +95,12 @@ public class MonaSpectrum implements MassSpectrum,MonaConfiguration {
             }
         });
 
-        logger.info("spectra build");
+        //assign compound information
+
+        String molFile = monaRecord.getBiologicalCompound().getMolFile();
+
+        //done
+        logger.finer("spectra build");
     }
 
     /**
@@ -187,5 +203,75 @@ public class MonaSpectrum implements MassSpectrum,MonaConfiguration {
             tic = point.getIntensity() + tic;
         }
         return tic;
+    }
+
+    @Nullable
+    @Override
+    public IAtomContainer getChemicalStructure() {
+        return this.atomContainer;
+    }
+
+    @Override
+    public void setChemicalStructure(@Nullable IAtomContainer structure) {
+        //not supported
+    }
+
+    @Nullable
+    @Override
+    public IMolecularFormula getFormula() {
+        return null;
+    }
+
+    @Override
+    public void setFormula(@Nullable IMolecularFormula formula) {
+        //not supported
+    }
+
+    @Nullable
+    @Override
+    public String getDescription() {
+        return "Massbank of Northern America record, " + id;
+    }
+
+    @Override
+    public void setDescription(@Nullable String description) {
+        //not supported
+    }
+
+    @Nullable
+    @Override
+    public String getIdentificationMethod() {
+        return null;
+    }
+
+    @Override
+    public void setIdentificationMethod(@Nullable String idMethod) {
+        //not supported
+    }
+
+    @Nullable
+    @Override
+    public String getDataBaseId() {
+        return this.id.toString();
+    }
+
+    @Override
+    public void setDataBaseId(@Nullable String dbId) {
+        //not supported
+    }
+
+    @Nullable
+    @Override
+    public URL getAccessionURL(){
+        try {
+            return  new URL(MONA_URL+"/rest/spectra/"+id);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("malformed URL, should never actually happen!");
+        }
+    }
+
+    @Override
+    public void setAccessionURL(@Nullable URL dbURL) {
+        //not supported
     }
 }

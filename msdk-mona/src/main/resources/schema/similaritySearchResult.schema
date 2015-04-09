@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "result": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "similarity": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "similarity"
+        ]
+      },
+      "required": [
+        "9"
+      ]
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "duration": {
+          "type": "integer"
+        }
+      }
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "minSimilarity": {
+          "type": "integer"
+        },
+        "commonIonCount": {
+          "type": "integer"
+        },
+        "spectra": {
+          "type": "String"
+        },
+        "maxHits": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "required": [
+    "result",
+    "statistics",
+    "config"
+  ]
+}
