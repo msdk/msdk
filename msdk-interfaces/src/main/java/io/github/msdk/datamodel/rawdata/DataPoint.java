@@ -14,6 +14,7 @@
 
 package io.github.msdk.datamodel.rawdata;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /**
@@ -29,6 +30,7 @@ public interface DataPoint {
      * 
      * @return Data point m/z
      */
+    @Nonnull
     Double getMz();
 
     /**
@@ -36,6 +38,7 @@ public interface DataPoint {
      * 
      * @return Data point intensity.
      */
+    @Nonnull
     Float getIntensity();
 
 }

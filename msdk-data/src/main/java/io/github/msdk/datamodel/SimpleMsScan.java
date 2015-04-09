@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.impl;
+package io.github.msdk.datamodel;
 
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.DataPoint;
@@ -42,7 +42,7 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     private ChromatographyInfo chromData;
 
     public SimpleMsScan(@Nonnull RawDataFile dataFile) {
-        super((SimpleRawDataFile) dataFile);
+        super(null);
         this.dataFile = dataFile;
     }
 

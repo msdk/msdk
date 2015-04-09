@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.impl;
+package io.github.msdk.datamodel;
 
 import io.github.msdk.datamodel.peaklists.PeakList;
 import io.github.msdk.datamodel.peaklists.PeakListRow;
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Simple implementation of the PeakList interface.
  */
-public class SimplePeakList extends DataPointStore implements PeakList {
+public class SimplePeakList implements PeakList {
 
     @Override
     public String getName() {
@@ -83,6 +83,12 @@ public class SimplePeakList extends DataPointStore implements PeakList {
     public void removeRow(PeakListRow row) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void dispose() {
+        // TODO Auto-generated method stub
+        
     }
 
 }

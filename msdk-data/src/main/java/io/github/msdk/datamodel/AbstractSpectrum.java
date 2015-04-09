@@ -12,12 +12,13 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.impl;
+package io.github.msdk.datamodel;
 
 import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
 import io.github.msdk.datamodel.rawdata.MassSpectrum;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
+import io.github.msdk.datamodel.store.DataPointStore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

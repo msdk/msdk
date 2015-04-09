@@ -22,15 +22,14 @@ import com.google.common.collect.Range;
 
 /**
  * This interface provides a convenient data structure for storing large amount
- * of data points in mass spectra. Internally, it is implemented by two arrays,
- * one for m/z values (double[]) and one for intensity values (float[]). The
- * arrays are resized dynamically, as in ArrayList. It provides all List
- * methods, therefore it supports iteration. Furthermore, it provides direct
- * access to the underlying buffer arrays, for more efficient data handling
- * operations. The access through these arrays is always preferred, as iteration
- * via the List interface has to create a new DataPoint instance for each
- * visited data point. DataPointList always keeps the data points sorted in the
- * m/z order.
+ * of MS data points in memory. Internally, it is implemented by two arrays, one
+ * for m/z values (double[]) and one for intensity values (float[]). The arrays
+ * are resized dynamically, as in ArrayList. It provides all List methods,
+ * therefore it supports iteration. Furthermore, it provides direct access to
+ * the underlying buffer arrays, for more efficient data handling operations.
+ * The access through these arrays is always preferred, as iteration via the
+ * List interface has to create a new DataPoint instance for each visited data
+ * point. DataPointList always keeps the data points sorted in the m/z order.
  * 
  * This data structure is not thread-safe.
  */
@@ -85,5 +84,25 @@ public interface DataPointList extends List<DataPoint> {
      */
     void setBuffers(@Nonnull double[] mzBuffer,
             @Nonnull float[] intensityBuffer, int size);
+
+    /**
+     * Copies the contents of another data point list into this list. The
+     * capacity of this list might stay the same or it might change, depending
+     * on needs.
+     * 
+     * @param list
+     *            Source list to copy from.
+     */
+    void copyFrom(@Nonnull DataPointList list);
+
+    /**
+     * Copies the contents of this data point list into another list. The
+     * capacity of the target list might stay the same or it might change,
+     * depending on needs.
+     * 
+     * @param list
+     *            Target list to copy to.
+     */
+    void copyTo(@Nonnull DataPointList list);
 
 }

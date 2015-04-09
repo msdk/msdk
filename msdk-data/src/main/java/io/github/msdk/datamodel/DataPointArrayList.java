@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.impl;
+package io.github.msdk.datamodel;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,13 +27,35 @@ import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
 
 /**
- *
+ * This class is not thread safe. TODO: ensure that data points are always
+ * sorted
  */
 class DataPointArrayList implements DataPointList {
 
+    /*
+     * Storage arrays
+     */
     private @Nonnull double[] mzBuffer;
     private @Nonnull float[] intensityBuffer;
     private int size;
+
+    /**
+     * Creates a new data point list with internal array capacity of 100.
+     */
+    DataPointArrayList() {
+        this(100);
+    }
+
+    /**
+     * Creates a new data point list with given internal array capacity.
+     * 
+     * @param initialCapacity
+     */
+    DataPointArrayList(@Nonnull Integer initialCapacity) {
+        mzBuffer = new double[initialCapacity];
+        intensityBuffer = new float[initialCapacity];
+        size = 0;
+    }
 
     @Override
     public int size() {
@@ -194,6 +216,18 @@ class DataPointArrayList implements DataPointList {
         this.mzBuffer = mzBuffer;
         this.intensityBuffer = intensityBuffer;
         this.size = size;
+    }
+
+    @Override
+    public void copyFrom(@Nonnull DataPointList list) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void copyTo(@Nonnull DataPointList list) {
+        // TODO Auto-generated method stub
+        
     }
 
 }
