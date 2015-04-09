@@ -27,7 +27,8 @@ import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
 
 /**
- * This class is not thread safe.
+ * This class is not thread safe. TODO: ensure that data points are always
+ * sorted
  */
 class DataPointArrayList implements DataPointList {
 
@@ -215,6 +216,18 @@ class DataPointArrayList implements DataPointList {
         this.mzBuffer = mzBuffer;
         this.intensityBuffer = intensityBuffer;
         this.size = size;
+    }
+
+    @Override
+    public void copyFrom(@Nonnull DataPointList list) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void copyTo(@Nonnull DataPointList list) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

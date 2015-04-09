@@ -123,7 +123,7 @@ public class TmpFileDataPointStore implements DataPointStore {
             // Increase the storage ID
             lastStorageId++;
 
-            // Save the reference to the
+            // Save the reference to the new items
             dataPointsOffsets.put(lastStorageId, currentOffset);
             dataPointsLengths.put(lastStorageId, numOfDataPoints);
 

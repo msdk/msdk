@@ -77,13 +77,59 @@ public class MSDKObjectBuilder {
     }
 
     /**
-     * Creates a DataPointList instance
+     * Creates a new DataPointList instance with no data points and given
+     * initial capacity.
      * 
      * @param capacity
      *            Initial capacity of the list
      * @return New DataPointList
      */
-    public static final @Nonnull DataPointList getDataPointList(int capacity) {
+    public static final @Nonnull DataPointList getDataPointList(
+            @Nonnull Integer capacity) {
         return new DataPointArrayList(capacity);
+    }
+
+    /**
+     * Creates a clone of a given DataPointList, with a capacity set to the
+     * current size of the source list.
+     * 
+     * @param sourceList
+     *            Source DataPointList that
+     * @return Cloned DataPointList
+     */
+    public static final @Nonnull DataPointList getDataPointList(
+            @Nonnull DataPointList sourceList) {
+        return getDataPointList(sourceList, sourceList.size());
+
+    }
+
+    /**
+     * Creates a clone of a given DataPointList, with a given capacity.
+     * 
+     * @param sourceList
+     *            Source DataPointList that
+     * @param capacity
+     *            Initial capacity of the list. Must be equal or higher than
+     *            sourceList.size()
+     * @return Cloned DataPointList
+     */
+    public static final @Nonnull DataPointList getDataPointList(
+            @Nonnull DataPointList sourceList, @Nonnull Integer capacity) {
+
+        if (capacity < sourceList.size())
+            throw new IllegalArgumentException(
+                    "Requested capacity must be >= size of the source list");
+
+        // Create the new list
+        final DataPointList newList = getDataPointList(capacity);
+
+        // Copy data
+        System.arraycopy(sourceList.getMzBuffer(), 0, newList.getMzBuffer(), 0,
+                sourceList.size());
+        System.arraycopy(sourceList.getIntensityBuffer(), 0,
+                newList.getIntensityBuffer(), 0, sourceList.size());
+
+        return newList;
+
     }
 }
