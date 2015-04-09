@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mask-query</artifactId>
+    <artifactId>msdk-query</artifactId>
     <name>MSDK - Query</name>
 
     <description>Simple query interface to the MSDK system</description>
