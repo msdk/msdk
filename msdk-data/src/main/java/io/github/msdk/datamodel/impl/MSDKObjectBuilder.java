@@ -15,6 +15,7 @@ package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.DataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -75,4 +76,14 @@ public class MSDKObjectBuilder {
                 separationType);
     }
 
+    /**
+     * Creates a DataPointList instance
+     * 
+     * @param capacity
+     *            Initial capacity of the list
+     * @return New DataPointList
+     */
+    public static final @Nonnull DataPointList getDataPointList(int capacity) {
+        return new DataPointArrayList(capacity);
+    }
 }

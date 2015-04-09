@@ -32,7 +32,7 @@ import com.google.common.collect.Range;
 /**
  * RawDataFile implementation.
  */
-class SimpleRawDataFile extends DataPointStore implements RawDataFile {
+class SimpleRawDataFile implements RawDataFile {
 
     private @Nonnull String rawDataFileName;
     private @Nonnull RawDataFile originalRawDataFile;
@@ -121,6 +121,12 @@ class SimpleRawDataFile extends DataPointStore implements RawDataFile {
             @Nonnull Range<ChromatographyInfo> chromatographyRange) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public void dispose() {
+        // TODO Auto-generated method stub
+        
     }
 
 }

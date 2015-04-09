@@ -27,13 +27,34 @@ import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
 
 /**
- *
+ * This class is not thread safe.
  */
 class DataPointArrayList implements DataPointList {
 
+    /*
+     * Storage arrays
+     */
     private @Nonnull double[] mzBuffer;
     private @Nonnull float[] intensityBuffer;
     private int size;
+
+    /**
+     * Creates a new data point list with internal array capacity of 100.
+     */
+    DataPointArrayList() {
+        this(100);
+    }
+
+    /**
+     * Creates a new data point list with given internal array capacity.
+     * 
+     * @param initialCapacity
+     */
+    DataPointArrayList(@Nonnull Integer initialCapacity) {
+        mzBuffer = new double[initialCapacity];
+        intensityBuffer = new float[initialCapacity];
+        size = 0;
+    }
 
     @Override
     public int size() {

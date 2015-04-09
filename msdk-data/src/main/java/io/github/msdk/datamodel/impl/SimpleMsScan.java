@@ -42,7 +42,7 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     private ChromatographyInfo chromData;
 
     public SimpleMsScan(@Nonnull RawDataFile dataFile) {
-        super((SimpleRawDataFile) dataFile);
+        super(null);
         this.dataFile = dataFile;
     }
 
