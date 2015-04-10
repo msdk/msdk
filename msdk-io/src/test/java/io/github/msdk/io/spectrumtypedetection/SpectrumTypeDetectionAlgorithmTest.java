@@ -20,15 +20,16 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.rawdataimport.RawDataFileImportAlgorithm;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SpectrumTypeDetectionAlgorithmTest {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * Test the SpectrumTypeDetectionAlgorithm

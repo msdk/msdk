@@ -26,9 +26,11 @@ import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.channels.FileChannel;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A DataPointStore implementation that stores the data points in a temporary
@@ -47,7 +49,7 @@ import javax.annotation.Nonnull;
  */
 public class TmpFileDataPointStore implements DataPointStore {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final File tmpDataFileName;
     private final RandomAccessFile tmpDataFile;
@@ -230,7 +232,7 @@ public class TmpFileDataPointStore implements DataPointStore {
             tmpDataFile.close();
             tmpDataFileName.delete();
         } catch (IOException e) {
-            logger.warning("Could not close and remove temporary file "
+            logger.warn("Could not close and remove temporary file "
                     + tmpDataFileName + ": " + e.toString());
             e.printStackTrace();
         }
