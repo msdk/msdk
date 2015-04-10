@@ -25,7 +25,6 @@ import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.channels.FileChannel;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.annotation.Nonnull;
@@ -100,10 +99,8 @@ public class TmpFileDataPointStore implements DataPointStore {
 
             final int numOfDataPoints = dataPoints.size();
 
-            // Each data point contains one double (m/z) and one float
-            // (intensity) value
-            final int numOfBytes = numOfDataPoints
-                    * (Double.SIZE / 8 + Float.SIZE / 8);
+            // Calculate minimum necessary size of the byte buffer
+            int numOfBytes = numOfDataPoints * (Double.SIZE / 8);
 
             // Make sure we have enough space in the byte buffer
             if (byteBuffer.capacity() < numOfBytes) {
@@ -112,16 +109,16 @@ public class TmpFileDataPointStore implements DataPointStore {
                 byteBuffer.clear();
             }
 
-            // Copy the m/z values into the byte buffer
+            // Write the m/z values into the file
             final DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
             dblBuffer.put(dataPoints.getMzBuffer(), 0, numOfDataPoints);
+            tmpDataFile.seek(currentOffset);
+            tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
 
-            // Copy the intensity values into the byte buffer
+            // Write the intensity values into the file
+            numOfBytes = numOfDataPoints * (Float.SIZE / 8);
             final FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
             fltBuffer.put(dataPoints.getIntensityBuffer(), 0, numOfDataPoints);
-
-            // Write the byte buffer to the file
-            tmpDataFile.seek(currentOffset);
             tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
 
             // Increase the storage ID
@@ -134,8 +131,6 @@ public class TmpFileDataPointStore implements DataPointStore {
         } catch (IOException e) {
             throw new MSDKRuntimeException(e);
         }
-
-        System.out.println("stored list " + dataPoints + " under id "+ lastStorageId);
 
         return lastStorageId;
 
@@ -184,10 +179,8 @@ public class TmpFileDataPointStore implements DataPointStore {
         final long offset = dataPointsOffsets.get(ID);
         final int numOfDataPoints = dataPointsLengths.get(ID);
 
-        // Each data point contains one double (m/z) and one float
-        // (intensity) value
-        final int numOfBytes = numOfDataPoints
-                * (Double.SIZE / 8 + Float.SIZE / 8);
+        // Calculate minimum necessary size of the byte buffer
+        int numOfBytes = numOfDataPoints * (Double.SIZE / 8);
 
         // Make sure we have enough space in the byte buffer
         if (byteBuffer.capacity() < numOfBytes) {
@@ -195,45 +188,34 @@ public class TmpFileDataPointStore implements DataPointStore {
         } else {
             byteBuffer.clear();
         }
-        
 
-        // Read the data into the byte buffer
         try {
+
+            // Read m/z values
             tmpDataFile.seek(offset);
             tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
+
+            DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
+            double mzValues[] = list.getMzBuffer();
+            if (mzValues.length < numOfDataPoints)
+                mzValues = new double[numOfDataPoints];
+            dblBuffer.get(mzValues, 0, numOfDataPoints);
+
+            // Read intensity values
+            numOfBytes = numOfDataPoints * (Float.SIZE / 8);
+            tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
+            FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
+            float intensityValues[] = list.getIntensityBuffer();
+            if (intensityValues.length < numOfDataPoints)
+                intensityValues = new float[numOfDataPoints];
+            fltBuffer.get(intensityValues, 0, numOfDataPoints);
+
+            // Update list
+            list.setBuffers(mzValues, intensityValues, numOfDataPoints);
+
         } catch (IOException e) {
             throw new MSDKRuntimeException(e);
         }
-
-        System.out.println("read byte buffer " + byteBuffer);
-
-        
-        // Read m/z values
-        DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
-        double mzValues[] = list.getMzBuffer();
-        if (mzValues.length < numOfDataPoints)
-            mzValues = new double[numOfDataPoints];
-        dblBuffer.get(mzValues, 0, numOfDataPoints);
-
-        // Read intensity values
-        FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
-        float intensityValues[] = list.getIntensityBuffer();
-        if (intensityValues.length < numOfDataPoints)
-            intensityValues = new float[numOfDataPoints];
-        fltBuffer.get(intensityValues, 0, numOfDataPoints);
-
-        StringBuilder builder = new StringBuilder();
-        builder.append("[");
-        for (int i = 0; i < numOfDataPoints; i++) {
-            if (i > 0)
-                builder.append(", ");
-            builder.append(mzValues[i]);
-        }
-        builder.append("]");
-        System.out.println("read list " + builder + " under id "+ ID);
-
-        // Update list
-        list.setBuffers(mzValues, intensityValues, numOfDataPoints);
 
     }
 

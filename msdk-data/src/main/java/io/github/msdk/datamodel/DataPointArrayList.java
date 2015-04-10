@@ -18,7 +18,6 @@ import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
 
 import java.util.AbstractList;
-import java.util.Arrays;
 
 import javax.annotation.Nonnull;
 

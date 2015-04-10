@@ -126,7 +126,7 @@ class SimpleRawDataFile implements RawDataFile {
     @Override
     public void dispose() {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

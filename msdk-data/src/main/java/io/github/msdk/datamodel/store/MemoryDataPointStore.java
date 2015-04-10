@@ -57,8 +57,9 @@ public class MemoryDataPointStore implements DataPointStore {
 
         // Increase the storage ID
         lastStorageId++;
-        
-        logger.debug("Storing " + dataPoints.size() + " data points under id " + lastStorageId);
+
+        logger.debug("Storing " + dataPoints.size() + " data points under id "
+                + lastStorageId);
 
         // Save the reference to the new list
         dataPointLists.put(lastStorageId, newList);

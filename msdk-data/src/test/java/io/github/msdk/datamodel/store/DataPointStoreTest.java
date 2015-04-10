@@ -28,7 +28,7 @@ public class DataPointStoreTest {
 
     public static void testStoreReadDataPoints(DataPointStore store) {
 
-        final int numOfGeneratedLists = 3; //TODO
+        final int numOfGeneratedLists = 3; // TODO
         final Object storageIds[] = new Object[numOfGeneratedLists];
 
         for (int i = 0; i < numOfGeneratedLists; i++) {

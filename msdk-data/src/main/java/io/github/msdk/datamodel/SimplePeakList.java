@@ -88,7 +88,7 @@ public class SimplePeakList implements PeakList {
     @Override
     public void dispose() {
         // TODO Auto-generated method stub
-        
+
     }
 
 }
