@@ -1,7 +1,8 @@
 package edu.ucdavis.fiehnlab.mona;
 
 import io.github.msdk.datamodel.rawdata.MassSpectrum;
-import io.github.msdk.query.Search;
+import io.github.msdk.identification.Search;
+
 import org.junit.Test;
 
 import java.util.Iterator;

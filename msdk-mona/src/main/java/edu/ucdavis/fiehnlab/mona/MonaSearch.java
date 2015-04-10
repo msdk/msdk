@@ -6,7 +6,8 @@ import edu.ucdavis.fiehnlab.mona.pojo.SimilaritySearchQuery;
 import edu.ucdavis.fiehnlab.mona.pojo.SimilaritySearchResult;
 import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.MassSpectrum;
-import io.github.msdk.query.Search;
+import io.github.msdk.identification.Search;
+
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
 
@@ -16,6 +17,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
