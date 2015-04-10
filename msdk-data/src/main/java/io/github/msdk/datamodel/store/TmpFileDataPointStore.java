@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.annotation.Nonnull;
@@ -57,8 +58,8 @@ public class TmpFileDataPointStore implements DataPointStore {
     // Start with a ~20 KB byte buffer, that will be expanded based on needs
     private ByteBuffer byteBuffer = ByteBuffer.allocate(20000);
 
-    private final HashMap<Integer, Long> dataPointsOffsets = new HashMap<>();
-    private final HashMap<Integer, Integer> dataPointsLengths = new HashMap<>();
+    private final HashMap<Object, Long> dataPointsOffsets = new HashMap<>();
+    private final HashMap<Object, Integer> dataPointsLengths = new HashMap<>();
 
     private int lastStorageId = 0;
 
@@ -134,6 +135,8 @@ public class TmpFileDataPointStore implements DataPointStore {
             throw new MSDKRuntimeException(e);
         }
 
+        System.out.println("stored list " + dataPoints + " under id "+ lastStorageId);
+
         return lastStorageId;
 
     }
@@ -142,8 +145,7 @@ public class TmpFileDataPointStore implements DataPointStore {
      * Reads the data points associated with given ID.
      */
     @Override
-    synchronized public @Nonnull DataPointList readDataPoints(
-            @Nonnull Integer ID) {
+    synchronized public @Nonnull DataPointList readDataPoints(@Nonnull Object ID) {
 
         if (byteBuffer == null)
             throw new IllegalStateException("This object has been disposed");
@@ -168,7 +170,7 @@ public class TmpFileDataPointStore implements DataPointStore {
      * Reads the data points associated with given ID.
      */
     @Override
-    synchronized public void readDataPoints(@Nonnull Integer ID,
+    synchronized public void readDataPoints(@Nonnull Object ID,
             @Nonnull DataPointList list) {
 
         if (byteBuffer == null)
@@ -193,6 +195,7 @@ public class TmpFileDataPointStore implements DataPointStore {
         } else {
             byteBuffer.clear();
         }
+        
 
         // Read the data into the byte buffer
         try {
@@ -202,6 +205,9 @@ public class TmpFileDataPointStore implements DataPointStore {
             throw new MSDKRuntimeException(e);
         }
 
+        System.out.println("read byte buffer " + byteBuffer);
+
+        
         // Read m/z values
         DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
         double mzValues[] = list.getMzBuffer();
@@ -216,6 +222,16 @@ public class TmpFileDataPointStore implements DataPointStore {
             intensityValues = new float[numOfDataPoints];
         fltBuffer.get(intensityValues, 0, numOfDataPoints);
 
+        StringBuilder builder = new StringBuilder();
+        builder.append("[");
+        for (int i = 0; i < numOfDataPoints; i++) {
+            if (i > 0)
+                builder.append(", ");
+            builder.append(mzValues[i]);
+        }
+        builder.append("]");
+        System.out.println("read list " + builder + " under id "+ ID);
+
         // Update list
         list.setBuffers(mzValues, intensityValues, numOfDataPoints);
 
@@ -226,7 +242,7 @@ public class TmpFileDataPointStore implements DataPointStore {
      * the data from disk, simply remove the reference to it.
      */
     @Override
-    synchronized public void removeDataPoints(@Nonnull Integer ID) {
+    synchronized public void removeDataPoints(@Nonnull Object ID) {
 
         if (byteBuffer == null)
             throw new IllegalStateException("This object has been disposed");

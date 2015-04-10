@@ -24,12 +24,20 @@ import com.google.common.collect.Range;
  * This interface provides a convenient data structure for storing large amount
  * of MS data points in memory. Internally, it is implemented by two arrays, one
  * for m/z values (double[]) and one for intensity values (float[]). The arrays
- * are resized dynamically, as in ArrayList. It provides all List methods,
- * therefore it supports iteration. Furthermore, it provides direct access to
- * the underlying buffer arrays, for more efficient data handling operations.
- * The access through these arrays is always preferred, as iteration via the
- * List interface has to create a new DataPoint instance for each visited data
- * point. DataPointList always keeps the data points sorted in the m/z order.
+ * are resized dynamically, as in ArrayList.
+ * 
+ * DataPointList provides all List methods, therefore it supports iteration.
+ * Furthermore, it provides direct access to the underlying buffer arrays, for
+ * more efficient data handling operations. The access through these arrays is
+ * always preferred, as iteration via the List interface has to create a new
+ * DataPoint instance for each visited data point.
+ * 
+ * DataPointList methods always keep the data points sorted in the m/z order,
+ * and this requirement must be maintained when the internal m/z and intensity
+ * arrays are modified directly.
+ * 
+ * The equals() method compares the contents of the two data point lists, and
+ * ignores their internal array sizes (capacities).
  * 
  * This data structure is not thread-safe.
  */
@@ -78,12 +86,30 @@ public interface DataPointList extends List<DataPoint> {
      *            New m/z buffer
      * @param intensityBuffer
      *            New intensity buffer
-     * @param size
+     * @param newSize
      *            Number of data point items in the buffers. This might be
      *            smaller than the actual length of the buffer arrays.
+     * @throws IllegalArgumentException
+     *             If the size is larger than the length of the m/z array.
+     * @throws IllegalStateException
+     *             if the m/z array is not sorted in ascending order.
      */
     void setBuffers(@Nonnull double[] mzBuffer,
-            @Nonnull float[] intensityBuffer, int size);
+            @Nonnull float[] intensityBuffer, int newSize);
+
+    /**
+     * Updates the size of the list, assuming the m/z and intensity arrays have
+     * already been updated accordingly. This method also checks whether the m/z
+     * array is sorted in ascending order.
+     * 
+     * @param newSize
+     *            New size of the list. Must be <= length of the m/z array.
+     * @throws IllegalArgumentException
+     *             If the size is larger than the length of the m/z array.
+     * @throws IllegalStateException
+     *             if the m/z array is not sorted in ascending order.
+     */
+    void setSize(int newSize);
 
     /**
      * Copies the contents of another data point list into this list. The

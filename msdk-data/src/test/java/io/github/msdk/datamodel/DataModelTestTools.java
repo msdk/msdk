@@ -49,6 +49,8 @@ public class DataModelTestTools {
             intensityValues[i] = (float) mzValues[i] * 2;
         }
 
+        list.setSize(count);
+
         return list;
     }
 

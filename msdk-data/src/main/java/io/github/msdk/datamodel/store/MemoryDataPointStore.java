@@ -21,6 +21,9 @@ import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A DataPointStore implementation that stores the data points in memory. Use
  * with caution.
@@ -30,7 +33,9 @@ import javax.annotation.Nonnull;
  */
 public class MemoryDataPointStore implements DataPointStore {
 
-    private HashMap<Integer, DataPointList> dataPointLists = new HashMap<>();
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private HashMap<Object, DataPointList> dataPointLists = new HashMap<>();
 
     private int lastStorageId = 0;
 
@@ -52,6 +57,8 @@ public class MemoryDataPointStore implements DataPointStore {
 
         // Increase the storage ID
         lastStorageId++;
+        
+        logger.debug("Storing " + dataPoints.size() + " data points under id " + lastStorageId);
 
         // Save the reference to the new list
         dataPointLists.put(lastStorageId, newList);
@@ -64,8 +71,7 @@ public class MemoryDataPointStore implements DataPointStore {
      * Reads the data points associated with given ID.
      */
     @Override
-    synchronized public @Nonnull DataPointList readDataPoints(
-            @Nonnull Integer ID) {
+    synchronized public @Nonnull DataPointList readDataPoints(@Nonnull Object ID) {
 
         if (dataPointLists == null)
             throw new IllegalStateException("This object has been disposed");
@@ -88,7 +94,7 @@ public class MemoryDataPointStore implements DataPointStore {
      * Reads the data points associated with given ID.
      */
     @Override
-    synchronized public void readDataPoints(@Nonnull Integer ID,
+    synchronized public void readDataPoints(@Nonnull Object ID,
             @Nonnull DataPointList list) {
 
         if (dataPointLists == null)
@@ -110,7 +116,7 @@ public class MemoryDataPointStore implements DataPointStore {
      * Remove data associated with given storage ID.
      */
     @Override
-    synchronized public void removeDataPoints(@Nonnull Integer ID) {
+    synchronized public void removeDataPoints(@Nonnull Object ID) {
 
         if (dataPointLists == null)
             throw new IllegalStateException("This object has been disposed");

@@ -16,6 +16,7 @@ package io.github.msdk.datamodel;
 
 import io.github.msdk.datamodel.rawdata.DataPoint;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /**
@@ -26,10 +27,10 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 class SimpleDataPoint implements DataPoint {
 
-    private double mz;
-    private float intensity;
+    private @Nonnull Double mz;
+    private @Nonnull Float intensity;
 
-    SimpleDataPoint(double mz, float intensity) {
+    SimpleDataPoint(@Nonnull Double mz, @Nonnull Float intensity) {
         this.mz = mz;
         this.intensity = intensity;
     }

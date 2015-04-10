@@ -122,24 +122,11 @@ public class MSDKObjectBuilder {
      *            Initial capacity of the list. Must be equal or higher than
      *            sourceList.size()
      * @return Cloned DataPointList
+     * @throws IllegalArgumentException
+     *             If the initial capacity < size of the sourceList
      */
     public static final @Nonnull DataPointList getDataPointList(
             @Nonnull DataPointList sourceList, @Nonnull Integer capacity) {
-
-        if (capacity < sourceList.size())
-            throw new IllegalArgumentException(
-                    "Requested capacity must be >= size of the source list");
-
-        // Create the new list
-        final DataPointList newList = getDataPointList(capacity);
-
-        // Copy data
-        System.arraycopy(sourceList.getMzBuffer(), 0, newList.getMzBuffer(), 0,
-                sourceList.size());
-        System.arraycopy(sourceList.getIntensityBuffer(), 0,
-                newList.getIntensityBuffer(), 0, sourceList.size());
-
-        return newList;
-
+        return new DataPointArrayList(sourceList, capacity);
     }
 }
