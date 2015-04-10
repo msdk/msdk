@@ -21,14 +21,15 @@ import static org.junit.Assume.assumeTrue;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RawDataimportTest {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Ignore("not ready yet")
     @Test

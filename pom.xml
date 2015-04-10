@@ -11,11 +11,11 @@
 	<url>https://msdk.github.io</url>
 
 	<modules>
+		<module>msdk-interfaces</module>
 		<module>msdk-data</module>
 		<module>msdk-io</module>
 		<module>msdk-rawdata</module>
-		<module>msdk-interfaces</module>
-		<module>msdk-query</module>
+		<module>msdk-identification</module>
 		<module>msdk-mona</module>
 	</modules>
 
@@ -25,6 +25,7 @@
 		<cdk.version>1.5.10</cdk.version>
 		<junit.version>4.12</junit.version>
 		<guava.version>18.0</guava.version>
+		<slf4j.version>1.7.12</slf4j.version>
 	</properties>
 
 	<licenses>

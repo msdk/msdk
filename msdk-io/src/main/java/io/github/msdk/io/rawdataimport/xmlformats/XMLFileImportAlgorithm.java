@@ -35,11 +35,13 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.ebi.pride.tools.jmzreader.JMzReader;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
@@ -58,7 +60,7 @@ import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLParsingException;
  */
 public class XMLFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 
-    private Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final File sourceFile;
     private final RawDataFileType fileType;

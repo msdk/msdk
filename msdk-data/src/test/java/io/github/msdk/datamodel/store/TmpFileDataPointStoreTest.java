@@ -17,14 +17,14 @@ package io.github.msdk.datamodel.store;
 import org.junit.Test;
 
 /**
- * Tests for MemoryDataPointStore
+ * Tests for TmpFileDataPointStore
  */
-public class MemoryDataPointStoreTest {
+public class TmpFileDataPointStoreTest {
 
     @Test
     public void testStoreReadDataPoints() {
 
-        MemoryDataPointStore store = new MemoryDataPointStore();
+        TmpFileDataPointStore store = new TmpFileDataPointStore();
         DataPointStoreTest.testStoreReadDataPoints(store);
 
     }
@@ -32,7 +32,7 @@ public class MemoryDataPointStoreTest {
     @Test(expected = IllegalArgumentException.class)
     public void testRemoveDataPoints() {
 
-        MemoryDataPointStore store = new MemoryDataPointStore();
+        TmpFileDataPointStore store = new TmpFileDataPointStore();
         DataPointStoreTest.testRemoveDataPoints(store);
 
     }
@@ -40,7 +40,7 @@ public class MemoryDataPointStoreTest {
     @Test(expected = IllegalStateException.class)
     public void testDispose() {
 
-        MemoryDataPointStore store = new MemoryDataPointStore();
+        TmpFileDataPointStore store = new TmpFileDataPointStore();
         DataPointStoreTest.testDispose(store);
 
     }

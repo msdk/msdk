@@ -17,9 +17,12 @@ package io.github.msdk.datamodel.store;
 import io.github.msdk.datamodel.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.DataPointList;
 
-import java.util.TreeMap;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A DataPointStore implementation that stores the data points in memory. Use
@@ -30,7 +33,10 @@ import javax.annotation.Nonnull;
  */
 public class MemoryDataPointStore implements DataPointStore {
 
-    private final TreeMap<Integer, DataPointList> dataPointLists = new TreeMap<>();
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private HashMap<Object, DataPointList> dataPointLists = new HashMap<>();
+
     private int lastStorageId = 0;
 
     /**
@@ -42,12 +48,18 @@ public class MemoryDataPointStore implements DataPointStore {
     synchronized public @Nonnull Integer storeDataPoints(
             @Nonnull DataPointList dataPoints) {
 
+        if (dataPointLists == null)
+            throw new IllegalStateException("This object has been disposed");
+
         // Clone the given list
         final DataPointList newList = MSDKObjectBuilder
                 .getDataPointList(dataPoints);
 
         // Increase the storage ID
         lastStorageId++;
+
+        logger.debug("Storing " + dataPoints.size() + " data points under id "
+                + lastStorageId);
 
         // Save the reference to the new list
         dataPointLists.put(lastStorageId, newList);
@@ -60,8 +72,10 @@ public class MemoryDataPointStore implements DataPointStore {
      * Reads the data points associated with given ID.
      */
     @Override
-    synchronized public @Nonnull DataPointList readDataPoints(
-            @Nonnull Integer ID) {
+    synchronized public @Nonnull DataPointList readDataPoints(@Nonnull Object ID) {
+
+        if (dataPointLists == null)
+            throw new IllegalStateException("This object has been disposed");
 
         if (!dataPointLists.containsKey(ID))
             throw new IllegalArgumentException("ID " + ID
@@ -81,8 +95,11 @@ public class MemoryDataPointStore implements DataPointStore {
      * Reads the data points associated with given ID.
      */
     @Override
-    synchronized public void readDataPoints(@Nonnull Integer ID,
+    synchronized public void readDataPoints(@Nonnull Object ID,
             @Nonnull DataPointList list) {
+
+        if (dataPointLists == null)
+            throw new IllegalStateException("This object has been disposed");
 
         if (!dataPointLists.containsKey(ID))
             throw new IllegalArgumentException("ID " + ID
@@ -100,13 +117,17 @@ public class MemoryDataPointStore implements DataPointStore {
      * Remove data associated with given storage ID.
      */
     @Override
-    synchronized public void removeDataPoints(@Nonnull Integer ID) {
+    synchronized public void removeDataPoints(@Nonnull Object ID) {
+
+        if (dataPointLists == null)
+            throw new IllegalStateException("This object has been disposed");
+
         dataPointLists.remove(ID);
     }
 
     @Override
     synchronized public void dispose() {
-        dataPointLists.clear();
+        dataPointLists = null;
     }
 
 }

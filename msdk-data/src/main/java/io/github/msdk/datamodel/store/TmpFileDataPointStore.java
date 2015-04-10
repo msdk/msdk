@@ -25,10 +25,12 @@ import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.channels.FileChannel;
-import java.util.TreeMap;
-import java.util.logging.Logger;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A DataPointStore implementation that stores the data points in a temporary
@@ -47,14 +49,17 @@ import javax.annotation.Nonnull;
  */
 public class TmpFileDataPointStore implements DataPointStore {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final File tmpDataFileName;
     private final RandomAccessFile tmpDataFile;
 
-    private ByteBuffer byteBuffer;
-    private final TreeMap<Integer, Long> dataPointsOffsets;
-    private final TreeMap<Integer, Integer> dataPointsLengths;
+    // Start with a ~20 KB byte buffer, that will be expanded based on needs
+    private ByteBuffer byteBuffer = ByteBuffer.allocate(20000);
+
+    private final HashMap<Object, Long> dataPointsOffsets = new HashMap<>();
+    private final HashMap<Object, Integer> dataPointsLengths = new HashMap<>();
+
     private int lastStorageId = 0;
 
     TmpFileDataPointStore() {
@@ -75,11 +80,6 @@ public class TmpFileDataPointStore implements DataPointStore {
             throw new MSDKRuntimeException(e);
         }
 
-        // Start with a ~20 KB byte buffer, that will be expanded based on needs
-        byteBuffer = ByteBuffer.allocate(20000);
-        dataPointsOffsets = new TreeMap<Integer, Long>();
-        dataPointsLengths = new TreeMap<Integer, Integer>();
-
     }
 
     /**
@@ -91,15 +91,16 @@ public class TmpFileDataPointStore implements DataPointStore {
     synchronized public @Nonnull Integer storeDataPoints(
             @Nonnull DataPointList dataPoints) {
 
+        if (byteBuffer == null)
+            throw new IllegalStateException("This object has been disposed");
+
         try {
             final long currentOffset = tmpDataFile.length();
 
             final int numOfDataPoints = dataPoints.size();
 
-            // Each data point contains one double (m/z) and one float
-            // (intensity) value
-            final int numOfBytes = numOfDataPoints
-                    * (Double.SIZE / 8 + Float.SIZE / 8);
+            // Calculate minimum necessary size of the byte buffer
+            int numOfBytes = numOfDataPoints * (Double.SIZE / 8);
 
             // Make sure we have enough space in the byte buffer
             if (byteBuffer.capacity() < numOfBytes) {
@@ -108,16 +109,16 @@ public class TmpFileDataPointStore implements DataPointStore {
                 byteBuffer.clear();
             }
 
-            // Copy the m/z values into the byte buffer
+            // Write the m/z values into the file
             final DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
             dblBuffer.put(dataPoints.getMzBuffer(), 0, numOfDataPoints);
+            tmpDataFile.seek(currentOffset);
+            tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
 
-            // Copy the intensity values into the byte buffer
+            // Write the intensity values into the file
+            numOfBytes = numOfDataPoints * (Float.SIZE / 8);
             final FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
             fltBuffer.put(dataPoints.getIntensityBuffer(), 0, numOfDataPoints);
-
-            // Write the byte buffer to the file
-            tmpDataFile.seek(currentOffset);
             tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
 
             // Increase the storage ID
@@ -139,8 +140,10 @@ public class TmpFileDataPointStore implements DataPointStore {
      * Reads the data points associated with given ID.
      */
     @Override
-    synchronized public @Nonnull DataPointList readDataPoints(
-            @Nonnull Integer ID) {
+    synchronized public @Nonnull DataPointList readDataPoints(@Nonnull Object ID) {
+
+        if (byteBuffer == null)
+            throw new IllegalStateException("This object has been disposed");
 
         if (!dataPointsLengths.containsKey(ID))
             throw new IllegalArgumentException("ID " + ID
@@ -162,8 +165,11 @@ public class TmpFileDataPointStore implements DataPointStore {
      * Reads the data points associated with given ID.
      */
     @Override
-    synchronized public void readDataPoints(@Nonnull Integer ID,
+    synchronized public void readDataPoints(@Nonnull Object ID,
             @Nonnull DataPointList list) {
+
+        if (byteBuffer == null)
+            throw new IllegalStateException("This object has been disposed");
 
         if (!dataPointsLengths.containsKey(ID))
             throw new IllegalArgumentException("ID " + ID
@@ -173,10 +179,8 @@ public class TmpFileDataPointStore implements DataPointStore {
         final long offset = dataPointsOffsets.get(ID);
         final int numOfDataPoints = dataPointsLengths.get(ID);
 
-        // Each data point contains one double (m/z) and one float
-        // (intensity) value
-        final int numOfBytes = numOfDataPoints
-                * (Double.SIZE / 8 + Float.SIZE / 8);
+        // Calculate minimum necessary size of the byte buffer
+        int numOfBytes = numOfDataPoints * (Double.SIZE / 8);
 
         // Make sure we have enough space in the byte buffer
         if (byteBuffer.capacity() < numOfBytes) {
@@ -185,30 +189,33 @@ public class TmpFileDataPointStore implements DataPointStore {
             byteBuffer.clear();
         }
 
-        // Read the data into the byte buffer
         try {
+
+            // Read m/z values
             tmpDataFile.seek(offset);
             tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
+
+            DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
+            double mzValues[] = list.getMzBuffer();
+            if (mzValues.length < numOfDataPoints)
+                mzValues = new double[numOfDataPoints];
+            dblBuffer.get(mzValues, 0, numOfDataPoints);
+
+            // Read intensity values
+            numOfBytes = numOfDataPoints * (Float.SIZE / 8);
+            tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
+            FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
+            float intensityValues[] = list.getIntensityBuffer();
+            if (intensityValues.length < numOfDataPoints)
+                intensityValues = new float[numOfDataPoints];
+            fltBuffer.get(intensityValues, 0, numOfDataPoints);
+
+            // Update list
+            list.setBuffers(mzValues, intensityValues, numOfDataPoints);
+
         } catch (IOException e) {
             throw new MSDKRuntimeException(e);
         }
-
-        // Read m/z values
-        DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
-        double mzValues[] = list.getMzBuffer();
-        if (mzValues.length < numOfDataPoints)
-            mzValues = new double[numOfDataPoints];
-        dblBuffer.get(mzValues, 0, numOfDataPoints);
-
-        // Read intensity values
-        FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
-        float intensityValues[] = list.getIntensityBuffer();
-        if (intensityValues.length < numOfDataPoints)
-            intensityValues = new float[numOfDataPoints];
-        fltBuffer.get(intensityValues, 0, numOfDataPoints);
-
-        // Update list
-        list.setBuffers(mzValues, intensityValues, numOfDataPoints);
 
     }
 
@@ -217,22 +224,33 @@ public class TmpFileDataPointStore implements DataPointStore {
      * the data from disk, simply remove the reference to it.
      */
     @Override
-    synchronized public void removeDataPoints(@Nonnull Integer ID) {
+    synchronized public void removeDataPoints(@Nonnull Object ID) {
+
+        if (byteBuffer == null)
+            throw new IllegalStateException("This object has been disposed");
+
         dataPointsOffsets.remove(ID);
         dataPointsLengths.remove(ID);
     }
 
     @Override
     synchronized public void dispose() {
-        if (!tmpDataFileName.exists())
-            return;
-        try {
-            tmpDataFile.close();
-            tmpDataFileName.delete();
-        } catch (IOException e) {
-            logger.warning("Could not close and remove temporary file "
-                    + tmpDataFileName + ": " + e.toString());
-            e.printStackTrace();
+
+        // Discard the hash maps and byte buffer
+        dataPointsOffsets.clear();
+        dataPointsLengths.clear();
+        byteBuffer = null;
+
+        // Remove the temporary file
+        if (tmpDataFileName.exists()) {
+            try {
+                tmpDataFile.close();
+                tmpDataFileName.delete();
+            } catch (IOException e) {
+                logger.warn("Could not close and remove temporary file "
+                        + tmpDataFileName + ": " + e.toString());
+                e.printStackTrace();
+            }
         }
     }
 

@@ -37,39 +37,43 @@ public interface DataPointStore {
      * @return Storage ID for the newly stored data.
      */
     @Nonnull
-    Integer storeDataPoints(@Nonnull DataPointList dataPoints);
+    Object storeDataPoints(@Nonnull DataPointList dataPoints);
 
     /**
      * Reads the data points associated with given ID. Returns a newly created
      * DataPointList.
      * 
-     * @param ID
+     * @param id
      *            Storage id obtained by storeDataPoints()
      * @return New DataPointList
+     * @throws IllegalIllegalArgumentException
+     *             If the given id is not present in this store.
      * 
      */
     @Nonnull
-    DataPointList readDataPoints(@Nonnull Integer ID);
+    DataPointList readDataPoints(@Nonnull Object id);
 
     /**
      * Reads the data points associated with given ID into a given
      * DataPointList. If the data point list does not have enough space, it is
      * expanded accordingly.
      *
-     * @param ID
+     * @param id
      *            Storage id obtained by storeDataPoints()
      * @param list
      *            List to store the loaded data points
+     * @throws IllegalIllegalArgumentException
+     *             If the given id is not present in this store.
      */
-    void readDataPoints(@Nonnull Integer ID, @Nonnull DataPointList list);
+    void readDataPoints(@Nonnull Object id, @Nonnull DataPointList list);
 
     /**
      * Discards data points stored under given ID.
      * 
-     * @param ID
+     * @param id
      *            Storage id to discard
      */
-    void removeDataPoints(@Nonnull Integer ID);
+    void removeDataPoints(@Nonnull Object id);
 
     /**
      * Completely discards this data point store. After this method is called,
