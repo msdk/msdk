@@ -17,7 +17,7 @@ package io.github.msdk.datamodel.store;
 import io.github.msdk.datamodel.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.DataPointList;
 
-import java.util.TreeMap;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 
@@ -30,7 +30,8 @@ import javax.annotation.Nonnull;
  */
 public class MemoryDataPointStore implements DataPointStore {
 
-    private final TreeMap<Integer, DataPointList> dataPointLists = new TreeMap<>();
+    private HashMap<Integer, DataPointList> dataPointLists = new HashMap<>();
+
     private int lastStorageId = 0;
 
     /**
@@ -41,6 +42,9 @@ public class MemoryDataPointStore implements DataPointStore {
     @Override
     synchronized public @Nonnull Integer storeDataPoints(
             @Nonnull DataPointList dataPoints) {
+
+        if (dataPointLists == null)
+            throw new IllegalStateException("This object has been disposed");
 
         // Clone the given list
         final DataPointList newList = MSDKObjectBuilder
@@ -63,6 +67,9 @@ public class MemoryDataPointStore implements DataPointStore {
     synchronized public @Nonnull DataPointList readDataPoints(
             @Nonnull Integer ID) {
 
+        if (dataPointLists == null)
+            throw new IllegalStateException("This object has been disposed");
+
         if (!dataPointLists.containsKey(ID))
             throw new IllegalArgumentException("ID " + ID
                     + " not found in storage");
@@ -84,6 +91,9 @@ public class MemoryDataPointStore implements DataPointStore {
     synchronized public void readDataPoints(@Nonnull Integer ID,
             @Nonnull DataPointList list) {
 
+        if (dataPointLists == null)
+            throw new IllegalStateException("This object has been disposed");
+
         if (!dataPointLists.containsKey(ID))
             throw new IllegalArgumentException("ID " + ID
                     + " not found in storage");
@@ -101,12 +111,16 @@ public class MemoryDataPointStore implements DataPointStore {
      */
     @Override
     synchronized public void removeDataPoints(@Nonnull Integer ID) {
+
+        if (dataPointLists == null)
+            throw new IllegalStateException("This object has been disposed");
+
         dataPointLists.remove(ID);
     }
 
     @Override
     synchronized public void dispose() {
-        dataPointLists.clear();
+        dataPointLists = null;
     }
 
 }

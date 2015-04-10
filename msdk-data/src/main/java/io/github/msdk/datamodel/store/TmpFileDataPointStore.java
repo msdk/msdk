@@ -25,10 +25,12 @@ import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.channels.FileChannel;
-import java.util.TreeMap;
-import java.util.logging.Logger;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A DataPointStore implementation that stores the data points in a temporary
@@ -47,14 +49,17 @@ import javax.annotation.Nonnull;
  */
 public class TmpFileDataPointStore implements DataPointStore {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final File tmpDataFileName;
     private final RandomAccessFile tmpDataFile;
 
-    private ByteBuffer byteBuffer;
-    private final TreeMap<Integer, Long> dataPointsOffsets;
-    private final TreeMap<Integer, Integer> dataPointsLengths;
+    // Start with a ~20 KB byte buffer, that will be expanded based on needs
+    private ByteBuffer byteBuffer = ByteBuffer.allocate(20000);
+
+    private final HashMap<Integer, Long> dataPointsOffsets = new HashMap<>();
+    private final HashMap<Integer, Integer> dataPointsLengths = new HashMap<>();
+
     private int lastStorageId = 0;
 
     TmpFileDataPointStore() {
@@ -75,11 +80,6 @@ public class TmpFileDataPointStore implements DataPointStore {
             throw new MSDKRuntimeException(e);
         }
 
-        // Start with a ~20 KB byte buffer, that will be expanded based on needs
-        byteBuffer = ByteBuffer.allocate(20000);
-        dataPointsOffsets = new TreeMap<Integer, Long>();
-        dataPointsLengths = new TreeMap<Integer, Integer>();
-
     }
 
     /**
@@ -90,6 +90,9 @@ public class TmpFileDataPointStore implements DataPointStore {
     @Override
     synchronized public @Nonnull Integer storeDataPoints(
             @Nonnull DataPointList dataPoints) {
+
+        if (byteBuffer == null)
+            throw new IllegalStateException("This object has been disposed");
 
         try {
             final long currentOffset = tmpDataFile.length();
@@ -142,6 +145,9 @@ public class TmpFileDataPointStore implements DataPointStore {
     synchronized public @Nonnull DataPointList readDataPoints(
             @Nonnull Integer ID) {
 
+        if (byteBuffer == null)
+            throw new IllegalStateException("This object has been disposed");
+
         if (!dataPointsLengths.containsKey(ID))
             throw new IllegalArgumentException("ID " + ID
                     + " not found in storage file " + tmpDataFileName);
@@ -164,6 +170,9 @@ public class TmpFileDataPointStore implements DataPointStore {
     @Override
     synchronized public void readDataPoints(@Nonnull Integer ID,
             @Nonnull DataPointList list) {
+
+        if (byteBuffer == null)
+            throw new IllegalStateException("This object has been disposed");
 
         if (!dataPointsLengths.containsKey(ID))
             throw new IllegalArgumentException("ID " + ID
@@ -218,21 +227,32 @@ public class TmpFileDataPointStore implements DataPointStore {
      */
     @Override
     synchronized public void removeDataPoints(@Nonnull Integer ID) {
+
+        if (byteBuffer == null)
+            throw new IllegalStateException("This object has been disposed");
+
         dataPointsOffsets.remove(ID);
         dataPointsLengths.remove(ID);
     }
 
     @Override
     synchronized public void dispose() {
-        if (!tmpDataFileName.exists())
-            return;
-        try {
-            tmpDataFile.close();
-            tmpDataFileName.delete();
-        } catch (IOException e) {
-            logger.warning("Could not close and remove temporary file "
-                    + tmpDataFileName + ": " + e.toString());
-            e.printStackTrace();
+
+        // Discard the hash maps and byte buffer
+        dataPointsOffsets.clear();
+        dataPointsLengths.clear();
+        byteBuffer = null;
+
+        // Remove the temporary file
+        if (tmpDataFileName.exists()) {
+            try {
+                tmpDataFile.close();
+                tmpDataFileName.delete();
+            } catch (IOException e) {
+                logger.warn("Could not close and remove temporary file "
+                        + tmpDataFileName + ": " + e.toString());
+                e.printStackTrace();
+            }
         }
     }
 
