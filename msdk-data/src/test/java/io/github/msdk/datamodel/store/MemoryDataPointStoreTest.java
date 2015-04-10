@@ -14,7 +14,7 @@
 
 package io.github.msdk.datamodel.store;
 
-import io.github.msdk.datamodel.MSDKObjectBuilder;
+import io.github.msdk.datamodel.DataModelTestTools;
 import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
 
@@ -28,20 +28,20 @@ public class MemoryDataPointStoreTest {
 
     @Test
     public void testStoreReadDataPoints() {
+
         MemoryDataPointStore store = new MemoryDataPointStore();
 
-        DataPointList dataPoints = MSDKObjectBuilder.getDataPointList();
-        dataPoints.add(MSDKObjectBuilder.getDataPoint(10.0, 20.0f));
-        dataPoints.add(MSDKObjectBuilder.getDataPoint(30.0, 40.0f));
-        dataPoints.add(MSDKObjectBuilder.getDataPoint(50.0, 60.0f));
+        DataPointList dataPoints = DataModelTestTools.generateDataPoints(5000);
 
         Integer storedId = store.storeDataPoints(dataPoints);
 
         DataPointList retrievedDataPoints = store.readDataPoints(storedId);
         Assert.assertEquals(3, retrievedDataPoints.size());
 
-        DataPoint lastDp = retrievedDataPoints.get(2);
-        Assert.assertEquals(60.0, lastDp.getIntensity(), 0.00001);
+        // Check if the intensity value matches the specification of
+        // DataModelTestTools.generateDataPoints()
+        DataPoint lastDp = retrievedDataPoints.get(4999);
+        Assert.assertEquals(5000.0 * 2, lastDp.getIntensity(), 0.00001);
 
     }
 
