@@ -14,6 +14,9 @@
 
 package io.github.msdk;
 
+/**
+ * MSDK runtime exception class.
+ */
 public class MSDKRuntimeException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;

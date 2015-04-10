@@ -35,7 +35,8 @@ public interface MSDKMethod<ResultType> {
     Float getFinishedPercentage();
 
     /**
-     * Performs the algorithm.
+     * Performs the algorithm. This method may throw MSDKException or
+     * MSDKRuntimeException if error occurs.
      * 
      * @throws MSDKException
      *             On any error
