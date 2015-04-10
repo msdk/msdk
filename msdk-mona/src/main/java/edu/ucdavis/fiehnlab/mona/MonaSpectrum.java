@@ -13,13 +13,14 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Range;
@@ -36,7 +37,7 @@ public class MonaSpectrum implements MassSpectrum,MonaConfiguration,PeakListRowA
      */
     private Long id;
 
-    private Logger logger = Logger.getLogger("mona");
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * unless otherwise said, MoNA spectra are always centroided
@@ -103,7 +104,7 @@ public class MonaSpectrum implements MassSpectrum,MonaConfiguration,PeakListRowA
         String molFile = monaRecord.getBiologicalCompound().getMolFile();
 
         //done
-        logger.finer("spectra build");
+        logger.debug("spectra build");
     }
 
     /**

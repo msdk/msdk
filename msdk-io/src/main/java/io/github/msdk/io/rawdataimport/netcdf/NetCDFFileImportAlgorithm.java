@@ -28,11 +28,12 @@ import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ucar.ma2.Array;
 import ucar.ma2.Index;
@@ -43,7 +44,7 @@ import ucar.nc2.Variable;
 
 public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 
-    private Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private NetcdfFile inputFile;
 
@@ -121,7 +122,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
         // Find mass_values and intensity_values variables
         massValueVariable = inputFile.findVariable("mass_values");
         if (massValueVariable == null) {
-            logger.severe("Could not find variable mass_values");
+            logger.error("Could not find variable mass_values");
             throw (new IOException("Could not find variable mass_values"));
         }
         assert (massValueVariable.getRank() == 1);
@@ -135,7 +136,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 
         intensityValueVariable = inputFile.findVariable("intensity_values");
         if (intensityValueVariable == null) {
-            logger.severe("Could not find variable intensity_values");
+            logger.error("Could not find variable intensity_values");
             throw (new IOException("Could not find variable intensity_values"));
         }
         assert (intensityValueVariable.getRank() == 1);
@@ -282,7 +283,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
                         } else {
                             retentionTimes[i] = 0;
                         }
-                        logger.severe("ERROR: Could not fix incorrect QStar scan times.");
+                        logger.error("ERROR: Could not fix incorrect QStar scan times.");
                     }
                 }
             }
@@ -355,7 +356,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
         // Get retention time of the scan
         Double retentionTime = scansRetentionTimes.get(scanNum);
         if (retentionTime == null) {
-            logger.severe("Could not find retention time for scan " + scanNum);
+            logger.error("Could not find retention time for scan " + scanNum);
             throw (new IOException("Could not find retention time for scan "
                     + scanNum));
         }
@@ -369,8 +370,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
             intensityValueArray = intensityValueVariable.read(
                     scanStartPosition, scanLength);
         } catch (Exception e) {
-            logger.log(
-                    Level.SEVERE,
+            logger.error(
                     "Could not read from variables mass_values and/or intensity_values.",
                     e);
             throw (new IOException(

@@ -25,7 +25,11 @@ import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.channels.FileChannel;
+<<<<<<< HEAD
 import java.util.HashMap;
+=======
+import java.util.TreeMap;
+>>>>>>> refs/heads/slf4j
 
 import javax.annotation.Nonnull;
 
@@ -237,6 +241,7 @@ public class TmpFileDataPointStore implements DataPointStore {
 
     @Override
     synchronized public void dispose() {
+<<<<<<< HEAD
 
         // Discard the hash maps and byte buffer
         dataPointsOffsets.clear();
@@ -253,6 +258,17 @@ public class TmpFileDataPointStore implements DataPointStore {
                         + tmpDataFileName + ": " + e.toString());
                 e.printStackTrace();
             }
+=======
+        if (!tmpDataFileName.exists())
+            return;
+        try {
+            tmpDataFile.close();
+            tmpDataFileName.delete();
+        } catch (IOException e) {
+            logger.warn("Could not close and remove temporary file "
+                    + tmpDataFileName + ": " + e.toString());
+            e.printStackTrace();
+>>>>>>> refs/heads/slf4j
         }
     }
 
