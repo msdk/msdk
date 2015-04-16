@@ -20,6 +20,7 @@ import io.github.msdk.datamodel.rawdata.DataPointList;
 import java.util.AbstractList;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
@@ -188,6 +189,7 @@ class DataPointArrayList extends AbstractList<DataPoint> implements
     /**
      * Returns the m/z range, assuming the m/z array is sorted.
      */
+    @SuppressWarnings("null")
     @Override
     @Nonnull
     public Range<Double> getMzRange() {
@@ -205,13 +207,31 @@ class DataPointArrayList extends AbstractList<DataPoint> implements
     }
 
     /**
-     * 
+     * AbstractList method implementation
      */
     @Override
     public void add(int index, DataPoint dp) {
+        this.add(index, dp.getMz(), dp.getIntensity());
+    }
+
+    public void add(double newMz, float newIntensity) {
+        this.add(size, newMz, newIntensity);
+    }
+
+    public void add(int index, double newMz, float newIntensity) {
 
         if (index < 0 || index > size)
             throw new IndexOutOfBoundsException();
+
+        if ((index > 0) && (mzBuffer[index - 1] > newMz)) {
+            throw new IllegalArgumentException(
+                    "Setting the data point at this position would break the m/z ordering of the data points");
+        }
+
+        if ((index < size) && (mzBuffer[index] < newMz)) {
+            throw new IllegalArgumentException(
+                    "Setting the data point at this position would break the m/z ordering of the data points");
+        }
 
         if (index >= mzBuffer.length) {
 
@@ -234,8 +254,8 @@ class DataPointArrayList extends AbstractList<DataPoint> implements
                     index + 1, size - index);
         }
 
-        mzBuffer[index] = dp.getMz();
-        intensityBuffer[index] = dp.getIntensity();
+        mzBuffer[index] = newMz;
+        intensityBuffer[index] = newIntensity;
 
         size++;
 
@@ -290,6 +310,16 @@ class DataPointArrayList extends AbstractList<DataPoint> implements
         if (dp == null) {
             throw new NullPointerException(
                     "DataPointList does not permit null elements");
+        }
+
+        if ((index > 0) && (mzBuffer[index - 1] > dp.getMz())) {
+            throw new IllegalArgumentException(
+                    "Setting the data point at this position would break the m/z ordering of the data points");
+        }
+
+        if ((index < (size - 1)) && (mzBuffer[index + 1] < dp.getMz())) {
+            throw new IllegalArgumentException(
+                    "Setting the data point at this position would break the m/z ordering of the data points");
         }
 
         final DataPoint current = get(index);
@@ -365,5 +395,45 @@ class DataPointArrayList extends AbstractList<DataPoint> implements
         }
         builder.append("]");
         return builder.toString();
+    }
+
+    @Override
+    @Nullable
+    public DataPoint getHighestDataPoint() {
+        if (size == 0)
+            return null;
+        int maxIndex = 0;
+        for (int i = 1; i < size; i++) {
+            if (intensityBuffer[i] > intensityBuffer[maxIndex])
+                maxIndex = i;
+        }
+        final DataPoint newDP = MSDKObjectBuilder.getDataPoint(
+                mzBuffer[maxIndex], intensityBuffer[maxIndex]);
+        return newDP;
+    }
+
+    @Override
+    @Nonnull
+    public Float getTIC() {
+        float tic = 0f;
+        for (int i = 0; i < size; i++) {
+            tic += intensityBuffer[i];
+        }
+        return tic;
+    }
+
+    @Override
+    public DataPointList selectDataPoints(@Nonnull Range<Double> mzRange,
+            @Nonnull Range<Float> intensityRange) {
+
+        final DataPointList newList = MSDKObjectBuilder.getDataPointList();
+
+        for (int i = 0; i < size; i++) {
+            if (mzRange.contains(mzBuffer[i])
+                    && intensityRange.contains(intensityBuffer[i]))
+                newList.add(mzBuffer[i], intensityBuffer[i]);
+        }
+
+        return newList;
     }
 }

@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Simple implementation of the PeakList interface.
  */
-public class SimplePeakList implements PeakList {
+class SimplePeakList implements PeakList {
 
     @Override
     public String getName() {

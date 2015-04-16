@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 /**
  * Detector of raw data file format
  */
-public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
+public class FileTypeDetectionMethod implements MSDKMethod<RawDataFileType> {
 
     /*
      * See
@@ -68,7 +68,7 @@ public class FileTypeDetectionAlgorithm implements MSDKMethod<RawDataFileType> {
      * @return Detected file type or null if the file is not of any supported
      *         type
      */
-    public FileTypeDetectionAlgorithm(@Nonnull File fileName) {
+    public FileTypeDetectionMethod(@Nonnull File fileName) {
         this.fileName = fileName;
     }
 

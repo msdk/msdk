@@ -19,6 +19,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datapointstore.DataPointStore;
+import io.github.msdk.datapointstore.MSDKDataStore;
 
 import java.io.File;
 
@@ -43,7 +45,7 @@ public class RawDataimportTest {
 
         int filesTested = 0;
         for (File inputFile : inputFiles) {
-            importFile(inputFile);
+            testFile(inputFile);
             filesTested++;
         }
 
@@ -63,7 +65,7 @@ public class RawDataimportTest {
 
         int filesTested = 0;
         for (File inputFile : inputFiles) {
-            importFile(inputFile);
+            testFile(inputFile);
             filesTested++;
         }
 
@@ -85,7 +87,8 @@ public class RawDataimportTest {
 
         int filesTested = 0;
         for (File inputFile : inputFiles) {
-            importFile(inputFile);
+            testFile(inputFile);
+
             filesTested++;
         }
 
@@ -107,7 +110,7 @@ public class RawDataimportTest {
 
         int filesTested = 0;
         for (File inputFile : inputFiles) {
-            importFile(inputFile);
+            testFile(inputFile);
             filesTested++;
         }
 
@@ -115,17 +118,21 @@ public class RawDataimportTest {
         // assertTrue(filesTested > 0);
     }
 
-    private void importFile(File inputFile) throws Exception {
+    private void testFile(File inputFile) throws Exception {
 
         logger.info("Checking import of file " + inputFile.getName());
 
-        RawDataFileImportAlgorithm importer = new RawDataFileImportAlgorithm(
-                inputFile);
-        importer.execute();
-        RawDataFile rawFile = importer.getResult();
+        DataPointStore dataStore = MSDKDataStore.getTmpFileDataPointStore();
+
+        RawDataFileImportMethod importer = new RawDataFileImportMethod(
+                inputFile, dataStore);
+
+        RawDataFile rawFile = importer.execute();
 
         assertNotNull(rawFile);
         assertNotEquals(rawFile.getScans().size(), 0);
+
+        rawFile.dispose();
 
     }
 }

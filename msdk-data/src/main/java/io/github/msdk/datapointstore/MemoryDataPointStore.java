@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.store;
+package io.github.msdk.datapointstore;
 
 import io.github.msdk.datamodel.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.DataPointList;
@@ -26,12 +26,13 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A DataPointStore implementation that stores the data points in memory. Use
- * with caution.
+ * with caution. When DataPointLists are stored or retrieved, they are not
+ * referenced but copied, so the original list can be used for other purpose.
  * 
  * The methods of this class are synchronized, therefore it can be safely used
  * by multiple threads.
  */
-public class MemoryDataPointStore implements DataPointStore {
+class MemoryDataPointStore implements DataPointStore {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -51,7 +52,7 @@ public class MemoryDataPointStore implements DataPointStore {
         if (dataPointLists == null)
             throw new IllegalStateException("This object has been disposed");
 
-        // Clone the given list
+        // Clone the given list for storage
         final DataPointList newList = MSDKObjectBuilder
                 .getDataPointList(dataPoints);
 

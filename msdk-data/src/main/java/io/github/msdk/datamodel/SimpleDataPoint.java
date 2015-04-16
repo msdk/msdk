@@ -36,12 +36,12 @@ class SimpleDataPoint implements DataPoint {
     }
 
     @Override
-    public Float getIntensity() {
+    public @Nonnull Float getIntensity() {
         return intensity;
     }
 
     @Override
-    public Double getMz() {
+    public @Nonnull Double getMz() {
         return mz;
     }
 

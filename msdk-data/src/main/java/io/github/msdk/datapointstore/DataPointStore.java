@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.store;
+package io.github.msdk.datapointstore;
 
 import io.github.msdk.datamodel.rawdata.DataPointList;
 

@@ -17,29 +17,30 @@ package io.github.msdk.io.spectrumtypedetection;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.rawdataimport.RawDataFileImportAlgorithm;
+import io.github.msdk.datapointstore.DataPointStore;
+import io.github.msdk.datapointstore.MSDKDataStore;
+import io.github.msdk.io.rawdataimport.RawDataFileImportMethod;
 
 import java.io.File;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SpectrumTypeDetectionAlgorithmTest {
+public class SpectrumTypeDetectionMethodTest {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private static final String TEST_DATA_PATH = "src/test/resources/spectrumtypedetection";
 
     /**
      * Test the SpectrumTypeDetectionAlgorithm
      */
-    @Ignore("not ready yet")
     @Test
     public void testSpectrumTypeDetectionAlgorithm() throws Exception {
 
-        File inputFiles[] = new File("src/test/resources/spectrumtypedetection")
-                .listFiles();
+        File inputFiles[] = new File(TEST_DATA_PATH).listFiles();
 
         Assert.assertNotNull(inputFiles);
         Assert.assertNotEquals(0, inputFiles.length);
@@ -48,28 +49,33 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
         for (File inputFile : inputFiles) {
 
-            MassSpectrumType trueType;
+            MassSpectrumType expectedType;
             if (inputFile.getName().startsWith("centroided"))
-                trueType = MassSpectrumType.CENTROIDED;
+                expectedType = MassSpectrumType.CENTROIDED;
             else if (inputFile.getName().startsWith("thresholded"))
-                trueType = MassSpectrumType.THRESHOLDED;
+                expectedType = MassSpectrumType.THRESHOLDED;
             else if (inputFile.getName().startsWith("profile"))
-                trueType = MassSpectrumType.PROFILE;
-            else
-                continue;
+                expectedType = MassSpectrumType.PROFILE;
+            else {
+                throw new Exception(
+                        "Cannot determine expected spectrum type of file "
+                                + inputFile);
+            }
 
-            logger.info("Checking autodetection of centroided/thresholded/profile scans on file "
+            logger.info("Testing autodetection of centroided/thresholded/profile scans on file "
                     + inputFile.getName());
 
-            RawDataFileImportAlgorithm importer = new RawDataFileImportAlgorithm(
-                    inputFile);
-            importer.execute();
-            RawDataFile rawFile = importer.getResult();
+            // We can use memory because the test files are not that big
+            DataPointStore dataStore = MSDKDataStore.getMemoryDataStore();
+
+            RawDataFileImportMethod importer = new RawDataFileImportMethod(
+                    inputFile, dataStore);
+            RawDataFile rawFile = importer.execute();
 
             Assert.assertNotNull(rawFile);
 
             for (MsScan scan : rawFile.getScans()) {
-                SpectrumTypeDetectionAlgorithm detector = new SpectrumTypeDetectionAlgorithm(
+                SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
                         scan);
                 detector.execute();
                 MassSpectrumType detectedType = detector.getResult();
@@ -77,12 +83,16 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
                 Assert.assertEquals("Scan type wrongly detected for scan "
                         + scan.getScanNumber() + " in " + rawFile.getName(),
-                        trueType, detectedType);
+                        expectedType, detectedType);
             }
+
+            // Dispose the when done
+            rawFile.dispose();
+
             filesTested++;
         }
 
-        // make sure we tested 10+ files
+        // Make sure we tested 10+ files
         Assert.assertTrue(filesTested > 10);
     }
 

@@ -24,7 +24,8 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
+import io.github.msdk.datapointstore.DataPointStore;
+import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
 import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.SortingDirection;
 import io.github.msdk.util.SortingProperty;
@@ -38,11 +39,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReader;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
 import uk.ac.ebi.pride.tools.jmzreader.model.Param;
@@ -58,12 +61,14 @@ import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLParsingException;
  * This class reads XML-based mass spec data formats (mzData, mzXML, and mzML)
  * using the jmzreader library.
  */
-public class XMLFileImportAlgorithm implements MSDKMethod<RawDataFile> {
+public class XMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final File sourceFile;
-    private final RawDataFileType fileType;
+    private final @Nonnull File sourceFile;
+    private final @Nonnull RawDataFileType fileType;
+    private final @Nonnull DataPointStore dataStore;
+
     private boolean canceled = false;
 
     private RawDataFile newRawFile;
@@ -72,9 +77,11 @@ public class XMLFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 
     private Map<String, Integer> scanIdTable = new Hashtable<String, Integer>();
 
-    public XMLFileImportAlgorithm(File sourceFile, RawDataFileType fileType) {
+    public XMLFileImportMethod(@Nonnull File sourceFile,
+            @Nonnull RawDataFileType fileType, @Nonnull DataPointStore dataStore) {
         this.sourceFile = sourceFile;
         this.fileType = fileType;
+        this.dataStore = dataStore;
     }
 
     /**
@@ -104,8 +111,8 @@ public class XMLFileImportAlgorithm implements MSDKMethod<RawDataFile> {
                 parser = new MzXMLFile(sourceFile);
                 break;
             default:
-                throw new IllegalArgumentException(
-                        "This reader cannot read file type " + fileType);
+                throw new MSDKException("This reader cannot read file type "
+                        + fileType);
             }
         } catch (Exception e) {
             throw new MSDKException(e);
@@ -122,13 +129,18 @@ public class XMLFileImportAlgorithm implements MSDKMethod<RawDataFile> {
 
             Spectrum spectrum = iterator.next();
 
-            // Create a new MsScan or MsMsScan instance depending on the MS
-            // level
-            Integer msLevel = spectrum.getMsLevel();
-            MsScan scan = MSDKObjectBuilder.getMsScan(newRawFile);
-            if ((msLevel != null) && (msLevel > 1)) {
+            // Create a new MsScan instance 
+            MsScan scan = MSDKObjectBuilder.getMsScan(dataStore);
+            
+            for (CvParam p : spectrum.getAdditional().getCvParams()) {
+                logger.debug("CvParam " + p.toString());
             }
-
+            for (Param p : spectrum.getAdditional().getParams()) {
+                logger.debug("Param " + p.toString());
+            }
+            
+            Integer msLevel = spectrum.getMsLevel();
+            
             // Store the scan MS level
 
             // Store the scan number
@@ -136,8 +148,7 @@ public class XMLFileImportAlgorithm implements MSDKMethod<RawDataFile> {
             int scanNumber = convertScanIdToScanNumber(scanId);
             scan.setScanNumber(scanNumber);
 
-            // Get parent scan number
-            int parentScan = extractParentScanNumber(spectrum);
+
 
             // Store the chromatography data
             ChromatographyInfo chromData = extractChromatographyData(spectrum);
@@ -147,7 +158,7 @@ public class XMLFileImportAlgorithm implements MSDKMethod<RawDataFile> {
             // scan.setDataPoints(dataPoints);
 
             // Auto-detect whether this scan is centroided
-            SpectrumTypeDetectionAlgorithm detector = new SpectrumTypeDetectionAlgorithm(
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
                     scan);
             detector.execute();
             MassSpectrumType spectrumType = detector.getResult();

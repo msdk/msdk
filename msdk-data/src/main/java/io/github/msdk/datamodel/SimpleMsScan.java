@@ -15,7 +15,6 @@
 package io.github.msdk.datamodel;
 
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
 import io.github.msdk.datamodel.rawdata.FragmentationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
@@ -24,7 +23,9 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datapointstore.DataPointStore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -35,53 +36,23 @@ import com.google.common.collect.Range;
 /**
  * Simple implementation of the Scan interface.
  */
-public class SimpleMsScan extends AbstractSpectrum implements MsScan {
+class SimpleMsScan extends AbstractSpectrum implements MsScan {
 
-    private final RawDataFile dataFile;
+    private final @Nonnull DataPointStore dataPointStore;
+
+    private RawDataFile dataFile;
     private Integer scanNumber, msLevel;
     private ChromatographyInfo chromData;
 
-    public SimpleMsScan(@Nonnull RawDataFile dataFile) {
-        super(null);
-        this.dataFile = dataFile;
-    }
-
-    @Override
-    public String toString() {
-        StringBuffer buf = new StringBuffer();
-        buf.append("#");
-        buf.append(getScanNumber());
-        buf.append(" @");
-        // buf.append(rtFormat.format(getRetentionTime()));
-        buf.append(" MS");
-        // buf.append(getMSLevel());
-        switch (getSpectrumType()) {
-        case CENTROIDED:
-            buf.append(" c");
-            break;
-        case PROFILE:
-            buf.append(" p");
-            break;
-        case THRESHOLDED:
-            buf.append(" t");
-            break;
-        }
-
-        return buf.toString();
+    public SimpleMsScan(@Nonnull DataPointStore dataPointStore) {
+        super(dataPointStore);
+        this.dataPointStore = dataPointStore;
     }
 
     @Override
     public void getDataPoints(DataPointList list) {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    @Nonnull
-    public List<DataPoint> getDataPointsByIntensity(
-            @Nonnull Range<Float> intensityRange) {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override
@@ -107,7 +78,7 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     @Nonnull
     public Integer getScanNumber() {
         // TODO Auto-generated method stub
-        return null;
+        return 1;
     }
 
     @Override
@@ -120,7 +91,7 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     @Nonnull
     public MsFunction getMsFunction() {
         // TODO Auto-generated method stub
-        return null;
+        return new SimpleMsFunction("MS", 1);
     }
 
     @Override
@@ -146,7 +117,7 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     @Nonnull
     public PolarityType getPolarity() {
         // TODO Auto-generated method stub
-        return null;
+        return PolarityType.UNKNOWN;
     }
 
     @Override
@@ -156,16 +127,16 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     }
 
     @Override
-    public MsScan clone() {
+    public @Nonnull MsScan clone() {
         // TODO Auto-generated method stub
-        return null;
+        return this;
     }
 
     @Override
     @Nonnull
     public MsScanType getMsScanType() {
         // TODO Auto-generated method stub
-        return null;
+        return MsScanType.UNKNOWN;
     }
 
     @Override
@@ -205,14 +176,31 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     @Nonnull
     public List<IsolationInfo> getIsolations() {
         // TODO Auto-generated method stub
-        return null;
+        return new ArrayList<IsolationInfo>();
     }
 
     @Override
-    @Nonnull
-    public Float getTIC() {
-        // TODO Auto-generated method stub
-        return null;
+    public String toString() {
+        StringBuffer buf = new StringBuffer();
+        buf.append("#");
+        buf.append(getScanNumber());
+        buf.append(" @");
+        // buf.append(rtFormat.format(getRetentionTime()));
+        buf.append(" MS");
+        // buf.append(getMSLevel());
+        switch (getSpectrumType()) {
+        case CENTROIDED:
+            buf.append(" c");
+            break;
+        case PROFILE:
+            buf.append(" p");
+            break;
+        case THRESHOLDED:
+            buf.append(" t");
+            break;
+        }
+
+        return buf.toString();
     }
 
 }

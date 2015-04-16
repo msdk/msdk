@@ -31,7 +31,7 @@ import com.google.common.collect.Range;
 /**
  * This class is a simple implementation of the peak interface.
  */
-public class SimpleFeature implements Feature {
+class SimpleFeature implements Feature {
 
     private @Nonnull FeatureType peakStatus = FeatureType.UNKNOWN;
     private RawDataFile dataFile;
@@ -140,14 +140,14 @@ public class SimpleFeature implements Feature {
     @Nonnull
     public PeakListRow getParentPeakListRow() {
         // TODO Auto-generated method stub
-        return null;
+        return new SimplePeakListRow();
     }
 
     @Override
     @Nonnull
     public FeatureType getFeatureType() {
         // TODO Auto-generated method stub
-        return null;
+        return FeatureType.UNKNOWN;
     }
 
     @Override
@@ -160,7 +160,7 @@ public class SimpleFeature implements Feature {
     @Nonnull
     public Double getMz() {
         // TODO Auto-generated method stub
-        return null;
+        return 0d;
     }
 
     @Override
@@ -186,7 +186,7 @@ public class SimpleFeature implements Feature {
     @Nonnull
     public Float getHeight() {
         // TODO Auto-generated method stub
-        return null;
+        return 0f;
     }
 
     @Override

@@ -12,8 +12,9 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.store;
+package io.github.msdk.datapointstore;
 
+import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.DataPointList;
@@ -47,7 +48,7 @@ import org.slf4j.LoggerFactory;
  * The methods of this class are synchronized, therefore it can be safely used
  * by multiple threads.
  */
-public class TmpFileDataPointStore implements DataPointStore {
+class TmpFileDataPointStore implements DataPointStore {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -62,7 +63,7 @@ public class TmpFileDataPointStore implements DataPointStore {
 
     private int lastStorageId = 0;
 
-    TmpFileDataPointStore() {
+    TmpFileDataPointStore() throws MSDKException {
 
         try {
             tmpDataFileName = File.createTempFile("msdk", ".tmp");
@@ -77,7 +78,7 @@ public class TmpFileDataPointStore implements DataPointStore {
             tmpDataFileName.deleteOnExit();
 
         } catch (IOException e) {
-            throw new MSDKRuntimeException(e);
+            throw new MSDKException(e);
         }
 
     }

@@ -23,7 +23,7 @@ import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
+import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,7 @@ import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 
-public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
+public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -64,7 +64,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
     private double massValueScaleFactor = 1;
     private double intensityValueScaleFactor = 1;
 
-    public NetCDFFileImportAlgorithm(@Nonnull File sourceFile) {
+    public NetCDFFileImportMethod(@Nonnull File sourceFile) {
         this.sourceFile = sourceFile;
     }
 
@@ -332,7 +332,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
      */
     private MsScan readNextScan() throws IOException, MSDKException {
 
-        MsScan scan = MSDKObjectBuilder.getMsScan(newRawFile);
+        MsScan scan = MSDKObjectBuilder.getMsScan(null);
 
         // Set scan number
         scanNum++;
@@ -397,7 +397,7 @@ public class NetCDFFileImportAlgorithm implements MSDKMethod<RawDataFile> {
         }
 
         // Auto-detect whether this scan is centroided
-        SpectrumTypeDetectionAlgorithm detector = new SpectrumTypeDetectionAlgorithm(
+        SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
                 scan);
         detector.execute();
         MassSpectrumType spectrumType = detector.getResult();
