@@ -16,11 +16,8 @@ package io.github.msdk.datamodel;
 
 import io.github.msdk.datamodel.peaklists.IsotopePattern;
 import io.github.msdk.datamodel.peaklists.IsotopePatternType;
-import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
-import io.github.msdk.datamodel.store.DataPointStore;
-
-import java.util.List;
+import io.github.msdk.datapointstore.DataPointStore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,8 +29,7 @@ import com.google.common.collect.Range;
 /**
  * Simple implementation of IsotopePattern interface
  */
-public class SimpleIsotopePattern extends AbstractSpectrum implements
-        IsotopePattern {
+class SimpleIsotopePattern extends AbstractSpectrum implements IsotopePattern {
 
     private @Nonnull IsotopePatternType status = IsotopePatternType.UNKNOWN;
     private @Nonnull String description = "";
@@ -75,45 +71,8 @@ public class SimpleIsotopePattern extends AbstractSpectrum implements
 
     }
 
-    @Override
-    // @Nonnull
-    public DataPointList getDataPoints() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
-    @Override
-    public void getDataPoints(DataPointList list) {
-        // TODO Auto-generated method stub
 
-    }
 
-    @Override
-    // @Nonnull
-    public DataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    // @Nonnull
-    public List<DataPoint> getDataPointsByIntensity(
-            @Nonnull Range<Float> intensityRange) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void setDataPoints(@Nonnull DataPointList newDataPoints) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    @Nonnull
-    public Float getTIC() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
 }

@@ -18,7 +18,8 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
-import io.github.msdk.io.rawdataimport.xmlformats.XMLFileImportAlgorithm;
+import io.github.msdk.datapointstore.DataPointStore;
+import io.github.msdk.io.rawdataimport.xmlformats.XMLFileImportMethod;
 
 import java.io.File;
 
@@ -30,9 +31,11 @@ import javax.annotation.Nullable;
  * RawDataFileTypeDetectionAlgorithm and then imports the raw data by performing
  * the right import algorithm.
  */
-public class RawDataFileImportAlgorithm implements MSDKMethod<RawDataFile> {
+public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
 
     private final @Nonnull File sourceFile;
+    private final @Nonnull DataPointStore dataStore;
+
     private RawDataFile result;
     private boolean canceled = false;
     MSDKMethod<RawDataFile> parser = null;
@@ -41,8 +44,10 @@ public class RawDataFileImportAlgorithm implements MSDKMethod<RawDataFile> {
      * 
      * @param sourceFile
      */
-    public RawDataFileImportAlgorithm(@Nonnull File sourceFile) {
+    public RawDataFileImportMethod(@Nonnull File sourceFile,
+            @Nonnull DataPointStore dataStore) {
         this.sourceFile = sourceFile;
+        this.dataStore = dataStore;
     }
 
     /**
@@ -51,25 +56,25 @@ public class RawDataFileImportAlgorithm implements MSDKMethod<RawDataFile> {
     @Override
     public RawDataFile execute() throws MSDKException {
 
-        FileTypeDetectionAlgorithm typeDetector = new FileTypeDetectionAlgorithm(
+        FileTypeDetectionMethod typeDetector = new FileTypeDetectionMethod(
                 sourceFile);
         RawDataFileType fileType = typeDetector.execute();
 
         if (fileType == null)
-            throw new MSDKException("Unsupported file type of file "
-                    + sourceFile);
+            throw new MSDKException("Unknown file type of file " + sourceFile);
 
         if (canceled)
             return null;
+
         switch (fileType) {
         case MZML:
         case MZXML:
         case MZDATA:
-            parser = new XMLFileImportAlgorithm(sourceFile, fileType);
+            parser = new XMLFileImportMethod(sourceFile, fileType, dataStore);
             break;
         default:
-            throw new MSDKException("Unsupported file type of file "
-                    + sourceFile);
+            throw new MSDKException("Unsupported file type (" + fileType
+                    + ") of file " + sourceFile);
         }
 
         result = parser.execute();

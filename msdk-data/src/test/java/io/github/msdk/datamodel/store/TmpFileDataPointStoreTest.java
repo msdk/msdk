@@ -14,6 +14,10 @@
 
 package io.github.msdk.datamodel.store;
 
+import io.github.msdk.MSDKException;
+import io.github.msdk.datapointstore.DataPointStore;
+import io.github.msdk.datapointstore.MSDKDataStore;
+
 import org.junit.Test;
 
 /**
@@ -22,25 +26,25 @@ import org.junit.Test;
 public class TmpFileDataPointStoreTest {
 
     @Test
-    public void testStoreReadDataPoints() {
+    public void testStoreReadDataPoints() throws MSDKException {
 
-        TmpFileDataPointStore store = new TmpFileDataPointStore();
+        DataPointStore store = MSDKDataStore.getTmpFileDataPointStore();
         DataPointStoreTest.testStoreReadDataPoints(store);
 
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testRemoveDataPoints() {
+    public void testRemoveDataPoints() throws MSDKException {
 
-        TmpFileDataPointStore store = new TmpFileDataPointStore();
+        DataPointStore store = MSDKDataStore.getTmpFileDataPointStore();
         DataPointStoreTest.testRemoveDataPoints(store);
 
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testDispose() {
+    public void testDispose() throws MSDKException {
 
-        TmpFileDataPointStore store = new TmpFileDataPointStore();
+        DataPointStore store = MSDKDataStore.getTmpFileDataPointStore();
         DataPointStoreTest.testDispose(store);
 
     }

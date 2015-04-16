@@ -25,12 +25,12 @@ import javax.annotation.Nonnull;
 /**
  * Implementation of PeakListRow
  */
-public class SimplePeakListRow implements PeakListRow {
+class SimplePeakListRow implements PeakListRow {
 
     @Override
     public @Nonnull PeakList getParentPeakList() {
         // TODO Auto-generated method stub
-        return null;
+        return new SimplePeakList();
     }
 
     @Override

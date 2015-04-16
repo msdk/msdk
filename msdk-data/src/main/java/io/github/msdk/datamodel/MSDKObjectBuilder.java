@@ -11,33 +11,79 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
+
 package io.github.msdk.datamodel;
 
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
+import io.github.msdk.datapointstore.DataPointStore;
+
+import java.lang.ref.WeakReference;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Object builder
  */
 public class MSDKObjectBuilder {
 
+    /**
+     * The number of MS functions used in a project is typically small, but each
+     * scan has to be annotated with its MS function. So we take advantage of
+     * the immutable nature of MsFunction and recycle the instances using this
+     * List.
+     */
+    private static final List<WeakReference<MsFunction>> msFunctions = new LinkedList<>();
+
     public static final @Nonnull DataPoint getDataPoint(double mz,
             float intensity) {
         return new SimpleDataPoint(mz, intensity);
+    }
+
+    public static final @Nonnull MsFunction getMsFunction(@Nonnull String name,
+            @Nullable Integer msLevel) {
+
+        synchronized (msFunctions) {
+            Iterator<WeakReference<MsFunction>> iter = msFunctions.iterator();
+            while (iter.hasNext()) {
+                WeakReference<MsFunction> ref = iter.next();
+                MsFunction func = ref.get();
+                if (func == null) {
+                    iter.remove();
+                    continue;
+                }
+                if (!func.getName().equals(name))
+                    continue;
+                if ((func.getMsLevel() == null) && (msLevel == null))
+                    return func;
+                if ((func.getMsLevel() != null)
+                        && (func.getMsLevel().equals(msLevel)))
+                    return func;
+            }
+            MsFunction newFunc = new SimpleMsFunction(name, msLevel);
+            WeakReference<MsFunction> ref = new WeakReference<>(newFunc);
+            msFunctions.add(ref);
+            return newFunc;
+
+        }
     }
 
     public static final @Nonnull RawDataFile getRawDataFile() {
         return new SimpleRawDataFile();
     }
 
-    public static final @Nonnull MsScan getMsScan(@Nonnull RawDataFile dataFile) {
-        return new SimpleMsScan(dataFile);
+    public static final @Nonnull MsScan getMsScan(
+            @Nonnull DataPointStore dataPointStore) {
+        return new SimpleMsScan(dataPointStore);
     }
 
     public static final @Nonnull ChromatographyInfo getChromatographyInfo1D(

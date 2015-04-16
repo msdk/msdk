@@ -91,7 +91,7 @@ class SimpleRawDataFile implements RawDataFile {
     @Nonnull
     public List<MsFunction> getMsFunctions() {
         // TODO Auto-generated method stub
-        return null;
+        return new ArrayList<MsFunction>();
     }
 
     @Override
@@ -104,7 +104,7 @@ class SimpleRawDataFile implements RawDataFile {
     @Nonnull
     public List<MsScan> getScans(MsFunction function) {
         // TODO Auto-generated method stub
-        return null;
+        return new ArrayList<MsScan>();
     }
 
     @Override
@@ -112,7 +112,7 @@ class SimpleRawDataFile implements RawDataFile {
     public List<MsScan> getScans(
             @Nonnull Range<ChromatographyInfo> chromatographyRange) {
         // TODO Auto-generated method stub
-        return null;
+        return new ArrayList<MsScan>();
     }
 
     @Override
@@ -120,7 +120,7 @@ class SimpleRawDataFile implements RawDataFile {
     public List<MsScan> getScans(@Nonnull MsFunction function,
             @Nonnull Range<ChromatographyInfo> chromatographyRange) {
         // TODO Auto-generated method stub
-        return null;
+        return new ArrayList<MsScan>();
     }
 
     @Override

@@ -18,6 +18,7 @@ import io.github.msdk.datamodel.DataModelTestTools;
 import io.github.msdk.datamodel.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datapointstore.DataPointStore;
 
 import org.junit.Assert;
 

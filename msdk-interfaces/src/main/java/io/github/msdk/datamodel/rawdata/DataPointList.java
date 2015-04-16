@@ -17,6 +17,7 @@ package io.github.msdk.datamodel.rawdata;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
@@ -44,14 +45,6 @@ import com.google.common.collect.Range;
 public interface DataPointList extends List<DataPoint> {
 
     /**
-     * Returns the range of m/z values in this DataPointList.
-     * 
-     * @return Range of m/z values in this DataPointList
-     */
-    @Nonnull
-    Range<Double> getMzRange();
-
-    /**
      * Returns the current m/z buffer array. The size of the array might be
      * larger than the actual size of this DataPointList, therefore data
      * operations should always use the size returned by the size() method and
@@ -59,7 +52,7 @@ public interface DataPointList extends List<DataPoint> {
      * the current state of this list - if more data points are added, the
      * internal buffer might be replaced with a larger array.
      * 
-     * @return Current m/z buffer
+     * @return current m/z buffer
      */
     @Nonnull
     double[] getMzBuffer();
@@ -72,7 +65,7 @@ public interface DataPointList extends List<DataPoint> {
      * the current state of this list - if more data points are added, the
      * internal buffer might be replaced with a larger array.
      * 
-     * @return Current intensity buffer
+     * @return current intensity buffer
      */
     @Nonnull
     float[] getIntensityBuffer();
@@ -83,19 +76,44 @@ public interface DataPointList extends List<DataPoint> {
      * ascending order.
      * 
      * @param mzBuffer
-     *            New m/z buffer
+     *            new m/z buffer
      * @param intensityBuffer
-     *            New intensity buffer
+     *            new intensity buffer
      * @param newSize
-     *            Number of data point items in the buffers. This might be
-     *            smaller than the actual length of the buffer arrays.
+     *            number of data point items in the buffers; this might be
+     *            smaller than the actual length of the buffer arrays
      * @throws IllegalArgumentException
-     *             If the size is larger than the length of the m/z array.
+     *             if the size is larger than the length of the m/z array
      * @throws IllegalStateException
-     *             if the m/z array is not sorted in ascending order.
+     *             if the m/z array is not sorted in ascending order
      */
     void setBuffers(@Nonnull double[] mzBuffer,
             @Nonnull float[] intensityBuffer, int newSize);
+
+    /**
+     * Add a new data point into the end of the list. If the internal arrays are
+     * full, they are replaced with new arrays of twice the length.
+     * 
+     * @param newMz
+     *            m/z value of the new data point
+     * @param newIntensity
+     *            intensity value of the new data point
+     */
+    void add(double newMz, float newIntensity);
+
+    /**
+     * Add a new data point into a specified position of the list. If the
+     * internal arrays are full, they are replaced with new arrays of twice the
+     * length.
+     * 
+     * @param index
+     *            index at which the specified data point is to be inserted
+     * @param newMz
+     *            m/z value of the new data point
+     * @param newIntensity
+     *            intensity value of the new data point
+     */
+    void add(int index, double newMz, float newIntensity);
 
     /**
      * Updates the size of the list, assuming the m/z and intensity arrays have
@@ -103,11 +121,11 @@ public interface DataPointList extends List<DataPoint> {
      * array is sorted in ascending order.
      * 
      * @param newSize
-     *            New size of the list. Must be <= length of the m/z array.
+     *            new size of the list. Must be <= length of the m/z array
      * @throws IllegalArgumentException
-     *             If the size is larger than the length of the m/z array.
+     *             if the size is larger than the length of the m/z array
      * @throws IllegalStateException
-     *             if the m/z array is not sorted in ascending order.
+     *             if the m/z array is not sorted in ascending order
      */
     void setSize(int newSize);
 
@@ -117,7 +135,7 @@ public interface DataPointList extends List<DataPoint> {
      * on needs.
      * 
      * @param list
-     *            Source list to copy from.
+     *            source list to copy from.
      */
     void copyFrom(@Nonnull DataPointList list);
 
@@ -127,8 +145,47 @@ public interface DataPointList extends List<DataPoint> {
      * depending on needs.
      * 
      * @param list
-     *            Target list to copy to.
+     *            target list to copy to.
      */
     void copyTo(@Nonnull DataPointList list);
+
+    /**
+     * Creates a new DataPointList that contains only those data points that fit
+     * within given m/z and intensity boundaries.
+     * 
+     * @param mzRange
+     *            m/z range to select
+     * @param intensityRange
+     *            intensity range to select
+     * @return new DataPointList
+     */
+    DataPointList selectDataPoints(@Nonnull Range<Double> mzRange,
+            @Nonnull Range<Float> intensityRange);
+
+    /**
+     * Returns the range of m/z values in this DataPointList.
+     * 
+     * @return range of m/z values in this DataPointList
+     */
+    @Nonnull
+    Range<Double> getMzRange();
+
+    /**
+     * Returns the top intensity data point, also called "base peak". May return
+     * null if there are no data points in this spectrum.
+     * 
+     * @return highest data point, or null
+     */
+    @Nullable
+    DataPoint getHighestDataPoint();
+
+    /**
+     * Returns the sum of intensities of all data points (total ion current or
+     * TIC).
+     * 
+     * @return total ion current
+     */
+    @Nonnull
+    Float getTIC();
 
 }

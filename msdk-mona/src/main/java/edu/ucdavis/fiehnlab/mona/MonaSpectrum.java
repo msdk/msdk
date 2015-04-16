@@ -12,7 +12,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -148,7 +147,7 @@ public class MonaSpectrum implements MassSpectrum,MonaConfiguration,PeakListRowA
 
     @Nonnull
     @Override
-    public DataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange) {
+    public DataPointList getDataPointsByMz(@Nonnull Range<Double> mzRange) {
         DataPointList list = MSDKObjectBuilder.getDataPointList();
         for(DataPoint dataPoint : dataPoints){
             if(mzRange.contains(dataPoint.getMz())){
@@ -160,7 +159,7 @@ public class MonaSpectrum implements MassSpectrum,MonaConfiguration,PeakListRowA
 
     @Nonnull
     @Override
-    public List<DataPoint> getDataPointsByIntensity(@Nonnull Range<Float> intensityRange) {
+    public DataPointList getDataPointsByIntensity(@Nonnull Range<Float> intensityRange) {
 
         DataPointList list = MSDKObjectBuilder.getDataPointList();
         for(DataPoint dataPoint : dataPoints){
@@ -278,5 +277,13 @@ public class MonaSpectrum implements MassSpectrum,MonaConfiguration,PeakListRowA
     @Override
     public void setAccessionURL(@Nullable URL dbURL) {
         //not supported
+    }
+
+    @Override
+    @Nonnull
+    public DataPointList getDataPointsByMzAndIntensity(
+            @Nonnull Range<Double> mzRange, @Nonnull Range<Float> intensityRange) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -14,8 +14,6 @@
 
 package io.github.msdk.datamodel.rawdata;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -34,7 +32,7 @@ public interface MassSpectrum {
      * raw data files, the type is detected automatically. For calculated
      * spectra, the type depends on the method of calculation.
      * 
-     * @return Spectrum type (profile, centroided, thresholded)
+     * @return spectrum type (profile, centroided, thresholded)
      */
     @Nonnull
     MassSpectrumType getSpectrumType();
@@ -53,7 +51,7 @@ public interface MassSpectrum {
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
      * 
-     * @return Data points (m/z and intensity pairs) of this spectrum
+     * @return data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
     DataPointList getDataPoints();
@@ -70,29 +68,49 @@ public interface MassSpectrum {
      * @param list
      *            DataPointList into which the data points should be loaded
      */
-    void getDataPoints(DataPointList list);
+    void getDataPoints(@Nonnull DataPointList list);
 
     /**
-     * Returns data points in given m/z range, sorted in m/z order.
+     * Returns data points in given m/z range.
      * 
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
      * 
-     * @return Data points (m/z and intensity pairs) of this spectrum
+     * @param mzRange
+     *            range of m/z values to select
+     * @return selected data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    DataPointList getDataPointsByMass(@Nonnull Range<Double> mzRange);
+    DataPointList getDataPointsByMz(@Nonnull Range<Double> mzRange);
 
     /**
-     * Returns data points over given intensity, sorted in m/z order.
+     * Returns data points in given intensity range.
      * 
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
      * 
-     * @return Data points (m/z and intensity pairs) of this spectrum
+     * @param intensityRange
+     *            range of intensity values to select
+     * 
+     * @return selected data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    List<DataPoint> getDataPointsByIntensity(
+    DataPointList getDataPointsByIntensity(@Nonnull Range<Float> intensityRange);
+
+    /**
+     * Returns data points in given m/z and intensity ranges.
+     * 
+     * Note: this method may need to read data from disk, therefore it may be
+     * quite slow.
+     * 
+     * @param mzRange
+     *            range of m/z values to select
+     * @param intensityRange
+     *            range of intensity values to select
+     * @return selected data points (m/z and intensity pairs) of this spectrum
+     */
+    @Nonnull
+    DataPointList getDataPointsByMzAndIntensity(@Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange);
 
     /**
@@ -105,7 +123,7 @@ public interface MassSpectrum {
      * quite slow.
      * 
      * @param newDataPoints
-     *            New data points
+     *            new data points
      */
     void setDataPoints(@Nonnull DataPointList newDataPoints);
 
@@ -122,7 +140,7 @@ public interface MassSpectrum {
      * Returns the top intensity data point, also called "base peak". May return
      * null if there are no data points in this spectrum.
      * 
-     * @return Highest data point
+     * @return highest data point, or null
      */
     @Nullable
     DataPoint getHighestDataPoint();
@@ -131,7 +149,7 @@ public interface MassSpectrum {
      * Returns the sum of intensities of all data points (total ion current or
      * TIC).
      * 
-     * @return Total ion current.
+     * @return total ion current
      */
     @Nonnull
     Float getTIC();

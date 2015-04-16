@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  * thresholded spectra is not trivial. We use multiple checks for that purpose,
  * as described in the code comments.
  */
-public class SpectrumTypeDetectionAlgorithm implements
+public class SpectrumTypeDetectionMethod implements
         MSDKMethod<MassSpectrumType> {
 
     private @Nonnull MassSpectrum inputSpectrum;
@@ -39,7 +39,7 @@ public class SpectrumTypeDetectionAlgorithm implements
     private Float finishedPercentage = null;
     private boolean canceled = false;
 
-    public SpectrumTypeDetectionAlgorithm(@Nonnull MassSpectrum inputSpectrum) {
+    public SpectrumTypeDetectionMethod(@Nonnull MassSpectrum inputSpectrum) {
         this.inputSpectrum = inputSpectrum;
     }
 

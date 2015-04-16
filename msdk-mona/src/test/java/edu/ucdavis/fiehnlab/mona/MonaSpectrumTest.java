@@ -41,7 +41,7 @@ public class MonaSpectrumTest {
 
     @org.junit.Test
     public void testGetDataPointsByMass() throws Exception {
-        assertTrue(spectrum.getDataPointsByMass(Range.singleton(303.2200)).size() == 1);
+        assertTrue(spectrum.getDataPointsByMz(Range.singleton(303.2200)).size() == 1);
     }
 
     @org.junit.Test
