@@ -30,21 +30,25 @@
 			<artifactId>msdk-data</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>uk.ac.ebi.pride.tools</groupId>
 			<artifactId>jmzreader</artifactId>
 			<version>1.2.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>uk.ac.ebi.pride.tools</groupId>
 			<artifactId>mzxml-parser</artifactId>
 			<version>1.3.3</version>
 		</dependency>
+
 		<dependency>
 			<groupId>uk.ac.ebi.pride.tools</groupId>
 			<artifactId>mzdata-parser</artifactId>
 			<version>1.2.1</version>
 		</dependency>
+
 		<dependency>
 			<groupId>uk.ac.ebi.pride.tools</groupId>
 			<artifactId>mzml-wrapper</artifactId>
@@ -54,12 +58,38 @@
 			<groupId>uk.ac.ebi.jmzml</groupId>
 			<artifactId>jmzml</artifactId>
 			<version>1.7.2</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+
 		<dependency>
 			<groupId>edu.ucar</groupId>
 			<artifactId>netcdf4</artifactId>
 			<version>4.5.3</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>jcl-over-slf4j</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

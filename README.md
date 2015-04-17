@@ -22,7 +22,7 @@ Since this is a collaborative project, please adhere to the following code forma
 
 ### Logging
 
-MSDK is using the [SLF4J library](http://www.slf4j.org) for logging calls. This library can forward all logging calls to your favorite logging framework (java.util.logging, log4j, or others). Please see [SLF4J documentation](http://www.slf4j.org/docs.html) for details.
+MSDK uses the [SLF4J library](http://www.slf4j.org) for logging. This library can forward all logging calls to your favorite logging framework (java.util.logging, Apache log4j, or others). Please see [SLF4J documentation](http://www.slf4j.org/docs.html) for details.
 
 ### Building 
 

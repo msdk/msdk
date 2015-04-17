@@ -23,6 +23,7 @@ import io.github.msdk.datapointstore.DataPointStore;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
 /**
@@ -35,33 +36,36 @@ abstract class AbstractSpectrum implements MassSpectrum {
 
     private Object dataStoreId = null;
 
-    private @Nonnull Range<Double> mzRange;
+    private @Nullable Range<Double> mzRange;
     private @Nullable DataPoint highestDataPoint;
     private @Nonnull Float totalIonCurrent;
 
     private @Nonnull MassSpectrumType spectrumType;
 
     AbstractSpectrum(@Nonnull DataPointStore dataPointStore) {
+        Preconditions.checkNotNull(dataPointStore);
         this.dataPointStore = dataPointStore;
-        mzRange = Range.open(0d, 0d);
         totalIonCurrent = 0f;
-        spectrumType = spectrumType.CENTROIDED;
+        spectrumType = MassSpectrumType.CENTROIDED;
     }
 
     @Override
     public @Nonnull DataPointList getDataPoints() {
+        Preconditions.checkNotNull(dataStoreId);
         DataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
         return storedData;
     }
 
     @Override
     public void getDataPoints(@Nonnull DataPointList list) {
+        Preconditions.checkNotNull(dataStoreId);
         dataPointStore.readDataPoints(dataStoreId, list);
     }
 
     @Override
     @Nonnull
     public DataPointList getDataPointsByMz(@Nonnull Range<Double> mzRange) {
+        Preconditions.checkNotNull(dataStoreId);
         DataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
         final Range<Float> all = Range.all();
         return storedData.selectDataPoints(mzRange, all);
@@ -70,6 +74,7 @@ abstract class AbstractSpectrum implements MassSpectrum {
     @Nonnull
     public DataPointList getDataPointsByIntensity(
             @Nonnull Range<Float> intensityRange) {
+        Preconditions.checkNotNull(dataStoreId);
         DataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
         final Range<Double> all = Range.all();
         return storedData.selectDataPoints(all, intensityRange);
@@ -78,6 +83,7 @@ abstract class AbstractSpectrum implements MassSpectrum {
     @Nonnull
     public DataPointList getDataPointsByMzAndIntensity(
             @Nonnull Range<Double> mzRange, @Nonnull Range<Float> intensityRange) {
+        Preconditions.checkNotNull(dataStoreId);
         DataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
         return storedData.selectDataPoints(mzRange, intensityRange);
     }
@@ -119,7 +125,7 @@ abstract class AbstractSpectrum implements MassSpectrum {
      * @return m/z range of this mass spectrum
      */
     @Override
-    @Nonnull
+    @Nullable
     public Range<Double> getMzRange() {
         return mzRange;
     }

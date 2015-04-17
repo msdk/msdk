@@ -28,6 +28,8 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public interface MsFunction {
 
+    static final String DEFAULT_MS_FUNCTION_NAME = "ms";
+
     /**
      * Returns the name of this MS function. For example, in Thermo raw files,
      * this might look like "Full ms", "ms2", or "sim", etc. In Waters raw

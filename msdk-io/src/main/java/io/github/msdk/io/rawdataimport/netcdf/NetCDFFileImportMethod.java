@@ -332,7 +332,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
      */
     private MsScan readNextScan() throws IOException, MSDKException {
 
-        MsScan scan = MSDKObjectBuilder.getMsScan(null);
+        MsScan scan = MSDKObjectBuilder.getMsScan(null, null, null);
 
         // Set scan number
         scanNum++;

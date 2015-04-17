@@ -15,6 +15,7 @@
 package io.github.msdk.datapointstore;
 
 import io.github.msdk.MSDKException;
+import io.github.msdk.datapointstore.DataPointStore;
 
 import javax.annotation.Nonnull;
 

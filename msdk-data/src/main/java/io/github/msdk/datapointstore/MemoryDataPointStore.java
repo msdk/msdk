@@ -16,6 +16,7 @@ package io.github.msdk.datapointstore;
 
 import io.github.msdk.datamodel.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datapointstore.DataPointStore;
 
 import java.util.HashMap;
 
