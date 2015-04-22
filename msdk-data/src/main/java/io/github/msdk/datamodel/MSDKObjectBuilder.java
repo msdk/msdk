@@ -44,11 +44,27 @@ public class MSDKObjectBuilder {
      */
     private static final List<WeakReference<MsFunction>> msFunctions = new LinkedList<>();
 
+    /**
+     * Creates a new DataPoint instance.
+     * 
+     * @param mz
+     *            m/z value
+     * @param intensity
+     *            intensity value
+     * @return new DataPoint
+     */
     public static final @Nonnull DataPoint getDataPoint(double mz,
             float intensity) {
         return new SimpleDataPoint(mz, intensity);
     }
 
+    /**
+     * Creates a new MsFunction reference.
+     * 
+     * @param name
+     * @param msLevel
+     * @return
+     */
     public static final @Nonnull MsFunction getMsFunction(@Nonnull String name,
             @Nullable Integer msLevel) {
 
@@ -77,13 +93,35 @@ public class MSDKObjectBuilder {
         }
     }
 
+    /**
+     * Creates a new MsFunction reference.
+     * 
+     * @param name
+     * @return
+     */
+    public static final @Nonnull MsFunction getMsFunction(@Nonnull String name) {
+        return getMsFunction(name, null);
+    }
+
+    /**
+     * Creates a new MsFunction reference.
+     * 
+     * @param msLevel
+     * @return
+     */
+    public static final @Nonnull MsFunction getMsFunction(
+            @Nullable Integer msLevel) {
+        return getMsFunction(MsFunction.DEFAULT_MS_FUNCTION_NAME, msLevel);
+    }
+
     public static final @Nonnull RawDataFile getRawDataFile() {
         return new SimpleRawDataFile();
     }
 
     public static final @Nonnull MsScan getMsScan(
-            @Nonnull DataPointStore dataPointStore) {
-        return new SimpleMsScan(dataPointStore);
+            @Nonnull DataPointStore dataPointStore,
+            @Nonnull Integer scanNumber, @Nonnull MsFunction msFunction) {
+        return new SimpleMsScan(dataPointStore, scanNumber, msFunction);
     }
 
     public static final @Nonnull ChromatographyInfo getChromatographyInfo1D(
@@ -126,7 +164,7 @@ public class MSDKObjectBuilder {
      * Creates a new DataPointList instance with no data points and initial
      * capacity of 100.
      * 
-     * @return New DataPointList
+     * @return new DataPointList
      */
     public static final @Nonnull DataPointList getDataPointList() {
         return new DataPointArrayList(100);
@@ -138,7 +176,7 @@ public class MSDKObjectBuilder {
      * 
      * @param capacity
      *            Initial capacity of the list
-     * @return New DataPointList
+     * @return new DataPointList
      */
     public static final @Nonnull DataPointList getDataPointList(
             @Nonnull Integer capacity) {
@@ -150,29 +188,48 @@ public class MSDKObjectBuilder {
      * current size of the source list.
      * 
      * @param sourceList
-     *            Source DataPointList that
-     * @return Cloned DataPointList
+     *            source DataPointList
+     * @return cloned DataPointList
      */
     public static final @Nonnull DataPointList getDataPointList(
             @Nonnull DataPointList sourceList) {
         return getDataPointList(sourceList, sourceList.size());
-
     }
 
     /**
      * Creates a clone of a given DataPointList, with a given capacity.
      * 
      * @param sourceList
-     *            Source DataPointList that
+     *            source DataPointList that
      * @param capacity
-     *            Initial capacity of the list. Must be equal or higher than
+     *            initial capacity of the list; must be equal or higher than
      *            sourceList.size()
-     * @return Cloned DataPointList
+     * @return cloned DataPointList
      * @throws IllegalArgumentException
-     *             If the initial capacity < size of the sourceList
+     *             if the initial capacity < size of the sourceList
      */
     public static final @Nonnull DataPointList getDataPointList(
             @Nonnull DataPointList sourceList, @Nonnull Integer capacity) {
         return new DataPointArrayList(sourceList, capacity);
     }
+
+    /**
+     * Creates a new data point list backed by given arrays. Arrays are
+     * referenced, not cloned.
+     * 
+     * @param mzBuffer
+     *            array of m/z values
+     * @param intensityBuffer
+     *            array of intensity values
+     * @param size
+     *            size of the list, must be <= length of both arrays
+     * @throws IllegalArgumentException
+     *             if the initial array length < size
+     */
+    public static final @Nonnull DataPointList getDataPointList(
+            @Nonnull double mzBuffer[], @Nonnull float intensityBuffer[],
+            int size) {
+        return new DataPointArrayList(mzBuffer, intensityBuffer, size);
+    }
+
 }

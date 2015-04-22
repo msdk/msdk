@@ -18,20 +18,17 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.DataPointList;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
+import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.datapointstore.DataPointStore;
 import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
-import io.github.msdk.util.DataPointSorter;
-import io.github.msdk.util.SortingDirection;
-import io.github.msdk.util.SortingProperty;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -45,13 +42,13 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReader;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
 import uk.ac.ebi.pride.tools.jmzreader.model.Param;
 import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
 import uk.ac.ebi.pride.tools.jmzreader.model.impl.CvParam;
 import uk.ac.ebi.pride.tools.jmzreader.model.impl.ParamGroup;
+import uk.ac.ebi.pride.tools.jmzreader.model.impl.UserParam;
 import uk.ac.ebi.pride.tools.mzdata_parser.MzDataFile;
 import uk.ac.ebi.pride.tools.mzml_wrapper.MzMlWrapper;
 import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLFile;
@@ -129,33 +126,25 @@ public class XMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
             Spectrum spectrum = iterator.next();
 
-            // Create a new MsScan instance 
-            MsScan scan = MSDKObjectBuilder.getMsScan(dataStore);
-            
-            for (CvParam p : spectrum.getAdditional().getCvParams()) {
-                logger.debug("CvParam " + p.toString());
-            }
-            for (Param p : spectrum.getAdditional().getParams()) {
-                logger.debug("Param " + p.toString());
-            }
-            
-            Integer msLevel = spectrum.getMsLevel();
-            
             // Store the scan MS level
 
-            // Store the scan number
+            // Get the scan number
             String scanId = spectrum.getId();
             int scanNumber = convertScanIdToScanNumber(scanId);
-            scan.setScanNumber(scanNumber);
 
+            // Get the MS function
+            MsFunction msFunction = extractMsFunction(spectrum);
 
+            // Create a new MsScan instance
+            MsScan scan = MSDKObjectBuilder.getMsScan(dataStore, scanNumber,
+                    msFunction);
 
             // Store the chromatography data
             ChromatographyInfo chromData = extractChromatographyData(spectrum);
 
             // Store the scan data points
-            DataPoint dataPoints[] = extractDataPoints(spectrum);
-            // scan.setDataPoints(dataPoints);
+            DataPointList dataPoints = extractDataPoints(spectrum);
+            scan.setDataPoints(dataPoints);
 
             // Auto-detect whether this scan is centroided
             SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
@@ -203,23 +192,37 @@ public class XMLFileImportMethod implements MSDKMethod<RawDataFile> {
         return scanNumber;
     }
 
+    private MsFunction extractMsFunction(Spectrum spectrum) {
+        Integer msLevel = spectrum.getMsLevel();
+        return MSDKObjectBuilder.getMsFunction(msLevel);
+
+    }
+
     private ChromatographyInfo extractChromatographyData(Spectrum spectrum) {
 
         ParamGroup params = spectrum.getAdditional();
 
         ParamGroup additional = spectrum.getAdditional();
-        /*
-         * 
-         * for (CvParam cvParam : additional.getCvParams()) {
-         * System.out.println("CV PARAM "+ cvParam.getAccession() + " - " +
-         * cvParam.getName() + " = " + cvParam.getValue()); } for (UserParam
-         * userParam : additional.getUserParams()) {
-         * System.out.println("USER PARAM "+ userParam.getName() + " = " +
-         * userParam.getValue()); }
-         */
 
+        if (false) {
+            for (CvParam cvParam : additional.getCvParams()) {
+                System.out.println("CV PARAM " + cvParam.getAccession() + " - "
+                        + cvParam.getName() + " = " + cvParam.getValue());
+            }
+            for (Param userParam : additional.getParams()) {
+                System.out.println("PARAM " + userParam.getName() + " = "
+                        + userParam.getValue());
+            }
+            for (UserParam userParam : additional.getUserParams()) {
+                System.out.println("USER PARAM " + userParam.getName() + " = "
+                        + userParam.getValue());
+            }
+        }
+
+        if (true)
+            return null;
         List<CvParam> cvParams = params.getCvParams();
-        List<Param> paramsList = params.getParams();
+        List<Param> paramss = params.getParams();
 
         for (CvParam param : cvParams) {
             String accession = param.getAccession();
@@ -253,37 +256,18 @@ public class XMLFileImportMethod implements MSDKMethod<RawDataFile> {
         return null;
     }
 
-    private DataPoint[] extractDataPoints(Spectrum spectrum) {
+    private DataPointList extractDataPoints(Spectrum spectrum) {
         Map<Double, Double> jmzreaderPeakList = spectrum.getPeakList();
-        DataPoint dataPoints[] = new DataPoint[jmzreaderPeakList.size()];
-        int i = 0;
+        DataPointList dataPoints = MSDKObjectBuilder
+                .getDataPointList(jmzreaderPeakList.size());
+
         for (Double mz : jmzreaderPeakList.keySet()) {
-            float intensity = jmzreaderPeakList.get(mz).floatValue();
-            dataPoints[i] = MSDKObjectBuilder.getDataPoint(mz, intensity);
-            i++;
+            final float intensity = jmzreaderPeakList.get(mz).floatValue();
+            dataPoints.add(mz, intensity);
         }
-        Arrays.sort(dataPoints, new DataPointSorter(SortingProperty.MZ,
-                SortingDirection.ASCENDING));
+
         return dataPoints;
 
-    }
-
-    private int extractParentScanNumber(Spectrum spectrum) {
-
-        /*
-         * PrecursorList precursorListElement = spectrum.getPrecursorList(); if
-         * ((precursorListElement == null) ||
-         * (precursorListElement.getCount().equals(0))) return -1;
-         * 
-         * List<Precursor> precursorList = precursorListElement.getPrecursor();
-         * for (Precursor parent : precursorList) { // Get the precursor scan
-         * number String precursorScanId = parent.getSpectrumRef(); if
-         * (precursorScanId == null) {
-         * logger.warning("Missing precursor spectrumRef tag for spectrum ID " +
-         * spectrum.getId()); return -1; } int parentScan =
-         * convertScanIdToScanNumber(precursorScanId); return parentScan; }
-         */
-        return -1;
     }
 
     @Override

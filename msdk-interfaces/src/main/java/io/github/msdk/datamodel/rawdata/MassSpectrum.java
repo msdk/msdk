@@ -41,12 +41,13 @@ public interface MassSpectrum {
      * Updates the type of this mass spectrum.
      * 
      * @param spectrumType
-     *            New spectrum type.
+     *            new spectrum type
      */
     void setSpectrumType(@Nonnull MassSpectrumType spectrumType);
 
     /**
-     * Returns data points of this spectrum.
+     * Returns data points of this spectrum. Importantly, a new instance of
+     * DataPointList is created by each call to this method.
      * 
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
@@ -71,7 +72,8 @@ public interface MassSpectrum {
     void getDataPoints(@Nonnull DataPointList list);
 
     /**
-     * Returns data points in given m/z range.
+     * Returns data points in given m/z range. Importantly, a new instance of
+     * DataPointList is created by each call to this method.
      * 
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
@@ -84,7 +86,8 @@ public interface MassSpectrum {
     DataPointList getDataPointsByMz(@Nonnull Range<Double> mzRange);
 
     /**
-     * Returns data points in given intensity range.
+     * Returns data points in given intensity range. Importantly, a new instance
+     * of DataPointList is created by each call to this method.
      * 
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
@@ -98,7 +101,8 @@ public interface MassSpectrum {
     DataPointList getDataPointsByIntensity(@Nonnull Range<Float> intensityRange);
 
     /**
-     * Returns data points in given m/z and intensity ranges.
+     * Returns data points in given m/z and intensity ranges. Importantly, a new
+     * instance of DataPointList is created by each call to this method.
      * 
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
@@ -129,11 +133,12 @@ public interface MassSpectrum {
 
     /**
      * Returns the m/z range of this mass spectrum (minimum and maximum m/z
-     * values of all data points, inclusive).
+     * values of all data points, inclusive). This method returns null if the
+     * spectrum has no data points.
      * 
-     * @return m/z range of this mass spectrum
+     * @return m/z range of this mass spectrum, or null
      */
-    @Nonnull
+    @Nullable
     Range<Double> getMzRange();
 
     /**

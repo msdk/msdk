@@ -22,6 +22,7 @@ import java.util.AbstractList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
 /**
@@ -71,11 +72,11 @@ class DataPointArrayList extends AbstractList<DataPoint> implements
      * Creates a copy of a given data point list with new array capacity.
      * 
      * @param sourceList
-     *            List to copy the data from
+     *            list to copy the data from
      * @param initialCapacity
-     *            Initial size of the m/z and intensity arrays.
+     *            initial size of the m/z and intensity arrays
      * @throws IllegalArgumentException
-     *             If the initial capacity < size of the sourceList
+     *             if the initial capacity < size of the sourceList
      */
     DataPointArrayList(@Nonnull DataPointList sourceList,
             @Nonnull Integer initialCapacity) {
@@ -91,6 +92,28 @@ class DataPointArrayList extends AbstractList<DataPoint> implements
         // Copy data
         copyFrom(sourceList);
 
+    }
+
+    /**
+     * Creates a new data point list backed by given arrays. Arrays are
+     * referenced, not cloned.
+     * 
+     * @param mzBuffer
+     *            array of m/z values
+     * @param intensityBuffer
+     *            array of intensity values
+     * @param size
+     *            size of the list, must be <= length of both arrays
+     * @throws IllegalArgumentException
+     *             if the initial array length < size
+     */
+    DataPointArrayList(@Nonnull double mzBuffer[],
+            @Nonnull float intensityBuffer[], int size) {
+        Preconditions.checkArgument(mzBuffer.length >= size);
+        Preconditions.checkArgument(intensityBuffer.length >= size);
+        this.mzBuffer = mzBuffer;
+        this.intensityBuffer = intensityBuffer;
+        this.size = size;
     }
 
     /**
@@ -189,12 +212,11 @@ class DataPointArrayList extends AbstractList<DataPoint> implements
     /**
      * Returns the m/z range, assuming the m/z array is sorted.
      */
-    @SuppressWarnings("null")
     @Override
-    @Nonnull
+    @Nullable
     public Range<Double> getMzRange() {
         if (size == 0)
-            return Range.open(0.0, 0.0);
+            return null;
         return Range.closed(mzBuffer[0], mzBuffer[size - 1]);
     }
 
@@ -214,14 +236,31 @@ class DataPointArrayList extends AbstractList<DataPoint> implements
         this.add(index, dp.getMz(), dp.getIntensity());
     }
 
+    /**
+     * Insert into the right position
+     */
+    public boolean add(DataPoint newDataPoint) {
+        this.add(newDataPoint.getMz(), newDataPoint.getIntensity());
+        return true;
+    }
+
+    /**
+     * Insert into the right position
+     */
     public void add(double newMz, float newIntensity) {
-        this.add(size, newMz, newIntensity);
+        int targetPosition;
+        for (targetPosition = 0; targetPosition < size; targetPosition++) {
+            if (mzBuffer[targetPosition] > newMz)
+                break;
+        }
+        this.add(targetPosition, newMz, newIntensity);
     }
 
     public void add(int index, double newMz, float newIntensity) {
 
         if (index < 0 || index > size)
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Cannot insert at position "
+                    + index + " (list size is " + size + ")");
 
         if ((index > 0) && (mzBuffer[index - 1] > newMz)) {
             throw new IllegalArgumentException(

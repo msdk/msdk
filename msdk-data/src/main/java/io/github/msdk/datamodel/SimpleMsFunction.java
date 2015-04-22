@@ -34,6 +34,16 @@ class SimpleMsFunction implements MsFunction {
         this.msLevel = msLevel;
     }
 
+    SimpleMsFunction(@Nonnull String name) {
+        this.name = name;
+        msLevel = null;
+    }
+
+    SimpleMsFunction(@Nullable Integer msLevel) {
+        this.name = MsFunction.DEFAULT_MS_FUNCTION_NAME;
+        this.msLevel = msLevel;
+    }
+
     @Override
     @Nonnull
     public String getName() {

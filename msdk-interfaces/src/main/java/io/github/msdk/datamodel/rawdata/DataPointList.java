@@ -91,8 +91,9 @@ public interface DataPointList extends List<DataPoint> {
             @Nonnull float[] intensityBuffer, int newSize);
 
     /**
-     * Add a new data point into the end of the list. If the internal arrays are
-     * full, they are replaced with new arrays of twice the length.
+     * Add a new data point into the right position of the list, maintaining the
+     * m/z order. If the internal arrays are full, they are replaced with new
+     * arrays of twice the length.
      * 
      * @param newMz
      *            m/z value of the new data point
@@ -163,11 +164,12 @@ public interface DataPointList extends List<DataPoint> {
             @Nonnull Range<Float> intensityRange);
 
     /**
-     * Returns the range of m/z values in this DataPointList.
+     * Returns the range of m/z values in this DataPointList, or null if the
+     * list is empty.
      * 
-     * @return range of m/z values in this DataPointList
+     * @return range of m/z values in this DataPointList, or null
      */
-    @Nonnull
+    @Nullable
     Range<Double> getMzRange();
 
     /**

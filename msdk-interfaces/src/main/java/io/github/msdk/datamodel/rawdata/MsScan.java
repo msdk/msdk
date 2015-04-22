@@ -14,6 +14,8 @@
 
 package io.github.msdk.datamodel.rawdata;
 
+import io.github.msdk.datapointstore.DataPointStore;
+
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -197,9 +199,12 @@ public interface MsScan extends MassSpectrum, Cloneable {
     /**
      * Returns a deep clone of this object.
      * 
+     * @param newStore
+     *            data points of the newly created MsScan will be stored in this
+     *            store
      * @return A clone of this MsScan.
      */
     @Nonnull
-    MsScan clone();
+    MsScan clone(@Nonnull DataPointStore newStore);
 
 }

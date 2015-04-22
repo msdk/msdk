@@ -33,12 +33,15 @@ public class RawDataimportTest {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private static final String TEST_DATA_PATH_XML = "src/test/resources/rawdataimport/xml";
+    private static final String TEST_DATA_PATH_CDF = "src/test/resources/rawdataimport/netcdf";
+    private static final String TEST_DATA_PATH_THERMO = "src/test/resources/rawdataimport/thermo";
+
     @Ignore("not ready yet")
     @Test
     public void testXMLFileImport() throws Exception {
 
-        File inputFiles[] = new File("src/test/resources/rawdataimport/xml")
-                .listFiles();
+        File inputFiles[] = new File(TEST_DATA_PATH_XML).listFiles();
 
         assertNotNull(inputFiles);
         assertNotEquals(0, inputFiles.length);
@@ -57,8 +60,7 @@ public class RawDataimportTest {
     @Test
     public void testCDFFileImport() throws Exception {
 
-        File inputFiles[] = new File("src/test/resources/rawdataimport/netcdf")
-                .listFiles();
+        File inputFiles[] = new File(TEST_DATA_PATH_CDF).listFiles();
 
         assertNotNull(inputFiles);
         assertNotEquals(0, inputFiles.length);
@@ -79,8 +81,7 @@ public class RawDataimportTest {
         // Run this test only on Windows
         assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
-        File inputFiles[] = new File("src/test/resources/rawdataimport/thermo")
-                .listFiles();
+        File inputFiles[] = new File(TEST_DATA_PATH_THERMO).listFiles();
 
         assertNotNull(inputFiles);
         assertNotEquals(0, inputFiles.length);

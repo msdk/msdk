@@ -18,6 +18,7 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datapointstore.DataPointStore;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,6 +68,9 @@ class TmpFileDataPointStore implements DataPointStore {
 
         try {
             tmpDataFileName = File.createTempFile("msdk", ".tmp");
+            
+            logger.debug("Initializing a new tmp-file data store in " + tmpDataFileName);
+            
             tmpDataFile = new RandomAccessFile(tmpDataFileName, "rw");
 
             /*
@@ -244,6 +248,8 @@ class TmpFileDataPointStore implements DataPointStore {
 
         // Remove the temporary file
         if (tmpDataFileName.exists()) {
+            logger.debug("Removing tmp-file " + tmpDataFileName);
+
             try {
                 tmpDataFile.close();
                 tmpDataFileName.delete();

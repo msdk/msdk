@@ -15,7 +15,6 @@
 package io.github.msdk.datamodel;
 
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.DataPointList;
 import io.github.msdk.datamodel.rawdata.FragmentationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
@@ -25,12 +24,13 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datapointstore.DataPointStore;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
 /**
@@ -38,145 +38,141 @@ import com.google.common.collect.Range;
  */
 class SimpleMsScan extends AbstractSpectrum implements MsScan {
 
-    private final @Nonnull DataPointStore dataPointStore;
+    private @Nullable RawDataFile dataFile;
+    private @Nonnull Integer scanNumber;
+    private @Nonnull MsFunction msFunction;
+    private @Nonnull PolarityType polarity = PolarityType.UNKNOWN;
+    private @Nonnull MsScanType scanType = MsScanType.UNKNOWN;
+    private @Nullable Range<Double> scanningRange;
+    private @Nullable ChromatographyInfo chromInfo;
+    private @Nullable FragmentationInfo sourceInducedFragInfo;
 
-    private RawDataFile dataFile;
-    private Integer scanNumber, msLevel;
-    private ChromatographyInfo chromData;
+    private final @Nonnull List<IsolationInfo> isolations = new LinkedList<>();
 
-    public SimpleMsScan(@Nonnull DataPointStore dataPointStore) {
+    public SimpleMsScan(@Nonnull DataPointStore dataPointStore,
+            @Nonnull Integer scanNumber, @Nonnull MsFunction msFunction) {
         super(dataPointStore);
-        this.dataPointStore = dataPointStore;
-    }
-
-    @Override
-    public void getDataPoints(DataPointList list) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void setDataPoints(@Nonnull DataPointList newDataPoints) {
-        // TODO Auto-generated method stub
-
+        Preconditions.checkNotNull(scanNumber);
+        Preconditions.checkNotNull(msFunction);
+        this.scanNumber = scanNumber;
+        this.msFunction = msFunction;
     }
 
     @Override
     @Nullable
     public RawDataFile getRawDataFile() {
-        // TODO Auto-generated method stub
-        return null;
+        return dataFile;
     }
 
     @Override
     public void setRawDataFile(@Nonnull RawDataFile newDataFile) {
-        // TODO Auto-generated method stub
-
+        this.dataFile = newDataFile;
     }
 
     @Override
     @Nonnull
     public Integer getScanNumber() {
-        // TODO Auto-generated method stub
-        return 1;
+        return scanNumber;
     }
 
     @Override
     public void setScanNumber(@Nonnull Integer scanNumber) {
-        // TODO Auto-generated method stub
-
+        Preconditions.checkNotNull(scanNumber);
+        this.scanNumber = scanNumber;
     }
 
     @Override
     @Nonnull
     public MsFunction getMsFunction() {
-        // TODO Auto-generated method stub
-        return new SimpleMsFunction("MS", 1);
+        return msFunction;
     }
 
     @Override
     public void setMsFunction(@Nonnull MsFunction newFunction) {
-        // TODO Auto-generated method stub
-
+        Preconditions.checkNotNull(newFunction);
+        this.msFunction = newFunction;
     }
 
     @Override
     @Nullable
     public Range<Double> getScanningRange() {
-        // TODO Auto-generated method stub
-        return null;
+        return scanningRange;
     }
 
     @Override
     public void setScanningRange(@Nullable Range<Double> newScanRange) {
-        // TODO Auto-generated method stub
-
+        this.scanningRange = newScanRange;
     }
 
     @Override
     @Nonnull
     public PolarityType getPolarity() {
-        // TODO Auto-generated method stub
-        return PolarityType.UNKNOWN;
+        return polarity;
     }
 
     @Override
     public void setPolarity(@Nonnull PolarityType newPolarity) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public @Nonnull MsScan clone() {
-        // TODO Auto-generated method stub
-        return this;
+        Preconditions.checkNotNull(newPolarity);
+        this.polarity = newPolarity;
     }
 
     @Override
     @Nonnull
     public MsScanType getMsScanType() {
-        // TODO Auto-generated method stub
-        return MsScanType.UNKNOWN;
+        return scanType;
     }
 
     @Override
     public void setMsScanType(@Nonnull MsScanType newType) {
-        // TODO Auto-generated method stub
-
+        Preconditions.checkNotNull(newType);
+        this.scanType = newType;
     }
 
     @Override
     @Nullable
     public ChromatographyInfo getChromatographyInfo() {
-        // TODO Auto-generated method stub
-        return null;
+        return chromInfo;
     }
 
     @Override
-    public void setChromatographyInfo(@Nullable ChromatographyInfo chromData) {
-        // TODO Auto-generated method stub
-
+    public void setChromatographyInfo(@Nullable ChromatographyInfo chromInfo) {
+        this.chromInfo = chromInfo;
     }
 
     @Override
     @Nullable
     public FragmentationInfo getSourceInducedFragmentation() {
-        // TODO Auto-generated method stub
-        return null;
+        return sourceInducedFragInfo;
     }
 
     @Override
     public void setSourceInducedFragmentation(
             @Nullable FragmentationInfo newFragmentationInfo) {
-        // TODO Auto-generated method stub
-
+        this.sourceInducedFragInfo = newFragmentationInfo;
     }
 
     @Override
     @Nonnull
     public List<IsolationInfo> getIsolations() {
-        // TODO Auto-generated method stub
-        return new ArrayList<IsolationInfo>();
+        return isolations;
+    }
+
+    @Override
+    public @Nonnull MsScan clone(@Nonnull DataPointStore newStore) {
+        MsScan newScan = MSDKObjectBuilder.getMsScan(newStore, scanNumber,
+                msFunction);
+        final RawDataFile dataFile2 = dataFile;
+        if (dataFile2 != null) {
+            newScan.setRawDataFile(dataFile2);
+        }
+        newScan.setPolarity(polarity);
+        newScan.setMsScanType(scanType);
+        newScan.setScanningRange(scanningRange);
+        newScan.setChromatographyInfo(chromInfo);
+        newScan.setSourceInducedFragmentation(sourceInducedFragInfo);
+        newScan.getIsolations().addAll(isolations);
+        newScan.setDataPoints(getDataPoints());
+        return newScan;
     }
 
     @Override

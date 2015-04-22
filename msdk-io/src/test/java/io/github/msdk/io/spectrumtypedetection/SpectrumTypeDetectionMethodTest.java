@@ -65,8 +65,8 @@ public class SpectrumTypeDetectionMethodTest {
             logger.info("Testing autodetection of centroided/thresholded/profile scans on file "
                     + inputFile.getName());
 
-            // We can use memory because the test files are not that big
-            DataPointStore dataStore = MSDKDataStore.getMemoryDataStore();
+            // Use a temporary file to store data points
+            DataPointStore dataStore = MSDKDataStore.getTmpFileDataPointStore();
 
             RawDataFileImportMethod importer = new RawDataFileImportMethod(
                     inputFile, dataStore);
@@ -86,7 +86,7 @@ public class SpectrumTypeDetectionMethodTest {
                         expectedType, detectedType);
             }
 
-            // Dispose the when done
+            // Dispose the data store when done
             rawFile.dispose();
 
             filesTested++;
