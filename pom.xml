@@ -19,6 +19,7 @@
 		<module>msdk-featuredetection</module>
 		<module>msdk-search</module>
 		<module>msdk-centroiding</module>
+		<module>msdk-all</module>
 	</modules>
 
 	<properties>
