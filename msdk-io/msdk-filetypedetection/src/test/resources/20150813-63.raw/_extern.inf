@@ -1,0 +1,127 @@
+
+Parameters for C:\PROJECTS\Rachel.PRO\ACQUDB\2015-8-12 full scan.EXP
+
+Data Processing:
+SIR / MRM Chromatogram Spike Removal	ON
+SIR / MRM Smoothing		OFF
+Smoothing window size (scans)	3
+Number of smooths		2
+
+
+Prescan Statistics:
+Initial Average Intensity	25.0751
+Initial Average Std Dev		3.0893
+Bunch Zero Level		0.0048
+Bunch Std Dev			0.0151
+Bunch Threshold			0.1211
+Spike Removal Std Dev		2.9977
+
+
+Method Events:
+Initial Stop Flow:	No Change
+Initial Switch 2:	No Change
+Initial Switch 3:	No Change
+Initial Switch 4:	No Change
+Initial Infusion:	No Change
+Initial Flow State:	LC
+Initial Flow Rate:	5
+Initial Reservoir:	No Action
+API Probe Delay Temp:	20
+Initial Refill:		No Action
+Timed Events Enabled
+Event	Time	Name		Action
+
+
+Instrument Parameters - Function 1:
+Parameter File - C:\PROJECTS\Rachel.PRO\ACQUDB\Rachel.IPR
+Polarity	ES+
+Calibration	Dynamic 1
+Capillary (kV)	3.00	2.99
+Cone (V)	25.00	40.29
+Extractor (V)	5.00	4.64
+RF (V)	0.50
+Source Temperature (°C)	120	118
+Desolvation Temperature (°C)	350	350
+Cone Gas Flow (L/Hr)	50	50
+Desolvation Gas Flow (L/Hr)	600	600
+Collision Gas Flow (mL/Min)	0.20	0.02
+LM 1 Resolution	13.00
+HM 1 Resolution	13.00
+Ion Energy 1	0.20
+MS Mode Entrance	50.00
+MS Mode Collision Energy	20.00
+MS Mode Exit	50.00
+MSMS Mode Entrance	5.00
+MSMS Mode Collision Energy	44.00
+MSMS Mode Exit	1.00
+LM 2 Resolution	13.00
+HM 2 Resolution	13.00
+Ion Energy 2	2.00
+Gain	1.00
+Multiplier	-600.29
+Autotune Reservoir	A
+Active Reservoir	B
+
+Instrument Parameters - Function 2:
+Parameter File - C:\PROJECTS\Rachel.PRO\ACQUDB\Rachel.IPR
+Polarity	ES-
+Calibration	Dynamic 1
+Capillary (kV)	3.00	2.99
+Cone (V)	25.00	40.29
+Extractor (V)	3.00	4.64
+RF (V)	0.50
+Source Temperature (°C)	120	118
+Desolvation Temperature (°C)	350	350
+Cone Gas Flow (L/Hr)	50	50
+Desolvation Gas Flow (L/Hr)	600	600
+Collision Gas Flow (mL/Min)	0.20	0.02
+LM 1 Resolution	13.00
+HM 1 Resolution	13.00
+Ion Energy 1	0.30
+MS Mode Entrance	20.00
+MS Mode Collision Energy	0.00
+MS Mode Exit	20.00
+MSMS Mode Entrance	1.00
+MSMS Mode Collision Energy	17.00
+MSMS Mode Exit	0.50
+LM 2 Resolution	13.00
+HM 2 Resolution	13.00
+Ion Energy 2	3.00
+Gain	1.00
+Multiplier	-600.29
+Active Reservoir	B
+
+
+Engineers Settings:
+MS1 Low Mass Position      	519
+MS1 High Mass Position     	450
+MS1 Low Mass Resolution    	511
+MS1 High Mass Resolution   	707
+MS1 Resolution Linearity   	800
+MS1 High Mass DC Balance   	0
+MS1 DC Polarity            	Negative
+MS2 Low Mass Position      	519
+MS2 High Mass Position     	401
+MS2 Low Mass Resolution    	512
+MS2 High Mass Resolution   	730
+MS2 Resolution Linearity   	819
+MS2 High Mass DC Balance   	-0
+MS2 DC Polarity            	Positive
+HM RF Lens Correction + 	0
+HM RF Lens Correction - 	0
+
+
+Inter-scan delays:
+Automatic Mode
+MS 1 Delay Table:
+         R     delay
+<=   0.500     0.005
+<=   2.000     0.008
+<=   4.000     0.010
+<=  11.000     0.012
+>   11.000     0.014
+MS 2 Delay Table:
+         R     delay
+<=   8.000     0.005
+<=  25.000     0.006
+>   25.000     0.007
