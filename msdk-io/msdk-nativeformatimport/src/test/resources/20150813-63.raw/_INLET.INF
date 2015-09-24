@@ -1,0 +1,101 @@
+
+ACE Experimental Record
+
+
+---------------------   Run method parameters   ----------------
+
+-- PUMP --
+
+Waters Acquity SDS
+ Run Time: 12.00 min
+ Comment:  
+ Solvent Selection A: A2 
+ Solvent Selection B: B2 
+ Low Pressure Limit: 0 psi
+ High Pressure Limit: 15000 psi
+ Solvent Name A: 0.1% formic acid 
+ Solvent Name B: Methanol 
+ Switch 1: No Change 
+ Switch 2: No Change 
+ Switch 3: No Change 
+ Seal Wash: 2.0 min
+ Chart Out 1: System Pressure 
+ Chart Out 2: %B 
+ System Pressure Data Channel: No 
+ Flow Rate Data Channel: No 
+ %A Data Channel: No 
+ %B Data Channel: No 
+ Primary A Pressure Data Channel: No 
+ Accumulator A Pressure Data Channel: No 
+ Primary B Pressure Data Channel: No 
+ Accumulator B Pressure Data Channel: No 
+ Degasser Pressure Data Channel: No 
+ [Gradient Table]
+  Time(min) Flow Rate %A %B Curve 
+ 1. Initial 0.200 95.0 5.0  
+ 2. 0.50 0.200 50.0 50.0 6 
+ 3. 9.00 0.200 0.0 100.0 6 
+ 4. 10.00 0.200 0.0 100.0 1 
+ 5. 12.00 0.200 95.0 5.0 1 
+ Run Events: Yes 
+
+-- END PUMP --
+
+-- AUTOSAMPLER --
+
+Waters Acquity AutoSampler 
+ Run Time: 12.00 min
+ Comment:  
+ Load Ahead: Disabled 
+ Loop Option: Partial Loop With Needle Overfill 
+ LoopOffline: Disable 
+ Weak Wash Solvent Name: Water/Methanol 
+ Weak Wash Volume: 2400 uL
+ Strong Wash Solvent Name: Water/Methanol 
+ Strong Wash Volume: 800 uL
+ Target Column Temperature: Off C
+ Column Temperature Alarm Band: Disabled 
+ Target Sample Temperature: 10.0 C
+ Sample Temperature Alarm Band: Disabled 
+ Full Loop Overfill Factor: Automatic 
+ Syringe Draw Rate: Automatic 
+ Needle Placement: Automatic 
+ Pre-Aspirate Air Gap: Automatic 
+ Post-Aspirate Air Gap: Automatic 
+ Column Temperature Data Channel: No 
+ Ambient Temperature Data Channel: No 
+ Sample Temperature Data Channel: No 
+ Sample Organizer Temperature Data Channel: No 
+ Sample Pressure Data Channel: No 
+ Switch 1: No Change 
+ Switch 2: No Change 
+ Switch 3: No Change 
+ Switch 4: No Change 
+ Chart Out: Sample Pressure 
+ Sample Temp Alarm: Disabled 
+ Column Temp Alarm: Disabled 
+ Run Events: Yes 
+ Column Valve Position: Column 1 
+ Column Manager Temperature: 40.0 C
+ Column Equilibration Time: 0.1 min
+ Column Manager Temp Data Channel: No 
+ Sample Temperature Alarm Band: Disabled 
+ Needle Overfill Flush: Automatic 
+ Run Time: 1.00 min
+ Comment:  
+ Column Valve Position: Column 1 
+ Target Column Temperature: 40.0 C
+ Equilibration Time: 0.1 min
+ Column Temperature Data Channel: No 
+ :  
+
+
+Sample Run Injection Parameter
+
+Injection Volume (ul)   -   5.00
+-- END AUTOSAMPLER --
+
+----------------------------  oOo  -----------------------------
+
+
+End of experimental record.

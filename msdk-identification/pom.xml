@@ -13,11 +13,5 @@
 
 	<description>Feature identification methods in MSDK</description>
 
-	<dependencies>
-		<dependency>
-			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-interfaces</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-	</dependencies>
+	<packaging>pom</packaging>
 </project>

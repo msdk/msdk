@@ -1,0 +1,46 @@
+$$ Version: 01.00
+$$ Acquired Name: 20150813-63
+$$ Acquired Date: 14-Aug-2015
+$$ Acquired Time: 15:27:15
+$$ Job Code: TCS&TCC-20140620
+$$ Task Code: 
+$$ User Name: 
+$$ Instrument: ACQ-TQD#QBA367
+$$ Conditions: 
+$$ Laboratory Name: 
+$$ Sample Description: 144h Ara-D-cell medium-4  centroid
+$$ Solvent Delay: 0.0000
+$$ Submitter: 
+$$ SampleID: 20111114-6564
+$$ Bottle Number: 1:A,4
+$$ Plate Desc: 01TL,YX,LN,1: 6,2: 8,3:140.0,4:140.0,5:  0.0,6:  0.0,7:O,8:O,9:1280.0,10:860.0,11:320.0,12:120.0,13:150.0,14: 83.0
+$$ Cal MS1 Static: ,T0
+$$ Cal MS2 Static: ,T0
+$$ Associated Datafile: 
+$$ Cal MS1 Static Params: 0,0,0.00,0.00,0.0,0.0,0.0,,
+$$ Cal MS1 Dynamic Params: 0,0,0.00,0.00,0.0,0.0,0.0,,
+$$ Cal MS1 Fast Params: 0,0,0.00,0.00,0.0,0.0,0.0,,
+$$ Cal MS2 Static Params: 0,0,0.00,0.00,0.0,0.0,0.0,,
+$$ Cal MS2 Dynamic Params: 0,0,0.00,0.00,0.0,0.0,0.0,,
+$$ Cal MS2 Fast Params: 0,0,0.00,0.00,0.0,0.0,0.0,,
+$$ Cal Time: 
+$$ Cal Date: 
+$$ Analog Channel 1 Offset: 0.000
+$$ Analog Channel 2 Offset: 0.000
+$$ Analog Channel 3 Offset: 0.000
+$$ Analog Channel 4 Offset: 0.000
+$$ Mux Stream: 0
+$$ Cal Temperature: 0.0000000
+$$ Inlet Method: C:\PROJECTS\Rachel.PRO\ACQUDB\PPCPs_All
+$$ Inlet Prerun Method: 
+$$ Inlet Postrun Method: 
+$$ Inlet Switch Method: 
+$$ HPLC Method: 
+$$ MS Method: C:\PROJECTS\Rachel.PRO\ACQUDB\2015-8-12 full scan.EXP
+$$ Tune Method: C:\PROJECTS\Rachel.PRO\ACQUDB\Rachel.IPR
+$$ FractionLynx Method: 
+$$ Spare1: 
+$$ Spare2: 
+$$ Spare3: 
+$$ Spare4: 
+$$ Spare5: 
