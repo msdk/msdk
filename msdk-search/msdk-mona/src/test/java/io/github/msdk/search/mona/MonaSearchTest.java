@@ -34,7 +34,6 @@ public class MonaSearchTest {
      */
     private static final long TEST_ID = 3841762;
 
-    @Ignore
     @Test
     public void testFindSpectrumById() throws Exception {
 
@@ -52,7 +51,6 @@ public class MonaSearchTest {
         fail("todo!");
     }
 
-    @Ignore
     @Test
     public void testFindSimilarSpectra() throws Exception {
 
@@ -71,7 +69,6 @@ public class MonaSearchTest {
         assertTrue(count != 0);
     }
 
-    @Ignore
     @Test
     public void testFindSimilarSpectraById() throws Exception {
 

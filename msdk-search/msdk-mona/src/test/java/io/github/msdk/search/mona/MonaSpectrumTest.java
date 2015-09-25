@@ -41,13 +41,11 @@ public class MonaSpectrumTest {
         spectrum = null;
     }
 
-    @Ignore
     @Test
     public void testGetSpectrumType() throws Exception {
         assertTrue(spectrum.getSpectrumType() != null);
     }
 
-    @Ignore
     @Test
     public void testGetDataPointsByMz() throws Exception {
         MsSpectrumDataPointList list = MSDKObjectBuilder
@@ -57,7 +55,6 @@ public class MonaSpectrumTest {
         assertTrue(list.getSize() == 1);
     }
 
-    @Ignore
     @Test
     public void testGetDataPoints() throws Exception {
         MsSpectrumDataPointList list = MSDKObjectBuilder
@@ -66,7 +63,6 @@ public class MonaSpectrumTest {
         assertTrue(list.getSize() == 5);
     }
 
-    @Ignore
     @Test
     public void testGetMzRange() throws Exception {
         Range<Double> range = spectrum.getMzRange();
@@ -74,7 +70,6 @@ public class MonaSpectrumTest {
         assertTrue(range.upperEndpoint().equals(864.5626));
     }
 
-    @Ignore
     @Test
     public void testGetTIC() throws Exception {
         assertTrue(spectrum.getTIC() != null);
