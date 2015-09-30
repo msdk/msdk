@@ -14,6 +14,8 @@
 
 package io.github.msdk.datamodel.impl;
 
+import java.util.Iterator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -21,6 +23,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
+import io.github.msdk.datamodel.msspectra.MsIon;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.DataPointSorter.SortingDirection;
@@ -355,6 +358,48 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
             setSize(size + 1);
         }
 
+    }
+
+    private static class MsIonIterator implements Iterator<MsIon>, MsIon {
+
+        private final MsSpectrumDataPointList list;
+        private int index = -1;
+
+        MsIonIterator(MsSpectrumDataPointList list) {
+            this.list = list;
+        }
+
+        @Override
+        public double getMz() {
+            return list.getMzBuffer()[index];
+        }
+
+        @Override
+        public float getIntensity() {
+            return list.getIntensityBuffer()[index];
+        }
+
+        @Override
+        public boolean hasNext() {
+            return index < (list.getSize() - 2);
+        }
+
+        @Override
+        public MsIon next() {
+            index++;
+            return this;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
+    @Override
+    public Iterator<MsIon> iterator() {
+        return new MsIonIterator(this);
     }
 
 }
