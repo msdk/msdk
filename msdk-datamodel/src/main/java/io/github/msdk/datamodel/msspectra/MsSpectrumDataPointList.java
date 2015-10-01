@@ -40,7 +40,7 @@ import com.google.common.collect.Range;
  * 
  * This data structure is not thread-safe.
  */
-public interface MsSpectrumDataPointList {
+public interface MsSpectrumDataPointList extends Iterable<MsIon> {
 
     /**
      * Returns the current m/z buffer array. The size of the array might be

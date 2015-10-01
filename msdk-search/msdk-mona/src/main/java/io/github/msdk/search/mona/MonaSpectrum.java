@@ -53,9 +53,12 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.search.mona.pojo.Spectra;
 
 /**
- * A basic MoNA record, which describes a MassBank of Northern America Spectra. This is a readonly entity and should not be modified by the software in any possible way
+ * A basic MoNA record, which describes a MassBank of Northern America Spectra.
+ * This is a readonly entity and should not be modified by the software in any
+ * possible way
  */
-public class MonaSpectrum implements MsSpectrum,MonaConfiguration,IonAnnotation {
+public class MonaSpectrum
+        implements MsSpectrum, MonaConfiguration, IonAnnotation {
 
     /**
      * internal MoNa ID
@@ -105,33 +108,35 @@ public class MonaSpectrum implements MsSpectrum,MonaConfiguration,IonAnnotation 
 
     /**
      * actual builder
+     * 
      * @param monaRecord
      */
-    protected void build(Spectra monaRecord){
+    protected void build(Spectra monaRecord) {
 
         logger.info("received: " + monaRecord.getId());
 
-        //convert to internal model
-        for(String s : monaRecord.getSpectrum().split(" ")){
+        // convert to internal model
+        for (String s : monaRecord.getSpectrum().split(" ")) {
             String v[] = s.split(":");
-            addDataPoint(Double.parseDouble(v[0]),Float.parseFloat(v[1]));
+            addDataPoint(Double.parseDouble(v[0]), Float.parseFloat(v[1]));
         }
 
-        //assign compound information
+        // assign compound information
 
         String molFile = monaRecord.getBiologicalCompound().getMolFile();
 
-        //done
+        // done
         logger.debug("spectra build");
     }
 
     /**
      * adds a datapoint internally
+     * 
      * @param mass
      * @param intensity
      */
-    protected void addDataPoint(Double mass, Float intensity){
-        if(this.dataPoints == null){
+    protected void addDataPoint(Double mass, Float intensity) {
+        if (this.dataPoints == null) {
             this.dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
         }
         this.dataPoints.add(mass, intensity);
@@ -148,12 +153,10 @@ public class MonaSpectrum implements MsSpectrum,MonaConfiguration,IonAnnotation 
         this.spectrumType = spectrumType;
     }
 
-
     @Override
     public void setDataPoints(@Nonnull MsSpectrumDataPointList newDataPoints) {
         this.dataPoints = newDataPoints;
     }
-
 
     @Nullable
     @Override
@@ -163,7 +166,7 @@ public class MonaSpectrum implements MsSpectrum,MonaConfiguration,IonAnnotation 
 
     @Override
     public void setChemicalStructure(@Nullable IAtomContainer structure) {
-        //not supported
+        // not supported
     }
 
     @Nullable
@@ -174,7 +177,7 @@ public class MonaSpectrum implements MsSpectrum,MonaConfiguration,IonAnnotation 
 
     @Override
     public void setFormula(@Nullable IMolecularFormula formula) {
-        //not supported
+        // not supported
     }
 
     @Nullable
@@ -185,7 +188,7 @@ public class MonaSpectrum implements MsSpectrum,MonaConfiguration,IonAnnotation 
 
     @Override
     public void setDescription(@Nullable String description) {
-        //not supported
+        // not supported
     }
 
     @Nullable
@@ -196,7 +199,7 @@ public class MonaSpectrum implements MsSpectrum,MonaConfiguration,IonAnnotation 
 
     @Override
     public void setIdentificationMethod(@Nullable String idMethod) {
-        //not supported
+        // not supported
     }
 
     @Nullable
@@ -207,22 +210,23 @@ public class MonaSpectrum implements MsSpectrum,MonaConfiguration,IonAnnotation 
 
     @Override
     public void setAnnotationId(@Nullable String dbId) {
-        //not supported
+        // not supported
     }
 
     @Nullable
     @Override
-    public URL getAccessionURL(){
+    public URL getAccessionURL() {
         try {
-            return  new URL(MONA_URL+"/rest/spectra/"+id);
+            return new URL(MONA_URL + "/rest/spectra/" + id);
         } catch (MalformedURLException e) {
-            throw new RuntimeException("malformed URL, should never actually happen!");
+            throw new RuntimeException(
+                    "malformed URL, should never actually happen!");
         }
     }
 
     @Override
     public void setAccessionURL(@Nullable URL dbURL) {
-        //not supported
+        // not supported
     }
 
     @Override
@@ -234,47 +238,40 @@ public class MonaSpectrum implements MsSpectrum,MonaConfiguration,IonAnnotation 
     @Override
     @Nullable
     public IonType getIonType() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public void setIonType(@Nullable IonType ionType) {
-        // TODO Auto-generated method stub
-        
+        // not supported
     }
 
     @Override
     @Nullable
     public Double getExpectedMz() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public void setExpectedMz(@Nullable Double expectedMz) {
-        // TODO Auto-generated method stub
-        
+        // not supported
     }
 
     @Override
     @Nullable
     public ChromatographyInfo getChromatographyInfo() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public void setChromatographyInfo(
             @Nullable ChromatographyInfo chromatographyInfo) {
-        // TODO Auto-generated method stub
-        
+        // not supported
     }
 
     @Override
     public void getDataPoints(@Nonnull MsSpectrumDataPointList dataPointList) {
-        // TODO Auto-generated method stub
-        
+        dataPointList.copyFrom(this.dataPoints);
     }
 
     @Override
@@ -282,22 +279,27 @@ public class MonaSpectrum implements MsSpectrum,MonaConfiguration,IonAnnotation 
             @Nonnull MsSpectrumDataPointList dataPointList,
             @Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange) {
-        // TODO Auto-generated method stub
-        
+        MsSpectrumDataPointList selection = this.dataPoints
+                .selectDataPoints(mzRange, intensityRange);
+        dataPointList.copyFrom(selection);
     }
 
     @Override
     @Nonnull
     public Float getTIC() {
-        // TODO Auto-generated method stub
-        return 0f;
+        if (dataPoints == null)
+            return 0f;
+        else
+            return dataPoints.getTIC();
     }
 
     @Override
     @Nullable
     public Range<Double> getMzRange() {
-        // TODO Auto-generated method stub
-        return null;
+        if (dataPoints == null)
+            return null;
+        else
+            return dataPoints.getMzRange();
     }
 
 }
