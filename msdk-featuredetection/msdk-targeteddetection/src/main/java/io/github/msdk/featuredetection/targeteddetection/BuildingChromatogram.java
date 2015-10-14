@@ -76,16 +76,45 @@ class BuildingChromatogram {
         }
 
         if (apexDataPoint != null) {
-            System.out.println("Apex data point: " + apexDataPoint);
-            System.out.println(intensityValues[apexDataPoint]);
-            System.out.println(chromatographyInfo[apexDataPoint].getRetentionTime()/60);
-            System.out.println(mzValues[apexDataPoint]);
-            System.out.println();
-            // Find start and stop index
-            // Shift data points using System.arraycopy
-            // Set new size to crop the data
-        }
-        else {
+            Integer startIndex = null, endIndex = null;
+
+            // Find start data point
+            for (int i = apexDataPoint - 1; i >= 0; i--) {
+
+                // Verify the intensity is within the intensity tolerance
+                if (intensityValues[i] > intensityValues[i + 1]
+                        * (1 + intensityTolerance)
+                        || intensityValues[i + 1] == 0) {
+                    break;
+                }
+                startIndex = i;
+            }
+
+            // Find end data point
+            for (int i = apexDataPoint + 1; i < size; i++) {
+
+                // Verify the intensity is within the intensity tolerance
+                if (intensityValues[i] > intensityValues[i - 1]
+                        * (1 + intensityTolerance)
+                        || intensityValues[i - 1] == 0) {
+                    break;
+                }
+                endIndex = i;
+            }
+
+            // Shift the peakPoints
+            int peakPoints = endIndex-startIndex+1;
+            ChromatographyInfo[] newRtBuffer = new ChromatographyInfo[peakPoints];
+            float[] newIntensityBuffer = new float[peakPoints];
+            System.arraycopy(dataPoints.getRtBuffer(), startIndex, newRtBuffer, 0, peakPoints);
+            System.arraycopy(dataPoints.getIntensityBuffer(), startIndex, newIntensityBuffer, 0, peakPoints);
+            dataPoints.setBuffers(newRtBuffer, newIntensityBuffer, peakPoints);
+
+            // Shift the m/z array
+            System.arraycopy(mzValues, startIndex, mzValues, 0, peakPoints);
+            size = peakPoints;
+
+        } else {
             // Empty all lists
             mzValues = null;
             dataPoints = null;
@@ -105,5 +134,9 @@ class BuildingChromatogram {
         }
 
         mzValues = mzValuesNew;
+    }
+
+    public int getSize() {
+        return size;
     }
 }
