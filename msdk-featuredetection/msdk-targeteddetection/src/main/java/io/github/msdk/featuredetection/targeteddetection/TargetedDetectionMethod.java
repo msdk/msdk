@@ -35,6 +35,8 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
+import io.github.msdk.util.ChromatogramUtil;
+import io.github.msdk.util.ChromatogramUtil.calcMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.msdk.util.RTTolerance;
@@ -105,7 +107,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
         totalScans = msScans.size();
         for (MsScan msScan : msScans) {
 
-            // Get scans data points
+            // Get the scans data points
             MsSpectrumDataPointList dataPointList = MSDKObjectBuilder
                     .getMsSpectrumDataPointList();
             msScan.getDataPoints(dataPointList);
@@ -175,15 +177,8 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 
             // Set the m/z value for the chromatogram
             double[] mzValues = buildingChromatogram.getMzValues();
-            double sum = 0;
-            int values = 0;
-            for(int i=0; i < buildingChromatogram.getSize() ; i++) {
-                if (mzValues[i] > 0) {
-                    values++;
-                    sum = sum + mzValues[i];
-                }
-            }
-            double newMz = sum/values;
+            float[] intensityValues = newDataPoints.getIntensityBuffer();
+            double newMz = ChromatogramUtil.calculateMz(intensityValues, mzValues, calcMethod.allAverage);
             chromatogram.setMz(newMz);
 
             // Add the chromatogram to the chromatogram list

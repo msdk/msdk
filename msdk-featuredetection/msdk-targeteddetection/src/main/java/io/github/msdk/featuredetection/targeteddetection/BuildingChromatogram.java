@@ -111,7 +111,9 @@ class BuildingChromatogram {
             dataPoints.setBuffers(newRtBuffer, newIntensityBuffer, peakPoints);
 
             // Shift the m/z array
-            System.arraycopy(mzValues, startIndex, mzValues, 0, peakPoints);
+            double[] newMzValues = new double[peakPoints];
+            System.arraycopy(mzValues, startIndex, newMzValues, 0, peakPoints);
+            mzValues = newMzValues;
             size = peakPoints;
 
         } else {
