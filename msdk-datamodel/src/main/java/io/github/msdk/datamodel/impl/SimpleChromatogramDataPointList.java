@@ -124,7 +124,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
 
         // Check if the RT array is properly sorted
         for (int pos = 1; pos < newSize; pos++) {
-            if (rtBuffer[pos].compareTo(rtBuffer[pos - 1]) >= 0)
+            if (rtBuffer[pos - 1].compareTo(rtBuffer[pos]) > 0)
                 throw (new MSDKRuntimeException(
                         "The RT array is not properly sorted. It should be sorted from lowest to highest."));
         }

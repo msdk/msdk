@@ -66,8 +66,8 @@ public class TargetedDetectionMethodTest {
 
         // Variables
         final MZTolerance mzTolerance = new MZTolerance(0.003, 5.0);
-        final RTTolerance rtTolerance = new RTTolerance(6, false);
-        final Double intensityTolerance = 10d;
+        final RTTolerance rtTolerance = new RTTolerance(0.2, false);
+        final Double intensityTolerance = 0.10d;
         final Double noiseLevel = 5000d;
 
         TargetedDetectionMethod chromBuilder = new TargetedDetectionMethod(
@@ -83,19 +83,25 @@ public class TargetedDetectionMethodTest {
         Chromatogram chromatogram1 = chromatograms.get(0);
         Assert.assertEquals(1, chromatogram1.getChromatogramNumber().intValue());
         chromatogram1.getDataPoints(dataPoints);
-        System.out.println(dataPoints.getSize());
+        Assert.assertEquals(20, dataPoints.getSize());
+        Assert.assertEquals(5513891.5, dataPoints.getIntensityBuffer()[8], 0.000001);
+        Assert.assertEquals(332.5622270372179, chromatogram1.getMz(), 0.000001);
 
         // Verify ion 2
         Chromatogram chromatogram2 = chromatograms.get(1);
         Assert.assertEquals(2, chromatogram2.getChromatogramNumber().intValue());
         chromatogram2.getDataPoints(dataPoints);
-        System.out.println(dataPoints.getSize());
+        Assert.assertEquals(18, dataPoints.getSize());
+        Assert.assertEquals(6317753.0, dataPoints.getIntensityBuffer()[7], 0.000001);
+        Assert.assertEquals(508.0034287396599, chromatogram2.getMz(), 0.000001);
 
         // Verify ion 3
         Chromatogram chromatogram3 = chromatograms.get(2);
         Assert.assertEquals(3, chromatogram3.getChromatogramNumber().intValue());
         chromatogram3.getDataPoints(dataPoints);
-        System.out.println(dataPoints.getSize());
+        Assert.assertEquals(17, dataPoints.getSize());
+        Assert.assertEquals(2609394.5, dataPoints.getIntensityBuffer()[5], 0.000001);
+        Assert.assertEquals(362.1021836224724, chromatogram3.getMz(), 0.000001);
     }
 
 }
