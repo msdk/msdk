@@ -79,44 +79,44 @@ public class ChromatogramUtil {
 		int values = 0;
 
 		switch (method) {
-			case allAverage:
-				for (int i = 0; i < mzValues.length; i++) {
-					if (mzValues[i] > 0) {
-						values++;
-						sum = sum + mzValues[i];
-					}
+		case allAverage:
+			for (int i = 0; i < mzValues.length; i++) {
+				if (mzValues[i] > 0) {
+					values++;
+					sum = sum + mzValues[i];
 				}
-				newMz = sum / values;
-				break;
-			case allMedian:
-				double index = Math.floor(mzValues.length / 2);
-				if (mzValues.length % 2 == 0) { // even
-					sum = mzValues[(int) index] + mzValues[(int) index + 1];
-					newMz = sum / 2;
-				} else { // odd
-					newMz = mzValues[(int) index];
+			}
+			newMz = sum / values;
+			break;
+		case allMedian:
+			double index = Math.floor(mzValues.length / 2);
+			if (mzValues.length % 2 == 0) { // even
+				sum = mzValues[(int) index] + mzValues[(int) index + 1];
+				newMz = sum / 2;
+			} else { // odd
+				newMz = mzValues[(int) index];
+			}
+			break;
+		case fwhmAverage:
+			// Find the maximum intensity
+			float max = intensityValues[0];
+			for (int i = 1; i < intensityValues.length; i++) {
+				if (intensityValues[i] > max) {
+					max = intensityValues[i];
 				}
-				break;
-			case fwhmAverage:
-				// Find the maximum intensity
-				float max = intensityValues[0];
-				for (int i = 1; i < intensityValues.length; i++) {
-				    if (intensityValues[i] > max) {
-				      max = intensityValues[i];
-				    }
-				}
+			}
 
-				// Calculate m/z
-				for (int i = 0; i < intensityValues.length; i++) {
-				    if (intensityValues[i] > max/2) {
-				    	values++;
-						sum = sum + mzValues[i];
-				    }
+			// Calculate m/z
+			for (int i = 0; i < intensityValues.length; i++) {
+				if (intensityValues[i] > max / 2) {
+					values++;
+					sum = sum + mzValues[i];
 				}
-				newMz = sum / values;
-				break;
-			case fwhmMedian:
-				// TODO
+			}
+			newMz = sum / values;
+			break;
+		case fwhmMedian:
+			// TODO
 		}
 
 		return newMz;
@@ -133,9 +133,9 @@ public class ChromatogramUtil {
 		float[] intensityValues = dataPointList.getIntensityBuffer();
 		int max = 0;
 		for (int i = 1; i < dataPointList.getSize(); i++) {
-		    if (intensityValues[i] > intensityValues[max]) {
-		      max = i;
-		    }
+			if (intensityValues[i] > intensityValues[max]) {
+				max = i;
+			}
 		}
 
 		ChromatographyInfo[] rtBuffer = dataPointList.getRtBuffer();
@@ -171,7 +171,7 @@ public class ChromatogramUtil {
 		Range<ChromatographyInfo> rtRange = dataPointList.getRtRange();
 		float start = rtRange.lowerEndpoint().getRetentionTime();
 		float end = rtRange.upperEndpoint().getRetentionTime();
-		return end-start;
+		return end - start;
 	}
 
 	/**
@@ -185,9 +185,9 @@ public class ChromatogramUtil {
 		float[] intensityValues = dataPointList.getIntensityBuffer();
 		float max = intensityValues[0];
 		for (int i = 1; i < dataPointList.getSize(); i++) {
-		    if (intensityValues[i] > max) {
-		      max = intensityValues[i];
-		    }
+			if (intensityValues[i] > max) {
+				max = intensityValues[i];
+			}
 		}
 
 		return max;
@@ -199,13 +199,13 @@ public class ChromatogramUtil {
 	@SuppressWarnings("null")
 	public static float getArea(@Nonnull Chromatogram chromatogram) {
 		chromatogram.getDataPoints(dataPointList);
-		float area = 0, rtDifference = 0, intensityStart = 0, intensityEnd= 0;
+		float area = 0, rtDifference = 0, intensityStart = 0, intensityEnd = 0;
 		float[] intensityValues = dataPointList.getIntensityBuffer();
 		ChromatographyInfo[] rtValues = dataPointList.getRtBuffer();
-		for (int i=0; i < dataPointList.getSize()-1; i++) {
-			rtDifference = rtValues[i+1].getRetentionTime() - rtValues[i].getRetentionTime();
+		for (int i = 0; i < dataPointList.getSize() - 1; i++) {
+			rtDifference = rtValues[i + 1].getRetentionTime() - rtValues[i].getRetentionTime();
 			intensityStart = intensityValues[i];
-			intensityEnd = intensityValues[i+1];
+			intensityEnd = intensityValues[i + 1];
 			area += (rtDifference * (intensityStart + intensityEnd) / 2);
 		}
 		return area;
@@ -233,9 +233,9 @@ public class ChromatogramUtil {
 		float rt = getRt(chromatogram);
 		float rtValues[] = findRTs(height * 0.05, rt, chromatogram);
 		Float tf = (rtValues[1] - rtValues[0]) / (2 * (rt - rtValues[0]));
-        if (tf < 0) {
-            tf = null;
-        }
+		if (tf < 0) {
+			tf = null;
+		}
 		return tf;
 	}
 
@@ -245,62 +245,63 @@ public class ChromatogramUtil {
 	public static Float getAsymmetryFactor(@Nonnull Chromatogram chromatogram) {
 		float height = getMaxHeight(chromatogram);
 		float rt = getRt(chromatogram);
-        float rtValues3[] = findRTs(height * 0.1, rt, chromatogram);
-        Float af = (rtValues3[1] - rt) / (rt - rtValues3[0]);
-        if (af < 0) {
-            af = null;
-        }
+		float rtValues3[] = findRTs(height * 0.1, rt, chromatogram);
+		Float af = (rtValues3[1] - rt) / (rt - rtValues3[0]);
+		if (af < 0) {
+			af = null;
+		}
 		return af;
 	}
 
 	private static float[] findRTs(double intensity, double rt, Chromatogram chromatogram) {
 
-        double lastDiff1 = intensity, lastDiff2 = intensity, currentDiff;
-        float x1 = 0, x2 = 0, x3 = 0, x4 = 0, y1 = 0, y2 = 0, y3 = 0, y4 = 0, currentRT;
+		double lastDiff1 = intensity, lastDiff2 = intensity, currentDiff;
+		float x1 = 0, x2 = 0, x3 = 0, x4 = 0, y1 = 0, y2 = 0, y3 = 0, y4 = 0, currentRT;
 
-        float[] intensityValues = dataPointList.getIntensityBuffer();
-        ChromatographyInfo[] rtValues = dataPointList.getRtBuffer();
+		float[] intensityValues = dataPointList.getIntensityBuffer();
+		ChromatographyInfo[] rtValues = dataPointList.getRtBuffer();
 
-        // Find the data points closet to input intensity on both side of the apex
-        for (int i = 1; i < dataPointList.getSize() - 1; i++) {
+		// Find the data points closet to input intensity on both side of the
+		// apex
+		for (int i = 1; i < dataPointList.getSize() - 1; i++) {
 
-            currentDiff = Math.abs(intensity - intensityValues[i]);
-            currentRT = rtValues[i].getRetentionTime();
-            
-            if (currentDiff < lastDiff1 & currentDiff > 0 & currentRT <= rt) {
-                x1 = rtValues[i].getRetentionTime();
-                y1 = intensityValues[i];
-                x2 = rtValues[i+1].getRetentionTime();
-                y2 = intensityValues[i+1];
-                lastDiff1 = currentDiff;
-            } else if (currentDiff < lastDiff2 & currentDiff > 0 & currentRT >= rt) {
-                x3 = rtValues[i - 1].getRetentionTime();
-                y3 = intensityValues[i - 1];
-                x4 = rtValues[i].getRetentionTime();
-                y4 = intensityValues[i];
-                lastDiff2 = currentDiff;
-            }
+			currentDiff = Math.abs(intensity - intensityValues[i]);
+			currentRT = rtValues[i].getRetentionTime();
 
-        }
+			if (currentDiff < lastDiff1 & currentDiff > 0 & currentRT <= rt) {
+				x1 = rtValues[i].getRetentionTime();
+				y1 = intensityValues[i];
+				x2 = rtValues[i + 1].getRetentionTime();
+				y2 = intensityValues[i + 1];
+				lastDiff1 = currentDiff;
+			} else if (currentDiff < lastDiff2 & currentDiff > 0 & currentRT >= rt) {
+				x3 = rtValues[i - 1].getRetentionTime();
+				y3 = intensityValues[i - 1];
+				x4 = rtValues[i].getRetentionTime();
+				y4 = intensityValues[i];
+				lastDiff2 = currentDiff;
+			}
 
-        // Calculate RT value for input intensity based on linear regression
-        double slope, intercept, rt1, rt2;
-        if (y1 > 0) {
-            slope = (y2 - y1) / (x2 - x1);
-            intercept = y1 - (slope * x1);
-            rt1 = (intensity - intercept) / slope;
-        } else { // Straight drop of peak to 0 intensity
-            rt1 = x2;
-        }
-        if (y4 > 0) {
-            slope = (y4 - y3) / (x4 - x3);
-            intercept = y3 - (slope * x3);
-            rt2 = (intensity - intercept) / slope;
-        } else { // Straight drop of peak to 0 intensity
-            rt2 = x3;
-        }
+		}
 
-        return new float[] { (float) rt1, (float) rt2 };
-    }
+		// Calculate RT value for input intensity based on linear regression
+		double slope, intercept, rt1, rt2;
+		if (y1 > 0) {
+			slope = (y2 - y1) / (x2 - x1);
+			intercept = y1 - (slope * x1);
+			rt1 = (intensity - intercept) / slope;
+		} else { // Straight drop of peak to 0 intensity
+			rt1 = x2;
+		}
+		if (y4 > 0) {
+			slope = (y4 - y3) / (x4 - x3);
+			intercept = y3 - (slope * x3);
+			rt2 = (intensity - intercept) / slope;
+		} else { // Straight drop of peak to 0 intensity
+			rt2 = x3;
+		}
+
+		return new float[] { (float) rt1, (float) rt2 };
+	}
 
 }
