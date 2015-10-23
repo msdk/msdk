@@ -12,5 +12,6 @@
   <modules>
   	<module>msdk-chromatogrambuilder</module>
   	<module>msdk-targeteddetection</module>
+  	<module>msdk-chromatogramtofeaturetable</module>
   </modules>
 </project>
