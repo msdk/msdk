@@ -82,6 +82,8 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 		if (!rows.isEmpty()) {
 			lastID = featureTable.getRows().get(featureTable.getRows().size()).getId();
 		}
+
+		// Loop through all chromatograms and add values to the feature table
 		FeatureTableColumn column;
 		for (Chromatogram chromatogram : chromatograms) {
 			lastID++;
@@ -134,6 +136,9 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 			// Add row to feature table
 			featureTable.addRow(newRow);
 
+			// Increase counter
+			processedChromatograms ++;
+
 			// Check if cancel is requested
 			if (canceled)
 				return null;
@@ -148,11 +153,14 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 	private void addColumns(@Nonnull FeatureTable featureTable) {
 
 		// Common columns
+		// Only add common columns if the feature table is empty
 		if (featureTable.getColumns().size() == 0) {
 			FeatureTableColumn<Integer> idColumn = MSDKObjectBuilder.getIdFeatureTableColumn();
 			FeatureTableColumn<Double> mzColumn = MSDKObjectBuilder.getMzFeatureTableColumn();
-			FeatureTableColumn<ChromatographyInfo> chromatographyInfoColumn = MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn();
-			FeatureTableColumn<IonAnnotation> ionAnnotationColumn = MSDKObjectBuilder.getIonAnnotationFeatureTableColumn();
+			FeatureTableColumn<ChromatographyInfo> chromatographyInfoColumn = MSDKObjectBuilder
+					.getChromatographyInfoFeatureTableColumn();
+			FeatureTableColumn<IonAnnotation> ionAnnotationColumn = MSDKObjectBuilder
+					.getIonAnnotationFeatureTableColumn();
 			featureTable.addColumn(idColumn);
 			featureTable.addColumn(mzColumn);
 			featureTable.addColumn(chromatographyInfoColumn);
