@@ -14,6 +14,7 @@
 
 package io.github.msdk.featuredetection.chromatogramtofeaturetable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -146,73 +147,40 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 
 	private void addColumns(@Nonnull FeatureTable featureTable) {
 
-		/*
-		 * TODO: Check if columns are already present before adding them!
-		 */
-
 		// Common columns
-		FeatureTableColumn<Integer> idColumn = MSDKObjectBuilder.getIdFeatureTableColumn();
-		FeatureTableColumn<Double> mzColumn = MSDKObjectBuilder.getMzFeatureTableColumn();
-		FeatureTableColumn<ChromatographyInfo> chromatographyInfoColumn = MSDKObjectBuilder
-				.getChromatographyInfoFeatureTableColumn();
-		FeatureTableColumn<IonAnnotation> ionAnnotationColumn = MSDKObjectBuilder.getIonAnnotationFeatureTableColumn();
-		featureTable.addColumn(idColumn);
-		featureTable.addColumn(mzColumn);
-		featureTable.addColumn(chromatographyInfoColumn);
-		featureTable.addColumn(ionAnnotationColumn);
+		if (featureTable.getColumns().size() == 0) {
+			FeatureTableColumn<Integer> idColumn = MSDKObjectBuilder.getIdFeatureTableColumn();
+			FeatureTableColumn<Double> mzColumn = MSDKObjectBuilder.getMzFeatureTableColumn();
+			FeatureTableColumn<ChromatographyInfo> chromatographyInfoColumn = MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn();
+			FeatureTableColumn<IonAnnotation> ionAnnotationColumn = MSDKObjectBuilder.getIonAnnotationFeatureTableColumn();
+			featureTable.addColumn(idColumn);
+			featureTable.addColumn(mzColumn);
+			featureTable.addColumn(chromatographyInfoColumn);
+			featureTable.addColumn(ionAnnotationColumn);
+		}
 
 		// Sample columns
-		FeatureTableColumn<Double> sampleMzColumn = MSDKObjectBuilder.getFeatureTableColumn(ColumnName.MZ, sample);
-		featureTable.addColumn(sampleMzColumn);
-		tableColumns.put(ColumnName.MZ.getName(), sampleMzColumn);
+		ArrayList<ColumnName> sampleColumns = new ArrayList<ColumnName>();
+		sampleColumns.add(ColumnName.MZ);
+		sampleColumns.add(ColumnName.RT);
+		sampleColumns.add(ColumnName.RTSTART);
+		sampleColumns.add(ColumnName.RTEND);
+		sampleColumns.add(ColumnName.DURATION);
+		sampleColumns.add(ColumnName.AREA);
+		sampleColumns.add(ColumnName.HEIGHT);
+		sampleColumns.add(ColumnName.NUMBEROFDATAPOINTS);
+		sampleColumns.add(ColumnName.FWHM);
+		sampleColumns.add(ColumnName.TAILINGFACTOR);
+		sampleColumns.add(ColumnName.ASYMMETRYFACTOR);
 
-		FeatureTableColumn<ChromatographyInfo> sampleChromatographyInfoColumn = MSDKObjectBuilder
-				.getFeatureTableColumn(ColumnName.RT, sample);
-		featureTable.addColumn(sampleChromatographyInfoColumn);
-		tableColumns.put(ColumnName.RT.getName(), sampleChromatographyInfoColumn);
-
-		FeatureTableColumn<Double> sampleRtStartColumn = MSDKObjectBuilder.getFeatureTableColumn(ColumnName.RTSTART,
-				sample);
-		featureTable.addColumn(sampleRtStartColumn);
-		tableColumns.put(ColumnName.RTSTART.getName(), sampleRtStartColumn);
-
-		FeatureTableColumn<Double> sampleRtEndColumn = MSDKObjectBuilder.getFeatureTableColumn(ColumnName.RTEND,
-				sample);
-		featureTable.addColumn(sampleRtEndColumn);
-		tableColumns.put(ColumnName.RTEND.getName(), sampleRtEndColumn);
-
-		FeatureTableColumn<Double> sampleDurationColumn = MSDKObjectBuilder.getFeatureTableColumn(ColumnName.DURATION,
-				sample);
-		featureTable.addColumn(sampleDurationColumn);
-		tableColumns.put(ColumnName.DURATION.getName(), sampleDurationColumn);
-
-		FeatureTableColumn<Double> sampleAreaColumn = MSDKObjectBuilder.getFeatureTableColumn(ColumnName.AREA, sample);
-		featureTable.addColumn(sampleAreaColumn);
-		tableColumns.put(ColumnName.AREA.getName(), sampleAreaColumn);
-
-		FeatureTableColumn<Double> sampleHeightColumn = MSDKObjectBuilder.getFeatureTableColumn(ColumnName.HEIGHT,
-				sample);
-		featureTable.addColumn(sampleHeightColumn);
-		tableColumns.put(ColumnName.HEIGHT.getName(), sampleHeightColumn);
-
-		FeatureTableColumn<Integer> sampleDatapointsColumn = MSDKObjectBuilder
-				.getFeatureTableColumn(ColumnName.NUMBEROFDATAPOINTS, sample);
-		featureTable.addColumn(sampleDatapointsColumn);
-		tableColumns.put(ColumnName.NUMBEROFDATAPOINTS.getName(), sampleDatapointsColumn);
-
-		FeatureTableColumn<Double> sampleFWHMColumn = MSDKObjectBuilder.getFeatureTableColumn(ColumnName.FWHM, sample);
-		featureTable.addColumn(sampleFWHMColumn);
-		tableColumns.put(ColumnName.FWHM.getName(), sampleFWHMColumn);
-
-		FeatureTableColumn<Double> sampleTailingColumn = MSDKObjectBuilder
-				.getFeatureTableColumn(ColumnName.TAILINGFACTOR, sample);
-		featureTable.addColumn(sampleTailingColumn);
-		tableColumns.put(ColumnName.TAILINGFACTOR.getName(), sampleTailingColumn);
-
-		FeatureTableColumn<Double> sampleAsymmetryColumn = MSDKObjectBuilder
-				.getFeatureTableColumn(ColumnName.ASYMMETRYFACTOR, sample);
-		featureTable.addColumn(sampleAsymmetryColumn);
-		tableColumns.put(ColumnName.ASYMMETRYFACTOR.getName(), sampleAsymmetryColumn);
+		for (ColumnName columnName : sampleColumns) {
+			FeatureTableColumn<?> column = featureTable.getColumn(columnName.getName(), sample);
+			if (column == null) {
+				column = MSDKObjectBuilder.getFeatureTableColumn(columnName, sample);
+				featureTable.addColumn(column);
+			}
+			tableColumns.put(columnName.getName(), column);
+		}
 
 	}
 
