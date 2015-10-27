@@ -6,7 +6,7 @@
     	<artifactId>msdk-featuredetection</artifactId>
     	<version>0.1</version>
   	</parent>
-  	<artifactId>msdk-featuretable</artifactId>
+  	<artifactId>msdk-chromatogramtofeaturetable</artifactId>
 	
 	<dependencies>
 
