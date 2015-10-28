@@ -105,7 +105,7 @@ public class ChromatogramToFeatureTableMethodTest {
 
 		// Verify row 2
 		Assert.assertEquals(3, featureTable.getRows().size());
-		Assert.assertEquals(15, featureTable.getColumns().size());
+		Assert.assertEquals(16, featureTable.getColumns().size());
 		FeatureTableRow row = featureTable.getRows().get(1);
 
 		// Common columns
@@ -116,6 +116,10 @@ public class ChromatogramToFeatureTableMethodTest {
 		Assert.assertEquals(14.481896, chromatographyInfo.getRetentionTime() / 60, 0.000001);
 
 		// Sample specific columns
+		column = featureTable.getColumn("Id", null);
+		int id = row.getData(column);
+		Assert.assertEquals(id, 2);
+
 		column = featureTable.getColumn(ColumnName.MZ.getName(), sample);
 		double mz = row.getData(column);
 		Assert.assertEquals(508.0034287396599, mz, 0.000001);

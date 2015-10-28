@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -156,6 +157,21 @@ public interface Chromatogram extends Cloneable {
      */
     @Nonnull
     SeparationType getSeparationType();
+
+    /**
+     * Sets the ion annotation for this chromatogram.
+     * 
+     * @param ionAnnotation
+     *            New ion annotation.
+     */
+    void setIonAnnotation(@Nonnull IonAnnotation ionAnnotation);
+
+    /**
+     * Returns the ion annotation for this chromatogram.
+     * 
+     * @return the ion annotation.
+     */
+    IonAnnotation getIonAnnotation();
 
     /**
      * Sets the separation type used for separation of molecules.

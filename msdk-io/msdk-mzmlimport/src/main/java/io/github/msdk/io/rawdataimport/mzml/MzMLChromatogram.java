@@ -27,6 +27,7 @@ import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -166,5 +167,17 @@ class MzMLChromatogram implements Chromatogram {
     public void setSeparationType(@Nonnull SeparationType separationType) {
         throw new UnsupportedOperationException();
     }
+
+	@Override
+	public void setIonAnnotation(@Nonnull IonAnnotation ionAnnotation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IonAnnotation getIonAnnotation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
