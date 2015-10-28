@@ -27,6 +27,7 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -43,6 +44,7 @@ class SimpleChromatogram implements Chromatogram {
     private @Nullable Double mz;
     private @Nonnull SeparationType separationType;
     private Object dataStoreId = null;
+    private @Nullable IonAnnotation ionAnnotation;
 
     private final @Nonnull List<IsolationInfo> isolations = new LinkedList<>();
 
@@ -159,5 +161,15 @@ class SimpleChromatogram implements Chromatogram {
     public void setMz(@Nullable Double newMz) {
         this.mz = newMz;
     }
+
+	@Override
+	public void setIonAnnotation(@Nonnull IonAnnotation ionAnnotation) {
+		this.ionAnnotation = ionAnnotation;
+	}
+
+	@Override
+	public IonAnnotation getIonAnnotation() {
+		return ionAnnotation;
+	}
 
 }

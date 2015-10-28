@@ -181,6 +181,9 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
             double newMz = ChromatogramUtil.calculateMz(intensityValues, mzValues, calcMethod.allAverage);
             chromatogram.setMz(newMz);
 
+            // Add the ion annotation to the chromatogram
+            chromatogram.setIonAnnotation(ionAnnotation);
+
             // Add the chromatogram to the chromatogram list
             result.add(chromatogram);
             chromatogramNumber++;

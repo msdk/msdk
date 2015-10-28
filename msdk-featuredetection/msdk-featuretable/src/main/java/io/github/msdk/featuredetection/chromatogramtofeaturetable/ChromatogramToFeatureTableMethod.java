@@ -89,6 +89,15 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 			lastID++;
 			FeatureTableRow newRow = MSDKObjectBuilder.getFeatureTableRow(featureTable, lastID);
 
+			column = featureTable.getColumn(ColumnName.ID.getName(), null);
+			newRow.setData(column, lastID);
+
+			column = featureTable.getColumn("Ion Annotation", null);
+			newRow.setData(column, chromatogram.getIonAnnotation());
+
+			column = tableColumns.get(ColumnName.CHROMATOGRAM.getName());
+			newRow.setData(column, chromatogram);
+
 			double mz = chromatogram.getMz();
 			column = tableColumns.get(ColumnName.MZ.getName());
 			newRow.setData(column, mz);
@@ -169,6 +178,7 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 
 		// Sample columns
 		ArrayList<ColumnName> sampleColumns = new ArrayList<ColumnName>();
+		sampleColumns.add(ColumnName.CHROMATOGRAM);
 		sampleColumns.add(ColumnName.MZ);
 		sampleColumns.add(ColumnName.RT);
 		sampleColumns.add(ColumnName.RTSTART);
