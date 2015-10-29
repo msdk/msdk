@@ -28,6 +28,7 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 public enum ColumnName {
 
     ID("Id", Integer.class),
+    GROUPID("Group ID", Integer.class),
     MZ("m/z", Double.class),
     RT("RT", ChromatographyInfo.class),
     RTSTART("RT Start", Double.class),
