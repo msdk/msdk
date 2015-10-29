@@ -11,7 +11,6 @@
 	<url>https://msdk.github.io</url>
 
 	<modules>
-
 		<module>msdk-datamodel</module>
 		<module>msdk-io</module>
 		<module>msdk-rawdata</module>
@@ -79,7 +78,7 @@
 		</developer>
 		<developer>
 			<name>Thomas F. Dyrlund</name>
-			<email>tfrd@steno.dk</email>
+			<email>thomas@dyrlund.dk</email>
 		</developer>
 	</developers>
 
