@@ -130,17 +130,23 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 			column = tableColumns.get(ColumnName.NUMBEROFDATAPOINTS.getName());
 			newRow.setData(column, datapoints);
 
-			float fwhm = ChromatogramUtil.getFwhm(chromatogram);
-			column = tableColumns.get(ColumnName.FWHM.getName());
-			newRow.setData(column, fwhm);
+			Float fwhm = ChromatogramUtil.getFwhm(chromatogram);
+			if (fwhm != null) {
+				column = tableColumns.get(ColumnName.FWHM.getName());
+				newRow.setData(column, fwhm);
+			}
 
-			float tailingFactor = ChromatogramUtil.getTailingFactor(chromatogram);
-			column = tableColumns.get(ColumnName.TAILINGFACTOR.getName());
-			newRow.setData(column, tailingFactor);
+			Float tailingFactor = ChromatogramUtil.getTailingFactor(chromatogram);
+			if (tailingFactor != null) {
+				column = tableColumns.get(ColumnName.TAILINGFACTOR.getName());
+				newRow.setData(column, tailingFactor);
+			}
 
-			float asymmetryFactor = ChromatogramUtil.getAsymmetryFactor(chromatogram);
-			column = tableColumns.get(ColumnName.ASYMMETRYFACTOR.getName());
-			newRow.setData(column, asymmetryFactor);
+			Float asymmetryFactor = ChromatogramUtil.getAsymmetryFactor(chromatogram);
+			if (asymmetryFactor != null) {
+				column = tableColumns.get(ColumnName.ASYMMETRYFACTOR.getName());
+				newRow.setData(column, asymmetryFactor);
+			}
 
 			// Add row to feature table
 			featureTable.addRow(newRow);
@@ -166,12 +172,14 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 		if (featureTable.getColumns().size() == 0) {
 			FeatureTableColumn<Integer> idColumn = MSDKObjectBuilder.getIdFeatureTableColumn();
 			FeatureTableColumn<Double> mzColumn = MSDKObjectBuilder.getMzFeatureTableColumn();
+			FeatureTableColumn<Double> ppmColumn = MSDKObjectBuilder.getPpmFeatureTableColumn();
 			FeatureTableColumn<ChromatographyInfo> chromatographyInfoColumn = MSDKObjectBuilder
 					.getChromatographyInfoFeatureTableColumn();
 			FeatureTableColumn<IonAnnotation> ionAnnotationColumn = MSDKObjectBuilder
 					.getIonAnnotationFeatureTableColumn();
 			featureTable.addColumn(idColumn);
 			featureTable.addColumn(mzColumn);
+			featureTable.addColumn(ppmColumn);
 			featureTable.addColumn(chromatographyInfoColumn);
 			featureTable.addColumn(ionAnnotationColumn);
 		}

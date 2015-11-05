@@ -232,6 +232,10 @@ public class ChromatogramUtil {
 		float height = getMaxHeight(chromatogram);
 		float rt = getRt(chromatogram);
 		float rtValues[] = findRTs(height * 0.05, rt, chromatogram);
+		
+		if (rtValues[1] == 0)
+			rtValues[1] = getRtEnd(chromatogram);
+
 		Float tf = (rtValues[1] - rtValues[0]) / (2 * (rt - rtValues[0]));
 		if (tf < 0) {
 			tf = null;
