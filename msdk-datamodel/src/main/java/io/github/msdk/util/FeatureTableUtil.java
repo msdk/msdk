@@ -24,6 +24,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
@@ -67,7 +68,18 @@ public class FeatureTableUtil {
 
 			// Update m/z
 			column = featureTable.getColumn(ColumnName.MZ.getName(), null);
-			row.setData(column, totalMz / mzCount);
+			Double newMz = totalMz / mzCount;
+			row.setData(column, newMz);
+
+			// Update ppm
+			column = featureTable.getColumn("Ion Annotation", null);
+			IonAnnotation ionAnnotation = row.getData(column);
+			Double ionMz = ionAnnotation.getExpectedMz();
+			if (ionMz != null) {
+				column = featureTable.getColumn(ColumnName.PPM.getName(), null);
+				Double diff = Math.abs(newMz-ionMz);
+				row.setData(column, (diff/ionMz)*1000000);
+			}
 
 			// Update RT
 			column = featureTable.getColumn("Chromatography Info", null);

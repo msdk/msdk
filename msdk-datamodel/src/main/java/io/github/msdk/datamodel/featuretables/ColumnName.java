@@ -30,6 +30,7 @@ public enum ColumnName {
     ID("Id", Integer.class),
     GROUPID("Group ID", Integer.class),
     MZ("m/z", Double.class),
+    PPM("ppm", Double.class),
     RT("RT", ChromatographyInfo.class),
     RTSTART("RT Start", Double.class),
     RTEND("RT End", Double.class),

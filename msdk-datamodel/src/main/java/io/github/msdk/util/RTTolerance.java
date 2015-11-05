@@ -21,12 +21,12 @@ import com.google.common.collect.Range;
 
 /**
  * This class represents rt tolerance. Tolerance is set using either a absolute
- * (min) or relative (%) value.
+ * (sec) or relative (%) value.
  */
 @Immutable
 public class RTTolerance {
 
-    // Tolerance can be either absolute (min) or relative (%).
+    // Tolerance can be either absolute (sec) or relative (%).
     private final @Nonnull Double rtTolerance;
     private final boolean isAbsolute;
 
@@ -56,7 +56,7 @@ public class RTTolerance {
 
     @Override
     public String toString() {
-        return isAbsolute ? rtTolerance + " min" : 100.0 * rtTolerance + " %";
+        return isAbsolute ? rtTolerance + " sec" : 100.0 * rtTolerance + " %";
     }
 
 }

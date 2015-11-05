@@ -57,6 +57,8 @@ public class MSDKObjectBuilder {
             "Id", Integer.class, null);
     private static final @Nonnull SimpleFeatureTableColumn<Double> MzFeatureTableColumn = new SimpleFeatureTableColumn<Double>(
             ColumnName.MZ.getName(), Double.class, null);
+    private static final @Nonnull SimpleFeatureTableColumn<Double> ppmFeatureTableColumn = new SimpleFeatureTableColumn<Double>(
+            ColumnName.PPM.getName(), Double.class, null);
     private static final @Nonnull SimpleFeatureTableColumn<ChromatographyInfo> ChromatographyInfoFeatureTableColumn = new SimpleFeatureTableColumn<ChromatographyInfo>(
             "Chromatography Info", ChromatographyInfo.class, null);
     private static final @Nonnull SimpleFeatureTableColumn<IonAnnotation> IonAnnotationFeatureTableColumn = new SimpleFeatureTableColumn<IonAnnotation>(
@@ -244,6 +246,10 @@ public class MSDKObjectBuilder {
 
     public static @Nonnull FeatureTableColumn<Double> getMzFeatureTableColumn() {
         return MzFeatureTableColumn;
+    }
+
+    public static @Nonnull FeatureTableColumn<Double> getPpmFeatureTableColumn() {
+        return ppmFeatureTableColumn;
     }
 
     public static @Nonnull FeatureTableColumn<ChromatographyInfo> getChromatographyInfoFeatureTableColumn() {

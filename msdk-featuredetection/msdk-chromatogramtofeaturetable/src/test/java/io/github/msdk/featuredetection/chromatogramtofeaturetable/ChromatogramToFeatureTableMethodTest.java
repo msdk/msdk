@@ -105,7 +105,7 @@ public class ChromatogramToFeatureTableMethodTest {
 
 		// Verify row 2
 		Assert.assertEquals(3, featureTable.getRows().size());
-		Assert.assertEquals(16, featureTable.getColumns().size());
+		Assert.assertEquals(17, featureTable.getColumns().size());
 		FeatureTableRow row = featureTable.getRows().get(1);
 
 		// Common columns
