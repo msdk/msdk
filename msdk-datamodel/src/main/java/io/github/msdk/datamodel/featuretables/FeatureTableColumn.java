@@ -20,9 +20,9 @@ import javax.annotation.Nullable;
 /**
  * 
  *
- * @param <DataType>
+ * @param <DATATYPE>
  */
-public interface FeatureTableColumn<DataType> {
+public interface FeatureTableColumn<DATATYPE> {
 
     /**
      * @return Short descriptive name for the feature table column
@@ -37,7 +37,7 @@ public interface FeatureTableColumn<DataType> {
     /**
      * @return
      */
-    @Nonnull Class<DataType> getDataTypeClass();
+    @Nonnull Class<DATATYPE> getDataTypeClass();
 
     /**
      * Returns the sample associated with this column, or null if no sample is associated.
