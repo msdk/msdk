@@ -37,8 +37,7 @@ public class FeatureTableUtil {
      */
     public static void recalculateAverages(@Nonnull FeatureTable featureTable) {
         List<FeatureTableRow> rows = featureTable.getRows();
-        Double mz;
-        Float rt;
+        Double mz, rt;
         double totalMz;
         float totalRt;
         int mzCount, rtCount;
@@ -63,7 +62,7 @@ public class FeatureTableUtil {
 
                 column = featureTable.getColumn(ColumnName.RT.getName(), sample);
                 if (column != null) {
-                    rt = row.getData(column, Float.class);
+                    rt = row.getData(column, Double.class);
                     if (rt != null) {
                         totalRt += rt;
                         rtCount++;

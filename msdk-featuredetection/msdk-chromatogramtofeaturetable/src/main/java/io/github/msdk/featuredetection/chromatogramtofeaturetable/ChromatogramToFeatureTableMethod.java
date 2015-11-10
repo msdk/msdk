@@ -102,27 +102,27 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 			column = tableColumns.get(ColumnName.MZ.getName());
 			newRow.setData(column, mz);
 
-			float rt = ChromatogramUtil.getRt(chromatogram);
+			double rt = ChromatogramUtil.getRt(chromatogram);
 			column = tableColumns.get(ColumnName.RT.getName());
 			newRow.setData(column, rt);
 
-			float rtStart = ChromatogramUtil.getRtStart(chromatogram);
+			double rtStart = ChromatogramUtil.getRtStart(chromatogram);
 			column = tableColumns.get(ColumnName.RTSTART.getName());
 			newRow.setData(column, rtStart);
 
-			float rtEnd = ChromatogramUtil.getRtEnd(chromatogram);
+			double rtEnd = ChromatogramUtil.getRtEnd(chromatogram);
 			column = tableColumns.get(ColumnName.RTEND.getName());
 			newRow.setData(column, rtEnd);
 
-			float duration = ChromatogramUtil.getDuration(chromatogram);
+			double duration = ChromatogramUtil.getDuration(chromatogram);
 			column = tableColumns.get(ColumnName.DURATION.getName());
 			newRow.setData(column, duration);
 
-			float area = ChromatogramUtil.getArea(chromatogram);
+			double area = ChromatogramUtil.getArea(chromatogram);
 			column = tableColumns.get(ColumnName.AREA.getName());
 			newRow.setData(column, area);
 
-			float height = ChromatogramUtil.getMaxHeight(chromatogram);
+			double height = ChromatogramUtil.getMaxHeight(chromatogram);
 			column = tableColumns.get(ColumnName.HEIGHT.getName());
 			newRow.setData(column, height);
 
@@ -130,19 +130,19 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 			column = tableColumns.get(ColumnName.NUMBEROFDATAPOINTS.getName());
 			newRow.setData(column, datapoints);
 
-			Float fwhm = ChromatogramUtil.getFwhm(chromatogram);
+			Double fwhm = ChromatogramUtil.getFwhm(chromatogram);
 			if (fwhm != null) {
 				column = tableColumns.get(ColumnName.FWHM.getName());
 				newRow.setData(column, fwhm);
 			}
 
-			Float tailingFactor = ChromatogramUtil.getTailingFactor(chromatogram);
+			Double tailingFactor = ChromatogramUtil.getTailingFactor(chromatogram);
 			if (tailingFactor != null) {
 				column = tableColumns.get(ColumnName.TAILINGFACTOR.getName());
 				newRow.setData(column, tailingFactor);
 			}
 
-			Float asymmetryFactor = ChromatogramUtil.getAsymmetryFactor(chromatogram);
+			Double asymmetryFactor = ChromatogramUtil.getAsymmetryFactor(chromatogram);
 			if (asymmetryFactor != null) {
 				column = tableColumns.get(ColumnName.ASYMMETRYFACTOR.getName());
 				newRow.setData(column, asymmetryFactor);
@@ -152,7 +152,7 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 			featureTable.addRow(newRow);
 
 			// Increase counter
-			processedChromatograms ++;
+			processedChromatograms++;
 
 			// Check if cancel is requested
 			if (canceled)

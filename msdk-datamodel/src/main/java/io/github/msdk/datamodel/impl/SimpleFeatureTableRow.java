@@ -53,12 +53,15 @@ class SimpleFeatureTableRow implements FeatureTableRow {
 
     @Override
     public Double getMz() {
-        return getData(MSDKObjectBuilder.getMzFeatureTableColumn(), Double.class);
+        return getData(MSDKObjectBuilder.getMzFeatureTableColumn(),
+                Double.class);
     }
 
     @Override
     public ChromatographyInfo getChromatographyInfo() {
-        return getData(MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn(), ChromatographyInfo.class);
+        return getData(
+                MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn(),
+                ChromatographyInfo.class);
     }
 
     @Override
@@ -69,9 +72,10 @@ class SimpleFeatureTableRow implements FeatureTableRow {
         rowData.put(column, data);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public <DataType> DataType getData(@Nonnull FeatureTableColumn<DataType> column, @Nonnull Class<? extends DataType> dtClass) {
+    public <DataType> DataType getData(
+            @Nonnull FeatureTableColumn<DataType> column,
+            @Nonnull Class<? extends DataType> dtClass) {
         Preconditions.checkNotNull(column);
         return dtClass.cast(rowData.get(column));
     }
