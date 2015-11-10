@@ -117,7 +117,7 @@ public class ChromatogramToFeatureTableMethodTest {
 
 		// Sample specific columns
 		column = featureTable.getColumn("Id", null);
-		int id = row.getData(column, int.class);
+		int id = (int) row.getData(column, Integer.class);
 		Assert.assertEquals(id, 2);
 
 		column = featureTable.getColumn(ColumnName.MZ.getName(), sample);
@@ -125,44 +125,44 @@ public class ChromatogramToFeatureTableMethodTest {
 		Assert.assertEquals(508.0034287396599, mz, 0.000001);
 
 		column = featureTable.getColumn(ColumnName.RT.getName(), sample);
-		float rt = row.getData(column, Float.class);
+		double rt = row.getData(column, Double.class);
 		Assert.assertEquals(14.481896, rt / 60, 0.000001);
 
 		column = featureTable.getColumn(ColumnName.RTSTART.getName(), sample);
-		float rtStart = row.getData(column, Float.class);
+		double rtStart = row.getData(column, Double.class);
 		Assert.assertEquals(14.16822, rtStart / 60, 0.000001);
 
 		column = featureTable.getColumn(ColumnName.RTEND.getName(), sample);
-		float rtEnd = row.getData(column, Float.class);
+		double rtEnd = row.getData(column, Double.class);
 		Assert.assertEquals(14.9408865, rtEnd / 60, 0.000001);
 
 		column = featureTable.getColumn(ColumnName.DURATION.getName(), sample);
-		float duration = row.getData(column, Float.class);
+		double duration = row.getData(column, Double.class);
 		Assert.assertEquals(46.3599853515625, duration, 0.000001);
 
 		column = featureTable.getColumn(ColumnName.HEIGHT.getName(), sample);
-		float height = row.getData(column, Float.class);
+		double height = row.getData(column, Double.class);
 		Assert.assertEquals(6317753.0, height, 0.000001);
 
 		column = featureTable.getColumn(ColumnName.AREA.getName(), sample);
-		float area = row.getData(column, Float.class);
+		double area = row.getData(column, Double.class);
 		Assert.assertEquals(8.4486608E7, area, 0.000001);
 
 		column = featureTable.getColumn(ColumnName.NUMBEROFDATAPOINTS.getName(), sample);
-		int datapoints = row.getData(column, int.class);
+		int datapoints = (int) row.getData(column, Integer.class);
 		Assert.assertEquals(18, datapoints, 0.000001);
 
 		column = featureTable.getColumn(ColumnName.FWHM.getName(), sample);
-		float fwhm = row.getData(column, Float.class);
+		double fwhm = row.getData(column, Double.class);
 		Assert.assertEquals(0.19513144, fwhm / 60, 0.000001);
 
 		column = featureTable.getColumn(ColumnName.TAILINGFACTOR.getName(), sample);
-		float tf = row.getData(column, Float.class);
-		Assert.assertEquals(1.3311311, tf, 0.000001);
-
+		double tf = row.getData(column, Double.class);
+		Assert.assertEquals(1.3311329466690036, tf, 0.000001);
+		
 		column = featureTable.getColumn(ColumnName.ASYMMETRYFACTOR.getName(), sample);
-		float af = row.getData(column, Float.class);
-		Assert.assertEquals(1.7337204, af, 0.000001);
+		double af = row.getData(column, Double.class);
+		Assert.assertEquals(1.7337219745465573, af, 0.000001);
 
 	}
 

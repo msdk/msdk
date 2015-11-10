@@ -214,11 +214,11 @@ public class ChromatogramUtil {
 	/**
 	 * Returns the full width at half maximum (FWHM) of this feature.
 	 */
-	public static Float getFwhm(@Nonnull Chromatogram chromatogram) {
+	public static Double getFwhm(@Nonnull Chromatogram chromatogram) {
 		float height = getMaxHeight(chromatogram);
 		float rt = getRt(chromatogram);
-		float rtValues[] = findRTs(height / 2, rt, chromatogram);
-		Float fwhm = rtValues[1] - rtValues[0];
+		double rtValues[] = findRTs(height / 2, rt, chromatogram);
+		Double fwhm = rtValues[1] - rtValues[0];
 		if (fwhm < 0) {
 			fwhm = null;
 		}
@@ -228,15 +228,15 @@ public class ChromatogramUtil {
 	/**
 	 * Returns the tailing factor of this feature.
 	 */
-	public static Float getTailingFactor(@Nonnull Chromatogram chromatogram) {
+	public static Double getTailingFactor(@Nonnull Chromatogram chromatogram) {
 		float height = getMaxHeight(chromatogram);
 		float rt = getRt(chromatogram);
-		float rtValues[] = findRTs(height * 0.05, rt, chromatogram);
-		
+		double rtValues[] = findRTs(height * 0.05, rt, chromatogram);
+
 		if (rtValues[1] == 0)
 			rtValues[1] = getRtEnd(chromatogram);
 
-		Float tf = (rtValues[1] - rtValues[0]) / (2 * (rt - rtValues[0]));
+		Double tf = (rtValues[1] - rtValues[0]) / (2 * (rt - rtValues[0]));
 		if (tf < 0) {
 			tf = null;
 		}
@@ -246,21 +246,21 @@ public class ChromatogramUtil {
 	/**
 	 * Returns the asymmetry factor of this feature.
 	 */
-	public static Float getAsymmetryFactor(@Nonnull Chromatogram chromatogram) {
+	public static Double getAsymmetryFactor(@Nonnull Chromatogram chromatogram) {
 		float height = getMaxHeight(chromatogram);
 		float rt = getRt(chromatogram);
-		float rtValues3[] = findRTs(height * 0.1, rt, chromatogram);
-		Float af = (rtValues3[1] - rt) / (rt - rtValues3[0]);
+		double rtValues3[] = findRTs(height * 0.1, rt, chromatogram);
+		Double af = (rtValues3[1] - rt) / (rt - rtValues3[0]);
 		if (af < 0) {
 			af = null;
 		}
 		return af;
 	}
 
-	private static float[] findRTs(double intensity, double rt, Chromatogram chromatogram) {
+	private static double[] findRTs(double intensity, double rt, Chromatogram chromatogram) {
 
 		double lastDiff1 = intensity, lastDiff2 = intensity, currentDiff;
-		float x1 = 0, x2 = 0, x3 = 0, x4 = 0, y1 = 0, y2 = 0, y3 = 0, y4 = 0, currentRT;
+		double x1 = 0, x2 = 0, x3 = 0, x4 = 0, y1 = 0, y2 = 0, y3 = 0, y4 = 0, currentRT;
 
 		float[] intensityValues = dataPointList.getIntensityBuffer();
 		ChromatographyInfo[] rtValues = dataPointList.getRtBuffer();
@@ -305,7 +305,7 @@ public class ChromatogramUtil {
 			rt2 = x3;
 		}
 
-		return new float[] { (float) rt1, (float) rt2 };
+		return new double[] { rt1, rt2 };
 	}
 
 }
