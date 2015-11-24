@@ -110,7 +110,7 @@ public class TargetedDetectionMethodTest {
         Assert.assertEquals(0.20610961,
                 ChromatogramUtil.getFwhm(chromatogram1) / 60, 0.000001);
         Assert.assertEquals(1.1181464,
-                ChromatogramUtil.getTailingFactor(chromatogram1), 0.000001);
+                ChromatogramUtil.getTailingFactor(chromatogram1), 0.001);
         Assert.assertEquals(1.1135141,
                 ChromatogramUtil.getAsymmetryFactor(chromatogram1), 0.000001);
 
@@ -141,9 +141,9 @@ public class TargetedDetectionMethodTest {
         Assert.assertEquals(0.19513144,
                 ChromatogramUtil.getFwhm(chromatogram2) / 60, 0.000001);
         Assert.assertEquals(1.3311311,
-                ChromatogramUtil.getTailingFactor(chromatogram2), 0.000001);
+                ChromatogramUtil.getTailingFactor(chromatogram2), 0.0001);
         Assert.assertEquals(1.7337204,
-                ChromatogramUtil.getAsymmetryFactor(chromatogram2), 0.000001);
+                ChromatogramUtil.getAsymmetryFactor(chromatogram2), 0.0001);
 
         // Verify ion 3
         Chromatogram chromatogram3 = chromatograms.get(2);
@@ -174,7 +174,7 @@ public class TargetedDetectionMethodTest {
         Assert.assertEquals(1.4721208,
                 ChromatogramUtil.getTailingFactor(chromatogram3), 0.000001);
         Assert.assertEquals(1.8304727,
-                ChromatogramUtil.getAsymmetryFactor(chromatogram3), 0.000001);
+                ChromatogramUtil.getAsymmetryFactor(chromatogram3), 0.0001);
 
     }
 
