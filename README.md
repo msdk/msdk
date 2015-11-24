@@ -26,4 +26,4 @@ MSDK uses the [SLF4J library](http://www.slf4j.org) for logging. This library ca
 
 ### Building 
 
-See the [BUILD.md] file
+See the [BUILD.md](BUILD.md) file
