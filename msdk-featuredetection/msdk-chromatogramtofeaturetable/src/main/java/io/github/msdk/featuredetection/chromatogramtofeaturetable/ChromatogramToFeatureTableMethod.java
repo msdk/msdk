@@ -33,6 +33,7 @@ import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.msdk.util.FeatureTableUtil;
 
@@ -102,9 +103,10 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 			column = tableColumns.get(ColumnName.MZ.getName());
 			newRow.setData(column, mz);
 
-			double rt = ChromatogramUtil.getRt(chromatogram);
+			float rt = ChromatogramUtil.getRt(chromatogram);
+			ChromatographyInfo chromatographyInfo = MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
 			column = tableColumns.get(ColumnName.RT.getName());
-			newRow.setData(column, rt);
+			newRow.setData(column, chromatographyInfo);
 
 			double rtStart = ChromatogramUtil.getRtStart(chromatogram);
 			column = tableColumns.get(ColumnName.RTSTART.getName());
