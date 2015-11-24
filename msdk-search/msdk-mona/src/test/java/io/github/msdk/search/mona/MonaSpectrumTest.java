@@ -41,11 +41,13 @@ public class MonaSpectrumTest {
         spectrum = null;
     }
 
-    @Test
+    @Ignore("Ignored because MoNA API is throwing HTTP 500 error")
+    @Test 
     public void testGetSpectrumType() throws Exception {
         assertTrue(spectrum.getSpectrumType() != null);
     }
 
+    @Ignore("Ignored because MoNA API is throwing HTTP 500 error")
     @Test
     public void testGetDataPointsByMz() throws Exception {
         MsSpectrumDataPointList list = MSDKObjectBuilder
@@ -55,6 +57,7 @@ public class MonaSpectrumTest {
         assertTrue(list.getSize() == 1);
     }
 
+    @Ignore("Ignored because MoNA API is throwing HTTP 500 error")
     @Test
     public void testGetDataPoints() throws Exception {
         MsSpectrumDataPointList list = MSDKObjectBuilder
@@ -63,6 +66,7 @@ public class MonaSpectrumTest {
         assertTrue(list.getSize() == 5);
     }
 
+    @Ignore("Ignored because MoNA API is throwing HTTP 500 error")
     @Test
     public void testGetMzRange() throws Exception {
         Range<Double> range = spectrum.getMzRange();
@@ -70,6 +74,7 @@ public class MonaSpectrumTest {
         assertTrue(range.upperEndpoint().equals(864.5626));
     }
 
+    @Ignore("Ignored because MoNA API is throwing HTTP 500 error")
     @Test
     public void testGetTIC() throws Exception {
         assertTrue(spectrum.getTIC() != null);
