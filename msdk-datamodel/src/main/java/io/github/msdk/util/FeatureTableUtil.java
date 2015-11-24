@@ -27,6 +27,10 @@ import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
+/**
+ * <p>FeatureTableUtil class.</p>
+ *
+ */
 public class FeatureTableUtil {
 
     /**

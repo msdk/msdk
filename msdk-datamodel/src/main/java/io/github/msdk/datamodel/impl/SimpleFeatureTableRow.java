@@ -41,22 +41,26 @@ class SimpleFeatureTableRow implements FeatureTableRow {
         rowData = new Hashtable<>();
     }
 
+    /** {@inheritDoc} */
     @Override
     public @Nonnull FeatureTable getFeatureTable() {
         return featureTable;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @Nonnull Integer getId() {
         return rowId;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Double getMz() {
         return getData(MSDKObjectBuilder.getMzFeatureTableColumn(),
                 Double.class);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ChromatographyInfo getChromatographyInfo() {
         return getData(
@@ -64,6 +68,7 @@ class SimpleFeatureTableRow implements FeatureTableRow {
                 ChromatographyInfo.class);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <DataType> void setData(FeatureTableColumn<DataType> column,
             @Nonnull DataType data) {
@@ -72,6 +77,7 @@ class SimpleFeatureTableRow implements FeatureTableRow {
         rowData.put(column, data);
     }
 
+    /** {@inheritDoc} */
     @Override
     public <DataType> DataType getData(
             @Nonnull FeatureTableColumn<DataType> column,

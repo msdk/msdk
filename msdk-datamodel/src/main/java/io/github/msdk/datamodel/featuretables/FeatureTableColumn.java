@@ -18,29 +18,37 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * 
+ * <p>FeatureTableColumn interface.</p>
  *
- * @param <DATATYPE>
+ * @param <DATATYPE> Data type of this column
  */
 public interface FeatureTableColumn<DATATYPE> {
 
     /**
+     * <p>getName.</p>
+     *
      * @return Short descriptive name for the feature table column
      */
     @Nonnull String getName();
 
     /**
      * Change the name of this feature table column
+     *
+     * @param name a {@link java.lang.String} object.
      */
     void setName(@Nonnull String name);
 
     /**
-     * @return
+     * <p>getDataTypeClass.</p>
+     *
+     * @return a {@link java.lang.Class} object.
      */
     @Nonnull Class<DATATYPE> getDataTypeClass();
 
     /**
      * Returns the sample associated with this column, or null if no sample is associated.
+     *
+     * @return a {@link io.github.msdk.datamodel.featuretables.Sample} object.
      */
     @Nullable Sample getSample();
     

@@ -48,6 +48,7 @@ abstract class AbstractSpectrum implements MsSpectrum {
         spectrumType = MsSpectrumType.CENTROIDED;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void getDataPoints(@Nonnull MsSpectrumDataPointList dataPointList) {
         final Object dataStoreIdCopy = dataStoreId;
@@ -58,6 +59,7 @@ abstract class AbstractSpectrum implements MsSpectrum {
         dataPointStore.readDataPoints(dataStoreIdCopy, dataPointList);
     }
 
+    /** {@inheritDoc} */
     public void getDataPointsByMzAndIntensity(
             @Nonnull MsSpectrumDataPointList dataPointList,
             @Nonnull Range<Double> mzRange,
@@ -72,6 +74,7 @@ abstract class AbstractSpectrum implements MsSpectrum {
                 orgDataPointList.selectDataPoints(mzRange, intensityRange));
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     synchronized public void setDataPoints(
             @Nonnull MsSpectrumDataPointList newDataPoints) {
@@ -83,22 +86,30 @@ abstract class AbstractSpectrum implements MsSpectrum {
         totalIonCurrent = newDataPoints.getTIC();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public MsSpectrumType getSpectrumType() {
         return spectrumType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSpectrumType(@Nonnull MsSpectrumType spectrumType) {
         this.spectrumType = spectrumType;
     }
 
+    /**
+     * <p>getTIC.</p>
+     *
+     * @return a {@link java.lang.Float} object.
+     */
     @Nonnull
     public Float getTIC() {
         return totalIonCurrent;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Range<Double> getMzRange() {
         return mzRange;

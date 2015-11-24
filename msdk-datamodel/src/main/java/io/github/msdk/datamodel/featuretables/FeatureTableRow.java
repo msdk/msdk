@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
- *
+ * <p>FeatureTableRow interface.</p>
  */
 public interface FeatureTableRow {
 
@@ -62,12 +62,17 @@ public interface FeatureTableRow {
      *
      * @param column the column to retrieve data from this row.
      * @param dtClass the class of the data type stored in the column.
+     * @param <DATATYPE> Data type of the column
+     * @return a DATATYPE object.
      */
     @Nullable
     <DATATYPE> DATATYPE getData(@Nonnull FeatureTableColumn<DATATYPE> column, @Nonnull Class<? extends DATATYPE> dtClass);
 
     /**
      * Return data assigned to this row
+     *
+     * @param column a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
+     * @param data a DATATYPE object.
      */
     <DATATYPE> void setData(FeatureTableColumn<DATATYPE> column,
             @Nonnull DATATYPE data);

@@ -61,9 +61,15 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
     private int processedScans = 0, totalScans = 0;
 
     /**
-     * @param ionAnnotations,
-     *            rawDataFile, dataPointStore, mzTolerance, rtTolerance,
-     *            intensityTolerance, noiseLevel
+     * <p>Constructor for TargetedDetectionMethod.</p>
+     *
+     * @param ionAnnotations a {@link java.util.List} object.
+     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param mzTolerance a {@link io.github.msdk.util.MZTolerance} object.
+     * @param rtTolerance a {@link io.github.msdk.util.RTTolerance} object.
+     * @param intensityTolerance a {@link java.lang.Double} object.
+     * @param noiseLevel a {@link java.lang.Double} object.
      */
     public TargetedDetectionMethod(@Nonnull List<IonAnnotation> ionAnnotations,
             @Nonnull RawDataFile rawDataFile,
@@ -79,9 +85,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
         this.noiseLevel = noiseLevel;
     }
 
-    /**
-     * @throws MSDKException
-     */
+    /** {@inheritDoc} */
     @Override
     public List<Chromatogram> execute() throws MSDKException {
 
@@ -193,18 +197,21 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Float getFinishedPercentage() {
         return totalScans == 0 ? null : (float) processedScans / totalScans;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public List<Chromatogram> getResult() {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         canceled = true;

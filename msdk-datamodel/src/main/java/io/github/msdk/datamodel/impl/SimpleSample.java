@@ -43,32 +43,38 @@ class SimpleSample implements Sample {
         this.rawDataFile = rawDataFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @Nonnull String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setName(@Nonnull String name) {
         Preconditions.checkNotNull(name);
         this.name = name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @Nullable RawDataFile getRawDataFile() {
         return rawDataFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRawDataFile(@Nullable RawDataFile rawDataFile) {
         this.rawDataFile = rawDataFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @Nullable File getOriginalFile() {
         return originalFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setOriginalFile(@Nullable File originalFile) {
         this.originalFile = originalFile;

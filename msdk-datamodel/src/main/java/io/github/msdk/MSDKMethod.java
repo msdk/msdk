@@ -29,7 +29,7 @@ public interface MSDKMethod<ResultType> {
      * Returns a number in the interval 0 to 1.0, representing the portion of
      * the task that has completed, or null if the algorithm has not yet
      * started.
-     * 
+     *
      * @return Finished percentage (0.0 to 1.0, inclusive), or null.
      */
     @Nullable
@@ -38,8 +38,8 @@ public interface MSDKMethod<ResultType> {
     /**
      * Performs the algorithm. This method may throw MSDKException or
      * MSDKRuntimeException if error occurs.
-     * 
-     * @throws MSDKException
+     *
+     * @throws io.github.msdk.MSDKException
      *             On any error
      * @return the result of this algorithm, or null
      */
@@ -48,6 +48,8 @@ public interface MSDKMethod<ResultType> {
 
     /**
      * Returns the result of this algorithm, or null.
+     *
+     * @return a ResultType object.
      */
     @Nullable
     ResultType getResult();

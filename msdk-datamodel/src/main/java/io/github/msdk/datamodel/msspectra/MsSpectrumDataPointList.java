@@ -24,20 +24,20 @@ import com.google.common.collect.Range;
  * of MS data points in memory. Internally, it is implemented by two arrays, one
  * for m/z values (double[]) and one for intensity values (float[]). The arrays
  * are resized dynamically, as in ArrayList.
- * 
+ *
  * DataPointList provides all List methods, therefore it supports iteration.
  * Furthermore, it provides direct access to the underlying buffer arrays, for
  * more efficient data handling operations. The access through these arrays is
  * always preferred, as iteration via the List interface has to create a new
  * DataPoint instance for each visited data point.
- * 
+ *
  * DataPointList methods always keep the data points sorted in the m/z order,
  * and this requirement must be maintained when the internal m/z and intensity
  * arrays are modified directly.
- * 
+ *
  * The equals() method compares the contents of the two data point lists, and
  * ignores their internal array sizes (capacities).
- * 
+ *
  * This data structure is not thread-safe.
  */
 public interface MsSpectrumDataPointList extends Iterable<MsIon> {
@@ -49,7 +49,7 @@ public interface MsSpectrumDataPointList extends Iterable<MsIon> {
      * not the length of the returned array. The returned array reflects only
      * the current state of this list - if more data points are added, the
      * internal buffer might be replaced with a larger array.
-     * 
+     *
      * @return current m/z buffer
      */
     @Nonnull
@@ -62,15 +62,16 @@ public interface MsSpectrumDataPointList extends Iterable<MsIon> {
      * not the length of the returned array. The returned array reflects only
      * the current state of this list - if more data points are added, the
      * internal buffer might be replaced with a larger array.
-     * 
+     *
      * @return current intensity buffer
      */
     @Nonnull
     float[] getIntensityBuffer();
 
     /**
-     * 
-     * @return
+     * <p>getSize.</p>
+     *
+     * @return a int.
      */
     int getSize();
 
@@ -78,18 +79,20 @@ public interface MsSpectrumDataPointList extends Iterable<MsIon> {
      * Sets a new size, after the user manipulated with the m/z and intensity
      * buffers. This method also ensures the data points are properly sorted in
      * the m/z order.
-     * 
-     * @param newSize
+     *
+     * @param newSize a int.
      */
     void setSize(int newSize);
 
     /**
      * Ensures the size of the internal arrays is at least newSize
+     *
+     * @param newSize a int.
      */
     void allocate(int newSize);
 
     /**
-     * 
+     * <p>clear.</p>
      */
     void clear();
 
@@ -97,7 +100,7 @@ public interface MsSpectrumDataPointList extends Iterable<MsIon> {
      * Sets the internal buffers to given arrays. The arrays will be referenced
      * directly without cloning. The m/z buffer contents must be sorted in
      * ascending order.
-     * 
+     *
      * @param mzBuffer
      *            new m/z buffer
      * @param intensityBuffer
@@ -105,9 +108,9 @@ public interface MsSpectrumDataPointList extends Iterable<MsIon> {
      * @param newSize
      *            number of data point items in the buffers; this might be
      *            smaller than the actual length of the buffer arrays
-     * @throws IllegalArgumentException
+     * @throws java.lang.IllegalArgumentException
      *             if the size is larger than the length of the m/z array
-     * @throws IllegalStateException
+     * @throws java.lang.IllegalStateException
      *             if the m/z array is not sorted in ascending order
      */
     void setBuffers(@Nonnull double[] mzBuffer,
@@ -119,7 +122,7 @@ public interface MsSpectrumDataPointList extends Iterable<MsIon> {
      * If that is not the case, the list is reordered to maintain the correct
      * order of data points by m/z. If the capacity of the list is full, its
      * capacity is doubled.
-     * 
+     *
      * @param mz
      *            new m/z value
      * @param intensity
@@ -131,7 +134,7 @@ public interface MsSpectrumDataPointList extends Iterable<MsIon> {
      * Copies the contents of another data point list into this list. The
      * capacity of this list might stay the same or it might change, depending
      * on needs.
-     * 
+     *
      * @param list
      *            source list to copy from.
      */
@@ -140,7 +143,7 @@ public interface MsSpectrumDataPointList extends Iterable<MsIon> {
     /**
      * Creates a new DataPointList that contains only those data points that fit
      * within given m/z and intensity boundaries.
-     * 
+     *
      * @param mzRange
      *            m/z range to select
      * @param intensityRange
@@ -154,7 +157,7 @@ public interface MsSpectrumDataPointList extends Iterable<MsIon> {
     /**
      * Returns the range of m/z values in this DataPointList, or null if the
      * list is empty.
-     * 
+     *
      * @return range of m/z values in this DataPointList, or null
      */
     @Nullable
@@ -163,7 +166,7 @@ public interface MsSpectrumDataPointList extends Iterable<MsIon> {
     /**
      * Returns the sum of intensities of all data points (total ion current or
      * TIC). Returns 0 if there are no data points.
-     * 
+     *
      * @return total ion current
      */
     @Nonnull

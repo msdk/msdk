@@ -63,10 +63,16 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
     private long totalScans = 0, totalChromatograms = 0, parsedScans,
             parsedChromatograms;
 
+    /**
+     * <p>Constructor for MzMLFileImportMethod.</p>
+     *
+     * @param sourceFile a {@link java.io.File} object.
+     */
     public MzMLFileImportMethod(@Nonnull File sourceFile) {
         this.sourceFile = sourceFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public RawDataFile execute() throws MSDKException {
 
@@ -227,6 +233,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float getFinishedPercentage() {
         return (totalScans + totalChromatograms) == 0 ? null
@@ -234,12 +241,14 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                         / (totalScans + totalChromatograms);
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public RawDataFile getResult() {
         return newRawFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         this.canceled = true;

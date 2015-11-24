@@ -29,7 +29,7 @@ public interface ActivationInfo {
     /**
      * Returns the type of the fragmentation (MS/MS) experiment. If unknown,
      * FragmentationType.UNKNOWN is returned.
-     * 
+     *
      * @return Fragmentation type
      */
     @Nonnull
@@ -39,7 +39,7 @@ public interface ActivationInfo {
      * Returns the activation energy applied for this MS/MS scan. This value has
      * no dimension and its meaning depends on instrument. Null is returned if
      * unknown.
-     * 
+     *
      * @return MS/MS activation energy, or null.
      */
     @Nullable

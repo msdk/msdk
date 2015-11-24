@@ -42,17 +42,16 @@ import io.github.msdk.search.mona.pojo.SimilaritySearchResult;
  * MoNA specific implementation of the Search Interface
  */
 public class MonaSearch implements Search, MonaConfiguration {
+    /** {@inheritDoc} */
     @Override
     public MsSpectrum findSpectrumById(long id) throws IOException {
         return new MonaSpectrum(id);
     }
 
     /**
+     * {@inheritDoc}
+     *
      * returns a mass spectra by it's property name
-     * @param propertyName
-     * @param propertyValue
-     * @return
-     * @throws IOException 
      */
     @Override
     public @Nonnull Iterator<MsSpectrum> findSpectrumByProperty(String propertyName, Serializable propertyValue) throws IOException {
@@ -60,10 +59,9 @@ public class MonaSearch implements Search, MonaConfiguration {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * searches for similar spectra based on an existing mona id
-     * @param id
-     * @param minSimilarity
-     * @return
      */
     public Iterator<MsSpectrum> findSimilarSpectra(long id, Integer minSimilarity) throws IOException {
         SimilaritySearchQuery query = new SimilaritySearchQuery();
@@ -73,11 +71,9 @@ public class MonaSearch implements Search, MonaConfiguration {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * searches for similar spectra, based on the provided Spectrum
-     * @param compare
-     * @param minSimilarity
-     * @return
-     * @throws IOException
      */
     @Override
     public @Nonnull Iterator<MsSpectrum> findSimilarSpectra(MsSpectrum compare, Integer minSimilarity) throws IOException  {

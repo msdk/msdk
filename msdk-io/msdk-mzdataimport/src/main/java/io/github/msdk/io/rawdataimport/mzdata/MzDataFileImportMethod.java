@@ -48,12 +48,19 @@ public class MzDataFileImportMethod implements MSDKMethod<RawDataFile> {
     private RawDataFile newRawFile;
     private boolean canceled = false;
 
+    /**
+     * <p>Constructor for MzDataFileImportMethod.</p>
+     *
+     * @param sourceFile a {@link java.io.File} object.
+     * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     */
     public MzDataFileImportMethod(@Nonnull File sourceFile,
             @Nonnull DataPointStore dataStore) {
         this.sourceFile = sourceFile;
         this.dataStore = dataStore;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     public RawDataFile execute() throws MSDKException {
@@ -83,6 +90,7 @@ public class MzDataFileImportMethod implements MSDKMethod<RawDataFile> {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float getFinishedPercentage() {
         if (saxHandler != null)
@@ -91,12 +99,14 @@ public class MzDataFileImportMethod implements MSDKMethod<RawDataFile> {
             return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public RawDataFile getResult() {
         return newRawFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         this.canceled = true;

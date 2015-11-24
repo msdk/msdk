@@ -58,24 +58,28 @@ class MzMLChromatogram implements Chromatogram {
         this.isolations = isolations;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public RawDataFile getRawDataFile() {
         return dataFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public Integer getChromatogramNumber() {
         return chromatogramNumber;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public ChromatogramType getChromatogramType() {
         return chromatogramType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void getDataPoints(
             @Nonnull ChromatogramDataPointList dataPointList) {
@@ -93,24 +97,28 @@ class MzMLChromatogram implements Chromatogram {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Double getMz() {
         return mz;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public List<IsolationInfo> getIsolations() {
         return isolations;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public SeparationType getSeparationType() {
         return separationType;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public Chromatogram clone(@Nonnull DataPointStore newStore) {
@@ -136,44 +144,52 @@ class MzMLChromatogram implements Chromatogram {
      * Unsupported set-operations
      */
 
+    /** {@inheritDoc} */
     @Override
     public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
         throw new UnsupportedOperationException();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setChromatogramNumber(@Nonnull Integer chromatogramNumber) {
         throw new UnsupportedOperationException();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setChromatogramType(
             @Nonnull ChromatogramType newChromatogramType) {
         throw new UnsupportedOperationException();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDataPoints(
             @Nonnull ChromatogramDataPointList newDataPoints) {
         throw new UnsupportedOperationException();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMz(@Nullable Double newMz) {
         throw new UnsupportedOperationException();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSeparationType(@Nonnull SeparationType separationType) {
         throw new UnsupportedOperationException();
     }
 
+	/** {@inheritDoc} */
 	@Override
 	public void setIonAnnotation(@Nonnull IonAnnotation ionAnnotation) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public IonAnnotation getIonAnnotation() {
 		// TODO Auto-generated method stub

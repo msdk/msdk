@@ -41,12 +41,14 @@ class SimpleActivationInfo implements ActivationInfo {
         this.fragmentationType = fragmentationType;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public ActivationType getActivationType() {
         return fragmentationType;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Double getActivationEnergy() {

@@ -42,6 +42,15 @@ class MzMLRawDataFile implements RawDataFile {
 
     private @Nonnull String name;
 
+    /**
+     * <p>Constructor for MzMLRawDataFile.</p>
+     *
+     * @param sourceFile a {@link java.io.File} object.
+     * @param parser a {@link uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller} object.
+     * @param msFunctions a {@link java.util.List} object.
+     * @param msScans a {@link java.util.List} object.
+     * @param chromatograms a {@link java.util.List} object.
+     */
     @SuppressWarnings("null")
     public MzMLRawDataFile(@Nonnull File sourceFile,
             @Nonnull MzMLUnmarshaller parser, List<MsFunction> msFunctions,
@@ -54,29 +63,34 @@ class MzMLRawDataFile implements RawDataFile {
         this.chromatograms = chromatograms;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setName(@Nonnull String name) {
         this.name = name;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public File getOriginalFile() {
         return sourceFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public FileType getRawDataFileType() {
         return fileType;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     @Nonnull
@@ -84,6 +98,7 @@ class MzMLRawDataFile implements RawDataFile {
         return ImmutableList.copyOf(msFunctions);
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     @Nonnull
@@ -91,6 +106,7 @@ class MzMLRawDataFile implements RawDataFile {
         return ImmutableList.copyOf(msScans);
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     @Nonnull
@@ -98,6 +114,7 @@ class MzMLRawDataFile implements RawDataFile {
         return ImmutableList.copyOf(chromatograms);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void dispose() {
         parser = null;
@@ -112,31 +129,37 @@ class MzMLRawDataFile implements RawDataFile {
      * Unsupported set-operations
      */
 
+    /** {@inheritDoc} */
     @Override
     public void setOriginalFile(@Nullable File newOriginalFile) {
         throw new UnsupportedOperationException();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRawDataFileType(@Nonnull FileType rawDataFileType) {
         throw new UnsupportedOperationException();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void addScan(@Nonnull MsScan scan) {
         throw new UnsupportedOperationException();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeScan(@Nonnull MsScan scan) {
         throw new UnsupportedOperationException();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void addChromatogram(@Nonnull Chromatogram chromatogram) {
         throw new UnsupportedOperationException();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeChromatogram(@Nonnull Chromatogram chromatogram) {
         throw new UnsupportedOperationException();

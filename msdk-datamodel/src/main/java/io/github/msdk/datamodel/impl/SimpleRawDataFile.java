@@ -57,39 +57,46 @@ class SimpleRawDataFile implements RawDataFile {
         this.chromatograms = new ArrayList<Chromatogram>();
     }
 
+    /** {@inheritDoc} */
     @Override
     public @Nonnull String getName() {
         return rawDataFileName;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setName(@Nonnull String name) {
         Preconditions.checkNotNull(name);
         this.rawDataFileName = name;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public File getOriginalFile() {
         return originalRawDataFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setOriginalFile(@Nullable File newOriginalFile) {
         this.originalRawDataFile = newOriginalFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @Nonnull FileType getRawDataFileType() {
         return rawDataFileType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRawDataFileType(@Nonnull FileType rawDataFileType) {
         Preconditions.checkNotNull(rawDataFileType);
         this.rawDataFileType = rawDataFileType;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public List<MsFunction> getMsFunctions() {
@@ -104,12 +111,14 @@ class SimpleRawDataFile implements RawDataFile {
         return msFunctionList;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     public @Nonnull List<MsScan> getScans() {
         return ImmutableList.copyOf(scans);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void addScan(@Nonnull MsScan scan) {
         Preconditions.checkNotNull(scan);
@@ -118,6 +127,7 @@ class SimpleRawDataFile implements RawDataFile {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeScan(@Nonnull MsScan scan) {
         Preconditions.checkNotNull(scan);
@@ -126,6 +136,7 @@ class SimpleRawDataFile implements RawDataFile {
         }
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     @Nonnull
@@ -133,6 +144,7 @@ class SimpleRawDataFile implements RawDataFile {
         return ImmutableList.copyOf(chromatograms);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void addChromatogram(@Nonnull Chromatogram chromatogram) {
         Preconditions.checkNotNull(chromatogram);
@@ -141,6 +153,7 @@ class SimpleRawDataFile implements RawDataFile {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeChromatogram(@Nonnull Chromatogram chromatogram) {
         Preconditions.checkNotNull(chromatogram);
@@ -149,6 +162,7 @@ class SimpleRawDataFile implements RawDataFile {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void dispose() {
         dataPointStore.dispose();

@@ -55,30 +55,35 @@ class SimpleIsolationInfo implements IsolationInfo {
         this.activationInfo = activationInfo;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public Range<Double> getIsolationMzRange() {
         return isolationMzRange;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Float getIonInjectTime() {
         return ionInjectTime;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Double getPrecursorMz() {
         return precursorMz;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Integer getPrecursorCharge() {
         return precursorCharge;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public ActivationInfo getActivationInfo() {

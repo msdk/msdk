@@ -44,6 +44,10 @@ import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 
+/**
+ * <p>NetCDFFileImportMethod class.</p>
+ *
+ */
 public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -72,12 +76,19 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     private final @Nonnull MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
             .getMsSpectrumDataPointList();
 
+    /**
+     * <p>Constructor for NetCDFFileImportMethod.</p>
+     *
+     * @param sourceFile a {@link java.io.File} object.
+     * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     */
     public NetCDFFileImportMethod(@Nonnull File sourceFile,
             @Nonnull DataPointStore dataStore) {
         this.sourceFile = sourceFile;
         this.dataStore = dataStore;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     public RawDataFile execute() throws MSDKException {
@@ -408,17 +419,20 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public RawDataFile getResult() {
         return newRawFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float getFinishedPercentage() {
         return totalScans == 0 ? null : (float) parsedScans / totalScans;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         this.canceled = true;
