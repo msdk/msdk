@@ -24,56 +24,50 @@ import io.github.msdk.datamodel.files.FileType;
 
 /**
  * A writable raw data file.
- * 
+ *
  * @see RawDataFile
  */
 public interface WritableRawDataFile extends RawDataFile {
 
     /**
+     * {@inheritDoc}
+     *
      * Updates the original filename.
-     * 
-     * @param newOriginalFile
-     *            New original filename.
      */
     void setOriginalFile(@Nullable File newOriginalFile);
 
     /**
+     * {@inheritDoc}
+     *
      * Updates the file type of this raw data file.
-     * 
-     * @param FileType
-     *            New file type
      */
     void setRawDataFileType(@Nonnull FileType rawDataFileType);
     
     /**
+     * {@inheritDoc}
+     *
      * Adds a new scan to this file.
-     * 
-     * @param scan
-     *            Scan to add.
      */
     void addScan(@Nonnull MsScan scan);
 
     /**
+     * {@inheritDoc}
+     *
      * Removes a scan from this file.
-     * 
-     * @param scan
-     *            Scan to remove.
      */
     void removeScan(@Nonnull MsScan scan);
 
     /**
+     * {@inheritDoc}
+     *
      * Adds a new chromatogram to this file.
-     * 
-     * @param scan
-     *            Scan to add.
      */
     void addChromatogram(@Nonnull Chromatogram chromatogram);
 
     /**
+     * {@inheritDoc}
+     *
      * Removes a chromatogram from this file.
-     * 
-     * @param scan
-     *            Scan to remove.
      */
     void removeChromatogram(@Nonnull Chromatogram chromatogram);
 

@@ -21,11 +21,15 @@ public interface MsIon {
 
     /**
      * Returns the ion's m/z value
+     *
+     * @return a double.
      */
     double getMz();
 
     /**
      * Returns the ion's intensity value
+     *
+     * @return a float.
      */
     float getIntensity();
 

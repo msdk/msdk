@@ -32,7 +32,7 @@ public interface IsolationInfo {
 
     /**
      * Returns the isolated m/z range.
-     * 
+     *
      * @return Isolated m/z range.
      */
     @Nonnull
@@ -41,7 +41,7 @@ public interface IsolationInfo {
     /**
      * Returns the ion injection time in ms, for ion trap experiments. Shorter
      * time indicates larger amount of ions (trap fills faster).
-     * 
+     *
      * @return Ion injection time in ms, or null.
      */
     @Nullable
@@ -51,7 +51,7 @@ public interface IsolationInfo {
      * Returns the precursor m/z. Null is returned if the precursor information
      * is not specified in the data or if there is no single precursor (such as
      * data-independent acquisition or DIA scans).
-     * 
+     *
      * @return Precursor m/z, or null.
      */
     @Nullable
@@ -62,7 +62,7 @@ public interface IsolationInfo {
      * or if the MS/MS scan targets multiple ions (such as data-independent
      * acquisition or DIA scans). Charge is always represented by a positive
      * integer.
-     * 
+     *
      * @return Precursor charge (positive integer), or null.
      */
     @Nullable
@@ -72,7 +72,7 @@ public interface IsolationInfo {
      * Returns the details about the fragmentation that followed this isolation.
      * Null is returned if no fragmentation occurred or if the details are
      * unknown.
-     * 
+     *
      * @return Fragmentation info, or null.
      */
     @Nullable

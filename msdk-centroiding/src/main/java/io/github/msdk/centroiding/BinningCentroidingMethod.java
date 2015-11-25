@@ -28,6 +28,10 @@ import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
 
+/**
+ * <p>BinningCentroidingMethod class.</p>
+ *
+ */
 public class BinningCentroidingMethod implements MSDKMethod<MsScan> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -39,6 +43,13 @@ public class BinningCentroidingMethod implements MSDKMethod<MsScan> {
     private float methodProgress = 0f;
     private MsScan newScan;
 
+    /**
+     * <p>Constructor for BinningCentroidingMethod.</p>
+     *
+     * @param inputScan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param binSize a {@link java.lang.Double} object.
+     */
     public BinningCentroidingMethod(@Nonnull MsScan inputScan,
             @Nonnull DataPointStore dataPointStore, @Nonnull Double binSize) {
         this.inputScan = inputScan;
@@ -46,6 +57,7 @@ public class BinningCentroidingMethod implements MSDKMethod<MsScan> {
         this.binSize = binSize;
     }
 
+    /** {@inheritDoc} */
     @Override
     public MsScan execute() throws MSDKException {
 
@@ -103,18 +115,21 @@ public class BinningCentroidingMethod implements MSDKMethod<MsScan> {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Float getFinishedPercentage() {
         return methodProgress;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public MsScan getResult() {
         return newScan;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         // This method is too fast to be canceled

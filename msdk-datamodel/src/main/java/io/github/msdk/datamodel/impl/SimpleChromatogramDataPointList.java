@@ -93,6 +93,8 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Returns the current RT array
      */
     @Override
@@ -102,6 +104,8 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Returns the current intensity array
      */
     @Override
@@ -111,6 +115,8 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Replaces the RT and intensity arrays with new ones
      */
     @Override
@@ -138,6 +144,8 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Copy data from another DataPointList
      */
     @Override
@@ -157,6 +165,8 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Returns the RT range, assuming the RT array is sorted.
      */
     @Override
@@ -168,6 +178,8 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Returns the current size of the array
      */
     @Override
@@ -176,9 +188,9 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Sets the current size of the array
-     * 
-     * @param newSize
      */
     public void setSize(int newSize) {
 
@@ -197,6 +209,8 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * The equals() method compares the contents of the two data point lists,
      * and ignores their internal array sizes (capacities).
      */
@@ -231,6 +245,8 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * The hashCode() code is inspired by Arrays.hashCode(double[] or float[])
      */
     @Override
@@ -245,6 +261,8 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * toString() method
      */
     @Override
@@ -262,6 +280,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
         return builder.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public ChromatogramDataPointList selectDataPoints(
@@ -305,11 +324,13 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void clear() {
         this.size = 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void allocate(int newSize) {
 
@@ -330,6 +351,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void add(@Nonnull ChromatographyInfo rt, float intensity) {
 

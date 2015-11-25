@@ -63,6 +63,12 @@ class MzDataSaxHandler extends DefaultHandler {
 
     private int peaksCount = 0;
 
+    /**
+     * <p>Constructor for MzDataSaxHandler.</p>
+     *
+     * @param newRawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     */
     public MzDataSaxHandler(RawDataFile newRawFile, DataPointStore dataStore) {
         this.newRawFile = newRawFile;
         this.dataStore = dataStore;
@@ -72,6 +78,7 @@ class MzDataSaxHandler extends DefaultHandler {
     private final MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
             .getMsSpectrumDataPointList();
 
+    /** {@inheritDoc} */
     public void startElement(String namespaceURI, String lName, String qName,
             Attributes attrs) throws SAXException {
 
@@ -181,9 +188,9 @@ class MzDataSaxHandler extends DefaultHandler {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * endElement()
-     * 
-     * @throws IOException
      */
     @SuppressWarnings("null")
     public void endElement(String namespaceURI, String sName, String qName)
@@ -308,8 +315,9 @@ class MzDataSaxHandler extends DefaultHandler {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * characters()
-     * 
      * @see org.xml.sax.ContentHandler#characters(char[], int, int)
      */
     public void characters(char buf[], int offset, int len)
@@ -319,11 +327,21 @@ class MzDataSaxHandler extends DefaultHandler {
         charBuffer.append(buf, offset, len);
     }
 
+    /**
+     * <p>endDocument.</p>
+     *
+     * @throws org.xml.sax.SAXException if any.
+     */
     public void endDocument() throws SAXException {
         if (canceled)
             throw new SAXException("Parsing Cancelled");
     }
 
+    /**
+     * <p>getFinishedPercentage.</p>
+     *
+     * @return a {@link java.lang.Float} object.
+     */
     public Float getFinishedPercentage() {
         if (totalScans == 0)
             return null;
@@ -331,6 +349,9 @@ class MzDataSaxHandler extends DefaultHandler {
             return (float) parsedScans / totalScans;
     }
 
+    /**
+     * <p>cancel.</p>
+     */
     public void cancel() {
         this.canceled = true;
     }

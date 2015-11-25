@@ -33,6 +33,10 @@ import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
+/**
+ * <p>ThermoRawImportMethod class.</p>
+ *
+ */
 public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -47,12 +51,19 @@ public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
     private Process dumperProcess = null;
     private RawDumpParser parser = null;
 
+    /**
+     * <p>Constructor for ThermoRawImportMethod.</p>
+     *
+     * @param sourceFile a {@link java.io.File} object.
+     * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     */
     public ThermoRawImportMethod(@Nonnull File sourceFile,
             @Nonnull DataPointStore dataStore) {
         this.sourceFile = sourceFile;
         this.dataStore = dataStore;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     public RawDataFile execute() throws MSDKException {
@@ -127,12 +138,14 @@ public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public RawDataFile getResult() {
         return newRawFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float getFinishedPercentage() {
         if (parser == null)
@@ -141,6 +154,7 @@ public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
             return parser.getFinishedPercentage();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         this.canceled = true;

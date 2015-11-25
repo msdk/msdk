@@ -35,26 +35,31 @@ class SimpleChromatographyInfo implements ChromatographyInfo {
         this.separationType = separationType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float getRetentionTime() {
         return retentionTime;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float getSecondaryRetentionTime() {
         return secondaryRetentionTime;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float getIonDriftTime() {
         return ionDriftTime;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SeparationType getSeparationType() {
         return separationType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int compareTo(ChromatographyInfo o) {
         int returnValue;

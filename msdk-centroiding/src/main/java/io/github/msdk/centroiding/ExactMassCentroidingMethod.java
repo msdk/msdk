@@ -28,6 +28,10 @@ import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
 
+/**
+ * <p>ExactMassCentroidingMethod class.</p>
+ *
+ */
 public class ExactMassCentroidingMethod implements MSDKMethod<MsScan> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -38,6 +42,13 @@ public class ExactMassCentroidingMethod implements MSDKMethod<MsScan> {
     private float methodProgress = 0f;
     private MsScan newScan;
 
+    /**
+     * <p>Constructor for ExactMassCentroidingMethod.</p>
+     *
+     * @param inputScan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param noiseLevel a {@link java.lang.Float} object.
+     */
     public ExactMassCentroidingMethod(@Nonnull MsScan inputScan,
             @Nonnull DataPointStore dataPointStore, @Nonnull Float noiseLevel) {
         this.inputScan = inputScan;
@@ -45,6 +56,7 @@ public class ExactMassCentroidingMethod implements MSDKMethod<MsScan> {
         this.noiseLevel = noiseLevel;
     }
 
+    /** {@inheritDoc} */
     @Override
     public MsScan execute() throws MSDKException {
 
@@ -231,18 +243,21 @@ public class ExactMassCentroidingMethod implements MSDKMethod<MsScan> {
         return exactMass;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Float getFinishedPercentage() {
         return methodProgress;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public MsScan getResult() {
         return newScan;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         // This method is too fast to be canceled

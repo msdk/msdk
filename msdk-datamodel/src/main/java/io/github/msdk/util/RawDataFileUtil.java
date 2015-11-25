@@ -27,8 +27,19 @@ import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
+/**
+ * <p>RawDataFileUtil class.</p>
+ *
+ */
 public class RawDataFileUtil {
 
+    /**
+     * <p>getScans.</p>
+     *
+     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
+     * @return a {@link java.util.List} object.
+     */
     @Nonnull
     static public List<MsScan> getScans(RawDataFile rawDataFile,
             MsFunction msFunction) {
@@ -43,6 +54,13 @@ public class RawDataFileUtil {
         return msScanList;
     }
 
+    /**
+     * <p>getScans.</p>
+     *
+     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param rtRange a {@link com.google.common.collect.Range} object.
+     * @return a {@link java.util.List} object.
+     */
     @Nonnull
     static public List<MsScan> getScans(RawDataFile rawDataFile,
             Range<ChromatographyInfo> rtRange) {
@@ -60,6 +78,14 @@ public class RawDataFileUtil {
         return new ArrayList<MsScan>();
     }
 
+    /**
+     * <p>getScans.</p>
+     *
+     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
+     * @param rtRange a {@link com.google.common.collect.Range} object.
+     * @return a {@link java.util.List} object.
+     */
     @Nonnull
     static public List<MsScan> getScans(RawDataFile rawDataFile,
             MsFunction msFunction, Range<ChromatographyInfo> rtRange) {
@@ -78,6 +104,12 @@ public class RawDataFileUtil {
         return new ArrayList<MsScan>();
     }
 
+    /**
+     * <p>getNextChromatogramNumber.</p>
+     *
+     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @return a {@link java.lang.Integer} object.
+     */
     @Nonnull
     static public Integer getNextChromatogramNumber(RawDataFile rawDataFile){
         int chromatogramNumber = 1;

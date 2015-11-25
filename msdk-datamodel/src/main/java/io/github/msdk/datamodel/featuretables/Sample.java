@@ -22,11 +22,13 @@ import javax.annotation.Nullable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
- * 
+ * <p>Sample interface.</p>
  */
 public interface Sample {
 
     /**
+     * <p>getName.</p>
+     *
      * @return Short descriptive name
      */
     @Nonnull
@@ -34,25 +36,31 @@ public interface Sample {
 
     /**
      * Change the name
+     *
+     * @param name a {@link java.lang.String} object.
      */
     void setName(@Nonnull String name);
 
     /**
      * Returns a raw data file or null if this sample has no associated raw
      * data.
+     *
+     * @return a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
      */
     @Nullable
     RawDataFile getRawDataFile();
 
     /**
      * Sets the raw data file reference.
+     *
+     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
      */
     void setRawDataFile(@Nullable RawDataFile rawDataFile);
 
     /**
      * Returns the original file name and path where the file was loaded from,
      * or null if this file was created by MSDK.
-     * 
+     *
      * @return Original filename and path.
      */
     @Nullable
@@ -60,6 +68,8 @@ public interface Sample {
 
     /**
      * Sets the original file
+     *
+     * @param originalFile a {@link java.io.File} object.
      */
     void setOriginalFile(@Nullable File originalFile);
 

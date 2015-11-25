@@ -96,6 +96,8 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Returns the current m/z array
      */
     @Override
@@ -105,6 +107,8 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Returns the current intensity array
      */
     @Override
@@ -114,6 +118,8 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Replaces the m/z and intensity arrays with new ones
      */
     @Override
@@ -134,6 +140,8 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Copy data from another DataPointList
      */
     @Override
@@ -154,6 +162,8 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Returns the m/z range, assuming the m/z array is sorted.
      */
     @Override
@@ -164,17 +174,13 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
         return Range.closed(mzBuffer[0], mzBuffer[size - 1]);
     }
 
-    /**
-     */
+    /** {@inheritDoc} */
     @Override
     public int getSize() {
         return size;
     }
 
-    /**
-     * 
-     * @param newSize
-     */
+    /** {@inheritDoc} */
     public void setSize(int newSize) {
 
         if (newSize < 0)
@@ -195,6 +201,8 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * The equals() method compares the contents of the two data point lists,
      * and ignores their internal array sizes (capacities).
      */
@@ -229,6 +237,8 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * The hashCode() code is inspired by Arrays.hashCode(double[] or float[])
      */
     @Override
@@ -243,6 +253,8 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * toString() method
      */
     @Override
@@ -260,6 +272,7 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
         return builder.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public Float getTIC() {
@@ -270,6 +283,7 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
         return tic;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public MsSpectrumDataPointList selectDataPoints(
@@ -312,11 +326,13 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
         return newList;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void clear() {
         this.size = 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void allocate(int newSize) {
 
@@ -337,6 +353,7 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void add(double mz, float intensity) {
 
@@ -397,6 +414,7 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<MsIon> iterator() {
         return new MsIonIterator(this);

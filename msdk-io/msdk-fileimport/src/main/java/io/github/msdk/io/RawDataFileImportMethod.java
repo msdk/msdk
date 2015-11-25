@@ -47,8 +47,10 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
     MSDKMethod<RawDataFile> parser = null;
 
     /**
-     * 
-     * @param sourceFile
+     * <p>Constructor for RawDataFileImportMethod.</p>
+     *
+     * @param sourceFile a {@link java.io.File} object.
+     * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
      */
     public RawDataFileImportMethod(@Nonnull File sourceFile,
             @Nonnull DataPointStore dataStore) {
@@ -56,9 +58,7 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
         this.dataStore = dataStore;
     }
 
-    /**
-     * @throws MSDKException
-     */
+    /** {@inheritDoc} */
     @Override
     public RawDataFile execute() throws MSDKException {
 
@@ -101,6 +101,7 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float getFinishedPercentage() {
         if (parser == null)
@@ -108,12 +109,14 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
         return parser.getFinishedPercentage();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public RawDataFile getResult() {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         canceled = true;

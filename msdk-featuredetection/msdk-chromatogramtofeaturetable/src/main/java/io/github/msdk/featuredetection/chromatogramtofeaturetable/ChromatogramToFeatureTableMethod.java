@@ -51,8 +51,11 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 	private int processedChromatograms = 0, totalChromatograms = 0;
 
 	/**
-	 * @param chromatograms,
-	 *            featureTable
+	 * <p>Constructor for ChromatogramToFeatureTableMethod.</p>
+	 *
+	 * @param chromatograms a {@link java.util.List} object.
+	 * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+	 * @param sample a {@link io.github.msdk.datamodel.featuretables.Sample} object.
 	 */
 	public ChromatogramToFeatureTableMethod(@Nonnull List<Chromatogram> chromatograms,
 			@Nonnull FeatureTable featureTable, @Nonnull Sample sample) {
@@ -61,9 +64,7 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 		this.sample = sample;
 	}
 
-	/**
-	 * @throws MSDKException
-	 */
+	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
 	public FeatureTable execute() throws MSDKException {
@@ -210,18 +211,21 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public Float getFinishedPercentage() {
 		return totalChromatograms == 0 ? null : (float) processedChromatograms / totalChromatograms;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public FeatureTable getResult() {
 		return featureTable;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void cancel() {
 		canceled = true;

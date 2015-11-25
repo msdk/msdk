@@ -21,10 +21,20 @@ public class MSDKException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * <p>Constructor for MSDKException.</p>
+     *
+     * @param msg a {@link java.lang.String} object.
+     */
     public MSDKException(String msg) {
         super(msg);
     }
 
+    /**
+     * <p>Constructor for MSDKException.</p>
+     *
+     * @param exception a {@link java.lang.Throwable} object.
+     */
     public MSDKException(Throwable exception) {
         super(exception);
     }

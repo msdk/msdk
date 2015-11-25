@@ -69,14 +69,15 @@ public class FileTypeDetectionMethod implements MSDKMethod<FileType> {
     private @Nullable Float finishedPercentage = null;
 
     /**
-     * 
-     * @return Detected file type or null if the file is not of any supported
-     *         type
+     * <p>Constructor for FileTypeDetectionMethod.</p>
+     *
+     * @param fileName a {@link java.io.File} object.
      */
     public FileTypeDetectionMethod(@Nonnull File fileName) {
         this.fileName = fileName;
     }
 
+    /** {@inheritDoc} */
     @Override
     public FileType execute() throws MSDKException {
 
@@ -134,17 +135,20 @@ public class FileTypeDetectionMethod implements MSDKMethod<FileType> {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float getFinishedPercentage() {
         return finishedPercentage;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public FileType getResult() {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         // This method is too fast to be canceled

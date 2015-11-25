@@ -62,10 +62,16 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
     private MzXMLRawDataFile newRawFile;
     private long totalScans = 0, parsedScans;
 
+    /**
+     * <p>Constructor for MzXMLFileImportMethod.</p>
+     *
+     * @param sourceFile a {@link java.io.File} object.
+     */
     public MzXMLFileImportMethod(@Nonnull File sourceFile) {
         this.sourceFile = sourceFile;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     public RawDataFile execute() throws MSDKException {
@@ -174,17 +180,20 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float getFinishedPercentage() {
         return totalScans == 0 ? null : (float) parsedScans / totalScans;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public RawDataFile getResult() {
         return newRawFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         this.canceled = true;

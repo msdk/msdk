@@ -26,29 +26,39 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 public interface IonType {
 
     /**
+     * <p>getName.</p>
+     *
      * @return Name of ionization type, such as [M+2H]2+.
      */
     @Nonnull
     String getName();
 
     /**
+     * <p>getPolarity.</p>
+     *
      * @return Polarity of ionization. See #PolarityType.java for values.
      */
     @Nonnull
     PolarityType getPolarity();
 
     /**
+     * <p>getNumberOfMolecules.</p>
+     *
      * @return Number of molecules in this ion.
      */
     int getNumberOfMolecules();
 
     /**
+     * <p>getAdductFormula.</p>
+     *
      * @return  Chemical formula for adduct.
      */
     @Nonnull
     String getAdductFormula();
 
     /**
+     * <p>getCharge.</p>
+     *
      * @return  Charge of ion.
      */
     int getCharge();

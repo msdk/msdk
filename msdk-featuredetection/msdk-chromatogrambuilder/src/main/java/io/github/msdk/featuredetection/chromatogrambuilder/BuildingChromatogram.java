@@ -47,6 +47,11 @@ class BuildingChromatogram {
         return numOfCommittedSegments;
     }
 
+    /**
+     * <p>Getter for the field <code>buildingSegmentLength</code>.</p>
+     *
+     * @return a float.
+     */
     @SuppressWarnings("null")
     public float getBuildingSegmentLength() {
 

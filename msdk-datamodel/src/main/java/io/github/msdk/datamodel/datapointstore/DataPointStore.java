@@ -32,7 +32,7 @@ public interface DataPointStore {
      * Stores new data point list into this store. No reference to the
      * DataPointList is saved, so it can be safely discarded or reused after
      * calling this method.
-     * 
+     *
      * @param dataPoints
      *            Data points to store.
      * @return Storage ID for the newly stored data.
@@ -40,6 +40,12 @@ public interface DataPointStore {
     @Nonnull
     Object storeDataPoints(@Nonnull MsSpectrumDataPointList dataPoints);
 
+    /**
+     * <p>storeDataPoints.</p>
+     *
+     * @param dataPoints a {@link io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList} object.
+     * @return a {@link java.lang.Object} object.
+     */
     @Nonnull
     Object storeDataPoints(@Nonnull ChromatogramDataPointList dataPoints);
 
@@ -52,16 +58,20 @@ public interface DataPointStore {
      *            Storage id obtained by storeDataPoints()
      * @param list
      *            List to store the loaded data points
-     * @throws IllegalIllegalArgumentException
-     *             If the given id is not present in this store.
      */
     void readDataPoints(@Nonnull Object id, @Nonnull MsSpectrumDataPointList list);
     
+    /**
+     * <p>readDataPoints.</p>
+     *
+     * @param id a {@link java.lang.Object} object.
+     * @param list a {@link io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList} object.
+     */
     void readDataPoints(@Nonnull Object id, @Nonnull ChromatogramDataPointList list);
  
     /**
      * Discards data points stored under given ID.
-     * 
+     *
      * @param id
      *            Storage id to discard
      */

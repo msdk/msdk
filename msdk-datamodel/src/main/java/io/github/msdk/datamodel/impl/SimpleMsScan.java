@@ -50,6 +50,13 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
 
     private final @Nonnull List<IsolationInfo> isolations = new LinkedList<>();
 
+    /**
+     * <p>Constructor for SimpleMsScan.</p>
+     *
+     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param scanNumber a {@link java.lang.Integer} object.
+     * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
+     */
     public SimpleMsScan(@Nonnull DataPointStore dataPointStore,
             @Nonnull Integer scanNumber, @Nonnull MsFunction msFunction) {
         super(dataPointStore);
@@ -59,117 +66,137 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
         this.msFunction = msFunction;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public RawDataFile getRawDataFile() {
         return dataFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
         this.dataFile = newRawDataFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public Integer getScanNumber() {
         return scanNumber;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setScanNumber(@Nonnull Integer scanNumber) {
         Preconditions.checkNotNull(scanNumber);
         this.scanNumber = scanNumber;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public String getScanDefinition() {
         return scanDefinition;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setScanDefinition(@Nullable String scanDefinition) {
         this.scanDefinition = scanDefinition;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public MsFunction getMsFunction() {
         return msFunction;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMsFunction(@Nonnull MsFunction newFunction) {
         Preconditions.checkNotNull(newFunction);
         this.msFunction = newFunction;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Range<Double> getScanningRange() {
         return scanningRange;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setScanningRange(@Nullable Range<Double> newScanRange) {
         this.scanningRange = newScanRange;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public PolarityType getPolarity() {
         return polarity;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setPolarity(@Nonnull PolarityType newPolarity) {
         Preconditions.checkNotNull(newPolarity);
         this.polarity = newPolarity;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public MsScanType getMsScanType() {
         return msScanType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMsScanType(@Nonnull MsScanType newMsScanType) {
         Preconditions.checkNotNull(newMsScanType);
         this.msScanType = newMsScanType;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public ChromatographyInfo getChromatographyInfo() {
         return chromInfo;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setChromatographyInfo(
             @Nullable ChromatographyInfo chromatographyInfo) {
         this.chromInfo = chromatographyInfo;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public ActivationInfo getSourceInducedFragmentation() {
         return sourceInducedFragInfo;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSourceInducedFragmentation(
             @Nullable ActivationInfo newFragmentationInfo) {
         this.sourceInducedFragInfo = newFragmentationInfo;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public List<IsolationInfo> getIsolations() {
         return isolations;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuffer buf = new StringBuffer();

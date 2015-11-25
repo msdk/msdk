@@ -84,6 +84,8 @@ public class MonaSpectrum
 
     /**
      * build a new mona spectrum from the given record
+     *
+     * @param monaRecord object.
      */
     public MonaSpectrum(Spectra monaRecord) {
         this.build(monaRecord);
@@ -92,7 +94,8 @@ public class MonaSpectrum
     /**
      * build a spectrum directly from an id, while accessing the mona repository
      *
-     * @param id
+     * @param id a long.
+     * @throws java.io.IOException if any.
      */
     public MonaSpectrum(long id) throws IOException {
 
@@ -108,8 +111,8 @@ public class MonaSpectrum
 
     /**
      * actual builder
-     * 
-     * @param monaRecord
+     *
+     * @param monaRecord object.
      */
     protected void build(Spectra monaRecord) {
 
@@ -131,9 +134,9 @@ public class MonaSpectrum
 
     /**
      * adds a datapoint internally
-     * 
-     * @param mass
-     * @param intensity
+     *
+     * @param mass a {@link java.lang.Double} object.
+     * @param intensity a {@link java.lang.Float} object.
      */
     protected void addDataPoint(Double mass, Float intensity) {
         if (this.dataPoints == null) {
@@ -142,77 +145,91 @@ public class MonaSpectrum
         this.dataPoints.add(mass, intensity);
     }
 
+    /** {@inheritDoc} */
     @Nonnull
     @Override
     public MsSpectrumType getSpectrumType() {
         return this.spectrumType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSpectrumType(@Nonnull MsSpectrumType spectrumType) {
         this.spectrumType = spectrumType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDataPoints(@Nonnull MsSpectrumDataPointList newDataPoints) {
         this.dataPoints = newDataPoints;
     }
 
+    /** {@inheritDoc} */
     @Nullable
     @Override
     public IAtomContainer getChemicalStructure() {
         return this.atomContainer;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setChemicalStructure(@Nullable IAtomContainer structure) {
         // not supported
     }
 
+    /** {@inheritDoc} */
     @Nullable
     @Override
     public IMolecularFormula getFormula() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setFormula(@Nullable IMolecularFormula formula) {
         // not supported
     }
 
+    /** {@inheritDoc} */
     @Nullable
     @Override
     public String getDescription() {
         return "Massbank of Northern America record, " + id;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDescription(@Nullable String description) {
         // not supported
     }
 
+    /** {@inheritDoc} */
     @Nullable
     @Override
     public String getIdentificationMethod() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setIdentificationMethod(@Nullable String idMethod) {
         // not supported
     }
 
+    /** {@inheritDoc} */
     @Nullable
     @Override
     public String getAnnotationId() {
         return this.id.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setAnnotationId(@Nullable String dbId) {
         // not supported
     }
 
+    /** {@inheritDoc} */
     @Nullable
     @Override
     public URL getAccessionURL() {
@@ -224,56 +241,66 @@ public class MonaSpectrum
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setAccessionURL(@Nullable URL dbURL) {
         // not supported
     }
 
+    /** {@inheritDoc} */
     @Override
     public int compareTo(IonAnnotation o) {
         // TODO Auto-generated method stub
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public IonType getIonType() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setIonType(@Nullable IonType ionType) {
         // not supported
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Double getExpectedMz() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setExpectedMz(@Nullable Double expectedMz) {
         // not supported
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public ChromatographyInfo getChromatographyInfo() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setChromatographyInfo(
             @Nullable ChromatographyInfo chromatographyInfo) {
         // not supported
     }
 
+    /** {@inheritDoc} */
     @Override
     public void getDataPoints(@Nonnull MsSpectrumDataPointList dataPointList) {
         dataPointList.copyFrom(this.dataPoints);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void getDataPointsByMzAndIntensity(
             @Nonnull MsSpectrumDataPointList dataPointList,
@@ -284,6 +311,7 @@ public class MonaSpectrum
         dataPointList.copyFrom(selection);
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public Float getTIC() {
@@ -293,6 +321,7 @@ public class MonaSpectrum
             return dataPoints.getTIC();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Range<Double> getMzRange() {
