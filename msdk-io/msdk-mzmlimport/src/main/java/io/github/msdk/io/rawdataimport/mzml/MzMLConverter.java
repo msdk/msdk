@@ -304,12 +304,24 @@ class MzMLConverter {
         return SeparationType.UNKNOWN;
     }
 
+    /**
+     * <p>extractSeparationType.</p>
+     *
+     * @param chromatogram a {@link uk.ac.ebi.jmzml.model.mzml.Chromatogram} object.
+     * @return a {@link io.github.msdk.datamodel.rawdata.SeparationType} object.
+     */
     @Nonnull
     public SeparationType extractSeparationType(
             uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {
         return SeparationType.UNKNOWN;
     }
 
+    /**
+     * <p>extractChromatogramType.</p>
+     *
+     * @param chromatogram a {@link uk.ac.ebi.jmzml.model.mzml.Chromatogram} object.
+     * @return a {@link io.github.msdk.datamodel.chromatograms.ChromatogramType} object.
+     */
     @Nonnull
     public ChromatogramType extractChromatogramType(
             uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {
@@ -336,6 +348,12 @@ class MzMLConverter {
         return ChromatogramType.UNKNOWN;
     }
 
+    /**
+     * <p>extractIsolations.</p>
+     *
+     * @param chromatogram a {@link uk.ac.ebi.jmzml.model.mzml.Chromatogram} object.
+     * @return a {@link java.util.List} object.
+     */
     @Nonnull
     public List<IsolationInfo> extractIsolations(
             uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {

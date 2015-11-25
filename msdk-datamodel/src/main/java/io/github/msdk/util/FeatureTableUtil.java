@@ -27,6 +27,10 @@ import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
+/**
+ * <p>FeatureTableUtil class.</p>
+ *
+ */
 public class FeatureTableUtil {
 
     /**
@@ -63,15 +67,15 @@ public class FeatureTableUtil {
 
                 column = featureTable.getColumn(ColumnName.RT.getName(), sample);
                 if (column != null) {
-                    rt = row.getData(column, ChromatographyInfo.class);
-                    if (rt.getRetentionTime() != null) {
-                        totalRt1 += rt.getRetentionTime();
-                        rtCount1++;
-                    }
-                    if (rt.getSecondaryRetentionTime() != null) {
-                        totalRt2 += rt.getRetentionTime();
-                        rtCount2++;
-                    }
+                	rt = row.getData(column, ChromatographyInfo.class);
+                	if (rt.getRetentionTime() != null) {
+                	    totalRt1 += rt.getRetentionTime();
+                	    rtCount1++;
+                	}
+                	if (rt.getSecondaryRetentionTime() != null) {
+                	   totalRt2 += rt.getRetentionTime();
+                	  rtCount2++;
+                	}
                 }
             }
 
@@ -108,7 +112,7 @@ public class FeatureTableUtil {
                 if (rtCount2 > 0) {
                     chromatographyInfo = MSDKObjectBuilder.getChromatographyInfo2D(separationType, totalRt1/rtCount1, totalRt2/rtCount2);
                 }
-                else {
+                 else {
                     chromatographyInfo = MSDKObjectBuilder.getChromatographyInfo1D(separationType, totalRt1/rtCount1);
                 }
                 row.setData(column, chromatographyInfo);

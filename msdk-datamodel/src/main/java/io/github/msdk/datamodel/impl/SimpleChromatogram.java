@@ -48,6 +48,14 @@ class SimpleChromatogram implements Chromatogram {
 
     private final @Nonnull List<IsolationInfo> isolations = new LinkedList<>();
 
+    /**
+     * <p>Constructor for SimpleChromatogram.</p>
+     *
+     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param chromatogramNumber a {@link java.lang.Integer} object.
+     * @param chromatogramType a {@link io.github.msdk.datamodel.chromatograms.ChromatogramType} object.
+     * @param separationType a {@link io.github.msdk.datamodel.rawdata.SeparationType} object.
+     */
     public SimpleChromatogram(@Nonnull DataPointStore dataPointStore,
             @Nonnull Integer chromatogramNumber,
             @Nonnull ChromatogramType chromatogramType,
@@ -59,40 +67,47 @@ class SimpleChromatogram implements Chromatogram {
         this.separationType = separationType;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public RawDataFile getRawDataFile() {
         return dataFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
         this.dataFile = newRawDataFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public Integer getChromatogramNumber() {
         return chromatogramNumber;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setChromatogramNumber(@Nonnull Integer chromatogramNumber) {
         this.chromatogramNumber = chromatogramNumber;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public ChromatogramType getChromatogramType() {
         return chromatogramType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setChromatogramType(
             @Nonnull ChromatogramType newChromatogramType) {
         this.chromatogramType = newChromatogramType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void getDataPoints(
             @Nonnull ChromatogramDataPointList dataPointList) {
@@ -104,6 +119,7 @@ class SimpleChromatogram implements Chromatogram {
         dataPointStore.readDataPoints(dataStoreIdCopy, dataPointList);
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     synchronized public void setDataPoints(
             @Nonnull ChromatogramDataPointList newDataPoints) {
@@ -113,23 +129,27 @@ class SimpleChromatogram implements Chromatogram {
         dataStoreId = dataPointStore.storeDataPoints(newDataPoints);
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public List<IsolationInfo> getIsolations() {
         return isolations;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public SeparationType getSeparationType() {
         return separationType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSeparationType(@Nonnull SeparationType separationType) {
         this.separationType = separationType;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public Chromatogram clone(@Nonnull DataPointStore newStore) {
@@ -151,22 +171,26 @@ class SimpleChromatogram implements Chromatogram {
         return newChromatogram;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Double getMz() {
         return mz;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMz(@Nullable Double newMz) {
         this.mz = newMz;
     }
 
+	/** {@inheritDoc} */
 	@Override
 	public void setIonAnnotation(@Nonnull IonAnnotation ionAnnotation) {
 		this.ionAnnotation = ionAnnotation;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public IonAnnotation getIonAnnotation() {
 		return ionAnnotation;

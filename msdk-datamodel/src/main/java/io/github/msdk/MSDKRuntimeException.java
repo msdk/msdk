@@ -21,10 +21,20 @@ public class MSDKRuntimeException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * <p>Constructor for MSDKRuntimeException.</p>
+     *
+     * @param msg a {@link java.lang.String} object.
+     */
     public MSDKRuntimeException(String msg) {
         super(msg);
     }
 
+    /**
+     * <p>Constructor for MSDKRuntimeException.</p>
+     *
+     * @param exception a {@link java.lang.Throwable} object.
+     */
     public MSDKRuntimeException(Throwable exception) {
         super(exception);
     }

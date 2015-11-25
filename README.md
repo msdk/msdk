@@ -26,8 +26,4 @@ MSDK uses the [SLF4J library](http://www.slf4j.org) for logging. This library ca
 
 ### Building 
 
-[Apache Maven](http://maven.apache.org) is required to build MSDK. To compile the source codes, run the following command in the source code directory:
-
-```
-$ mvn package
-```
+See the [BUILD.md](BUILD.md) file

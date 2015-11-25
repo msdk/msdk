@@ -49,18 +49,21 @@ class SimpleMsFunction implements MsFunction {
         this.msLevel = msLevel;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Integer getMsLevel() {
         return msLevel;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof MsFunction))
@@ -83,6 +86,7 @@ class SimpleMsFunction implements MsFunction {
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         int hash = name.hashCode();
@@ -93,6 +97,7 @@ class SimpleMsFunction implements MsFunction {
         return hash;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         String str = name;

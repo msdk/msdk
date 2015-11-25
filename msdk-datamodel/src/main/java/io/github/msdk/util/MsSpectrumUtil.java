@@ -24,11 +24,18 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 
+/**
+ * <p>MsSpectrumUtil class.</p>
+ *
+ */
 public class MsSpectrumUtil {
 
     /**
      * Returns the m/z range of given data points. Can return null if the data
      * point list is empty.
+     *
+     * @param dataPoints a {@link io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList} object.
+     * @return a {@link com.google.common.collect.Range} object.
      */
     @Nullable
     public static Range<Double> getMzRange(
@@ -45,6 +52,9 @@ public class MsSpectrumUtil {
 
     /**
      * Calculates the total ion current (=sum of all intensity values)
+     *
+     * @param dataPoints a {@link io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList} object.
+     * @return a {@link java.lang.Float} object.
      */
     public static @Nonnull Float getTIC(
             @Nonnull MsSpectrumDataPointList dataPoints) {
@@ -60,6 +70,9 @@ public class MsSpectrumUtil {
     /**
      * Returns the highest intensity value. Returns 0 if the list has no data
      * points.
+     *
+     * @param dataPoints a {@link io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList} object.
+     * @return a {@link java.lang.Float} object.
      */
     public static @Nonnull Float getMaxIntensity(
             @Nonnull MsSpectrumDataPointList dataPoints) {
@@ -74,6 +87,9 @@ public class MsSpectrumUtil {
     /**
      * Returns the index of the highest intensity value. Returns null if the
      * list has no data points.
+     *
+     * @param dataPoints a {@link io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList} object.
+     * @return a {@link java.lang.Integer} object.
      */
     public static @Nullable Integer getBasePeakIndex(
             @Nonnull MsSpectrumDataPointList dataPoints) {
@@ -93,6 +109,10 @@ public class MsSpectrumUtil {
      * Returns the index of the highest intensity value. Returns null if the
      * list has no data points or if no data point was found within the mz
      * range.
+     *
+     * @param dataPoints a {@link io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList} object.
+     * @param mzRange a {@link com.google.common.collect.Range} object.
+     * @return a {@link java.lang.Integer} object.
      */
     public static @Nullable Integer getBasePeakIndex(
             @Nonnull MsSpectrumDataPointList dataPoints,

@@ -38,9 +38,9 @@ class MemoryDataPointStore implements DataPointStore {
     private int lastStorageId = 0;
 
     /**
+     * {@inheritDoc}
+     *
      * Stores new array of data points.
-     * 
-     * @return Storage ID for the newly stored data.
      */
     @Override
     public @Nonnull Integer storeDataPoints(
@@ -65,9 +65,9 @@ class MemoryDataPointStore implements DataPointStore {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Stores new array of data points.
-     * 
-     * @return Storage ID for the newly stored data.
      */
     @Override
     public @Nonnull Integer storeDataPoints(
@@ -92,6 +92,8 @@ class MemoryDataPointStore implements DataPointStore {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Reads the data points associated with given ID.
      */
     @Override
@@ -118,6 +120,8 @@ class MemoryDataPointStore implements DataPointStore {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Reads the data points associated with given ID.
      */
     @Override
@@ -144,6 +148,8 @@ class MemoryDataPointStore implements DataPointStore {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Remove data associated with given storage ID.
      */
     @Override
@@ -155,6 +161,7 @@ class MemoryDataPointStore implements DataPointStore {
         storageMap.remove(ID);
     }
 
+    /** {@inheritDoc} */
     @Override
     synchronized public void dispose() {
         storageMap = null;

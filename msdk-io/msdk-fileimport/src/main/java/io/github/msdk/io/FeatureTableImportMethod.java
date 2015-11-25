@@ -42,9 +42,10 @@ public class FeatureTableImportMethod implements MSDKMethod<FeatureTable> {
     MSDKMethod<FeatureTable> parser = null;
 
     /**
-     * 
-     * @param sourceFile,
-     *            dataStore
+     * <p>Constructor for FeatureTableImportMethod.</p>
+     *
+     * @param sourceFile a {@link java.io.File} object.
+     * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
      */
     public FeatureTableImportMethod(@Nonnull File sourceFile,
             @Nonnull DataPointStore dataStore) {
@@ -52,9 +53,7 @@ public class FeatureTableImportMethod implements MSDKMethod<FeatureTable> {
         this.dataStore = dataStore;
     }
 
-    /**
-     * @throws MSDKException
-     */
+    /** {@inheritDoc} */
     @Override
     public FeatureTable execute() throws MSDKException {
 
@@ -81,6 +80,7 @@ public class FeatureTableImportMethod implements MSDKMethod<FeatureTable> {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float getFinishedPercentage() {
         if (parser == null)
@@ -88,12 +88,14 @@ public class FeatureTableImportMethod implements MSDKMethod<FeatureTable> {
         return parser.getFinishedPercentage();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public FeatureTable getResult() {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         canceled = true;

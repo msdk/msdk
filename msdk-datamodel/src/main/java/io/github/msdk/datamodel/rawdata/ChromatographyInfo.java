@@ -31,7 +31,7 @@ public interface ChromatographyInfo extends Comparable<ChromatographyInfo> {
     /**
      * Returns retention time in seconds, or null if no retention time is
      * defined.
-     * 
+     *
      * @return Retention time in seconds, or null.
      */
     @Nullable
@@ -41,7 +41,7 @@ public interface ChromatographyInfo extends Comparable<ChromatographyInfo> {
      * Returns secondary retention time in seconds (for two-dimensional
      * separations such as GCxGC-MS), or null if no secondary retention time is
      * defined.
-     * 
+     *
      * @return Secondary retention time in seconds, or null.
      */
     @Nullable
@@ -50,7 +50,7 @@ public interface ChromatographyInfo extends Comparable<ChromatographyInfo> {
     /**
      * Returns ion drift time in ms, or null if no drift time is defined. Drift
      * time is used in ion mobility experiments.
-     * 
+     *
      * @return Drift time in ms, or null.
      */
     @Nullable
@@ -58,7 +58,7 @@ public interface ChromatographyInfo extends Comparable<ChromatographyInfo> {
 
     /**
      * Returns the separation type used for separation of molecules.
-     * 
+     *
      * @return the seperation type. Returns {@link SeparationType#UNKNOWN} for
      *         unknown separations.
      */

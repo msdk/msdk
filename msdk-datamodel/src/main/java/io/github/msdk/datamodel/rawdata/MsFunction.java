@@ -28,6 +28,7 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public interface MsFunction {
 
+    /** Constant <code>DEFAULT_MS_FUNCTION_NAME="ms"</code> */
     static final String DEFAULT_MS_FUNCTION_NAME = "ms";
 
     /**
@@ -35,7 +36,7 @@ public interface MsFunction {
      * this might look like "Full ms", "ms2", or "sim", etc. In Waters raw
      * files, it might look like "MS", "MRM", "TOFD", etc. The value depends on
      * instrument and experiment configuration.
-     * 
+     *
      * @return Non-null name of this MS function.
      */
     @Nonnull
@@ -45,7 +46,7 @@ public interface MsFunction {
      * Returns the MS level of this function, if it is known. 1 means no
      * fragmentation, 2 means MS/MS, 3 means MS3 and so on. Returns null if the
      * MS level is unknown.
-     * 
+     *
      * @return MS level, or null.
      */
     @Nullable

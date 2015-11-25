@@ -40,22 +40,26 @@ class SimpleFeatureTableColumn<DataType> implements FeatureTableColumn<DataType>
         this.simpleSample = sample;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @Nonnull String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setName(@Nonnull String name) {
         Preconditions.checkNotNull(name);
         this.name = name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @Nonnull Class<DataType> getDataTypeClass() {
         return dataTypeClass;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Sample getSample() {
         return simpleSample;

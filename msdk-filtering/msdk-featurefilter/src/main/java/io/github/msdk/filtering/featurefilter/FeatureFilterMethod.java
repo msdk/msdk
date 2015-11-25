@@ -107,7 +107,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 		for (FeatureTableColumn column : featureTable.getColumns()) {
 			result.addColumn(column);
 		}
-		
+
 		// Loop through all features
 		for (FeatureTableRow row : featureTable.getRows()) {
 

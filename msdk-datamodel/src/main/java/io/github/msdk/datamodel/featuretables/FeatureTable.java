@@ -25,6 +25,8 @@ import javax.annotation.Nullable;
 public interface FeatureTable {
 
     /**
+     * <p>getName.</p>
+     *
      * @return Short descriptive name for the feature table
      */
     @Nonnull
@@ -32,51 +34,69 @@ public interface FeatureTable {
 
     /**
      * Change the name of this feature table
+     *
+     * @param name a {@link java.lang.String} object.
      */
     void setName(@Nonnull String name);
 
     /**
      * Returns an immutable list of columns
+     *
+     * @return a {@link java.util.List} object.
      */
     @Nonnull
     List<FeatureTableColumn<?>> getColumns();
 
     /**
      * Returns an immutable list of columns
+     *
+     * @param columnName a {@link java.lang.String} object.
+     * @param sample a {@link io.github.msdk.datamodel.featuretables.Sample} object.
+     * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
      */
     @Nullable
     FeatureTableColumn<?> getColumn(@Nonnull String columnName, Sample sample);
 
     /**
      * Add a new column to the feature table
+     *
+     * @param col a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
      */
     void addColumn(@Nonnull FeatureTableColumn<?> col);
 
     /**
      * Removes a column from this feature table
-     * 
+     *
+     * @param col a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
      */
     void removeColumn(@Nonnull FeatureTableColumn<?> col);
 
     /**
      * Returns an immutable list of rows
+     *
+     * @return a {@link java.util.List} object.
      */
     @Nonnull
     List<FeatureTableRow> getRows();
 
     /**
      * Add a new row to the feature table
+     *
+     * @param row a {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} object.
      */
     void addRow(@Nonnull FeatureTableRow row);
 
     /**
      * Removes a row from this feature table
-     * 
+     *
+     * @param row a {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} object.
      */
     void removeRow(@Nonnull FeatureTableRow row);
 
     /**
      * Shortcut to return an immutable list of samples found in this feature table
+     *
+     * @return a {@link java.util.List} object.
      */
     @Nonnull
     List<Sample> getSamples();

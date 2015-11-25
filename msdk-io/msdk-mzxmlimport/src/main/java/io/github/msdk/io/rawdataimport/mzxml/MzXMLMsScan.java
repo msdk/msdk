@@ -59,6 +59,7 @@ class MzXMLMsScan extends AbstractReadOnlyMsScan {
         this.spectrumId = spectrumId;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void getDataPoints(@Nonnull MsSpectrumDataPointList dataPoints) {
         try {
@@ -74,6 +75,7 @@ class MzXMLMsScan extends AbstractReadOnlyMsScan {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void getDataPointsByMzAndIntensity(
             @Nonnull MsSpectrumDataPointList dataPoints,

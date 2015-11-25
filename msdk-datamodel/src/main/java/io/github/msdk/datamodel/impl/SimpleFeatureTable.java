@@ -48,17 +48,20 @@ class SimpleFeatureTable implements FeatureTable {
         featureTableColumns = new ArrayList<FeatureTableColumn<?>>();
     }
 
+    /** {@inheritDoc} */
     @Override
     public @Nonnull String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setName(@Nonnull String name) {
         Preconditions.checkNotNull(name);
         this.name = name;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     public @Nonnull List<FeatureTableRow> getRows() {
@@ -67,6 +70,7 @@ class SimpleFeatureTable implements FeatureTable {
         return featureTableRowCopy;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void addRow(@Nonnull FeatureTableRow row) {
         Preconditions.checkNotNull(row);
@@ -75,6 +79,7 @@ class SimpleFeatureTable implements FeatureTable {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeRow(@Nonnull FeatureTableRow row) {
         Preconditions.checkNotNull(row);
@@ -83,6 +88,7 @@ class SimpleFeatureTable implements FeatureTable {
         }
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     public @Nonnull List<FeatureTableColumn<?>> getColumns() {
@@ -91,6 +97,7 @@ class SimpleFeatureTable implements FeatureTable {
         return featureTableColumnsCopy;
     }
 
+    /** {@inheritDoc} */
     @Override
     public FeatureTableColumn<?> getColumn(@Nonnull String columnName,
             Sample sample) {
@@ -111,6 +118,7 @@ class SimpleFeatureTable implements FeatureTable {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void addColumn(@Nonnull FeatureTableColumn<?> col) {
         Preconditions.checkNotNull(col);
@@ -119,6 +127,7 @@ class SimpleFeatureTable implements FeatureTable {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeColumn(@Nonnull FeatureTableColumn<?> col) {
         Preconditions.checkNotNull(col);
@@ -127,6 +136,7 @@ class SimpleFeatureTable implements FeatureTable {
         }
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     public @Nonnull List<Sample> getSamples() {
@@ -141,6 +151,7 @@ class SimpleFeatureTable implements FeatureTable {
         return ImmutableList.copyOf(sampleList);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void dispose() {
         dataPointStore.dispose();

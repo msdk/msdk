@@ -44,29 +44,34 @@ class SimpleIonType implements IonType {
         this.charge = charge;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public PolarityType getPolarity() {
         return polarity;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getNumberOfMolecules() {
         return numberOfMolecules;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public String getAdductFormula() {
         return adductFormula;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getCharge() {
         return charge;

@@ -34,20 +34,42 @@ public class MZTolerance {
     private final @Nonnull Double mzTolerance;
     private final @Nonnull Double ppmTolerance;
 
+    /**
+     * <p>Constructor for MZTolerance.</p>
+     *
+     * @param toleranceMZ a {@link java.lang.Double} object.
+     * @param tolerancePPM a {@link java.lang.Double} object.
+     */
     public MZTolerance(final @Nonnull Double toleranceMZ,
             final @Nonnull Double tolerancePPM) {
         mzTolerance = toleranceMZ;
         ppmTolerance = tolerancePPM;
     }
 
+    /**
+     * <p>Getter for the field <code>mzTolerance</code>.</p>
+     *
+     * @return a {@link java.lang.Double} object.
+     */
     public @Nonnull Double getMzTolerance() {
         return mzTolerance;
     }
 
+    /**
+     * <p>Getter for the field <code>ppmTolerance</code>.</p>
+     *
+     * @return a {@link java.lang.Double} object.
+     */
     public @Nonnull Double getPpmTolerance() {
         return ppmTolerance;
     }
 
+    /**
+     * <p>getToleranceRange.</p>
+     *
+     * @param mzValue a {@link java.lang.Double} object.
+     * @return a {@link com.google.common.collect.Range} object.
+     */
     @SuppressWarnings("null")
     public @Nonnull Range<Double> getToleranceRange(
             final @Nonnull Double mzValue) {
@@ -57,6 +79,7 @@ public class MZTolerance {
                 mzValue + absoluteTolerance);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return mzTolerance + " m/z or " + ppmTolerance + " ppm";

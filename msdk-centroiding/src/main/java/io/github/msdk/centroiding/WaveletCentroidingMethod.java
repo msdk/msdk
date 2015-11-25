@@ -55,6 +55,15 @@ public class WaveletCentroidingMethod implements MSDKMethod<MsScan> {
     private float methodProgress = 0f;
     private MsScan newScan;
 
+    /**
+     * <p>Constructor for WaveletCentroidingMethod.</p>
+     *
+     * @param inputScan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param noiseLevel a {@link java.lang.Float} object.
+     * @param scaleLevel a {@link java.lang.Integer} object.
+     * @param waveletWindow a {@link java.lang.Double} object.
+     */
     public WaveletCentroidingMethod(@Nonnull MsScan inputScan,
             @Nonnull DataPointStore dataPointStore, @Nonnull Float noiseLevel,
             @Nonnull Integer scaleLevel, @Nonnull Double waveletWindow) {
@@ -65,6 +74,7 @@ public class WaveletCentroidingMethod implements MSDKMethod<MsScan> {
         this.waveletWindow = waveletWindow;
     }
 
+    /** {@inheritDoc} */
     @Override
     public MsScan execute() throws MSDKException {
 
@@ -232,18 +242,21 @@ public class WaveletCentroidingMethod implements MSDKMethod<MsScan> {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Float getFinishedPercentage() {
         return methodProgress;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public MsScan getResult() {
         return newScan;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         // This method is too fast to be canceled

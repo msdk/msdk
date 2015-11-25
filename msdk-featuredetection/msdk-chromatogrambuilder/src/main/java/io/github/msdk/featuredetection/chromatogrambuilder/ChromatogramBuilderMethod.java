@@ -32,6 +32,10 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.util.MZTolerance;
 
+/**
+ * <p>ChromatogramBuilderMethod class.</p>
+ *
+ */
 public class ChromatogramBuilderMethod
         implements MSDKMethod<List<Chromatogram>> {
 
@@ -47,6 +51,15 @@ public class ChromatogramBuilderMethod
     private boolean canceled = false;
     private List<Chromatogram> result;
 
+    /**
+     * <p>Constructor for ChromatogramBuilderMethod.</p>
+     *
+     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param inputFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param minimumTimeSpan a {@link java.lang.Double} object.
+     * @param minimumHeight a {@link java.lang.Double} object.
+     * @param mzTolerance a {@link io.github.msdk.util.MZTolerance} object.
+     */
     public ChromatogramBuilderMethod(@Nonnull DataPointStore dataPointStore,
             @Nonnull RawDataFile inputFile, @Nonnull Double minimumTimeSpan,
             @Nonnull Double minimumHeight, @Nonnull MZTolerance mzTolerance) {
@@ -54,6 +67,16 @@ public class ChromatogramBuilderMethod
                 minimumHeight, mzTolerance);
     }
 
+    /**
+     * <p>Constructor for ChromatogramBuilderMethod.</p>
+     *
+     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param inputFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param inputScans a {@link java.util.List} object.
+     * @param minimumTimeSpan a {@link java.lang.Double} object.
+     * @param minimumHeight a {@link java.lang.Double} object.
+     * @param mzTolerance a {@link io.github.msdk.util.MZTolerance} object.
+     */
     public ChromatogramBuilderMethod(@Nonnull DataPointStore dataPointStore,
             @Nonnull RawDataFile inputFile, @Nonnull List<MsScan> inputScans,
             @Nonnull Double minimumTimeSpan, @Nonnull Double minimumHeight,
@@ -66,6 +89,7 @@ public class ChromatogramBuilderMethod
         this.mzTolerance = mzTolerance;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public List<Chromatogram> execute() throws MSDKException {
@@ -122,6 +146,7 @@ public class ChromatogramBuilderMethod
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Float getFinishedPercentage() {
@@ -131,12 +156,14 @@ public class ChromatogramBuilderMethod
             return (float) processedScans / totalScans;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public List<Chromatogram> getResult() {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         this.canceled = true;

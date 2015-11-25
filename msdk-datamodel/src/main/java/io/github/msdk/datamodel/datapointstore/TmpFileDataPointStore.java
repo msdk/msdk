@@ -91,9 +91,9 @@ class TmpFileDataPointStore implements DataPointStore {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Stores new array of data points.
-     * 
-     * @return Storage ID for the newly stored data.
      */
     @Override
     synchronized public @Nonnull Integer storeDataPoints(
@@ -144,6 +144,7 @@ class TmpFileDataPointStore implements DataPointStore {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     synchronized public @Nonnull Integer storeDataPoints(
             @Nonnull ChromatogramDataPointList dataPoints) {
@@ -206,6 +207,8 @@ class TmpFileDataPointStore implements DataPointStore {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Reads the data points associated with given ID.
      */
     @Override
@@ -263,6 +266,7 @@ class TmpFileDataPointStore implements DataPointStore {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public synchronized void readDataPoints(@Nonnull Object ID,
             @Nonnull ChromatogramDataPointList list) {
@@ -332,6 +336,8 @@ class TmpFileDataPointStore implements DataPointStore {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Remove data associated with given storage ID. We do not attempt to remove
      * the data from disk, simply remove the reference to it.
      */
@@ -345,6 +351,7 @@ class TmpFileDataPointStore implements DataPointStore {
         dataPointsLengths.remove(ID);
     }
 
+    /** {@inheritDoc} */
     @Override
     synchronized public void dispose() {
 
@@ -369,6 +376,8 @@ class TmpFileDataPointStore implements DataPointStore {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * When this object is garbage collected, remove the associated temporary
      * data file from disk.
      */

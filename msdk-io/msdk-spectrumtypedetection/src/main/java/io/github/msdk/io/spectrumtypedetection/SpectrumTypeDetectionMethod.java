@@ -38,21 +38,33 @@ public class SpectrumTypeDetectionMethod implements MSDKMethod<MsSpectrumType> {
     private @Nullable MsSpectrumType result = null;
     private Float finishedPercentage = null;
 
+    /**
+     * <p>Constructor for SpectrumTypeDetectionMethod.</p>
+     *
+     * @param msSpectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     */
     public SpectrumTypeDetectionMethod(@Nonnull MsSpectrum msSpectrum) {
         this.dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
         msSpectrum.getDataPoints(dataPoints);
     }
 
+    /**
+     * <p>Constructor for SpectrumTypeDetectionMethod.</p>
+     *
+     * @param dataPoints a {@link io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList} object.
+     */
     public SpectrumTypeDetectionMethod(
             @Nonnull MsSpectrumDataPointList dataPoints) {
         this.dataPoints = dataPoints;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float getFinishedPercentage() {
         return finishedPercentage;
     }
 
+    /** {@inheritDoc} */
     @Override
     public MsSpectrumType execute() throws MSDKException {
         result = detectSpectrumType(dataPoints);
@@ -60,16 +72,24 @@ public class SpectrumTypeDetectionMethod implements MSDKMethod<MsSpectrumType> {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public MsSpectrumType getResult() {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         // this method is too fast to be canceled
     }
 
+    /**
+     * <p>detectSpectrumType.</p>
+     *
+     * @param dataPoints a {@link io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList} object.
+     * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType} object.
+     */
     public static MsSpectrumType detectSpectrumType(
             @Nonnull MsSpectrumDataPointList dataPoints) {
 
