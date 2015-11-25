@@ -33,202 +33,225 @@ import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.msdk.util.FeatureTableUtil;
 
 /**
  * This class adds a list of chromatograms to a feature table.
  */
-public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable> {
+public class ChromatogramToFeatureTableMethod
+        implements MSDKMethod<FeatureTable> {
 
-	private @Nonnull List<Chromatogram> chromatograms;
-	private @Nonnull FeatureTable featureTable;
-	private @Nonnull Sample sample;
+    private @Nonnull List<Chromatogram> chromatograms;
+    private @Nonnull FeatureTable featureTable;
+    private @Nonnull Sample sample;
 
-	private Map<String, FeatureTableColumn<?>> tableColumns = new HashMap<String, FeatureTableColumn<?>>();
+    private Map<String, FeatureTableColumn<?>> tableColumns = new HashMap<String, FeatureTableColumn<?>>();
 
-	private boolean canceled = false;
-	private int processedChromatograms = 0, totalChromatograms = 0;
+    private boolean canceled = false;
+    private int processedChromatograms = 0, totalChromatograms = 0;
 
-	/**
-	 * <p>Constructor for ChromatogramToFeatureTableMethod.</p>
-	 *
-	 * @param chromatograms a {@link java.util.List} object.
-	 * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
-	 * @param sample a {@link io.github.msdk.datamodel.featuretables.Sample} object.
-	 */
-	public ChromatogramToFeatureTableMethod(@Nonnull List<Chromatogram> chromatograms,
-			@Nonnull FeatureTable featureTable, @Nonnull Sample sample) {
-		this.chromatograms = chromatograms;
-		this.featureTable = featureTable;
-		this.sample = sample;
-	}
+    /**
+     * <p>
+     * Constructor for ChromatogramToFeatureTableMethod.
+     * </p>
+     *
+     * @param chromatograms
+     *            a {@link java.util.List} object.
+     * @param featureTable
+     *            a {@link io.github.msdk.datamodel.featuretables.FeatureTable}
+     *            object.
+     * @param sample
+     *            a {@link io.github.msdk.datamodel.featuretables.Sample}
+     *            object.
+     */
+    public ChromatogramToFeatureTableMethod(
+            @Nonnull List<Chromatogram> chromatograms,
+            @Nonnull FeatureTable featureTable, @Nonnull Sample sample) {
+        this.chromatograms = chromatograms;
+        this.featureTable = featureTable;
+        this.sample = sample;
+    }
 
-	/** {@inheritDoc} */
-	@SuppressWarnings("unchecked")
-	@Override
-	public FeatureTable execute() throws MSDKException {
-		totalChromatograms = chromatograms.size();
+    /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
+    @Override
+    public FeatureTable execute() throws MSDKException {
+        totalChromatograms = chromatograms.size();
 
-		// Add the columns to the table if needed
-		addColumns(featureTable);
+        // Add the columns to the table if needed
+        addColumns(featureTable);
 
-		// Check if cancel is requested
-		if (canceled)
-			return null;
+        // Check if cancel is requested
+        if (canceled)
+            return null;
 
-		// Id of last row in feature table
-		int lastID = 0;
-		List<FeatureTableRow> rows = featureTable.getRows();
-		if (!rows.isEmpty()) {
-			lastID = featureTable.getRows().get(featureTable.getRows().size()).getId();
-		}
+        // Id of last row in feature table
+        int lastID = 0;
+        List<FeatureTableRow> rows = featureTable.getRows();
+        if (!rows.isEmpty()) {
+            lastID = featureTable.getRows().get(featureTable.getRows().size())
+                    .getId();
+        }
 
-		// Loop through all chromatograms and add values to the feature table
-		FeatureTableColumn column;
-		for (Chromatogram chromatogram : chromatograms) {
-			lastID++;
-			FeatureTableRow newRow = MSDKObjectBuilder.getFeatureTableRow(featureTable, lastID);
+        // Loop through all chromatograms and add values to the feature table
+        FeatureTableColumn column;
+        for (Chromatogram chromatogram : chromatograms) {
+            lastID++;
+            FeatureTableRow newRow = MSDKObjectBuilder
+                    .getFeatureTableRow(featureTable, lastID);
 
-			column = featureTable.getColumn(ColumnName.ID.getName(), null);
-			newRow.setData(column, lastID);
+            column = featureTable.getColumn(ColumnName.ID.getName(), null);
+            newRow.setData(column, lastID);
 
-			column = featureTable.getColumn("Ion Annotation", null);
-			newRow.setData(column, chromatogram.getIonAnnotation());
+            column = featureTable.getColumn("Ion Annotation", null);
+            newRow.setData(column, chromatogram.getIonAnnotation());
 
-			column = tableColumns.get(ColumnName.CHROMATOGRAM.getName());
-			newRow.setData(column, chromatogram);
+            column = tableColumns.get(ColumnName.CHROMATOGRAM.getName());
+            newRow.setData(column, chromatogram);
 
-			double mz = chromatogram.getMz();
-			column = tableColumns.get(ColumnName.MZ.getName());
-			newRow.setData(column, mz);
+            double mz = chromatogram.getMz();
+            column = tableColumns.get(ColumnName.MZ.getName());
+            newRow.setData(column, mz);
 
-			double rt = ChromatogramUtil.getRt(chromatogram);
-			column = tableColumns.get(ColumnName.RT.getName());
-			newRow.setData(column, rt);
+            float rt = ChromatogramUtil.getRt(chromatogram);
+            ChromatographyInfo chromatographyInfo = MSDKObjectBuilder
+                    .getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
+            column = tableColumns.get(ColumnName.RT.getName());
+            newRow.setData(column, chromatographyInfo);
 
-			double rtStart = ChromatogramUtil.getRtStart(chromatogram);
-			column = tableColumns.get(ColumnName.RTSTART.getName());
-			newRow.setData(column, rtStart);
+            double rtStart = ChromatogramUtil.getRtStart(chromatogram);
+            column = tableColumns.get(ColumnName.RTSTART.getName());
+            newRow.setData(column, rtStart);
 
-			double rtEnd = ChromatogramUtil.getRtEnd(chromatogram);
-			column = tableColumns.get(ColumnName.RTEND.getName());
-			newRow.setData(column, rtEnd);
+            double rtEnd = ChromatogramUtil.getRtEnd(chromatogram);
+            column = tableColumns.get(ColumnName.RTEND.getName());
+            newRow.setData(column, rtEnd);
 
-			double duration = ChromatogramUtil.getDuration(chromatogram);
-			column = tableColumns.get(ColumnName.DURATION.getName());
-			newRow.setData(column, duration);
+            double duration = ChromatogramUtil.getDuration(chromatogram);
+            column = tableColumns.get(ColumnName.DURATION.getName());
+            newRow.setData(column, duration);
 
-			double area = ChromatogramUtil.getArea(chromatogram);
-			column = tableColumns.get(ColumnName.AREA.getName());
-			newRow.setData(column, area);
+            double area = ChromatogramUtil.getArea(chromatogram);
+            column = tableColumns.get(ColumnName.AREA.getName());
+            newRow.setData(column, area);
 
-			double height = ChromatogramUtil.getMaxHeight(chromatogram);
-			column = tableColumns.get(ColumnName.HEIGHT.getName());
-			newRow.setData(column, height);
+            double height = ChromatogramUtil.getMaxHeight(chromatogram);
+            column = tableColumns.get(ColumnName.HEIGHT.getName());
+            newRow.setData(column, height);
 
-			int datapoints = ChromatogramUtil.getNumberOfDataPoints(chromatogram);
-			column = tableColumns.get(ColumnName.NUMBEROFDATAPOINTS.getName());
-			newRow.setData(column, datapoints);
+            int datapoints = ChromatogramUtil
+                    .getNumberOfDataPoints(chromatogram);
+            column = tableColumns.get(ColumnName.NUMBEROFDATAPOINTS.getName());
+            newRow.setData(column, datapoints);
 
-			Double fwhm = ChromatogramUtil.getFwhm(chromatogram);
-			if (fwhm != null) {
-				column = tableColumns.get(ColumnName.FWHM.getName());
-				newRow.setData(column, fwhm);
-			}
+            Double fwhm = ChromatogramUtil.getFwhm(chromatogram);
+            if (fwhm != null) {
+                column = tableColumns.get(ColumnName.FWHM.getName());
+                newRow.setData(column, fwhm);
+            }
 
-			Double tailingFactor = ChromatogramUtil.getTailingFactor(chromatogram);
-			if (tailingFactor != null) {
-				column = tableColumns.get(ColumnName.TAILINGFACTOR.getName());
-				newRow.setData(column, tailingFactor);
-			}
+            Double tailingFactor = ChromatogramUtil
+                    .getTailingFactor(chromatogram);
+            if (tailingFactor != null) {
+                column = tableColumns.get(ColumnName.TAILINGFACTOR.getName());
+                newRow.setData(column, tailingFactor);
+            }
 
-			Double asymmetryFactor = ChromatogramUtil.getAsymmetryFactor(chromatogram);
-			if (asymmetryFactor != null) {
-				column = tableColumns.get(ColumnName.ASYMMETRYFACTOR.getName());
-				newRow.setData(column, asymmetryFactor);
-			}
+            Double asymmetryFactor = ChromatogramUtil
+                    .getAsymmetryFactor(chromatogram);
+            if (asymmetryFactor != null) {
+                column = tableColumns.get(ColumnName.ASYMMETRYFACTOR.getName());
+                newRow.setData(column, asymmetryFactor);
+            }
 
-			// Add row to feature table
-			featureTable.addRow(newRow);
+            // Add row to feature table
+            featureTable.addRow(newRow);
 
-			// Increase counter
-			processedChromatograms++;
+            // Increase counter
+            processedChromatograms++;
 
-			// Check if cancel is requested
-			if (canceled)
-				return null;
-		}
+            // Check if cancel is requested
+            if (canceled)
+                return null;
+        }
 
-		// Re-calculate average row m/z and RT values
-		FeatureTableUtil.recalculateAverages(featureTable);
+        // Re-calculate average row m/z and RT values
+        FeatureTableUtil.recalculateAverages(featureTable);
 
-		return featureTable;
-	}
+        return featureTable;
+    }
 
-	private void addColumns(@Nonnull FeatureTable featureTable) {
+    private void addColumns(@Nonnull FeatureTable featureTable) {
 
-		// Common columns
-		// Only add common columns if the feature table is empty
-		if (featureTable.getColumns().size() == 0) {
-			FeatureTableColumn<Integer> idColumn = MSDKObjectBuilder.getIdFeatureTableColumn();
-			FeatureTableColumn<Double> mzColumn = MSDKObjectBuilder.getMzFeatureTableColumn();
-			FeatureTableColumn<Double> ppmColumn = MSDKObjectBuilder.getPpmFeatureTableColumn();
-			FeatureTableColumn<ChromatographyInfo> chromatographyInfoColumn = MSDKObjectBuilder
-					.getChromatographyInfoFeatureTableColumn();
-			FeatureTableColumn<IonAnnotation> ionAnnotationColumn = MSDKObjectBuilder
-					.getIonAnnotationFeatureTableColumn();
-			featureTable.addColumn(idColumn);
-			featureTable.addColumn(mzColumn);
-			featureTable.addColumn(ppmColumn);
-			featureTable.addColumn(chromatographyInfoColumn);
-			featureTable.addColumn(ionAnnotationColumn);
-		}
+        // Common columns
+        // Only add common columns if the feature table is empty
+        if (featureTable.getColumns().size() == 0) {
+            FeatureTableColumn<Integer> idColumn = MSDKObjectBuilder
+                    .getIdFeatureTableColumn();
+            FeatureTableColumn<Double> mzColumn = MSDKObjectBuilder
+                    .getMzFeatureTableColumn();
+            FeatureTableColumn<Double> ppmColumn = MSDKObjectBuilder
+                    .getPpmFeatureTableColumn();
+            FeatureTableColumn<ChromatographyInfo> chromatographyInfoColumn = MSDKObjectBuilder
+                    .getChromatographyInfoFeatureTableColumn();
+            FeatureTableColumn<IonAnnotation> ionAnnotationColumn = MSDKObjectBuilder
+                    .getIonAnnotationFeatureTableColumn();
+            featureTable.addColumn(idColumn);
+            featureTable.addColumn(mzColumn);
+            featureTable.addColumn(ppmColumn);
+            featureTable.addColumn(chromatographyInfoColumn);
+            featureTable.addColumn(ionAnnotationColumn);
+        }
 
-		// Sample columns
-		ArrayList<ColumnName> sampleColumns = new ArrayList<ColumnName>();
-		sampleColumns.add(ColumnName.CHROMATOGRAM);
-		sampleColumns.add(ColumnName.MZ);
-		sampleColumns.add(ColumnName.RT);
-		sampleColumns.add(ColumnName.RTSTART);
-		sampleColumns.add(ColumnName.RTEND);
-		sampleColumns.add(ColumnName.DURATION);
-		sampleColumns.add(ColumnName.AREA);
-		sampleColumns.add(ColumnName.HEIGHT);
-		sampleColumns.add(ColumnName.NUMBEROFDATAPOINTS);
-		sampleColumns.add(ColumnName.FWHM);
-		sampleColumns.add(ColumnName.TAILINGFACTOR);
-		sampleColumns.add(ColumnName.ASYMMETRYFACTOR);
+        // Sample columns
+        ArrayList<ColumnName> sampleColumns = new ArrayList<ColumnName>();
+        sampleColumns.add(ColumnName.CHROMATOGRAM);
+        sampleColumns.add(ColumnName.MZ);
+        sampleColumns.add(ColumnName.RT);
+        sampleColumns.add(ColumnName.RTSTART);
+        sampleColumns.add(ColumnName.RTEND);
+        sampleColumns.add(ColumnName.DURATION);
+        sampleColumns.add(ColumnName.AREA);
+        sampleColumns.add(ColumnName.HEIGHT);
+        sampleColumns.add(ColumnName.NUMBEROFDATAPOINTS);
+        sampleColumns.add(ColumnName.FWHM);
+        sampleColumns.add(ColumnName.TAILINGFACTOR);
+        sampleColumns.add(ColumnName.ASYMMETRYFACTOR);
 
-		for (ColumnName columnName : sampleColumns) {
-			FeatureTableColumn<?> column = featureTable.getColumn(columnName.getName(), sample);
-			if (column == null) {
-				column = MSDKObjectBuilder.getFeatureTableColumn(columnName, sample);
-				featureTable.addColumn(column);
-			}
-			tableColumns.put(columnName.getName(), column);
-		}
+        for (ColumnName columnName : sampleColumns) {
+            FeatureTableColumn<?> column = featureTable
+                    .getColumn(columnName.getName(), sample);
+            if (column == null) {
+                column = MSDKObjectBuilder.getFeatureTableColumn(columnName,
+                        sample);
+                featureTable.addColumn(column);
+            }
+            tableColumns.put(columnName.getName(), column);
+        }
 
-	}
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	@Nullable
-	public Float getFinishedPercentage() {
-		return totalChromatograms == 0 ? null : (float) processedChromatograms / totalChromatograms;
-	}
+    /** {@inheritDoc} */
+    @Override
+    @Nullable
+    public Float getFinishedPercentage() {
+        return totalChromatograms == 0 ? null
+                : (float) processedChromatograms / totalChromatograms;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	@Nullable
-	public FeatureTable getResult() {
-		return featureTable;
-	}
+    /** {@inheritDoc} */
+    @Override
+    @Nullable
+    public FeatureTable getResult() {
+        return featureTable;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public void cancel() {
-		canceled = true;
-	}
+    /** {@inheritDoc} */
+    @Override
+    public void cancel() {
+        canceled = true;
+    }
 
 }
