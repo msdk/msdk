@@ -11,8 +11,6 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-
-
 package io.github.msdk.filtering.cropper;
 
 import com.google.common.collect.Range;
@@ -27,15 +25,14 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.Assert;
 
-
 public class CropFilterMethodTest {
-     private static final String TEST_DATA_PATH = "src/test/resources/";
+
+    private static final String TEST_DATA_PATH = "src/test/resources/";
 
     @SuppressWarnings("null")
     @Test
     public void testCropFilter() throws MSDKException {
 
-       
         // Import the file
         File inputFile = new File(TEST_DATA_PATH + "orbitrap_300-600mz.mzML");
         Assert.assertTrue("Cannot read test data", inputFile.canRead());
@@ -45,12 +42,20 @@ public class CropFilterMethodTest {
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
         List<MsScan> scans = rawFile.getScans();
-        Range<Float> rtRange = Range.closed(scans.get(3).getChromatographyInfo().getRetentionTime(), scans.get(scans.size()-3).getChromatographyInfo().getRetentionTime());
+        Range<Float> rtRange = Range.closed(scans.get(50).getChromatographyInfo().getRetentionTime(), scans.get(scans.size() - 30).getChromatographyInfo().getRetentionTime());
         Range<Double> mzRange = scans.get(0).getMzRange();
-        
+
         CropFilterMethod cropFilter = new CropFilterMethod(rawFile, mzRange, rtRange);
         final RawDataFile newRawFile = cropFilter.execute();
         Assert.assertEquals(1.0, cropFilter.getFinishedPercentage(), 0.0001);
-    
+        Assert.assertNotNull(newRawFile);
+        List<MsScan> newScans = newRawFile.getScans();
+        for (MsScan newScan : newScans) {   
+            Assert.assertTrue(rtRange.contains(newScan.getChromatographyInfo().getRetentionTime()));
+            System.out.println(mzRange.toString()+ " - "+newScan.getMzRange().toString());
+            
+            Assert.assertTrue(mzRange.contains(newScan.getMzRange().lowerEndpoint()) && mzRange.contains(newScan.getMzRange().upperEndpoint()));
+        }
+        
     }
 }
