@@ -47,14 +47,16 @@ public class CropFilterMethodTest {
 
         CropFilterMethod cropFilter = new CropFilterMethod(rawFile, mzRange, rtRange);
         final RawDataFile newRawFile = cropFilter.execute();
+        
         Assert.assertEquals(1.0, cropFilter.getFinishedPercentage(), 0.0001);
         Assert.assertNotNull(newRawFile);
+        
         List<MsScan> newScans = newRawFile.getScans();
-        for (MsScan newScan : newScans) {   
+        
+        for (MsScan newScan : newScans) {  
+            Assert.assertNotNull(newScan);
             Assert.assertTrue(rtRange.contains(newScan.getChromatographyInfo().getRetentionTime()));
-            System.out.println(mzRange.toString()+ " - "+newScan.getMzRange().toString());
-            
-            Assert.assertTrue(mzRange.contains(newScan.getMzRange().lowerEndpoint()) && mzRange.contains(newScan.getMzRange().upperEndpoint()));
+            Assert.assertTrue(mzRange.encloses(newScan.getMzRange()));
         }
         
     }
