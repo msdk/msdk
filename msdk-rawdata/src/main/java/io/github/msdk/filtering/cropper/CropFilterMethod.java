@@ -32,11 +32,13 @@ public class CropFilterMethod implements MSDKMethod<RawDataFile> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final @Nonnull RawDataFile rawDataFile;
-    private final @Nonnull Range<Double> mzRange;
-    private final @Nonnull Range<Float> rtRange;
+    private final @Nonnull
+    RawDataFile rawDataFile;
+    private final @Nonnull
+    Range<Double> mzRange;
+    private final @Nonnull
+    Range<Float> rtRange;
 
-    private float methodProgress = 0f;
     private int processedScans = 0, totalScans = 0;
     private RawDataFile result;
     private boolean canceled = false;
@@ -49,10 +51,11 @@ public class CropFilterMethod implements MSDKMethod<RawDataFile> {
 
     @Override
     public Float getFinishedPercentage() {
-        if (totalScans == 0)
+        if (totalScans == 0) {
             return null;
-        else
+        } else {
             return (float) processedScans / totalScans;
+        }
     }
 
     @Override
@@ -63,41 +66,39 @@ public class CropFilterMethod implements MSDKMethod<RawDataFile> {
     @Override
     public RawDataFile execute() throws MSDKException {
         logger.info("Started Crop Filter with Raw Data File #"
-            + rawDataFile.getName());
-              
-        
+                + rawDataFile.getName());
+
         List<MsScan> scans = this.rawDataFile.getScans();
-        
+
         totalScans = scans.size();
         RawDataFile result = MSDKObjectBuilder.getRawDataFile(this.rawDataFile.getName(), this.rawDataFile.getOriginalFile(), this.rawDataFile.getRawDataFileType(), DataPointStoreFactory.getMemoryDataStore());
 
-        
         for (MsScan scan : scans) {
             Float rt = scan.getChromatographyInfo().getRetentionTime();
             if (rt != null && this.rtRange.contains(rt.floatValue())) {
                 MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
                 scan.getDataPoints(dataPoints);
-                
+
                 Range<Float> intensityRange = Range.closed(Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY);
                 MsFunction function = scan.getMsFunction();
-                Integer scanNumber = scan.getScanNumber();                
+                Integer scanNumber = scan.getScanNumber();
                 MsSpectrumDataPointList newDataPoints = dataPoints.selectDataPoints(mzRange, intensityRange);
-                
+
                 DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
                 store.storeDataPoints(newDataPoints);
 
                 MsScan newScan = MSDKObjectBuilder.getMsScan(store, scanNumber, function);
                 result.addScan(newScan);
-                processedScans++;
-                
-                if (canceled)
+
+                if (canceled) {
                     return null;
+                }
             }
+            processedScans++;
         }
-        
-        
+
         logger.info("Finished Crop Filter with Raw Data File #"
-            + rawDataFile.getName());
+                + rawDataFile.getName());
         return this.rawDataFile;
     }
 

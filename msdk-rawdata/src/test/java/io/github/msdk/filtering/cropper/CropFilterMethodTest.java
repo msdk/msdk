@@ -35,9 +35,7 @@ public class CropFilterMethodTest {
     @Test
     public void testCropFilter() throws MSDKException {
 
-        // Create the data structures
-        DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
-
+       
         // Import the file
         File inputFile = new File(TEST_DATA_PATH + "orbitrap_300-600mz.mzML");
         Assert.assertTrue("Cannot read test data", inputFile.canRead());
