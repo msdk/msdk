@@ -74,14 +74,6 @@ public class CropFilterMethod implements MSDKMethod<RawDataFile> {
         List<MsScan> scans = rawDataFile.getScans();
         totalScans = scans.size();
 
-                
-        // Check that the original RT Range includes the user defined RT Range
-        Range<Float> originalRTRange = Range.closed(scans.get(0).getChromatographyInfo().getRetentionTime(), scans.get(scans.size() - 1).getChromatographyInfo().getRetentionTime());
-        if (!originalRTRange.encloses(rtRange)) {
-            throw new MSDKException(
-                    "The RT Range excedes the limits of the RT range in the data.");
-        }
-
         MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
 
         // Iterate through all the scans
@@ -90,12 +82,6 @@ public class CropFilterMethod implements MSDKMethod<RawDataFile> {
 
             // Do only if the scan's retention time is inside the user defined retention time range
             if (rt != null && rtRange.contains(rt.floatValue())) {
-                // Check that the user defined MZ range is included into the data point's MZ range
-                Range originalMZRange = scan.getMzRange();
-                if (!originalMZRange.encloses(mzRange)) {
-                    throw new MSDKException(
-                            "The MZ Range excedes the limits of the MZ range in the data.");
-                }
 
                 // Select the data points with mz value inside the user defined mz range                
                 Range<Float> intensityRange = Range.all();
