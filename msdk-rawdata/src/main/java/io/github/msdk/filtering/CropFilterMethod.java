@@ -31,14 +31,10 @@ public class CropFilterMethod implements MSDKMethod<RawDataFile> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final @Nonnull
-    RawDataFile rawDataFile;
-    private final @Nonnull
-    Range<Double> mzRange;
-    private final @Nonnull
-    Range<Float> rtRange;
-    private final @Nonnull
-    DataPointStore store;
+    private final @Nonnull RawDataFile rawDataFile;
+    private final @Nonnull Range<Double> mzRange;
+    private final @Nonnull Range<Float> rtRange;
+    private final @Nonnull DataPointStore store;
 
     private int processedScans = 0, totalScans = 0;
     private RawDataFile result;
@@ -103,14 +99,14 @@ public class CropFilterMethod implements MSDKMethod<RawDataFile> {
 
                 // Select the data points with mz value inside the user defined mz range                
                 Range<Float> intensityRange = Range.all();
-                scan.getDataPointsByMzAndIntensity(dataPoints, mzRange, intensityRange);
+                scan.getDataPoints(dataPoints);
 
                 // Create a new scan
                 MsScan newScan = MSDKObjectBuilder.getMsScan(store, scan.getScanNumber(), scan.getMsFunction());
                 newScan.setChromatographyInfo(scan.getChromatographyInfo());
                 newScan.setRawDataFile(result);
                 // Store the new data points
-                newScan.setDataPoints(dataPoints);
+                newScan.setDataPoints(dataPoints.selectDataPoints(mzRange, intensityRange));
 
                 if (canceled) {
                     return null;

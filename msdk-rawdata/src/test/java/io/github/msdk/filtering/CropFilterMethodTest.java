@@ -41,24 +41,30 @@ public class CropFilterMethodTest {
         Assert.assertNotNull(rawFile);
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
+        // Create the data needed by the Crop Filter Method
         List<MsScan> scans = rawFile.getScans();
         Range<Float> rtRange = Range.closed(scans.get(50).getChromatographyInfo().getRetentionTime(), scans.get(scans.size() - 30).getChromatographyInfo().getRetentionTime());
-        Range<Double> mzRange = scans.get(0).getMzRange();
+        Range<Double> scanRange = scans.get(0).getMzRange();
+        Range<Double> mzRange = Range.closed(scanRange.lowerEndpoint()+10, scanRange.upperEndpoint()-10);
         DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
 
+        // Execute the filter
         CropFilterMethod cropFilter = new CropFilterMethod(rawFile, mzRange, rtRange, store);
-        final RawDataFile newRawFile = cropFilter.execute();
+        RawDataFile newRawFile = cropFilter.execute();
 
         Assert.assertEquals(1.0, cropFilter.getFinishedPercentage(), 0.0001);
+        
+        // The result of the method can't be Null
         Assert.assertNotNull(newRawFile);
 
         List<MsScan> newScans = newRawFile.getScans();
 
+        // Check the new scans are between the new range limits
         for (MsScan newScan : newScans) {
             Assert.assertNotNull(newScan);
             Assert.assertTrue(rtRange.contains(newScan.getChromatographyInfo().getRetentionTime()));
             Assert.assertTrue(mzRange.encloses(newScan.getMzRange()));
         }
-
+     
     }
 }
