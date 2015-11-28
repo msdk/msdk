@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-package io.github.msdk.filtering.cropper;
+package io.github.msdk.filtering;
 
 import com.google.common.collect.Range;
 import io.github.msdk.MSDKException;
@@ -44,20 +44,21 @@ public class CropFilterMethodTest {
         List<MsScan> scans = rawFile.getScans();
         Range<Float> rtRange = Range.closed(scans.get(50).getChromatographyInfo().getRetentionTime(), scans.get(scans.size() - 30).getChromatographyInfo().getRetentionTime());
         Range<Double> mzRange = scans.get(0).getMzRange();
+        DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
 
-        CropFilterMethod cropFilter = new CropFilterMethod(rawFile, mzRange, rtRange);
+        CropFilterMethod cropFilter = new CropFilterMethod(rawFile, mzRange, rtRange, store);
         final RawDataFile newRawFile = cropFilter.execute();
-        
+
         Assert.assertEquals(1.0, cropFilter.getFinishedPercentage(), 0.0001);
         Assert.assertNotNull(newRawFile);
-        
+
         List<MsScan> newScans = newRawFile.getScans();
-        
-        for (MsScan newScan : newScans) {  
+
+        for (MsScan newScan : newScans) {
             Assert.assertNotNull(newScan);
             Assert.assertTrue(rtRange.contains(newScan.getChromatographyInfo().getRetentionTime()));
             Assert.assertTrue(mzRange.encloses(newScan.getMzRange()));
         }
-        
+
     }
 }

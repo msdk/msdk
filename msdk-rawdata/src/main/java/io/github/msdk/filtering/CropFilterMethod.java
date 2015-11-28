@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-package io.github.msdk.filtering.cropper;
+package io.github.msdk.filtering;
 
 import com.google.common.collect.Range;
 import io.github.msdk.MSDKException;
@@ -31,18 +31,25 @@ public class CropFilterMethod implements MSDKMethod<RawDataFile> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final @Nonnull RawDataFile rawDataFile;
-    private final @Nonnull Range<Double> mzRange;
-    private final @Nonnull Range<Float> rtRange;
+    private final @Nonnull
+    RawDataFile rawDataFile;
+    private final @Nonnull
+    Range<Double> mzRange;
+    private final @Nonnull
+    Range<Float> rtRange;
+    private final @Nonnull
+    DataPointStore store;
 
     private int processedScans = 0, totalScans = 0;
     private RawDataFile result;
     private boolean canceled = false;
 
-    public CropFilterMethod(@Nonnull RawDataFile rawDataFile, @Nonnull Range<Double> mzRange, @Nonnull Range<Float> rtRange) {
+    public CropFilterMethod(@Nonnull RawDataFile rawDataFile, @Nonnull Range<Double> mzRange, @Nonnull Range<Float> rtRange, @Nonnull DataPointStore store) {
         this.rawDataFile = rawDataFile;
         this.mzRange = mzRange;
         this.rtRange = rtRange;
+        this.store = store;
+
     }
 
     @Override
@@ -64,32 +71,56 @@ public class CropFilterMethod implements MSDKMethod<RawDataFile> {
         logger.info("Started Crop Filter with Raw Data File #"
                 + rawDataFile.getName());
 
+        // Create a new raw data file
         result = MSDKObjectBuilder.getRawDataFile(this.rawDataFile.getName(), this.rawDataFile.getOriginalFile(), this.rawDataFile.getRawDataFileType(), DataPointStoreFactory.getMemoryDataStore());
+
+        // Get the scans from the user defined raw data file
         List<MsScan> scans = rawDataFile.getScans();
         totalScans = scans.size();
+
+                
+        // Check that the original RT Range includes the user defined RT Range
+        Range<Float> originalRTRange = Range.closed(scans.get(0).getChromatographyInfo().getRetentionTime(), scans.get(scans.size() - 1).getChromatographyInfo().getRetentionTime());
+        if (!originalRTRange.encloses(rtRange)) {
+            throw new MSDKException(
+                    "The RT Range excedes the limits of the RT range in the data.");
+        }
+
+        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
+
+        // Iterate through all the scans
         for (MsScan scan : scans) {
             Float rt = scan.getChromatographyInfo().getRetentionTime();
-            if (rt != null && rtRange.contains(rt.floatValue())) {                
-                MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
-                scan.getDataPoints(dataPoints);
-                
-                Range<Float> intensityRange = Range.closed(Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY);
-                DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
-                
+
+            // Do only if the scan's retention time is inside the user defined retention time range
+            if (rt != null && rtRange.contains(rt.floatValue())) {
+                // Check that the user defined MZ range is included into the data point's MZ range
+                Range originalMZRange = scan.getMzRange();
+                if (!originalMZRange.encloses(mzRange)) {
+                    throw new MSDKException(
+                            "The MZ Range excedes the limits of the MZ range in the data.");
+                }
+
+                // Select the data points with mz value inside the user defined mz range                
+                Range<Float> intensityRange = Range.all();
+                scan.getDataPointsByMzAndIntensity(dataPoints, mzRange, intensityRange);
+
+                // Create a new scan
                 MsScan newScan = MSDKObjectBuilder.getMsScan(store, scan.getScanNumber(), scan.getMsFunction());
                 newScan.setChromatographyInfo(scan.getChromatographyInfo());
                 newScan.setRawDataFile(result);
-                newScan.setDataPoints(dataPoints.selectDataPoints(mzRange, intensityRange));
-                
-                 if (canceled) {
+                // Store the new data points
+                newScan.setDataPoints(dataPoints);
+
+                if (canceled) {
                     return null;
                 }
+                // Add the new scan to the created raw data file
                 result.addScan(newScan);
             }
             processedScans++;
         }
 
-        
         logger.info("Finished Crop Filter with Raw Data File #"
                 + rawDataFile.getName());
         return result;
