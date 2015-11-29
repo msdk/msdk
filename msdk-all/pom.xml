@@ -96,7 +96,7 @@
 
         <dependency>
             <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-rawdata</artifactId>
+            <artifactId>msdk-rawdatafilters</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -109,6 +109,12 @@
         <dependency>
             <groupId>io.github.msdk</groupId>
             <artifactId>msdk-featurefilter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>io.github.msdk</groupId>
+            <artifactId>msdk-chromatofimport</artifactId>
             <version>${project.version}</version>
         </dependency>
 
