@@ -71,10 +71,9 @@ public class MzTabFileImportMethodTest {
 
         // Annotation 7 - HEPES
         FeatureTableRow row = featureTable.getRows().get(7);
-        FeatureTableColumn column = featureTable.getColumn("Ion Annotation",
-                null);
-        IonAnnotation ionAnnotation = (IonAnnotation) row.getData(column,
-                IonAnnotation.class);
+        FeatureTableColumn<IonAnnotation> ionAnnotationColumn = featureTable.getColumn("Ion Annotation",
+                null, IonAnnotation.class);
+        IonAnnotation ionAnnotation = row.getData(ionAnnotationColumn);
         Assert.assertEquals("HEPES", ionAnnotation.getDescription());
         IChemObjectBuilder builder = DefaultChemObjectBuilder.getInstance();
         IMolecularFormula cdkFormula = MolecularFormulaManipulator
@@ -86,8 +85,8 @@ public class MzTabFileImportMethodTest {
 
         // Row 5
         row = featureTable.getRows().get(5);
-        column = featureTable.getColumn(ColumnName.MZ.getName(), null);
-        Double averageMZ = (Double) row.getData(column, Double.class);
+        FeatureTableColumn<Double> mzColumn = featureTable.getColumnByName(ColumnName.MZ, null);
+        Double averageMZ = row.getData(mzColumn);
         Assert.assertEquals(520.334738595145, averageMZ, 0.0000001);
         Sample sample = featureTable.getSamples().get(5);
         Assert.assertEquals("36C sample 2", sample.getName());
@@ -96,22 +95,22 @@ public class MzTabFileImportMethodTest {
         row = featureTable.getRows().get(297);
         sample = featureTable.getSamples().get(5);
         // Area
-        column = featureTable.getColumn(ColumnName.AREA.getName(), sample);
-        Double area = (Double) row.getData(column, Double.class);
+        FeatureTableColumn<Double> areaColumn = featureTable.getColumnByName(ColumnName.AREA, sample);
+        Double area = row.getData(areaColumn);
         Assert.assertEquals(11480605.3259747, area, 0.0000001);
         // RT
-        column = featureTable.getColumn(ColumnName.RT.getName(), sample);
-        ChromatographyInfo chromatographyInfo = (ChromatographyInfo) row
-                .getData(column, ChromatographyInfo.class);
+        FeatureTableColumn<ChromatographyInfo> chromInfoColumn = featureTable.getColumn("Chromatography Info", null, ChromatographyInfo.class);
+        ChromatographyInfo chromatographyInfo = row
+                .getData(chromInfoColumn);
         Float rt = chromatographyInfo.getRetentionTime();
-        Assert.assertEquals(30.2350216666666, rt, 0.0000001);
+        Assert.assertEquals(30.23502166666667, rt, 0.0000001);
         // Height
-        column = featureTable.getColumn(ColumnName.HEIGHT.getName(), sample);
-        Double height = (Double) row.getData(column, Double.class);
+        FeatureTableColumn<Double> heightColumn = featureTable.getColumnByName(ColumnName.HEIGHT, sample);
+        Double height = row.getData(heightColumn);
         Assert.assertEquals(312942.149147727, height, 0.0000001);
         // m/z
-        column = featureTable.getColumn(ColumnName.MZ.getName(), sample);
-        Double mz = (Double) row.getData(column, Double.class);
+        mzColumn = featureTable.getColumnByName(ColumnName.MZ, sample);
+        Double mz = row.getData(mzColumn);
         Assert.assertEquals(144.927825927734, mz, 0.0000001);
 
         featureTable.dispose();
@@ -157,10 +156,9 @@ public class MzTabFileImportMethodTest {
 
         // Annotation 27 - PC32:1
         FeatureTableRow row = featureTable.getRows().get(27);
-        FeatureTableColumn column = featureTable.getColumn("Ion Annotation",
-                null);
-        IonAnnotation ionAnnotation = (IonAnnotation) row.getData(column,
-                IonAnnotation.class);
+        FeatureTableColumn<IonAnnotation> column = featureTable.getColumn("Ion Annotation",
+                null, IonAnnotation.class);
+        IonAnnotation ionAnnotation = row.getData(column);
         Assert.assertEquals("PC32:1", ionAnnotation.getAnnotationId());
         IChemObjectBuilder builder = DefaultChemObjectBuilder.getInstance();
         IMolecularFormula cdkFormula = MolecularFormulaManipulator
