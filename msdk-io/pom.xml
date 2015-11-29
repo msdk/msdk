@@ -1,27 +1,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>io.github.msdk</groupId>
-		<artifactId>msdk</artifactId>
-		<version>0.0.2</version>
-	</parent>
-	<artifactId>msdk-io</artifactId>
-	<name>MSDK - IO</name>
-	<description>Data import and export algorithms for MSDK</description>
-	<packaging>pom</packaging>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.msdk</groupId>
+        <artifactId>msdk</artifactId>
+        <version>0.0.2-SNAPSHOT</version>
+    </parent>
+    <artifactId>msdk-io</artifactId>
+    <name>MSDK - IO</name>
+    <description>Data import and export algorithms for MSDK</description>
+    <packaging>pom</packaging>
 	
-	<modules>
-		<module>msdk-spectrumtypedetection</module>
-		<module>msdk-filetypedetection</module>
-		<module>msdk-mzmlimport</module>
-		<module>msdk-mztabimport</module>
-		<module>msdk-netcdfimport</module>
-		<module>msdk-mzxmlimport</module>
-		<module>msdk-mzdataimport</module>
-		<module>msdk-nativeformatimport</module>
-		<module>msdk-fileimport</module>
-		
-		<module>msdk-spectrumtypedetectiontest</module>
-	</modules>
+    <modules>
+        <module>msdk-spectrumtypedetection</module>
+        <module>msdk-filetypedetection</module>
+        <module>msdk-mzmlimport</module>
+        <module>msdk-mztabimport</module>
+        <module>msdk-netcdfimport</module>
+        <module>msdk-mzxmlimport</module>
+        <module>msdk-mzdataimport</module>
+        <module>msdk-nativeformatimport</module>
+        <module>msdk-fileimport</module>
+        <module>msdk-spectrumtypedetectiontest</module>
+        <module>msdk-chromatofimport</module>
+    </modules>
 </project>

@@ -15,7 +15,6 @@
 package io.github.msdk.featuredetection.chromatogramtofeaturetable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,18 +35,20 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.msdk.util.FeatureTableUtil;
+import java.util.EnumMap;
 
 /**
  * This class adds a list of chromatograms to a feature table.
  */
-public class ChromatogramToFeatureTableMethod
-        implements MSDKMethod<FeatureTable> {
+public class ChromatogramToFeatureTableMethod implements
+        MSDKMethod<FeatureTable> {
 
-    private @Nonnull List<Chromatogram> chromatograms;
-    private @Nonnull FeatureTable featureTable;
-    private @Nonnull Sample sample;
+    private final @Nonnull List<Chromatogram> chromatograms;
+    private final @Nonnull FeatureTable featureTable;
+    private final @Nonnull Sample sample;
 
-    private Map<String, FeatureTableColumn<?>> tableColumns = new HashMap<String, FeatureTableColumn<?>>();
+    private final Map<ColumnName, FeatureTableColumn<?>> tableColumns = new EnumMap<>(
+            ColumnName.class);
 
     private boolean canceled = false;
     private int processedChromatograms = 0, totalChromatograms = 0;
@@ -99,70 +100,71 @@ public class ChromatogramToFeatureTableMethod
         FeatureTableColumn column;
         for (Chromatogram chromatogram : chromatograms) {
             lastID++;
-            FeatureTableRow newRow = MSDKObjectBuilder
-                    .getFeatureTableRow(featureTable, lastID);
+            FeatureTableRow newRow = MSDKObjectBuilder.getFeatureTableRow(
+                    featureTable, lastID);
 
-            column = featureTable.getColumn(ColumnName.ID.getName(), null);
+            column = featureTable.getColumn(ColumnName.ID, null);
             newRow.setData(column, lastID);
 
-            column = featureTable.getColumn("Ion Annotation", null);
+            column = featureTable.getColumn("Ion Annotation", null,
+                    IonAnnotation.class);
             newRow.setData(column, chromatogram.getIonAnnotation());
 
-            column = tableColumns.get(ColumnName.CHROMATOGRAM.getName());
+            column = tableColumns.get(ColumnName.CHROMATOGRAM);
             newRow.setData(column, chromatogram);
 
             double mz = chromatogram.getMz();
-            column = tableColumns.get(ColumnName.MZ.getName());
+            column = tableColumns.get(ColumnName.MZ);
             newRow.setData(column, mz);
 
             float rt = ChromatogramUtil.getRt(chromatogram);
             ChromatographyInfo chromatographyInfo = MSDKObjectBuilder
                     .getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
-            column = tableColumns.get(ColumnName.RT.getName());
-            newRow.setData(column, chromatographyInfo);
+            column = tableColumns.get(ColumnName.RT);
+            newRow.setData(column, (double) rt);
 
             double rtStart = ChromatogramUtil.getRtStart(chromatogram);
-            column = tableColumns.get(ColumnName.RTSTART.getName());
+            column = tableColumns.get(ColumnName.RTSTART);
             newRow.setData(column, rtStart);
 
             double rtEnd = ChromatogramUtil.getRtEnd(chromatogram);
-            column = tableColumns.get(ColumnName.RTEND.getName());
+            column = tableColumns.get(ColumnName.RTEND);
             newRow.setData(column, rtEnd);
 
             double duration = ChromatogramUtil.getDuration(chromatogram);
-            column = tableColumns.get(ColumnName.DURATION.getName());
+            column = tableColumns.get(ColumnName.DURATION);
             newRow.setData(column, duration);
 
             double area = ChromatogramUtil.getArea(chromatogram);
-            column = tableColumns.get(ColumnName.AREA.getName());
+            column = tableColumns.get(ColumnName.AREA);
             newRow.setData(column, area);
 
             double height = ChromatogramUtil.getMaxHeight(chromatogram);
-            column = tableColumns.get(ColumnName.HEIGHT.getName());
+            column = tableColumns.get(ColumnName.HEIGHT);
             newRow.setData(column, height);
 
             int datapoints = ChromatogramUtil
                     .getNumberOfDataPoints(chromatogram);
-            column = tableColumns.get(ColumnName.NUMBEROFDATAPOINTS.getName());
+            column = tableColumns.get(ColumnName.NUMBEROFDATAPOINTS);
             newRow.setData(column, datapoints);
 
             Double fwhm = ChromatogramUtil.getFwhm(chromatogram);
             if (fwhm != null) {
-                column = tableColumns.get(ColumnName.FWHM.getName());
+                column = tableColumns.get(ColumnName.FWHM);
                 newRow.setData(column, fwhm);
             }
 
             Double tailingFactor = ChromatogramUtil
                     .getTailingFactor(chromatogram);
             if (tailingFactor != null) {
-                column = tableColumns.get(ColumnName.TAILINGFACTOR.getName());
+                column = tableColumns.get(ColumnName.TAILINGFACTOR);
                 newRow.setData(column, tailingFactor);
             }
 
             Double asymmetryFactor = ChromatogramUtil
                     .getAsymmetryFactor(chromatogram);
             if (asymmetryFactor != null) {
-                column = tableColumns.get(ColumnName.ASYMMETRYFACTOR.getName());
+                column = tableColumns.get(ColumnName.ASYMMETRYFACTOR);
                 newRow.setData(column, asymmetryFactor);
             }
 
@@ -187,7 +189,7 @@ public class ChromatogramToFeatureTableMethod
 
         // Common columns
         // Only add common columns if the feature table is empty
-        if (featureTable.getColumns().size() == 0) {
+        if (featureTable.getColumns().isEmpty()) {
             FeatureTableColumn<Integer> idColumn = MSDKObjectBuilder
                     .getIdFeatureTableColumn();
             FeatureTableColumn<Double> mzColumn = MSDKObjectBuilder
@@ -206,7 +208,7 @@ public class ChromatogramToFeatureTableMethod
         }
 
         // Sample columns
-        ArrayList<ColumnName> sampleColumns = new ArrayList<ColumnName>();
+        ArrayList<ColumnName> sampleColumns = new ArrayList<>();
         sampleColumns.add(ColumnName.CHROMATOGRAM);
         sampleColumns.add(ColumnName.MZ);
         sampleColumns.add(ColumnName.RT);
@@ -221,14 +223,14 @@ public class ChromatogramToFeatureTableMethod
         sampleColumns.add(ColumnName.ASYMMETRYFACTOR);
 
         for (ColumnName columnName : sampleColumns) {
-            FeatureTableColumn<?> column = featureTable
-                    .getColumn(columnName.getName(), sample);
+            FeatureTableColumn<?> column = featureTable.getColumn(columnName,
+                    sample);
             if (column == null) {
                 column = MSDKObjectBuilder.getFeatureTableColumn(columnName,
                         sample);
                 featureTable.addColumn(column);
             }
-            tableColumns.put(columnName.getName(), column);
+            tableColumns.put(columnName, column);
         }
 
     }
@@ -237,8 +239,8 @@ public class ChromatogramToFeatureTableMethod
     @Override
     @Nullable
     public Float getFinishedPercentage() {
-        return totalChromatograms == 0 ? null
-                : (float) processedChromatograms / totalChromatograms;
+        return totalChromatograms == 0 ? null : (float) processedChromatograms
+                / totalChromatograms;
     }
 
     /** {@inheritDoc} */
