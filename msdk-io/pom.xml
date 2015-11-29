@@ -21,7 +21,7 @@
 		<module>msdk-mzdataimport</module>
 		<module>msdk-nativeformatimport</module>
 		<module>msdk-fileimport</module>
-		
 		<module>msdk-spectrumtypedetectiontest</module>
+		<module>msdk-chromatofimport</module>
 	</modules>
 </project>
