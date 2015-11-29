@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>io.github.msdk</groupId>
+		<artifactId>msdk-io</artifactId>
+		<version>0.0.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>msdk-io-fileimport</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-filetypedetection</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-mzml</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-mztab</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-netcdf</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-mzxml</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-mzdata</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-nativeformats</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+	</dependencies>
+
+</project>
