@@ -56,10 +56,6 @@ import uk.ac.ebi.pride.jmztab.model.SmallMolecule;
 import uk.ac.ebi.pride.jmztab.model.SplitList;
 import uk.ac.ebi.pride.jmztab.utils.MZTabFileParser;
 
-/**
- * <p>MzTabFileImportMethod class.</p>
- *
- */
 public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -74,19 +70,12 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
     private Map<String, FeatureTableColumn<?>> tableColumns = new HashMap<String, FeatureTableColumn<?>>();
     private ArrayList<String> columnNameArray = new ArrayList<String>();
 
-    /**
-     * <p>Constructor for MzTabFileImportMethod.</p>
-     *
-     * @param sourceFile a {@link java.io.File} object.
-     * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
-     */
     public MzTabFileImportMethod(@Nonnull File sourceFile,
             @Nonnull DataPointStore dataStore) {
         this.sourceFile = sourceFile;
         this.dataStore = dataStore;
     }
 
-    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     public FeatureTable execute() throws MSDKException {
@@ -148,20 +137,17 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
 
     }
 
-    /** {@inheritDoc} */
     @Override
     @Nullable
     public FeatureTable getResult() {
         return newFeatureTable;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Float getFinishedPercentage() {
         return totalRows == 0 ? null : (float) parsedRows / totalRows;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void cancel() {
         this.canceled = true;
@@ -309,23 +295,23 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
 
             // Add common data to columns
             // Common column: Id
-            column = featureTable.getColumn(ColumnName.ID.getName(), null);
+            column = featureTable.getColumnByName(ColumnName.ID, null);
             currentRow.setData(column, parsedRows);
 
             // Common column: m/z
-            column = featureTable.getColumn(ColumnName.MZ.getName(), null);
+            column = featureTable.getColumnByName(ColumnName.MZ, null);
             currentRow.setData(column, mzExp);
 
             // Common column: Chromatography Info
-            column = featureTable.getColumn("Chromatography Info", null);
+            column = featureTable.getColumn("Chromatography Info", null, ChromatographyInfo.class);
             currentRow.setData(column, chromatographyInfo);
 
             // Common column: Ion Annotation
-            column = featureTable.getColumn("Ion Annotation", null);
+            column = featureTable.getColumn("Ion Annotation", null, IonAnnotation.class);
             currentRow.setData(column, ionAnnotation);
 
             // Common column: Charge
-            column = featureTable.getColumn(ColumnName.CHARGE.getName(), null);
+            column = featureTable.getColumnByName(ColumnName.CHARGE, null);
             if (charge != null)
                 currentRow.setData(column, charge);
 

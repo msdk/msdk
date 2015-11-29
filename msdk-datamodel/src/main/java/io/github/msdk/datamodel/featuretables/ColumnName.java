@@ -11,48 +11,49 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-
 package io.github.msdk.datamodel.featuretables;
 
 import javax.annotation.Nonnull;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * Represents the name of the feature table columns.
  */
 public enum ColumnName {
 
-    ID("Id", Integer.class),
-    GROUPID("Group ID", Integer.class),
-    MZ("m/z", Double.class),
-    PPM("ppm", Double.class),
-    RT("RT", ChromatographyInfo.class),
-    RTSTART("RT Start", Double.class),
-    RTEND("RT End", Double.class),
-    DURATION("Duration", Double.class),
-    AREA("Area", Double.class),
-    HEIGHT("Height", Double.class),
-    CHARGE("Charge", Integer.class),
-    NUMBEROFDATAPOINTS("# Data Points", Integer.class),
-    FWHM("FWHM", Double.class),
-    TAILINGFACTOR("Tailing Factor", Double.class),
-    ASYMMETRYFACTOR("Asymmetry Factor", Double.class),
-    CHROMATOGRAM("Chromatogram", Chromatogram.class);
+    ID("Id", Integer.class), GROUPID("Group ID", Integer.class), MZ("m/z",
+            Double.class), PPM("ppm", Double.class), RT("RT", Double.class), RTSTART(
+            "RT Start", Double.class), RTEND("RT End", Double.class), DURATION(
+            "Duration", Double.class), AREA("Area", Double.class), HEIGHT(
+            "Height", Double.class), CHARGE("Charge", Integer.class), NUMBEROFDATAPOINTS(
+            "# Data Points", Integer.class), FWHM("FWHM", Double.class), TAILINGFACTOR(
+            "Tailing Factor", Double.class), ASYMMETRYFACTOR(
+            "Asymmetry Factor", Double.class), CHROMATOGRAM("Chromatogram",
+            Chromatogram.class);
 
-    @Nonnull private final String name;
-    @Nonnull private final Class<?> dataTypeClass;
+    @Nonnull
+    private final String name;
+    @Nonnull
+    private final Class<?> dataTypeClass;
 
+    /**
+     * Create a new column name instance.
+     *
+     * @param name
+     *            the name of the column.
+     * @param dataTypeClass
+     *            the class of the column's values.
+     */
     ColumnName(@Nonnull String name, @Nonnull Class<?> dataTypeClass) {
         this.name = name;
         this.dataTypeClass = dataTypeClass;
     }
 
     /**
-     * <p>Getter for the field <code>name</code>.</p>
+     * Returns the name of the column.
      *
-     * @return a {@link java.lang.String} object.
+     * @return the name of the column.
      */
     @Nonnull
     public String getName() {
@@ -60,9 +61,9 @@ public enum ColumnName {
     }
 
     /**
-     * <p>Getter for the field <code>dataTypeClass</code>.</p>
+     * Returns the class of the column's values.
      *
-     * @return a {@link java.lang.Class} object.
+     * @return the class of the column's values.
      */
     @Nonnull
     public Class<?> getDataTypeClass() {

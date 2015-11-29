@@ -11,45 +11,51 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-
 package io.github.msdk.datamodel.featuretables;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * <p>FeatureTableColumn interface.</p>
+ * A feature table column has a name, a fixed type for its element values, and
+ * an optional {@link Sample} associated to it.
  *
- * @param <DATATYPE> Data type of this column
+ * @param <DATATYPE>
+ *            the generic type of the element values.
  */
 public interface FeatureTableColumn<DATATYPE> {
 
     /**
-     * <p>getName.</p>
+     * Returns the column's name.
      *
-     * @return Short descriptive name for the feature table column
+     * @return Short descriptive name for the feature table column.
      */
-    @Nonnull String getName();
+    @Nonnull
+    String getName();
 
     /**
-     * Change the name of this feature table column
+     * Change the name of this feature table column.
      *
-     * @param name a {@link java.lang.String} object.
+     * @param name
+     *            the column's name.
      */
     void setName(@Nonnull String name);
 
     /**
-     * <p>getDataTypeClass.</p>
+     * Returns the class of the values contained in this column.
      *
-     * @return a {@link java.lang.Class} object.
+     * @return the class of the column' datatype.
      */
-    @Nonnull Class<DATATYPE> getDataTypeClass();
+    @Nonnull
+    Class<DATATYPE> getDataTypeClass();
 
     /**
-     * Returns the sample associated with this column, or null if no sample is associated.
+     * Returns the sample associated with this column, or null if no sample is
+     * associated.
      *
-     * @return a {@link io.github.msdk.datamodel.featuretables.Sample} object.
+     * @return the sample associated to this column, or null.
      */
-    @Nullable Sample getSample();
-    
+    @Nullable
+    Sample getSample();
+
 }

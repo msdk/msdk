@@ -23,6 +23,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
@@ -48,20 +49,17 @@ class SimpleFeatureTable implements FeatureTable {
         featureTableColumns = new ArrayList<FeatureTableColumn<?>>();
     }
 
-    /** {@inheritDoc} */
     @Override
     public @Nonnull String getName() {
         return name;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void setName(@Nonnull String name) {
         Preconditions.checkNotNull(name);
         this.name = name;
     }
 
-    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     public @Nonnull List<FeatureTableRow> getRows() {
@@ -70,7 +68,6 @@ class SimpleFeatureTable implements FeatureTable {
         return featureTableRowCopy;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void addRow(@Nonnull FeatureTableRow row) {
         Preconditions.checkNotNull(row);
@@ -79,7 +76,6 @@ class SimpleFeatureTable implements FeatureTable {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void removeRow(@Nonnull FeatureTableRow row) {
         Preconditions.checkNotNull(row);
@@ -88,7 +84,6 @@ class SimpleFeatureTable implements FeatureTable {
         }
     }
 
-    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     public @Nonnull List<FeatureTableColumn<?>> getColumns() {
@@ -97,19 +92,18 @@ class SimpleFeatureTable implements FeatureTable {
         return featureTableColumnsCopy;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public FeatureTableColumn<?> getColumn(@Nonnull String columnName,
-            Sample sample) {
+    public <DATATYPE> FeatureTableColumn<DATATYPE> getColumn(@Nonnull String columnName,
+            Sample sample, Class<? extends DATATYPE> dtClass) {
         for (FeatureTableColumn<?> column : featureTableColumns) {
             if (column.getName().equals(columnName)) {
                 
                 if (column.getSample() == null) {
                     if (sample == null)
-                        return column;
+                        return (FeatureTableColumn<DATATYPE>) column;
                 }
                 else if (column.getSample().equals(sample)) {
-                    return column;
+                    return (FeatureTableColumn<DATATYPE>) column;
                 }
 
             }
@@ -117,8 +111,16 @@ class SimpleFeatureTable implements FeatureTable {
         }
         return null;
     }
+    
+    @Override
+    public <DATATYPE> FeatureTableColumn<DATATYPE> getColumnByName(ColumnName columnName, Sample sample) {
+        FeatureTableColumn<?> column = getColumn(columnName.getName(), sample, columnName.getDataTypeClass());
+        if(column!=null) {
+            return (FeatureTableColumn<DATATYPE>) column; 
+        }
+        return null;
+    }
 
-    /** {@inheritDoc} */
     @Override
     public void addColumn(@Nonnull FeatureTableColumn<?> col) {
         Preconditions.checkNotNull(col);
@@ -127,7 +129,6 @@ class SimpleFeatureTable implements FeatureTable {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void removeColumn(@Nonnull FeatureTableColumn<?> col) {
         Preconditions.checkNotNull(col);
@@ -136,7 +137,6 @@ class SimpleFeatureTable implements FeatureTable {
         }
     }
 
-    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     public @Nonnull List<Sample> getSamples() {
@@ -151,7 +151,6 @@ class SimpleFeatureTable implements FeatureTable {
         return ImmutableList.copyOf(sampleList);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void dispose() {
         dataPointStore.dispose();
