@@ -22,15 +22,22 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
  */
 public enum ColumnName {
 
-    ID("Id", Integer.class), GROUPID("Group ID", Integer.class), MZ("m/z",
-            Double.class), PPM("ppm", Double.class), RT("RT", Double.class), RTSTART(
-            "RT Start", Double.class), RTEND("RT End", Double.class), DURATION(
-            "Duration", Double.class), AREA("Area", Double.class), HEIGHT(
-            "Height", Double.class), CHARGE("Charge", Integer.class), NUMBEROFDATAPOINTS(
-            "# Data Points", Integer.class), FWHM("FWHM", Double.class), TAILINGFACTOR(
-            "Tailing Factor", Double.class), ASYMMETRYFACTOR(
-            "Asymmetry Factor", Double.class), CHROMATOGRAM("Chromatogram",
-            Chromatogram.class);
+    ID("Id", Integer.class),
+    GROUPID("Group ID", Integer.class),
+    MZ("m/z", Double.class),
+    PPM("ppm", Double.class),
+    RT("RT", Double.class),
+    RTSTART("RT Start", Double.class),
+    RTEND("RT End", Double.class),
+    DURATION("Duration", Double.class),
+    AREA("Area", Double.class),
+    HEIGHT("Height", Double.class),
+    CHARGE("Charge", Integer.class),
+    NUMBEROFDATAPOINTS("# Data Points", Integer.class),
+    FWHM("FWHM", Double.class),
+    TAILINGFACTOR("Tailing Factor", Double.class),
+    ASYMMETRYFACTOR("Asymmetry Factor", Double.class),
+    CHROMATOGRAM("Chromatogram", Chromatogram.class);
 
     @Nonnull
     private final String name;

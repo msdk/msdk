@@ -113,7 +113,7 @@ class SimpleFeatureTable implements FeatureTable {
     }
     
     @Override
-    public <DATATYPE> FeatureTableColumn<DATATYPE> getColumnByName(ColumnName columnName, Sample sample) {
+    public <DATATYPE> FeatureTableColumn<DATATYPE> getColumn(ColumnName columnName, Sample sample) {
         FeatureTableColumn<?> column = getColumn(columnName.getName(), sample, columnName.getDataTypeClass());
         if(column!=null) {
             return (FeatureTableColumn<DATATYPE>) column; 

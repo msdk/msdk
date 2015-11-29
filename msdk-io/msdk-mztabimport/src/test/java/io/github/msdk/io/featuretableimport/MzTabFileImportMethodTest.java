@@ -71,21 +71,22 @@ public class MzTabFileImportMethodTest {
 
         // Annotation 7 - HEPES
         FeatureTableRow row = featureTable.getRows().get(7);
-        FeatureTableColumn<IonAnnotation> ionAnnotationColumn = featureTable.getColumn("Ion Annotation",
-                null, IonAnnotation.class);
+        FeatureTableColumn<IonAnnotation> ionAnnotationColumn = featureTable
+                .getColumn("Ion Annotation", null, IonAnnotation.class);
         IonAnnotation ionAnnotation = row.getData(ionAnnotationColumn);
         Assert.assertEquals("HEPES", ionAnnotation.getDescription());
         IChemObjectBuilder builder = DefaultChemObjectBuilder.getInstance();
         IMolecularFormula cdkFormula = MolecularFormulaManipulator
                 .getMolecularFormula("C8H18N2O4S", builder);
-        String formula = MolecularFormulaManipulator
-                .getString(ionAnnotation.getFormula());
+        String formula = MolecularFormulaManipulator.getString(ionAnnotation
+                .getFormula());
         String formula2 = MolecularFormulaManipulator.getString(cdkFormula);
         Assert.assertTrue(formula.equals(formula2));
 
         // Row 5
         row = featureTable.getRows().get(5);
-        FeatureTableColumn<Double> mzColumn = featureTable.getColumnByName(ColumnName.MZ, null);
+        FeatureTableColumn<Double> mzColumn = featureTable.getColumn(
+                ColumnName.MZ, null);
         Double averageMZ = row.getData(mzColumn);
         Assert.assertEquals(520.334738595145, averageMZ, 0.0000001);
         Sample sample = featureTable.getSamples().get(5);
@@ -95,21 +96,24 @@ public class MzTabFileImportMethodTest {
         row = featureTable.getRows().get(297);
         sample = featureTable.getSamples().get(5);
         // Area
-        FeatureTableColumn<Double> areaColumn = featureTable.getColumnByName(ColumnName.AREA, sample);
+        FeatureTableColumn<Double> areaColumn = featureTable.getColumn(
+                ColumnName.AREA, sample);
         Double area = row.getData(areaColumn);
         Assert.assertEquals(11480605.3259747, area, 0.0000001);
         // RT
-        FeatureTableColumn<ChromatographyInfo> chromInfoColumn = featureTable.getColumn("Chromatography Info", null, ChromatographyInfo.class);
-        ChromatographyInfo chromatographyInfo = row
-                .getData(chromInfoColumn);
+        FeatureTableColumn<ChromatographyInfo> chromInfoColumn = featureTable
+                .getColumn("Chromatography Info", null,
+                        ChromatographyInfo.class);
+        ChromatographyInfo chromatographyInfo = row.getData(chromInfoColumn);
         Float rt = chromatographyInfo.getRetentionTime();
-        Assert.assertEquals(30.23502166666667, rt, 0.0000001);
+        Assert.assertEquals(30.324697494506836, rt, 0.0000001);
         // Height
-        FeatureTableColumn<Double> heightColumn = featureTable.getColumnByName(ColumnName.HEIGHT, sample);
+        FeatureTableColumn<Double> heightColumn = featureTable.getColumn(
+                ColumnName.HEIGHT, sample);
         Double height = row.getData(heightColumn);
         Assert.assertEquals(312942.149147727, height, 0.0000001);
         // m/z
-        mzColumn = featureTable.getColumnByName(ColumnName.MZ, sample);
+        mzColumn = featureTable.getColumn(ColumnName.MZ, sample);
         Double mz = row.getData(mzColumn);
         Assert.assertEquals(144.927825927734, mz, 0.0000001);
 
@@ -125,8 +129,8 @@ public class MzTabFileImportMethodTest {
                 .getTmpFileDataPointStore();
 
         // Import the file
-        File inputFile = new File(
-                TEST_DATA_PATH + "lipidomics-HFD-LD-study-TG.mzTab");
+        File inputFile = new File(TEST_DATA_PATH
+                + "lipidomics-HFD-LD-study-TG.mzTab");
         Assert.assertTrue(inputFile.canRead());
         MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile,
                 dataStore);
@@ -142,8 +146,8 @@ public class MzTabFileImportMethodTest {
         featureTable.dispose();
 
         // Import the file
-        inputFile = new File(
-                TEST_DATA_PATH + "lipidomics-HFD-LD-study-PL-DG-SM.mzTab");
+        inputFile = new File(TEST_DATA_PATH
+                + "lipidomics-HFD-LD-study-PL-DG-SM.mzTab");
         Assert.assertTrue(inputFile.canRead());
         importer = new MzTabFileImportMethod(inputFile, dataStore);
         featureTable = importer.execute();
@@ -156,15 +160,15 @@ public class MzTabFileImportMethodTest {
 
         // Annotation 27 - PC32:1
         FeatureTableRow row = featureTable.getRows().get(27);
-        FeatureTableColumn<IonAnnotation> column = featureTable.getColumn("Ion Annotation",
-                null, IonAnnotation.class);
+        FeatureTableColumn<IonAnnotation> column = featureTable.getColumn(
+                "Ion Annotation", null, IonAnnotation.class);
         IonAnnotation ionAnnotation = row.getData(column);
         Assert.assertEquals("PC32:1", ionAnnotation.getAnnotationId());
         IChemObjectBuilder builder = DefaultChemObjectBuilder.getInstance();
         IMolecularFormula cdkFormula = MolecularFormulaManipulator
                 .getMolecularFormula("C40H78P1O8N1", builder);
-        String formula = MolecularFormulaManipulator
-                .getString(ionAnnotation.getFormula());
+        String formula = MolecularFormulaManipulator.getString(ionAnnotation
+                .getFormula());
         String formula2 = MolecularFormulaManipulator.getString(cdkFormula);
         Assert.assertTrue(formula.equals(formula2));
 

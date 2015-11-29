@@ -50,7 +50,7 @@ public class FeatureTableUtil {
             mzCount = 0;
             rtCount = 0;
             for (Sample sample : samples) {
-                FeatureTableColumn<Double> mzColumn = featureTable.getColumnByName(ColumnName.MZ, sample);
+                FeatureTableColumn<Double> mzColumn = featureTable.getColumn(ColumnName.MZ, sample);
                 if (mzColumn != null) {
                     mz = row.getData(mzColumn);
                     if (mz != null) {
@@ -59,7 +59,7 @@ public class FeatureTableUtil {
                     }
                 }
 
-                FeatureTableColumn<Double> rtColumn = featureTable.getColumnByName(ColumnName.RT, sample);
+                FeatureTableColumn<Double> rtColumn = featureTable.getColumn(ColumnName.RT, sample);
                 if (rtColumn != null) {
                     rt = row.getData(rtColumn);
                     if (rt != null) {
@@ -70,7 +70,7 @@ public class FeatureTableUtil {
             }
 
             // Update m/z
-            FeatureTableColumn<Double> mzColumn = featureTable.getColumnByName(ColumnName.MZ, null);
+            FeatureTableColumn<Double> mzColumn = featureTable.getColumn(ColumnName.MZ, null);
             Double newMz = totalMz / mzCount;
             row.setData(mzColumn, newMz);
 
@@ -81,7 +81,7 @@ public class FeatureTableUtil {
                 if (ionAnnotation != null) {
                     Double ionMz = ionAnnotation.getExpectedMz();
                     if (ionMz != null) {
-                        FeatureTableColumn<Double> ppmColumn = featureTable.getColumnByName(ColumnName.PPM, null);
+                        FeatureTableColumn<Double> ppmColumn = featureTable.getColumn(ColumnName.PPM, null);
                         Double diff = Math.abs(newMz - ionMz);
                         row.setData(ppmColumn, (diff / ionMz) * 1000000);
                     }

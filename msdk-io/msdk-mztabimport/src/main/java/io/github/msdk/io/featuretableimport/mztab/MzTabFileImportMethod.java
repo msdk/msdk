@@ -88,8 +88,8 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
         }
 
         String fileName = sourceFile.getName();
-        newFeatureTable = MSDKObjectBuilder.getFeatureTable(fileName,
-                dataStore);
+        newFeatureTable = MSDKObjectBuilder
+                .getFeatureTable(fileName, dataStore);
 
         try {
             // Prevent MZTabFileParser from writing to console
@@ -236,8 +236,8 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
         for (SmallMolecule smallMolecule : smallMolecules) {
             parsedRows++;
             FeatureTableColumn column;
-            FeatureTableRow currentRow = MSDKObjectBuilder
-                    .getFeatureTableRow(featureTable, parsedRows);
+            FeatureTableRow currentRow = MSDKObjectBuilder.getFeatureTableRow(
+                    featureTable, parsedRows);
 
             formula = smallMolecule.getChemicalFormula();
             smile = smallMolecule.getSmiles().toString();
@@ -295,23 +295,25 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
 
             // Add common data to columns
             // Common column: Id
-            column = featureTable.getColumnByName(ColumnName.ID, null);
+            column = featureTable.getColumn(ColumnName.ID, null);
             currentRow.setData(column, parsedRows);
 
             // Common column: m/z
-            column = featureTable.getColumnByName(ColumnName.MZ, null);
+            column = featureTable.getColumn(ColumnName.MZ, null);
             currentRow.setData(column, mzExp);
 
             // Common column: Chromatography Info
-            column = featureTable.getColumn("Chromatography Info", null, ChromatographyInfo.class);
+            column = featureTable.getColumn("Chromatography Info", null,
+                    ChromatographyInfo.class);
             currentRow.setData(column, chromatographyInfo);
 
             // Common column: Ion Annotation
-            column = featureTable.getColumn("Ion Annotation", null, IonAnnotation.class);
+            column = featureTable.getColumn("Ion Annotation", null,
+                    IonAnnotation.class);
             currentRow.setData(column, ionAnnotation);
 
             // Common column: Charge
-            column = featureTable.getColumnByName(ColumnName.CHARGE, null);
+            column = featureTable.getColumn(ColumnName.CHARGE, null);
             if (charge != null)
                 currentRow.setData(column, charge);
 
@@ -323,12 +325,11 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
                 int sampleKey = sampleAssay.getId();
 
                 // Abundance - Area
-                if (smallMolecule
-                        .getAbundanceColumnValue(sampleAssay) != null) {
+                if (smallMolecule.getAbundanceColumnValue(sampleAssay) != null) {
                     featureArea = Double.parseDouble(smallMolecule
                             .getAbundanceColumnValue(sampleAssay).toString());
-                    column = tableColumns.get(
-                            "[" + sampleKey + "]_" + ColumnName.AREA.getName());
+                    column = tableColumns.get("[" + sampleKey + "]_"
+                            + ColumnName.AREA.getName());
                     currentRow.setData(column, featureArea);
                 }
 
@@ -337,12 +338,12 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
                     if (smallMolecule.getOptionColumnValue(sampleAssay,
                             columnName) != null) {
 
-                        column = tableColumns.get(
-                                "opt_assay[" + sampleKey + "]_" + columnName);
+                        column = tableColumns.get("opt_assay[" + sampleKey
+                                + "]_" + columnName);
                         String classType = getDataTypeClass(columnName)
                                 .getSimpleName();
-                        String orgValue = smallMolecule
-                                .getOptionColumnValue(sampleAssay, columnName);
+                        String orgValue = smallMolecule.getOptionColumnValue(
+                                sampleAssay, columnName);
                         switch (classType) {
                         case "Float":
                             Float floatValue = Float.parseFloat(orgValue);
@@ -421,8 +422,8 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
         // Only compare letters in name and ignore case
         String compareName = mzTabColumnName.replaceAll("[^A-Za-z]", "");
         for (ColumnName columnName : ColumnName.values()) {
-            if (compareName.toUpperCase()
-                    .equals(columnName.toString().toUpperCase()))
+            if (compareName.toUpperCase().equals(
+                    columnName.toString().toUpperCase()))
                 return columnName;
         }
         return null;

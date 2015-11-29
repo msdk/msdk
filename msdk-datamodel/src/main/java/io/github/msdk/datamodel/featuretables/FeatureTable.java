@@ -82,7 +82,7 @@ public interface FeatureTable {
      * @return the {@link FeatureTableColumn} for the given name and sample.
      */
     @Nullable
-    <DATATYPE> FeatureTableColumn<DATATYPE> getColumnByName(
+    <DATATYPE> FeatureTableColumn<DATATYPE> getColumn(
             @Nonnull ColumnName columnName, Sample sample);
 
     /**
