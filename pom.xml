@@ -16,9 +16,8 @@
         <module>msdk-rawdata</module>
         <module>msdk-featuredetection</module>
         <module>msdk-id</module>
-        <module>msdk-centroiding</module>
-        <module>msdk-all</module>
         <module>msdk-filtering</module>
+        <module>msdk-all</module>
     </modules>
 
     <properties>

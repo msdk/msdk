@@ -10,11 +10,6 @@
 
 	<dependencies>
 
-		<dependency>
-			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-centroiding</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
@@ -103,6 +98,12 @@
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-rawdata-filters</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-rawdata-centroiding</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
