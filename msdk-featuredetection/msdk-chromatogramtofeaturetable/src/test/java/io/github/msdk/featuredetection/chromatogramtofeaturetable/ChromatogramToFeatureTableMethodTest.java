@@ -60,7 +60,7 @@ public class ChromatogramToFeatureTableMethodTest {
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
         // Ion 1
-        List<IonAnnotation> ionAnnotations = new ArrayList<IonAnnotation>();
+        List<IonAnnotation> ionAnnotations = new ArrayList<>();
         IonAnnotation ion1 = MSDKObjectBuilder.getSimpleIonAnnotation();
         ion1.setExpectedMz(332.56);
         ion1.setAnnotationId("Feature 332.56");
@@ -133,9 +133,10 @@ public class ChromatogramToFeatureTableMethodTest {
         double mz = row.getData(mzColumn);
         Assert.assertEquals(508.0034287396599, mz, 0.000001);
 
-        FeatureTableColumn<Double> rtColumn = featureTable.getColumn(
-                ColumnName.RT, sample);
-        double rt = row.getData(rtColumn);
+        FeatureTableColumn<ChromatographyInfo> rtColumn = featureTable
+                .getColumn(ColumnName.RT, sample);
+        ChromatographyInfo chromInfo = row.getData(rtColumn);
+        Float rt = chromInfo.getRetentionTime();
         Assert.assertEquals(14.481896, rt / 60, 0.000001);
 
         FeatureTableColumn<Double> rtStartColumn = featureTable.getColumn(
