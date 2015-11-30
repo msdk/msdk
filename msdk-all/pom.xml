@@ -1,116 +1,122 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>io.github.msdk</groupId>
-        <artifactId>msdk</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
-    </parent>
-    <artifactId>msdk-all</artifactId>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>io.github.msdk</groupId>
+		<artifactId>msdk</artifactId>
+		<version>0.0.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>msdk-all</artifactId>
 
-    <dependencies>
+	<dependencies>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-centroiding</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-centroiding</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-datamodel</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-datamodel</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-chromatogrambuilder</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-chromatogrambuilder</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-chromatogramtofeaturetable</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-chromatogramtofeaturetable</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-targeteddetection</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-targeteddetection</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-fileimport</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-fileimport</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-filetypedetection</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-filetypedetection</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-mzdataimport</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-mzdata</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-mzmlimport</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-mzml</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-mztabimport</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-mztab</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-mzxmlimport</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-mzxml</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-nativeformatimport</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-nativeformats</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-netcdfimport</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-netcdf</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-spectrumtypedetection</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-spectrumtypedetection</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-rawdata</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-chromatof</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-mona</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-rawdata-filters</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-featurefilter</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-id-mona</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-    </dependencies>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-featurefilter</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+	</dependencies>
 </project>

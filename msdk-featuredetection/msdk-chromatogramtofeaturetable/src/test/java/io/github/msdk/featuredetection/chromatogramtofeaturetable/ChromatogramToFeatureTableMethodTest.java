@@ -35,7 +35,7 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.featuredetection.targeteddetection.TargetedDetectionMethod;
-import io.github.msdk.io.rawdataimport.mzml.MzMLFileImportMethod;
+import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
 

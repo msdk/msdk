@@ -8,19 +8,10 @@
     </parent>
     <artifactId>msdk-rawdata</artifactId>
     <name>MSDK - Raw data algorithms</name>
+	<packaging>pom</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-datamodel</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-mzmlimport</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+	<modules>
+		<module>msdk-rawdata-filters</module>
+	</modules>
 
 </project>
