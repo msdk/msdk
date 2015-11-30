@@ -3,10 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.msdk</groupId>
-        <artifactId>msdk</artifactId>
+        <artifactId>msdk-rawdata</artifactId>
         <version>0.0.2-SNAPSHOT</version>
     </parent>
-    <artifactId>msdk-centroiding</artifactId>
+    <artifactId>msdk-rawdata-centroiding</artifactId>
     <name>MSDK centroiding modules</name>
     <description>Package for MSDK centroiding algorithms</description>
 

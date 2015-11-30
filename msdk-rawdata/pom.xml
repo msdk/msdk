@@ -12,6 +12,7 @@
 
 	<modules>
 		<module>msdk-rawdata-filters</module>
+		<module>msdk-rawdata-centroiding</module>
 	</modules>
 
 </project>
