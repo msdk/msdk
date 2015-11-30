@@ -10,7 +10,6 @@
 
 	<dependencies>
 
-
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-datamodel</artifactId>
@@ -89,6 +88,8 @@
 			<version>${project.version}</version>
 		</dependency>
 
+
+
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-io-chromatof</artifactId>
@@ -116,6 +117,12 @@
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-featurefilter</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-spectra-splash</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
