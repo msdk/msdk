@@ -11,7 +11,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>msdk-rawdatafilters</module>
+		<module>msdk-rawdata-filters</module>
 	</modules>
 
 </project>

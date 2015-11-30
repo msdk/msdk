@@ -102,7 +102,7 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-rawdatafilters</artifactId>
+			<artifactId>msdk-rawdata-filters</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
