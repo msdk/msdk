@@ -121,7 +121,7 @@ public class ChromatogramToFeatureTableMethod implements
             ChromatographyInfo chromatographyInfo = MSDKObjectBuilder
                     .getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
             column = tableColumns.get(ColumnName.RT);
-            newRow.setData(column, (double) rt);
+            newRow.setData(column, chromatographyInfo);
 
             double rtStart = ChromatogramUtil.getRtStart(chromatogram);
             column = tableColumns.get(ColumnName.RTSTART);
