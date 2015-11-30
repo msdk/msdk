@@ -18,6 +18,7 @@
         <module>msdk-id</module>
         <module>msdk-filtering</module>
         <module>msdk-all</module>
+        <module>msdk-spectra</module>
     </modules>
 
     <properties>
