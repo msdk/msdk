@@ -108,7 +108,7 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-mona</artifactId>
+			<artifactId>msdk-id-mona</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

@@ -14,9 +14,8 @@
         <module>msdk-datamodel</module>
         <module>msdk-io</module>
         <module>msdk-rawdata</module>
-        <module>msdk-identification</module>
         <module>msdk-featuredetection</module>
-        <module>msdk-search</module>
+        <module>msdk-id</module>
         <module>msdk-centroiding</module>
         <module>msdk-all</module>
         <module>msdk-filtering</module>
