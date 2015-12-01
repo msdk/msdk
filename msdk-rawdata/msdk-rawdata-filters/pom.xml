@@ -7,7 +7,7 @@
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>msdk-rawdata-filters</artifactId>
-	<name>MSDK - raw data filters</name>
+	<description>MSDK - raw data filters</description>
 
 	<dependencies>
 		<dependency>

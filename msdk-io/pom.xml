@@ -7,13 +7,10 @@
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>msdk-io</artifactId>
-	<name>MSDK - IO</name>
 	<description>Data import and export algorithms for MSDK</description>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>msdk-io-spectrumtypedetection</module>
-		<module>msdk-io-spectrumtypedetectiontest</module>
 		<module>msdk-io-filetypedetection</module>
 		<module>msdk-io-mzml</module>
 		<module>msdk-io-mztab</module>

@@ -3,45 +3,34 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>io.github.msdk</groupId>
-		<artifactId>msdk-io</artifactId>
+		<artifactId>msdk-spectra</artifactId>
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>msdk-io-mzml</artifactId>
-
-	<repositories>
-		<repository>
-			<!-- EBI repository -->
-			<id>ebi-repo</id>
-			<name>The EBI Maven repository</name>
-			<url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/</url>
-		</repository>
-	</repositories>
+	<artifactId>msdk-spectra-spectrumtypedetectiontest</artifactId>
+	<description>These tests are in a separate package because they depend on both msdk-spectra-spectrumtypedetection and msdk-io-mzml modules. If we add the tests to the msdk-spectra-spectrumtypedetection module, it would create a dependency cycle.</description>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-datamodel</artifactId>
 			<version>${project.version}</version>
+			<scope>test</scope>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-mzml</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-spectra-spectrumtypedetection</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>uk.ac.ebi.jmzml</groupId>
-			<artifactId>jmzml</artifactId>
-			<version>1.7.2</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-log4j12</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
+
 </project>

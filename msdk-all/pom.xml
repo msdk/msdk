@@ -18,24 +18,6 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-chromatogrambuilder</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-chromatogramtofeaturetable</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-targeteddetection</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-io-fileimport</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -82,13 +64,6 @@
 			<version>${project.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-io-spectrumtypedetection</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
@@ -110,19 +85,73 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-id-mona</artifactId>
+			<artifactId>msdk-db-mona</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-featurefilter</artifactId>
+			<artifactId>msdk-db-kegg</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-db-gnps</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-db-metabolights</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-id-sirius</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-id-metfrag</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-features-filtering</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-spectra-spectrumtypedetection</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-spectra-splash</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-featdet-chromatogrambuilder</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-featdet-chromatogramtofeaturetable</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-featdet-targeteddetection</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
