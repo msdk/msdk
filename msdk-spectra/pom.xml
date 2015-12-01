@@ -12,5 +12,6 @@
 		<module>msdk-spectra-spectrumtypedetection</module>
 		<module>msdk-spectra-spectrumtypedetectiontest</module>
 		<module>msdk-spectra-splash</module>
+		<module>msdk-spectra-comparison</module>
 	</modules>
 </project>
