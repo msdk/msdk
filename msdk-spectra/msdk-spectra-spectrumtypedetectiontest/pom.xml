@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>io.github.msdk</groupId>
+		<artifactId>msdk-spectra</artifactId>
+		<version>0.0.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>msdk-spectra-spectrumtypedetectiontest</artifactId>
+	<description>These tests are in a separate package because they depend on both msdk-spectra-spectrumtypedetection and msdk-io-mzml modules. If we add the tests to the msdk-spectra-spectrumtypedetection module, it would create a dependency cycle.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-datamodel</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-mzml</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-spectra-spectrumtypedetection</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+</project>

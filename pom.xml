@@ -6,7 +6,6 @@
     <version>0.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>MSDK - Mass Spectrometry Development Kit</name>
     <description>A java library for the development of mass spectrometry-related algorithms.</description>
     <url>https://msdk.github.io</url>
 
@@ -14,10 +13,12 @@
         <module>msdk-datamodel</module>
         <module>msdk-io</module>
         <module>msdk-rawdata</module>
-        <module>msdk-featuredetection</module>
+        <module>msdk-featdet</module>
         <module>msdk-id</module>
-        <module>msdk-filtering</module>
+        <module>msdk-features</module>
         <module>msdk-all</module>
+        <module>msdk-spectra</module>
+        <module>msdk-db</module>
     </modules>
 
     <properties>

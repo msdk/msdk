@@ -7,9 +7,9 @@
     </parent>
     <artifactId>msdk-id</artifactId>
     <packaging>pom</packaging>
-    <name>MSDK search modules</name>
-    <description>MSDK package for database search and other spectral/compound search modules</description>
+    <description>MSDK package for spectral/compound identification modules</description>
     <modules>
-        <module>msdk-id-mona</module>
+        <module>msdk-id-sirius</module>
+        <module>msdk-id-metfrag</module>
     </modules>
 </project>

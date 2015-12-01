@@ -27,7 +27,7 @@
 		
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-io-spectrumtypedetection</artifactId>
+			<artifactId>msdk-spectra-spectrumtypedetection</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

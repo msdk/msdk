@@ -1,0 +1,16 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.msdk</groupId>
+        <artifactId>msdk</artifactId>
+        <version>0.0.2-SNAPSHOT</version>
+    </parent>
+    <artifactId>msdk-featdet</artifactId>
+    <packaging>pom</packaging>
+    <description>MSDK package for feature detection algorithms</description>
+    <modules>
+        <module>msdk-featdet-chromatogrambuilder</module>
+        <module>msdk-featdet-targeteddetection</module>
+        <module>msdk-featdet-chromatogramtofeaturetable</module>
+    </modules>
+</project>
