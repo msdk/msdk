@@ -46,6 +46,10 @@ class MzMLCV {
     static final String cvPolarityPositive = "MS:1000130";
     static final String cvPolarityNegative = "MS:1000129";
 
+    // Centroid vs profile
+    static final String cvCentroidSpectrum = "MS:1000127";    
+    static final String cvProfileSpectrum = "MS:1000128";
+    
     // Chromatograms
     static final String cvChromatogramTIC = "MS:1000235";
     static final String cvChromatogramMRM_SRM = "MS:1001473";
@@ -58,5 +62,9 @@ class MzMLCV {
 
     // Isolation
     static final String cvIsolationWindow = "MS:1000827";
+    
+    static final String cvMzArray = "MS:1000514";
+    static final String cvIntensityArray = "MS:1000515";
+    
 
 }
