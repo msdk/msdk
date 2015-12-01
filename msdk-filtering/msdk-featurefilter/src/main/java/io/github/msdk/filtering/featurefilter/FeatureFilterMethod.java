@@ -22,11 +22,13 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.util.FeatureTableUtil;
 
 /**
  * This class creates a filtered feature table based on a feature table and a
@@ -56,7 +58,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
     private final @Nonnull FeatureTable featureTable;
     private final @Nonnull String nameSuffix;
     private final @Nonnull DataPointStore dataStore;
-    private FeatureTable result;
+    static FeatureTable result;
     private boolean canceled = false;
     private int processedFeatures = 0, totalFeatures = 0;
 
@@ -102,6 +104,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
     /**
      * @throws MSDKException
      */
+    @SuppressWarnings("unchecked")
     @Override
     public FeatureTable execute() throws MSDKException {
         // Total features
@@ -120,27 +123,158 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
         // Loop through all features
         for (FeatureTableRow row : featureTable.getRows()) {
 
+            // Values for keeping track of features for a sample
+            boolean[] keepFeature = new boolean[featureTable.getSamples()
+                    .size()];
+            int i = 0;
+
             // Loop through all samples for the feature
             for (Sample sample : featureTable.getSamples()) {
 
-                /*
-                 * TODO: Add sample specific data only if the filter criteria
-                 * are fulfilled.
-                 */
+                FeatureTableColumn column;
+                keepFeature[i] = true;
 
+                // Check Duration
+                if (filterByDuration) {
+                    column = featureTable.getColumn(ColumnName.DURATION,
+                            sample);
+                    if (column != null) {
+                        if (row.getData(column) != null) {
+                            final double peakDuration = row.getData(column);
+                            if (!durationRange.contains(peakDuration))
+                                keepFeature[i] = false;
+                        }
+                    }
+                }
+
+                // Check Area
+                if (filterByArea) {
+                    column = featureTable.getColumn(ColumnName.AREA, sample);
+                    if (column != null) {
+                        if (row.getData(column) != null) {
+                            final Double peakArea = row.getData(column);
+                            if (!areaRange.contains(peakArea))
+                                keepFeature[i] = false;
+                        }
+                    }
+                }
+
+                // Check Height
+                if (filterByHeight) {
+                    column = featureTable.getColumn(ColumnName.HEIGHT, sample);
+                    if (column != null) {
+                        if (row.getData(column) != null) {
+                            final double peakHeight = row.getData(column);
+                            if (!heightRange.contains(peakHeight))
+                                keepFeature[i] = false;
+                        }
+                    }
+                }
+
+                // Check # Data Points
+                if (filterByDataPoints) {
+                    column = featureTable
+                            .getColumn(ColumnName.NUMBEROFDATAPOINTS, sample);
+                    if (column != null) {
+                        if (row.getData(column) != null) {
+                            final int peakDataPoints = row.getData(column);
+                            if (!dataPointsRange.contains(peakDataPoints))
+                                keepFeature[i] = false;
+                        }
+                    }
+                }
+
+                // Check FWHM
+                if (filterByFWHM) {
+                    column = featureTable.getColumn(ColumnName.FWHM, sample);
+                    if (column != null) {
+                        if (row.getData(column) != null) {
+                            final double peakFWHM = row.getData(column);
+                            if (!fwhmRange.contains(peakFWHM))
+                                keepFeature[i] = false;
+                        }
+                    }
+                }
+
+                // Check Tailing Factor
+                if (filterByTailingFactor) {
+                    column = featureTable.getColumn(ColumnName.TAILINGFACTOR,
+                            sample);
+                    if (column != null) {
+                        if (row.getData(column) != null) {
+                            final double peakTF = row.getData(column);
+                            if (!tailingFactorRange.contains(peakTF))
+                                keepFeature[i] = false;
+                        }
+                    }
+                }
+
+                // Check Asymmetry Factor
+                if (filterByAsymmetryFactor) {
+                    column = featureTable.getColumn(ColumnName.ASYMMETRYFACTOR,
+                            sample);
+                    if (column != null) {
+                        if (row.getData(column) != null) {
+                            final double peakAF = row.getData(column);
+                            if (!asymmetryFactorRange.contains(peakAF))
+                                keepFeature[i] = false;
+                        }
+                    }
+                }
+
+                i++;
                 processedFeatures++;
 
                 if (canceled)
                     return null;
             }
 
-            // Remove features with no data for any samples
-            /*
-             * TODO!
-             */
+            // Add the feature row to the table if it is not null
+            FeatureTableRow newRow = copyRow(row, keepFeature);
+            if (newRow != null)
+                result.addRow(newRow);
         }
 
+        // Re-calculate average row m/z and RT values
+        FeatureTableUtil.recalculateAverages(result);
+
+        // Return the new feature table
         return result;
+    }
+
+    /**
+     * Create a copy of a peak list row.
+     */
+    private static FeatureTableRow copyRow(@Nonnull FeatureTableRow row,
+            @Nonnull boolean[] keepFeatures) {
+
+        // Return null if no sample has data for the feature
+        boolean noSamples = true;
+        for (boolean value : keepFeatures) {
+            if (value)
+                noSamples = false;
+        }
+        if (noSamples)
+            return null;
+
+        // Create a new row with the common feature data
+        final FeatureTableRow newRow = MSDKObjectBuilder
+                .getFeatureTableRow(result, row.getId());
+        FeatureTableUtil.copyCommonValues(row, newRow);
+
+        // Copy the feature data for the samples
+        int i = 0;
+        for (Sample sample : row.getFeatureTable().getSamples()) {
+
+            // Only keep feature data if it fulfills the filter criteria
+            if (keepFeatures[i]) {
+                FeatureTableUtil.copyFeatureValues(row, newRow, sample);
+            }
+            i++;
+
+        }
+
+        return newRow;
     }
 
     @Override

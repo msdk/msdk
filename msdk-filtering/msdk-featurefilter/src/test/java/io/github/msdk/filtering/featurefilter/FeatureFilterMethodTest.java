@@ -35,6 +35,7 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.featuredetection.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
 import io.github.msdk.featuredetection.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
+import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
 
@@ -84,7 +85,7 @@ public class FeatureFilterMethodTest {
 
         // Variables
         final MZTolerance mzTolerance = new MZTolerance(0.003, 5.0);
-        final RTTolerance rtTolerance = new RTTolerance(0.2, false);
+        final RTTolerance rtTolerance = new RTTolerance(3, false);
         final Double intensityTolerance = 0.10d;
         final Double noiseLevel = 5000d;
 
@@ -106,24 +107,24 @@ public class FeatureFilterMethodTest {
                 chromatograms, featureTable, sample);
         tableBuilder.execute();
 
-        // Filter parameters
-        final boolean filterByDuration = true;
-        final boolean filterByArea = true;
-        final boolean filterByHeight = true;
-        final boolean filterByDataPoints = true;
-        final boolean filterByFWHM = true;
-        final boolean filterByTailingFactor = true;
-        final boolean filterByAsymmetryFactor = true;
-        final Range<Double> durationRange = Range.closed(0.0, 30.0);
-        final Range<Double> areaRange = Range.closed(1E3, 7E6);
-        final Range<Double> heightRange = Range.closed(1E3, 7E6);
-        final Range<Integer> dataPointsRange = Range.closed(10, 50);
-        final Range<Double> fwhmRange = Range.closed(0.0, 15.0);
-        final Range<Double> tailingFactorRange = Range.closed(0.5, 2.0);
-        final Range<Double> asymmetryFactorRange = Range.closed(0.5, 2.0);
-        final String nameSuffix = "-Filtered";
+        // 1. Filter parameters
+        boolean filterByDuration = true;
+        boolean filterByArea = true;
+        boolean filterByHeight = true;
+        boolean filterByDataPoints = true;
+        boolean filterByFWHM = true;
+        boolean filterByTailingFactor = true;
+        boolean filterByAsymmetryFactor = true;
+        Range<Double> durationRange = Range.closed(10.0, 50.0);
+        Range<Double> areaRange = Range.closed(1E5, 1E9);
+        Range<Double> heightRange = Range.closed(1E4, 1E7);
+        Range<Integer> dataPointsRange = Range.closed(10, 999);
+        Range<Double> fwhmRange = Range.closed(0.0, 15.0);
+        Range<Double> tailingFactorRange = Range.closed(0.5, 2.0);
+        Range<Double> asymmetryFactorRange = Range.closed(0.5, 2.0);
+        String nameSuffix = "-Filtered";
 
-        // Filter the features
+        // 1. Filter the features
         FeatureFilterMethod filterMethod = new FeatureFilterMethod(featureTable,
                 dataStore, filterByDuration, filterByArea, filterByHeight,
                 filterByDataPoints, filterByFWHM, filterByTailingFactor,
@@ -133,9 +134,114 @@ public class FeatureFilterMethodTest {
         filterMethod.execute();
         Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
 
-        /*
-         * TODO Verify data
-         */
+        // 1. Verify data
+        FeatureTable filteredTable = filterMethod.getResult();
+        Assert.assertEquals(3, filteredTable.getRows().size());
 
+        // 2. Filter parameters
+        filterByDataPoints = false;
+        dataPointsRange = Range.closed(18, 20);
+
+        // 2. Filter the features
+        filterMethod = new FeatureFilterMethod(featureTable,
+                dataStore, filterByDuration, filterByArea, filterByHeight,
+                filterByDataPoints, filterByFWHM, filterByTailingFactor,
+                filterByAsymmetryFactor, durationRange, areaRange, heightRange,
+                dataPointsRange, fwhmRange, tailingFactorRange,
+                asymmetryFactorRange, nameSuffix);
+        filterMethod.execute();
+        Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
+
+        // 2. Verify data
+        filteredTable = filterMethod.getResult();
+        Assert.assertEquals(3, filteredTable.getRows().size());
+
+        // 3. Filter parameters
+        filterByDataPoints = true;
+        dataPointsRange = Range.closed(18, 20);
+        areaRange = Range.closed(8E7, 1E9);
+
+        // 3. Filter the features
+        filterMethod = new FeatureFilterMethod(featureTable,
+                dataStore, filterByDuration, filterByArea, filterByHeight,
+                filterByDataPoints, filterByFWHM, filterByTailingFactor,
+                filterByAsymmetryFactor, durationRange, areaRange, heightRange,
+                dataPointsRange, fwhmRange, tailingFactorRange,
+                asymmetryFactorRange, nameSuffix);
+        filterMethod.execute();
+        Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
+
+        // 3. Verify data
+        filteredTable = filterMethod.getResult();
+        Assert.assertEquals(1, filteredTable.getRows().size());
+    }
+
+    @Test
+    public void testMzTab_Sample() throws MSDKException {
+
+        // Create the data structures
+        DataPointStore dataStore = DataPointStoreFactory
+                .getTmpFileDataPointStore();
+
+        // Import the file
+        File inputFile = new File(TEST_DATA_PATH + "Sample-2.3.mzTab");
+        Assert.assertTrue(inputFile.canRead());
+        MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile,
+                dataStore);
+        FeatureTable featureTable = importer.execute();
+        Assert.assertNotNull(featureTable);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+        Assert.assertEquals(298, featureTable.getRows().size());
+
+        // 1. Filter parameters
+        boolean filterByDuration = false;
+        boolean filterByArea = false;
+        boolean filterByHeight = false;
+        boolean filterByDataPoints = false;
+        boolean filterByFWHM = false;
+        boolean filterByTailingFactor = false;
+        boolean filterByAsymmetryFactor = false;
+        Range<Double> durationRange = Range.closed(0.0, 0.0);
+        Range<Double> areaRange = Range.closed(1E7, 1E9);
+        Range<Double> heightRange = Range.closed(1E5, 1E9);
+        Range<Integer> dataPointsRange = Range.closed(0, 0);
+        Range<Double> fwhmRange = Range.closed(0.0, 0.0);
+        Range<Double> tailingFactorRange = Range.closed(0.0, 0.0);
+        Range<Double> asymmetryFactorRange = Range.closed(0.0, 0.0);
+        String nameSuffix = "-Filtered";
+
+        // 1. Filter the features
+        FeatureFilterMethod filterMethod = new FeatureFilterMethod(featureTable,
+                dataStore, filterByDuration, filterByArea, filterByHeight,
+                filterByDataPoints, filterByFWHM, filterByTailingFactor,
+                filterByAsymmetryFactor, durationRange, areaRange, heightRange,
+                dataPointsRange, fwhmRange, tailingFactorRange,
+                asymmetryFactorRange, nameSuffix);
+        filterMethod.execute();
+        Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
+
+        // 1. Verify data - no filter was applied
+        FeatureTable filteredTable = filterMethod.getResult();
+        Assert.assertEquals(298, filteredTable.getRows().size());
+
+        // 2. Filter parameters
+        filterByArea = true;
+
+        // 2. Filter the features
+        filterMethod = new FeatureFilterMethod(featureTable,
+                dataStore, filterByDuration, filterByArea, filterByHeight,
+                filterByDataPoints, filterByFWHM, filterByTailingFactor,
+                filterByAsymmetryFactor, durationRange, areaRange, heightRange,
+                dataPointsRange, fwhmRange, tailingFactorRange,
+                asymmetryFactorRange, nameSuffix);
+        filterMethod.execute();
+        Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
+
+        // 2. Verify data
+        filteredTable = filterMethod.getResult();
+        Assert.assertEquals(116, filteredTable.getRows().size());
+        /*
+         * TODO: Test is failing :(
+         */
     }
 }
