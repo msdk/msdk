@@ -3,17 +3,27 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.msdk</groupId>
-        <artifactId>msdk-io</artifactId>
+        <artifactId>msdk-featdet</artifactId>
         <version>0.0.2-SNAPSHOT</version>
     </parent>
-    <artifactId>msdk-io-spectrumtypedetection</artifactId>
+    <artifactId>msdk-featdet-targeteddetection</artifactId>
+    <description>MSDK targeted feature detection algorithm</description>
 
     <dependencies>
+
         <dependency>
             <groupId>io.github.msdk</groupId>
             <artifactId>msdk-datamodel</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.github.msdk</groupId>
+            <artifactId>msdk-io-mzml</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

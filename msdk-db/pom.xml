@@ -6,11 +6,13 @@
 		<artifactId>msdk</artifactId>
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>msdk-spectra</artifactId>
+	<artifactId>msdk-db</artifactId>
 	<packaging>pom</packaging>
+	<description>MSDK package for database connection modules</description>
 	<modules>
-		<module>msdk-spectra-spectrumtypedetection</module>
-		<module>msdk-spectra-spectrumtypedetectiontest</module>
-		<module>msdk-spectra-splash</module>
+		<module>msdk-db-mona</module>
+		<module>msdk-db-gnps</module>
+		<module>msdk-db-kegg</module>
+		<module>msdk-db-metabolights</module>
 	</modules>
 </project>

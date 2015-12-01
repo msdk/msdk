@@ -2,15 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>msdk-id</artifactId>
+        <artifactId>msdk-db</artifactId>
         <groupId>io.github.msdk</groupId>
         <version>0.0.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>msdk-id-mona</artifactId>
+    <artifactId>msdk-db-mona</artifactId>
 
-    <name>MSDK - MoNA</name>
     <description>
         MassBank of America (MoNA), is an auto curating repository for storing, comparing and querying mass spectra of chemical compounds. It is metadata centric and it was designed to allow easy integration into other tools by utilize its REST based application programming interface.
 

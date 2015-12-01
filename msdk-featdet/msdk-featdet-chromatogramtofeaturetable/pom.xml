@@ -3,19 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>io.github.msdk</groupId>
-		<artifactId>msdk-io</artifactId>
+		<artifactId>msdk-featdet</artifactId>
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>msdk-io-mzml</artifactId>
-
-	<repositories>
-		<repository>
-			<!-- EBI repository -->
-			<id>ebi-repo</id>
-			<name>The EBI Maven repository</name>
-			<url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/</url>
-		</repository>
-	</repositories>
+	<artifactId>msdk-featdet-chromatogramtofeaturetable</artifactId>
 
 	<dependencies>
 
@@ -24,24 +15,21 @@
 			<artifactId>msdk-datamodel</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-spectra-spectrumtypedetection</artifactId>
+			<artifactId>msdk-io-mzml</artifactId>
 			<version>${project.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>uk.ac.ebi.jmzml</groupId>
-			<artifactId>jmzml</artifactId>
-			<version>1.7.2</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-log4j12</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-featdet-targeteddetection</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
+
 </project>

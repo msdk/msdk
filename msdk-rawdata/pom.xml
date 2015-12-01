@@ -7,7 +7,7 @@
         <version>0.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>msdk-rawdata</artifactId>
-    <name>MSDK - Raw data algorithms</name>
+    <description>MSDK - Raw data algorithms</description>
 	<packaging>pom</packaging>
 
 	<modules>
