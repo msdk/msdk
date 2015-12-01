@@ -28,6 +28,9 @@
         <junit.version>4.12</junit.version>
         <guava.version>18.0</guava.version>
         <slf4j.version>1.7.12</slf4j.version>
+        <java.version>1.7</java.version>
+        <jacoco.version>0.7.5.201505241946</jacoco.version>
+        <findbugs.version>3.0.0</findbugs.version>
     </properties>
 
     <licenses>
@@ -90,8 +93,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.3</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
                         <encoding>UTF-8</encoding>
                     </configuration>
                 </plugin>
@@ -124,7 +127,7 @@
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
-            <version>3.0.0</version>
+            <version>${findbugs.version}</version>
         </dependency>
 
         <dependency>
@@ -143,7 +146,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.7.5.201505241946</version>
+                        <version>${jacoco.version}</version>
                         <executions>
                             <execution>
                                 <id>default-prepare-agent</id>
