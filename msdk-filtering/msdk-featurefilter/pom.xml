@@ -26,14 +26,14 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-targeteddetection</artifactId>
+			<artifactId>msdk-featdet-targeteddetection</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-chromatogramtofeaturetable</artifactId>
+			<artifactId>msdk-featdet-chromatogramtofeaturetable</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
