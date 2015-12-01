@@ -85,6 +85,12 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-rawdata-baselinecorrection</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-db-mona</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -134,6 +140,12 @@
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-spectra-splash</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-spectra-comparison</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
