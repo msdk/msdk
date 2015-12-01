@@ -13,6 +13,9 @@
 		<module>msdk-spectra-spectrumtypedetectiontest</module>
 		<module>msdk-spectra-splash</module>
 		<module>msdk-spectra-comparison</module>
+<<<<<<< Upstream, based on upstream/master
 		<module>msdk-spectra-shoulderpeaks</module>
+=======
+>>>>>>> eee8113 Added a module for spectral comparisons
 	</modules>
 </project>
