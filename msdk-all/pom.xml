@@ -145,15 +145,12 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-<<<<<<< Upstream, based on upstream/master
 			<artifactId>msdk-spectra-shoulderpeaks</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-=======
->>>>>>> 1539af5 Added baseline correction module
 			<artifactId>msdk-spectra-comparison</artifactId>
 			<version>${project.version}</version>
 		</dependency>
