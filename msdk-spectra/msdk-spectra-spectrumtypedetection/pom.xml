@@ -3,33 +3,17 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>io.github.msdk</groupId>
-		<artifactId>msdk-featuredetection</artifactId>
+		<artifactId>msdk-spectra</artifactId>
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>msdk-chromatogramtofeaturetable</artifactId>
+	<artifactId>msdk-spectra-spectrumtypedetection</artifactId>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-datamodel</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-io-mzml</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-targeteddetection</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-
 	</dependencies>
 
 </project>

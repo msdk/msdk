@@ -7,7 +7,6 @@
         <version>0.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>msdk-datamodel</artifactId>
-    <name>MSDK - Data</name>
     <description>Basic implementations for MSDK data model interfaces</description>
 
     <dependencies>

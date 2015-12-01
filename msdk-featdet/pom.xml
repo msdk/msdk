@@ -5,11 +5,12 @@
         <artifactId>msdk</artifactId>
         <version>0.0.2-SNAPSHOT</version>
     </parent>
-    <artifactId>msdk-filtering</artifactId>
+    <artifactId>msdk-featdet</artifactId>
     <packaging>pom</packaging>
-    <name>MSDK feature table filtering</name>
-    <description>MSDK package for feature table filtering</description>
+    <description>MSDK package for feature detection algorithms</description>
     <modules>
-        <module>msdk-featurefilter</module>
+        <module>msdk-featdet-chromatogrambuilder</module>
+        <module>msdk-featdet-targeteddetection</module>
+        <module>msdk-featdet-chromatogramtofeaturetable</module>
     </modules>
 </project>

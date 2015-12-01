@@ -7,7 +7,6 @@
         <version>0.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>msdk-rawdata-centroiding</artifactId>
-    <name>MSDK centroiding modules</name>
     <description>Package for MSDK centroiding algorithms</description>
 
     <dependencies>

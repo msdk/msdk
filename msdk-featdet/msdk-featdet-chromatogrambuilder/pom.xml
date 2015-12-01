@@ -3,18 +3,18 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.msdk</groupId>
-        <artifactId>msdk-io</artifactId>
+        <artifactId>msdk-featdet</artifactId>
         <version>0.0.2-SNAPSHOT</version>
     </parent>
-    <artifactId>msdk-io-spectrumtypedetectiontest</artifactId>
-    <description>These tests are in a separate package because they depend on both msdk-spectrumtypedetection and msdk-mzmlimport modules. If we add the tests to the msdk-spectrumtypedetection module, it would create a dependency cycle.</description>
+    <artifactId>msdk-featdet-chromatogrambuilder</artifactId>
+    <description>MSDK chromatogram builder module</description>
 
     <dependencies>
+
         <dependency>
             <groupId>io.github.msdk</groupId>
             <artifactId>msdk-datamodel</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -25,10 +25,9 @@
         </dependency>
 
         <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-io-spectrumtypedetection</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.5</version>
         </dependency>
 
     </dependencies>
