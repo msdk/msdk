@@ -13,5 +13,6 @@
 		<module>msdk-spectra-spectrumtypedetectiontest</module>
 		<module>msdk-spectra-splash</module>
 		<module>msdk-spectra-comparison</module>
+		<module>msdk-spectra-shoulderpeaks</module>
 	</modules>
 </project>
