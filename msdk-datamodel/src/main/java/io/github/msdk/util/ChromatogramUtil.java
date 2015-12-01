@@ -23,6 +23,10 @@ import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
+/**
+ * <p>ChromatogramUtil class.</p>
+ *
+ */
 public class ChromatogramUtil {
 
 	private static ChromatogramDataPointList dataPointList = MSDKObjectBuilder.getChromatogramDataPointList();
@@ -30,6 +34,9 @@ public class ChromatogramUtil {
 	/**
 	 * Returns the range of ChromatographyInfo of all data points in this
 	 * feature.
+	 *
+	 * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+	 * @return a {@link com.google.common.collect.Range} object.
 	 */
 	@SuppressWarnings("null")
 	@Nonnull
@@ -43,6 +50,9 @@ public class ChromatogramUtil {
 
 	/**
 	 * Returns the range of intensity values of all data points in this feature.
+	 *
+	 * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+	 * @return a {@link com.google.common.collect.Range} object.
 	 */
 	@SuppressWarnings("null")
 	@Nonnull
@@ -57,6 +67,9 @@ public class ChromatogramUtil {
 
 	/**
 	 * Returns the number of data points for this feature.
+	 *
+	 * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+	 * @return a int.
 	 */
 	@SuppressWarnings("null")
 	public static int getNumberOfDataPoints(@Nonnull Chromatogram chromatogram) {
@@ -72,6 +85,14 @@ public class ChromatogramUtil {
 		allAverage, allMedian, fwhmAverage, fwhmMedian
 	};
 
+	/**
+	 * <p>calculateMz.</p>
+	 *
+	 * @param intensityValues an array of float.
+	 * @param mzValues an array of double.
+	 * @param method a {@link io.github.msdk.util.ChromatogramUtil.calcMethod} object.
+	 * @return a {@link java.lang.Double} object.
+	 */
 	public static Double calculateMz(@Nonnull float[] intensityValues, @Nonnull double[] mzValues,
 			@Nonnull calcMethod method) {
 		double newMz = 0;
@@ -124,6 +145,9 @@ public class ChromatogramUtil {
 
 	/**
 	 * Returns the retention time of this feature.
+	 *
+	 * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+	 * @return a float.
 	 */
 	@SuppressWarnings("null")
 	public static float getRt(@Nonnull Chromatogram chromatogram) {
@@ -144,6 +168,9 @@ public class ChromatogramUtil {
 
 	/**
 	 * Returns the start retention time of this feature.
+	 *
+	 * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+	 * @return a float.
 	 */
 	@SuppressWarnings("null")
 	public static float getRtStart(@Nonnull Chromatogram chromatogram) {
@@ -154,6 +181,9 @@ public class ChromatogramUtil {
 
 	/**
 	 * Returns the end retention time of this feature.
+	 *
+	 * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+	 * @return a float.
 	 */
 	@SuppressWarnings("null")
 	public static float getRtEnd(@Nonnull Chromatogram chromatogram) {
@@ -164,6 +194,9 @@ public class ChromatogramUtil {
 
 	/**
 	 * Returns the duration of this feature.
+	 *
+	 * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+	 * @return a float.
 	 */
 	@SuppressWarnings("null")
 	public static float getDuration(@Nonnull Chromatogram chromatogram) {
@@ -176,6 +209,9 @@ public class ChromatogramUtil {
 
 	/**
 	 * Returns the maximum height of this feature.
+	 *
+	 * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+	 * @return a float.
 	 */
 	@SuppressWarnings("null")
 	public static float getMaxHeight(@Nonnull Chromatogram chromatogram) {
@@ -195,6 +231,9 @@ public class ChromatogramUtil {
 
 	/**
 	 * Returns the area of this feature.
+	 *
+	 * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+	 * @return a float.
 	 */
 	@SuppressWarnings("null")
 	public static float getArea(@Nonnull Chromatogram chromatogram) {
@@ -213,6 +252,9 @@ public class ChromatogramUtil {
 
 	/**
 	 * Returns the full width at half maximum (FWHM) of this feature.
+	 *
+	 * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+	 * @return a {@link java.lang.Double} object.
 	 */
 	public static Double getFwhm(@Nonnull Chromatogram chromatogram) {
 		float height = getMaxHeight(chromatogram);
@@ -227,6 +269,9 @@ public class ChromatogramUtil {
 
 	/**
 	 * Returns the tailing factor of this feature.
+	 *
+	 * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+	 * @return a {@link java.lang.Double} object.
 	 */
 	public static Double getTailingFactor(@Nonnull Chromatogram chromatogram) {
 		float height = getMaxHeight(chromatogram);
@@ -245,6 +290,9 @@ public class ChromatogramUtil {
 
 	/**
 	 * Returns the asymmetry factor of this feature.
+	 *
+	 * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+	 * @return a {@link java.lang.Double} object.
 	 */
 	public static Double getAsymmetryFactor(@Nonnull Chromatogram chromatogram) {
 		float height = getMaxHeight(chromatogram);

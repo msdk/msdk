@@ -25,7 +25,7 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.rawdataimport.mzml.MzMLFileImportMethod;
+import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.util.MZTolerance;
 
 public class ChromatogramBuilderMethodTest {

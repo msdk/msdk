@@ -32,16 +32,16 @@ public class FeatureTableUtil {
     /**
      * Re-calculates the average m/z and RT values for a feature table
      *
-     * @param featureTable the {@link FeatureTable} to apply the recalculation
-     * on.
+     * @param featureTable
+     *            the {@link FeatureTable} to apply the recalculation on.
      */
     public static void recalculateAverages(@Nonnull FeatureTable featureTable) {
         List<FeatureTableRow> rows = featureTable.getRows();
-        Double mz, rt;
+        Double mz;
+        Float rt;
         double totalMz;
         float totalRt;
         int mzCount, rtCount;
-        FeatureTableColumn column;
 
         for (FeatureTableRow row : rows) {
             List<Sample> samples = featureTable.getSamples();
@@ -51,56 +51,69 @@ public class FeatureTableUtil {
             mzCount = 0;
             rtCount = 0;
             for (Sample sample : samples) {
-                column = featureTable.getColumn(ColumnName.MZ.getName(), sample);
-                if (column != null) {
-                    mz = row.getData(column, Double.class);
+                FeatureTableColumn<Double> mzColumn = featureTable.getColumn(
+                        ColumnName.MZ, sample);
+                if (mzColumn != null) {
+                    mz = row.getData(mzColumn);
                     if (mz != null) {
                         totalMz += mz;
                         mzCount++;
                     }
                 }
 
-                column = featureTable.getColumn(ColumnName.RT.getName(), sample);
-                if (column != null) {
-                    rt = row.getData(column, Double.class);
-                    if (rt != null) {
-                        totalRt += rt;
-                        rtCount++;
+                FeatureTableColumn<ChromatographyInfo> rtColumn = featureTable
+                        .getColumn(ColumnName.RT, sample);
+                if (rtColumn != null) {
+                    ChromatographyInfo ri = row.getData(rtColumn);
+                    if (ri != null) {
+                        rt = ri.getRetentionTime();
+                        if (rt != null) {
+                            totalRt += rt;
+                            rtCount++;
+                        }
                     }
                 }
             }
 
             // Update m/z
-            column = featureTable.getColumn(ColumnName.MZ.getName(), null);
+            FeatureTableColumn<Double> mzColumn = featureTable.getColumn(
+                    ColumnName.MZ, null);
             Double newMz = totalMz / mzCount;
-            row.setData(column, newMz);
+            row.setData(mzColumn, newMz);
 
             // Update ppm
-            column = featureTable.getColumn("Ion Annotation", null);
-            if (column != null) {
-                IonAnnotation ionAnnotation = row.getData(column, IonAnnotation.class);
+            FeatureTableColumn<IonAnnotation> ionAnnotationColumn = featureTable
+                    .getColumn("Ion Annotation", null, IonAnnotation.class);
+            if (ionAnnotationColumn != null) {
+                IonAnnotation ionAnnotation = row.getData(ionAnnotationColumn);
                 if (ionAnnotation != null) {
                     Double ionMz = ionAnnotation.getExpectedMz();
                     if (ionMz != null) {
-                        column = featureTable.getColumn(ColumnName.PPM.getName(), null);
+                        FeatureTableColumn<Double> ppmColumn = featureTable
+                                .getColumn(ColumnName.PPM, null);
                         Double diff = Math.abs(newMz - ionMz);
-                        row.setData(column, (diff / ionMz) * 1000000);
+                        row.setData(ppmColumn, (diff / ionMz) * 1000000);
                     }
                 }
             }
             // Update RT
-            column = featureTable.getColumn("Chromatography Info", null);
-            if (column != null) {
-                ChromatographyInfo currentChromatographyInfo = row.getData(column, ChromatographyInfo.class);
+            FeatureTableColumn<ChromatographyInfo> chromInfoColumn = featureTable
+                    .getColumn("Chromatography Info", null,
+                            ChromatographyInfo.class);
+            if (chromInfoColumn != null) {
+                ChromatographyInfo currentChromatographyInfo = row
+                        .getData(chromInfoColumn);
                 SeparationType separationType;
                 if (currentChromatographyInfo == null) {
                     separationType = SeparationType.UNKNOWN;
                 } else {
-                    separationType = currentChromatographyInfo.getSeparationType();
+                    separationType = currentChromatographyInfo
+                            .getSeparationType();
                 }
                 ChromatographyInfo chromatographyInfo = MSDKObjectBuilder
-                        .getChromatographyInfo1D(separationType, totalRt / rtCount);
-                row.setData(column, chromatographyInfo);
+                        .getChromatographyInfo1D(separationType, totalRt
+                                / rtCount);
+                row.setData(chromInfoColumn, chromatographyInfo);
             }
         }
     }

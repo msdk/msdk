@@ -31,26 +31,32 @@ public interface Search {
 
     /**
      * finds a spectrum by it's provided id.
-     * @param id
-     * @return
+     *
+     * @param id a long.
+     * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     * @throws java.io.IOException if any.
      */
     @Nullable
     MsSpectrum findSpectrumById(long id) throws IOException;
 
     /**
      * query by a specific property name and value
-     * @param propertyName
-     * @param propertyValue
-     * @return
+     *
+     * @param propertyName a {@link java.lang.String} object.
+     * @param propertyValue a {@link java.io.Serializable} object.
+     * @return a {@link java.util.Iterator} object.
+     * @throws java.io.IOException if any.
      */
     @Nonnull
     Iterator<MsSpectrum> findSpectrumByProperty(String propertyName, Serializable propertyValue) throws IOException;
 
     /**
      * searches for similar spectra
-     * @param compare
-     * @param minSimilarity
-     * @return
+     *
+     * @param compare a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     * @param minSimilarity a {@link java.lang.Integer} object.
+     * @return a {@link java.util.Iterator} object.
+     * @throws java.io.IOException if any.
      */
     @Nonnull
     Iterator<MsSpectrum> findSimilarSpectra(MsSpectrum compare,Integer minSimilarity) throws IOException;

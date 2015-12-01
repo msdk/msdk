@@ -23,6 +23,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
@@ -92,21 +93,30 @@ class SimpleFeatureTable implements FeatureTable {
     }
 
     @Override
-    public FeatureTableColumn<?> getColumn(@Nonnull String columnName,
-            Sample sample) {
+    public <DATATYPE> FeatureTableColumn<DATATYPE> getColumn(@Nonnull String columnName,
+            Sample sample, Class<? extends DATATYPE> dtClass) {
         for (FeatureTableColumn<?> column : featureTableColumns) {
             if (column.getName().equals(columnName)) {
                 
                 if (column.getSample() == null) {
                     if (sample == null)
-                        return column;
+                        return (FeatureTableColumn<DATATYPE>) column;
                 }
                 else if (column.getSample().equals(sample)) {
-                    return column;
+                    return (FeatureTableColumn<DATATYPE>) column;
                 }
 
             }
 
+        }
+        return null;
+    }
+    
+    @Override
+    public <DATATYPE> FeatureTableColumn<DATATYPE> getColumn(ColumnName columnName, Sample sample) {
+        FeatureTableColumn<?> column = getColumn(columnName.getName(), sample, columnName.getDataTypeClass());
+        if(column!=null) {
+            return (FeatureTableColumn<DATATYPE>) column; 
         }
         return null;
     }

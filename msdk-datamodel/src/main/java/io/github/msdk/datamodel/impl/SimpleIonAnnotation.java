@@ -40,95 +40,112 @@ class SimpleIonAnnotation implements IonAnnotation {
     private @Nullable URL accessionURL;
     private @Nullable ChromatographyInfo chromatographyInfo;
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public IAtomContainer getChemicalStructure() {
         return chemicalStructure;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setChemicalStructure(
             @Nullable IAtomContainer chemicalStructure) {
         this.chemicalStructure = chemicalStructure;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public IMolecularFormula getFormula() {
         return formula;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setFormula(@Nullable IMolecularFormula formula) {
         this.formula = formula;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public IonType getIonType() {
         return ionType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setIonType(@Nullable IonType ionType) {
         this.ionType = ionType;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Double getExpectedMz() {
         return expectedMz;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setExpectedMz(@Nullable Double expectedMz) {
         this.expectedMz = expectedMz;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public String getDescription() {
         return description;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDescription(@Nullable String description) {
         this.description = description;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public String getIdentificationMethod() {
         return identificationMethod;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setIdentificationMethod(@Nullable String identificationMethod) {
         this.identificationMethod = identificationMethod;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public String getAnnotationId() {
         return annotationId;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setAnnotationId(@Nullable String annotationId) {
         this.annotationId = annotationId;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public URL getAccessionURL() {
         return accessionURL;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setAccessionURL(@Nullable URL accessionURL) {
         this.accessionURL = accessionURL;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int compareTo(IonAnnotation i) {
         int returnValue;
@@ -164,12 +181,14 @@ class SimpleIonAnnotation implements IonAnnotation {
         return returnValue;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public ChromatographyInfo getChromatographyInfo() {
         return chromatographyInfo;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setChromatographyInfo(
             @Nullable ChromatographyInfo chromatographyInfo) {

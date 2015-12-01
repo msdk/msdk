@@ -16,7 +16,7 @@ package io.github.msdk.datamodel.rawdata;
 
 /**
  * Represents the various types of MS/MS experiments.
- * 
+ *
  * See also K. K. Murray, R. K. Boyd, M. N. Eberlin, G. J. Langley, L. Li and Y.
  * Naito, Definitions of Terms Relating to Mass Spectrometry (IUPAC
  * Recommendations 2013) Pure Appl. Chem. 2013, 85, 1515-1609.

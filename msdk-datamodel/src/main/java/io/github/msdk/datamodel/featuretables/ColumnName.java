@@ -11,7 +11,6 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-
 package io.github.msdk.datamodel.featuretables;
 
 import javax.annotation.Nonnull;
@@ -41,19 +40,39 @@ public enum ColumnName {
     ASYMMETRYFACTOR("Asymmetry Factor", Double.class),
     CHROMATOGRAM("Chromatogram", Chromatogram.class);
 
-    @Nonnull private final String name;
-    @Nonnull private final Class<?> dataTypeClass;
+    @Nonnull
+    private final String name;
+    @Nonnull
+    private final Class<?> dataTypeClass;
 
+    /**
+     * Create a new column name instance.
+     *
+     * @param name
+     *            the name of the column.
+     * @param dataTypeClass
+     *            the class of the column's values.
+     */
     ColumnName(@Nonnull String name, @Nonnull Class<?> dataTypeClass) {
         this.name = name;
         this.dataTypeClass = dataTypeClass;
     }
 
+    /**
+     * Returns the name of the column.
+     *
+     * @return the name of the column.
+     */
     @Nonnull
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the class of the column's values.
+     *
+     * @return the class of the column's values.
+     */
     @Nonnull
     public Class<?> getDataTypeClass() {
         return dataTypeClass;

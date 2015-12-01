@@ -14,7 +14,6 @@
 
 package io.github.msdk.datamodel.impl;
 
-import java.util.Hashtable;
 
 import javax.annotation.Nonnull;
 
@@ -24,21 +23,25 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
- * Implementation of FeatureTableRow
+ * Implementation of FeatureTableRow. Backed by a non-thread safe Map.
  */
+@NotThreadSafe
 class SimpleFeatureTableRow implements FeatureTableRow {
 
-    private int rowId;
-    private @Nonnull FeatureTable featureTable;
-    private @Nonnull Hashtable<FeatureTableColumn<?>, Object> rowData;
+    private final int rowId;
+    private final @Nonnull FeatureTable featureTable;
+    private final @Nonnull Map<FeatureTableColumn<?>, Object> rowData;
 
     SimpleFeatureTableRow(@Nonnull FeatureTable featureTable, int rowId) {
         Preconditions.checkNotNull(featureTable);
         this.featureTable = featureTable;
         this.rowId = rowId;
-        rowData = new Hashtable<>();
+        rowData = new HashMap<>();
     }
 
     @Override
@@ -53,15 +56,13 @@ class SimpleFeatureTableRow implements FeatureTableRow {
 
     @Override
     public Double getMz() {
-        return getData(MSDKObjectBuilder.getMzFeatureTableColumn(),
-                Double.class);
+        return getData(MSDKObjectBuilder.getMzFeatureTableColumn());
     }
 
     @Override
     public ChromatographyInfo getChromatographyInfo() {
         return getData(
-                MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn(),
-                ChromatographyInfo.class);
+                MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn());
     }
 
     @Override
@@ -74,10 +75,9 @@ class SimpleFeatureTableRow implements FeatureTableRow {
 
     @Override
     public <DataType> DataType getData(
-            @Nonnull FeatureTableColumn<DataType> column,
-            @Nonnull Class<? extends DataType> dtClass) {
+            @Nonnull FeatureTableColumn<DataType> column) {
         Preconditions.checkNotNull(column);
-        return dtClass.cast(rowData.get(column));
+        return column.getDataTypeClass().cast(rowData.get(column));
     }
 
 }

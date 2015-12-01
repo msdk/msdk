@@ -54,6 +54,13 @@ class BuildingChromatogram {
         return mzValues;
     }
 
+    /**
+     * <p>cropChromatogram.</p>
+     *
+     * @param rtRange a {@link com.google.common.collect.Range} object.
+     * @param intensityTolerance a {@link java.lang.Double} object.
+     * @param noiseLevel a {@link java.lang.Double} object.
+     */
     public void cropChromatogram(Range<Double> rtRange,
             Double intensityTolerance, Double noiseLevel) {
         ChromatographyInfo[] chromatographyInfo = dataPoints.getRtBuffer();
@@ -124,6 +131,11 @@ class BuildingChromatogram {
 
     }
 
+    /**
+     * <p>allocate.</p>
+     *
+     * @param newSize a int.
+     */
     public void allocate(int newSize) {
 
         if (mzValues.length >= newSize)
@@ -138,6 +150,11 @@ class BuildingChromatogram {
         mzValues = mzValuesNew;
     }
 
+    /**
+     * <p>Getter for the field <code>size</code>.</p>
+     *
+     * @return a int.
+     */
     public int getSize() {
         return size;
     }

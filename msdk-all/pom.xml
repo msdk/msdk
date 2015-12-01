@@ -4,17 +4,11 @@
 	<parent>
 		<groupId>io.github.msdk</groupId>
 		<artifactId>msdk</artifactId>
-		<version>0.1</version>
+		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>msdk-all</artifactId>
 
 	<dependencies>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-centroiding</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
@@ -42,67 +36,93 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-fileimport</artifactId>
+			<artifactId>msdk-io-fileimport</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-filetypedetection</artifactId>
+			<artifactId>msdk-io-filetypedetection</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-mzdataimport</artifactId>
+			<artifactId>msdk-io-mzdata</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-mzmlimport</artifactId>
+			<artifactId>msdk-io-mzml</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-mztabimport</artifactId>
+			<artifactId>msdk-io-mztab</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-mzxmlimport</artifactId>
+			<artifactId>msdk-io-mzxml</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-nativeformatimport</artifactId>
+			<artifactId>msdk-io-nativeformats</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-netcdfimport</artifactId>
+			<artifactId>msdk-io-netcdf</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-spectrumtypedetection</artifactId>
+			<artifactId>msdk-io-spectrumtypedetection</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-chromatof</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-rawdata</artifactId>
+			<artifactId>msdk-rawdata-filters</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-mona</artifactId>
+			<artifactId>msdk-rawdata-centroiding</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-id-mona</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-featurefilter</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-spectra-splash</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

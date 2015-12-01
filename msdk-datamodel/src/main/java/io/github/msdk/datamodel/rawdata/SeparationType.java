@@ -23,7 +23,6 @@ package io.github.msdk.datamodel.rawdata;
  * separation coupled to a mass spectrometer. Here, the chromatograph would
  * provide the retention time of each acquired data point as additional
  * information.
- *
  */
 public enum SeparationType {
 

@@ -23,10 +23,21 @@ import io.github.msdk.MSDKException;
  */
 public class DataPointStoreFactory {
 
+    /**
+     * <p>getMemoryDataStore.</p>
+     *
+     * @return a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     */
     public static final @Nonnull DataPointStore getMemoryDataStore() {
         return new MemoryDataPointStore();
     }
 
+    /**
+     * <p>getTmpFileDataPointStore.</p>
+     *
+     * @return a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @throws io.github.msdk.MSDKException if any.
+     */
     public static final @Nonnull DataPointStore getTmpFileDataPointStore()
             throws MSDKException {
         return new TmpFileDataPointStore();

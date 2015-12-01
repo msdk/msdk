@@ -29,7 +29,7 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
  * Represents a single MS scan in a raw data file. This interface extends
  * IMassSpectrum, therefore the actual data points can be accessed through the
  * inherited methods of IMassSpectrum.
- * 
+ *
  * If the scan is not added to any file, its data points are stored in memory.
  * However, once the scan is added into a raw data file by calling
  * setRawDataFile(), its data points will be stored in a temporary file that
@@ -44,7 +44,7 @@ public interface Chromatogram extends Cloneable {
      * is added to the raw data file by calling RawDataFile.addChromatogram(),
      * the RawDataFile automatically calls the Chromatogram.setRawDataFile()
      * method to update this reference.
-     * 
+     *
      * @return RawDataFile containing this chromatogram, or null.
      * @see RawDataFile
      */
@@ -54,11 +54,8 @@ public interface Chromatogram extends Cloneable {
     /**
      * Updates the raw data file reference. This method can be called only once.
      * Any subsequent calls will throw the IllegalOperationException.
-     * 
-     * @param newDataFile
-     *            New RawDataFile reference.
-     * @throws IllegalOperationException
-     *             If the reference to the raw data file has already been set.
+     *
+     * @param newRawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
      */
     void setRawDataFile(@Nonnull RawDataFile newRawDataFile);
 
@@ -68,7 +65,7 @@ public interface Chromatogram extends Cloneable {
      * within the file. However, the data model does not guarantee that, and in
      * some cases multiple chromatogram with the same number may be present in
      * the file.
-     * 
+     *
      * @return Chromatogram number
      */
     @Nonnull
@@ -76,7 +73,7 @@ public interface Chromatogram extends Cloneable {
 
     /**
      * Updates the chromatogram number.
-     * 
+     *
      * @param chromatogramNumber
      *            New chromatogram number.
      */
@@ -85,7 +82,7 @@ public interface Chromatogram extends Cloneable {
     /**
      * Returns the type of the chromatogram. If unknown,
      * ChromatogramType.UNKNOWN is returned.
-     * 
+     *
      * @return Chromatogram type
      */
     @Nonnull
@@ -93,7 +90,7 @@ public interface Chromatogram extends Cloneable {
 
     /**
      * Updates the chromatogram type.
-     * 
+     *
      * @param newChromatogramType
      *            New chromatogram type.
      */
@@ -104,12 +101,11 @@ public interface Chromatogram extends Cloneable {
      * If the DataPointList is not empty, it is cleared first. This method
      * allows the internal arrays of the DataPointList to be reused for loading
      * multiple spectra.
-     * 
+     *
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
-     * 
-     * @param list
-     *            DataPointList into which the data points should be loaded
+     *
+     * @param dataPointList a {@link io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList} object.
      */
     void getDataPoints(@Nonnull ChromatogramDataPointList dataPointList);
 
@@ -118,10 +114,10 @@ public interface Chromatogram extends Cloneable {
      * been added to a raw data file or a feature table, the data points will be
      * immediately stored in a temporary file. Therefore, the DataPointList in
      * the parameter can be reused for other purposes.
-     * 
+     *
      * Note: this method may need to write data to disk, therefore it may be
      * quite slow.
-     * 
+     *
      * @param newDataPoints
      *            new data points
      */
@@ -130,19 +126,23 @@ public interface Chromatogram extends Cloneable {
     /**
      * Returns the m/z value of this chromatogram, or null if no m/z value is
      * set for the chromatogram.
+     *
+     * @return a {@link java.lang.Double} object.
      */
     @Nullable
     Double getMz();
 
     /**
      * Sets the m/z value of the chromatogram
+     *
+     * @param newMz a {@link java.lang.Double} object.
      */
     void setMz(@Nullable Double newMz);
 
     /**
      * Returns a list of isolations performed for this chromatogram. These
      * isolations may also include fragmentations (tandem MS).
-     * 
+     *
      * @return A mutable list of isolations. New isolation items can be added to
      *         this list.
      */
@@ -151,7 +151,7 @@ public interface Chromatogram extends Cloneable {
 
     /**
      * Returns the separation type used for separation of molecules.
-     * 
+     *
      * @return the seperation type. Returns {@link SeparationType#UNKNOWN} for
      *         unknown separations.
      */
@@ -160,7 +160,7 @@ public interface Chromatogram extends Cloneable {
 
     /**
      * Sets the ion annotation for this chromatogram.
-     * 
+     *
      * @param ionAnnotation
      *            New ion annotation.
      */
@@ -168,14 +168,14 @@ public interface Chromatogram extends Cloneable {
 
     /**
      * Returns the ion annotation for this chromatogram.
-     * 
+     *
      * @return the ion annotation.
      */
     IonAnnotation getIonAnnotation();
 
     /**
      * Sets the separation type used for separation of molecules.
-     * 
+     *
      * @param separationType
      *            New seperation type.
      */
@@ -183,7 +183,7 @@ public interface Chromatogram extends Cloneable {
 
     /**
      * Returns a deep clone of this object.
-     * 
+     *
      * @param newStore
      *            data points of the newly created MsScan will be stored in this
      *            store

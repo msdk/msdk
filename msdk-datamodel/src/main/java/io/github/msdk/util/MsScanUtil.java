@@ -23,8 +23,20 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
 
+/**
+ * <p>MsScanUtil class.</p>
+ *
+ */
 public class MsScanUtil {
 
+    /**
+     * <p>clone.</p>
+     *
+     * @param newStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param scan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+     * @param copyDataPoints a {@link java.lang.Boolean} object.
+     * @return a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+     */
     @Nonnull
     static public MsScan clone(@Nonnull DataPointStore newStore,
             @Nonnull MsScan scan, @Nonnull Boolean copyDataPoints) {

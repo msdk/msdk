@@ -31,7 +31,7 @@ public interface MsSpectrum {
      * Returns the type of this mass spectrum. For spectra that are loaded from
      * raw data files, the type is detected automatically. For calculated
      * spectra, the type depends on the method of calculation.
-     * 
+     *
      * @return spectrum type (profile, centroided, thresholded)
      */
     @Nonnull
@@ -39,7 +39,7 @@ public interface MsSpectrum {
 
     /**
      * Updates the type of this mass spectrum.
-     * 
+     *
      * @param spectrumType
      *            new spectrum type
      */
@@ -50,10 +50,10 @@ public interface MsSpectrum {
      * the DataPointList is not empty, it is cleared first. This method allows
      * the internal arrays of the DataPointList to be reused for loading
      * multiple spectra.
-     * 
+     *
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
-     * 
+     *
      * @param dataPointList
      *            DataPointList into which the data points should be loaded
      */
@@ -62,15 +62,15 @@ public interface MsSpectrum {
     /**
      * Returns data points in given m/z and intensity ranges. Importantly, a new
      * instance of DataPointList is created by each call to this method.
-     * 
+     *
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
-     * 
+     *
      * @param mzRange
      *            range of m/z values to select
      * @param intensityRange
      *            range of intensity values to select
-     * @return selected data points (m/z and intensity pairs) of this spectrum
+     * @param dataPointList a {@link io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList} object.
      */
     void getDataPointsByMzAndIntensity(
             @Nonnull MsSpectrumDataPointList dataPointList,
@@ -82,10 +82,10 @@ public interface MsSpectrum {
      * been added to a raw data file or a feature table, the data points will be
      * immediately stored in a temporary file. Therefore, the DataPointList in
      * the parameter can be reused for other purposes.
-     * 
+     *
      * Note: this method may need to write data to disk, therefore it may be
      * quite slow.
-     * 
+     *
      * @param newDataPoints
      *            new data points
      */
@@ -94,7 +94,7 @@ public interface MsSpectrum {
     /**
      * Returns the sum of intensities of all data points (total ion current or
      * TIC).
-     * 
+     *
      * @return total ion current
      */
     @Nonnull
@@ -103,7 +103,7 @@ public interface MsSpectrum {
     /**
      * Returns the range of m/z values for the current spectrum. This can return
      * null if the spectrum has no data points.
-     * 
+     *
      * @return m/z range
      */
     @Nullable

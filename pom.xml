@@ -1,136 +1,208 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>io.github.msdk</groupId>
-	<artifactId>msdk</artifactId>
-	<version>0.1</version>
-	<packaging>pom</packaging>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>io.github.msdk</groupId>
+    <artifactId>msdk</artifactId>
+    <version>0.0.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-	<name>MSDK - Mass Spectrometry Development Kit</name>
-	<description>A java library for the development of mass spectrometry-related algorithms.</description>
-	<url>https://msdk.github.io</url>
+    <name>MSDK - Mass Spectrometry Development Kit</name>
+    <description>A java library for the development of mass spectrometry-related algorithms.</description>
+    <url>https://msdk.github.io</url>
 
-	<modules>
-		<module>msdk-datamodel</module>
-		<module>msdk-io</module>
-		<module>msdk-rawdata</module>
-		<module>msdk-identification</module>
-		<module>msdk-featuredetection</module>
-		<module>msdk-search</module>
-		<module>msdk-centroiding</module>
-		<module>msdk-all</module>
-	</modules>
+    <modules>
+        <module>msdk-datamodel</module>
+        <module>msdk-io</module>
+        <module>msdk-rawdata</module>
+        <module>msdk-featuredetection</module>
+        <module>msdk-id</module>
+        <module>msdk-filtering</module>
+        <module>msdk-all</module>
+        <module>msdk-spectra</module>
+    </modules>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<cdk.version>1.5.11</cdk.version>
-		<junit.version>4.12</junit.version>
-		<guava.version>18.0</guava.version>
-		<slf4j.version>1.7.12</slf4j.version>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <cdk.version>1.5.11</cdk.version>
+        <junit.version>4.12</junit.version>
+        <guava.version>18.0</guava.version>
+        <slf4j.version>1.7.12</slf4j.version>
+    </properties>
 
-	<licenses>
-		<license>
-			<name>GNU Lesser General Public License (LGPL) 2.1</name>
-			<url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
-			<distribution>repo</distribution>
-		</license>
-		<license>
-			<name>Eclipse Public License (EPL) 1.0</name>
-			<url>http://www.eclipse.org/org/documents/epl-v10.php</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License (LGPL) 2.1</name>
+            <url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
+            <distribution>repo</distribution>
+        </license>
+        <license>
+            <name>Eclipse Public License (EPL) 1.0</name>
+            <url>http://www.eclipse.org/org/documents/epl-v10.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-	<mailingLists>
-		<mailingList>
-			<name>msdk-devel</name>
-			<subscribe>msdk-devel+subscribe@googlegroups.com</subscribe>
-			<unsubscribe>msdk-devel+unsubscribe@googlegroups.com</unsubscribe>
-			<post>msdk-devel@googlegroups.com</post>
-			<archive>https://groups.google.com/forum/#!forum/msdk-devel</archive>
-		</mailingList>
-	</mailingLists>
+    <mailingLists>
+        <mailingList>
+            <name>msdk-devel</name>
+            <subscribe>msdk-devel+subscribe@googlegroups.com</subscribe>
+            <unsubscribe>msdk-devel+unsubscribe@googlegroups.com</unsubscribe>
+            <post>msdk-devel@googlegroups.com</post>
+            <archive>https://groups.google.com/forum/#!forum/msdk-devel</archive>
+        </mailingList>
+    </mailingLists>
 
-	<scm>
-		<url>https://github.com/msdk/msdk</url>
-		<connection>scm:git:git://github.com/msdk/msdk.git</connection>
-		<developerConnection>scm:git:git@github.com/msdk/msdk.git</developerConnection>
-	</scm>
+    <scm>
+        <url>https://github.com/msdk/msdk</url>
+        <connection>scm:git:git://github.com/msdk/msdk.git</connection>
+        <developerConnection>scm:git:git@github.com/msdk/msdk.git</developerConnection>
+    </scm>
 
-	<developers>
-		<developer>
-			<name>Tomáš Pluskal</name>
-			<email>plusik@gmail.com</email>
-		</developer>
-		<developer>
-			<name>Gert Wohlgemuth</name>
-			<email>berlinguyinca@gmail.com</email>
-		</developer>
-		<developer>
-			<name>Nils Hoffmann</name>
-			<email>nhoffmann@netbeans.org</email>
-		</developer>
-		<developer>
-			<name>Richard A. Scheltema</name>
-			<email>R.A.Scheltema@uu.nl</email>
-		</developer>
-		<developer>
-			<name>Thomas F. Dyrlund</name>
-			<email>thomas@dyrlund.dk</email>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <name>Tomáš Pluskal</name>
+            <email>plusik@gmail.com</email>
+        </developer>
+        <developer>
+            <name>Gert Wohlgemuth</name>
+            <email>berlinguyinca@gmail.com</email>
+        </developer>
+        <developer>
+            <name>Nils Hoffmann</name>
+            <email>nhoffmann@netbeans.org</email>
+        </developer>
+        <developer>
+            <name>Richard A. Scheltema</name>
+            <email>R.A.Scheltema@uu.nl</email>
+        </developer>
+        <developer>
+            <name>Thomas F. Dyrlund</name>
+            <email>thomas@dyrlund.dk</email>
+        </developer>
+    </developers>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.3</version>
+                    <configuration>
+                        <source>1.7</source>
+                        <target>1.7</target>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
-	<dependencies>
+    <dependencies>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-			<version>3.0.0</version>
-		</dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
 
+    </dependencies>
+    
+    <profiles>
+        <profile>
+            <id>msdk-release</id>
+            <activation>
+                <property>
+                    <!-- will activate automatically during release:perform -->
+                    <!-- goal of the maven release plugin -->
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.3</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
 
-	</dependencies>
-
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.4</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.6</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

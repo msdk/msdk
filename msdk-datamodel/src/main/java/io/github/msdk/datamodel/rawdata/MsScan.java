@@ -27,7 +27,7 @@ import io.github.msdk.datamodel.msspectra.MsSpectrum;
  * Represents a single MS scan in a raw data file. This interface extends
  * IMassSpectrum, therefore the actual data points can be accessed through the
  * inherited methods of IMassSpectrum.
- * 
+ *
  * If the scan is not added to any file, its data points are stored in memory.
  * However, once the scan is added into a raw data file by calling
  * setRawDataFile(), its data points will be stored in a temporary file that
@@ -41,7 +41,7 @@ public interface MsScan extends MsSpectrum {
      * when the scan is created, but once the scan is added to the raw data file
      * by calling RawDataFile.addScan(), the RawDataFile automatically calls the
      * MsScan.setRawDataFile() method to update this reference.
-     * 
+     *
      * @return RawDataFile containing this MsScan, or null.
      * @see RawDataFile
      */
@@ -51,11 +51,8 @@ public interface MsScan extends MsSpectrum {
     /**
      * Updates the raw data file reference. This method can be called only once.
      * Any subsequent calls will throw the IllegalOperationException.
-     * 
-     * @param newDataFile
-     *            New RawDataFile reference.
-     * @throws IllegalOperationException
-     *             If the reference to the raw data file has already been set.
+     *
+     * @param newRawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
      */
     void setRawDataFile(@Nonnull RawDataFile newRawDataFile);
 
@@ -64,7 +61,7 @@ public interface MsScan extends MsSpectrum {
      * positive. Typically, the scan number will be unique within the file.
      * However, the data model does not guarantee that, and in some cases
      * multiple scans with the same number may be present in the file.
-     * 
+     *
      * @return Scan number
      */
     @Nonnull
@@ -72,7 +69,7 @@ public interface MsScan extends MsSpectrum {
 
     /**
      * Updates the scan number.
-     * 
+     *
      * @param scanNumber
      *            New scan number.
      */
@@ -81,11 +78,11 @@ public interface MsScan extends MsSpectrum {
     /**
      * Returns the instrument-specific textual definition of the scan
      * parameters. For example, in Thermo raw data this may look like:
-     * 
+     *
      * FTMS + p ESI Full ms2 209.09@hcd35.00 [50.00-230.00]
-     * 
+     *
      * The scan definition can be null if not specified in the raw data.
-     * 
+     *
      * @return Scan definition
      */
     @Nullable
@@ -94,7 +91,7 @@ public interface MsScan extends MsSpectrum {
     /**
      * Updates the scan definition (instrument-specific textual definition of
      * the scan parameters).
-     * 
+     *
      * @param scanDefinition
      *            New scan definition.
      */
@@ -102,7 +99,7 @@ public interface MsScan extends MsSpectrum {
 
     /**
      * Returns the MS function of this scan.
-     * 
+     *
      * @return MS function.
      */
     @Nonnull
@@ -110,7 +107,7 @@ public interface MsScan extends MsSpectrum {
 
     /**
      * Updates the MS function of this scan.
-     * 
+     *
      * @param newFunction
      *            New MS function.
      */
@@ -119,7 +116,7 @@ public interface MsScan extends MsSpectrum {
     /**
      * Returns the type of the MS scan. If unknown, MsScanType.UNKNOWN is
      * returned.
-     * 
+     *
      * @return MS scan type
      */
     @Nonnull
@@ -127,16 +124,15 @@ public interface MsScan extends MsSpectrum {
 
     /**
      * Updates the MS scan type.
-     * 
-     * @param newType
-     *            New MS scan type.
+     *
+     * @param newMsScanType a {@link io.github.msdk.datamodel.rawdata.MsScanType} object.
      */
     void setMsScanType(@Nonnull MsScanType newMsScanType);
 
     /**
      * Returns the chromatography data (retention time, etc.) associated with
      * this scan. Null is returned if no chromatography data is available.
-     * 
+     *
      * @return Associated chromatography data.
      */
     @Nullable
@@ -144,8 +140,8 @@ public interface MsScan extends MsSpectrum {
 
     /**
      * Updates the associated chromatography data.
-     * 
-     * @param chromData
+     *
+     * @param chromatographyInfo a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} object.
      */
     void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo);
 
@@ -156,10 +152,10 @@ public interface MsScan extends MsSpectrum {
      *
      * getMzRange() returns the range of the actual data points (lowest and
      * highest m/z)
-     * 
+     *
      * getScanningRange() returns the instrument scanning range that was
      * configured in the experiment setup.
-     * 
+     *
      * @return The scanning m/z range of the instrument
      */
     @Nullable
@@ -167,7 +163,7 @@ public interface MsScan extends MsSpectrum {
 
     /**
      * Updates the instrument scanning m/z range.
-     * 
+     *
      * @param newScanRange
      *            New scanning range.
      */
@@ -176,7 +172,7 @@ public interface MsScan extends MsSpectrum {
     /**
      * Returns the polarity of this scan. If unknown, PolarityType.UNKNOWN is
      * returned.
-     * 
+     *
      * @return Polarity of this scan.
      */
     @Nonnull
@@ -184,7 +180,7 @@ public interface MsScan extends MsSpectrum {
 
     /**
      * Updates the polarity of this scan.
-     * 
+     *
      * @param newPolarity
      *            New scan polarity.
      */
@@ -193,7 +189,7 @@ public interface MsScan extends MsSpectrum {
     /**
      * Returns the fragmentation parameters of ion source-induced fragmentation,
      * or null if no such information is known.
-     * 
+     *
      * @return Fragmentation info of ion source-induced fragmentation, or null.
      */
     @Nullable
@@ -201,7 +197,7 @@ public interface MsScan extends MsSpectrum {
 
     /**
      * Updates the fragmentation parameters of ion source-induced fragmentation.
-     * 
+     *
      * @param newFragmentationInfo
      *            New fragmentation parameters.
      */
@@ -211,7 +207,7 @@ public interface MsScan extends MsSpectrum {
     /**
      * Returns a list of isolations performed for this scan. These isolations
      * may also include fragmentations (tandem MS).
-     * 
+     *
      * @return A mutable list of isolations. New isolation items can be added to
      *         this list.
      */
