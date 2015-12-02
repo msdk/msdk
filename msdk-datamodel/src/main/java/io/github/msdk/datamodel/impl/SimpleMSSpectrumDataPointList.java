@@ -398,7 +398,7 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
 
         @Override
         public boolean hasNext() {
-            return index < (list.getSize() - 2);
+            return index < (list.getSize() - 1);
         }
 
         @Override
