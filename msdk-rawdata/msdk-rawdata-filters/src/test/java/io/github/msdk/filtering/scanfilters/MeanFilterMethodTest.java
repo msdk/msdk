@@ -23,7 +23,6 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -69,27 +68,32 @@ public class MeanFilterMethodTest {
         // The resulting scan should be equal to the input scan
         MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
         scanTest.getDataPoints(dataPoints);
-        List<Ion> ions = new ArrayList();
-        List<Ion> newIons = new ArrayList();
+       
         float intensityAverage = 0;
 
         for (MsIon ion : dataPoints) {
-            ions.add(new Ion(ion.getMz(), ion.getIntensity()));
             intensityAverage += ion.getIntensity();
         }
         
-        intensityAverage/=ions.size();
-
+        intensityAverage/=dataPoints.getSize();
+        
+        // Get the mz and intensities values from the input scan
+        double mzValues[] = dataPoints.getMzBuffer();
+        float intensityValues[] = dataPoints.getIntensityBuffer();
+        int numberOfDataPoints = dataPoints.getSize();
+        
         newScan.getDataPoints(dataPoints);
-        for (MsIon ion : dataPoints) {
-            newIons.add(new Ion(ion.getMz(), ion.getIntensity()));
-        }
+        
+        // Get the mz and intensities values from the filtered scan
+        double newMzValues[] = dataPoints.getMzBuffer();
+        float newIntensityValues[] = dataPoints.getIntensityBuffer();
 
-        Assert.assertEquals(ions.size(), newIons.size());
+        // They should contain the same number of data points
+        Assert.assertEquals(numberOfDataPoints, dataPoints.getSize(), 0.0001);
 
-        for (int i = 0; i < newIons.size(); i++) {
-            Assert.assertEquals(ions.get(i).mz(), newIons.get(i).mz(), 0.0001);
-            Assert.assertEquals(ions.get(i).intensity(), newIons.get(i).intensity(), 0.0001);
+        for (int i = 0; i < dataPoints.getSize(); i++) {
+            Assert.assertEquals(mzValues[i],newMzValues[i], 0.0001);
+            Assert.assertEquals(intensityValues[i], newIntensityValues[i], 0.0001);
         }
 
         // Test windowLength == 100000 -> all the dataPoints should have the same intensity
@@ -102,25 +106,5 @@ public class MeanFilterMethodTest {
             Assert.assertEquals(ion.getIntensity(), intensityAverage, 0.0001);
         }
 
-    }
-}
-
-// Class to store the data points
-class Ion {
-
-    private final Double mz;
-    private final Float intensity;
-
-    public Ion(Double mz, Float intensity) {
-        this.mz = mz;
-        this.intensity = intensity;
-    }
-
-    public Double mz() {
-        return mz;
-    }
-
-    public Float intensity() {
-        return intensity;
     }
 }

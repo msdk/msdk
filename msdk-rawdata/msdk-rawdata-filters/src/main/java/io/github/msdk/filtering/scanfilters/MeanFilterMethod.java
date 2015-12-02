@@ -17,7 +17,6 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsIon;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import java.util.ArrayList;
@@ -71,20 +70,17 @@ public class MeanFilterMethod implements MSDKMethod<MsScan> {
         // Create data point list object and fill it with the scan data points
         MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
         scan.getDataPoints(dataPoints);
+        double mzValues[] = dataPoints.getMzBuffer();
+        float intensityValues[] = dataPoints.getIntensityBuffer();
+        
 
-        List<Ion> ions = new ArrayList();
-
-        for (MsIon ion : dataPoints) {
-            ions.add(new Ion(ion.getMz(), ion.getIntensity()));
-        }
-
-        totalDataPoints = ions.size();
+        totalDataPoints = dataPoints.getSize();
         // Clear the data point list to fill it with the new points after filtering
         dataPoints.clear();
         
         // For each data point
-        for (int i = 0; i < ions.size(); i++) {
-            currentMass = ions.get(i).mz();
+        for (int i = 0; i < totalDataPoints; i++) {
+            currentMass = mzValues[i];
             lowLimit = currentMass - windowLength;
             hiLimit = currentMass + windowLength;
 
@@ -103,10 +99,10 @@ public class MeanFilterMethod implements MSDKMethod<MsScan> {
 
             // Add new elements as long as their m/z values are less than the hi
             // limit
-            while ((addi < ions.size())
-                && (ions.get(addi).mz() <= hiLimit)) {
-                massWindow.add(ions.get(addi).mz());
-                intensityWindow.add(ions.get(addi).intensity());
+            while ((addi < totalDataPoints)
+                && (mzValues[addi] <= hiLimit)) {
+                massWindow.add(mzValues[addi]);
+                intensityWindow.add(intensityValues[addi]);
                 addi++;
             }
 
@@ -145,25 +141,4 @@ public class MeanFilterMethod implements MSDKMethod<MsScan> {
         this.canceled = true;
     }
 
-}
-
-
-// Class to store the data points
-class Ion {
-
-    private final Double mz;
-    private final Float intensity;
-
-    public Ion(Double mz, Float intensity) {
-        this.mz = mz;
-        this.intensity = intensity;
-    }
-
-    public Double mz() {
-        return mz;
-    }
-
-    public Float intensity() {
-        return intensity;
-    }
 }
