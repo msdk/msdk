@@ -13,6 +13,7 @@
 	<modules>
 		<module>msdk-rawdata-filters</module>
 		<module>msdk-rawdata-centroiding</module>
+		<module>msdk-rawdata-baselinecorrection</module>
 	</modules>
 
 </project>
