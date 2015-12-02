@@ -35,16 +35,19 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArrayList;
-import uk.ac.ebi.jmzml.model.mzml.CV;
 import uk.ac.ebi.jmzml.model.mzml.CVList;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.DataProcessing;
 import uk.ac.ebi.jmzml.model.mzml.DataProcessingList;
 import uk.ac.ebi.jmzml.model.mzml.ProcessingMethod;
+import uk.ac.ebi.jmzml.model.mzml.Scan;
+import uk.ac.ebi.jmzml.model.mzml.ScanList;
 import uk.ac.ebi.jmzml.model.mzml.Software;
+import uk.ac.ebi.jmzml.model.mzml.SourceFile;
 import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.model.mzml.utilities.CommonCvParams;
 import uk.ac.ebi.jmzml.xml.io.MzMLInstantMarshaller;
@@ -53,6 +56,9 @@ import uk.ac.ebi.jmzml.xml.io.MzMLInstantMarshaller;
  * This class reads mzML data format using the jmzml library.
  */
 public class MzMLFileExportMethod implements MSDKMethod<Void> {
+
+    private static final String dataProcessingId = "MSDK_mzml_export";
+    private static final String softwareId = "MSDK";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -89,8 +95,7 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
         List<Chromatogram> chromatograms = rawDataFile.getChromatograms();
         totalScans = scans.size();
         totalChromatograms = chromatograms.size();
-        final MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
-                .getMsSpectrumDataPointList();
+
         final Map<String, String> atts = new Hashtable<>();
 
         try {
@@ -115,10 +120,10 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
             ProcessingMethod pm = new ProcessingMethod();
             DataProcessingList dpl = new DataProcessingList();
             DataProcessing dp = new DataProcessing();
-            dp.setId("MSDK_mzml_export");
+            dp.setId(dataProcessingId);
             pm.setOrder(0);
             Software msdk = new Software();
-            msdk.setId("msdk");
+            msdk.setId(softwareId);
             msdk.setVersion(MSDKVersion.getMSDKVersion());
             pm.setSoftware(msdk);
             dp.getProcessingMethod().add(pm);
@@ -138,24 +143,22 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
             writer.write(marshaller.createSpecListStartTag(atts));
             writer.write("\n");
 
+            // prepare BinaryDataArray instances
             final BinaryDataArray bdaMz = new BinaryDataArray();
             final BinaryDataArray bdaInt = new BinaryDataArray();
-            final CV centroidCV = new CV();
-            centroidCV.setId(MzMLCV.cvCentroidSpectrum);
-            centroidCV.setFullName("centroid mass spectrum");
-            final CV profileCV = new CV();
-            profileCV.setId(MzMLCV.cvProfileSpectrum);
-            profileCV.setFullName("profile spectrum");
 
             for (MsScan scan : scans) {
 
+                if (canceled) {
+                    writer.close();
+                    target.delete();
+                    return null;
+                }
+
+                // Convert data points to BinaryDataArrays
+                MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
+                        .getMsSpectrumDataPointList();
                 scan.getDataPoints(dataPoints);
-
-                /*
-                 * ScanList scanList = new ScanList(); Scan mzMLScan = new
-                 * Scan();
-                 */
-
                 bdaMz.set64BitFloatArrayAsBinaryData(dataPoints.getMzBuffer(),
                         true, CommonCvParams.MZ_PARAM.getCv());
                 bdaInt.set32BitFloatArrayAsBinaryData(
@@ -163,7 +166,6 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
                         CommonCvParams.INTENSITY_PARAM.getCv());
                 bdaMz.setArrayLength(dataPoints.getSize());
                 bdaInt.setArrayLength(dataPoints.getSize());
-
                 BinaryDataArrayList bdal = new BinaryDataArrayList();
                 bdal.setCount(2);
                 bdal.getBinaryDataArray().add(bdaMz);
@@ -175,15 +177,56 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
                 spectrum.setIndex((int) parsedScans);
                 spectrum.setBinaryDataArrayList(bdal);
                 spectrum.setDefaultArrayLength(bdaMz.getArrayLength());
-                
-                // <cvParamList>
-                List<CVParam> cvParams = spectrum.getCvParam();
-                final CVParam cvParam = new CVParam();
+                if (rawDataFile.getOriginalFile() != null) {
+                    File originalFile = rawDataFile.getOriginalFile();
+                    SourceFile sourceFile = new SourceFile();
+                    sourceFile.setLocation(originalFile.getPath());
+                    sourceFile.setName(originalFile.getName());
+                    spectrum.setSourceFile(sourceFile);
+                }
+
+                // spectrum type CV param
                 if (scan.getSpectrumType() == MsSpectrumType.CENTROIDED)
-                    cvParam.setCv(centroidCV);
+                    spectrum.getCvParam().add(MzMLCV.centroidCvParam);
                 else
-                    cvParam.setCv(profileCV);
-                cvParams.add(cvParam);
+                    spectrum.getCvParam().add(MzMLCV.profileCvParam);
+
+                // ms level CV param
+                if (scan.getMsFunction().getMsLevel() != null) {
+                    Integer msLevel = scan.getMsFunction().getMsLevel();
+                    CVParam msLevelCvParam = new CVParam();
+                    msLevelCvParam.setAccession(MzMLCV.cvMSLevel);
+                    msLevelCvParam.setName("ms level");
+                    msLevelCvParam.setValue(String.valueOf(msLevel));
+                    spectrum.getCvParam().add(msLevelCvParam);
+                }
+
+                // <scan>
+                ScanList scanList = new ScanList();
+                scanList.setCount(1);
+                spectrum.setScanList(scanList);
+                Scan mzMlScan = new Scan();
+                scanList.getScan().add(mzMlScan);
+
+                // retention time CV param
+                if (scan.getChromatographyInfo() != null) {
+                    Float rt = scan.getChromatographyInfo().getRetentionTime();
+                    CVParam rtCvParam = new CVParam();
+                    rtCvParam.setAccession(MzMLCV.cvScanStartTime);
+                    rtCvParam.setName("scan time");
+                    rtCvParam.setValue(String.valueOf(rt));
+                    rtCvParam.setUnitAccession(MzMLCV.cvUnitsSec);
+                    rtCvParam.setUnitName("second");
+                    mzMlScan.getCvParam().add(rtCvParam);
+                }
+
+                // scan polarity CV param
+                if (scan.getPolarity() == PolarityType.POSITIVE)
+                    mzMlScan.getCvParam().add(MzMLCV.polarityPositiveCvParam);
+                else if (scan.getPolarity() == PolarityType.NEGATIVE)
+                    mzMlScan.getCvParam().add(MzMLCV.polarityNegativeCvParam);
+
+                // write the spectrum
                 writer.write(marshaller.marshall(spectrum));
                 writer.write("\n");
 
@@ -195,6 +238,11 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
             writer.write("\n");
 
             for (Chromatogram chromatogram : chromatograms) {
+                if (canceled) {
+                    writer.close();
+                    target.delete();
+                    return null;
+                }
 
                 parsedChromatograms++;
             }

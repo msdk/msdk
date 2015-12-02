@@ -95,12 +95,12 @@ public class MzMLFileExportMethodTest {
         Float scan5maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);
         Assert.assertEquals(8.6E3f, scan5maxInt, 1E2f);
 
-        // TODO: check chromatogram
-        
+        // TODO: test chromatogram
+
         // Cleanup
         rawFile.dispose();
         newMzMLFile.dispose();
-        // TODO tempFile.delete();
+        tempFile.delete();
 
     }
 
