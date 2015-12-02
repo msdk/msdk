@@ -14,11 +14,16 @@
 
 package io.github.msdk.datamodel.impl;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.common.collect.Lists;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKRuntimeException;
+import io.github.msdk.datamodel.msspectra.MsIon;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 
 /**
@@ -55,7 +60,8 @@ public class SimpleMSSpectrumDataPointListTest {
         // Check that the m/z array is properly sorted
         mzBuffer = dpl.getMzBuffer();
         for (int i = 1; i < dpl.getSize(); i++) {
-            Assert.assertTrue("array is not sorted", mzBuffer[i] > mzBuffer[i - 1]);
+            Assert.assertTrue("array is not sorted",
+                    mzBuffer[i] > mzBuffer[i - 1]);
         }
 
         // Check that the last data point is 0 intensity
@@ -72,6 +78,30 @@ public class SimpleMSSpectrumDataPointListTest {
         dpl.allocate(10);
         dpl.setSize(1000000);
 
+    }
+
+    @Test
+    public void testIterator() throws MSDKException {
+
+        MsSpectrumDataPointList dpl = MSDKObjectBuilder
+                .getMsSpectrumDataPointList();
+        dpl.setBuffers(
+                new double[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 },
+                new float[] { 10f, 20f, 30f, 40f, 50f, 60f, 70f, 80f, 90f }, 5);
+
+        List<Double> mzValues = Lists.newArrayList();
+        List<Float> intValues = Lists.newArrayList();
+        for (MsIon ion : dpl) {
+            mzValues.add(ion.getMz());
+            intValues.add(ion.getIntensity());
+        }
+        Assert.assertEquals(dpl.getSize(), mzValues.size());
+
+        for (int i = 0; i < dpl.getSize(); i++) {
+            Assert.assertEquals(dpl.getMzBuffer()[i], mzValues.get(i), 0.00001);
+            Assert.assertEquals(dpl.getIntensityBuffer()[i], intValues.get(i),
+                    0.00001);
+        }
     }
 
 }
