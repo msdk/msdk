@@ -26,7 +26,10 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
+import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
@@ -143,8 +146,8 @@ public class FeatureFilterMethodTest {
         dataPointsRange = Range.closed(18, 20);
 
         // 2. Filter the features
-        filterMethod = new FeatureFilterMethod(featureTable,
-                dataStore, filterByDuration, filterByArea, filterByHeight,
+        filterMethod = new FeatureFilterMethod(featureTable, dataStore,
+                filterByDuration, filterByArea, filterByHeight,
                 filterByDataPoints, filterByFWHM, filterByTailingFactor,
                 filterByAsymmetryFactor, durationRange, areaRange, heightRange,
                 dataPointsRange, fwhmRange, tailingFactorRange,
@@ -162,8 +165,8 @@ public class FeatureFilterMethodTest {
         areaRange = Range.closed(8E7, 1E9);
 
         // 3. Filter the features
-        filterMethod = new FeatureFilterMethod(featureTable,
-                dataStore, filterByDuration, filterByArea, filterByHeight,
+        filterMethod = new FeatureFilterMethod(featureTable, dataStore,
+                filterByDuration, filterByArea, filterByHeight,
                 filterByDataPoints, filterByFWHM, filterByTailingFactor,
                 filterByAsymmetryFactor, durationRange, areaRange, heightRange,
                 dataPointsRange, fwhmRange, tailingFactorRange,
@@ -228,8 +231,8 @@ public class FeatureFilterMethodTest {
         filterByArea = true;
 
         // 2. Filter the features
-        filterMethod = new FeatureFilterMethod(featureTable,
-                dataStore, filterByDuration, filterByArea, filterByHeight,
+        filterMethod = new FeatureFilterMethod(featureTable, dataStore,
+                filterByDuration, filterByArea, filterByHeight,
                 filterByDataPoints, filterByFWHM, filterByTailingFactor,
                 filterByAsymmetryFactor, durationRange, areaRange, heightRange,
                 dataPointsRange, fwhmRange, tailingFactorRange,
@@ -240,8 +243,40 @@ public class FeatureFilterMethodTest {
         // 2. Verify data
         filteredTable = filterMethod.getResult();
         Assert.assertEquals(116, filteredTable.getRows().size());
-        /*
-         * TODO: Test is failing :(
-         */
+
+        // 3. Filter parameters
+        filterByArea = true;
+        filterByHeight = true;
+
+        // 3. Filter the features
+        filterMethod = new FeatureFilterMethod(featureTable, dataStore,
+                filterByDuration, filterByArea, filterByHeight,
+                filterByDataPoints, filterByFWHM, filterByTailingFactor,
+                filterByAsymmetryFactor, durationRange, areaRange, heightRange,
+                dataPointsRange, fwhmRange, tailingFactorRange,
+                asymmetryFactorRange, nameSuffix);
+        filterMethod.execute();
+        Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
+
+        // 3. Verify data
+        filteredTable = filterMethod.getResult();
+        Assert.assertEquals(115, filteredTable.getRows().size());
+
+        // Row ID 176, ID: L-Arginine
+        FeatureTableRow row = filteredTable.getRows().get(110);
+        Assert.assertEquals(176, row.getId(), 0.0001);
+        IonAnnotation ionAnnotation = row.getData(filteredTable
+                .getColumn("Ion Annotation", null, IonAnnotation.class));
+        Assert.assertEquals("L-Arginine", ionAnnotation.getDescription());
+        // BLANK sample
+        Sample sample = filteredTable.getSamples().get(0);
+        FeatureTableColumn column = filteredTable.getColumn(ColumnName.AREA, sample);
+        Assert.assertNull(row.getData(column));
+        // 26C sample 1
+        sample = filteredTable.getSamples().get(1);
+        column = filteredTable.getColumn(ColumnName.AREA, sample);
+        Assert.assertEquals(2.559630988648635E8, row.getData(column));
+
     }
+
 }
