@@ -24,7 +24,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -67,7 +66,7 @@ public class MeanFilterMethodTest {
         // The result of the method can't be Null
         Assert.assertNotNull(newScan);
 
-        // The resultint scan should be equal to the input scan
+        // The resulting scan should be equal to the input scan
         MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
         scanTest.getDataPoints(dataPoints);
         List<Ion> ions = new ArrayList();
@@ -106,6 +105,7 @@ public class MeanFilterMethodTest {
     }
 }
 
+// Class to store the data points
 class Ion {
 
     private final Double mz;

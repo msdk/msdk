@@ -20,11 +20,8 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsIon;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
-import com.google.common.collect.Lists;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,12 +30,9 @@ public class MeanFilterMethod implements MSDKMethod<MsScan> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final @Nonnull
-    MsScan scan;
-    private final @Nonnull
-    double windowLength;
-    private final @Nonnull
-    DataPointStore store;
+    private final @Nonnull MsScan scan;
+    private final @Nonnull double windowLength;
+    private final @Nonnull DataPointStore store;
 
     private int processedDataPoints = 0, totalDataPoints = 0;
     private MsScan result;
@@ -74,7 +68,7 @@ public class MeanFilterMethod implements MSDKMethod<MsScan> {
         float elSum;
         int addi = 0;
 
-        // Create dataPoint list object and fill it with the scan data points
+        // Create data point list object and fill it with the scan data points
         MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
         scan.getDataPoints(dataPoints);
 
@@ -85,7 +79,9 @@ public class MeanFilterMethod implements MSDKMethod<MsScan> {
         }
 
         totalDataPoints = ions.size();
+        // Clear the data point list to fill it with the new points after filtering
         dataPoints.clear();
+        
         // For each data point
         for (int i = 0; i < ions.size(); i++) {
             currentMass = ions.get(i).mz();
@@ -105,8 +101,6 @@ public class MeanFilterMethod implements MSDKMethod<MsScan> {
                 }
             }
 
-            // Add new elements as long as their m/z values are less than the hi
-            // limit
             // Add new elements as long as their m/z values are less than the hi
             // limit
             while ((addi < ions.size())
@@ -130,6 +124,7 @@ public class MeanFilterMethod implements MSDKMethod<MsScan> {
             processedDataPoints++;
         }
 
+        // Return a new scan with the new data points
         result = MSDKObjectBuilder.getMsScan(store, scan.getScanNumber(), scan.getMsFunction());
         result.setDataPoints(dataPoints);
         result.setChromatographyInfo(scan.getChromatographyInfo());
@@ -152,6 +147,8 @@ public class MeanFilterMethod implements MSDKMethod<MsScan> {
 
 }
 
+
+// Class to store the data points
 class Ion {
 
     private final Double mz;
