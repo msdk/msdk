@@ -20,9 +20,11 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsIon;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +33,17 @@ public class MeanFilterMethod implements MSDKMethod<MsScan> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final @Nonnull MsScan scan;
-    private final @Nonnull double windowLength;
-    private final @Nonnull DataPointStore store;
-    
+    private final @Nonnull
+    MsScan scan;
+    private final @Nonnull
+    double windowLength;
+    private final @Nonnull
+    DataPointStore store;
+
+    private int processedDataPoints = 0, totalDataPoints = 0;
     private MsScan result;
     private boolean canceled = false;
-    
+
     public MeanFilterMethod(@Nonnull MsScan scan, @Nonnull double windowLength, @Nonnull DataPointStore store) {
         this.scan = scan;
         this.windowLength = windowLength;
@@ -46,11 +52,18 @@ public class MeanFilterMethod implements MSDKMethod<MsScan> {
 
     @Override
     public Float getFinishedPercentage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (totalDataPoints == 0) {
+            return null;
+        } else {
+            return (float) processedDataPoints / totalDataPoints;
+        }
     }
 
     @Override
     public MsScan execute() throws MSDKException {
+        logger.info("Started Mean Filter with Scan number #"
+            + scan.getScanNumber());
+
         List<Double> massWindow = new ArrayList();
         List<Float> intensityWindow = new ArrayList();
 
@@ -59,21 +72,23 @@ public class MeanFilterMethod implements MSDKMethod<MsScan> {
         double hiLimit;
         double mzVal;
         float elSum;
+        int addi = 0;
 
+        // Create dataPoint list object and fill it with the scan data points
         MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
-        MsSpectrumDataPointList newDataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
-
         scan.getDataPoints(dataPoints);
 
-        int addi = 0;
-        Iterator iterator = dataPoints.iterator();
-        List<MsIon> ionList = new ArrayList();
-        while (iterator.hasNext()) {
-            ionList.add((MsIon) iterator.next());
+        List<Ion> ions = new ArrayList();
+
+        for (MsIon ion : dataPoints) {
+            ions.add(new Ion(ion.getMz(), ion.getIntensity()));
         }
-        
-        for (int i = 0; i < ionList.size(); i++) {
-            currentMass = ionList.get(i).getMz();
+
+        totalDataPoints = ions.size();
+        dataPoints.clear();
+        // For each data point
+        for (int i = 0; i < ions.size(); i++) {
+            currentMass = ions.get(i).mz();
             lowLimit = currentMass - windowLength;
             hiLimit = currentMass + windowLength;
 
@@ -89,29 +104,39 @@ public class MeanFilterMethod implements MSDKMethod<MsScan> {
                     }
                 }
             }
+
             // Add new elements as long as their m/z values are less than the hi
             // limit
-            while ((addi < dataPoints.getSize())
-                    && (ionList.get(addi).getMz() <= hiLimit)) {
-                massWindow.add(ionList.get(addi).getMz());
-                intensityWindow.add(ionList.get(addi).getIntensity());
+            // Add new elements as long as their m/z values are less than the hi
+            // limit
+            while ((addi < ions.size())
+                && (ions.get(addi).mz() <= hiLimit)) {
+                massWindow.add(ions.get(addi).mz());
+                intensityWindow.add(ions.get(addi).intensity());
                 addi++;
             }
 
             elSum = 0;
             for (Float intensity : intensityWindow) {
                 elSum += (intensity);
-            }           
-            newDataPoints.add(currentMass, elSum /(float) intensityWindow.size());
-            
+            }
+
+            dataPoints.add(currentMass, elSum / (float) intensityWindow.size());
+
             if (canceled) {
                 return null;
-            }        
+            }
+
+            processedDataPoints++;
         }
-        
-        MsScan newScan = MSDKObjectBuilder.getMsScan(store, scan.getScanNumber(), scan.getMsFunction());
-        newScan.setDataPoints(newDataPoints);
-        result = newScan;
+
+        result = MSDKObjectBuilder.getMsScan(store, scan.getScanNumber(), scan.getMsFunction());
+        result.setDataPoints(dataPoints);
+        result.setChromatographyInfo(scan.getChromatographyInfo());
+        result.setRawDataFile(scan.getRawDataFile());
+
+        logger.info("Finished Mean Filter with Scan number #"
+            + scan.getScanNumber());
         return result;
     }
 
@@ -121,8 +146,27 @@ public class MeanFilterMethod implements MSDKMethod<MsScan> {
     }
 
     @Override
-    public void cancel() {        
+    public void cancel() {
         this.canceled = true;
     }
 
+}
+
+class Ion {
+
+    private final Double mz;
+    private final Float intensity;
+
+    public Ion(Double mz, Float intensity) {
+        this.mz = mz;
+        this.intensity = intensity;
+    }
+
+    public Double mz() {
+        return mz;
+    }
+
+    public Float intensity() {
+        return intensity;
+    }
 }
