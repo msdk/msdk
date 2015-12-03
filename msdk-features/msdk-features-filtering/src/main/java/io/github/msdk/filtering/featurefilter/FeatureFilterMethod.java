@@ -129,7 +129,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 					column = featureTable.getColumn(ColumnName.DURATION, sample);
 					if (column != null) {
 						if (row.getData(column) != null) {
-							final double peakDuration = row.getData(column);
+							final Double peakDuration = row.getData(column);
 							if (!durationRange.contains(peakDuration))
 								keepFeature[i] = false;
 						}
@@ -165,7 +165,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 					column = featureTable.getColumn(ColumnName.NUMBEROFDATAPOINTS, sample);
 					if (column != null) {
 						if (row.getData(column) != null) {
-							final int peakDataPoints = row.getData(column);
+							final Integer peakDataPoints = row.getData(column);
 							if (!dataPointsRange.contains(peakDataPoints))
 								keepFeature[i] = false;
 						}
@@ -177,7 +177,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 					column = featureTable.getColumn(ColumnName.FWHM, sample);
 					if (column != null) {
 						if (row.getData(column) != null) {
-							final double peakFWHM = row.getData(column);
+							final Double peakFWHM = row.getData(column);
 							if (!fwhmRange.contains(peakFWHM))
 								keepFeature[i] = false;
 						}
@@ -189,7 +189,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 					column = featureTable.getColumn(ColumnName.TAILINGFACTOR, sample);
 					if (column != null) {
 						if (row.getData(column) != null) {
-							final double peakTF = row.getData(column);
+							final Double peakTF = row.getData(column);
 							if (!tailingFactorRange.contains(peakTF))
 								keepFeature[i] = false;
 						}
@@ -201,7 +201,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 					column = featureTable.getColumn(ColumnName.ASYMMETRYFACTOR, sample);
 					if (column != null) {
 						if (row.getData(column) != null) {
-							final double peakAF = row.getData(column);
+							final Double peakAF = row.getData(column);
 							if (!asymmetryFactorRange.contains(peakAF))
 								keepFeature[i] = false;
 						}
