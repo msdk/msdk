@@ -49,7 +49,10 @@ mvn javadoc:fix
 # Build the whole project
 mvn package
 
-# Deployment
+# Create a signed release
+mvn release:perform
+
+# Deploy
 mvn deploy
 ```
 

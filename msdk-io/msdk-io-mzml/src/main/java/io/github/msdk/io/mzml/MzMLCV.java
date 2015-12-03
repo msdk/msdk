@@ -14,6 +14,8 @@
 
 package io.github.msdk.io.mzml;
 
+import uk.ac.ebi.jmzml.model.mzml.CVParam;
+
 /**
  * Controlled vocabulary (CV) values for mzML files.
  * 
@@ -27,6 +29,9 @@ class MzMLCV {
     // Scan start time
     static final String cvScanStartTime = "MS:1000016";
 
+    // MS level
+    static final String cvMSLevel = "MS:1000511";
+    
     // m/z and charge state
     static final String cvMz = "MS:1000040";
     static final String cvChargeState = "MS:1000041";
@@ -35,6 +40,7 @@ class MzMLCV {
     // mzML 1.1.0
     static final String cvUnitsMin1 = "MS:1000038";
     static final String cvUnitsMin2 = "UO:0000031";
+    static final String cvUnitsSec = "UO:0000010";
 
     // Scan filter string
     static final String cvScanFilterString = "MS:1000512";
@@ -45,6 +51,26 @@ class MzMLCV {
     // Polarity
     static final String cvPolarityPositive = "MS:1000130";
     static final String cvPolarityNegative = "MS:1000129";
+    static final CVParam polarityPositiveCvParam = new CVParam();
+    static final CVParam polarityNegativeCvParam = new CVParam();
+
+    // Centroid vs profile
+    static final String cvCentroidSpectrum = "MS:1000127";
+    static final String cvProfileSpectrum = "MS:1000128";
+    static final CVParam centroidCvParam = new CVParam();
+    static final CVParam profileCvParam = new CVParam();
+
+    // Fill in the CVParam details
+    static {
+        polarityPositiveCvParam.setAccession(cvPolarityPositive);
+        polarityPositiveCvParam.setName("positive scan");
+        polarityNegativeCvParam.setAccession(cvPolarityNegative);
+        polarityNegativeCvParam.setName("negative scan");
+        centroidCvParam.setAccession(cvCentroidSpectrum);
+        centroidCvParam.setName("centroid mass spectrum");
+        profileCvParam.setAccession(cvProfileSpectrum);
+        profileCvParam.setName("profile spectrum");
+    }
 
     // Chromatograms
     static final String cvChromatogramTIC = "MS:1000235";
@@ -58,5 +84,8 @@ class MzMLCV {
 
     // Isolation
     static final String cvIsolationWindow = "MS:1000827";
+
+    static final String cvMzArray = "MS:1000514";
+    static final String cvIntensityArray = "MS:1000515";
 
 }

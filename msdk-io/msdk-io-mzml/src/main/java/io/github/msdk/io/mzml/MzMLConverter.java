@@ -101,8 +101,7 @@ class MzMLConverter {
                 if ((accession == null) || (value == null))
                     continue;
 
-                // MS level MS:1000511
-                if (accession.equals("MS:1000511")) {
+                if (accession.equals(MzMLCV.cvMSLevel)) {
                     msLevel = Integer.parseInt(value);
                 }
             }
