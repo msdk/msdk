@@ -82,16 +82,17 @@ public class MeanFilterMethodTest {
         float intensityValues[] = dataPoints.getIntensityBuffer();
         int numberOfDataPoints = dataPoints.getSize();
         
-        newScan.getDataPoints(dataPoints);
+        MsSpectrumDataPointList newDataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();       
+        newScan.getDataPoints(newDataPoints);
         
         // Get the mz and intensities values from the filtered scan
-        double newMzValues[] = dataPoints.getMzBuffer();
-        float newIntensityValues[] = dataPoints.getIntensityBuffer();
+        double newMzValues[] = newDataPoints.getMzBuffer();
+        float newIntensityValues[] = newDataPoints.getIntensityBuffer();
 
         // They should contain the same number of data points
-        Assert.assertEquals(numberOfDataPoints, dataPoints.getSize(), 0.0001);
+        Assert.assertEquals(numberOfDataPoints, newDataPoints.getSize(), 0.0001);
 
-        for (int i = 0; i < dataPoints.getSize(); i++) {
+        for (int i = 0; i < newDataPoints.getSize(); i++) {
             Assert.assertEquals(mzValues[i],newMzValues[i], 0.0001);
             Assert.assertEquals(intensityValues[i], newIntensityValues[i], 0.0001);
         }
@@ -100,9 +101,10 @@ public class MeanFilterMethodTest {
         meanFilter = new MeanFilterMethod(scanTest, 100000, store);
         newScan = meanFilter.execute();
         Assert.assertEquals(1.0, meanFilter.getFinishedPercentage(), 0.0001);
-
-        newScan.getDataPoints(dataPoints);
-        for (MsIon ion : dataPoints) {       
+        
+        newDataPoints.clear();
+        newScan.getDataPoints(newDataPoints);
+        for (MsIon ion : newDataPoints) {       
             Assert.assertEquals(ion.getIntensity(), intensityAverage, 0.0001);
         }
 
