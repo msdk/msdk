@@ -36,6 +36,7 @@ public class FeatureTableUtil {
      *            the {@link FeatureTable} to apply the recalculation on.
      */
     public static void recalculateAverages(@Nonnull FeatureTable featureTable) {
+
         List<FeatureTableRow> rows = featureTable.getRows();
         Double mz;
         Float rt;
@@ -51,8 +52,8 @@ public class FeatureTableUtil {
             mzCount = 0;
             rtCount = 0;
             for (Sample sample : samples) {
-                FeatureTableColumn<Double> mzColumn = featureTable.getColumn(
-                        ColumnName.MZ, sample);
+                FeatureTableColumn<Double> mzColumn = featureTable
+                        .getColumn(ColumnName.MZ, sample);
                 if (mzColumn != null) {
                     mz = row.getData(mzColumn);
                     if (mz != null) {
@@ -76,8 +77,8 @@ public class FeatureTableUtil {
             }
 
             // Update m/z
-            FeatureTableColumn<Double> mzColumn = featureTable.getColumn(
-                    ColumnName.MZ, null);
+            FeatureTableColumn<Double> mzColumn = featureTable
+                    .getColumn(ColumnName.MZ, null);
             Double newMz = totalMz / mzCount;
             row.setData(mzColumn, newMz);
 
@@ -111,9 +112,80 @@ public class FeatureTableUtil {
                             .getSeparationType();
                 }
                 ChromatographyInfo chromatographyInfo = MSDKObjectBuilder
-                        .getChromatographyInfo1D(separationType, totalRt
-                                / rtCount);
+                        .getChromatographyInfo1D(separationType,
+                                totalRt / rtCount);
                 row.setData(chromInfoColumn, chromatographyInfo);
+            }
+        }
+    }
+
+    /**
+     * Copies common values such as identification results and comments from the
+     * source row to the target row.
+     * 
+     * @param sourceFeatureTableRow
+     *            the source {@link FeatureTableRow} to copy the common values
+     *            from.
+     * @param newFeatureTableRow
+     *            the target {@link FeatureTableRow} to copy the common values
+     *            to.
+     */
+    public static void copyCommonValues(
+            @Nonnull FeatureTableRow sourceFeatureTableRow,
+            @Nonnull FeatureTableRow targetFeatureTableRow) {
+
+        List<FeatureTableColumn<?>> sourceColumns = sourceFeatureTableRow
+                .getFeatureTable().getColumns();
+        List<FeatureTableColumn<?>> targetColumns = targetFeatureTableRow
+                .getFeatureTable().getColumns();
+
+        for (int i = 0; i < sourceColumns.size(); i++) {
+            FeatureTableColumn sourceColumn = sourceColumns.get(i);
+            FeatureTableColumn targetColumn = targetColumns.get(i);
+
+            // Only add common values
+            if (sourceColumns.get(i).getSample() == null) {
+                targetFeatureTableRow.setData(targetColumn,
+                        sourceFeatureTableRow.getData(sourceColumn));
+            }
+        }
+    }
+
+    /**
+     * Copies sample specific feature values from the source row to the target
+     * row.
+     * 
+     * @param sourceFeatureTableRow
+     *            the source {@link FeatureTableRow} to copy the common values
+     *            from.
+     * @param newFeatureTableRow
+     *            the target {@link FeatureTableRow} to copy the common values
+     *            to.
+     * @param sample
+     *            the target {@link Sample}.
+     */
+    public static void copyFeatureValues(
+            @Nonnull FeatureTableRow sourceFeatureTableRow,
+            @Nonnull FeatureTableRow targetFeatureTableRow,
+            @Nonnull Sample sample) {
+
+        List<FeatureTableColumn<?>> sourceColumns = sourceFeatureTableRow
+                .getFeatureTable().getColumns();
+        List<FeatureTableColumn<?>> targetColumns = targetFeatureTableRow
+                .getFeatureTable().getColumns();
+
+        for (int i = 0; i < sourceColumns.size(); i++) {
+            FeatureTableColumn sourceColumn = sourceColumns.get(i);
+            FeatureTableColumn targetColumn = targetColumns.get(i);
+
+            // Only add sample specific values
+            if (sourceColumns.get(i).getSample() != null) {
+                if (sourceColumns.get(i).getSample().equals(sample)) {
+                    if (sourceFeatureTableRow.getData(sourceColumn) != null) {
+                        targetFeatureTableRow.setData(targetColumn,
+                                sourceFeatureTableRow.getData(sourceColumn));
+                    }
+                }
             }
         }
     }
