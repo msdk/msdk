@@ -129,7 +129,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 					column = featureTable.getColumn(ColumnName.DURATION, sample);
 					if (column != null) {
 						if (row.getData(column) != null) {
-							final Double peakDuration = row.getData(column);
+							final Double peakDuration = (Double) row.getData(column);
 							if (!durationRange.contains(peakDuration))
 								keepFeature[i] = false;
 						}
@@ -141,7 +141,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 					column = featureTable.getColumn(ColumnName.AREA, sample);
 					if (column != null) {
 						if (row.getData(column) != null) {
-							final Double peakArea = row.getData(column);
+							final Double peakArea = (Double) row.getData(column);
 							if (!areaRange.contains(peakArea))
 								keepFeature[i] = false;
 						}
@@ -153,7 +153,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 					column = featureTable.getColumn(ColumnName.HEIGHT, sample);
 					if (column != null) {
 						if (row.getData(column) != null) {
-							final double peakHeight = row.getData(column);
+							final Double peakHeight = (Double) row.getData(column);
 							if (!heightRange.contains(peakHeight))
 								keepFeature[i] = false;
 						}
@@ -165,7 +165,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 					column = featureTable.getColumn(ColumnName.NUMBEROFDATAPOINTS, sample);
 					if (column != null) {
 						if (row.getData(column) != null) {
-							final Integer peakDataPoints = row.getData(column);
+							final Integer peakDataPoints = (Integer) row.getData(column);
 							if (!dataPointsRange.contains(peakDataPoints))
 								keepFeature[i] = false;
 						}
@@ -177,7 +177,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 					column = featureTable.getColumn(ColumnName.FWHM, sample);
 					if (column != null) {
 						if (row.getData(column) != null) {
-							final Double peakFWHM = row.getData(column);
+							final Double peakFWHM = (Double) row.getData(column);
 							if (!fwhmRange.contains(peakFWHM))
 								keepFeature[i] = false;
 						}
@@ -189,7 +189,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 					column = featureTable.getColumn(ColumnName.TAILINGFACTOR, sample);
 					if (column != null) {
 						if (row.getData(column) != null) {
-							final Double peakTF = row.getData(column);
+							final Double peakTF = (Double) row.getData(column);
 							if (!tailingFactorRange.contains(peakTF))
 								keepFeature[i] = false;
 						}
@@ -201,7 +201,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 					column = featureTable.getColumn(ColumnName.ASYMMETRYFACTOR, sample);
 					if (column != null) {
 						if (row.getData(column) != null) {
-							final Double peakAF = row.getData(column);
+							final Double peakAF = (Double) row.getData(column);
 							if (!asymmetryFactorRange.contains(peakAF))
 								keepFeature[i] = false;
 						}
