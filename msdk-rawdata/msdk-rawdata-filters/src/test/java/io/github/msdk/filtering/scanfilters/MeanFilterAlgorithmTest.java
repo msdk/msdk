@@ -66,10 +66,6 @@ public class MeanFilterAlgorithmTest {
         MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
         scanTest.getDataPoints(dataPoints);
 
-        float intensityAverage = 0;
-       
-        intensityAverage = scanTest.getTIC()/dataPoints.getSize();
-
         // Get the mz and intensities values from the input scan
         double mzValues[] = dataPoints.getMzBuffer();
         float intensityValues[] = dataPoints.getIntensityBuffer();
@@ -94,6 +90,8 @@ public class MeanFilterAlgorithmTest {
         newScan = meanFilter.execute();
         newDataPoints.clear();
         newScan.getDataPoints(newDataPoints);
+        float intensityAverage = scanTest.getTIC()/dataPoints.getSize();
+
         for (MsIon ion : newDataPoints) {
             Assert.assertEquals(ion.getIntensity(), intensityAverage, 0.001);
         }
