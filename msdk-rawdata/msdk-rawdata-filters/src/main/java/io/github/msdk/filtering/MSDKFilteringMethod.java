@@ -15,34 +15,30 @@ package io.github.msdk.filtering;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.filtering.scanfilters.MeanFilterAlgorithm;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MeanFilterMethod implements MSDKMethod<RawDataFile> {
+public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private final @Nonnull MSDKFilteringAlgorithm filteringAlgorithm;
     private final @Nonnull RawDataFile rawDataFile;
-    private final @Nonnull double windowLength;
-    private final @Nonnull DataPointStore store;
 
     private int processedScans = 0, totalScans = 0;
     private RawDataFile result;
     private boolean canceled = false;
 
-    public MeanFilterMethod(@Nonnull RawDataFile rawDataFile, @Nonnull double windowLength, @Nonnull DataPointStore store) {
+    public MSDKFilteringMethod(@Nonnull RawDataFile rawDataFile, @Nonnull MSDKFilteringAlgorithm filteringAlgorithm) {
+        this.filteringAlgorithm = filteringAlgorithm;
         this.rawDataFile = rawDataFile;
-        this.windowLength = windowLength;
-        this.store = store;
-
     }
 
     @Override
@@ -55,34 +51,30 @@ public class MeanFilterMethod implements MSDKMethod<RawDataFile> {
     }
 
     @Override
-    public void cancel() {
-        this.canceled = true;
-    }
-
-    @Override
     public RawDataFile execute() throws MSDKException {
-        logger.info("Started Mean Filter with Raw Data File #"
+        logger.info("Started Filter " + this.filteringAlgorithm.getName() + " with Raw Data File #"
                 + rawDataFile.getName());
 
         // Create a new raw data file
         result = MSDKObjectBuilder.getRawDataFile(this.rawDataFile.getName(), this.rawDataFile.getOriginalFile(), this.rawDataFile.getRawDataFileType(), DataPointStoreFactory.getMemoryDataStore());
 
-        // Get the scans from the user defined raw data file
         List<MsScan> scans = rawDataFile.getScans();
         totalScans = scans.size();
+
         for (MsScan scan : scans) {
             if (canceled) {
                 return null;
             }
-            MeanFilterAlgorithm meanFilter = new MeanFilterAlgorithm(scan, windowLength, store);
-            MsScan newScan = meanFilter.execute();
+
+            MsSpectrum newScan = this.filteringAlgorithm.performFilter(scan);
 
             // Add the new scan to the created raw data file
-            result.addScan(newScan);
+            if (newScan != null) {
+                result.addScan((MsScan) newScan);
+            }
             processedScans++;
         }
-        
-        logger.info("Finished Mean Filter with Raw Data File #"
+        logger.info("Finished Filter " + this.filteringAlgorithm.getName() + " with Raw Data File #"
                 + rawDataFile.getName());
         return result;
     }
@@ -91,4 +83,10 @@ public class MeanFilterMethod implements MSDKMethod<RawDataFile> {
     public RawDataFile getResult() {
         return result;
     }
+
+    @Override
+    public void cancel() {
+        this.canceled = true;
+    }
+
 }

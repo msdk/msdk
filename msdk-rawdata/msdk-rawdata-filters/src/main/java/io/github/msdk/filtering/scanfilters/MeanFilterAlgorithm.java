@@ -13,30 +13,28 @@
  */
 package io.github.msdk.filtering.scanfilters;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.filtering.MSDKFilteringAlgorithm;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-public class MeanFilterAlgorithm {
+public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
 
-    private final @Nonnull MsScan scan;
     private final @Nonnull double windowLength;
     private final @Nonnull DataPointStore store;
 
-    private MsScan result;
-
-    public MeanFilterAlgorithm(@Nonnull MsScan scan, @Nonnull double windowLength, @Nonnull DataPointStore store) {
-        this.scan = scan;
+    public MeanFilterAlgorithm(@Nonnull double windowLength, @Nonnull DataPointStore store) {
         this.windowLength = windowLength;
         this.store = store;
     }
    
-    public MsScan execute() throws MSDKException {
+    @Override
+    public MsSpectrum performFilter(MsSpectrum scan) {
         List<Double> massWindow = new ArrayList();
         List<Float> intensityWindow = new ArrayList();
 
@@ -95,18 +93,17 @@ public class MeanFilterAlgorithm {
         }
 
         // Return a new scan with the new data points
-        result = MSDKObjectBuilder.getMsScan(store, scan.getScanNumber(), scan.getMsFunction());
+        MsScan result = MSDKObjectBuilder.getMsScan(store, ((MsScan) scan).getScanNumber(), ((MsScan) scan).getMsFunction());
         result.setDataPoints(dataPoints);
-        result.setChromatographyInfo(scan.getChromatographyInfo());
-        result.setRawDataFile(scan.getRawDataFile());
+        result.setChromatographyInfo(((MsScan) scan).getChromatographyInfo());
+        result.setRawDataFile(((MsScan) scan).getRawDataFile());
 
         return result;
     }
 
-    
-    public MsScan getResult() {
-        return result;
+    @Override
+    public String getName() {
+        return "Mean Filter";
     }
-
 
 }

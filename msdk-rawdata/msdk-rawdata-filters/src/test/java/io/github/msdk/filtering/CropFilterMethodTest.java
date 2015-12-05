@@ -13,6 +13,7 @@
  */
 package io.github.msdk.filtering;
 
+import io.github.msdk.filtering.scanfilters.CropFilterAlgorithm;
 import com.google.common.collect.Range;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
@@ -52,13 +53,12 @@ public class CropFilterMethodTest {
         DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
 
         // Execute the filter
-        CropFilterMethod cropFilter = new CropFilterMethod(rawFile, mzRange, rtRange, store);
-        RawDataFile newRawFile = cropFilter.execute();
-
-        Assert.assertEquals(1.0, cropFilter.getFinishedPercentage(), 0.0001);
-        
+        CropFilterAlgorithm cropFilter = new CropFilterAlgorithm(mzRange, rtRange, store);
+        MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile,cropFilter);
+        RawDataFile newRawFile = filterMethod.execute();
         // The result of the method can't be Null
         Assert.assertNotNull(newRawFile);
+        Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
 
         List<MsScan> newScans = newRawFile.getScans();
 
@@ -88,10 +88,12 @@ public class CropFilterMethodTest {
         DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
 
         // Execute the filter
-        CropFilterMethod cropFilter = new CropFilterMethod(rawFile, mzRange, rtRange, store);
-        RawDataFile newRawFile = cropFilter.execute();
-
-        Assert.assertEquals(1.0, cropFilter.getFinishedPercentage(), 0.0001);
+        CropFilterAlgorithm cropFilter = new CropFilterAlgorithm(mzRange, rtRange, store);
+        MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile,cropFilter);
+        RawDataFile newRawFile = filterMethod.execute();
+        // The result of the method can't be Null
+        Assert.assertNotNull(newRawFile);
+        Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
         
         // The result of the method can't be Null
         Assert.assertNotNull(newRawFile);
