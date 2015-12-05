@@ -18,7 +18,6 @@ import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.filtering.MSDKFilteringAlgorithm;
 import javax.annotation.Nonnull;
 
@@ -36,10 +35,10 @@ public class CropFilterAlgorithm implements MSDKFilteringAlgorithm {
     }
 
     @Override
-    public MsSpectrum performFilter(MsSpectrum scan) {
+    public MsScan performFilter(@Nonnull MsScan scan) {
 
         MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
-        Float rt = ((MsScan) scan).getChromatographyInfo().getRetentionTime();
+        Float rt = scan.getChromatographyInfo().getRetentionTime();
 
         // Do only if the scan's retention time is inside the user defined retention time range
         if (rt != null && rtRange.contains(rt.floatValue())) {
@@ -49,9 +48,9 @@ public class CropFilterAlgorithm implements MSDKFilteringAlgorithm {
             scan.getDataPoints(dataPoints);
 
             // Create a new scan
-            MsScan newScan = MSDKObjectBuilder.getMsScan(store, ((MsScan) scan).getScanNumber(), ((MsScan) scan).getMsFunction());
-            newScan.setChromatographyInfo(((MsScan) scan).getChromatographyInfo());
-            newScan.setRawDataFile(((MsScan) scan).getRawDataFile());
+            MsScan newScan = MSDKObjectBuilder.getMsScan(store, scan.getScanNumber(), scan.getMsFunction());
+            newScan.setChromatographyInfo(scan.getChromatographyInfo());
+            newScan.setRawDataFile(scan.getRawDataFile());
 
             // Store the new data points
             newScan.setDataPoints(dataPoints.selectDataPoints(mzRange, intensityRange));

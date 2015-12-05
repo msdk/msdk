@@ -13,12 +13,13 @@
  */
 package io.github.msdk.filtering;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.datamodel.rawdata.MsScan;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface MSDKFilteringAlgorithm {
-    @Nullable MsSpectrum performFilter(@Nonnull MsSpectrum input);
     
-    String getName();
+    public @Nullable MsScan performFilter(@Nonnull MsScan input);
+    
+    public String getName();
 }

@@ -49,7 +49,7 @@ public class MeanFilterMethodTest {
 
         // Execute the filter
         MeanFilterAlgorithm meanFilter = new MeanFilterAlgorithm(3.5, store);
-        MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, meanFilter);
+        MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, meanFilter, store);
         RawDataFile newRawFile = filterMethod.execute();
 
         Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
@@ -66,7 +66,7 @@ public class MeanFilterMethodTest {
 
         // Test windowLength == 0 -> the resulting scan should be the equal to the input scan      
         meanFilter = new MeanFilterAlgorithm(0.0, store);
-        filterMethod = new MSDKFilteringMethod(rawFile, meanFilter);
+        filterMethod = new MSDKFilteringMethod(rawFile, meanFilter, store);
         newRawFile = filterMethod.execute();
 
         Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
@@ -110,7 +110,7 @@ public class MeanFilterMethodTest {
 
         // Test windowLength == 100000 -> all the dataPoints should have the same intensity
         meanFilter = new MeanFilterAlgorithm(10000.0, store);
-        filterMethod = new MSDKFilteringMethod(rawFile, meanFilter);
+        filterMethod = new MSDKFilteringMethod(rawFile, meanFilter, store);
         newRawFile = filterMethod.execute();
 
         Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);

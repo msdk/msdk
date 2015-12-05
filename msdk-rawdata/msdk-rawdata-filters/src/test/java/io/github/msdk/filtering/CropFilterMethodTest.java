@@ -54,7 +54,7 @@ public class CropFilterMethodTest {
 
         // Execute the filter
         CropFilterAlgorithm cropFilter = new CropFilterAlgorithm(mzRange, rtRange, store);
-        MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile,cropFilter);
+        MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, cropFilter, store);
         RawDataFile newRawFile = filterMethod.execute();
         // The result of the method can't be Null
         Assert.assertNotNull(newRawFile);
@@ -89,7 +89,7 @@ public class CropFilterMethodTest {
 
         // Execute the filter
         CropFilterAlgorithm cropFilter = new CropFilterAlgorithm(mzRange, rtRange, store);
-        MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile,cropFilter);
+        MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile,cropFilter, store);
         RawDataFile newRawFile = filterMethod.execute();
         // The result of the method can't be Null
         Assert.assertNotNull(newRawFile);

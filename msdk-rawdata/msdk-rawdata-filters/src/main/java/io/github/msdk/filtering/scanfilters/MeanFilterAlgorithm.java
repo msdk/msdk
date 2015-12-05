@@ -15,7 +15,6 @@ package io.github.msdk.filtering.scanfilters;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.filtering.MSDKFilteringAlgorithm;
@@ -25,7 +24,7 @@ import javax.annotation.Nonnull;
 
 public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
 
-    private final @Nonnull double windowLength;
+    private final @Nonnull double windowLength;    
     private final @Nonnull DataPointStore store;
 
     public MeanFilterAlgorithm(@Nonnull double windowLength, @Nonnull DataPointStore store) {
@@ -34,7 +33,7 @@ public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
     }
    
     @Override
-    public MsSpectrum performFilter(MsSpectrum scan) {
+    public MsScan performFilter(@Nonnull MsScan scan) {
         List<Double> massWindow = new ArrayList();
         List<Float> intensityWindow = new ArrayList();
 
@@ -93,10 +92,10 @@ public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
         }
 
         // Return a new scan with the new data points
-        MsScan result = MSDKObjectBuilder.getMsScan(store, ((MsScan) scan).getScanNumber(), ((MsScan) scan).getMsFunction());
+        MsScan result = MSDKObjectBuilder.getMsScan(store, scan.getScanNumber(), scan.getMsFunction());
         result.setDataPoints(dataPoints);
-        result.setChromatographyInfo(((MsScan) scan).getChromatographyInfo());
-        result.setRawDataFile(((MsScan) scan).getRawDataFile());
+        result.setChromatographyInfo(scan.getChromatographyInfo());
+        result.setRawDataFile(scan.getRawDataFile());
 
         return result;
     }
