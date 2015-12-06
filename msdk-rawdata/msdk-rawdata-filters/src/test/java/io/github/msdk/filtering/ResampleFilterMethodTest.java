@@ -55,14 +55,14 @@ public class ResampleFilterMethodTest {
         Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
 
         List<MsScan> newScans = newRawFile.getScans();
-
+        List<MsScan> scans = rawFile.getScans();
         // Check the new scans are between the new range limits
         for (MsScan newScan : newScans) {
             Assert.assertNotNull(newScan);
         }
 
         // Execute the filter with a big bin size
-        resampleFilter = new ResampleFilterAlgorithm(100000.0, store);
+        resampleFilter = new ResampleFilterAlgorithm(10000000.0, store);
         filterMethod = new MSDKFilteringMethod(rawFile, resampleFilter, store);
         newRawFile = filterMethod.execute();
         // The result of the method can't be Null
@@ -70,18 +70,27 @@ public class ResampleFilterMethodTest {
         Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
 
         newScans = newRawFile.getScans();
-
+        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
+        MsSpectrumDataPointList newDataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
+               
         // Check the new scans are between the new range limits
-        for (MsScan newScan : newScans) {
+        for (int i = 0; i < newScans.size(); i++) {
+            dataPoints.clear();
+            newDataPoints.clear();
+            
+            MsScan newScan = newScans.get(i);
+            MsScan scan = scans.get(i);
+            
             Assert.assertNotNull(newScan);
-            MsSpectrumDataPointList newDataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
+            
+            scan.getDataPoints(dataPoints);
             newScan.getDataPoints(newDataPoints);
-            float intensityAverage = newDataPoints.getTIC() / newDataPoints.getSize();
-            float intensityValues[] = newDataPoints.getIntensityBuffer();
+            Assert.assertEquals(1, newDataPoints.getSize(), 0.001);
 
-            for (int j = 0; j < newDataPoints.getSize(); j++) {
-                Assert.assertEquals(intensityValues[j], intensityAverage, 0.0001);
-            }
+            float intensityAverage = dataPoints.getTIC() / dataPoints.getSize();
+            float intensityValues[] = newDataPoints.getIntensityBuffer();
+            
+            Assert.assertEquals(intensityValues[0], intensityAverage, 0.0001);
         }
 
         // Execute the filter with a zero bin size
@@ -92,21 +101,20 @@ public class ResampleFilterMethodTest {
         Assert.assertNotNull(newRawFile);
         Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
         newScans = newRawFile.getScans();
-        
-        List<MsScan> scans = rawFile.getScans();
-        
+
         Assert.assertEquals(scans.size(), newScans.size(), 0.0001);
-        
+
         // The resulting data points should be exactly the same as the input
-        for (int i =0; i < scans.size(); i++) {
+        for (int i = 0; i < scans.size(); i++) {
+            dataPoints.clear();
+            newDataPoints.clear();
+            
             MsScan newScan = newScans.get(i);
             MsScan scan = scans.get(i);
             Assert.assertNotNull(newScan);
-            MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
             scan.getDataPoints(dataPoints);
-            MsSpectrumDataPointList newDataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
             newScan.getDataPoints(newDataPoints);
-            
+
             float newIntensityValues[] = newDataPoints.getIntensityBuffer();
             float intensityValues[] = newDataPoints.getIntensityBuffer();
 
@@ -123,21 +131,22 @@ public class ResampleFilterMethodTest {
         Assert.assertNotNull(newRawFile);
         Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
         newScans = newRawFile.getScans();
-        
+
         scans = rawFile.getScans();
-        
+
         Assert.assertEquals(scans.size(), newScans.size(), 0.0001);
-        
+
         // The resulting data points should be exactly the same as the input
-        for (int i =0; i < scans.size(); i++) {
+        for (int i = 0; i < scans.size(); i++) {
+            dataPoints.clear();
+            newDataPoints.clear();
+            
             MsScan newScan = newScans.get(i);
             MsScan scan = scans.get(i);
             Assert.assertNotNull(newScan);
-            MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
             scan.getDataPoints(dataPoints);
-            MsSpectrumDataPointList newDataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
             newScan.getDataPoints(newDataPoints);
-            
+
             float newIntensityValues[] = newDataPoints.getIntensityBuffer();
             float intensityValues[] = newDataPoints.getIntensityBuffer();
 
