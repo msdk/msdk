@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 
 public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
 
-    private final @Nonnull double binSize;
+    private @Nonnull double binSize;
     private final @Nonnull DataPointStore store;
     
     public ResampleFilterAlgorithm(@Nonnull double binSize, @Nonnull DataPointStore store) {
@@ -33,29 +33,36 @@ public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
 
     @Override
     public MsScan performFilter(@Nonnull MsScan scan) {
+        // Create data point list object and fill it with the scan data points
+        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
+        scan.getDataPoints(dataPoints);
+	float intensityValues[] = dataPoints.getIntensityBuffer(); 
         Range<Double> mzRange = scan.getMzRange();
+       
+        if(binSize > mzRange.upperEndpoint()){
+            this.binSize = (int) Math.round(mzRange.upperEndpoint());
+        }
+        
+        
 	int numberOfBins = (int) Math.round((mzRange.upperEndpoint() - mzRange
 		.lowerEndpoint()) / binSize);
 	if (numberOfBins <= 0) {
 	    numberOfBins++;
 	}
-
-        // Create data point list object and fill it with the scan data points
-        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
-        scan.getDataPoints(dataPoints);
-	float intensityValues[] = dataPoints.getIntensityBuffer();        
-        
+       
         // Create the array with the intensity values for each bin
         Float[] newY = new Float[numberOfBins];
         int intVal = 0;
         for(int i = 0; i < numberOfBins; i++){
             newY[i] = 0.0f;
+            int pointsInTheBin = 0;
             for(int j = 0; j < binSize; j++){
                 if(intVal < intensityValues.length){
                     newY[i] += intensityValues[intVal++];
+                    pointsInTheBin++;
                 }
             }
-            newY[i] /= (float)binSize;
+            newY[i] /= pointsInTheBin;
         }
 
 	// Set the new m/z value in the middle of the bin
