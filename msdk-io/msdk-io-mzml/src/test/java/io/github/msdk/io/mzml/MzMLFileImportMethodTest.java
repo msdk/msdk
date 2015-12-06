@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.rawdataimport;
+package io.github.msdk.io.mzml;
 
 import java.io.File;
 import java.util.List;
