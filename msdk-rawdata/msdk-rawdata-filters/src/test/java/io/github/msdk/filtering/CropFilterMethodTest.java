@@ -105,7 +105,7 @@ public class CropFilterMethodTest {
         
         MsSpectrumDataPointList dataPointList = MSDKObjectBuilder.getMsSpectrumDataPointList();
         for (MsScan scan : newScans) {
-
+            
             // All scans should have zero data points
             scan.getDataPoints(dataPointList);
             Assert.assertEquals(0, dataPointList.getSize());

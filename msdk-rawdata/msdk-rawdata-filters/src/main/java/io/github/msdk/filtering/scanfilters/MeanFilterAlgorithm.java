@@ -94,7 +94,7 @@ public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
         // Return a new scan with the new data points
         MsScan result = MSDKObjectBuilder.getMsScan(store, scan.getScanNumber(), scan.getMsFunction());
         result.setDataPoints(dataPoints);
-        result.setChromatographyInfo(scan.getChromatographyInfo());
+        result.setChromatographyInfo(scan.getChromatographyInfo());        
         result.setRawDataFile(scan.getRawDataFile());
 
         return result;
