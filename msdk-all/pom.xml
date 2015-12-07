@@ -173,5 +173,11 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-featdet-gridmass</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 	</dependencies>
 </project>
