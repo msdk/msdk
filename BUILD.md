@@ -44,7 +44,7 @@ mvn clean
 mvn versions:set -DnewVersion=X.Y.Z versions:commit
 
 # Optional - fix missing JavaDoc comments
-mvn javadoc:fix
+mvn -DfixTags=param,return,throws -Dforce javadoc:fix
 
 # Build the whole project
 mvn package
