@@ -11,5 +11,6 @@
 	<description>MSDK package for feature table methods</description>
 	<modules>
 		<module>msdk-features-filtering</module>
+		<module>msdk-row-filtering</module>
 	</modules>
 </project>
