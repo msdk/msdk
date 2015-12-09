@@ -6,7 +6,7 @@
         <artifactId>msdk-features</artifactId>
         <version>0.0.2-SNAPSHOT</version>
     </parent>
-    <artifactId>msdk-row-filtering</artifactId>
+    <artifactId>msdk-features-row-filtering</artifactId>
     <name>MSDK feature table row filter algorithm</name>
 
     <dependencies>

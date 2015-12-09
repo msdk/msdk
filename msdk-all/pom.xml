@@ -133,7 +133,7 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-row-filtering</artifactId>
+			<artifactId>msdk-features-row-filtering</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
