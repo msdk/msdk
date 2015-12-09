@@ -17,7 +17,6 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsIon;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -64,39 +63,21 @@ public class SGFilterMethodTest {
            
         }
         
-        MsScan scan = MSDKObjectBuilder.getMsScan(store, 1, MSDKObjectBuilder.getMsFunction(1));
-        dataPointList.clear();
-        dataPointList.add(400, 0);
-        dataPointList.add(405, 100);
-        dataPointList.add(410, 200);
-        dataPointList.add(415, 300);
-        dataPointList.add(420, 400);
-        dataPointList.add(425, 500);
-        dataPointList.add(430, 600);
-        dataPointList.add(435, 700);
-        dataPointList.add(445, 800);
-        dataPointList.add(445, 900);
-        dataPointList.add(450, 0);
-        dataPointList.add(455, 100);
-        dataPointList.add(460, 200);
-        dataPointList.add(465, 300);
-        dataPointList.add(470, 400);
-        dataPointList.add(475, 500);
-        dataPointList.add(480, 600);
-        dataPointList.add(485, 700);
-        dataPointList.add(490, 800);
-        dataPointList.add(495, 900);
-        scan.setDataPoints(dataPointList);
-        // Execute the filter
-        MsScan newScan = SGFilter.performFilter(scan);
+        // Execute the filter with wrong parameters
+        SGFilter = new SGFilterAlgorithm(110, store);
+        filterMethod = new MSDKFilteringMethod(rawFile, SGFilter, store);
+        newRawFile = filterMethod.execute();
+        // The result of the method can't be Null
+        Assert.assertNotNull(newRawFile);
+        Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
         
-        dataPointList.clear();
-        newScan.setDataPoints(dataPointList);
-        
-        System.out.println(dataPointList.getSize());
-        for(MsIon ion: dataPointList){
-            System.out.println(ion.getMz() + " - " +ion.getIntensity());
+        newScans = newRawFile.getScans();
+            
+        for (MsScan newScan : newScans) {
+            Assert.assertNull(newScan);           
         }
+        
+        
     }
 
 }

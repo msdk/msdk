@@ -11,6 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
+
 package io.github.msdk.filtering.scanfilters;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
@@ -23,8 +24,8 @@ import javax.annotation.Nonnull;
 
 public class SGFilterAlgorithm implements MSDKFilteringAlgorithm {
 
-    private static final HashMap<Integer, Integer> Hvalues = new HashMap<Integer, Integer>();
-    private static final HashMap<Integer, int[]> Avalues = new HashMap<Integer, int[]>();
+    private static final HashMap<Integer, Integer> Hvalues = new HashMap<>();
+    private static final HashMap<Integer, int[]> Avalues = new HashMap<>();
 
     static {
         int[] a5Ints = {17, 12, -3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -76,8 +77,10 @@ public class SGFilterAlgorithm implements MSDKFilteringAlgorithm {
 
     @Override
     public MsScan performFilter(MsScan scan) {
-        assert Avalues.containsKey(numOfDataPoints);
-	assert Hvalues.containsKey(numOfDataPoints);
+        
+        if(!Avalues.containsKey(numOfDataPoints) || !Hvalues.containsKey(numOfDataPoints)){
+            return null;
+        }
 
 	int[] aVals = Avalues.get(numOfDataPoints);
 	int h = Hvalues.get(numOfDataPoints);
