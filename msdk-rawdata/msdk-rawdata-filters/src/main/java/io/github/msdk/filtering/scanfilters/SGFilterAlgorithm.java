@@ -79,7 +79,7 @@ public class SGFilterAlgorithm implements MSDKFilteringAlgorithm {
     public MsScan performFilter(MsScan scan) {
         
         if(!Avalues.containsKey(numOfDataPoints) || !Hvalues.containsKey(numOfDataPoints)){
-            return null;
+            return scan;
         }
 
 	int[] aVals = Avalues.get(numOfDataPoints);
