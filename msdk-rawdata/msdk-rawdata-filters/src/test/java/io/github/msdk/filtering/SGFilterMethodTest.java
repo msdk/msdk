@@ -72,9 +72,37 @@ public class SGFilterMethodTest {
         Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
         
         newScans = newRawFile.getScans();
+        List<MsScan> scans = rawFile.getScans();
+        
+        // The resulting scans should be equal to the input scans
+        for (int i = 0; i < scans.size(); i++) {
+            Assert.assertNotNull(newScans.get(i));
+            MsScan newScan = newScans.get(i);
+            MsScan inputScan = scans.get(i);
+            // The resulting scan should be equal to the input scan
+
+            MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();            
+            inputScan.getDataPoints(dataPoints);
+
+            // Get the mz and intensities values from the input scan
+            double mzValues[] = dataPoints.getMzBuffer();
+            float intensityValues[] = dataPoints.getIntensityBuffer();
+
+            MsSpectrumDataPointList newDataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
+            newScan.getDataPoints(newDataPoints);
             
-        for (MsScan newScan : newScans) {
-            Assert.assertNull(newScan);           
+            // Get the mz and intensities values from the filtered scan
+            double newMzValues[] = newDataPoints.getMzBuffer();
+            float newIntensityValues[] = newDataPoints.getIntensityBuffer();
+
+            // They should contain the same number of data points
+            Assert.assertEquals(dataPoints.getSize(), newDataPoints.getSize(), 0.0001);
+
+            for (int j = 0; j < newDataPoints.getSize(); j++) {
+                Assert.assertEquals(mzValues[j], newMzValues[j], 0.0001);
+                Assert.assertEquals(intensityValues[j], newIntensityValues[j], 0.0001);
+            }
+
         }
         
         
