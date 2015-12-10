@@ -123,6 +123,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 		// Loop through all features
 		for (FeatureTableRow row : featureTable.getRows()) {
 			FeatureTableColumn column;
+			processedRows++;
 
 			// Check m/z
 			if (filterByMz) {
@@ -161,7 +162,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 			}
 
 			// Check ion annotation
-			if (filterByIonAnnotation) {
+			if (filterByIonAnnotation && ionAnnotation != null) {
 				column = featureTable.getColumn("Ion Annotation", null, IonAnnotation.class);
 				if (column == null)
 					continue;
@@ -184,8 +185,6 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 
 			// Add row if all filters are fulfilled
 			result.addRow(copyRow(row, result));
-
-			processedRows++;
 
 			if (canceled)
 				return null;

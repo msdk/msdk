@@ -21,6 +21,8 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.common.collect.Range;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
@@ -99,6 +101,68 @@ public class RowFilterMethodTest {
 				featureTable, sample);
 		tableBuilder.execute();
 
+		// 1. Filter parameters
+		boolean filterByMz = true;
+		boolean filterByRt = true;
+		boolean filterByDuration = true;
+		boolean filterByCount = true;
+		boolean filterByIsotopes = true;
+		boolean filterByIonAnnotation = true;
+		boolean requireAnnotation = false;
+		boolean removeDuplicates = false;
+		boolean duplicateRequireSameID = true;
+		Range<Double> mzRange = Range.closed(300.0, 600.0);
+		Range<Double> rtRange = Range.closed(600.0, 900.0); // Seconds
+		Range<Double> durationRange = Range.closed(0.0, 47.0); // Seconds
+		final MZTolerance duplicateMzTolerance = new MZTolerance(0.003, 5.0);
+		final RTTolerance duplicateRtTolerance = new RTTolerance(0.2, false);
+		int minCount = 1;
+		int minIsotopes = 1;
+		String ionAnnotation = null;
+		String nameSuffix = "-rowFiltered";
+
+		// 1. Filter the rows
+		RowFilterMethod filterMethod = new RowFilterMethod(featureTable, dataStore, nameSuffix, filterByMz, filterByRt,
+				filterByDuration, filterByCount, filterByIsotopes, filterByIonAnnotation, requireAnnotation, mzRange,
+				rtRange, durationRange, minCount, minIsotopes, ionAnnotation, removeDuplicates, duplicateMzTolerance,
+				duplicateRtTolerance, duplicateRequireSameID);
+		filterMethod.execute();
+		Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
+
+		// 1. Verify data
+		FeatureTable filteredTable = filterMethod.getResult();
+		Assert.assertEquals(3, filteredTable.getRows().size());
+
+		// 2. Filter parameters
+		mzRange = Range.closed(350.0, 600.0);
+		durationRange = Range.closed(46.0, 47.0); // Seconds
+
+		// 2. Filter the features
+		filterMethod = new RowFilterMethod(featureTable, dataStore, nameSuffix, filterByMz, filterByRt,
+				filterByDuration, filterByCount, filterByIsotopes, filterByIonAnnotation, requireAnnotation, mzRange,
+				rtRange, durationRange, minCount, minIsotopes, ionAnnotation, removeDuplicates, duplicateMzTolerance,
+				duplicateRtTolerance, duplicateRequireSameID);
+		filterMethod.execute();
+		Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
+
+		// 2. Verify data
+		filteredTable = filterMethod.getResult();
+		Assert.assertEquals(1, filteredTable.getRows().size());
+
+		// 3. Filter parameters
+		minCount = 2;
+
+		// 3. Filter the features
+		filterMethod = new RowFilterMethod(filteredTable, dataStore, nameSuffix, filterByMz, filterByRt,
+				filterByDuration, filterByCount, filterByIsotopes, filterByIonAnnotation, requireAnnotation, mzRange,
+				rtRange, durationRange, minCount, minIsotopes, ionAnnotation, removeDuplicates, duplicateMzTolerance,
+				duplicateRtTolerance, duplicateRequireSameID);
+		filterMethod.execute();
+		Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
+
+		// 3. Verify data
+		filteredTable = filterMethod.getResult();
+		Assert.assertEquals(0, filteredTable.getRows().size());
 	}
 
 }
