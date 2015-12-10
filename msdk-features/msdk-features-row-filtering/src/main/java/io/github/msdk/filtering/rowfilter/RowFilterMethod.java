@@ -23,7 +23,12 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
+import io.github.msdk.datamodel.featuretables.FeatureTableRow;
+import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.util.FeatureTableUtil;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
 
@@ -101,13 +106,126 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 	/**
 	 * @throws MSDKException
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public FeatureTable execute() throws MSDKException {
 		// Total features
 		totalRows = featureTable.getRows().size();
+		// If remove duplicates is selected, the features will looped twice 
+		if (removeDuplicates)
+			totalRows = totalRows*2;
+
+		// Add columns
+		for (FeatureTableColumn column : featureTable.getColumns()) {
+			result.addColumn(column);
+		}
+
+		// Loop through all features
+		for (FeatureTableRow row : featureTable.getRows()) {
+			FeatureTableColumn column;
+
+			// Check m/z
+			if (filterByMz) {
+				if (!mzRange.contains(row.getMz()))
+					continue;
+			}
+
+			// Check RT
+			if (filterByRt) {
+				double rowRT = (double) row.getChromatographyInfo().getRetentionTime();
+				if (!rtRange.contains(rowRT))
+					continue;
+			}
+
+			// Check duration
+			if (filterByDuration) {
+				final Double averageDuration = FeatureTableUtil.getAverageFeatureDuration(row);
+				if (averageDuration == null)
+					continue;
+				if (!durationRange.contains(averageDuration))
+					continue;
+			}
+
+			// Check count
+			if (filterByCount) {
+				final int rowCount = FeatureTableUtil.getRowCount(row);
+				if (!(rowCount >= minCount))
+					continue;
+			}
+
+			// Check isotopes
+			if (filterByIsotopes) {
+				/*
+				 * TODO
+				 */
+			}
+
+			// Check ion annotation
+			if (filterByIonAnnotation) {
+				column = featureTable.getColumn("Ion Annotation", null, IonAnnotation.class);
+				if (column == null)
+					continue;
+				if (row.getData(column) != null) {
+					final IonAnnotation rowIonAnnotation = (IonAnnotation) row.getData(column);
+					if (!rowIonAnnotation.getAnnotationId().contains(ionAnnotation)) {
+						continue;
+					}
+				}
+			}
+
+			// Require ion annotation?
+			if (requireAnnotation) {
+				column = featureTable.getColumn("Ion Annotation", null, IonAnnotation.class);
+				if (column == null)
+					continue;
+				if (row.getData(column) == null)
+					continue;
+			}
+
+			// Add row if all filters are fulfilled
+			result.addRow(copyRow(row, result));
+
+			processedRows++;
+
+			if (canceled)
+				return null;
+		}
+
+		// Remove duplicate features?
+		if (removeDuplicates) {
+			// Recalculate the remaining rows in the result feature table
+			totalRows = totalRows/2 + result.getRows().size();
+			
+			// Loop through all features
+			for (FeatureTableRow row : result.getRows()) {
+				/*
+				 * TODO!
+				 */
+
+				processedRows++;
+
+				if (canceled)
+					return null;
+			}
+
+		}
 
 		// Return the new feature table
 		return result;
+	}
+
+	private static FeatureTableRow copyRow(@Nonnull FeatureTableRow row, @Nonnull FeatureTable result) {
+
+		// Create a new row with the common feature data
+		final FeatureTableRow newRow = MSDKObjectBuilder.getFeatureTableRow(result, row.getId());
+		FeatureTableUtil.copyCommonValues(row, newRow);
+
+		// Copy the feature data for the samples
+		for (Sample sample : row.getFeatureTable().getSamples()) {
+			FeatureTableUtil.copyFeatureValues(row, newRow, sample);
+		}
+
+		return newRow;
 	}
 
 	@Override
