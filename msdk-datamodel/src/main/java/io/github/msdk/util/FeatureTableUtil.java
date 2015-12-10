@@ -190,4 +190,69 @@ public class FeatureTableUtil {
         }
     }
 
+    /**
+     * Calculates in how many sample the feature is found. It is assumed that at
+     * least one of the following columns are present in the feature table: m/z,
+     * area and height.
+     *
+     * @param featureTableRow
+     *            the {@link FeatureTableRow} to apply the calculation on.
+     */
+    public static int getRowCount(FeatureTableRow featureTableRow) {
+        int count = 0;
+        FeatureTable featureTable = featureTableRow.getFeatureTable();
+        FeatureTableColumn column;
+        for (Sample sample : featureTable.getSamples()) {
+            column = featureTable.getColumn(ColumnName.MZ, sample);
+            if (column != null) {
+                count++;
+                continue;
+            }
+            column = featureTable.getColumn(ColumnName.AREA, sample);
+            if (column != null) {
+                count++;
+                continue;
+            }
+            column = featureTable.getColumn(ColumnName.HEIGHT, sample);
+            if (column != null) {
+                count++;
+                continue;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Calculates the average duration of a feature across a set of samples in a
+     * feature table row.
+     *
+     * @param featureTableRow
+     *            the {@link FeatureTableRow} to apply the calculation on.
+     */
+    public static Double getAverageFeatureDuration(
+            FeatureTableRow featureTableRow) {
+        FeatureTable featureTable = featureTableRow.getFeatureTable();
+        FeatureTableColumn column;
+        Double averageDuration = 0d;
+        int sampleCount = 0;
+
+        for (Sample sample : featureTable.getSamples()) {
+            column = featureTable.getColumn(ColumnName.DURATION, sample);
+            if (column != null) {
+                double duration = featureTableRow.getData(column);
+                averageDuration = averageDuration + duration;
+                sampleCount++;
+            }
+        }
+
+        // Return null if no duration is found
+        if (sampleCount == 0) {
+            averageDuration = null;
+        } else {
+            averageDuration /= sampleCount;
+        }
+
+        return averageDuration;
+    }
+
 }
