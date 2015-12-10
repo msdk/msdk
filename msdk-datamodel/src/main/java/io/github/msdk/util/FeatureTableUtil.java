@@ -205,18 +205,24 @@ public class FeatureTableUtil {
         for (Sample sample : featureTable.getSamples()) {
             column = featureTable.getColumn(ColumnName.MZ, sample);
             if (column != null) {
-                count++;
-                continue;
+                if (featureTableRow.getData(column) != null) {
+                    count++;
+                    continue;
+                }
             }
             column = featureTable.getColumn(ColumnName.AREA, sample);
             if (column != null) {
-                count++;
-                continue;
+                if (featureTableRow.getData(column) != null) {
+                    count++;
+                    continue;
+                }
             }
             column = featureTable.getColumn(ColumnName.HEIGHT, sample);
             if (column != null) {
-                count++;
-                continue;
+                if (featureTableRow.getData(column) != null) {
+                    count++;
+                    continue;
+                }
             }
         }
         return count;
