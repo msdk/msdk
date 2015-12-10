@@ -179,7 +179,8 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 				column = featureTable.getColumn("Ion Annotation", null, IonAnnotation.class);
 				if (column == null)
 					continue;
-				if (row.getData(column) == null)
+				IonAnnotation ionAnnotation = row.getData(column);
+				if (ionAnnotation.getDescription() == null)
 					continue;
 			}
 
