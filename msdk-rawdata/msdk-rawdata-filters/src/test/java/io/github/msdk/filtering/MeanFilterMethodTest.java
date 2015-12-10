@@ -83,8 +83,8 @@ public class MeanFilterMethodTest {
             MsScan newScan = newScans.get(i);
             MsScan inputScan = inputScans.get(i);
             // The resulting scan should be equal to the input scan
-            
-            MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
+
+            MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();            
             inputScan.getDataPoints(dataPoints);
 
             // Get the mz and intensities values from the input scan
@@ -93,7 +93,7 @@ public class MeanFilterMethodTest {
 
             MsSpectrumDataPointList newDataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
             newScan.getDataPoints(newDataPoints);
-
+            
             // Get the mz and intensities values from the filtered scan
             double newMzValues[] = newDataPoints.getMzBuffer();
             float newIntensityValues[] = newDataPoints.getIntensityBuffer();
@@ -125,7 +125,7 @@ public class MeanFilterMethodTest {
             Assert.assertNotNull(newScans.get(i));
             MsScan newScan = newScans.get(i);
             MsScan inputScan = inputScans.get(i);
-            
+
             MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
             inputScan.getDataPoints(dataPoints);
 
