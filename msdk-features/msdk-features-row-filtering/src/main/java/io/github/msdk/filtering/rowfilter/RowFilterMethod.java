@@ -14,6 +14,9 @@
 
 package io.github.msdk.filtering.rowfilter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -28,6 +31,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.util.FeatureTableUtil;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
@@ -111,9 +115,9 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 	public FeatureTable execute() throws MSDKException {
 		// Total features
 		totalRows = featureTable.getRows().size();
-		// If remove duplicates is selected, the features will looped twice 
+		// If remove duplicates is selected, the features will looped twice
 		if (removeDuplicates)
-			totalRows = totalRows*2;
+			totalRows = totalRows * 2;
 
 		// Add columns
 		for (FeatureTableColumn column : featureTable.getColumns()) {
@@ -193,19 +197,58 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 
 		// Remove duplicate features?
 		if (removeDuplicates) {
+
+			final int rowCount = result.getRows().size();
+			List<FeatureTableRow> rows = result.getRows();
+			List<FeatureTableRow> removeRows = new ArrayList<FeatureTableRow>();
+
 			// Recalculate the remaining rows in the result feature table
-			totalRows = totalRows/2 + result.getRows().size();
-			
-			// Loop through all features
-			for (FeatureTableRow row : result.getRows()) {
-				/*
-				 * TODO!
-				 */
+			totalRows = totalRows / 2 + rowCount;
+
+			// Loop through all rows
+			for (int firstRowIndex = 0; firstRowIndex < rowCount; firstRowIndex++) {
+				FeatureTableRow firstRow = rows.get(firstRowIndex);
+
+				// Loop through all the rows below the current
+				for (int secondRowIndex = firstRowIndex + 1; secondRowIndex < rowCount; secondRowIndex++) {
+					FeatureTableRow secondRow = rows.get(secondRowIndex);
+					if (removeRows.contains(secondRow))
+						continue;
+
+					// Compare m/z
+					final boolean sameMz = duplicateMzTolerance.getToleranceRange(firstRow.getMz())
+							.contains(secondRow.getMz());
+
+					// Compare rt
+					ChromatographyInfo chromatographyInfo1 = firstRow.getChromatographyInfo();
+					ChromatographyInfo chromatographyInfo2 = secondRow.getChromatographyInfo();
+					final boolean sameRt = duplicateRtTolerance
+							.getToleranceRange(chromatographyInfo1.getRetentionTime())
+							.contains((double) chromatographyInfo2.getRetentionTime());
+
+					// Compare identifications
+					FeatureTableColumn column = result.getColumn("Ion Annotation", null, IonAnnotation.class);
+					IonAnnotation ionAnnotation1 = firstRow.getData(column);
+					IonAnnotation ionAnnotation2 = firstRow.getData(column);
+					final boolean sameId = !duplicateRequireSameID || ionAnnotation1.equals(ionAnnotation2);
+
+					// Duplicate peaks?
+					if (sameMz && sameRt && sameId) {
+						if (!removeRows.contains(secondRow))
+							removeRows.add(secondRow);
+					}
+
+					if (canceled)
+						return null;
+				}
 
 				processedRows++;
 
-				if (canceled)
-					return null;
+			}
+
+			// Remove rows
+			for (FeatureTableRow row : removeRows) {
+				result.removeRow(row);
 			}
 
 		}
