@@ -34,7 +34,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
-import io.github.msdk.util.ScanSelection;
 
 /**
  * This class creates a list of IonAnnotations for a RawDataFile based the
@@ -43,7 +42,7 @@ import io.github.msdk.util.ScanSelection;
 public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
 
     private final @Nonnull RawDataFile rawDataFile;
-    private final @Nonnull ScanSelection scanSelection;
+    private final @Nonnull List<MsScan> msScans;
     private final @Nonnull DataPointStore dataPointStore;
     private final @Nonnull MZTolerance mzTolerance;
     private final @Nonnull RTTolerance rtTolerance;
@@ -63,12 +62,12 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
      * @param intensityTolerance a {@link java.lang.Double} object.
      */
     public MsMsDetectionMethod(@Nonnull RawDataFile rawDataFile,
-    		@Nonnull ScanSelection scanSelection,
+    		@Nonnull List<MsScan> msScans,
             @Nonnull DataPointStore dataPointStore,
             @Nonnull MZTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
             @Nonnull Double intensityTolerance) {
         this.rawDataFile = rawDataFile;
-        this.scanSelection = scanSelection;
+        this.msScans = msScans;
         this.dataPointStore = dataPointStore;
         this.mzTolerance = mzTolerance;
         this.rtTolerance = rtTolerance;
@@ -80,8 +79,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
     public List<IonAnnotation> execute() throws MSDKException {
 
         result = new ArrayList<IonAnnotation>();
-        List<MsScan> scans = scanSelection.getMatchingScans(rawDataFile);
-        totalScans = scans.size();
+        totalScans = msScans.size();
 
         // No MS/MS scans found
         if (totalScans == 0)
@@ -91,7 +89,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
         double[][] scanData = new double[totalScans][3];
 
         // Loop through all MS/MS scans
-        for (MsScan scan : scans) {
+        for (MsScan scan : msScans) {
 
         	// Calculate total intensity of the ions in the MS/MS spectrum
             MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
