@@ -106,8 +106,15 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
             tempChromatogramList.add(newChromatogram);
         }
 
-        // Loop through all MS scans in the raw data file
-        List<MsScan> msScans = rawDataFile.getScans();
+        // Get MS1 scans from the raw data file
+        List<MsScan> allScans = rawDataFile.getScans();
+        List<MsScan> msScans = new ArrayList<MsScan>();
+        for (MsScan scan : allScans) {
+        	if (scan.getMsFunction().getMsLevel().equals(1))
+        		msScans.add(scan);
+        }
+
+        // Loop through all scans
         totalScans = msScans.size();
         for (MsScan msScan : msScans) {
 
