@@ -245,7 +245,7 @@ public class FeatureTableUtil {
         for (Sample sample : featureTable.getSamples()) {
             column = featureTable.getColumn(ColumnName.DURATION, sample);
             if (column != null) {
-                double duration = featureTableRow.getData(column);
+                double duration = (Double) featureTableRow.getData(column);
                 averageDuration = averageDuration + duration;
                 sampleCount++;
             }
