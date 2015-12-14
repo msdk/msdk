@@ -26,6 +26,10 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <p>MSDKFilteringMethod class.</p>
+ *
+ */
 public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -38,12 +42,20 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
     private RawDataFile result;
     private boolean canceled = false;
 
+    /**
+     * <p>Constructor for MSDKFilteringMethod.</p>
+     *
+     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param filteringAlgorithm a {@link io.github.msdk.filtering.MSDKFilteringAlgorithm} object.
+     * @param store a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     */
     public MSDKFilteringMethod(@Nonnull RawDataFile rawDataFile, @Nonnull MSDKFilteringAlgorithm filteringAlgorithm, @Nonnull DataPointStore store) {
         this.filteringAlgorithm = filteringAlgorithm;
         this.rawDataFile = rawDataFile;
         this.store = store;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float getFinishedPercentage() {
         if (totalScans == 0) {
@@ -53,6 +65,7 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public RawDataFile execute() throws MSDKException {
         logger.info("Started Filter " + this.filteringAlgorithm.getName() + " with Raw Data File #"
@@ -82,11 +95,13 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public RawDataFile getResult() {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         this.canceled = true;

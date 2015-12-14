@@ -26,7 +26,6 @@ import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
  * <p>
  * MsSpectrumUtil class.
  * </p>
- *
  */
 public class MsSpectrumUtil {
 
@@ -148,6 +147,12 @@ public class MsSpectrumUtil {
         return topIndex;
     }
 
+    /**
+     * <p>convertToRelative.</p>
+     *
+     * @param dataPoints a {@link io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList} object.
+     * @param scale a int.
+     */
     public static void convertToRelative(MsSpectrumDataPointList dataPoints,
             int scale) {
 

@@ -3,9 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.msdk</groupId>
 	<artifactId>msdk</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
+	<name>MSDK - Mass Spectrometry Development Kit</name>
 	<description>A java library for the development of mass spectrometry-related algorithms.</description>
 	<url>https://msdk.github.io</url>
 

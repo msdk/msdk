@@ -21,16 +21,27 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.filtering.MSDKFilteringAlgorithm;
 import javax.annotation.Nonnull;
 
+/**
+ * <p>ResampleFilterAlgorithm class.</p>
+ *
+ */
 public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
 
     private @Nonnull double binSize;
     private final @Nonnull DataPointStore store;
     
+    /**
+     * <p>Constructor for ResampleFilterAlgorithm.</p>
+     *
+     * @param binSize a double.
+     * @param store a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     */
     public ResampleFilterAlgorithm(@Nonnull double binSize, @Nonnull DataPointStore store) {
         this.binSize = binSize;
         this.store = store;
     }
 
+    /** {@inheritDoc} */
     @Override
     public MsScan performFilter(@Nonnull MsScan scan) {
         // Create data point list object and fill it with the scan data points
@@ -84,6 +95,7 @@ public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "Resample filter";

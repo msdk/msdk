@@ -27,6 +27,10 @@ import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
+/**
+ * <p>FeatureTableUtil class.</p>
+ *
+ */
 public class FeatureTableUtil {
 
     /**
@@ -122,13 +126,11 @@ public class FeatureTableUtil {
     /**
      * Copies common values such as identification results and comments from the
      * source row to the target row.
-     * 
+     *
      * @param sourceFeatureTableRow
      *            the source {@link FeatureTableRow} to copy the common values
      *            from.
-     * @param newFeatureTableRow
-     *            the target {@link FeatureTableRow} to copy the common values
-     *            to.
+     * @param targetFeatureTableRow a {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} object.
      */
     public static void copyCommonValues(
             @Nonnull FeatureTableRow sourceFeatureTableRow,
@@ -154,15 +156,13 @@ public class FeatureTableUtil {
     /**
      * Copies sample specific feature values from the source row to the target
      * row.
-     * 
+     *
      * @param sourceFeatureTableRow
      *            the source {@link FeatureTableRow} to copy the common values
      *            from.
-     * @param newFeatureTableRow
-     *            the target {@link FeatureTableRow} to copy the common values
-     *            to.
      * @param sample
      *            the target {@link Sample}.
+     * @param targetFeatureTableRow a {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} object.
      */
     public static void copyFeatureValues(
             @Nonnull FeatureTableRow sourceFeatureTableRow,
@@ -197,6 +197,7 @@ public class FeatureTableUtil {
      *
      * @param featureTableRow
      *            the {@link FeatureTableRow} to apply the calculation on.
+     * @return a int.
      */
     public static int getRowCount(FeatureTableRow featureTableRow) {
         int count = 0;
@@ -234,6 +235,7 @@ public class FeatureTableUtil {
      *
      * @param featureTableRow
      *            the {@link FeatureTableRow} to apply the calculation on.
+     * @return a {@link java.lang.Double} object.
      */
     public static Double getAverageFeatureDuration(
             FeatureTableRow featureTableRow) {

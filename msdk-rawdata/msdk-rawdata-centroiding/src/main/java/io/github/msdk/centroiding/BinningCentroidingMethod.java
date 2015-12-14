@@ -30,7 +30,6 @@ import io.github.msdk.util.MsScanUtil;
 
 /**
  * <p>BinningCentroidingMethod class.</p>
- *
  */
 public class BinningCentroidingMethod implements MSDKMethod<MsScan> {
 

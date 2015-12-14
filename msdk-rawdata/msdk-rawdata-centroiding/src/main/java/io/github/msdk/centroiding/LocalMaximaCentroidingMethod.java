@@ -30,7 +30,6 @@ import io.github.msdk.util.MsScanUtil;
 
 /**
  * <p>LocalMaximaCentroidingMethod class.</p>
- *
  */
 public class LocalMaximaCentroidingMethod implements MSDKMethod<MsScan> {
 

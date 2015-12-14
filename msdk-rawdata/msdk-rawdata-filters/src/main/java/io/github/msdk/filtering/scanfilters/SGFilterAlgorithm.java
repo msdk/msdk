@@ -22,6 +22,10 @@ import io.github.msdk.filtering.MSDKFilteringAlgorithm;
 import java.util.HashMap;
 import javax.annotation.Nonnull;
 
+/**
+ * <p>SGFilterAlgorithm class.</p>
+ *
+ */
 public class SGFilterAlgorithm implements MSDKFilteringAlgorithm {
 
     private static final HashMap<Integer, Integer> Hvalues = new HashMap<>();
@@ -70,11 +74,18 @@ public class SGFilterAlgorithm implements MSDKFilteringAlgorithm {
     private final @Nonnull int numOfDataPoints;
     private final @Nonnull DataPointStore store;
     
+    /**
+     * <p>Constructor for SGFilterAlgorithm.</p>
+     *
+     * @param numOfDataPoints a int.
+     * @param store a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     */
     public SGFilterAlgorithm(@Nonnull int numOfDataPoints, @Nonnull DataPointStore store) {
         this.numOfDataPoints = numOfDataPoints;
         this.store = store;
     }
 
+    /** {@inheritDoc} */
     @Override
     public MsScan performFilter(MsScan scan) {
         
@@ -141,6 +152,7 @@ public class SGFilterAlgorithm implements MSDKFilteringAlgorithm {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "Savitzky-Golay filter";

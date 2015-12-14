@@ -29,6 +29,9 @@ public class TextUtils {
     /**
      * Generates a regular expression from a string that contains asterisks (*)
      * as wild cards. Basically, it replaces all * with .*
+     *
+     * @param text a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
      */
     public static String createRegexFromWildcards(String text) {
         final StringBuilder regex = new StringBuilder("^");

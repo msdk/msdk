@@ -73,6 +73,30 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 	private boolean canceled = false;
 	private int processedRows = 0, totalRows = 0;
 
+	/**
+	 * <p>Constructor for RowFilterMethod.</p>
+	 *
+	 * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+	 * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+	 * @param nameSuffix a {@link java.lang.String} object.
+	 * @param filterByMz a boolean.
+	 * @param filterByRt a boolean.
+	 * @param filterByDuration a boolean.
+	 * @param filterByCount a boolean.
+	 * @param filterByIsotopes a boolean.
+	 * @param filterByIonAnnotation a boolean.
+	 * @param requireAnnotation a boolean.
+	 * @param mzRange a {@link com.google.common.collect.Range} object.
+	 * @param rtRange a {@link com.google.common.collect.Range} object.
+	 * @param durationRange a {@link com.google.common.collect.Range} object.
+	 * @param minCount a {@link java.lang.Integer} object.
+	 * @param minIsotopes a {@link java.lang.Integer} object.
+	 * @param ionAnnotation a {@link java.lang.String} object.
+	 * @param removeDuplicates a boolean.
+	 * @param duplicateMzTolerance a {@link io.github.msdk.util.MZTolerance} object.
+	 * @param duplicateRtTolerance a {@link io.github.msdk.util.RTTolerance} object.
+	 * @param duplicateRequireSameID a boolean.
+	 */
 	public RowFilterMethod(@Nonnull FeatureTable featureTable, @Nonnull DataPointStore dataStore,
 			@Nonnull String nameSuffix, @Nonnull boolean filterByMz, @Nonnull boolean filterByRt,
 			@Nonnull boolean filterByDuration, @Nonnull boolean filterByCount, @Nonnull boolean filterByIsotopes,
@@ -107,9 +131,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 		result = MSDKObjectBuilder.getFeatureTable(featureTable.getName() + nameSuffix, dataStore);
 	}
 
-	/**
-	 * @throws MSDKException
-	 */
+	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
 	public FeatureTable execute() throws MSDKException {
@@ -271,18 +293,21 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 		return newRow;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public Float getFinishedPercentage() {
 		return totalRows == 0 ? null : (float) processedRows / totalRows;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public FeatureTable getResult() {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void cancel() {
 		canceled = true;

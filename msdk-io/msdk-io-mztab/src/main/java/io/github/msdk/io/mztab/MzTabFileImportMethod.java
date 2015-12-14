@@ -56,6 +56,10 @@ import uk.ac.ebi.pride.jmztab.model.SmallMolecule;
 import uk.ac.ebi.pride.jmztab.model.SplitList;
 import uk.ac.ebi.pride.jmztab.utils.MZTabFileParser;
 
+/**
+ * <p>MzTabFileImportMethod class.</p>
+ *
+ */
 public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -70,12 +74,19 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
     private Map<String, FeatureTableColumn<?>> tableColumns = new HashMap<String, FeatureTableColumn<?>>();
     private ArrayList<String> columnNameArray = new ArrayList<String>();
 
+    /**
+     * <p>Constructor for MzTabFileImportMethod.</p>
+     *
+     * @param sourceFile a {@link java.io.File} object.
+     * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     */
     public MzTabFileImportMethod(@Nonnull File sourceFile,
             @Nonnull DataPointStore dataStore) {
         this.sourceFile = sourceFile;
         this.dataStore = dataStore;
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("null")
     @Override
     public FeatureTable execute() throws MSDKException {
@@ -137,17 +148,20 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public FeatureTable getResult() {
         return newFeatureTable;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Float getFinishedPercentage() {
         return totalRows == 0 ? null : (float) parsedRows / totalRows;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         this.canceled = true;

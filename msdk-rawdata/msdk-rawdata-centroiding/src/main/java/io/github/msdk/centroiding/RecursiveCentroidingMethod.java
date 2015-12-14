@@ -32,7 +32,6 @@ import io.github.msdk.util.MsScanUtil;
 
 /**
  * <p>RecursiveCentroidingMethod class.</p>
- *
  */
 public class RecursiveCentroidingMethod implements MSDKMethod<MsScan> {
 

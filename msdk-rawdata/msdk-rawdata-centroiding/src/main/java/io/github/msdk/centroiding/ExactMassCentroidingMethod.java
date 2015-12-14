@@ -30,7 +30,6 @@ import io.github.msdk.util.MsScanUtil;
 
 /**
  * <p>ExactMassCentroidingMethod class.</p>
- *
  */
 public class ExactMassCentroidingMethod implements MSDKMethod<MsScan> {
 
