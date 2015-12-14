@@ -59,7 +59,7 @@
 	<scm>
 		<url>https://github.com/msdk/msdk</url>
 		<connection>scm:git:git://github.com/msdk/msdk.git</connection>
-		<developerConnection>scm:git:git@github.com/msdk/msdk.git</developerConnection>
+		<developerConnection>scm:git:github.com/msdk/msdk.git</developerConnection>
 	</scm>
 
 	<developers>
