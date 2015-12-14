@@ -183,7 +183,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 				column = featureTable.getColumn("Ion Annotation", null, IonAnnotation.class);
 				if (column == null)
 					continue;
-				IonAnnotation ionAnnotation = row.getData(column);
+				IonAnnotation ionAnnotation = (IonAnnotation) row.getData(column);
 				if (ionAnnotation.getDescription() == null)
 					continue;
 			}
@@ -228,8 +228,8 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 
 					// Compare identifications
 					FeatureTableColumn column = result.getColumn("Ion Annotation", null, IonAnnotation.class);
-					IonAnnotation ionAnnotation1 = firstRow.getData(column);
-					IonAnnotation ionAnnotation2 = firstRow.getData(column);
+					IonAnnotation ionAnnotation1 = (IonAnnotation) firstRow.getData(column);
+					IonAnnotation ionAnnotation2 = (IonAnnotation) firstRow.getData(column);
 					final boolean sameId = !duplicateRequireSameID || ionAnnotation1.equals(ionAnnotation2);
 
 					// Duplicate peaks?
