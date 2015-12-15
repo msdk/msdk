@@ -48,185 +48,197 @@ import io.github.msdk.util.RawDataFileUtil;
  */
 public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 
-	private final @Nonnull List<IonAnnotation> ionAnnotations;
-	private final @Nonnull RawDataFile rawDataFile;
-	private final @Nonnull DataPointStore dataPointStore;
-	private final @Nonnull MZTolerance mzTolerance;
-	private final @Nonnull RTTolerance rtTolerance;
-	private final @Nonnull Double intensityTolerance;
-	private final @Nonnull Double noiseLevel;
+    private final @Nonnull List<IonAnnotation> ionAnnotations;
+    private final @Nonnull RawDataFile rawDataFile;
+    private final @Nonnull DataPointStore dataPointStore;
+    private final @Nonnull MZTolerance mzTolerance;
+    private final @Nonnull RTTolerance rtTolerance;
+    private final @Nonnull Double intensityTolerance;
+    private final @Nonnull Double noiseLevel;
 
-	private List<Chromatogram> result;
-	private boolean canceled = false;
-	private int processedScans = 0, totalScans = 0;
+    private List<Chromatogram> result;
+    private boolean canceled = false;
+    private int processedScans = 0, totalScans = 0;
 
-	/**
-	 * <p>
-	 * Constructor for TargetedDetectionMethod.
-	 * </p>
-	 *
-	 * @param ionAnnotations
-	 *            a {@link java.util.List} object.
-	 * @param rawDataFile
-	 *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-	 * @param dataPointStore
-	 *            a
-	 *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
-	 *            object.
-	 * @param mzTolerance
-	 *            a {@link io.github.msdk.util.MZTolerance} object.
-	 * @param rtTolerance
-	 *            a {@link io.github.msdk.util.RTTolerance} object.
-	 * @param intensityTolerance
-	 *            a {@link java.lang.Double} object.
-	 * @param noiseLevel
-	 *            a {@link java.lang.Double} object.
-	 */
-	public TargetedDetectionMethod(@Nonnull List<IonAnnotation> ionAnnotations, @Nonnull RawDataFile rawDataFile,
-			@Nonnull DataPointStore dataPointStore, @Nonnull MZTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
-			@Nonnull Double intensityTolerance, @Nonnull Double noiseLevel) {
-		this.ionAnnotations = ionAnnotations;
-		this.rawDataFile = rawDataFile;
-		this.dataPointStore = dataPointStore;
-		this.mzTolerance = mzTolerance;
-		this.rtTolerance = rtTolerance;
-		this.intensityTolerance = intensityTolerance;
-		this.noiseLevel = noiseLevel;
-	}
+    /**
+     * <p>
+     * Constructor for TargetedDetectionMethod.
+     * </p>
+     *
+     * @param ionAnnotations
+     *            a {@link java.util.List} object.
+     * @param rawDataFile
+     *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param dataPointStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
+     * @param mzTolerance
+     *            a {@link io.github.msdk.util.MZTolerance} object.
+     * @param rtTolerance
+     *            a {@link io.github.msdk.util.RTTolerance} object.
+     * @param intensityTolerance
+     *            a {@link java.lang.Double} object.
+     * @param noiseLevel
+     *            a {@link java.lang.Double} object.
+     */
+    public TargetedDetectionMethod(@Nonnull List<IonAnnotation> ionAnnotations,
+            @Nonnull RawDataFile rawDataFile,
+            @Nonnull DataPointStore dataPointStore,
+            @Nonnull MZTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
+            @Nonnull Double intensityTolerance, @Nonnull Double noiseLevel) {
+        this.ionAnnotations = ionAnnotations;
+        this.rawDataFile = rawDataFile;
+        this.dataPointStore = dataPointStore;
+        this.mzTolerance = mzTolerance;
+        this.rtTolerance = rtTolerance;
+        this.intensityTolerance = intensityTolerance;
+        this.noiseLevel = noiseLevel;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public List<Chromatogram> execute() throws MSDKException {
+    /** {@inheritDoc} */
+    @Override
+    public List<Chromatogram> execute() throws MSDKException {
 
-		result = new ArrayList<Chromatogram>();
-		List<BuildingChromatogram> tempChromatogramList = new ArrayList<BuildingChromatogram>();
-		int chromatogramNumber = RawDataFileUtil.getNextChromatogramNumber(rawDataFile);
+        result = new ArrayList<Chromatogram>();
+        List<BuildingChromatogram> tempChromatogramList = new ArrayList<BuildingChromatogram>();
+        int chromatogramNumber = RawDataFileUtil
+                .getNextChromatogramNumber(rawDataFile);
 
-		// Variables
-		Chromatogram chromatogram;
-		BuildingChromatogram buildingChromatogram;
-		ChromatogramDataPointList newDataPoints;
-		int ionNr;
+        // Variables
+        Chromatogram chromatogram;
+        BuildingChromatogram buildingChromatogram;
+        ChromatogramDataPointList newDataPoints;
+        int ionNr;
 
-		// Create at new building chromatogram for all ions
-		for (int i = 0; i < ionAnnotations.size(); i++) {
-			BuildingChromatogram newChromatogram = new BuildingChromatogram();
-			tempChromatogramList.add(newChromatogram);
-		}
+        // Create at new building chromatogram for all ions
+        for (int i = 0; i < ionAnnotations.size(); i++) {
+            BuildingChromatogram newChromatogram = new BuildingChromatogram();
+            tempChromatogramList.add(newChromatogram);
+        }
 
-		// Get MS1 scans from the raw data file
-		List<MsScan> allScans = rawDataFile.getScans();
-		List<MsScan> msScans = new ArrayList<MsScan>();
-		for (MsScan scan : allScans) {
-			if (scan.getMsFunction().getMsLevel().equals(1))
-				msScans.add(scan);
-		}
+        // Get MS1 scans from the raw data file
+        List<MsScan> allScans = rawDataFile.getScans();
+        List<MsScan> msScans = new ArrayList<MsScan>();
+        for (MsScan scan : allScans) {
+            if (scan.getMsFunction().getMsLevel().equals(1))
+                msScans.add(scan);
+        }
 
-		// Loop through all scans
-		totalScans = msScans.size();
-		for (MsScan msScan : msScans) {
+        // Loop through all scans
+        totalScans = msScans.size();
+        for (MsScan msScan : msScans) {
 
-			// Get the scans data points
-			MsSpectrumDataPointList dataPointList = MSDKObjectBuilder.getMsSpectrumDataPointList();
-			msScan.getDataPoints(dataPointList);
-			ChromatographyInfo chromatographyInfo = msScan.getChromatographyInfo();
+            // Get the scans data points
+            MsSpectrumDataPointList dataPointList = MSDKObjectBuilder
+                    .getMsSpectrumDataPointList();
+            msScan.getDataPoints(dataPointList);
+            ChromatographyInfo chromatographyInfo = msScan
+                    .getChromatographyInfo();
 
-			// Loop through all the ions in the ion annotation list
-			ionNr = 0;
-			for (IonAnnotation ionAnnotation : ionAnnotations) {
-				Double ionMz = ionAnnotation.getExpectedMz();
-				if (ionMz != null) {
-					Range<Double> mzRange = mzTolerance.getToleranceRange(ionMz);
+            // Loop through all the ions in the ion annotation list
+            ionNr = 0;
+            for (IonAnnotation ionAnnotation : ionAnnotations) {
+                Double ionMz = ionAnnotation.getExpectedMz();
+                if (ionMz != null) {
+                    Range<Double> mzRange = mzTolerance
+                            .getToleranceRange(ionMz);
 
-					// Get highest data point from the MS dataPointList which
-					// has a m/z within the mzRange
-					Double mz = 0d;
-					Float intensity = 0f;
-					Integer index = MsSpectrumUtil.getBasePeakIndex(dataPointList, mzRange);
-					if (index != null) {
-						mz = dataPointList.getMzBuffer()[index];
-						intensity = dataPointList.getIntensityBuffer()[index];
-					}
+                    // Get highest data point from the MS dataPointList which
+                    // has a m/z within the mzRange
+                    Double mz = 0d;
+                    Float intensity = 0f;
+                    Integer index = MsSpectrumUtil
+                            .getBasePeakIndex(dataPointList, mzRange);
+                    if (index != null) {
+                        mz = dataPointList.getMzBuffer()[index];
+                        intensity = dataPointList.getIntensityBuffer()[index];
+                    }
 
-					// Add this mzPeak or zero values to the chromatogram
-					buildingChromatogram = tempChromatogramList.get(ionNr);
-					buildingChromatogram.addDataPoint(chromatographyInfo, mz, intensity);
+                    // Add this mzPeak or zero values to the chromatogram
+                    buildingChromatogram = tempChromatogramList.get(ionNr);
+                    buildingChromatogram.addDataPoint(chromatographyInfo, mz,
+                            intensity);
 
-				}
-				ionNr++;
-			}
+                }
+                ionNr++;
+            }
 
-			processedScans++;
+            processedScans++;
 
-			if (canceled)
-				return null;
+            if (canceled)
+                return null;
 
-		}
+        }
 
-		// Loop through all the ions in the ion annotation list
-		ionNr = 0;
-		for (IonAnnotation ionAnnotation : ionAnnotations) {
+        // Loop through all the ions in the ion annotation list
+        ionNr = 0;
+        for (IonAnnotation ionAnnotation : ionAnnotations) {
 
-			// Temporary chromatogram
-			buildingChromatogram = tempChromatogramList.get(ionNr);
+            // Temporary chromatogram
+            buildingChromatogram = tempChromatogramList.get(ionNr);
 
-			// Find the most intense data point and crop the chromatogram based
-			// on the input parameters
-			Double ionRt = (double) ionAnnotation.getChromatographyInfo().getRetentionTime();
-			Range<Double> rtRange = rtTolerance.getToleranceRange(ionRt);
-			buildingChromatogram.cropChromatogram(rtRange, intensityTolerance, noiseLevel);
+            // Find the most intense data point and crop the chromatogram based
+            // on the input parameters
+            Double ionRt = (double) ionAnnotation.getChromatographyInfo()
+                    .getRetentionTime();
+            Range<Double> rtRange = rtTolerance.getToleranceRange(ionRt);
+            buildingChromatogram.cropChromatogram(rtRange, intensityTolerance,
+                    noiseLevel);
 
-			// Final chromatogram
-			chromatogram = MSDKObjectBuilder.getChromatogram(dataPointStore, chromatogramNumber, ChromatogramType.XIC,
-					SeparationType.UNKNOWN);
+            // Final chromatogram
+            chromatogram = MSDKObjectBuilder.getChromatogram(dataPointStore,
+                    chromatogramNumber, ChromatogramType.XIC,
+                    SeparationType.UNKNOWN);
 
-			// Add the data points to the final chromatogram
-			newDataPoints = buildingChromatogram.getDataPoints();
-			if (newDataPoints != null) {
-				chromatogram.setDataPoints(newDataPoints);
-			}
+            // Add the data points to the final chromatogram
+            newDataPoints = buildingChromatogram.getDataPoints();
+            if (newDataPoints != null) {
+                chromatogram.setDataPoints(newDataPoints);
+            }
 
-			// Set the m/z value for the chromatogram
-			double[] mzValues = buildingChromatogram.getMzValues();
-			float[] intensityValues = newDataPoints.getIntensityBuffer();
-			double newMz;
+            // Set the m/z value for the chromatogram
+            double[] mzValues = buildingChromatogram.getMzValues();
+            float[] intensityValues = newDataPoints.getIntensityBuffer();
+            double newMz;
 
-			if (mzValues != null) {
-				newMz = ChromatogramUtil.calculateMz(intensityValues, mzValues, calcMethod.allAverage);
-				chromatogram.setMz(newMz);
+            if (mzValues != null) {
+                newMz = ChromatogramUtil.calculateMz(intensityValues, mzValues,
+                        calcMethod.allAverage);
+                chromatogram.setMz(newMz);
 
-				// Add the ion annotation to the chromatogram
-				chromatogram.setIonAnnotation(ionAnnotation);
+                // Add the ion annotation to the chromatogram
+                chromatogram.setIonAnnotation(ionAnnotation);
 
-				// Add the chromatogram to the chromatogram list
-				result.add(chromatogram);
-			}
+                // Add the chromatogram to the chromatogram list
+                result.add(chromatogram);
+            }
 
-			chromatogramNumber++;
-			ionNr++;
-		}
+            chromatogramNumber++;
+            ionNr++;
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	@Nullable
-	public Float getFinishedPercentage() {
-		return totalScans == 0 ? null : (float) processedScans / totalScans;
-	}
+    /** {@inheritDoc} */
+    @Override
+    @Nullable
+    public Float getFinishedPercentage() {
+        return totalScans == 0 ? null : (float) processedScans / totalScans;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	@Nullable
-	public List<Chromatogram> getResult() {
-		return result;
-	}
+    /** {@inheritDoc} */
+    @Override
+    @Nullable
+    public List<Chromatogram> getResult() {
+        return result;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public void cancel() {
-		canceled = true;
-	}
+    /** {@inheritDoc} */
+    @Override
+    public void cancel() {
+        canceled = true;
+    }
 
 }
