@@ -23,7 +23,6 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * <p>DataPointSorter class.</p>
- *
  */
 public class DataPointSorter {
 

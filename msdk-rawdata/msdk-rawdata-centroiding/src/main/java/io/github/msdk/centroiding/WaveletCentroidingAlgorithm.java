@@ -15,13 +15,7 @@
 package io.github.msdk.centroiding;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.github.msdk.MSDKException;
-import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
@@ -34,9 +28,7 @@ import io.github.msdk.util.MsScanUtil;
  * wavelet's time domain, we use the local maxima to detect possible peaks in
  * the original raw datapoints.
  */
-public class WaveletCentroidingMethod implements MSDKMethod<MsScan> {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
     /**
      * Parameters of the wavelet, NPOINTS is the number of wavelet values to use
@@ -46,28 +38,32 @@ public class WaveletCentroidingMethod implements MSDKMethod<MsScan> {
     private static final int WAVELET_ESL = -5;
     private static final int WAVELET_ESR = 5;
 
-    private final @Nonnull MsScan inputScan;
     private final @Nonnull DataPointStore dataPointStore;
     private final @Nonnull Float noiseLevel;
     private final @Nonnull Integer scaleLevel;
     private final @Nonnull Double waveletWindow;
 
-    private float methodProgress = 0f;
     private MsScan newScan;
 
     /**
-     * <p>Constructor for WaveletCentroidingMethod.</p>
+     * <p>
+     * Constructor for WaveletCentroidingMethod.
+     * </p>
      *
-     * @param inputScan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
-     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
-     * @param noiseLevel a {@link java.lang.Float} object.
-     * @param scaleLevel a {@link java.lang.Integer} object.
-     * @param waveletWindow a {@link java.lang.Double} object.
+     * @param dataPointStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
+     * @param noiseLevel
+     *            a {@link java.lang.Float} object.
+     * @param scaleLevel
+     *            a {@link java.lang.Integer} object.
+     * @param waveletWindow
+     *            a {@link java.lang.Double} object.
      */
-    public WaveletCentroidingMethod(@Nonnull MsScan inputScan,
-            @Nonnull DataPointStore dataPointStore, @Nonnull Float noiseLevel,
-            @Nonnull Integer scaleLevel, @Nonnull Double waveletWindow) {
-        this.inputScan = inputScan;
+    public WaveletCentroidingAlgorithm(@Nonnull DataPointStore dataPointStore,
+            @Nonnull Float noiseLevel, @Nonnull Integer scaleLevel,
+            @Nonnull Double waveletWindow) {
         this.dataPointStore = dataPointStore;
         this.noiseLevel = noiseLevel;
         this.scaleLevel = scaleLevel;
@@ -76,10 +72,7 @@ public class WaveletCentroidingMethod implements MSDKMethod<MsScan> {
 
     /** {@inheritDoc} */
     @Override
-    public MsScan execute() throws MSDKException {
-
-        logger.info("Started wavelet centroider on scan #"
-                + inputScan.getScanNumber());
+    public @Nonnull MsScan centroidScan(@Nonnull MsScan inputScan) {
 
         // Copy all scan properties
         this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
@@ -96,7 +89,6 @@ public class WaveletCentroidingMethod implements MSDKMethod<MsScan> {
         // If there are no data points, just return the scan
         if (inputDataPoints.getSize() == 0) {
             newScan.setDataPoints(inputDataPoints);
-            methodProgress = 1f;
             return newScan;
         }
 
@@ -105,12 +97,6 @@ public class WaveletCentroidingMethod implements MSDKMethod<MsScan> {
 
         // Store the new data points
         newScan.setDataPoints(newDataPoints);
-
-        // Finish
-        methodProgress = 1f;
-
-        logger.info("Finished wavelet centroider on scan #"
-                + inputScan.getScanNumber());
 
         return newScan;
 
@@ -240,26 +226,6 @@ public class WaveletCentroidingMethod implements MSDKMethod<MsScan> {
             }
         }
 
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public Float getFinishedPercentage() {
-        return methodProgress;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public MsScan getResult() {
-        return newScan;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void cancel() {
-        // This method is too fast to be canceled
     }
 
 }

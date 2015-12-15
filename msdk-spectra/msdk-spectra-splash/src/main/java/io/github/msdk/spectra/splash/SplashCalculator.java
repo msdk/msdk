@@ -140,8 +140,8 @@ public class SplashCalculator {
     /**
      * calculates our spectral hash
      *
-     * @param spectrum
-     * @return
+     * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     * @return a {@link java.lang.String} object.
      */
     public static String calculateSplash(MsSpectrum spectrum) {
 
@@ -151,6 +151,12 @@ public class SplashCalculator {
         return calculateSplash(dataPoints);
     }
 
+    /**
+     * <p>calculateSplash.</p>
+     *
+     * @param dataPoints a {@link io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String calculateSplash(MsSpectrumDataPointList dataPoints) {
 
         // convert the spectrum to relative values

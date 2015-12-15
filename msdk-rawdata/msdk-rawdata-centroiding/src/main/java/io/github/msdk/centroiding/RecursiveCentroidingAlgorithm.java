@@ -15,15 +15,9 @@
 package io.github.msdk.centroiding;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.MSDKException;
-import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
@@ -31,33 +25,35 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
 
 /**
- * <p>RecursiveCentroidingMethod class.</p>
- *
+ * <p>
+ * RecursiveCentroidingAlgorithm class.
+ * </p>
  */
-public class RecursiveCentroidingMethod implements MSDKMethod<MsScan> {
+public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private final @Nonnull MsScan inputScan;
     private final @Nonnull DataPointStore dataPointStore;
     private final @Nonnull Float noiseLevel;
     private final @Nonnull Range<Double> mzPeakWidthRange;
 
-    private float methodProgress = 0f;
     private MsScan newScan;
 
     /**
-     * <p>Constructor for RecursiveCentroidingMethod.</p>
+     * <p>
+     * Constructor for RecursiveCentroidingMethod.
+     * </p>
      *
-     * @param inputScan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
-     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
-     * @param noiseLevel a {@link java.lang.Float} object.
-     * @param mzPeakWidthRange a {@link com.google.common.collect.Range} object.
+     * @param dataPointStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
+     * @param noiseLevel
+     *            a {@link java.lang.Float} object.
+     * @param mzPeakWidthRange
+     *            a {@link com.google.common.collect.Range} object.
      */
-    public RecursiveCentroidingMethod(@Nonnull MsScan inputScan,
-            @Nonnull DataPointStore dataPointStore, @Nonnull Float noiseLevel,
+    public RecursiveCentroidingAlgorithm(@Nonnull DataPointStore dataPointStore,
+            @Nonnull Float noiseLevel,
             @Nonnull Range<Double> mzPeakWidthRange) {
-        this.inputScan = inputScan;
         this.dataPointStore = dataPointStore;
         this.noiseLevel = noiseLevel;
         this.mzPeakWidthRange = mzPeakWidthRange;
@@ -65,10 +61,7 @@ public class RecursiveCentroidingMethod implements MSDKMethod<MsScan> {
 
     /** {@inheritDoc} */
     @Override
-    public MsScan execute() throws MSDKException {
-
-        logger.info("Started recursive centroider on scan #"
-                + inputScan.getScanNumber());
+    public @Nonnull MsScan centroidScan(@Nonnull MsScan inputScan) {
 
         // Copy all scan properties
         this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
@@ -85,7 +78,6 @@ public class RecursiveCentroidingMethod implements MSDKMethod<MsScan> {
         // If there are no data points, just return the scan
         if (inputDataPoints.getSize() == 0) {
             newScan.setDataPoints(inputDataPoints);
-            methodProgress = 1f;
             return newScan;
         }
 
@@ -95,12 +87,6 @@ public class RecursiveCentroidingMethod implements MSDKMethod<MsScan> {
 
         // Store the new data points
         newScan.setDataPoints(newDataPoints);
-
-        // Finish
-        methodProgress = 1f;
-
-        logger.info("Finished recursive centroider on scan #"
-                + inputScan.getScanNumber());
 
         return newScan;
 
@@ -185,26 +171,6 @@ public class RecursiveCentroidingMethod implements MSDKMethod<MsScan> {
         // return stop index
         return stopInd;
 
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public Float getFinishedPercentage() {
-        return methodProgress;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public MsScan getResult() {
-        return newScan;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void cancel() {
-        // This method is too fast to be canceled
     }
 
 }

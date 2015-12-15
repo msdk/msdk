@@ -30,11 +30,10 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.util.MsSpectrumUtil;
 
-public class ExactMassCentroidingMethodTest {
+public class BinningCentroidingAlgorithmTest {
 
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
-    @SuppressWarnings("null")
     @Test
     public void testOrbitrap() throws MSDKException {
 
@@ -55,11 +54,10 @@ public class ExactMassCentroidingMethodTest {
 
         MsScan lastScan = scans.get(scans.size() - 1);
 
-        final float noiseLevel = 1E3f;
-        ExactMassCentroidingMethod centroider = new ExactMassCentroidingMethod(
-                lastScan, dataStore, noiseLevel);
-        final MsScan centroidedScan = centroider.execute();
-        Assert.assertEquals(1.0, centroider.getFinishedPercentage(), 0.0001);
+        final double binSize = 1.0;
+        BinningCentroidingAlgorithm centroider = new BinningCentroidingAlgorithm(
+                dataStore, binSize);
+        final MsScan centroidedScan = centroider.centroidScan(lastScan);
 
         centroidedScan.getDataPoints(dataPoints);
         double mzBuffer[] = dataPoints.getMzBuffer();
@@ -69,8 +67,8 @@ public class ExactMassCentroidingMethodTest {
 
         Integer basePeak = MsSpectrumUtil.getBasePeakIndex(dataPoints);
 
-        Assert.assertEquals(3.537E7f, intensityBuffer[basePeak], 1E5);
-        Assert.assertEquals(281.24774060, mzBuffer[basePeak], 0.0000001);
+        Assert.assertEquals(1.49854E8f, intensityBuffer[basePeak], 1E5);
+        Assert.assertEquals(281.4996043, mzBuffer[basePeak], 0.000001);
 
         rawFile.dispose();
 

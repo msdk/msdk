@@ -15,13 +15,7 @@
 package io.github.msdk.centroiding;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.github.msdk.MSDKException;
-import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
@@ -29,39 +23,37 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
 
 /**
- * <p>ExactMassCentroidingMethod class.</p>
- *
+ * <p>
+ * ExactMassCentroidingAlgorithm class.
+ * </p>
  */
-public class ExactMassCentroidingMethod implements MSDKMethod<MsScan> {
+public class ExactMassCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private final @Nonnull MsScan inputScan;
     private final @Nonnull DataPointStore dataPointStore;
     private final @Nonnull Float noiseLevel;
-    private float methodProgress = 0f;
     private MsScan newScan;
 
     /**
-     * <p>Constructor for ExactMassCentroidingMethod.</p>
+     * <p>
+     * Constructor for ExactMassCentroidingMethod.
+     * </p>
      *
-     * @param inputScan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
-     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
-     * @param noiseLevel a {@link java.lang.Float} object.
+     * @param dataPointStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
+     * @param noiseLevel
+     *            a {@link java.lang.Float} object.
      */
-    public ExactMassCentroidingMethod(@Nonnull MsScan inputScan,
-            @Nonnull DataPointStore dataPointStore, @Nonnull Float noiseLevel) {
-        this.inputScan = inputScan;
+    public ExactMassCentroidingAlgorithm(@Nonnull DataPointStore dataPointStore,
+            @Nonnull Float noiseLevel) {
         this.dataPointStore = dataPointStore;
         this.noiseLevel = noiseLevel;
     }
 
     /** {@inheritDoc} */
     @Override
-    public MsScan execute() throws MSDKException {
-
-        logger.info("Started exact mass centroider on scan #"
-                + inputScan.getScanNumber());
+    public @Nonnull MsScan centroidScan(@Nonnull MsScan inputScan) {
 
         // Copy all scan properties
         this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
@@ -80,7 +72,6 @@ public class ExactMassCentroidingMethod implements MSDKMethod<MsScan> {
         // If there are no data points, just return the scan
         if (inputDataPoints.getSize() == 0) {
             newScan.setDataPoints(inputDataPoints);
-            methodProgress = 1f;
             return newScan;
         }
 
@@ -141,12 +132,6 @@ public class ExactMassCentroidingMethod implements MSDKMethod<MsScan> {
 
         // Store the new data points
         newScan.setDataPoints(newDataPoints);
-
-        // Finish
-        methodProgress = 1f;
-
-        logger.info("Finished exact mass centroider on scan #"
-                + inputScan.getScanNumber());
 
         return newScan;
 
@@ -241,26 +226,6 @@ public class ExactMassCentroidingMethod implements MSDKMethod<MsScan> {
         double exactMass = (xLeft + xRight) / 2;
 
         return exactMass;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public Float getFinishedPercentage() {
-        return methodProgress;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public MsScan getResult() {
-        return newScan;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void cancel() {
-        // This method is too fast to be canceled
     }
 
 }

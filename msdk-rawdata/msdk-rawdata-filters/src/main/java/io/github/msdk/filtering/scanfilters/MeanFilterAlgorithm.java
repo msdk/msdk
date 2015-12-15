@@ -22,16 +22,27 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 
+/**
+ * <p>MeanFilterAlgorithm class.</p>
+ *
+ */
 public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
 
     private final @Nonnull double windowLength;    
     private final @Nonnull DataPointStore store;
 
+    /**
+     * <p>Constructor for MeanFilterAlgorithm.</p>
+     *
+     * @param windowLength a double.
+     * @param store a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     */
     public MeanFilterAlgorithm(@Nonnull double windowLength, @Nonnull DataPointStore store) {
         this.windowLength = windowLength;
         this.store = store;
     }
    
+    /** {@inheritDoc} */
     @Override
     public MsScan performFilter(@Nonnull MsScan scan) {
         List<Double> massWindow = new ArrayList();
@@ -100,6 +111,7 @@ public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "Mean Filter";

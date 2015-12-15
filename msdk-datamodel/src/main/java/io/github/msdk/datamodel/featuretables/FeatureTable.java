@@ -62,7 +62,6 @@ public interface FeatureTable {
      *            the {@link Sample}.
      * @param dtType
      *            the class of the column' datatype.
-     *
      * @return the feature table column for the given name, or null.
      */
     @Nullable
@@ -98,7 +97,6 @@ public interface FeatureTable {
      *
      * @param col
      *            the {@link FeatureTableColumn} to remove.
-     *
      */
     void removeColumn(@Nonnull FeatureTableColumn<?> col);
 
@@ -123,7 +121,6 @@ public interface FeatureTable {
      *
      * @param row
      *            the {@link FeatureTableRow} to remove.
-     *
      */
     void removeRow(@Nonnull FeatureTableRow row);
 
