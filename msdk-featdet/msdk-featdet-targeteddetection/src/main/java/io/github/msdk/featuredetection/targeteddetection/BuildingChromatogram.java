@@ -83,7 +83,7 @@ class BuildingChromatogram {
         }
 
         if (apexDataPoint != null) {
-            Integer startIndex = null, endIndex = null;
+            Integer startIndex = apexDataPoint, endIndex = apexDataPoint;
 
             // Find start data point
             for (int i = apexDataPoint - 1; i >= 0; i--) {
@@ -126,7 +126,7 @@ class BuildingChromatogram {
         } else {
             // Empty all lists
             mzValues = null;
-            dataPoints = null;
+            dataPoints.clear();
         }
 
     }

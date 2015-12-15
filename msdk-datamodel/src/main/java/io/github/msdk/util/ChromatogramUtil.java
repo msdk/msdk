@@ -170,26 +170,28 @@ public class ChromatogramUtil {
 	 * Returns the start retention time of this feature.
 	 *
 	 * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
-	 * @return a float.
+	 * @return a Float.
 	 */
-	@SuppressWarnings("null")
-	public static float getRtStart(@Nonnull Chromatogram chromatogram) {
+	public static Float getRtStart(@Nonnull Chromatogram chromatogram) {
 		chromatogram.getDataPoints(dataPointList);
 		Range<ChromatographyInfo> rtRange = dataPointList.getRtRange();
-		return rtRange.lowerEndpoint().getRetentionTime();
+		if (rtRange != null)
+		    return rtRange.lowerEndpoint().getRetentionTime();
+		return null;
 	}
 
 	/**
 	 * Returns the end retention time of this feature.
 	 *
 	 * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
-	 * @return a float.
+	 * @return a Float.
 	 */
-	@SuppressWarnings("null")
-	public static float getRtEnd(@Nonnull Chromatogram chromatogram) {
+	public static Float getRtEnd(@Nonnull Chromatogram chromatogram) {
 		chromatogram.getDataPoints(dataPointList);
 		Range<ChromatographyInfo> rtRange = dataPointList.getRtRange();
-		return rtRange.upperEndpoint().getRetentionTime();
+		if (rtRange != null)
+		    return rtRange.upperEndpoint().getRetentionTime();
+		return null;
 	}
 
 	/**
