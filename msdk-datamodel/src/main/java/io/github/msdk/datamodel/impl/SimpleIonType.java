@@ -30,10 +30,11 @@ class SimpleIonType implements IonType {
     private @Nonnull PolarityType polarity;
     private int numberOfMolecules;
     private @Nonnull String adductFormula;
-    private int charge;
+    private Integer charge;
 
-    SimpleIonType(@Nonnull String name, @Nonnull PolarityType polarity, 
-            int numberOfMolecules, @Nonnull String adductFormula, int charge) {
+    SimpleIonType(@Nonnull String name, @Nonnull PolarityType polarity,
+            int numberOfMolecules, @Nonnull String adductFormula,
+            Integer charge) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(polarity);
         Preconditions.checkNotNull(adductFormula);
@@ -73,7 +74,7 @@ class SimpleIonType implements IonType {
 
     /** {@inheritDoc} */
     @Override
-    public int getCharge() {
+    public Integer getCharge() {
         return charge;
     }
 

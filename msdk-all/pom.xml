@@ -127,6 +127,12 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-id-localdatabasesearch</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-features-filtering</artifactId>
 			<version>${project.version}</version>
 		</dependency>

@@ -11,5 +11,6 @@
     <modules>
         <module>msdk-id-sirius</module>
         <module>msdk-id-metfrag</module>
+        <module>msdk-id-localdatabasesearch</module>
     </modules>
 </project>
