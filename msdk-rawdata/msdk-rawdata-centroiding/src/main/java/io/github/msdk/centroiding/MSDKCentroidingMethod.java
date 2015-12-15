@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.filtering;
+package io.github.msdk.centroiding;
 
 import java.util.List;
 
@@ -30,15 +30,15 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
  * <p>
- * MSDKFilteringMethod class.
+ * MSDKCentroidingMethod class.
  * </p>
  *
  */
-public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
+public class MSDKCentroidingMethod implements MSDKMethod<RawDataFile> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final @Nonnull MSDKFilteringAlgorithm filteringAlgorithm;
+    private final @Nonnull MSDKCentroidingAlgorithm centroidingAlgorithm;
     private final @Nonnull RawDataFile rawDataFile;
     private final @Nonnull DataPointStore store;
 
@@ -61,10 +61,10 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
      *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
      *            object.
      */
-    public MSDKFilteringMethod(@Nonnull RawDataFile rawDataFile,
-            @Nonnull MSDKFilteringAlgorithm filteringAlgorithm,
+    public MSDKCentroidingMethod(@Nonnull RawDataFile rawDataFile,
+            @Nonnull MSDKCentroidingAlgorithm centroidingAlgorithm,
             @Nonnull DataPointStore store) {
-        this.filteringAlgorithm = filteringAlgorithm;
+        this.centroidingAlgorithm = centroidingAlgorithm;
         this.rawDataFile = rawDataFile;
         this.store = store;
     }
@@ -82,8 +82,8 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
     /** {@inheritDoc} */
     @Override
     public RawDataFile execute() throws MSDKException {
-        logger.info("Started Filter " + filteringAlgorithm.getName()
-                + " with Raw Data File #" + rawDataFile.getName());
+
+        logger.info("Started centroiding file " + rawDataFile.getName());
 
         // Create a new raw data file
         result = MSDKObjectBuilder.getRawDataFile(rawDataFile.getName(),
@@ -98,7 +98,7 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
             if (canceled)
                 return null;
 
-            MsScan newScan = filteringAlgorithm.performFilter(scan);
+            MsScan newScan = centroidingAlgorithm.centroidScan(scan);
 
             // Add the new scan to the created raw data file
             if (newScan != null)
@@ -106,8 +106,7 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
 
             processedScans++;
         }
-        logger.info("Finished Filter " + this.filteringAlgorithm.getName()
-                + " with Raw Data File #" + rawDataFile.getName());
+        logger.info("Finished centroiding file " + rawDataFile.getName());
         return result;
     }
 

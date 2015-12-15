@@ -18,23 +18,31 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * <p>MSDKFilteringAlgorithm interface.</p>
+ * <p>
+ * MSDKFilteringAlgorithm interface.
+ * </p>
  *
  */
 public interface MSDKFilteringAlgorithm {
-    
+
     /**
-     * <p>performFilter.</p>
+     * <p>
+     * performFilter.
+     * </p>
      *
-     * @param input a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+     * @param input
+     *            a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
      * @return a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
      */
-    public @Nullable MsScan performFilter(@Nonnull MsScan input);
-    
+    @Nullable
+    MsScan performFilter(@Nonnull MsScan input);
+
     /**
-     * <p>getName.</p>
+     * <p>
+     * getName.
+     * </p>
      *
      * @return a {@link java.lang.String} object.
      */
-    public String getName();
+    String getName();
 }

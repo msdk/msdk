@@ -30,11 +30,10 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.util.MsSpectrumUtil;
 
-public class LocalMaximaCentroidingMethodTest {
+public class ExactMassCentroidingAlgorithmTest {
 
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
-    @SuppressWarnings("null")
     @Test
     public void testOrbitrap() throws MSDKException {
 
@@ -56,10 +55,9 @@ public class LocalMaximaCentroidingMethodTest {
         MsScan lastScan = scans.get(scans.size() - 1);
 
         final float noiseLevel = 1E3f;
-        LocalMaximaCentroidingMethod centroider = new LocalMaximaCentroidingMethod(
-                lastScan, dataStore, noiseLevel);
-        final MsScan centroidedScan = centroider.execute();
-        Assert.assertEquals(1.0, centroider.getFinishedPercentage(), 0.0001);
+        ExactMassCentroidingAlgorithm centroider = new ExactMassCentroidingAlgorithm(
+                dataStore, noiseLevel);
+        final MsScan centroidedScan = centroider.centroidScan(lastScan);
 
         centroidedScan.getDataPoints(dataPoints);
         double mzBuffer[] = dataPoints.getMzBuffer();
@@ -70,7 +68,7 @@ public class LocalMaximaCentroidingMethodTest {
         Integer basePeak = MsSpectrumUtil.getBasePeakIndex(dataPoints);
 
         Assert.assertEquals(3.537E7f, intensityBuffer[basePeak], 1E5);
-        Assert.assertEquals(281.24761852, mzBuffer[basePeak], 0.000001);
+        Assert.assertEquals(281.24774060, mzBuffer[basePeak], 0.0000001);
 
         rawFile.dispose();
 

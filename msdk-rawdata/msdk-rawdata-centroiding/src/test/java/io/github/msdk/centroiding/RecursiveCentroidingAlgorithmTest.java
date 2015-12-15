@@ -14,7 +14,7 @@
 
 package io.github.msdk.centroiding;
 
-public class WaveletCentroidingMethodTest {
+public class RecursiveCentroidingAlgorithmTest {
 
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
