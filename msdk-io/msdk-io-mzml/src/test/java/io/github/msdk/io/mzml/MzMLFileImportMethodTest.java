@@ -32,7 +32,6 @@ import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.util.MsSpectrumUtil;
 
 public class MzMLFileImportMethodTest {
@@ -280,6 +279,42 @@ public class MzMLFileImportMethodTest {
         Assert.assertEquals(ChromatogramType.TIC,
                 chromatogram.getChromatogramType());
         Assert.assertEquals(0, chromatogram.getIsolations().size());
+
+        rawFile.dispose();
+    }
+
+    @Test
+    public void testFileWithUV() throws MSDKException {
+
+        // Create the data structures
+        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
+                .getMsSpectrumDataPointList();
+
+        // Import the file
+        File inputFile = new File(TEST_DATA_PATH + "mzML_with_UV.mzML");
+        Assert.assertTrue(inputFile.canRead());
+        MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        // The file has 27 MS scans, the rest are UV spectra
+        List<MsScan> scans = rawFile.getScans();
+        Assert.assertNotNull(scans);
+        Assert.assertEquals(27, scans.size());
+
+        // 2nd scan, #2101
+        MsScan scan2 = scans.get(1);
+        Assert.assertEquals(new Integer(2101), scan2.getScanNumber());
+        Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
+        Assert.assertEquals(new Integer(1), scan2.getMsFunction().getMsLevel());
+        Assert.assertEquals(1126.57f,
+                scan2.getChromatographyInfo().getRetentionTime(), 0.01f);
+        Assert.assertEquals(PolarityType.NEGATIVE, scan2.getPolarity());
+        scan2.getDataPoints(dataPoints);
+        Assert.assertEquals(1315, dataPoints.getSize());
+        Float scan2maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);
+        Assert.assertEquals(6457.04296f, scan2maxInt, 0.1f);
 
         rawFile.dispose();
     }

@@ -90,6 +90,27 @@ class MzMLConverter {
     }
 
     @Nonnull
+    Boolean isMsSpectrum(Spectrum spectrum) {
+
+        List<CVParam> cvParams = spectrum.getCvParam();
+        if (cvParams != null) {
+            for (CVParam param : cvParams) {
+                String accession = param.getAccession();
+                if (accession == null)
+                    continue;
+
+                if (accession.equals(MzMLCV.cvUVSpectrum))
+                    return false;
+                if (accession.equals(MzMLCV.cvMS1Spectrum))
+                    return true;
+            }
+        }
+
+        // By default, let's assume unidentified spectra are MS spectra
+        return true;
+    }
+
+    @Nonnull
     MsFunction extractMsFunction(Spectrum spectrum) {
         Integer msLevel = 1;
         // Browse the spectrum parameters
