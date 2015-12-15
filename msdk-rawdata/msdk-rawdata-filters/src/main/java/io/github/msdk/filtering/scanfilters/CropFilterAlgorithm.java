@@ -21,12 +21,23 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.filtering.MSDKFilteringAlgorithm;
 import javax.annotation.Nonnull;
 
+/**
+ * <p>CropFilterAlgorithm class.</p>
+ *
+ */
 public class CropFilterAlgorithm implements MSDKFilteringAlgorithm {
 
     private final @Nonnull Range<Double> mzRange;
     private final @Nonnull Range<Float> rtRange;
     private final @Nonnull DataPointStore store;
 
+    /**
+     * <p>Constructor for CropFilterAlgorithm.</p>
+     *
+     * @param mzRange a {@link com.google.common.collect.Range} object.
+     * @param rtRange a {@link com.google.common.collect.Range} object.
+     * @param store a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     */
     public CropFilterAlgorithm(@Nonnull Range<Double> mzRange, @Nonnull Range<Float> rtRange, @Nonnull DataPointStore store) {
         this.mzRange = mzRange;
         this.rtRange = rtRange;
@@ -34,6 +45,7 @@ public class CropFilterAlgorithm implements MSDKFilteringAlgorithm {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public MsScan performFilter(@Nonnull MsScan scan) {
 
@@ -60,6 +72,7 @@ public class CropFilterAlgorithm implements MSDKFilteringAlgorithm {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return "Crop Filter";

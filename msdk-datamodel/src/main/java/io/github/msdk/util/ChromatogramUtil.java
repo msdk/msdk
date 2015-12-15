@@ -25,7 +25,6 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * <p>ChromatogramUtil class.</p>
- *
  */
 public class ChromatogramUtil {
 

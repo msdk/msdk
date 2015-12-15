@@ -49,9 +49,6 @@ mvn -DfixTags=param,return,throws -Dforce javadoc:fix
 # Build the whole project
 mvn package
 
-# Create a signed release
-mvn release:perform
-
 # Deploy
 mvn deploy
 ```

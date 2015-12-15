@@ -75,8 +75,8 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
      * Constructor for MzMLFileExportMethod.
      * </p>
      *
-     * @param targetFile
-     *            a {@link java.io.File} object.
+     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param target a {@link java.io.File} object.
      */
     public MzMLFileExportMethod(@Nonnull RawDataFile rawDataFile,
             @Nonnull File target) {

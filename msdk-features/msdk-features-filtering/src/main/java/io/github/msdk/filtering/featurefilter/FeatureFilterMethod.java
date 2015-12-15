@@ -63,9 +63,25 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 	private int processedFeatures = 0, totalFeatures = 0;
 
 	/**
-	 * @param ionAnnotations,
-	 *            rawDataFile, dataPointStore, mzTolerance, rtTolerance,
-	 *            intensityTolerance, noiseLevel
+	 * <p>Constructor for FeatureFilterMethod.</p>
+	 *
+	 * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+	 * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+	 * @param filterByDuration a boolean.
+	 * @param filterByArea a boolean.
+	 * @param filterByHeight a boolean.
+	 * @param filterByDataPoints a boolean.
+	 * @param filterByFWHM a boolean.
+	 * @param filterByTailingFactor a boolean.
+	 * @param filterByAsymmetryFactor a boolean.
+	 * @param durationRange a {@link com.google.common.collect.Range} object.
+	 * @param areaRange a {@link com.google.common.collect.Range} object.
+	 * @param heightRange a {@link com.google.common.collect.Range} object.
+	 * @param dataPointsRange a {@link com.google.common.collect.Range} object.
+	 * @param fwhmRange a {@link com.google.common.collect.Range} object.
+	 * @param tailingFactorRange a {@link com.google.common.collect.Range} object.
+	 * @param asymmetryFactorRange a {@link com.google.common.collect.Range} object.
+	 * @param nameSuffix a {@link java.lang.String} object.
 	 */
 	public FeatureFilterMethod(@Nonnull FeatureTable featureTable, @Nonnull DataPointStore dataStore,
 			@Nonnull boolean filterByDuration, @Nonnull boolean filterByArea, @Nonnull boolean filterByHeight,
@@ -97,9 +113,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 		result = MSDKObjectBuilder.getFeatureTable(featureTable.getName() + nameSuffix, dataStore);
 	}
 
-	/**
-	 * @throws MSDKException
-	 */
+	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
 	public FeatureTable execute() throws MSDKException {
@@ -269,18 +283,21 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 		return newRow;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public Float getFinishedPercentage() {
 		return totalFeatures == 0 ? null : (float) processedFeatures / totalFeatures;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public FeatureTable getResult() {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void cancel() {
 		canceled = true;

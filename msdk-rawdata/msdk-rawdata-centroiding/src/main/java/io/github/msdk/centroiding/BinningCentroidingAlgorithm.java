@@ -15,13 +15,7 @@
 package io.github.msdk.centroiding;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.github.msdk.MSDKException;
-import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
@@ -29,40 +23,38 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
 
 /**
- * <p>BinningCentroidingMethod class.</p>
- *
+ * <p>
+ * BinningCentroidingAlgorithm class.
+ * </p>
  */
-public class BinningCentroidingMethod implements MSDKMethod<MsScan> {
+public class BinningCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private final @Nonnull MsScan inputScan;
     private final @Nonnull DataPointStore dataPointStore;
     private final @Nonnull Double binSize;
 
-    private float methodProgress = 0f;
     private MsScan newScan;
 
     /**
-     * <p>Constructor for BinningCentroidingMethod.</p>
+     * <p>
+     * Constructor for BinningCentroidingMethod.
+     * </p>
      *
-     * @param inputScan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
-     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
-     * @param binSize a {@link java.lang.Double} object.
+     * @param dataPointStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
+     * @param binSize
+     *            a {@link java.lang.Double} object.
      */
-    public BinningCentroidingMethod(@Nonnull MsScan inputScan,
-            @Nonnull DataPointStore dataPointStore, @Nonnull Double binSize) {
-        this.inputScan = inputScan;
+    public BinningCentroidingAlgorithm(@Nonnull DataPointStore dataPointStore,
+            @Nonnull Double binSize) {
         this.dataPointStore = dataPointStore;
         this.binSize = binSize;
     }
 
     /** {@inheritDoc} */
     @Override
-    public MsScan execute() throws MSDKException {
-
-        logger.info("Started binning centroider on scan #"
-                + inputScan.getScanNumber());
+    public @Nonnull MsScan centroidScan(@Nonnull MsScan inputScan) {
 
         // Copy all scan properties
         this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
@@ -81,7 +73,6 @@ public class BinningCentroidingMethod implements MSDKMethod<MsScan> {
         // If there are no data points, just return the scan
         if (inputDataPoints.getSize() == 0) {
             newScan.setDataPoints(inputDataPoints);
-            methodProgress = 1f;
             return newScan;
         }
 
@@ -94,45 +85,21 @@ public class BinningCentroidingMethod implements MSDKMethod<MsScan> {
             if (mzBuffer[i] < (currentBinMzStart + binSize)) {
                 currentBinIntensity += intensityBuffer[i];
                 continue;
-            } else {
-                // Add the new data point
-                double currentBinMzValue = currentBinMzStart + (binSize / 2);
-                newDataPoints.add(currentBinMzValue, currentBinIntensity);
             }
+
+            // Add the new data point
+            final double currentBinMzValue = currentBinMzStart + (binSize / 2);
+            newDataPoints.add(currentBinMzValue, currentBinIntensity);
+            currentBinMzStart += binSize;
+            currentBinIntensity = 0f;
 
         }
 
         // Store the new data points
         newScan.setDataPoints(newDataPoints);
 
-        // Finish
-        methodProgress = 1f;
-
-        logger.info("Finished binning centroider on scan #"
-                + inputScan.getScanNumber());
-
         return newScan;
 
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public Float getFinishedPercentage() {
-        return methodProgress;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public MsScan getResult() {
-        return newScan;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void cancel() {
-        // This method is too fast to be canceled
     }
 
 }

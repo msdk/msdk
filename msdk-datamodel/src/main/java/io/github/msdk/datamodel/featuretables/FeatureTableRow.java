@@ -66,7 +66,6 @@ public interface FeatureTableRow {
      *            Generic data type of the column.
      * @param column
      *            the column to retrieve data from this row.
-     *
      * @return a DATATYPE object.
      */
     @Nullable

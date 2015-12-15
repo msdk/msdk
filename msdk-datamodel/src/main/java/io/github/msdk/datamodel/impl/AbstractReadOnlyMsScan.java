@@ -34,7 +34,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
  * <p>Abstract AbstractReadOnlyMsScan class.</p>
- *
  */
 public abstract class AbstractReadOnlyMsScan implements MsScan {
 

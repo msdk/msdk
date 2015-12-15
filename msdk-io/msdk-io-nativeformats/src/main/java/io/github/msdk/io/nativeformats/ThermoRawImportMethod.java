@@ -35,7 +35,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
  * <p>ThermoRawImportMethod class.</p>
- *
  */
 public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
 

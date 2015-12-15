@@ -24,6 +24,11 @@ import javax.annotation.Nonnull;
  */
 public class MSDKVersion {
 
+    /**
+     * <p>getMSDKVersion.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static @Nonnull String getMSDKVersion() {
         try {
             ClassLoader myClassLoader = MSDKVersion.class.getClassLoader();

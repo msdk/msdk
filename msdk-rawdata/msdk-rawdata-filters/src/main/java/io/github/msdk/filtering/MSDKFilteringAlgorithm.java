@@ -17,9 +17,32 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * <p>
+ * MSDKFilteringAlgorithm interface.
+ * </p>
+ *
+ */
 public interface MSDKFilteringAlgorithm {
-    
-    public @Nullable MsScan performFilter(@Nonnull MsScan input);
-    
-    public String getName();
+
+    /**
+     * <p>
+     * performFilter.
+     * </p>
+     *
+     * @param input
+     *            a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+     * @return a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+     */
+    @Nullable
+    MsScan performFilter(@Nonnull MsScan input);
+
+    /**
+     * <p>
+     * getName.
+     * </p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    String getName();
 }
