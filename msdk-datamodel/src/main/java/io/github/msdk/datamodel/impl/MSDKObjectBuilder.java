@@ -35,6 +35,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
@@ -42,6 +43,7 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
@@ -66,7 +68,6 @@ public class MSDKObjectBuilder {
     private static final @Nonnull SimpleFeatureTableColumn<Integer> ChargeFeatureTableColumn = new SimpleFeatureTableColumn<Integer>(
             ColumnName.CHARGE.getName(), Integer.class, null);
 
-    
     /**
      * The number of MS functions used in a project is typically small, but each
      * scan has to be annotated with its MS function. So we take advantage of
@@ -78,8 +79,10 @@ public class MSDKObjectBuilder {
     /**
      * Creates a new MsFunction reference.
      *
-     * @param name a {@link java.lang.String} object.
-     * @param msLevel a {@link java.lang.Integer} object.
+     * @param name
+     *            a {@link java.lang.String} object.
+     * @param msLevel
+     *            a {@link java.lang.Integer} object.
      * @return a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
      */
     public static final @Nonnull MsFunction getMsFunction(@Nonnull String name,
@@ -113,7 +116,8 @@ public class MSDKObjectBuilder {
     /**
      * Creates a new MsFunction reference.
      *
-     * @param name a {@link java.lang.String} object.
+     * @param name
+     *            a {@link java.lang.String} object.
      * @return a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
      */
     public static final @Nonnull MsFunction getMsFunction(
@@ -124,7 +128,8 @@ public class MSDKObjectBuilder {
     /**
      * Creates a new MsFunction reference.
      *
-     * @param msLevel a {@link java.lang.Integer} object.
+     * @param msLevel
+     *            a {@link java.lang.Integer} object.
      * @return a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
      */
     @SuppressWarnings("null")
@@ -134,12 +139,20 @@ public class MSDKObjectBuilder {
     }
 
     /**
-     * <p>getRawDataFile.</p>
+     * <p>
+     * getRawDataFile.
+     * </p>
      *
-     * @param rawDataFileName a {@link java.lang.String} object.
-     * @param originalRawDataFile a {@link java.io.File} object.
-     * @param rawDataFileType a {@link io.github.msdk.datamodel.files.FileType} object.
-     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param rawDataFileName
+     *            a {@link java.lang.String} object.
+     * @param originalRawDataFile
+     *            a {@link java.io.File} object.
+     * @param rawDataFileType
+     *            a {@link io.github.msdk.datamodel.files.FileType} object.
+     * @param dataPointStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
      * @return a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
      */
     public static final @Nonnull RawDataFile getRawDataFile(
@@ -151,11 +164,18 @@ public class MSDKObjectBuilder {
     }
 
     /**
-     * <p>getFeatureTable.</p>
+     * <p>
+     * getFeatureTable.
+     * </p>
      *
-     * @param featureTableName a {@link java.lang.String} object.
-     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
-     * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+     * @param featureTableName
+     *            a {@link java.lang.String} object.
+     * @param dataPointStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
+     * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTable}
+     *         object.
      */
     public static final @Nonnull FeatureTable getFeatureTable(
             @Nonnull String featureTableName,
@@ -164,11 +184,18 @@ public class MSDKObjectBuilder {
     }
 
     /**
-     * <p>getMsScan.</p>
+     * <p>
+     * getMsScan.
+     * </p>
      *
-     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
-     * @param scanNumber a {@link java.lang.Integer} object.
-     * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
+     * @param dataPointStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
+     * @param scanNumber
+     *            a {@link java.lang.Integer} object.
+     * @param msFunction
+     *            a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
      * @return a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
      */
     public static final @Nonnull MsScan getMsScan(
@@ -178,13 +205,25 @@ public class MSDKObjectBuilder {
     }
 
     /**
-     * <p>getChromatogram.</p>
+     * <p>
+     * getChromatogram.
+     * </p>
      *
-     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
-     * @param chromatogramNumber a {@link java.lang.Integer} object.
-     * @param chromatogramType a {@link io.github.msdk.datamodel.chromatograms.ChromatogramType} object.
-     * @param separationType a {@link io.github.msdk.datamodel.rawdata.SeparationType} object.
-     * @return a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+     * @param dataPointStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
+     * @param chromatogramNumber
+     *            a {@link java.lang.Integer} object.
+     * @param chromatogramType
+     *            a
+     *            {@link io.github.msdk.datamodel.chromatograms.ChromatogramType}
+     *            object.
+     * @param separationType
+     *            a {@link io.github.msdk.datamodel.rawdata.SeparationType}
+     *            object.
+     * @return a {@link io.github.msdk.datamodel.chromatograms.Chromatogram}
+     *         object.
      */
     public static final @Nonnull Chromatogram getChromatogram(
             @Nonnull DataPointStore dataPointStore,
@@ -196,11 +235,17 @@ public class MSDKObjectBuilder {
     }
 
     /**
-     * <p>getChromatographyInfo1D.</p>
+     * <p>
+     * getChromatographyInfo1D.
+     * </p>
      *
-     * @param separationType a {@link io.github.msdk.datamodel.rawdata.SeparationType} object.
-     * @param rt1 a {@link java.lang.Float} object.
-     * @return a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} object.
+     * @param separationType
+     *            a {@link io.github.msdk.datamodel.rawdata.SeparationType}
+     *            object.
+     * @param rt1
+     *            a {@link java.lang.Float} object.
+     * @return a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *         object.
      */
     public static final @Nonnull ChromatographyInfo getChromatographyInfo1D(
             SeparationType separationType, Float rt1) {
@@ -208,12 +253,19 @@ public class MSDKObjectBuilder {
     }
 
     /**
-     * <p>getChromatographyInfo2D.</p>
+     * <p>
+     * getChromatographyInfo2D.
+     * </p>
      *
-     * @param separationType a {@link io.github.msdk.datamodel.rawdata.SeparationType} object.
-     * @param rt1 a {@link java.lang.Float} object.
-     * @param rt2 a {@link java.lang.Float} object.
-     * @return a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} object.
+     * @param separationType
+     *            a {@link io.github.msdk.datamodel.rawdata.SeparationType}
+     *            object.
+     * @param rt1
+     *            a {@link java.lang.Float} object.
+     * @param rt2
+     *            a {@link java.lang.Float} object.
+     * @return a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *         object.
      */
     public static final @Nonnull ChromatographyInfo getChromatographyInfo2D(
             SeparationType separationType, Float rt1, Float rt2) {
@@ -227,12 +279,19 @@ public class MSDKObjectBuilder {
     }
 
     /**
-     * <p>getImsInfo.</p>
+     * <p>
+     * getImsInfo.
+     * </p>
      *
-     * @param separationType a {@link io.github.msdk.datamodel.rawdata.SeparationType} object.
-     * @param rt1 a {@link java.lang.Float} object.
-     * @param ionDriftTime a {@link java.lang.Float} object.
-     * @return a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} object.
+     * @param separationType
+     *            a {@link io.github.msdk.datamodel.rawdata.SeparationType}
+     *            object.
+     * @param rt1
+     *            a {@link java.lang.Float} object.
+     * @param ionDriftTime
+     *            a {@link java.lang.Float} object.
+     * @return a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *         object.
      */
     public static final @Nonnull ChromatographyInfo getImsInfo(
             SeparationType separationType, Float rt1, Float ionDriftTime) {
@@ -275,9 +334,14 @@ public class MSDKObjectBuilder {
      * Creates a new FeatureTableColumn instance.
      *
      * @return new SimpleFeatureTableColumn
-     * @param columnName a {@link io.github.msdk.datamodel.featuretables.ColumnName} object.
-     * @param sample a {@link io.github.msdk.datamodel.featuretables.Sample} object.
-     * @param <DataType> a DataType object.
+     * @param columnName
+     *            a {@link io.github.msdk.datamodel.featuretables.ColumnName}
+     *            object.
+     * @param sample
+     *            a {@link io.github.msdk.datamodel.featuretables.Sample}
+     *            object.
+     * @param <DataType>
+     *            a DataType object.
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static @Nonnull <DataType> FeatureTableColumn<DataType> getFeatureTableColumn(
@@ -287,13 +351,22 @@ public class MSDKObjectBuilder {
     }
 
     /**
-     * <p>getFeatureTableColumn.</p>
+     * <p>
+     * getFeatureTableColumn.
+     * </p>
      *
-     * @param name a {@link java.lang.String} object.
-     * @param dataTypeClass a {@link java.lang.Class} object.
-     * @param sample a {@link io.github.msdk.datamodel.featuretables.Sample} object.
-     * @param <DataType> a DataType object.
-     * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
+     * @param name
+     *            a {@link java.lang.String} object.
+     * @param dataTypeClass
+     *            a {@link java.lang.Class} object.
+     * @param sample
+     *            a {@link io.github.msdk.datamodel.featuretables.Sample}
+     *            object.
+     * @param <DataType>
+     *            a DataType object.
+     * @return a
+     *         {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn}
+     *         object.
      */
     public static @Nonnull <DataType> FeatureTableColumn<DataType> getFeatureTableColumn(
             @Nonnull String name, @Nonnull Class<DataType> dataTypeClass,
@@ -306,8 +379,11 @@ public class MSDKObjectBuilder {
      * Creates a new FeatureTableRow instance.
      *
      * @return new SimpleFeatureTableRow
-     * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
-     * @param rowId a int.
+     * @param featureTable
+     *            a {@link io.github.msdk.datamodel.featuretables.FeatureTable}
+     *            object.
+     * @param rowId
+     *            a int.
      */
     public static @Nonnull SimpleFeatureTableRow getFeatureTableRow(
             @Nonnull FeatureTable featureTable, int rowId) {
@@ -315,54 +391,78 @@ public class MSDKObjectBuilder {
     }
 
     /**
-     * <p>getMzFeatureTableColumn.</p>
+     * <p>
+     * getMzFeatureTableColumn.
+     * </p>
      *
-     * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
+     * @return a
+     *         {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn}
+     *         object.
      */
     public static @Nonnull FeatureTableColumn<Double> getMzFeatureTableColumn() {
         return MzFeatureTableColumn;
     }
 
     /**
-     * <p>Getter for the field <code>ppmFeatureTableColumn</code>.</p>
+     * <p>
+     * Getter for the field <code>ppmFeatureTableColumn</code>.
+     * </p>
      *
-     * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
+     * @return a
+     *         {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn}
+     *         object.
      */
     public static @Nonnull FeatureTableColumn<Double> getPpmFeatureTableColumn() {
         return ppmFeatureTableColumn;
     }
 
     /**
-     * <p>getChromatographyInfoFeatureTableColumn.</p>
+     * <p>
+     * getChromatographyInfoFeatureTableColumn.
+     * </p>
      *
-     * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
+     * @return a
+     *         {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn}
+     *         object.
      */
     public static @Nonnull FeatureTableColumn<ChromatographyInfo> getChromatographyInfoFeatureTableColumn() {
         return ChromatographyInfoFeatureTableColumn;
     }
 
     /**
-     * <p>getIdFeatureTableColumn.</p>
+     * <p>
+     * getIdFeatureTableColumn.
+     * </p>
      *
-     * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
+     * @return a
+     *         {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn}
+     *         object.
      */
     public static @Nonnull FeatureTableColumn<Integer> getIdFeatureTableColumn() {
         return IdFeatureTableColumn;
     }
 
     /**
-     * <p>getIonAnnotationFeatureTableColumn.</p>
+     * <p>
+     * getIonAnnotationFeatureTableColumn.
+     * </p>
      *
-     * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
+     * @return a
+     *         {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn}
+     *         object.
      */
     public static @Nonnull FeatureTableColumn<IonAnnotation> getIonAnnotationFeatureTableColumn() {
         return IonAnnotationFeatureTableColumn;
     }
 
     /**
-     * <p>getChargeFeatureTableColumn.</p>
+     * <p>
+     * getChargeFeatureTableColumn.
+     * </p>
      *
-     * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
+     * @return a
+     *         {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn}
+     *         object.
      */
     public static @Nonnull FeatureTableColumn<Integer> getChargeFeatureTableColumn() {
         return ChargeFeatureTableColumn;
@@ -371,8 +471,11 @@ public class MSDKObjectBuilder {
     /**
      * Creates a new ActivationInfo reference.
      *
-     * @param activationEnergy a {@link java.lang.Double} object.
-     * @param fragmentationType a {@link io.github.msdk.datamodel.rawdata.ActivationType} object.
+     * @param activationEnergy
+     *            a {@link java.lang.Double} object.
+     * @param fragmentationType
+     *            a {@link io.github.msdk.datamodel.rawdata.ActivationType}
+     *            object.
      * @return new SimpleActivationInfo
      */
     public static final @Nonnull ActivationInfo getActivationInfo(
@@ -386,11 +489,17 @@ public class MSDKObjectBuilder {
     /**
      * Creates a new IsolationInfo reference.
      *
-     * @param isolationMzRange a {@link com.google.common.collect.Range} object.
-     * @param ionInjectTime a {@link java.lang.Float} object.
-     * @param precursorMz a {@link java.lang.Double} object.
-     * @param precursorCharge a {@link java.lang.Integer} object.
-     * @param activationInfo a {@link io.github.msdk.datamodel.rawdata.ActivationInfo} object.
+     * @param isolationMzRange
+     *            a {@link com.google.common.collect.Range} object.
+     * @param ionInjectTime
+     *            a {@link java.lang.Float} object.
+     * @param precursorMz
+     *            a {@link java.lang.Double} object.
+     * @param precursorCharge
+     *            a {@link java.lang.Integer} object.
+     * @param activationInfo
+     *            a {@link io.github.msdk.datamodel.rawdata.ActivationInfo}
+     *            object.
      * @return new SimpleIsolationInfo
      */
     public static final @Nonnull IsolationInfo getIsolationInfo(
@@ -406,7 +515,8 @@ public class MSDKObjectBuilder {
     /**
      * Creates a new SimpleSample reference.
      *
-     * @param sampleName a {@link java.lang.String} object.
+     * @param sampleName
+     *            a {@link java.lang.String} object.
      * @return new SimpleSample
      */
     public static final @Nonnull SimpleSample getSimpleSample(
@@ -423,6 +533,30 @@ public class MSDKObjectBuilder {
     public static final @Nonnull SimpleIonAnnotation getSimpleIonAnnotation() {
         SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
         return ionAnnotation;
+    }
+
+    /**
+     * <p>
+     * Creates a new SimpleIonType reference.
+     * </p>
+     *
+     * @param name
+     *            a {@link java.lang.String} object.
+     * @param polarity
+     *            a {@link io.github.msdk.datamodel.rawdata.PolarityType}
+     *            object.
+     * @param numberOfMolecules
+     *            a {@link java.lang.Integer} object.
+     * @param adductFormula
+     *            a {@link java.lang.String} object.
+     * @param charge
+     *            a {@link java.lang.Integer} object.
+     */
+    public static final @Nonnull IonType getIonType(@Nonnull String name,
+            @Nonnull PolarityType polarity, @Nullable Integer numberOfMolecules,
+            @Nonnull String adductFormula, @Nullable Integer charge) {
+        return new SimpleIonType(name, polarity, numberOfMolecules,
+                adductFormula, charge);
     }
 
 }

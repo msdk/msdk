@@ -61,6 +61,6 @@ public interface IonType {
      *
      * @return  Charge of ion.
      */
-    int getCharge();
+    Integer getCharge();
 
 }
