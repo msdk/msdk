@@ -61,15 +61,26 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
     private int processedScans = 0, totalScans = 0;
 
     /**
-     * <p>Constructor for TargetedDetectionMethod.</p>
+     * <p>
+     * Constructor for TargetedDetectionMethod.
+     * </p>
      *
-     * @param ionAnnotations a {@link java.util.List} object.
-     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
-     * @param mzTolerance a {@link io.github.msdk.util.MZTolerance} object.
-     * @param rtTolerance a {@link io.github.msdk.util.RTTolerance} object.
-     * @param intensityTolerance a {@link java.lang.Double} object.
-     * @param noiseLevel a {@link java.lang.Double} object.
+     * @param ionAnnotations
+     *            a {@link java.util.List} object.
+     * @param rawDataFile
+     *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param dataPointStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
+     * @param mzTolerance
+     *            a {@link io.github.msdk.util.MZTolerance} object.
+     * @param rtTolerance
+     *            a {@link io.github.msdk.util.RTTolerance} object.
+     * @param intensityTolerance
+     *            a {@link java.lang.Double} object.
+     * @param noiseLevel
+     *            a {@link java.lang.Double} object.
      */
     public TargetedDetectionMethod(@Nonnull List<IonAnnotation> ionAnnotations,
             @Nonnull RawDataFile rawDataFile,
@@ -110,8 +121,8 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
         List<MsScan> allScans = rawDataFile.getScans();
         List<MsScan> msScans = new ArrayList<MsScan>();
         for (MsScan scan : allScans) {
-        	if (scan.getMsFunction().getMsLevel().equals(1))
-        		msScans.add(scan);
+            if (scan.getMsFunction().getMsLevel().equals(1))
+                msScans.add(scan);
         }
 
         // Loop through all scans
@@ -189,14 +200,20 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
             // Set the m/z value for the chromatogram
             double[] mzValues = buildingChromatogram.getMzValues();
             float[] intensityValues = newDataPoints.getIntensityBuffer();
-            double newMz = ChromatogramUtil.calculateMz(intensityValues, mzValues, calcMethod.allAverage);
-            chromatogram.setMz(newMz);
+            double newMz;
 
-            // Add the ion annotation to the chromatogram
-            chromatogram.setIonAnnotation(ionAnnotation);
+            if (mzValues != null) {
+                newMz = ChromatogramUtil.calculateMz(intensityValues, mzValues,
+                        calcMethod.allAverage);
+                chromatogram.setMz(newMz);
 
-            // Add the chromatogram to the chromatogram list
-            result.add(chromatogram);
+                // Add the ion annotation to the chromatogram
+                chromatogram.setIonAnnotation(ionAnnotation);
+
+                // Add the chromatogram to the chromatogram list
+                result.add(chromatogram);
+            }
+
             chromatogramNumber++;
             ionNr++;
         }
