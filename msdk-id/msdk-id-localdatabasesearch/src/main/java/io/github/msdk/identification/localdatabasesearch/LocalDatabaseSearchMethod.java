@@ -52,6 +52,10 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
      * @param featureTable
      *            a {@link io.github.msdk.datamodel.featuretable.FeatureTable}
      *            object.
+     * @param ionAnnotations
+     *            a {@link java.util.List} of
+     *            {@link io.github.msdk.datamodel.ionannotations.IonAnnotation}
+     *            objects.
      * @param mzTolerance
      *            a {@link io.github.msdk.util.MZTolerance} object.
      * @param rtTolerance
@@ -72,7 +76,7 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
     public Void execute() throws MSDKException {
 
         totalFeatures = featureTable.getRows().size();
-        FeatureTableColumn ionAnnotationColumn = featureTable
+        FeatureTableColumn<IonAnnotation> ionAnnotationColumn = featureTable
                 .getColumn("Ion Annotation", null, IonAnnotation.class);
 
         // Loop through all features in the feature table
@@ -100,6 +104,9 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
                 }
 
             }
+
+            if (canceled)
+                return null;
 
             processedFeatures++;
         }
