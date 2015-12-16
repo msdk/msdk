@@ -111,6 +111,12 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
                 Spectrum spectrum = iterator.next();
 
+                // Ignore scans that are not MS, e.g. UV
+                if (! converter.isMsSpectrum(spectrum)) {
+                    parsedScans++;
+                    continue;
+                }
+                
                 // Get spectrum ID
                 String spectrumId = spectrum.getId();
 

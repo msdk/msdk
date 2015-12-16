@@ -19,6 +19,14 @@
 
 package io.github.msdk.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+
+import com.google.common.base.Strings;
+
+import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
@@ -28,6 +36,9 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
  */
 public class IonTypeUtil {
 
+    private static final Pattern ionTypePattern = Pattern
+            .compile("\\[(\\d*)M([+-]?.*)\\](\\d*)([+-])");
+
     /**
      * Creates an IonType from a string. The expected string format is [M+2H]2+.
      *
@@ -35,53 +46,53 @@ public class IonTypeUtil {
      *            a {@link java.lang.String} object.
      * @return a {@link io.github.msdk.datamodel.ionannotations.IonType} object.
      */
-    public static IonType createIonType(String adduct) {
+    public static @Nonnull IonType createIonType(final @Nonnull String adduct) {
         // Expected string format: [M+2H]2+
 
-        // Polarity type
-        PolarityType polarity;
-        String lastChar = adduct.substring(adduct.length() - 1);
-        switch (lastChar) {
-        case "+":
-            polarity = PolarityType.POSITIVE;
-            break;
-        case "-":
-            polarity = PolarityType.NEGATIVE;
-            break;
-        default:
-            polarity = PolarityType.UNKNOWN;
-        }
+        Matcher m = ionTypePattern.matcher(adduct);
 
-        // Number of molecules
-        Integer numberOfMolecules = null;
-        String secondChar = adduct.substring(1, 2);
+        if (!m.matches())
+            throw new MSDKRuntimeException("Cannot parse ion type " + adduct);
+
+        final String numOfMoleculesGroup = m.group(1);
+        final String adductFormulaGroup = m.group(2);
+        final String chargeGroup = m.group(3);
+        final String polarityGroup = m.group(4);
+
         try {
-            numberOfMolecules = Integer.parseInt(secondChar);
+
+            // Polarity type
+            PolarityType polarity;
+            switch (polarityGroup) {
+            case "+":
+                polarity = PolarityType.POSITIVE;
+                break;
+            case "-":
+                polarity = PolarityType.NEGATIVE;
+                break;
+            default:
+                polarity = PolarityType.UNKNOWN;
+            }
+
+            // Number of molecules
+            Integer numberOfMolecules = 1;
+            if (!Strings.isNullOrEmpty(numOfMoleculesGroup))
+                numberOfMolecules = Integer.parseInt(numOfMoleculesGroup);
+
+            // Charge
+            Integer charge = 1;
+            if (!Strings.isNullOrEmpty(chargeGroup))
+                charge = Integer.parseInt(chargeGroup);
+
+            // Create ionType
+            IonType ionType = MSDKObjectBuilder.getIonType(adduct, polarity,
+                    numberOfMolecules, adductFormulaGroup, charge);
+
+            return ionType;
+
         } catch (Exception e) {
-            numberOfMolecules = 1;
+            throw new MSDKRuntimeException("Cannot parse ion type " + adduct);
         }
-
-        // Adduct formula
-        String adductFormula = null;
-        /*
-         * TODO: Extract e.g. NH4 from [M+NH4]+
-         */
-        adductFormula = "[M+H]";
-
-        // Charge
-        Integer charge = null;
-        String secondLastChar = adduct.substring(adduct.length() - 2,
-                adduct.length() - 1);
-        try {
-            charge = Integer.parseInt(secondLastChar);
-        } catch (Exception e) {
-        }
-
-        // Create ionType
-        IonType ionType = MSDKObjectBuilder.getIonType(adduct, polarity,
-                numberOfMolecules, adductFormula, charge);
-
-        return ionType;
 
     }
 
