@@ -20,6 +20,9 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.openscience.cdk.DefaultChemObjectBuilder;
+import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
@@ -71,6 +74,7 @@ public class LocalDatabaseSearchMethodTest {
         final MZTolerance mzTolerance = new MZTolerance(0.003, 5.0);
         final RTTolerance rtTolerance = new RTTolerance(0.1, false);
         List<IonAnnotation> ionAnnotations = new ArrayList<IonAnnotation>();
+        IMolecularFormula formula;
 
         // Ion 1
         IonAnnotation ion1 = MSDKObjectBuilder.getSimpleIonAnnotation();
@@ -79,7 +83,9 @@ public class LocalDatabaseSearchMethodTest {
         ion1.setDescription("ATP");
         ion1.setChromatographyInfo(MSDKObjectBuilder
                 .getChromatographyInfo1D(SeparationType.LC, (float) 814.4));
-        // Formula: C10H16N5O13P3
+        formula = MolecularFormulaManipulator.getMolecularFormula(
+                "C10H16N5O13P3", DefaultChemObjectBuilder.getInstance());
+        ion1.setFormula(formula);
         ion1.setIonType(IonTypeUtil.createIonType("[M+2H]2+"));
         ionAnnotations.add(ion1);
 
@@ -90,7 +96,9 @@ public class LocalDatabaseSearchMethodTest {
         ion2.setDescription("Glutathione disulfide");
         ion2.setChromatographyInfo(MSDKObjectBuilder
                 .getChromatographyInfo1D(SeparationType.LC, (float) 878.1));
-        // Formula: C20H32N6O12S2
+        formula = MolecularFormulaManipulator.getMolecularFormula(
+                "C20H32N6O12S2", DefaultChemObjectBuilder.getInstance());
+        ion2.setFormula(formula);
         ion2.setIonType(IonTypeUtil.createIonType("[M+NH4]+"));
         ionAnnotations.add(ion2);
 
@@ -110,7 +118,9 @@ public class LocalDatabaseSearchMethodTest {
         ion4.setDescription("L-Arginine");
         ion4.setChromatographyInfo(MSDKObjectBuilder
                 .getChromatographyInfo1D(SeparationType.LC, (float) 1368.9));
-        // Formula C6H14N4O2
+        formula = MolecularFormulaManipulator.getMolecularFormula("C6H14N4O2",
+                DefaultChemObjectBuilder.getInstance());
+        ion4.setFormula(formula);
         ionAnnotations.add(ion4);
 
         // Ion 5
@@ -120,7 +130,9 @@ public class LocalDatabaseSearchMethodTest {
         ion5.setDescription("NAD+");
         ion5.setChromatographyInfo(MSDKObjectBuilder
                 .getChromatographyInfo1D(SeparationType.LC, (float) 680.8));
-        // Formula C21H28N7O14P2
+        formula = MolecularFormulaManipulator.getMolecularFormula(
+                "C21H28N7O14P2", DefaultChemObjectBuilder.getInstance());
+        ion5.setFormula(formula);
         ionAnnotations.add(ion5);
 
         // Ion 6
@@ -130,7 +142,9 @@ public class LocalDatabaseSearchMethodTest {
         ion6.setDescription("NADH");
         ion6.setChromatographyInfo(MSDKObjectBuilder
                 .getChromatographyInfo1D(SeparationType.LC, (float) 633.5));
-        // Formula C21H29N7O14P2
+        formula = MolecularFormulaManipulator.getMolecularFormula(
+                "C21H29N7O14P2", DefaultChemObjectBuilder.getInstance());
+        ion6.setFormula(formula);
         ionAnnotations.add(ion6);
 
         // Ion 7
@@ -181,6 +195,9 @@ public class LocalDatabaseSearchMethodTest {
         Assert.assertEquals("[M+NH4]+", ionType.getName());
         Assert.assertEquals(1, ionType.getNumberOfMolecules());
         Assert.assertEquals(PolarityType.POSITIVE, ionType.getPolarity());
+        IMolecularFormula ionFormula = ionAnnotation.getFormula();
+        Assert.assertEquals("C20H32N6O12S2",
+                MolecularFormulaManipulator.getString(ionFormula));
 
     }
 
