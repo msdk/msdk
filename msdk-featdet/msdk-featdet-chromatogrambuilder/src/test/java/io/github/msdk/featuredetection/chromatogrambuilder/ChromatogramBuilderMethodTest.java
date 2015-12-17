@@ -47,18 +47,56 @@ public class ChromatogramBuilderMethodTest {
         Assert.assertNotNull(rawFile);
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
-        final double minimumTimeSpan = 6; // 6s
-        final double minimumHeight = 1E4;
-        final MZTolerance mzTolerance = new MZTolerance(0.001, 5.0);
+        double minimumTimeSpan = 6; // 6s
+        double minimumHeight = 1E4;
+        MZTolerance mzTolerance = new MZTolerance(0.001, 5.0);
         ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(
                 dataStore, rawFile, minimumTimeSpan, minimumHeight,
                 mzTolerance);
-        final List<Chromatogram> detectedFeatures = chromBuilder.execute();
+        List<Chromatogram> detectedFeatures = chromBuilder.execute();
         Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
 
         Assert.assertTrue(detectedFeatures.size() > 10);
 
-    
+        // Testing a big timeSpan
+        minimumTimeSpan = 1000000; // 6s
+        minimumHeight = 1E4;
+        mzTolerance = new MZTolerance(0.001, 5.0);
+        chromBuilder = new ChromatogramBuilderMethod(
+                dataStore, rawFile, minimumTimeSpan, minimumHeight,
+                mzTolerance);
+        detectedFeatures = chromBuilder.execute();
+        Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
+
+        // Nothing should be recognized as a chromatogram
+        Assert.assertEquals(detectedFeatures.size(),0.0, 0.0001);
+        
+        // Testing a big minimun height
+        minimumTimeSpan = 6; // 6s
+        minimumHeight = 10000000;
+        mzTolerance = new MZTolerance(0.001, 5.0);
+        chromBuilder = new ChromatogramBuilderMethod(
+                dataStore, rawFile, minimumTimeSpan, minimumHeight,
+                mzTolerance);
+        detectedFeatures = chromBuilder.execute();
+        Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
+        
+        // There are no so big picks in the data so there should be no chromatograms
+        Assert.assertEquals(detectedFeatures.size(),0.0, 0.0001);
+        
+        // Testing a small MZTolerance
+        minimumTimeSpan = 6; // 6s
+        minimumHeight = 1E4;
+        mzTolerance = new MZTolerance(0.0, 0.0);
+        chromBuilder = new ChromatogramBuilderMethod(
+                dataStore, rawFile, minimumTimeSpan, minimumHeight,
+                mzTolerance);
+        detectedFeatures = chromBuilder.execute();
+        Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
+        
+        // Nothing should be connected in consecutive scans as the mz tolerance is 0
+        Assert.assertEquals(detectedFeatures.size(),0.0, 0.0001);
+
     
     }
 }
