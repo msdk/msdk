@@ -14,6 +14,8 @@
 
 package io.github.msdk.util;
 
+import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,12 +29,18 @@ import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 
 /**
- * Text processing utilities
+ * IonType utilities
  */
 public class IonTypeUtil {
 
     private static final Pattern ionTypePattern = Pattern
             .compile("\\[(\\d*)M([+-]?.*)\\](\\d*)([+-])");
+
+    private static final Pattern adductPattern = Pattern
+            .compile("([+-])(\\d*)([\\w]+)");
+
+    private static final Pattern elementPattern = Pattern
+            .compile("([A-Z][a-z]*)(\\d*)");
 
     /**
      * Creates an IonType from a string. The expected string format is [M+2H]2+.
@@ -42,7 +50,6 @@ public class IonTypeUtil {
      * @return a {@link io.github.msdk.datamodel.ionannotations.IonType} object.
      */
     public static @Nonnull IonType createIonType(final @Nonnull String adduct) {
-        // Expected string format: [M+2H]2+
 
         Matcher m = ionTypePattern.matcher(adduct);
 
@@ -79,9 +86,12 @@ public class IonTypeUtil {
             if (!Strings.isNullOrEmpty(chargeGroup))
                 charge = Integer.parseInt(chargeGroup);
 
+            // Adduct formula
+            String adductFormula = parseAdductFormula(adductFormulaGroup);
+
             // Create ionType
             IonType ionType = MSDKObjectBuilder.getIonType(adduct, polarity,
-                    numberOfMolecules, adductFormulaGroup, charge);
+                    numberOfMolecules, adductFormula, charge);
 
             return ionType;
 
@@ -89,6 +99,70 @@ public class IonTypeUtil {
             throw new MSDKRuntimeException("Cannot parse ion type " + adduct);
         }
 
+    }
+
+    /**
+     * Parses a "vague" formula from ionization adduct definition (e.g.,
+     * -H2O+NH4 coming from adduct type [2M-H2O+NH4]+) into a standard chemical
+     * formula. Note that the resulting formula may have negative element
+     * counts, in case the adduct represents a loss. In the above adduct case,
+     * the resulting formula would be H2NO-1
+     * 
+     * @param adductFormula
+     *            Adduct formula in the form +XXX or -XXX or +XXX-YYY
+     * @return Chemical formula formatted according to the Hill System
+     */
+    private static String parseAdductFormula(String adductFormula) {
+
+        Hashtable<String, Integer> elementCounts = new Hashtable<>();
+
+        Matcher m = adductPattern.matcher(adductFormula);
+        while (m.find()) {
+            String plusMinus = m.group(1);
+            Integer multiplier = 1;
+            if (!Strings.isNullOrEmpty(m.group(2)))
+                multiplier = Integer.parseInt(m.group(2));
+            String formula = m.group(3);
+            Matcher f = elementPattern.matcher(formula);
+            while (f.find()) {
+                String element = f.group(1);
+                Integer count = multiplier;
+                if (!Strings.isNullOrEmpty(f.group(2)))
+                    count *= Integer.parseInt(f.group(2));
+                if (plusMinus.equals("-"))
+                    count *= -1;
+                if (elementCounts.containsKey(element))
+                    count += elementCounts.get(element);
+                elementCounts.put(element, count);
+            }
+        }
+        // Build the formula string according to Hill System rules
+        StringBuilder formula = new StringBuilder();
+        Integer cCount = elementCounts.get("C");
+        if (cCount != null && cCount != 0) {
+            formula.append("C");
+            if (cCount != 1)
+                formula.append(cCount);
+        }
+        elementCounts.remove("C");
+        Integer hCount = elementCounts.get("H");
+        if (hCount != null && hCount != 0) {
+            formula.append("H");
+            if (hCount != 1)
+                formula.append(hCount);
+        }
+        elementCounts.remove("H");
+        String elements[] = elementCounts.keySet().toArray(new String[0]);
+        Arrays.sort(elements);
+        for (String element : elements) {
+            Integer count = elementCounts.get(element);
+            if (count != 0) {
+                formula.append(element);
+                if (count != 1)
+                    formula.append(count);
+            }
+        }
+        return formula.toString();
     }
 
 }

@@ -31,7 +31,7 @@ public class IonTypeUtilTest {
     public void test1() {
         IonType t = IonTypeUtil.createIonType("[3M+2H]2+");
         Assert.assertEquals(3, t.getNumberOfMolecules());
-        Assert.assertEquals("+2H", t.getAdductFormula());
+        Assert.assertEquals("H2", t.getAdductFormula());
         Assert.assertEquals(Integer.valueOf(2), t.getCharge());
         Assert.assertEquals(PolarityType.POSITIVE, t.getPolarity());
     }
@@ -40,7 +40,7 @@ public class IonTypeUtilTest {
     public void test2() {
         IonType t = IonTypeUtil.createIonType("[2M+B-2H]-");
         Assert.assertEquals(2, t.getNumberOfMolecules());
-        Assert.assertEquals("+B-2H", t.getAdductFormula());
+        Assert.assertEquals("H-2B", t.getAdductFormula());
         Assert.assertEquals(Integer.valueOf(1), t.getCharge());
         Assert.assertEquals(PolarityType.NEGATIVE, t.getPolarity());
     }
@@ -58,9 +58,18 @@ public class IonTypeUtilTest {
     public void test4() {
         IonType t = IonTypeUtil.createIonType("[M-5H]5-");
         Assert.assertEquals(1, t.getNumberOfMolecules());
-        Assert.assertEquals("-5H", t.getAdductFormula());
+        Assert.assertEquals("H-5", t.getAdductFormula());
         Assert.assertEquals(Integer.valueOf(5), t.getCharge());
         Assert.assertEquals(PolarityType.NEGATIVE, t.getPolarity());
+    }
+
+    @Test
+    public void test5() {
+        IonType t = IonTypeUtil.createIonType("[2M-H2O+NH4]+");
+        Assert.assertEquals(2, t.getNumberOfMolecules());
+        Assert.assertEquals("H2NO-1", t.getAdductFormula());
+        Assert.assertEquals(Integer.valueOf(1), t.getCharge());
+        Assert.assertEquals(PolarityType.POSITIVE, t.getPolarity());
     }
 
     @Test(expected = MSDKRuntimeException.class)
@@ -70,7 +79,7 @@ public class IonTypeUtilTest {
 
     @Test(expected = MSDKRuntimeException.class)
     public void testNonsense2() {
-        IonTypeUtil.createIonType("M+P");
+        IonTypeUtil.createIonType("M+N");
     }
 
 }
