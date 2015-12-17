@@ -26,15 +26,7 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
- * Represents a single MS scan in a raw data file. This interface extends
- * IMassSpectrum, therefore the actual data points can be accessed through the
- * inherited methods of IMassSpectrum.
- *
- * If the scan is not added to any file, its data points are stored in memory.
- * However, once the scan is added into a raw data file by calling
- * setRawDataFile(), its data points will be stored in a temporary file that
- * belongs to that RawDataFile. When RawDataFile.dispose() is called, the data
- * points are discarded so the MsScan instance cannot be used anymore.
+ * Represents a single chromatogram.
  */
 public interface Chromatogram extends Cloneable {
 
