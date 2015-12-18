@@ -12,5 +12,6 @@
 	<modules>
 		<module>msdk-features-filtering</module>
 		<module>msdk-features-row-filtering</module>
+		<module>msdk-features-alignment-matchaligner</module>
 	</modules>
 </project>

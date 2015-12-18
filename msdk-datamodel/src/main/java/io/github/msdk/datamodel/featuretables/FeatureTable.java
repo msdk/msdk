@@ -19,6 +19,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
+import com.google.common.collect.Range;
+
 /**
  * A feature table consists of a list of named columns, each with a specific
  * type for the values contained in it.
@@ -137,5 +139,14 @@ public interface FeatureTable {
      * Remove all data associated to this feature table.
      */
     void dispose();
+
+    /**
+     * Shortcut to return an immutable list of {@link FeatureTableRow}s found in this
+     * feature table with average m/z and RT values within the given ranges.
+     *
+     * @return the list of feature table rows.
+     */
+    List<FeatureTableRow> getRowsInsideRange(Range<Double> rtRange,
+            Range<Double> mzRange);
 
 }

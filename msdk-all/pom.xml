@@ -151,6 +151,12 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-features-alignment-matchaligner</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-spectra-spectrumtypedetection</artifactId>
 			<version>${project.version}</version>
 		</dependency>

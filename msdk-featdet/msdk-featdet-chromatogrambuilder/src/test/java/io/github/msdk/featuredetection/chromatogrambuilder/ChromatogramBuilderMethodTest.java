@@ -32,7 +32,6 @@ public class ChromatogramBuilderMethodTest {
 
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
-    @SuppressWarnings("null")
     @Test
     public void testOrbitrap() throws MSDKException {
 
@@ -59,7 +58,7 @@ public class ChromatogramBuilderMethodTest {
         Assert.assertTrue(detectedFeatures.size() > 10);
 
         // Testing a big timeSpan
-        minimumTimeSpan = 1000000; // 6s
+        minimumTimeSpan = 1000000;
         minimumHeight = 1E4;
         mzTolerance = new MZTolerance(0.001, 5.0);
         chromBuilder = new ChromatogramBuilderMethod(
@@ -69,9 +68,9 @@ public class ChromatogramBuilderMethodTest {
         Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
 
         // Nothing should be recognized as a chromatogram
-        Assert.assertEquals(detectedFeatures.size(),0.0, 0.0001);
-        
-        // Testing a big minimun height
+        Assert.assertEquals(0, detectedFeatures.size());
+
+        // Testing a big minimum height
         minimumTimeSpan = 6; // 6s
         minimumHeight = 10000000;
         mzTolerance = new MZTolerance(0.001, 5.0);
@@ -80,10 +79,10 @@ public class ChromatogramBuilderMethodTest {
                 mzTolerance);
         detectedFeatures = chromBuilder.execute();
         Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
-        
+
         // There are no so big picks in the data so there should be no chromatograms
-        Assert.assertEquals(detectedFeatures.size(),0.0, 0.0001);
-        
+        Assert.assertEquals(0, detectedFeatures.size());
+
         // Testing a small MZTolerance
         minimumTimeSpan = 6; // 6s
         minimumHeight = 1E4;
@@ -93,10 +92,9 @@ public class ChromatogramBuilderMethodTest {
                 mzTolerance);
         detectedFeatures = chromBuilder.execute();
         Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
-        
-        // Nothing should be connected in consecutive scans as the mz tolerance is 0
-        Assert.assertEquals(detectedFeatures.size(),0.0, 0.0001);
 
-    
+        // Nothing should be connected in consecutive scans as the mz tolerance is 0
+        Assert.assertEquals(0, detectedFeatures.size());
+
     }
 }
