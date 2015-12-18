@@ -15,6 +15,7 @@
 package io.github.msdk.featuredetection.chromatogramtofeaturetable;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,13 +36,12 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.msdk.util.FeatureTableUtil;
-import java.util.EnumMap;
 
 /**
  * This class adds a list of chromatograms to a feature table.
  */
-public class ChromatogramToFeatureTableMethod implements
-        MSDKMethod<FeatureTable> {
+public class ChromatogramToFeatureTableMethod
+        implements MSDKMethod<FeatureTable> {
 
     private final @Nonnull List<Chromatogram> chromatograms;
     private final @Nonnull FeatureTable featureTable;
@@ -100,15 +100,17 @@ public class ChromatogramToFeatureTableMethod implements
         FeatureTableColumn column;
         for (Chromatogram chromatogram : chromatograms) {
             lastID++;
-            FeatureTableRow newRow = MSDKObjectBuilder.getFeatureTableRow(
-                    featureTable, lastID);
+            FeatureTableRow newRow = MSDKObjectBuilder
+                    .getFeatureTableRow(featureTable, lastID);
 
             column = featureTable.getColumn(ColumnName.ID, null);
             newRow.setData(column, lastID);
 
-            column = featureTable.getColumn("Ion Annotation", null,
-                    IonAnnotation.class);
-            newRow.setData(column, chromatogram.getIonAnnotation());
+            if (chromatogram.getIonAnnotation() != null) {
+                column = featureTable.getColumn("Ion Annotation", null,
+                        IonAnnotation.class);
+                newRow.setData(column, chromatogram.getIonAnnotation());
+            }
 
             column = tableColumns.get(ColumnName.CHROMATOGRAM);
             newRow.setData(column, chromatogram);
@@ -239,8 +241,8 @@ public class ChromatogramToFeatureTableMethod implements
     @Override
     @Nullable
     public Float getFinishedPercentage() {
-        return totalChromatograms == 0 ? null : (float) processedChromatograms
-                / totalChromatograms;
+        return totalChromatograms == 0 ? null
+                : (float) processedChromatograms / totalChromatograms;
     }
 
     /** {@inheritDoc} */
