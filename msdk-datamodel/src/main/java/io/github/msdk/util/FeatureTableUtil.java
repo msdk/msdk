@@ -28,7 +28,9 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
- * <p>FeatureTableUtil class.</p>
+ * <p>
+ * FeatureTableUtil class.
+ * </p>
  *
  */
 public class FeatureTableUtil {
@@ -130,7 +132,10 @@ public class FeatureTableUtil {
      * @param sourceFeatureTableRow
      *            the source {@link FeatureTableRow} to copy the common values
      *            from.
-     * @param targetFeatureTableRow a {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} object.
+     * @param targetFeatureTableRow
+     *            a
+     *            {@link io.github.msdk.datamodel.featuretables.FeatureTableRow}
+     *            object.
      */
     public static void copyCommonValues(
             @Nonnull FeatureTableRow sourceFeatureTableRow,
@@ -141,12 +146,27 @@ public class FeatureTableUtil {
         List<FeatureTableColumn<?>> targetColumns = targetFeatureTableRow
                 .getFeatureTable().getColumns();
 
-        for (int i = 0; i < sourceColumns.size(); i++) {
-            FeatureTableColumn sourceColumn = sourceColumns.get(i);
-            FeatureTableColumn targetColumn = targetColumns.get(i);
+        for (FeatureTableColumn sourceColumn : sourceColumns) {
+
+            // Find target column
+            FeatureTableColumn targetColumn = null;
+            for (FeatureTableColumn column : targetColumns) {
+                boolean equalName = sourceColumn.getName()
+                        .equals(column.getName());
+                boolean equalSample = true;
+                if (sourceColumn.getSample() != null
+                        & column.getSample() != null)
+                    equalSample = sourceColumn.getSample().getName()
+                            .equals(column.getSample().getName());
+
+                if (equalName & equalSample) {
+                    targetColumn = column;
+                    continue;
+                }
+            }
 
             // Only add common values
-            if (sourceColumns.get(i).getSample() == null) {
+            if (sourceColumn.getSample() == null) {
                 targetFeatureTableRow.setData(targetColumn,
                         sourceFeatureTableRow.getData(sourceColumn));
             }
@@ -162,7 +182,10 @@ public class FeatureTableUtil {
      *            from.
      * @param sample
      *            the target {@link Sample}.
-     * @param targetFeatureTableRow a {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} object.
+     * @param targetFeatureTableRow
+     *            a
+     *            {@link io.github.msdk.datamodel.featuretables.FeatureTableRow}
+     *            object.
      */
     public static void copyFeatureValues(
             @Nonnull FeatureTableRow sourceFeatureTableRow,
@@ -174,13 +197,28 @@ public class FeatureTableUtil {
         List<FeatureTableColumn<?>> targetColumns = targetFeatureTableRow
                 .getFeatureTable().getColumns();
 
-        for (int i = 0; i < sourceColumns.size(); i++) {
-            FeatureTableColumn sourceColumn = sourceColumns.get(i);
-            FeatureTableColumn targetColumn = targetColumns.get(i);
+        for (FeatureTableColumn sourceColumn : sourceColumns) {
+
+            // Find target column
+            FeatureTableColumn targetColumn = null;
+            for (FeatureTableColumn column : targetColumns) {
+                boolean equalName = sourceColumn.getName()
+                        .equals(column.getName());
+                boolean equalSample = true;
+                if (sourceColumn.getSample() != null
+                        & column.getSample() != null)
+                    equalSample = sourceColumn.getSample().getName()
+                            .equals(column.getSample().getName());
+
+                if (equalName & equalSample) {
+                    targetColumn = column;
+                    continue;
+                }
+            }
 
             // Only add sample specific values
-            if (sourceColumns.get(i).getSample() != null) {
-                if (sourceColumns.get(i).getSample().equals(sample)) {
+            if (sourceColumn.getSample() != null) {
+                if (sourceColumn.getSample().equals(sample)) {
                     if (sourceFeatureTableRow.getData(sourceColumn) != null) {
                         targetFeatureTableRow.setData(targetColumn,
                                 sourceFeatureTableRow.getData(sourceColumn));
