@@ -173,8 +173,9 @@ public class MatchAlignerMethod implements MSDKMethod<FeatureTable> {
                         FeatureTableColumn<IonAnnotation> ionAnnotationColumn2 = result
                                 .getColumn("Ion Annotation", null,
                                         IonAnnotation.class);
-                        if (!row.getData(ionAnnotationColumn1).equals(
-                                candidateRow.getData(ionAnnotationColumn2)))
+                        if (row.getData(ionAnnotationColumn1)
+                                .compareTo(candidateRow
+                                        .getData(ionAnnotationColumn2)) != 0)
                             continue;
                     }
 
@@ -226,6 +227,9 @@ public class MatchAlignerMethod implements MSDKMethod<FeatureTable> {
                     targetRow = MSDKObjectBuilder.getFeatureTableRow(result,
                             newRowID);
                     result.addRow(targetRow);
+                    FeatureTableColumn<Integer> column = result
+                            .getColumn(ColumnName.ID, null);
+                    targetRow.setData(column, newRowID);
                     newRowID++;
                 }
 

@@ -148,27 +148,31 @@ public class FeatureTableUtil {
 
         for (FeatureTableColumn sourceColumn : sourceColumns) {
 
-            // Find target column
-            FeatureTableColumn targetColumn = null;
-            for (FeatureTableColumn column : targetColumns) {
-                boolean equalName = sourceColumn.getName()
-                        .equals(column.getName());
-                boolean equalSample = true;
-                if (sourceColumn.getSample() != null
-                        & column.getSample() != null)
-                    equalSample = sourceColumn.getSample().getName()
-                            .equals(column.getSample().getName());
+            // Ignore ID column
+            if (!sourceColumn.getName().equals(ColumnName.ID.getName())) {
 
-                if (equalName & equalSample) {
-                    targetColumn = column;
-                    continue;
+                // Find target column
+                FeatureTableColumn targetColumn = null;
+                for (FeatureTableColumn column : targetColumns) {
+                    boolean equalName = sourceColumn.getName()
+                            .equals(column.getName());
+                    boolean equalSample = true;
+                    if (sourceColumn.getSample() != null
+                            & column.getSample() != null)
+                        equalSample = sourceColumn.getSample().getName()
+                                .equals(column.getSample().getName());
+
+                    if (equalName & equalSample) {
+                        targetColumn = column;
+                        continue;
+                    }
                 }
-            }
 
-            // Only add common values
-            if (sourceColumn.getSample() == null) {
-                targetFeatureTableRow.setData(targetColumn,
-                        sourceFeatureTableRow.getData(sourceColumn));
+                // Only add common values
+                if (sourceColumn.getSample() == null) {
+                    targetFeatureTableRow.setData(targetColumn,
+                            sourceFeatureTableRow.getData(sourceColumn));
+                }
             }
         }
     }
