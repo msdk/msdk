@@ -19,15 +19,13 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.base.Preconditions;
+import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -43,12 +41,16 @@ class MzMLChromatogram implements Chromatogram {
     private final @Nullable Double mz;
     private final @Nonnull SeparationType separationType;
     private final @Nonnull List<IsolationInfo> isolations;
+    private final @Nonnull Integer numOfDataPoints;
+    private final Range<ChromatographyInfo> rtRange;
 
     MzMLChromatogram(@Nonnull MzMLRawDataFile dataFile,
             @Nonnull String chromatogramId, @Nonnull Integer chromatogramNumber,
             @Nonnull SeparationType separationType, @Nullable Double mz,
             @Nonnull ChromatogramType chromatogramType,
-            @Nonnull List<IsolationInfo> isolations) {
+            @Nonnull List<IsolationInfo> isolations,
+            @Nonnull Integer numOfDataPoints,
+            @Nonnull Range<ChromatographyInfo> rtRange) {
         this.dataFile = dataFile;
         this.chromatogramId = chromatogramId;
         this.chromatogramNumber = chromatogramNumber;
@@ -56,6 +58,8 @@ class MzMLChromatogram implements Chromatogram {
         this.mz = mz;
         this.chromatogramType = chromatogramType;
         this.isolations = isolations;
+        this.numOfDataPoints = numOfDataPoints;
+        this.rtRange = rtRange;
     }
 
     /** {@inheritDoc} */
@@ -81,24 +85,6 @@ class MzMLChromatogram implements Chromatogram {
 
     /** {@inheritDoc} */
     @Override
-    public void getDataPoints(
-            @Nonnull ChromatogramDataPointList dataPointList) {
-        try {
-            MzMLUnmarshaller parser = dataFile.getParser();
-            if (parser == null) {
-                throw new MSDKRuntimeException(
-                        "The raw data file object has been disposed");
-            }
-            uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram = parser
-                    .getChromatogramById(chromatogramId);
-            MzMLConverter.extractDataPoints(jmzChromatogram, dataPointList);
-        } catch (MzMLUnmarshallerException e) {
-            throw (new MSDKRuntimeException(e));
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
     @Nullable
     public Double getMz() {
         return mz;
@@ -120,24 +106,8 @@ class MzMLChromatogram implements Chromatogram {
 
     /** {@inheritDoc} */
     @Override
-    @Nonnull
-    public Chromatogram clone(@Nonnull DataPointStore newStore) {
-        Preconditions.checkNotNull(newStore);
-        Chromatogram newChromatogram = MSDKObjectBuilder.getChromatogram(
-                newStore, getChromatogramNumber(), getChromatogramType(),
-                getSeparationType());
-
-        final ChromatogramDataPointList dataPointList = MSDKObjectBuilder
-                .getChromatogramDataPointList();
-        getDataPoints(dataPointList);
-
-        final RawDataFile rawDataFile2 = getRawDataFile();
-        if (rawDataFile2 != null) {
-            newChromatogram.setRawDataFile(rawDataFile2);
-        }
-        newChromatogram.getIsolations().addAll(getIsolations());
-        newChromatogram.setDataPoints(dataPointList);
-        return newChromatogram;
+    public IonAnnotation getIonAnnotation() {
+        return null;
     }
 
     /*
@@ -165,8 +135,9 @@ class MzMLChromatogram implements Chromatogram {
 
     /** {@inheritDoc} */
     @Override
-    public void setDataPoints(
-            @Nonnull ChromatogramDataPointList newDataPoints) {
+    public void setDataPoints(@Nonnull ChromatographyInfo rtValues[],
+            @Nullable double mzValues[], @Nonnull float intensityValues[],
+            @Nonnull Integer size) {
         throw new UnsupportedOperationException();
     }
 
@@ -182,18 +153,88 @@ class MzMLChromatogram implements Chromatogram {
         throw new UnsupportedOperationException();
     }
 
-	/** {@inheritDoc} */
-	@Override
-	public void setIonAnnotation(@Nonnull IonAnnotation ionAnnotation) {
-		// TODO Auto-generated method stub
-		
-	}
+    /** {@inheritDoc} */
+    @Override
+    public void setIonAnnotation(@Nonnull IonAnnotation ionAnnotation) {
+        throw new UnsupportedOperationException();
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public IonAnnotation getIonAnnotation() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /** {@inheritDoc} */
+    @Override
+    @Nonnull
+    public Integer getNumberOfDataPoints() {
+        return numOfDataPoints;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Nonnull
+    public ChromatographyInfo[] getRetentionTimes() {
+        return getRetentionTimes(null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Nonnull
+    public ChromatographyInfo[] getRetentionTimes(
+            @Nullable ChromatographyInfo[] array) {
+        try {
+            MzMLUnmarshaller parser = dataFile.getParser();
+            if (parser == null) {
+                throw new MSDKRuntimeException(
+                        "The raw data file object has been disposed");
+            }
+            uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram = parser
+                    .getChromatogramById(chromatogramId);
+            return MzMLConverter.extractRtValues(jmzChromatogram, array);
+        } catch (MzMLUnmarshallerException e) {
+            throw (new MSDKRuntimeException(e));
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Nonnull
+    public float[] getIntensityValues() {
+        return getIntensityValues(null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Nonnull
+    public float[] getIntensityValues(@Nullable float[] array) {
+        try {
+            MzMLUnmarshaller parser = dataFile.getParser();
+            if (parser == null) {
+                throw new MSDKRuntimeException(
+                        "The raw data file object has been disposed");
+            }
+            uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram = parser
+                    .getChromatogramById(chromatogramId);
+            return MzMLConverter.extractIntensityValues(jmzChromatogram, array);
+        } catch (MzMLUnmarshallerException e) {
+            throw (new MSDKRuntimeException(e));
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Nullable
+    public double[] getMzValues() {
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Nullable
+    public double[] getMzValues(@Nullable double[] array) {
+        return null;
+    }
+
+    @Override
+    @Nullable
+    public Range<ChromatographyInfo> getRtRange() {
+        return rtRange;
+    }
 
 }

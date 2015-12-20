@@ -25,10 +25,8 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
@@ -118,71 +116,42 @@ class MzXMLConverter {
         return Collections.emptyList();
     }
 
-    static void extractDataPoints(Spectrum spectrum,
-            MsSpectrumDataPointList spectrumDataPoints) {
+    static @Nonnull double[] extractMzValues(Spectrum spectrum,
+            double[] array) {
 
         Map<Double, Double> jmzreaderPeakList = spectrum.getPeakList();
 
-        spectrumDataPoints.clear();
-
         // Allocate space for the data points
-        spectrumDataPoints.allocate(jmzreaderPeakList.size());
-        final double mzBuffer[] = spectrumDataPoints.getMzBuffer();
-        final float intensityBuffer[] = spectrumDataPoints.getIntensityBuffer();
+        if ((array == null) || (array.length < jmzreaderPeakList.size()))
+            array = new double[jmzreaderPeakList.size()];
 
         // Copy the actual data point values
         int newIndex = 0;
         for (Double mz : jmzreaderPeakList.keySet()) {
-            mzBuffer[newIndex] = mz.doubleValue();
-            intensityBuffer[newIndex] = jmzreaderPeakList.get(mz).floatValue();
+            array[newIndex] = mz.doubleValue();
             newIndex++;
         }
 
-        // Commit the changes
-        spectrumDataPoints.setSize(jmzreaderPeakList.size());
+        return array;
     }
 
-    static void extractDataPoints(Spectrum spectrum,
-            MsSpectrumDataPointList spectrumDataPoints,
-            @Nonnull Range<Double> mzRange,
-            @Nonnull Range<Float> intensityRange) {
+    static @Nonnull float[] extractIntensityValues(Spectrum spectrum,
+            float[] array) {
 
         Map<Double, Double> jmzreaderPeakList = spectrum.getPeakList();
 
-        spectrumDataPoints.clear();
-
-        // Find how many data points will pass the conditions
-        int numOfGoodDataPoints = 0;
-        for (Double mz : jmzreaderPeakList.keySet()) {
-            if (!mzRange.contains(mz.doubleValue()))
-                continue;
-            if (!intensityRange
-                    .contains(jmzreaderPeakList.get(mz).floatValue()))
-                continue;
-            numOfGoodDataPoints++;
-        }
-
         // Allocate space for the data points
-        spectrumDataPoints.allocate(numOfGoodDataPoints);
-        final double mzBuffer[] = spectrumDataPoints.getMzBuffer();
-        final float intensityBuffer[] = spectrumDataPoints.getIntensityBuffer();
+        if ((array == null) || (array.length < jmzreaderPeakList.size()))
+            array = new float[jmzreaderPeakList.size()];
 
         // Copy the actual data point values
         int newIndex = 0;
         for (Double mz : jmzreaderPeakList.keySet()) {
-            if (!mzRange.contains(mz.doubleValue()))
-                continue;
-            if (!intensityRange
-                    .contains(jmzreaderPeakList.get(mz).floatValue()))
-                continue;
-            mzBuffer[newIndex] = mz.doubleValue();
-            intensityBuffer[newIndex] = jmzreaderPeakList.get(mz).floatValue();
+            array[newIndex] = jmzreaderPeakList.get(mz).floatValue();
             newIndex++;
         }
 
-        // Commit the changes
-        spectrumDataPoints.setSize(numOfGoodDataPoints);
-
+        return array;
     }
 
 }

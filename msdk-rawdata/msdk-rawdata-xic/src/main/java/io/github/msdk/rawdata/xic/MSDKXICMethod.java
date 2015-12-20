@@ -26,16 +26,13 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.util.MsSpectrumUtil;
 
 /**
  * <p>
@@ -98,13 +95,8 @@ public class MSDKXICMethod implements MSDKMethod<Chromatogram> {
         // Create a new Chromatogram
         result = MSDKObjectBuilder.getChromatogram(store, 0, chromatogramType,
                 SeparationType.UNKNOWN);
-        ChromatogramDataPointList chrDataPoints = MSDKObjectBuilder
-                .getChromatogramDataPointList();
-        chrDataPoints.allocate(totalScans);
-        final ChromatographyInfo rtValues[] = chrDataPoints.getRtBuffer();
-        final float intensityValues[] = chrDataPoints.getIntensityBuffer();
-        MsSpectrumDataPointList msDataPoints = MSDKObjectBuilder
-                .getMsSpectrumDataPointList();
+        ChromatographyInfo rtValues[] = new ChromatographyInfo[10000];
+        float intensityValues[] = new float[10000];
 
         for (processedScans = 0; processedScans < totalScans; processedScans++) {
 
@@ -118,18 +110,16 @@ public class MSDKXICMethod implements MSDKMethod<Chromatogram> {
                         + scan.getScanNumber() + " has no chromatography data");
 
             Range<Float> all = Range.all();
-            scan.getDataPointsByMzAndIntensity(msDataPoints, mzRange, all);
+            // scan.getDataPointsByMzAndIntensity(msDataPoints, mzRange, all);
 
             switch (chromatogramType) {
             case BPC:
-                intensityValues[processedScans] = MsSpectrumUtil
-                        .getMaxIntensity(msDataPoints);
+                // intensityValues[processedScans] = MsSpectrumUtil.getMaxIntensity(msDataPoints);
                 break;
             case TIC:
             case XIC:
             case SIC:
-                intensityValues[processedScans] = MsSpectrumUtil
-                        .getTIC(msDataPoints);
+                // intensityValues[processedScans] = MsSpectrumUtil.getTIC(msDataPoints);
                 break;
             default:
                 throw new MSDKException(
@@ -138,8 +128,7 @@ public class MSDKXICMethod implements MSDKMethod<Chromatogram> {
 
         }
 
-        result.setDataPoints(chrDataPoints);
-
+        
         logger.info(
                 "Finished extracting XIC from file " + rawDataFile.getName());
         return result;

@@ -29,9 +29,7 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
 
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.identification.Search;
 import io.github.msdk.search.mona.pojo.Result;
 import io.github.msdk.search.mona.pojo.SimilaritySearchQuery;
@@ -135,13 +133,13 @@ public class MonaSearch implements Search, MonaConfiguration {
         //builds a standard mona spectra string ion:intensity ion:intensity
         StringBuffer spectraString = new StringBuffer();
 
-        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
-        compare.getDataPoints(dataPoints);
+        double mzValues[] = compare.getMzValues();
+        float intValues[] = compare.getIntensityValues();
         
-        for (int i = 0; i < dataPoints.getSize(); i++) {
-            spectraString.append(dataPoints.getMzBuffer()[i]);
+        for (int i = 0; i < mzValues.length; i++) {
+            spectraString.append(mzValues[i]);
             spectraString.append(":");
-            spectraString.append(dataPoints.getIntensityBuffer()[i]);
+            spectraString.append(intValues[i]);
             spectraString.append(" ");
         }
 

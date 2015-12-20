@@ -30,8 +30,6 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -42,7 +40,7 @@ import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
+import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionMethod;
 import io.github.msdk.util.MsSpectrumUtil;
 import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
@@ -64,9 +62,12 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
             parsedChromatograms;
 
     /**
-     * <p>Constructor for MzMLFileImportMethod.</p>
+     * <p>
+     * Constructor for MzMLFileImportMethod.
+     * </p>
      *
-     * @param sourceFile a {@link java.io.File} object.
+     * @param sourceFile
+     *            a {@link java.io.File} object.
      */
     public MzMLFileImportMethod(@Nonnull File sourceFile) {
         this.sourceFile = sourceFile;
@@ -89,8 +90,6 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
         List<MsFunction> msFunctionsList = new ArrayList<>();
         List<MsScan> scansList = new ArrayList<>();
         List<Chromatogram> chromatogramsList = new ArrayList<>();
-        MsSpectrumDataPointList spectrumDataPoints = MSDKObjectBuilder
-                .getMsSpectrumDataPointList();
 
         // Create the XMLBasedRawDataFile object
         newRawFile = new MzMLRawDataFile(sourceFile, parser, msFunctionsList,
@@ -104,6 +103,9 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                     .unmarshalCollectionFromXpath("/run/spectrumList/spectrum",
                             Spectrum.class);
 
+            double mzValues[] = new double[1000];
+            float intensityValues[] = new float[1000];
+
             while (iterator.hasNext()) {
 
                 if (canceled)
@@ -112,11 +114,11 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                 Spectrum spectrum = iterator.next();
 
                 // Ignore scans that are not MS, e.g. UV
-                if (! converter.isMsSpectrum(spectrum)) {
+                if (!converter.isMsSpectrum(spectrum)) {
                     parsedScans++;
                     continue;
                 }
-                
+
                 // Get spectrum ID
                 String spectrumId = spectrum.getId();
 
@@ -137,22 +139,27 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
                 // Extract the scan data points, so we can check the m/z range
                 // and detect the spectrum type (profile/centroid)
-                MzMLConverter.extractDataPoints(spectrum, spectrumDataPoints);
+                mzValues = MzMLConverter.extractMzValues(spectrum, mzValues);
+                intensityValues = MzMLConverter.extractIntensityValues(spectrum,
+                        intensityValues);
+                final Integer numOfDataPoints = spectrum
+                        .getDefaultArrayLength();
 
                 // Get the m/z range
-                Range<Double> mzRange = MsSpectrumUtil
-                        .getMzRange(spectrumDataPoints);
+                Range<Double> mzRange = MsSpectrumUtil.getMzRange(mzValues,
+                        numOfDataPoints);
 
                 // Get the instrument scanning range
                 Range<Double> scanningRange = null;
 
                 // Get the TIC
-                Float tic = MsSpectrumUtil.getTIC(spectrumDataPoints);
+                Float tic = MsSpectrumUtil.getTIC(intensityValues,
+                        numOfDataPoints);
 
                 // Auto-detect whether this scan is centroided
-                SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
-                        spectrumDataPoints);
-                MsSpectrumType spectrumType = detector.execute();
+                MsSpectrumType spectrumType = SpectrumTypeDetectionMethod
+                        .detectSpectrumType(mzValues, intensityValues,
+                                numOfDataPoints);
 
                 // Get the MS scan type
                 MsScanType scanType = converter.extractScanType(spectrum);
@@ -172,7 +179,8 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                 MzMLMsScan scan = new MzMLMsScan(newRawFile, spectrumId,
                         spectrumType, msFunction, chromData, scanType, mzRange,
                         scanningRange, scanNumber, scanDefinition, tic,
-                        polarity, sourceFragmentation, isolations);
+                        polarity, sourceFragmentation, isolations,
+                        numOfDataPoints);
 
                 // Add the scan to the final raw data file
                 scansList.add(scan);
@@ -187,6 +195,8 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                     .unmarshalCollectionFromXpath(
                             "/run/chromatogramList/chromatogram",
                             uk.ac.ebi.jmzml.model.mzml.Chromatogram.class);
+
+            ChromatographyInfo rtValues[] = new ChromatographyInfo[1000];
 
             while (iterator.hasNext()) {
 
@@ -213,6 +223,15 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                 // Get the chromatogram m/z value
                 Double mz = converter.extractMz(chromatogram);
 
+                Integer numOfDataPoints = chromatogram.getDefaultArrayLength();
+
+                rtValues = MzMLConverter.extractRtValues(chromatogram,
+                        rtValues);
+                Range<ChromatographyInfo> rtRange = null;
+                if (numOfDataPoints > 0)
+                    rtRange = Range.closed(rtValues[0],
+                            rtValues[numOfDataPoints - 1]);
+
                 // Get the in-source fragmentation
                 List<IsolationInfo> isolations = converter
                         .extractIsolations(chromatogram);
@@ -220,7 +239,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                 // Create a new Chromatogram instance
                 MzMLChromatogram chrom = new MzMLChromatogram(newRawFile,
                         chromatogramId, chromatogramNumber, separationType, mz,
-                        chromatogramType, isolations);
+                        chromatogramType, isolations, numOfDataPoints, rtRange);
 
                 // Add the chromatogram to the final raw data file
                 chromatogramsList.add(chrom);

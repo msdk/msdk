@@ -18,9 +18,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import com.google.common.primitives.Doubles;
 
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.util.MsSpectrumUtil;
 
 /**
@@ -110,21 +108,19 @@ public class SplashCalculator {
      * @param spectrum
      * @return
      */
-    private static String encodeSpectrum(MsSpectrumDataPointList dataPoints) {
-
-        double mzValues[] = dataPoints.getMzBuffer();
-        float intValues[] = dataPoints.getIntensityBuffer();
+    private static String encodeSpectrum(double mzValues[], float intValues[],
+            int size) {
 
         StringBuilder buffer = new StringBuilder();
 
         // build the first string
-        for (int i = 0; i < dataPoints.getSize(); i++) {
+        for (int i = 0; i < size; i++) {
             buffer.append(formatMZ(mzValues[i]));
             buffer.append(":");
             buffer.append(formatIntensity(intValues[i]));
 
             // add our separator
-            if (i < dataPoints.getSize() - 1) {
+            if (i < size - 1) {
                 buffer.append(ION_SEPERATOR);
             }
         }
@@ -140,30 +136,34 @@ public class SplashCalculator {
     /**
      * calculates our spectral hash
      *
-     * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     * @param spectrum
+     *            a {@link io.github.msdk.datamodel.msspectra.MsSpectrum}
+     *            object.
      * @return a {@link java.lang.String} object.
      */
     public static String calculateSplash(MsSpectrum spectrum) {
 
-        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
-                .getMsSpectrumDataPointList();
-        spectrum.getDataPoints(dataPoints);
-        return calculateSplash(dataPoints);
+        return calculateSplash(spectrum.getMzValues(),
+                spectrum.getIntensityValues(),
+                spectrum.getNumberOfDataPoints());
     }
 
     /**
-     * <p>calculateSplash.</p>
+     * <p>
+     * calculateSplash.
+     * </p>
      *
-     * @param dataPoints a {@link io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList} object.
      * @return a {@link java.lang.String} object.
+     * @param mzValues an array of double.
+     * @param intValues an array of float.
+     * @param size a {@link java.lang.Integer} object.
      */
-    public static String calculateSplash(MsSpectrumDataPointList dataPoints) {
+    public static String calculateSplash(double mzValues[], float intValues[],
+            Integer size) {
 
         // convert the spectrum to relative values
-        MsSpectrumDataPointList relativeDataPoints = MSDKObjectBuilder
-                .getMsSpectrumDataPointList();
-        relativeDataPoints.copyFrom(dataPoints);
-        MsSpectrumUtil.convertToRelative(dataPoints,
+        float relativeIntensities[] = intValues.clone();
+        MsSpectrumUtil.convertToRelative(relativeIntensities, size,
                 scalingOfRelativeIntensity);
 
         StringBuffer buffer = new StringBuffer();
@@ -173,11 +173,12 @@ public class SplashCalculator {
         buffer.append("-");
 
         // second block
-        buffer.append(calculateHistogramBlock(dataPoints));
+        buffer.append(
+                calculateHistogramBlock(mzValues, relativeIntensities, size));
         buffer.append("-");
 
         // third block
-        buffer.append(encodeSpectrum(dataPoints));
+        buffer.append(encodeSpectrum(mzValues, relativeIntensities, size));
 
         return buffer.toString();
     }
@@ -207,15 +208,13 @@ public class SplashCalculator {
      * @param spectrum
      * @return histogram
      */
-    private static String calculateHistogramBlock(
-            MsSpectrumDataPointList dataPoints) {
+    private static String calculateHistogramBlock(double mzValues[],
+            float intValues[], int size) {
 
         double binnedIons[] = new double[BINS];
 
-        double mzValues[] = dataPoints.getMzBuffer();
-        float intValues[] = dataPoints.getIntensityBuffer();
         // Bin ions
-        for (int i = 0; i < dataPoints.getSize(); i++) {
+        for (int i = 0; i < size; i++) {
             int index = ((int) (mzValues[i] / BIN_SIZE)) % BINS;
             binnedIons[index] += intValues[i];
         }

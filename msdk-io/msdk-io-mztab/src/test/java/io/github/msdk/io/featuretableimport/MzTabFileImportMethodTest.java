@@ -44,8 +44,7 @@ public class MzTabFileImportMethodTest {
     public void testMzTab_Sample() throws MSDKException {
 
         // Create the data structures
-        DataPointStore dataStore = DataPointStoreFactory
-                .getTmpFileDataPointStore();
+        DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
 
         // Import the file
         File inputFile = new File(TEST_DATA_PATH + "Sample-2.3.mzTab");
@@ -124,8 +123,7 @@ public class MzTabFileImportMethodTest {
     public void testMzTab_Lipidomics() throws MSDKException {
 
         // Create the data structures
-        DataPointStore dataStore = DataPointStoreFactory
-                .getTmpFileDataPointStore();
+        DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
 
         // Import the file
         File inputFile = new File(
@@ -159,10 +157,16 @@ public class MzTabFileImportMethodTest {
 
         // Annotation 27 - PC32:1
         FeatureTableRow row = featureTable.getRows().get(27);
+<<<<<<< Upstream, based on upstream/master
         FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = featureTable
                 .getColumn(ColumnName.IONANNOTATION, null);
         List<IonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
         IonAnnotation ionAnnotation = ionAnnotations.get(0);
+=======
+        FeatureTableColumn<IonAnnotation> column = featureTable
+                .getColumn("Ion Annotation", null, IonAnnotation.class);
+        IonAnnotation ionAnnotation = row.getData(column);
+>>>>>>> 68c368c Data model overhaul - removed data point lists
         Assert.assertEquals("PC32:1", ionAnnotation.getAnnotationId());
         IChemObjectBuilder builder = DefaultChemObjectBuilder.getInstance();
         IMolecularFormula cdkFormula = MolecularFormulaManipulator

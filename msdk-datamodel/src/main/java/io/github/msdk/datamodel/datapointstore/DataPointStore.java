@@ -16,9 +16,6 @@ package io.github.msdk.datamodel.datapointstore;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
-
 /**
  * Represents a storage mechanism for data points represented by DataPointList.
  * Each RawDataFile and FeatureTable will use this mechanism to store their data
@@ -33,49 +30,28 @@ public interface DataPointStore {
      * DataPointList is saved, so it can be safely discarded or reused after
      * calling this method.
      *
-     * @param dataPoints
-     *            Data points to store.
      * @return Storage ID for the newly stored data.
+     * @param data a {@link java.lang.Object} object.
+     * @param size a {@link java.lang.Integer} object.
      */
     @Nonnull
-    Object storeDataPoints(@Nonnull MsSpectrumDataPointList dataPoints);
+    Object storeData(@Nonnull Object data, @Nonnull Integer size);
 
     /**
-     * <p>storeDataPoints.</p>
-     *
-     * @param dataPoints a {@link io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList} object.
-     * @return a {@link java.lang.Object} object.
-     */
-    @Nonnull
-    Object storeDataPoints(@Nonnull ChromatogramDataPointList dataPoints);
-
-    /**
-     * Reads the data points associated with given ID into a given
-     * DataPointList. If the data point list does not have enough space, it is
-     * expanded accordingly.
-     *
-     * @param id
-     *            Storage id obtained by storeDataPoints()
-     * @param list
-     *            List to store the loaded data points
-     */
-    void readDataPoints(@Nonnull Object id, @Nonnull MsSpectrumDataPointList list);
-    
-    /**
-     * <p>readDataPoints.</p>
+     * <p>loadData.</p>
      *
      * @param id a {@link java.lang.Object} object.
-     * @param list a {@link io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList} object.
+     * @param array a {@link java.lang.Object} object.
      */
-    void readDataPoints(@Nonnull Object id, @Nonnull ChromatogramDataPointList list);
- 
+    void loadData(@Nonnull Object id, @Nonnull Object array);
+
     /**
      * Discards data points stored under given ID.
      *
      * @param id
      *            Storage id to discard
      */
-    void removeDataPoints(@Nonnull Object id);
+    void removeData(@Nonnull Object id);
 
     /**
      * Completely discards this data point store. After this method is called,

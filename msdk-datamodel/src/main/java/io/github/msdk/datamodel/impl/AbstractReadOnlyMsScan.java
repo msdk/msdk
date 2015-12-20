@@ -21,7 +21,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -33,7 +32,9 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
- * <p>Abstract AbstractReadOnlyMsScan class.</p>
+ * <p>
+ * Abstract AbstractReadOnlyMsScan class.
+ * </p>
  */
 public abstract class AbstractReadOnlyMsScan implements MsScan {
 
@@ -50,23 +51,44 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
     private final @Nonnull PolarityType polarity;
     private final @Nullable ActivationInfo sourceFragmentation;
     private final @Nonnull List<IsolationInfo> isolations;
+    private final @Nonnull Integer numOfDataPoints;
 
     /**
-     * <p>Constructor for AbstractReadOnlyMsScan.</p>
+     * <p>
+     * Constructor for AbstractReadOnlyMsScan.
+     * </p>
      *
-     * @param dataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-     * @param spectrumType a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType} object.
-     * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
-     * @param chromatographyInfo a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} object.
-     * @param scanType a {@link io.github.msdk.datamodel.rawdata.MsScanType} object.
-     * @param mzRange a {@link com.google.common.collect.Range} object.
-     * @param scanningRange a {@link com.google.common.collect.Range} object.
-     * @param scanNumber a {@link java.lang.Integer} object.
-     * @param scanDefinition a {@link java.lang.String} object.
-     * @param tic a {@link java.lang.Float} object.
-     * @param polarity a {@link io.github.msdk.datamodel.rawdata.PolarityType} object.
-     * @param sourceFragmentation a {@link io.github.msdk.datamodel.rawdata.ActivationInfo} object.
-     * @param isolations a {@link java.util.List} object.
+     * @param dataFile
+     *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param spectrumType
+     *            a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType}
+     *            object.
+     * @param msFunction
+     *            a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
+     * @param chromatographyInfo
+     *            a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *            object.
+     * @param scanType
+     *            a {@link io.github.msdk.datamodel.rawdata.MsScanType} object.
+     * @param mzRange
+     *            a {@link com.google.common.collect.Range} object.
+     * @param scanningRange
+     *            a {@link com.google.common.collect.Range} object.
+     * @param scanNumber
+     *            a {@link java.lang.Integer} object.
+     * @param scanDefinition
+     *            a {@link java.lang.String} object.
+     * @param tic
+     *            a {@link java.lang.Float} object.
+     * @param polarity
+     *            a {@link io.github.msdk.datamodel.rawdata.PolarityType}
+     *            object.
+     * @param sourceFragmentation
+     *            a {@link io.github.msdk.datamodel.rawdata.ActivationInfo}
+     *            object.
+     * @param isolations
+     *            a {@link java.util.List} object.
+     * @param numOfDataPoints a {@link java.lang.Integer} object.
      */
     public AbstractReadOnlyMsScan(@Nonnull RawDataFile dataFile,
             @Nonnull MsSpectrumType spectrumType,
@@ -77,7 +99,8 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
             @Nullable String scanDefinition, @Nonnull Float tic,
             @Nonnull PolarityType polarity,
             @Nullable ActivationInfo sourceFragmentation,
-            @Nonnull List<IsolationInfo> isolations) {
+            @Nonnull List<IsolationInfo> isolations,
+            @Nonnull Integer numOfDataPoints) {
         this.dataFile = dataFile;
         this.spectrumType = spectrumType;
         this.msFunction = msFunction;
@@ -91,6 +114,7 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
         this.polarity = polarity;
         this.sourceFragmentation = sourceFragmentation;
         this.isolations = isolations;
+        this.numOfDataPoints = numOfDataPoints;
     }
 
     /** {@inheritDoc} */
@@ -184,13 +208,21 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
         return isolations;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    @Nonnull
+    public Integer getNumberOfDataPoints() {
+        return numOfDataPoints;
+    }
+
     /*
      * Unsupported set-operations
      */
 
     /** {@inheritDoc} */
     @Override
-    public void setDataPoints(@Nonnull MsSpectrumDataPointList newDataPoints) {
+    public void setDataPoints(@Nonnull double mzValues[],
+            @Nonnull float intensityValues[], @Nonnull Integer size) {
         throw new UnsupportedOperationException();
     }
 
@@ -253,6 +285,20 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
     public void setSourceInducedFragmentation(
             @Nullable ActivationInfo newFragmentationInfo) {
         throw new UnsupportedOperationException();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Nonnull
+    public double[] getMzValues() {
+        return getMzValues(null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Nonnull
+    public float[] getIntensityValues() {
+        return getIntensityValues(null);
     }
 
 }

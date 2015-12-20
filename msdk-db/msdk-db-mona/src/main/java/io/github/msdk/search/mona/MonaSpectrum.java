@@ -43,11 +43,9 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.search.mona.pojo.Spectra;
@@ -72,10 +70,7 @@ public class MonaSpectrum
      */
     private MsSpectrumType spectrumType = MsSpectrumType.CENTROIDED;
 
-    /**
-     * storage of dataPoints
-     */
-    private MsSpectrumDataPointList dataPoints;
+
 
     /**
      * chemical structure of this compound
@@ -85,7 +80,8 @@ public class MonaSpectrum
     /**
      * build a new mona spectrum from the given record
      *
-     * @param monaRecord object.
+     * @param monaRecord
+     *            object.
      */
     public MonaSpectrum(Spectra monaRecord) {
         this.build(monaRecord);
@@ -94,8 +90,10 @@ public class MonaSpectrum
     /**
      * build a spectrum directly from an id, while accessing the mona repository
      *
-     * @param id a long.
-     * @throws java.io.IOException if any.
+     * @param id
+     *            a long.
+     * @throws java.io.IOException
+     *             if any.
      */
     public MonaSpectrum(long id) throws IOException {
 
@@ -112,7 +110,8 @@ public class MonaSpectrum
     /**
      * actual builder
      *
-     * @param monaRecord object.
+     * @param monaRecord
+     *            object.
      */
     protected void build(Spectra monaRecord) {
 
@@ -135,14 +134,13 @@ public class MonaSpectrum
     /**
      * adds a datapoint internally
      *
-     * @param mass a {@link java.lang.Double} object.
-     * @param intensity a {@link java.lang.Float} object.
+     * @param mass
+     *            a {@link java.lang.Double} object.
+     * @param intensity
+     *            a {@link java.lang.Float} object.
      */
     protected void addDataPoint(Double mass, Float intensity) {
-        if (this.dataPoints == null) {
-            this.dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
-        }
-        this.dataPoints.add(mass, intensity);
+    
     }
 
     /** {@inheritDoc} */
@@ -158,11 +156,6 @@ public class MonaSpectrum
         this.spectrumType = spectrumType;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setDataPoints(@Nonnull MsSpectrumDataPointList newDataPoints) {
-        this.dataPoints = newDataPoints;
-    }
 
     /** {@inheritDoc} */
     @Nullable
@@ -296,39 +289,66 @@ public class MonaSpectrum
 
     /** {@inheritDoc} */
     @Override
-    public void getDataPoints(@Nonnull MsSpectrumDataPointList dataPointList) {
-        dataPointList.copyFrom(this.dataPoints);
+    @Nonnull
+    public Integer getNumberOfDataPoints() {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getDataPointsByMzAndIntensity(
-            @Nonnull MsSpectrumDataPointList dataPointList,
-            @Nonnull Range<Double> mzRange,
-            @Nonnull Range<Float> intensityRange) {
-        MsSpectrumDataPointList selection = this.dataPoints
-                .selectDataPoints(mzRange, intensityRange);
-        dataPointList.copyFrom(selection);
+    @Nonnull
+    public double[] getMzValues() {
+        // TODO Auto-generated method stub
+        return new double[0];
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Nonnull
+    public double[] getMzValues(@Nullable double[] array) {
+        // TODO Auto-generated method stub
+        return new double[0];
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Nonnull
+    public float[] getIntensityValues() {
+        // TODO Auto-generated method stub
+        return new float[0];
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Nonnull
+    public float[] getIntensityValues(@Nullable float[] array) {
+        // TODO Auto-generated method stub
+        return new float[0];
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setDataPoints(@Nonnull double[] mzValues,
+            @Nonnull float[] intensityValues, @Nonnull Integer size) {
+        // TODO Auto-generated method stub
+        
     }
 
     /** {@inheritDoc} */
     @Override
     @Nonnull
     public Float getTIC() {
-        if (dataPoints == null)
-            return 0f;
-        else
-            return dataPoints.getTIC();
+        // TODO Auto-generated method stub
+        return 0f;
     }
 
     /** {@inheritDoc} */
     @Override
     @Nullable
     public Range<Double> getMzRange() {
-        if (dataPoints == null)
-            return null;
-        else
-            return dataPoints.getMzRange();
+        // TODO Auto-generated method stub
+        return null;
     }
 
 	@Override

@@ -28,8 +28,6 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.msspectra.MsIon;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -195,26 +193,20 @@ public class SimpleMsScanTest {
     @Test
     public void testTIC() throws MSDKException {
 
-        MsSpectrumDataPointList dpl = MSDKObjectBuilder
-                .getMsSpectrumDataPointList();
-
         double mzBuffer[] = new double[10000];
         float intBuffer[] = new float[10000];
         for (int i = 0; i < intBuffer.length; i++) {
             intBuffer[i] = 100f / i;
         }
-        dpl.setBuffers(mzBuffer, intBuffer, 9000);
 
         DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
         MsFunction msf = MSDKObjectBuilder.getMsFunction(1);
         MsScan scan = MSDKObjectBuilder.getMsScan(store, 1, msf);
-        scan.setDataPoints(dpl);
+        scan.setDataPoints(mzBuffer, intBuffer, 9000);
 
-        dpl = MSDKObjectBuilder.getMsSpectrumDataPointList();
-        scan.getDataPoints(dpl);
         float sumInt = 0;
-        for (MsIon ion : dpl) {
-            sumInt += ion.getIntensity();
+        for (int i = 0; i < 9000; i++) {
+            sumInt += intBuffer[i];
         }
         Assert.assertEquals(sumInt, scan.getTIC(), 0.00001);
 

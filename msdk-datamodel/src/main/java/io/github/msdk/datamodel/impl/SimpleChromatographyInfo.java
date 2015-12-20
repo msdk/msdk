@@ -14,6 +14,7 @@
 
 package io.github.msdk.datamodel.impl;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -21,11 +22,12 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 
 class SimpleChromatographyInfo implements ChromatographyInfo {
 
-    private Float retentionTime, secondaryRetentionTime, ionDriftTime;
+    private @Nonnull Float retentionTime;
+    private @Nullable Float secondaryRetentionTime, ionDriftTime;
 
     private @Nullable SeparationType separationType;
 
-    SimpleChromatographyInfo(@Nullable Float retentionTime,
+    SimpleChromatographyInfo(@Nonnull Float retentionTime,
             @Nullable Float secondaryRetentionTime,
             @Nullable Float ionDriftTime,
             @Nullable SeparationType separationType) {
@@ -37,7 +39,7 @@ class SimpleChromatographyInfo implements ChromatographyInfo {
 
     /** {@inheritDoc} */
     @Override
-    public Float getRetentionTime() {
+    public @Nonnull Float getRetentionTime() {
         return retentionTime;
     }
 
@@ -69,14 +71,15 @@ class SimpleChromatographyInfo implements ChromatographyInfo {
 
         // 2. Compare secondary retention time
         if (returnValue == 0) {
-            if (this.secondaryRetentionTime != null
+            final Float secondaryRetentionTime = this.secondaryRetentionTime;
+            if (secondaryRetentionTime != null
                     && o.getSecondaryRetentionTime() != null) {
-                returnValue = this.secondaryRetentionTime
+                returnValue = secondaryRetentionTime
                         .compareTo(o.getSecondaryRetentionTime());
-            } else if (this.secondaryRetentionTime == null
+            } else if (secondaryRetentionTime == null
                     && o.getSecondaryRetentionTime() == null) {
                 returnValue = 0;
-            } else if (this.secondaryRetentionTime == null) {
+            } else if (secondaryRetentionTime == null) {
                 returnValue = -1;
             } else {
                 returnValue = 1;
@@ -85,11 +88,12 @@ class SimpleChromatographyInfo implements ChromatographyInfo {
 
         // 3. Compare ion drift time
         if (returnValue == 0) {
-            if (this.ionDriftTime != null && o.getIonDriftTime() != null) {
-                returnValue = this.ionDriftTime.compareTo(o.getIonDriftTime());
-            } else if (this.ionDriftTime == null && o.getIonDriftTime() == null) {
+            final Float driftTime = this.ionDriftTime;
+            if (driftTime != null && o.getIonDriftTime() != null) {
+                returnValue = driftTime.compareTo(o.getIonDriftTime());
+            } else if (driftTime == null && o.getIonDriftTime() == null) {
                 returnValue = 0;
-            } else if (this.ionDriftTime == null) {
+            } else if (driftTime == null) {
                 returnValue = -1;
             } else {
                 returnValue = 1;

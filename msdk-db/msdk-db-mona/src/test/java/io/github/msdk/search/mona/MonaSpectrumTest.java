@@ -23,9 +23,7 @@ import org.junit.Test;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 
 public class MonaSpectrumTest {
 
@@ -50,20 +48,11 @@ public class MonaSpectrumTest {
     @Ignore("Ignored because MoNA API is throwing HTTP 500 error")
     @Test
     public void testGetDataPointsByMz() throws Exception {
-        MsSpectrumDataPointList list = MSDKObjectBuilder
-                .getMsSpectrumDataPointList();
-        spectrum.getDataPointsByMzAndIntensity(list, Range.singleton(303.2200),
-                (Range) Range.all());
-        assertTrue(list.getSize() == 1);
     }
 
     @Ignore("Ignored because MoNA API is throwing HTTP 500 error")
     @Test
     public void testGetDataPoints() throws Exception {
-        MsSpectrumDataPointList list = MSDKObjectBuilder
-                .getMsSpectrumDataPointList();
-        spectrum.getDataPoints(list);
-        assertTrue(list.getSize() == 5);
     }
 
     @Ignore("Ignored because MoNA API is throwing HTTP 500 error")

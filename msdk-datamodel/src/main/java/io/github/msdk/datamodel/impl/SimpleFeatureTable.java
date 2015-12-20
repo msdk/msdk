@@ -124,7 +124,7 @@ class SimpleFeatureTable implements FeatureTable {
     /** {@inheritDoc} */
     @Override
     public <DATATYPE> FeatureTableColumn<DATATYPE> getColumn(
-            ColumnName columnName, Sample sample) {
+            @Nonnull ColumnName columnName, Sample sample) {
         FeatureTableColumn<?> column = getColumn(columnName.getName(), sample,
                 columnName.getDataTypeClass());
         if (column != null) {

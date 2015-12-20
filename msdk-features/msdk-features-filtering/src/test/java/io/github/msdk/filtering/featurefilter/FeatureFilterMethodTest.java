@@ -11,6 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
+
 package io.github.msdk.filtering.featurefilter;
 
 import java.io.File;
@@ -35,8 +36,8 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.featuredetection.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
-import io.github.msdk.featuredetection.targeteddetection.TargetedDetectionMethod;
+import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
+import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.msdk.util.MZTolerance;
@@ -183,7 +184,7 @@ public class FeatureFilterMethodTest {
 
         // Create the data structures
         DataPointStore dataStore = DataPointStoreFactory
-                .getTmpFileDataPointStore();
+                .getTmpFileDataStore();
 
         // Import the file
         File inputFile = new File(TEST_DATA_PATH + "Sample-2.3.mzTab");
@@ -264,10 +265,17 @@ public class FeatureFilterMethodTest {
         // Row ID 176, ID: L-Arginine
         FeatureTableRow row = filteredTable.getRows().get(110);
         Assert.assertEquals(176, row.getId(), 0.0001);
+<<<<<<< Upstream, based on upstream/master
         FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = filteredTable
                 .getColumn(ColumnName.IONANNOTATION, null);
         List<IonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
         IonAnnotation ionAnnotation = ionAnnotations.get(0);
+=======
+        FeatureTableColumn<IonAnnotation> annotColumn = filteredTable
+        .getColumn("Ion Annotation", null, IonAnnotation.class);
+        Assert.assertNotNull(annotColumn);
+        IonAnnotation ionAnnotation = row.getData(annotColumn);
+>>>>>>> 68c368c Data model overhaul - removed data point lists
         Assert.assertEquals("L-Arginine", ionAnnotation.getDescription());
 
         // BLANK sample

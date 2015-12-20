@@ -28,10 +28,8 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -310,7 +308,6 @@ class MzMLConverter {
             }
         }
         if (precursorMz != null) {
-            @SuppressWarnings("null")
             IsolationInfo isolation = MSDKObjectBuilder.getIsolationInfo(
                     Range.singleton(precursorMz), null, precursorMz,
                     precursorCharge, null);
@@ -462,135 +459,114 @@ class MzMLConverter {
 
     }
 
-    static void extractDataPoints(Spectrum spectrum,
-            MsSpectrumDataPointList dataPointList) {
-
-        dataPointList.clear();
+    static double[] extractMzValues(Spectrum spectrum, double[] array) {
 
         BinaryDataArrayList dataList = spectrum.getBinaryDataArrayList();
 
         if ((dataList == null) || (dataList.getCount().equals(0)))
-            return;
+            return array;
 
         // Obtain the data arrays from spectrum
         final BinaryDataArray mzArray = dataList.getBinaryDataArray().get(0);
-        final BinaryDataArray intensityArray = dataList.getBinaryDataArray()
-                .get(1);
         final Number mzValues[] = mzArray.getBinaryDataAsNumberArray();
-        final Number intensityValues[] = intensityArray
-                .getBinaryDataAsNumberArray();
 
         // Allocate space for the data points
-        dataPointList.allocate(mzValues.length);
-        final double mzBuffer[] = dataPointList.getMzBuffer();
-        final float intensityBuffer[] = dataPointList.getIntensityBuffer();
+        if ((array == null) || (array.length < mzValues.length))
+            array = new double[mzValues.length];
 
         // Copy the actual data point values
         for (int i = 0; i < mzValues.length; i++) {
-            mzBuffer[i] = mzValues[i].doubleValue();
-            intensityBuffer[i] = intensityValues[i].floatValue();
+            array[i] = mzValues[i].doubleValue();
         }
 
-        // Commit the changes
-        dataPointList.setSize(mzValues.length);
-
+        return array;
     }
 
-    static void extractDataPoints(Spectrum spectrum,
-            MsSpectrumDataPointList dataPointList,
-            @Nonnull Range<Double> mzRange,
-            @Nonnull Range<Float> intensityRange) {
-
-        dataPointList.clear();
+    static float[] extractIntensityValues(Spectrum spectrum, float[] array) {
 
         BinaryDataArrayList dataList = spectrum.getBinaryDataArrayList();
 
         if ((dataList == null) || (dataList.getCount().equals(0)))
-            return;
+            return array;
 
         // Obtain the data arrays from spectrum
-        final BinaryDataArray mzArray = dataList.getBinaryDataArray().get(0);
         final BinaryDataArray intensityArray = dataList.getBinaryDataArray()
                 .get(1);
-        final Number mzValues[] = mzArray.getBinaryDataAsNumberArray();
         final Number intensityValues[] = intensityArray
                 .getBinaryDataAsNumberArray();
 
-        // Find how many data points will pass the conditions
-        int numOfGoodDataPoints = 0;
-        for (int i = 0; i < mzValues.length; i++) {
-            if (!mzRange.contains(mzValues[i].doubleValue()))
-                continue;
-            if (!intensityRange.contains(intensityValues[i].floatValue()))
-                continue;
-            numOfGoodDataPoints++;
-        }
-
-        if (numOfGoodDataPoints == 0)
-            return;
-
         // Allocate space for the data points
-        dataPointList.allocate(numOfGoodDataPoints);
-        final double mzBuffer[] = dataPointList.getMzBuffer();
-        final float intensityBuffer[] = dataPointList.getIntensityBuffer();
+        if ((array == null) || (array.length < intensityValues.length))
+            array = new float[intensityValues.length];
 
         // Copy the actual data point values
-        int newIndex = 0;
-        for (int i = 0; i < mzValues.length; i++) {
-            if (!mzRange.contains(mzValues[i].doubleValue()))
-                continue;
-            if (!intensityRange.contains(intensityValues[i].floatValue()))
-                continue;
-            mzBuffer[newIndex] = mzValues[i].doubleValue();
-            intensityBuffer[newIndex] = intensityValues[i].floatValue();
-            newIndex++;
+        for (int i = 0; i < intensityValues.length; i++) {
+            array[i] = intensityValues[i].floatValue();
         }
 
-        // Commit the changes
-        dataPointList.setSize(numOfGoodDataPoints);
+        return array;
 
     }
 
-    static void extractDataPoints(
+    static ChromatographyInfo[] extractRtValues(
             uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram,
-            ChromatogramDataPointList dataPointList) {
-
-        dataPointList.clear();
+            ChromatographyInfo[] array) {
 
         BinaryDataArrayList dataList = jmzChromatogram.getBinaryDataArrayList();
 
         if ((dataList == null) || (dataList.getCount().equals(0)))
-            return;
+            return new ChromatographyInfo[0];
 
-        // Obtain the data arrays from spectrum
+        // Obtain the data arrays from chromatogram
         final BinaryDataArray rtArray = dataList.getBinaryDataArray().get(0);
-        final BinaryDataArray intensityArray = dataList.getBinaryDataArray()
-                .get(1);
         final Number rtValues[] = rtArray.getBinaryDataAsNumberArray();
-        final Number intensityValues[] = intensityArray
-                .getBinaryDataAsNumberArray();
 
         // Allocate space for the data points
-        dataPointList.allocate(rtValues.length);
-        final ChromatographyInfo rtBuffer[] = dataPointList.getRtBuffer();
-        final float intensityBuffer[] = dataPointList.getIntensityBuffer();
+        if ((array == null) || (array.length < rtValues.length))
+            array = new ChromatographyInfo[rtValues.length];
 
         // Copy the actual data point values
         for (int i = 0; i < rtValues.length; i++) {
             final float rt = rtValues[i].floatValue();
-            final float intensity = intensityValues[i].floatValue();
             final ChromatographyInfo chromatographyInfo = MSDKObjectBuilder
                     .getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
-            rtBuffer[i] = chromatographyInfo;
-            intensityBuffer[i] = intensity;
+            array[i] = chromatographyInfo;
         }
 
-        // Commit the changes
-        dataPointList.setSize(rtValues.length);
+        return array;
+
     }
 
-    static @Nullable Double extractMz(
-            uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram) {
+    static float[] extractIntensityValues(
+            uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram,
+            float[] array) {
+
+        BinaryDataArrayList dataList = jmzChromatogram.getBinaryDataArrayList();
+
+        if ((dataList == null) || (dataList.getCount().equals(0)))
+            return array;
+
+        // Obtain the data arrays from chromatogram
+        final BinaryDataArray intensityArray = dataList.getBinaryDataArray()
+                .get(1);
+        final Number intensityValues[] = intensityArray
+                .getBinaryDataAsNumberArray();
+
+        // Allocate space for the data points
+        if ((array == null) || (array.length < intensityValues.length))
+            array = new float[intensityValues.length];
+
+        // Copy the actual data point values
+        for (int i = 0; i < intensityValues.length; i++) {
+            array[i] = intensityValues[i].floatValue();
+        }
+
+        return array;
+
+    }
+
+    @Nullable
+    Double extractMz(uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram) {
         return null;
     }
 

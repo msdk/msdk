@@ -14,6 +14,7 @@
 
 package io.github.msdk.datamodel.rawdata;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
@@ -34,7 +35,7 @@ public interface ChromatographyInfo extends Comparable<ChromatographyInfo> {
      *
      * @return Retention time in seconds, or null.
      */
-    @Nullable
+    @Nonnull
     Float getRetentionTime();
 
     /**

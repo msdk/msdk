@@ -22,14 +22,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.mzml.MzMLFileExportMethod;
-import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.util.MsSpectrumUtil;
 
 public class MzMLFileExportMethodTest {
@@ -40,8 +36,8 @@ public class MzMLFileExportMethodTest {
     public void test5peptideFT() throws MSDKException, IOException {
 
         // Create the data structures
-        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
-                .getMsSpectrumDataPointList();
+        double mzBuffer[] = new double[10000];
+        float intensityBuffer[] = new float[10000];
 
         // Import the file
         File inputFile = new File(TEST_DATA_PATH + "5peptideFT.mzML");
@@ -77,9 +73,11 @@ public class MzMLFileExportMethodTest {
         Assert.assertEquals(0.474f,
                 scan2.getChromatographyInfo().getRetentionTime(), 0.01f);
         Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
-        scan2.getDataPoints(dataPoints);
-        Assert.assertEquals(19800, dataPoints.getSize());
-        Float scan2maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);
+        mzBuffer = scan2.getMzValues(mzBuffer);
+        intensityBuffer = scan2.getIntensityValues(intensityBuffer);
+        Assert.assertEquals(19800, (int) scan2.getNumberOfDataPoints());
+        Float scan2maxInt = MsSpectrumUtil.getMaxIntensity(intensityBuffer,
+                scan2.getNumberOfDataPoints());
         Assert.assertEquals(1.8E5f, scan2maxInt, 1E4f);
 
         // 5th scan, #5
@@ -90,9 +88,11 @@ public class MzMLFileExportMethodTest {
         Assert.assertEquals(2.094f,
                 scan5.getChromatographyInfo().getRetentionTime(), 0.01f);
         Assert.assertEquals(PolarityType.POSITIVE, scan5.getPolarity());
-        scan5.getDataPoints(dataPoints);
-        Assert.assertEquals(837, dataPoints.getSize());
-        Float scan5maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);
+        mzBuffer = scan5.getMzValues(mzBuffer);
+        intensityBuffer = scan5.getIntensityValues(intensityBuffer);
+        Assert.assertEquals(837, (int) scan5.getNumberOfDataPoints());
+        Float scan5maxInt = MsSpectrumUtil.getMaxIntensity(intensityBuffer,
+                scan5.getNumberOfDataPoints());
         Assert.assertEquals(8.6E3f, scan5maxInt, 1E2f);
 
         // TODO: test chromatogram

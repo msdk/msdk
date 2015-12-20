@@ -157,7 +157,7 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-features-alignment-matchaligner</artifactId>
+			<artifactId>msdk-features-joinaligner</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

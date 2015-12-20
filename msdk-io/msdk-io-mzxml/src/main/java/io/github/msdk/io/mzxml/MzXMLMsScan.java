@@ -23,7 +23,6 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.impl.AbstractReadOnlyMsScan;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -49,11 +48,12 @@ class MzXMLMsScan extends AbstractReadOnlyMsScan {
             @Nullable String scanDefinition, @Nonnull Float tic,
             @Nonnull PolarityType polarity,
             @Nullable ActivationInfo sourceFragmentation,
-            @Nonnull List<IsolationInfo> isolations) {
+            @Nonnull List<IsolationInfo> isolations,
+            @Nonnull Integer numOfDataPoints) {
 
         super(dataFile, spectrumType, msFunction, chromatographyInfo, scanType,
                 mzRange, scanningRange, scanNumber, scanDefinition, tic,
-                polarity, sourceFragmentation, isolations);
+                polarity, sourceFragmentation, isolations, numOfDataPoints);
 
         this.dataFile = dataFile;
         this.spectrumId = spectrumId;
@@ -61,7 +61,7 @@ class MzXMLMsScan extends AbstractReadOnlyMsScan {
 
     /** {@inheritDoc} */
     @Override
-    public void getDataPoints(@Nonnull MsSpectrumDataPointList dataPoints) {
+    public @Nonnull double[] getMzValues(@Nullable double[] array) {
         try {
             MzXMLFile parser = dataFile.getParser();
             if (parser == null) {
@@ -69,7 +69,7 @@ class MzXMLMsScan extends AbstractReadOnlyMsScan {
                         "The raw data file object has been disposed");
             }
             Spectrum jmzSpectrum = parser.getSpectrumById(spectrumId);
-            MzXMLConverter.extractDataPoints(jmzSpectrum, dataPoints);
+            return MzXMLConverter.extractMzValues(jmzSpectrum, array);
         } catch (JMzReaderException e) {
             throw (new MSDKRuntimeException(e));
         }
@@ -77,10 +77,7 @@ class MzXMLMsScan extends AbstractReadOnlyMsScan {
 
     /** {@inheritDoc} */
     @Override
-    public void getDataPointsByMzAndIntensity(
-            @Nonnull MsSpectrumDataPointList dataPoints,
-            @Nonnull Range<Double> mzRange,
-            @Nonnull Range<Float> intensityRange) {
+    public @Nonnull float[] getIntensityValues(@Nullable float[] array) {
         try {
             MzXMLFile parser = dataFile.getParser();
             if (parser == null) {
@@ -88,8 +85,7 @@ class MzXMLMsScan extends AbstractReadOnlyMsScan {
                         "The raw data file object has been disposed");
             }
             Spectrum jmzSpectrum = parser.getSpectrumById(spectrumId);
-            MzXMLConverter.extractDataPoints(jmzSpectrum, dataPoints, mzRange,
-                    intensityRange);
+            return MzXMLConverter.extractIntensityValues(jmzSpectrum, array);
         } catch (JMzReaderException e) {
             throw (new MSDKRuntimeException(e));
         }

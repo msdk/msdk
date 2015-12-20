@@ -21,13 +21,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Range;
 
-import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -39,22 +39,35 @@ class SimpleChromatogram implements Chromatogram {
 
     private @Nonnull DataPointStore dataPointStore;
     private @Nullable RawDataFile dataFile;
-    private @Nonnull Integer chromatogramNumber;
+    private @Nonnull Integer chromatogramNumber, numOfDataPoints;
     private @Nonnull ChromatogramType chromatogramType;
     private @Nullable Double mz;
     private @Nonnull SeparationType separationType;
-    private Object dataStoreId = null;
+    private Object dataStoreRtId = null, dataStoreIntensityId = null,
+            dataStoreMzId = null;
     private @Nullable IonAnnotation ionAnnotation;
+    private Range<ChromatographyInfo> rtRange;
 
     private final @Nonnull List<IsolationInfo> isolations = new LinkedList<>();
 
     /**
-     * <p>Constructor for SimpleChromatogram.</p>
+     * <p>
+     * Constructor for SimpleChromatogram.
+     * </p>
      *
-     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
-     * @param chromatogramNumber a {@link java.lang.Integer} object.
-     * @param chromatogramType a {@link io.github.msdk.datamodel.chromatograms.ChromatogramType} object.
-     * @param separationType a {@link io.github.msdk.datamodel.rawdata.SeparationType} object.
+     * @param dataPointStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
+     * @param chromatogramNumber
+     *            a {@link java.lang.Integer} object.
+     * @param chromatogramType
+     *            a
+     *            {@link io.github.msdk.datamodel.chromatograms.ChromatogramType}
+     *            object.
+     * @param separationType
+     *            a {@link io.github.msdk.datamodel.rawdata.SeparationType}
+     *            object.
      */
     public SimpleChromatogram(@Nonnull DataPointStore dataPointStore,
             @Nonnull Integer chromatogramNumber,
@@ -65,6 +78,7 @@ class SimpleChromatogram implements Chromatogram {
         this.chromatogramNumber = chromatogramNumber;
         this.chromatogramType = chromatogramType;
         this.separationType = separationType;
+        this.numOfDataPoints = 0;
     }
 
     /** {@inheritDoc} */
@@ -109,24 +123,81 @@ class SimpleChromatogram implements Chromatogram {
 
     /** {@inheritDoc} */
     @Override
-    public void getDataPoints(
-            @Nonnull ChromatogramDataPointList dataPointList) {
-        final Object dataStoreIdCopy = dataStoreId;
-        if (dataStoreIdCopy == null)
-            throw (new MSDKRuntimeException("Missing data store ID"));
-        Preconditions.checkNotNull(dataPointStore);
-        Preconditions.checkNotNull(dataPointList);
-        dataPointStore.readDataPoints(dataStoreIdCopy, dataPointList);
+    public @Nonnull Integer getNumberOfDataPoints() {
+        return numOfDataPoints;
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("null")
-    synchronized public void setDataPoints(
-            @Nonnull ChromatogramDataPointList newDataPoints) {
-        Preconditions.checkNotNull(newDataPoints);
-        if (dataStoreId != null)
-            dataPointStore.removeDataPoints(dataStoreId);
-        dataStoreId = dataPointStore.storeDataPoints(newDataPoints);
+    @Override
+    public @Nonnull ChromatographyInfo[] getRetentionTimes() {
+        return getRetentionTimes(null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public @Nonnull ChromatographyInfo[] getRetentionTimes(
+            @Nullable ChromatographyInfo[] array) {
+        if ((array == null) || (array.length < numOfDataPoints))
+            array = new ChromatographyInfo[numOfDataPoints];
+        dataPointStore.loadData(dataStoreRtId, array);
+        return array;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public @Nonnull double[] getMzValues() {
+        return getMzValues(null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public @Nonnull double[] getMzValues(@Nullable double array[]) {
+        if ((array == null) || (array.length < numOfDataPoints))
+            array = new double[numOfDataPoints];
+        dataPointStore.loadData(dataStoreMzId, array);
+        return array;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public @Nonnull float[] getIntensityValues() {
+        return getIntensityValues(null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public @Nonnull float[] getIntensityValues(@Nullable float array[]) {
+        if ((array == null) || (array.length < numOfDataPoints))
+            array = new float[numOfDataPoints];
+        dataPointStore.loadData(dataStoreIntensityId, array);
+        return array;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public synchronized void setDataPoints(
+            @Nonnull ChromatographyInfo rtValues[], @Nullable double mzValues[],
+            @Nonnull float intensityValues[], @Nonnull Integer size) {
+
+        if (dataStoreRtId != null)
+            dataPointStore.removeData(dataStoreRtId);
+        if (dataStoreMzId != null)
+            dataPointStore.removeData(dataStoreMzId);
+        if (dataStoreIntensityId != null)
+            dataPointStore.removeData(dataStoreIntensityId);
+
+        dataStoreRtId = dataPointStore.storeData(rtValues, size);
+        if (mzValues != null)
+            dataStoreMzId = dataPointStore.storeData(mzValues, size);
+        else
+            dataStoreMzId = null;
+        dataStoreIntensityId = dataPointStore.storeData(intensityValues, size);
+        this.numOfDataPoints = size;
+
+        if (size > 0)
+            this.rtRange = Range.closed(rtValues[0], rtValues[size - 1]);
+        else
+            this.rtRange = null;
     }
 
     /** {@inheritDoc} */
@@ -151,28 +222,6 @@ class SimpleChromatogram implements Chromatogram {
 
     /** {@inheritDoc} */
     @Override
-    @Nonnull
-    public Chromatogram clone(@Nonnull DataPointStore newStore) {
-        Preconditions.checkNotNull(newStore);
-        Chromatogram newChromatogram = MSDKObjectBuilder.getChromatogram(
-                newStore, getChromatogramNumber(), getChromatogramType(),
-                getSeparationType());
-
-        final ChromatogramDataPointList dataPointList = MSDKObjectBuilder
-                .getChromatogramDataPointList();
-        getDataPoints(dataPointList);
-
-        final RawDataFile rawDataFile2 = getRawDataFile();
-        if (rawDataFile2 != null) {
-            newChromatogram.setRawDataFile(rawDataFile2);
-        }
-        newChromatogram.getIsolations().addAll(getIsolations());
-        newChromatogram.setDataPoints(dataPointList);
-        return newChromatogram;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     @Nullable
     public Double getMz() {
         return mz;
@@ -184,16 +233,22 @@ class SimpleChromatogram implements Chromatogram {
         this.mz = newMz;
     }
 
-	/** {@inheritDoc} */
-	@Override
-	public void setIonAnnotation(@Nonnull IonAnnotation ionAnnotation) {
-		this.ionAnnotation = ionAnnotation;
-	}
+    /** {@inheritDoc} */
+    @Override
+    public void setIonAnnotation(@Nonnull IonAnnotation ionAnnotation) {
+        this.ionAnnotation = ionAnnotation;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public IonAnnotation getIonAnnotation() {
-		return ionAnnotation;
-	}
+    /** {@inheritDoc} */
+    @Override
+    public IonAnnotation getIonAnnotation() {
+        return ionAnnotation;
+    }
+
+    @Override
+    @Nullable
+    public Range<ChromatographyInfo> getRtRange() {
+        return rtRange;
+    }
 
 }

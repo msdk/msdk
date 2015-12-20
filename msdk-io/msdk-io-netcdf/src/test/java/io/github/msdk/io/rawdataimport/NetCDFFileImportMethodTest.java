@@ -23,8 +23,6 @@ import org.junit.Test;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -40,10 +38,9 @@ public class NetCDFFileImportMethodTest {
     public void testWT15() throws MSDKException {
 
         // Create the data structures
-        DataPointStore dataStore = DataPointStoreFactory
-                .getTmpFileDataPointStore();
-        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
-                .getMsSpectrumDataPointList();
+        DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
+        double mzBuffer[] = new double[10000];
+        float intensityBuffer[] = new float[10000];
 
         // Import the file
         File inputFile = new File(TEST_DATA_PATH + "wt15.CDF");
@@ -66,9 +63,11 @@ public class NetCDFFileImportMethodTest {
         Assert.assertEquals(new Integer(1), scan3.getMsFunction().getMsLevel());
         Assert.assertEquals(2504.508f,
                 scan3.getChromatographyInfo().getRetentionTime(), 0.01f);
-        scan3.getDataPoints(dataPoints);
-        Assert.assertEquals(420, dataPoints.getSize());
-        Float scan3maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);
+        mzBuffer = scan3.getMzValues(mzBuffer);
+        intensityBuffer = scan3.getIntensityValues(intensityBuffer);
+        Assert.assertEquals(420, (int) scan3.getNumberOfDataPoints());
+        Float scan3maxInt = MsSpectrumUtil.getMaxIntensity(intensityBuffer,
+                scan3.getNumberOfDataPoints());
         Assert.assertEquals(4.5E4f, scan3maxInt, 1E3f);
 
         // 1278th scan, #1278
@@ -80,9 +79,11 @@ public class NetCDFFileImportMethodTest {
                 scan1278.getMsFunction().getMsLevel());
         Assert.assertEquals(4499.826f,
                 scan1278.getChromatographyInfo().getRetentionTime(), 0.01f);
-        scan1278.getDataPoints(dataPoints);
-        Assert.assertEquals(61, dataPoints.getSize());
-        Float scan1278maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);
+        mzBuffer = scan1278.getMzValues(mzBuffer);
+        intensityBuffer = scan1278.getIntensityValues(intensityBuffer);
+        Assert.assertEquals(61, (int) scan1278.getNumberOfDataPoints());
+        Float scan1278maxInt = MsSpectrumUtil.getMaxIntensity(intensityBuffer,
+                scan1278.getNumberOfDataPoints());
         Assert.assertEquals(4.0E3f, scan1278maxInt, 1E2f);
 
         rawFile.dispose();

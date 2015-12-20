@@ -14,7 +14,6 @@
 
 package io.github.msdk.io.mzdata;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -25,10 +24,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
@@ -37,7 +34,7 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
+import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionMethod;
 
 class MzDataSaxHandler extends DefaultHandler {
 
@@ -61,22 +58,27 @@ class MzDataSaxHandler extends DefaultHandler {
     private Double precursorMz;
     private Integer precursorCharge;
 
+    private double mzBuffer[] = new double[10000];
+    private float intensityBuffer[] = new float[10000];
     private int peaksCount = 0;
 
     /**
-     * <p>Constructor for MzDataSaxHandler.</p>
+     * <p>
+     * Constructor for MzDataSaxHandler.
+     * </p>
      *
-     * @param newRawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-     * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param newRawFile
+     *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param dataStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
      */
     public MzDataSaxHandler(RawDataFile newRawFile, DataPointStore dataStore) {
         this.newRawFile = newRawFile;
         this.dataStore = dataStore;
         charBuffer = new StringBuilder();
     }
-
-    private final MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
-            .getMsSpectrumDataPointList();
 
     /** {@inheritDoc} */
     public void startElement(String namespaceURI, String lName, String qName,
@@ -215,14 +217,8 @@ class MzDataSaxHandler extends DefaultHandler {
             spectrumInstrumentFlag = false;
 
             // Auto-detect whether this scan is centroided
-            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
-                    dataPoints);
-            MsSpectrumType spectrumType;
-            try {
-                spectrumType = detector.execute();
-            } catch (MSDKException e) {
-                throw (new SAXException(e));
-            }
+            MsSpectrumType spectrumType = SpectrumTypeDetectionMethod
+                    .detectSpectrumType(mzBuffer, intensityBuffer, peaksCount);
 
             // Create a new scan
             MsFunction msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
@@ -230,8 +226,7 @@ class MzDataSaxHandler extends DefaultHandler {
             MsScan newScan = MSDKObjectBuilder.getMsScan(dataStore, scanNumber,
                     msFunction);
 
-            newScan.setDataPoints(dataPoints);
-
+            newScan.setDataPoints(mzBuffer, intensityBuffer, peaksCount);
             newScan.setSpectrumType(spectrumType);
             newScan.setPolarity(polarity);
 
@@ -260,7 +255,9 @@ class MzDataSaxHandler extends DefaultHandler {
 
             mzArrayBinaryFlag = false;
 
-            dataPoints.allocate(peaksCount);
+            // Allocate space for the whole array
+            if (mzBuffer.length < peaksCount)
+                mzBuffer = new double[peaksCount * 2];
 
             byte[] peakBytes = Base64
                     .decodeBase64(charBuffer.toString().getBytes());
@@ -273,14 +270,12 @@ class MzDataSaxHandler extends DefaultHandler {
                 currentMzBytes = currentMzBytes.order(ByteOrder.LITTLE_ENDIAN);
             }
 
-            double mzBuffer[] = dataPoints.getMzBuffer();
             for (int i = 0; i < peaksCount; i++) {
                 if (precision == null || precision.equals("32"))
                     mzBuffer[i] = (double) currentMzBytes.getFloat();
                 else
                     mzBuffer[i] = currentMzBytes.getDouble();
             }
-            dataPoints.setSize(peaksCount);
 
         }
 
@@ -289,7 +284,9 @@ class MzDataSaxHandler extends DefaultHandler {
 
             intenArrayBinaryFlag = false;
 
-            dataPoints.allocate(peaksCount);
+            // Allocate space for the whole array
+            if (intensityBuffer.length < peaksCount)
+                intensityBuffer = new float[peaksCount * 2];
 
             byte[] peakBytes = Base64
                     .decodeBase64(charBuffer.toString().getBytes());
@@ -304,12 +301,12 @@ class MzDataSaxHandler extends DefaultHandler {
                         .order(ByteOrder.LITTLE_ENDIAN);
             }
 
-            float intBuffer[] = dataPoints.getIntensityBuffer();
             for (int i = 0; i < peaksCount; i++) {
                 if (precision == null || precision.equals("32"))
-                    intBuffer[i] = currentIntensityBytes.getFloat();
+                    intensityBuffer[i] = currentIntensityBytes.getFloat();
                 else
-                    intBuffer[i] = (float) currentIntensityBytes.getDouble();
+                    intensityBuffer[i] = (float) currentIntensityBytes
+                            .getDouble();
             }
         }
     }
@@ -328,9 +325,12 @@ class MzDataSaxHandler extends DefaultHandler {
     }
 
     /**
-     * <p>endDocument.</p>
+     * <p>
+     * endDocument.
+     * </p>
      *
-     * @throws org.xml.sax.SAXException if any.
+     * @throws org.xml.sax.SAXException
+     *             if any.
      */
     public void endDocument() throws SAXException {
         if (canceled)
@@ -338,7 +338,9 @@ class MzDataSaxHandler extends DefaultHandler {
     }
 
     /**
-     * <p>getFinishedPercentage.</p>
+     * <p>
+     * getFinishedPercentage.
+     * </p>
      *
      * @return a {@link java.lang.Float} object.
      */
@@ -350,7 +352,9 @@ class MzDataSaxHandler extends DefaultHandler {
     }
 
     /**
-     * <p>cancel.</p>
+     * <p>
+     * cancel.
+     * </p>
      */
     public void cancel() {
         this.canceled = true;

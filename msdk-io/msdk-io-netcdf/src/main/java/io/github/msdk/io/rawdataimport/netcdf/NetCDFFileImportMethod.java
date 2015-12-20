@@ -28,14 +28,13 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
+import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionMethod;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
@@ -45,7 +44,9 @@ import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 
 /**
- * <p>NetCDFFileImportMethod class.</p>
+ * <p>
+ * NetCDFFileImportMethod class.
+ * </p>
  */
 public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
@@ -72,14 +73,21 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     private double massValueScaleFactor = 1;
     private double intensityValueScaleFactor = 1;
 
-    private final @Nonnull MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
-            .getMsSpectrumDataPointList();
+    private double mzValues[] = new double[10000];
+    private float intensityValues[] = new float[10000];
+    private int numOfDataPoints;
 
     /**
-     * <p>Constructor for NetCDFFileImportMethod.</p>
+     * <p>
+     * Constructor for NetCDFFileImportMethod.
+     * </p>
      *
-     * @param sourceFile a {@link java.io.File} object.
-     * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param sourceFile
+     *            a {@link java.io.File} object.
+     * @param dataStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
      */
     public NetCDFFileImportMethod(@Nonnull File sourceFile,
             @Nonnull DataPointStore dataStore) {
@@ -152,7 +160,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
             logger.error("Could not find variable mass_values");
             throw (new MSDKException("Could not find variable mass_values"));
         }
-        assert(massValueVariable.getRank() == 1);
+        assert (massValueVariable.getRank() == 1);
 
         Attribute massScaleFacAttr = massValueVariable
                 .findAttribute("scale_factor");
@@ -167,7 +175,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
             throw (new MSDKException(
                     "Could not find variable intensity_values"));
         }
-        assert(intensityValueVariable.getRank() == 1);
+        assert (intensityValueVariable.getRank() == 1);
 
         Attribute intScaleFacAttr = intensityValueVariable
                 .findAttribute("scale_factor");
@@ -353,13 +361,12 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
                 msFunction);
 
         // Extract and store the data points
-        extractDataPoints(scanIndex, dataPoints);
-        scan.setDataPoints(dataPoints);
+        extractDataPoints(scanIndex);
+        scan.setDataPoints(mzValues, intensityValues, numOfDataPoints);
 
         // Auto-detect whether this scan is centroided
-        SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
-                scan);
-        MsSpectrumType spectrumType = detector.execute();
+        MsSpectrumType spectrumType = SpectrumTypeDetectionMethod
+                .detectSpectrumType(mzValues, intensityValues, numOfDataPoints);
         scan.setSpectrumType(spectrumType);
 
         // TODO set correct separation type from global netCDF file attributes
@@ -380,9 +387,8 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
      * @throws InvalidRangeException
      * @throws IOException
      */
-    private void extractDataPoints(int scanIndex,
-            MsSpectrumDataPointList dataPoints)
-                    throws IOException, InvalidRangeException {
+    private void extractDataPoints(int scanIndex)
+            throws IOException, InvalidRangeException {
 
         // Find the Index of mass and intensity values
         final int scanStartPosition[] = { scanStartPositions[scanIndex] };
@@ -396,25 +402,23 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
         final Index intensityValuesIndex = intensityValueArray.getIndex();
 
         // Get number of data points
-        final int arrayLength = massValueArray.getShape()[0];
+        numOfDataPoints = massValueArray.getShape()[0];
+
+        // Allocate space
+        if (mzValues.length < numOfDataPoints)
+            mzValues = new double[numOfDataPoints * 2];
+        if (intensityValues.length < numOfDataPoints)
+            intensityValues = new float[numOfDataPoints * 2];
 
         // Load the data points
-        dataPoints.clear();
-        dataPoints.allocate(arrayLength);
-        double mzValues[] = dataPoints.getMzBuffer();
-        float intValues[] = dataPoints.getIntensityBuffer();
-
-        for (int i = 0; i < arrayLength; i++) {
+        for (int i = 0; i < numOfDataPoints; i++) {
             final Index massIndex0 = massValuesIndex.set0(i);
             final Index intensityIndex0 = intensityValuesIndex.set0(i);
             mzValues[i] = massValueArray.getDouble(massIndex0)
                     * massValueScaleFactor;
-            intValues[i] = (float) (intensityValueArray
+            intensityValues[i] = (float) (intensityValueArray
                     .getDouble(intensityIndex0) * intensityValueScaleFactor);
         }
-
-        // Update the size of data point list
-        dataPoints.setSize(arrayLength);
 
     }
 

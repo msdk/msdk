@@ -218,6 +218,18 @@ public class FeatureTableUtil {
                     targetFeatureTableRow.setData(targetColumn,
                             sourceFeatureTableRow.getData(sourceColumn));
                 }
+
+                else {
+                    targetFeatureTableRow.setData(targetColumn, sourceFeatureTableRow.getData(sourceColumn));
+=======
+                // Only add common values
+                if (sourceColumn.getSample() == null) {
+                    final Object data = sourceFeatureTableRow
+                            .getData(sourceColumn);
+                    if (data != null)
+                        targetFeatureTableRow.setData(targetColumn, data);
+>>>>>>> 68c368c Data model overhaul - removed data point lists
+                }
             }
         }
     }
