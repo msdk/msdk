@@ -136,24 +136,29 @@ public class FeatureTableUtil {
      *            a
      *            {@link io.github.msdk.datamodel.featuretables.FeatureTableRow}
      *            object.
+     * @param combineData
+     *            a {@link java.lang.Boolean} object which specifies if data
+     *            will be added or replaced.
      */
     public static void copyCommonValues(
             @Nonnull FeatureTableRow sourceFeatureTableRow,
-            @Nonnull FeatureTableRow targetFeatureTableRow) {
+            @Nonnull FeatureTableRow targetFeatureTableRow,
+            @Nonnull Boolean combineData) {
 
         List<FeatureTableColumn<?>> sourceColumns = sourceFeatureTableRow
                 .getFeatureTable().getColumns();
         List<FeatureTableColumn<?>> targetColumns = targetFeatureTableRow
                 .getFeatureTable().getColumns();
 
-        for (FeatureTableColumn sourceColumn : sourceColumns) {
+        for (FeatureTableColumn<?> sourceColumn : sourceColumns) {
 
-            // Ignore ID column
-            if (!sourceColumn.getName().equals(ColumnName.ID.getName())) {
+            // Only add common values and ignore ID column
+            if (sourceColumn.getSample() == null
+                    & !sourceColumn.getName().equals(ColumnName.ID.getName())) {
 
                 // Find target column
                 FeatureTableColumn targetColumn = null;
-                for (FeatureTableColumn column : targetColumns) {
+                for (FeatureTableColumn<?> column : targetColumns) {
                     boolean equalName = sourceColumn.getName()
                             .equals(column.getName());
                     boolean equalSample = true;
@@ -168,11 +173,11 @@ public class FeatureTableUtil {
                     }
                 }
 
-                // Only add common values
-                if (sourceColumn.getSample() == null) {
-                    targetFeatureTableRow.setData(targetColumn,
-                            sourceFeatureTableRow.getData(sourceColumn));
-                }
+                /*
+                 * TODO: Handle combine option! (combineData)
+                 */
+                targetFeatureTableRow.setData(targetColumn,
+                        sourceFeatureTableRow.getData(sourceColumn));
             }
         }
     }
@@ -201,33 +206,33 @@ public class FeatureTableUtil {
         List<FeatureTableColumn<?>> targetColumns = targetFeatureTableRow
                 .getFeatureTable().getColumns();
 
-        for (FeatureTableColumn sourceColumn : sourceColumns) {
-
-            // Find target column
-            FeatureTableColumn targetColumn = null;
-            for (FeatureTableColumn column : targetColumns) {
-                boolean equalName = sourceColumn.getName()
-                        .equals(column.getName());
-                boolean equalSample = true;
-                if (sourceColumn.getSample() != null
-                        & column.getSample() != null)
-                    equalSample = sourceColumn.getSample().getName()
-                            .equals(column.getSample().getName());
-
-                if (equalName & equalSample) {
-                    targetColumn = column;
-                    continue;
-                }
-            }
+        for (FeatureTableColumn<?> sourceColumn : sourceColumns) {
 
             // Only add sample specific values
-            if (sourceColumn.getSample() != null) {
-                if (sourceColumn.getSample().equals(sample)) {
-                    if (sourceFeatureTableRow.getData(sourceColumn) != null) {
-                        targetFeatureTableRow.setData(targetColumn,
-                                sourceFeatureTableRow.getData(sourceColumn));
+            if (sourceColumn.getSample().equals(sample)) {
+
+                // Find target column
+                FeatureTableColumn targetColumn = null;
+                for (FeatureTableColumn<?> column : targetColumns) {
+                    boolean equalName = sourceColumn.getName()
+                            .equals(column.getName());
+                    boolean equalSample = true;
+                    if (sourceColumn.getSample() != null
+                            & column.getSample() != null)
+                        equalSample = sourceColumn.getSample().getName()
+                                .equals(column.getSample().getName());
+
+                    if (equalName & equalSample) {
+                        targetColumn = column;
+                        continue;
                     }
                 }
+
+                if (sourceFeatureTableRow.getData(sourceColumn) != null) {
+                    targetFeatureTableRow.setData(targetColumn,
+                            sourceFeatureTableRow.getData(sourceColumn));
+                }
+
             }
         }
     }
@@ -244,7 +249,7 @@ public class FeatureTableUtil {
     public static int getRowCount(FeatureTableRow featureTableRow) {
         int count = 0;
         FeatureTable featureTable = featureTableRow.getFeatureTable();
-        FeatureTableColumn column;
+        FeatureTableColumn<?> column;
         for (Sample sample : featureTable.getSamples()) {
             column = featureTable.getColumn(ColumnName.MZ, sample);
             if (column != null) {
@@ -282,7 +287,7 @@ public class FeatureTableUtil {
     public static Double getAverageFeatureDuration(
             FeatureTableRow featureTableRow) {
         FeatureTable featureTable = featureTableRow.getFeatureTable();
-        FeatureTableColumn column;
+        FeatureTableColumn<?> column;
         Double averageDuration = 0d;
         int sampleCount = 0;
 

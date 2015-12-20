@@ -283,7 +283,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 
 		// Create a new row with the common feature data
 		final FeatureTableRow newRow = MSDKObjectBuilder.getFeatureTableRow(result, row.getId());
-		FeatureTableUtil.copyCommonValues(row, newRow);
+		FeatureTableUtil.copyCommonValues(row, newRow, false);
 
 		// Copy the feature data for the samples
 		for (Sample sample : row.getFeatureTable().getSamples()) {

@@ -239,9 +239,8 @@ public class MatchAlignerMethod implements MSDKMethod<FeatureTable> {
                             sample);
                 }
 
-                // Add all common values from the original row to the aligned
-                // row
-                FeatureTableUtil.copyCommonValues(sourceRow, targetRow);
+                // Combine common values from the original row with the aligned row
+                FeatureTableUtil.copyCommonValues(sourceRow, targetRow, true);
 
                 processedFeatures++;
             }
