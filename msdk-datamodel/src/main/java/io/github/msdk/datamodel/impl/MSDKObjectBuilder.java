@@ -63,8 +63,9 @@ public class MSDKObjectBuilder {
             ColumnName.PPM.getName(), Double.class, null);
     private static final @Nonnull SimpleFeatureTableColumn<ChromatographyInfo> ChromatographyInfoFeatureTableColumn = new SimpleFeatureTableColumn<ChromatographyInfo>(
             "Chromatography Info", ChromatographyInfo.class, null);
-    private static final @Nonnull SimpleFeatureTableColumn<IonAnnotation> IonAnnotationFeatureTableColumn = new SimpleFeatureTableColumn<IonAnnotation>(
-            "Ion Annotation", IonAnnotation.class, null);
+    private static final @Nonnull SimpleFeatureTableColumn<List<IonAnnotation>> IonAnnotationFeatureTableColumn = new SimpleFeatureTableColumn<List<IonAnnotation>>(
+            "Ion Annotation",
+            (Class<List<IonAnnotation>>) (Class<?>) List.class, null);
     private static final @Nonnull SimpleFeatureTableColumn<Integer> ChargeFeatureTableColumn = new SimpleFeatureTableColumn<Integer>(
             ColumnName.CHARGE.getName(), Integer.class, null);
 
@@ -451,7 +452,7 @@ public class MSDKObjectBuilder {
      *         {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn}
      *         object.
      */
-    public static @Nonnull FeatureTableColumn<IonAnnotation> getIonAnnotationFeatureTableColumn() {
+    public static @Nonnull FeatureTableColumn<List<IonAnnotation>> getIonAnnotationFeatureTableColumn() {
         return IonAnnotationFeatureTableColumn;
     }
 

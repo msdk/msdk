@@ -114,14 +114,13 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 	}
 
 	/** {@inheritDoc} */
-	@SuppressWarnings("unchecked")
 	@Override
 	public FeatureTable execute() throws MSDKException {
 		// Total features
 		totalFeatures = featureTable.getRows().size() * featureTable.getSamples().size();
 
 		// Add columns
-		for (FeatureTableColumn column : featureTable.getColumns()) {
+		for (FeatureTableColumn<?> column : featureTable.getColumns()) {
 			result.addColumn(column);
 		}
 
@@ -135,7 +134,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 			// Loop through all samples for the feature
 			for (Sample sample : featureTable.getSamples()) {
 
-				FeatureTableColumn column;
+				FeatureTableColumn<?> column;
 				keepFeature[i] = true;
 
 				// Check Duration

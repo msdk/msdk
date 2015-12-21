@@ -27,6 +27,7 @@ import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
@@ -60,13 +61,15 @@ public class LocalDatabaseSearchMethodTest {
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
         // Verify that none of the features have an ion annotation
-        FeatureTableColumn<IonAnnotation> column = featureTable
-                .getColumn("Ion Annotation", null, IonAnnotation.class);
+        FeatureTableColumn<List<IonAnnotation>> column = featureTable
+                .getColumn(ColumnName.IONANNOTATION, null);
         int annotatedFeatures = 0;
         for (FeatureTableRow row : featureTable.getRows()) {
-            IonAnnotation ionAnnotation = row.getData(column);
-            if (ionAnnotation.getDescription() != null)
-                annotatedFeatures++;
+            List<IonAnnotation> ionAnnotations = row.getData(column);
+            for (IonAnnotation ionAnnotation : ionAnnotations) {
+                if (ionAnnotation.getDescription() != null)
+                    annotatedFeatures++;
+            }
         }
         Assert.assertEquals(0, annotatedFeatures);
 
@@ -163,19 +166,22 @@ public class LocalDatabaseSearchMethodTest {
         Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
         Assert.assertNotNull(featureTable);
 
-        // Verify that 7 of the features have an ion annotation
+        // Verify that 7 of the features has an ion annotation
         for (FeatureTableRow row : featureTable.getRows()) {
-            IonAnnotation ionAnnotation = row.getData(column);
-            if (ionAnnotation.getDescription() != null)
-                annotatedFeatures++;
+            ionAnnotations = row.getData(column);
+            for (IonAnnotation ionAnnotation : ionAnnotations) {
+                if (ionAnnotation.getDescription() != null)
+                    annotatedFeatures++;
+            }
         }
         Assert.assertEquals(7, annotatedFeatures);
 
         // Verify ion 2
-        FeatureTableColumn<IonAnnotation> ionAnnotationColumn = featureTable
-                .getColumn("Ion Annotation", null, IonAnnotation.class);
-        IonAnnotation ionAnnotation = featureTable.getRows().get(1)
-                .getData(ionAnnotationColumn);
+        FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = featureTable
+                .getColumn(ColumnName.IONANNOTATION, null);
+        ionAnnotations = featureTable.getRows().get(1).getData(ionAnnotationColumn);
+        Assert.assertEquals(1, ionAnnotations.size());
+        IonAnnotation ionAnnotation = ionAnnotations.get(0);
         Assert.assertEquals("3", ionAnnotation.getAnnotationId());
         Assert.assertEquals("HEPES", ionAnnotation.getDescription());
         Assert.assertEquals(239.1068954, ionAnnotation.getExpectedMz(), 0.0001);
@@ -183,15 +189,16 @@ public class LocalDatabaseSearchMethodTest {
         Assert.assertNull(ionType);
 
         // Verify ion 8
-        ionAnnotation = featureTable.getRows().get(7)
-                .getData(ionAnnotationColumn);
+        ionAnnotations = featureTable.getRows().get(7).getData(ionAnnotationColumn);
+        Assert.assertEquals(1, ionAnnotations.size());
+        ionAnnotation = ionAnnotations.get(0);
         Assert.assertEquals("2", ionAnnotation.getAnnotationId());
         Assert.assertEquals("Glutathione disulfide",
                 ionAnnotation.getDescription());
         Assert.assertEquals(613.1625235, ionAnnotation.getExpectedMz(), 0.0001);
         ionType = ionAnnotation.getIonType();
         Assert.assertNotNull(ionType);
-        Assert.assertEquals("NH4", ionType.getAdductFormula());
+        Assert.assertEquals("H4N", ionType.getAdductFormula());
         Assert.assertEquals("[M+NH4]+", ionType.getName());
         Assert.assertEquals(1, ionType.getNumberOfMolecules());
         Assert.assertEquals(PolarityType.POSITIVE, ionType.getPolarity());

@@ -84,7 +84,8 @@ public class MatchAlignerMethod implements MSDKMethod<FeatureTable> {
      *            a {@link java.lang.Boolean} object.
      * @param featureTableName
      *            a {@link java.lang.String} object.
-     * @param rtTolerance a {@link io.github.msdk.util.RTTolerance} object.
+     * @param rtTolerance
+     *            a {@link io.github.msdk.util.RTTolerance} object.
      */
     public MatchAlignerMethod(@Nonnull List<FeatureTable> featureTables,
             @Nonnull DataPointStore dataStore, @Nonnull MZTolerance mzTolerance,
@@ -163,16 +164,28 @@ public class MatchAlignerMethod implements MSDKMethod<FeatureTable> {
 
                     // Check ion annotation
                     if (requireSameAnnotation) {
-                        FeatureTableColumn<IonAnnotation> ionAnnotationColumn1 = featureTable
-                                .getColumn("Ion Annotation", null,
-                                        IonAnnotation.class);
-                        FeatureTableColumn<IonAnnotation> ionAnnotationColumn2 = result
-                                .getColumn("Ion Annotation", null,
-                                        IonAnnotation.class);
-                        if (row.getData(ionAnnotationColumn1)
-                                .compareTo(candidateRow
-                                        .getData(ionAnnotationColumn2)) != 0)
+                        FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn1 = featureTable
+                                .getColumn(ColumnName.IONANNOTATION, null);
+                        FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn2 = result
+                                .getColumn(ColumnName.IONANNOTATION, null);
+                        List<IonAnnotation> ionAnnotations1 = row
+                                .getData(ionAnnotationColumn1);
+                        List<IonAnnotation> ionAnnotations2 = candidateRow
+                                .getData(ionAnnotationColumn2);
+
+                        // Check that all ion annotations in first row are in
+                        // the candidate row
+                        boolean equalIons = false;
+                        for (IonAnnotation ionAnnotation : ionAnnotations1) {
+                            for (IonAnnotation targetIonAnnotation : ionAnnotations2) {
+                                if (targetIonAnnotation
+                                        .compareTo(ionAnnotation) == 0)
+                                    equalIons = true;
+                            }
+                        }
+                        if (!equalIons)
                             continue;
+
                     }
 
                     // Calculate score
@@ -235,7 +248,8 @@ public class MatchAlignerMethod implements MSDKMethod<FeatureTable> {
                             sample);
                 }
 
-                // Combine common values from the original row with the aligned row
+                // Combine common values from the original row with the aligned
+                // row
                 FeatureTableUtil.copyCommonValues(sourceRow, targetRow, true);
 
                 processedFeatures++;
