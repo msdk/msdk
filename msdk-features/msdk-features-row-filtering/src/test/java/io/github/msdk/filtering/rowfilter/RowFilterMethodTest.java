@@ -28,6 +28,7 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
@@ -153,7 +154,7 @@ public class RowFilterMethodTest {
 		minCount = 2;
 
 		// 3. Filter the features
-		filterMethod = new RowFilterMethod(filteredTable, dataStore, nameSuffix, filterByMz, filterByRt,
+		filterMethod = new RowFilterMethod(featureTable, dataStore, nameSuffix, filterByMz, filterByRt,
 				filterByDuration, filterByCount, filterByIsotopes, filterByIonAnnotation, requireAnnotation, mzRange,
 				rtRange, durationRange, minCount, minIsotopes, ionAnnotation, removeDuplicates, duplicateMzTolerance,
 				duplicateRtTolerance, duplicateRequireSameID);

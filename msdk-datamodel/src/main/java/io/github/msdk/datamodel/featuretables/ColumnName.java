@@ -13,9 +13,12 @@
  */
 package io.github.msdk.datamodel.featuretables;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
@@ -25,6 +28,7 @@ public enum ColumnName {
 
     ID("Id", Integer.class),
     GROUPID("Group ID", Integer.class),
+    IONANNOTATION("Ion Annotation", (Class<List<IonAnnotation>>) (Class<?>) List.class),
     MZ("m/z", Double.class),
     PPM("ppm", Double.class),
     RT("RT", ChromatographyInfo.class),

@@ -95,9 +95,8 @@ public class FeatureFilterMethodTest {
         TargetedDetectionMethod chromBuilder = new TargetedDetectionMethod(
                 ionAnnotations, rawFile, dataStore, mzTolerance, rtTolerance,
                 intensityTolerance, noiseLevel);
-        final List<Chromatogram> detectedChromatograms = chromBuilder.execute();
+        final List<Chromatogram> chromatograms = chromBuilder.execute();
         Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
-        List<Chromatogram> chromatograms = chromBuilder.getResult();
         Assert.assertNotNull(chromatograms);
         Assert.assertEquals(3, chromatograms.size());
 
@@ -265,17 +264,22 @@ public class FeatureFilterMethodTest {
         // Row ID 176, ID: L-Arginine
         FeatureTableRow row = filteredTable.getRows().get(110);
         Assert.assertEquals(176, row.getId(), 0.0001);
-        IonAnnotation ionAnnotation = row.getData(filteredTable
-                .getColumn("Ion Annotation", null, IonAnnotation.class));
+        FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = filteredTable
+                .getColumn(ColumnName.IONANNOTATION, null);
+        List<IonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
+        IonAnnotation ionAnnotation = ionAnnotations.get(0);
         Assert.assertEquals("L-Arginine", ionAnnotation.getDescription());
+
         // BLANK sample
         Sample sample = filteredTable.getSamples().get(0);
-        FeatureTableColumn column = filteredTable.getColumn(ColumnName.AREA, sample);
-        Assert.assertNull(row.getData(column));
+        FeatureTableColumn<Double> areaColumn = filteredTable.getColumn(ColumnName.AREA,
+                sample);
+        Assert.assertNull(row.getData(areaColumn));
+
         // 26C sample 1
         sample = filteredTable.getSamples().get(1);
-        column = filteredTable.getColumn(ColumnName.AREA, sample);
-        Assert.assertEquals(2.559630988648635E8, row.getData(column));
+        areaColumn = filteredTable.getColumn(ColumnName.AREA, sample);
+        Assert.assertEquals(2.559630988648635E8, row.getData(areaColumn), 0.00001);
 
     }
 

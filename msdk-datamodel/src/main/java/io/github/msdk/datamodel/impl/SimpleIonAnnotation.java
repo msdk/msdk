@@ -16,6 +16,7 @@ package io.github.msdk.datamodel.impl;
 
 import java.net.URL;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.openscience.cdk.interfaces.IAtomContainer;
@@ -168,8 +169,8 @@ class SimpleIonAnnotation implements IonAnnotation {
         if (returnValue == 0) {
             if (thisAnnotationId != null && i.getAnnotationId() != null) {
                 returnValue = thisAnnotationId.compareTo(i.getAnnotationId());
-            } else
-                if (thisAnnotationId == null && i.getAnnotationId() == null) {
+            } else if (thisAnnotationId == null
+                    && i.getAnnotationId() == null) {
                 returnValue = 0;
             } else if (thisAnnotationId == null) {
                 returnValue = 1;
@@ -193,5 +194,17 @@ class SimpleIonAnnotation implements IonAnnotation {
     public void setChromatographyInfo(
             @Nullable ChromatographyInfo chromatographyInfo) {
         this.chromatographyInfo = chromatographyInfo;
+    }
+
+    @Override
+    @Nonnull
+    public Boolean isNA() {
+        if (this.chemicalStructure == null & this.formula == null
+                & this.ionType == null & this.expectedMz == null
+                & this.description == null & (this.annotationId == null || this.annotationId == "")
+                & this.accessionURL == null & this.chromatographyInfo == null)
+            return true;
+        else
+            return false;
     }
 }

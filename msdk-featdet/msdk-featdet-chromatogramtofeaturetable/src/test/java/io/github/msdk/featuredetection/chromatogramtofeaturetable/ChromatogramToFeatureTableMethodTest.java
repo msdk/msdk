@@ -11,6 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
+
 package io.github.msdk.featuredetection.chromatogramtofeaturetable;
 
 import java.io.File;
@@ -43,7 +44,6 @@ public class ChromatogramToFeatureTableMethodTest {
 
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
-    @SuppressWarnings({ "unchecked", "null" })
     @Test
     public void testOrbitrap() throws MSDKException {
 

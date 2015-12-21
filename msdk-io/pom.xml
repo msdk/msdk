@@ -20,5 +20,6 @@
 		<module>msdk-io-nativeformats</module>
 		<module>msdk-io-fileimport</module>
 		<module>msdk-io-chromatof</module>
+		<module>msdk-io-csv</module>
 	</modules>
 </project>

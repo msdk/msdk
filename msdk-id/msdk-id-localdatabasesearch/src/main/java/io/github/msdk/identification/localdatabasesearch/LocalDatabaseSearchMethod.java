@@ -23,9 +23,11 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
@@ -74,8 +76,8 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
     public Void execute() throws MSDKException {
 
         totalFeatures = featureTable.getRows().size();
-        FeatureTableColumn<IonAnnotation> ionAnnotationColumn = featureTable
-                .getColumn("Ion Annotation", null, IonAnnotation.class);
+        FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = featureTable
+                .getColumn(ColumnName.IONANNOTATION, null);
 
         // Loop through all features in the feature table
         for (FeatureTableRow row : featureTable.getRows()) {
@@ -84,6 +86,7 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
             Range<Double> mzRange = mzTolerance.getToleranceRange(row.getMz());
             Range<Double> rtRange = rtTolerance.getToleranceRange(
                     row.getChromatographyInfo().getRetentionTime());
+            List<IonAnnotation> rowIonAnnotations = row.getData(ionAnnotationColumn);
 
             // Loop through all ion annotations from the local database
             for (IonAnnotation ionAnnotation : ionAnnotations) {
@@ -96,12 +99,20 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
                 final boolean mzMatch = mzRange.contains(ionMz);
                 final boolean rtMatch = rtRange.contains(ionRt);
 
-                // If match, add the ion annotation to the feature
+                // If match, add the ion annotation to the list
                 if (mzMatch && rtMatch) {
-                    row.setData(ionAnnotationColumn, ionAnnotation);
+                    // Is first ion annotation is empty then remove it
+                    IonAnnotation firstionAnnotation = rowIonAnnotations.get(0);
+                    if (firstionAnnotation.isNA())
+                        rowIonAnnotations.remove(0);
+
+                    rowIonAnnotations.add(ionAnnotation);
                 }
 
             }
+
+            // Update the ion annotations of the feature
+            row.setData(ionAnnotationColumn, rowIonAnnotations);
 
             if (canceled)
                 return null;

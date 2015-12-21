@@ -16,6 +16,7 @@ package io.github.msdk.datamodel.ionannotations;
 
 import java.net.URL;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.openscience.cdk.interfaces.IAtomContainer;
@@ -170,4 +171,11 @@ public interface IonAnnotation extends Comparable<IonAnnotation> {
      */
     void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo);
 
+    /**
+     * <p>isNA.</p>
+     *
+     * @return True if no data is associated to this annotation.
+     */
+    @Nonnull
+    Boolean isNA();
 }

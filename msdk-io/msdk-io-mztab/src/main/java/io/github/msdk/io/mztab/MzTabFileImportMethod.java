@@ -19,6 +19,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
@@ -86,7 +87,6 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("null")
     @Override
     public FeatureTable execute() throws MSDKException {
 
@@ -166,7 +166,6 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
         this.canceled = true;
     }
 
-    @SuppressWarnings("null")
     private void addColumns(@Nonnull FeatureTable featureTable,
             @Nonnull MZTabFile mzTabFile) {
         // Common columns
@@ -176,7 +175,7 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
                 .getMzFeatureTableColumn();
         FeatureTableColumn<ChromatographyInfo> chromatographyInfoColumn = MSDKObjectBuilder
                 .getChromatographyInfoFeatureTableColumn();
-        FeatureTableColumn<IonAnnotation> ionAnnotationColumn = MSDKObjectBuilder
+        FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = MSDKObjectBuilder
                 .getIonAnnotationFeatureTableColumn();
         FeatureTableColumn<Integer> chargeColumn = MSDKObjectBuilder
                 .getChargeFeatureTableColumn();
@@ -231,7 +230,7 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
         }
     }
 
-    @SuppressWarnings({ "unchecked", "null" })
+    @SuppressWarnings({ "unchecked" })
     private void addRows(@Nonnull FeatureTable featureTable,
             @Nonnull MZTabFile mzTabFile) {
 
@@ -321,9 +320,12 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
             currentRow.setData(column, chromatographyInfo);
 
             // Common column: Ion Annotation
-            column = featureTable.getColumn("Ion Annotation", null,
-                    IonAnnotation.class);
-            currentRow.setData(column, ionAnnotation);
+            column = featureTable.getColumn(ColumnName.IONANNOTATION, null);
+            List<IonAnnotation> ionAnnotations = currentRow.getData(column);
+            if (ionAnnotations == null)
+            	ionAnnotations = new ArrayList<IonAnnotation>();
+            ionAnnotations.add(ionAnnotation);
+            currentRow.setData(column, ionAnnotations);
 
             // Common column: Charge
             column = featureTable.getColumn(ColumnName.CHARGE, null);
@@ -398,7 +400,6 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
     }
 
     @Nullable
-    @SuppressWarnings("null")
     private FeatureTableColumn<?> getFeatureTableColumn(
             @Nonnull String mzTabColumnName, @Nonnull Sample sample,
             int msRunKey) {

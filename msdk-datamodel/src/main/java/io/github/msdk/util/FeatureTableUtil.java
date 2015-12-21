@@ -13,6 +13,7 @@
  */
 package io.github.msdk.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -88,20 +89,29 @@ public class FeatureTableUtil {
             row.setData(mzColumn, newMz);
 
             // Update ppm
-            FeatureTableColumn<IonAnnotation> ionAnnotationColumn = featureTable
-                    .getColumn("Ion Annotation", null, IonAnnotation.class);
+            FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = featureTable
+                    .getColumn(ColumnName.IONANNOTATION, null);
             if (ionAnnotationColumn != null) {
-                IonAnnotation ionAnnotation = row.getData(ionAnnotationColumn);
-                if (ionAnnotation != null) {
-                    Double ionMz = ionAnnotation.getExpectedMz();
-                    if (ionMz != null) {
-                        FeatureTableColumn<Double> ppmColumn = featureTable
-                                .getColumn(ColumnName.PPM, null);
-                        Double diff = Math.abs(newMz - ionMz);
-                        row.setData(ppmColumn, (diff / ionMz) * 1000000);
+                List<IonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
+                Double totalIonMz = 0d;
+                Integer counter = 0;
+                for (IonAnnotation ionAnnotation : ionAnnotations) {
+                    if (ionAnnotation != null) {
+                        Double ionMz = ionAnnotation.getExpectedMz();
+                        if (ionMz != null) {
+                            totalIonMz = totalIonMz + ionMz;
+                            counter++;
+                        }
                     }
                 }
+                if (counter > 0) {
+                    Double ionMz = totalIonMz/counter;
+                    FeatureTableColumn<Double> ppmColumn = featureTable.getColumn(ColumnName.PPM, null);
+                    Double diff = Math.abs(newMz - ionMz);
+                    row.setData(ppmColumn, (diff / ionMz) * 1000000);
+                }
             }
+
             // Update RT
             FeatureTableColumn<ChromatographyInfo> chromInfoColumn = featureTable
                     .getColumn("Chromatography Info", null,
@@ -135,10 +145,14 @@ public class FeatureTableUtil {
      *            a
      *            {@link io.github.msdk.datamodel.featuretables.FeatureTableRow}
      *            object.
+     * @param combineData
+     *            a {@link java.lang.Boolean} object which specifies if data
+     *            will be added or replaced.
      */
     public static void copyCommonValues(
             @Nonnull FeatureTableRow sourceFeatureTableRow,
-            @Nonnull FeatureTableRow targetFeatureTableRow) {
+            @Nonnull FeatureTableRow targetFeatureTableRow,
+            @Nonnull Boolean combineData) {
 
         List<FeatureTableColumn<?>> sourceColumns = sourceFeatureTableRow
                 .getFeatureTable().getColumns();
@@ -147,12 +161,13 @@ public class FeatureTableUtil {
 
         for (FeatureTableColumn sourceColumn : sourceColumns) {
 
-            // Ignore ID column
-            if (!sourceColumn.getName().equals(ColumnName.ID.getName())) {
+            // Only add common values and ignore ID column
+            if (sourceColumn.getSample() == null
+                    & !sourceColumn.getName().equals(ColumnName.ID.getName())) {
 
                 // Find target column
                 FeatureTableColumn targetColumn = null;
-                for (FeatureTableColumn column : targetColumns) {
+                for (FeatureTableColumn<?> column : targetColumns) {
                     boolean equalName = sourceColumn.getName()
                             .equals(column.getName());
                     boolean equalSample = true;
@@ -167,10 +182,33 @@ public class FeatureTableUtil {
                     }
                 }
 
-                // Only add common values
-                if (sourceColumn.getSample() == null) {
-                    targetFeatureTableRow.setData(targetColumn,
-                            sourceFeatureTableRow.getData(sourceColumn));
+                // Handle combine option
+                if (combineData) {
+                    switch (sourceColumn.getName()) {
+                        case "Ion Annotation":
+                            List<IonAnnotation> targetIonAnnotations = targetFeatureTableRow.getData(targetColumn);
+                            List<IonAnnotation> sourceIonAnnotations = sourceFeatureTableRow.getData(sourceColumn);
+                            if (targetIonAnnotations == null)
+                                targetIonAnnotations = new ArrayList<IonAnnotation>();
+                            if (sourceIonAnnotations != null) {
+                                for (IonAnnotation ionAnnotation : sourceIonAnnotations) {
+                                    if (!ionAnnotation.isNA()) {
+                                        boolean addIon = true;
+                                        for (IonAnnotation targetIonAnnotation : targetIonAnnotations) {
+                                            if (targetIonAnnotation.compareTo(ionAnnotation) == 0)
+                                                addIon = false;
+                                        }
+                                        if (addIon)
+                                            targetIonAnnotations.add(ionAnnotation);
+                                    }
+                                }
+                                targetFeatureTableRow.setData(targetColumn, targetIonAnnotations);
+                            }
+                            break;
+                    }
+                }
+                else {
+                    targetFeatureTableRow.setData(targetColumn, sourceFeatureTableRow.getData(sourceColumn));
                 }
             }
         }
@@ -200,32 +238,34 @@ public class FeatureTableUtil {
         List<FeatureTableColumn<?>> targetColumns = targetFeatureTableRow
                 .getFeatureTable().getColumns();
 
-        for (FeatureTableColumn sourceColumn : sourceColumns) {
-
-            // Find target column
-            FeatureTableColumn targetColumn = null;
-            for (FeatureTableColumn column : targetColumns) {
-                boolean equalName = sourceColumn.getName()
-                        .equals(column.getName());
-                boolean equalSample = true;
-                if (sourceColumn.getSample() != null
-                        & column.getSample() != null)
-                    equalSample = sourceColumn.getSample().getName()
-                            .equals(column.getSample().getName());
-
-                if (equalName & equalSample) {
-                    targetColumn = column;
-                    continue;
-                }
-            }
+        for (FeatureTableColumn<?> sourceColumn : sourceColumns) {
 
             // Only add sample specific values
             if (sourceColumn.getSample() != null) {
                 if (sourceColumn.getSample().equals(sample)) {
+    
+                    // Find target column
+                    FeatureTableColumn targetColumn = null;
+                    for (FeatureTableColumn<?> column : targetColumns) {
+                        boolean equalName = sourceColumn.getName()
+                                .equals(column.getName());
+                        boolean equalSample = true;
+                        if (sourceColumn.getSample() != null
+                                & column.getSample() != null)
+                            equalSample = sourceColumn.getSample().getName()
+                                    .equals(column.getSample().getName());
+    
+                        if (equalName & equalSample) {
+                            targetColumn = column;
+                            continue;
+                        }
+                    }
+    
                     if (sourceFeatureTableRow.getData(sourceColumn) != null) {
                         targetFeatureTableRow.setData(targetColumn,
                                 sourceFeatureTableRow.getData(sourceColumn));
                     }
+    
                 }
             }
         }
@@ -243,7 +283,7 @@ public class FeatureTableUtil {
     public static int getRowCount(FeatureTableRow featureTableRow) {
         int count = 0;
         FeatureTable featureTable = featureTableRow.getFeatureTable();
-        FeatureTableColumn column;
+        FeatureTableColumn<?> column;
         for (Sample sample : featureTable.getSamples()) {
             column = featureTable.getColumn(ColumnName.MZ, sample);
             if (column != null) {
@@ -281,7 +321,7 @@ public class FeatureTableUtil {
     public static Double getAverageFeatureDuration(
             FeatureTableRow featureTableRow) {
         FeatureTable featureTable = featureTableRow.getFeatureTable();
-        FeatureTableColumn column;
+        FeatureTableColumn<?> column;
         Double averageDuration = 0d;
         int sampleCount = 0;
 

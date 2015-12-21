@@ -331,4 +331,9 @@ public class MonaSpectrum
             return dataPoints.getMzRange();
     }
 
+	@Override
+	public Boolean isNA() {
+		return false;
+	}
+
 }
