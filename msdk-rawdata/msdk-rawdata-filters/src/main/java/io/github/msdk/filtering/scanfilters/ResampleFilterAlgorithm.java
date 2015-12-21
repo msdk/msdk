@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 
 /**
  * <p>ResampleFilterAlgorithm class.</p>
- *
  */
 public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
 

@@ -31,7 +31,6 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
  * <p>
  * FeatureTableUtil class.
  * </p>
- *
  */
 public class FeatureTableUtil {
 

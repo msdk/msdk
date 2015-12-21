@@ -21,7 +21,6 @@ import javax.annotation.Nullable;
  * <p>
  * MSDKFilteringAlgorithm interface.
  * </p>
- *
  */
 public interface MSDKFilteringAlgorithm {
 

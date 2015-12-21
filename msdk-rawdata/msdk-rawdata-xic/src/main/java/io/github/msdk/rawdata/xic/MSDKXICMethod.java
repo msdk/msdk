@@ -41,7 +41,6 @@ import io.github.msdk.util.MsSpectrumUtil;
  * <p>
  * MSDKXICMethod class.
  * </p>
- *
  */
 public class MSDKXICMethod implements MSDKMethod<Chromatogram> {
 
@@ -57,6 +56,15 @@ public class MSDKXICMethod implements MSDKMethod<Chromatogram> {
     private Chromatogram result;
     private boolean canceled = false;
 
+    /**
+     * <p>Constructor for MSDKXICMethod.</p>
+     *
+     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param scans a {@link java.util.List} object.
+     * @param mzRange a {@link com.google.common.collect.Range} object.
+     * @param chromatogramType a {@link io.github.msdk.datamodel.chromatograms.ChromatogramType} object.
+     * @param store a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     */
     public MSDKXICMethod(@Nonnull RawDataFile rawDataFile,
             @Nonnull List<MsScan> scans, @Nonnull Range<Double> mzRange,
             @Nonnull ChromatogramType chromatogramType,
@@ -128,7 +136,6 @@ public class MSDKXICMethod implements MSDKMethod<Chromatogram> {
                         "Invalid chromatogram type: " + chromatogramType);
             }
 
-            processedScans++;
         }
 
         result.setDataPoints(chrDataPoints);

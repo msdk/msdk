@@ -145,6 +145,8 @@ public interface FeatureTable {
      * feature table with average m/z and RT values within the given ranges.
      *
      * @return the list of feature table rows.
+     * @param rtRange a {@link com.google.common.collect.Range} object.
+     * @param mzRange a {@link com.google.common.collect.Range} object.
      */
     List<FeatureTableRow> getRowsInsideRange(Range<Double> rtRange,
             Range<Double> mzRange);

@@ -20,11 +20,14 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.common.collect.Range;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.msspectra.MsIon;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationType;
@@ -71,6 +74,17 @@ public class MzMLFileImportMethodTest {
         Assert.assertEquals(19800, dataPoints.getSize());
         Float scan2maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);
         Assert.assertEquals(1.8E5f, scan2maxInt, 1E4f);
+
+        // Test restricted mzRange and intensity range
+        Range<Double> mzRange = Range.closed(500.0, 600.0);
+        Range<Float> intensityRange = Range.closed(1E3f, 1E4f);
+        scan2.getDataPointsByMzAndIntensity(dataPoints, mzRange,
+                intensityRange);
+        Assert.assertEquals(495, dataPoints.getSize());
+        for (MsIon ion : dataPoints) {
+            Assert.assertTrue(mzRange.contains(ion.getMz()));
+            Assert.assertTrue(intensityRange.contains(ion.getIntensity()));
+        }
 
         // 5th scan, #5
         MsScan scan5 = scans.get(4);

@@ -35,7 +35,6 @@ public class RTTolerance {
      *
      * @param rtTolerance a {@link java.lang.Double} object.
      * @param isAbsolute a {@link java.lang.Boolean} object.
-     * 
      */
     public RTTolerance(final double rtTolerance, final boolean isAbsolute) {
         this.rtTolerance = rtTolerance;

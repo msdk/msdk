@@ -68,17 +68,12 @@ public class MatchAlignerMethod implements MSDKMethod<FeatureTable> {
      * </p>
      *
      * @param featureTables
-     *            a {@link java.lang.List} of
-     *            {@link io.github.msdk.datamodel.featuretables.FeatureTable}
-     *            objects.
      * @param dataStore
      *            a
      *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
      *            object.
      * @param mzTolerance
      *            a {@link io.github.msdk.util.MZTolerance} object.
-     * @param RTTolerance
-     *            a {@link io.github.msdk.util.RTTolerance} object.
      * @param mzWeight
      *            a {@link java.lang.Integer} object.
      * @param rtWeight
@@ -89,6 +84,7 @@ public class MatchAlignerMethod implements MSDKMethod<FeatureTable> {
      *            a {@link java.lang.Boolean} object.
      * @param featureTableName
      *            a {@link java.lang.String} object.
+     * @param rtTolerance a {@link io.github.msdk.util.RTTolerance} object.
      */
     public MatchAlignerMethod(@Nonnull List<FeatureTable> featureTables,
             @Nonnull DataPointStore dataStore, @Nonnull MZTolerance mzTolerance,
