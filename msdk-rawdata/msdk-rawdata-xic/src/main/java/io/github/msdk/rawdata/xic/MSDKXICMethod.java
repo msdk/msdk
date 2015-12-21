@@ -136,7 +136,6 @@ public class MSDKXICMethod implements MSDKMethod<Chromatogram> {
                         "Invalid chromatogram type: " + chromatogramType);
             }
 
-            processedScans++;
         }
 
         result.setDataPoints(chrDataPoints);
