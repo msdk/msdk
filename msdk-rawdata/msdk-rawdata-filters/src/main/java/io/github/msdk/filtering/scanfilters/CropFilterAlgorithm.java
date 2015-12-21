@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 
 /**
  * <p>CropFilterAlgorithm class.</p>
- *
  */
 public class CropFilterAlgorithm implements MSDKFilteringAlgorithm {
 

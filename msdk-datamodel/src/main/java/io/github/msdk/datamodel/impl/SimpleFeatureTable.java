@@ -172,6 +172,7 @@ class SimpleFeatureTable implements FeatureTable {
         dataPointStore.dispose();
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<FeatureTableRow> getRowsInsideRange(Range<Double> rtRange,
             Range<Double> mzRange) {

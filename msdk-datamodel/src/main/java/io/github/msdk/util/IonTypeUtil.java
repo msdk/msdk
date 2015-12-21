@@ -45,9 +45,8 @@ public class IonTypeUtil {
     /**
      * Creates an IonType from a string. The expected string format is [M+2H]2+.
      *
-     * @param text
-     *            a {@link java.lang.String} object.
      * @return a {@link io.github.msdk.datamodel.ionannotations.IonType} object.
+     * @param adduct a {@link java.lang.String} object.
      */
     public static @Nonnull IonType createIonType(final @Nonnull String adduct) {
 

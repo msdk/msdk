@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 
 /**
  * <p>MeanFilterAlgorithm class.</p>
- *
  */
 public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
 
