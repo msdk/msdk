@@ -18,6 +18,7 @@ import java.io.File;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
@@ -32,19 +33,26 @@ public class ChromatogramBuilderMethodTest {
 
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
-    @Test
-    public void testOrbitrap() throws MSDKException {
+    private static DataPointStore dataStore;
+    private static RawDataFile rawFile;
+
+    @BeforeClass
+    public static void loadData() throws MSDKException {
 
         // Create the data structures
-        DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
+        dataStore = DataPointStoreFactory.getMemoryDataStore();
 
         // Import the file
         File inputFile = new File(TEST_DATA_PATH + "orbitrap_300-600mz.mzML");
         Assert.assertTrue("Cannot read test data", inputFile.canRead());
         MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
-        RawDataFile rawFile = importer.execute();
+        rawFile = importer.execute();
         Assert.assertNotNull(rawFile);
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+    }
+
+    @Test
+    public void testOrbitrap() throws MSDKException {
 
         double minimumTimeSpan = 6; // 6s
         double minimumHeight = 1E4;
@@ -57,44 +65,43 @@ public class ChromatogramBuilderMethodTest {
 
         Assert.assertTrue(detectedFeatures.size() > 10);
 
+    }
+
+    @Test
+    public void testBigTimeSpan() throws MSDKException {
+
         // Testing a big timeSpan
-        minimumTimeSpan = 1000000;
-        minimumHeight = 1E4;
-        mzTolerance = new MZTolerance(0.001, 5.0);
-        chromBuilder = new ChromatogramBuilderMethod(
+        double minimumTimeSpan = 1000000;
+        double minimumHeight = 1E4;
+        MZTolerance mzTolerance = new MZTolerance(0.001, 5.0);
+        ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(
                 dataStore, rawFile, minimumTimeSpan, minimumHeight,
                 mzTolerance);
-        detectedFeatures = chromBuilder.execute();
+        List<Chromatogram> detectedFeatures = chromBuilder.execute();
         Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
 
         // Nothing should be recognized as a chromatogram
         Assert.assertEquals(0, detectedFeatures.size());
 
+    }
+
+    @Test
+    public void testBigMinHeight() throws MSDKException {
+
         // Testing a big minimum height
-        minimumTimeSpan = 6; // 6s
-        minimumHeight = 10000000;
-        mzTolerance = new MZTolerance(0.001, 5.0);
-        chromBuilder = new ChromatogramBuilderMethod(
+        double minimumTimeSpan = 6; // 6s
+        double minimumHeight = 10000000;
+        MZTolerance mzTolerance = new MZTolerance(0.001, 5.0);
+        ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(
                 dataStore, rawFile, minimumTimeSpan, minimumHeight,
                 mzTolerance);
-        detectedFeatures = chromBuilder.execute();
+        List<Chromatogram> detectedFeatures = chromBuilder.execute();
         Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
 
-        // There are no so big picks in the data so there should be no chromatograms
-        Assert.assertEquals(0, detectedFeatures.size());
-
-        // Testing a small MZTolerance
-        minimumTimeSpan = 6; // 6s
-        minimumHeight = 1E4;
-        mzTolerance = new MZTolerance(0.0, 0.0);
-        chromBuilder = new ChromatogramBuilderMethod(
-                dataStore, rawFile, minimumTimeSpan, minimumHeight,
-                mzTolerance);
-        detectedFeatures = chromBuilder.execute();
-        Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
-
-        // Nothing should be connected in consecutive scans as the mz tolerance is 0
+        // There are no so big picks in the data so there should be no
+        // chromatograms
         Assert.assertEquals(0, detectedFeatures.size());
 
     }
+
 }
