@@ -50,8 +50,6 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
      * </p>
      *
      * @param featureTable
-     *            a {@link io.github.msdk.datamodel.featuretable.FeatureTable}
-     *            object.
      * @param ionAnnotations
      *            a {@link java.util.List} of
      *            {@link io.github.msdk.datamodel.ionannotations.IonAnnotation}

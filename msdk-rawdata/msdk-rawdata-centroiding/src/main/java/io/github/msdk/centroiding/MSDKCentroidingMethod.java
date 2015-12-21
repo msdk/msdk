@@ -32,7 +32,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * MSDKCentroidingMethod class.
  * </p>
- *
  */
 public class MSDKCentroidingMethod implements MSDKMethod<RawDataFile> {
 
@@ -53,13 +52,11 @@ public class MSDKCentroidingMethod implements MSDKMethod<RawDataFile> {
      *
      * @param rawDataFile
      *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-     * @param filteringAlgorithm
-     *            a {@link io.github.msdk.filtering.MSDKFilteringAlgorithm}
-     *            object.
      * @param store
      *            a
      *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
      *            object.
+     * @param centroidingAlgorithm a {@link io.github.msdk.centroiding.MSDKCentroidingAlgorithm} object.
      */
     public MSDKCentroidingMethod(@Nonnull RawDataFile rawDataFile,
             @Nonnull MSDKCentroidingAlgorithm centroidingAlgorithm,

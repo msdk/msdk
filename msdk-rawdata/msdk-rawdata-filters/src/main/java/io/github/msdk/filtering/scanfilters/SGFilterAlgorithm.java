@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 
 /**
  * <p>SGFilterAlgorithm class.</p>
- *
  */
 public class SGFilterAlgorithm implements MSDKFilteringAlgorithm {
 

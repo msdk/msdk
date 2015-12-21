@@ -551,6 +551,7 @@ public class MSDKObjectBuilder {
      *            a {@link java.lang.String} object.
      * @param charge
      *            a {@link java.lang.Integer} object.
+     * @return a {@link io.github.msdk.datamodel.ionannotations.IonType} object.
      */
     public static final @Nonnull IonType getIonType(@Nonnull String name,
             @Nonnull PolarityType polarity, @Nullable Integer numberOfMolecules,

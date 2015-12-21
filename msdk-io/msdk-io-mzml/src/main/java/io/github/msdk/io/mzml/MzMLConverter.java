@@ -537,6 +537,10 @@ class MzMLConverter {
         // Copy the actual data point values
         int newIndex = 0;
         for (int i = 0; i < mzValues.length; i++) {
+            if (!mzRange.contains(mzValues[i].doubleValue()))
+                continue;
+            if (!intensityRange.contains(intensityValues[i].floatValue()))
+                continue;
             mzBuffer[newIndex] = mzValues[i].doubleValue();
             intensityBuffer[newIndex] = intensityValues[i].floatValue();
             newIndex++;
