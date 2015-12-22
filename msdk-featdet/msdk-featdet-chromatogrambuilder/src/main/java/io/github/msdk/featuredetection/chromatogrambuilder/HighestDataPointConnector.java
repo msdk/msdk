@@ -38,24 +38,26 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.DataPointSorter;
-import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.DataPointSorter.SortingDirection;
 import io.github.msdk.util.DataPointSorter.SortingProperty;
+import io.github.msdk.util.MZTolerance;
 
 class HighestDataPointConnector {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final @Nonnull MsSpectrumDataPointList dataPoints;
+    private final @Nonnull Float noiseLevel;
     private final MZTolerance mzTolerance;
     private final double minimumTimeSpan, minimumHeight;
 
     private final Set<BuildingChromatogram> buildingChromatograms,
             connectedChromatograms;
 
-    HighestDataPointConnector(double minimumTimeSpan, double minimumHeight,
-            MZTolerance mzTolerance) {
+    HighestDataPointConnector(@Nonnull Float noiseLevel, double minimumTimeSpan,
+            double minimumHeight, MZTolerance mzTolerance) {
 
+        this.noiseLevel = noiseLevel;
         this.mzTolerance = mzTolerance;
         this.minimumHeight = minimumHeight;
         this.minimumTimeSpan = minimumTimeSpan;
@@ -73,8 +75,11 @@ class HighestDataPointConnector {
 
     void addScan(RawDataFile dataFile, MsScan scan) {
 
+        final Range<Double> allMz = Range.all();
+
         // Load scan data points
-        scan.getDataPoints(dataPoints);
+        scan.getDataPointsByMzAndIntensity(dataPoints, allMz,
+                Range.atLeast(noiseLevel));
         final double mzBuffer[] = dataPoints.getMzBuffer();
         final float intensityBuffer[] = dataPoints.getIntensityBuffer();
 

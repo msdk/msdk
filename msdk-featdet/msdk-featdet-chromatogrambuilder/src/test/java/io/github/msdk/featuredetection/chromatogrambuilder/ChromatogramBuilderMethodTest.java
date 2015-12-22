@@ -54,11 +54,12 @@ public class ChromatogramBuilderMethodTest {
     @Test
     public void testOrbitrap() throws MSDKException {
 
+        float noiseLevel = 0f;
         double minimumTimeSpan = 6; // 6s
         double minimumHeight = 1E4;
         MZTolerance mzTolerance = new MZTolerance(0.001, 5.0);
         ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(
-                dataStore, rawFile, minimumTimeSpan, minimumHeight,
+                dataStore, rawFile, noiseLevel, minimumTimeSpan, minimumHeight,
                 mzTolerance);
         List<Chromatogram> detectedFeatures = chromBuilder.execute();
         Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
@@ -71,11 +72,12 @@ public class ChromatogramBuilderMethodTest {
     public void testBigTimeSpan() throws MSDKException {
 
         // Testing a big timeSpan
+        float noiseLevel = 0f;
         double minimumTimeSpan = 1000000;
         double minimumHeight = 1E4;
         MZTolerance mzTolerance = new MZTolerance(0.001, 5.0);
         ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(
-                dataStore, rawFile, minimumTimeSpan, minimumHeight,
+                dataStore, rawFile, noiseLevel, minimumTimeSpan, minimumHeight,
                 mzTolerance);
         List<Chromatogram> detectedFeatures = chromBuilder.execute();
         Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
@@ -89,11 +91,12 @@ public class ChromatogramBuilderMethodTest {
     public void testBigMinHeight() throws MSDKException {
 
         // Testing a big minimum height
+        float noiseLevel = 0f;
         double minimumTimeSpan = 6; // 6s
         double minimumHeight = 10000000;
         MZTolerance mzTolerance = new MZTolerance(0.001, 5.0);
         ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(
-                dataStore, rawFile, minimumTimeSpan, minimumHeight,
+                dataStore, rawFile, noiseLevel, minimumTimeSpan, minimumHeight,
                 mzTolerance);
         List<Chromatogram> detectedFeatures = chromBuilder.execute();
         Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
