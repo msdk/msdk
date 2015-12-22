@@ -42,7 +42,8 @@ public enum ColumnName {
     FWHM("FWHM", Double.class),
     TAILINGFACTOR("Tailing Factor", Double.class),
     ASYMMETRYFACTOR("Asymmetry Factor", Double.class),
-    CHROMATOGRAM("Chromatogram", Chromatogram.class);
+    CHROMATOGRAM("Chromatogram", Chromatogram.class),
+    RETENTIONINDEX("Retention Index", Double.class);
 
     @Nonnull
     private final String name;
