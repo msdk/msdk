@@ -39,7 +39,6 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
     private static final int WAVELET_ESR = 5;
 
     private final @Nonnull DataPointStore dataPointStore;
-    private final @Nonnull Float noiseLevel;
     private final @Nonnull Integer scaleLevel;
     private final @Nonnull Double waveletWindow;
 
@@ -54,18 +53,14 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
      *            a
      *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
      *            object.
-     * @param noiseLevel
-     *            a {@link java.lang.Float} object.
      * @param scaleLevel
      *            a {@link java.lang.Integer} object.
      * @param waveletWindow
      *            a {@link java.lang.Double} object.
      */
     public WaveletCentroidingAlgorithm(@Nonnull DataPointStore dataPointStore,
-            @Nonnull Float noiseLevel, @Nonnull Integer scaleLevel,
-            @Nonnull Double waveletWindow) {
+            @Nonnull Integer scaleLevel, @Nonnull Double waveletWindow) {
         this.dataPointStore = dataPointStore;
-        this.noiseLevel = noiseLevel;
         this.scaleLevel = scaleLevel;
         this.waveletWindow = waveletWindow;
     }
@@ -220,10 +215,8 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
                 break;
             }
 
-            if (intensityBuffer[peakMaxInd] > noiseLevel) {
-                newDataPoints.add(mzBuffer[peakMaxInd],
-                        intensityBuffer[peakMaxInd]);
-            }
+            newDataPoints.add(mzBuffer[peakMaxInd],
+                    intensityBuffer[peakMaxInd]);
         }
 
     }

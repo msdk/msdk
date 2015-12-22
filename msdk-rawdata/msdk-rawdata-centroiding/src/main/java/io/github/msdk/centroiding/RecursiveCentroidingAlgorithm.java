@@ -32,7 +32,6 @@ import io.github.msdk.util.MsScanUtil;
 public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
     private final @Nonnull DataPointStore dataPointStore;
-    private final @Nonnull Float noiseLevel;
     private final @Nonnull Range<Double> mzPeakWidthRange;
 
     private MsScan newScan;
@@ -46,16 +45,12 @@ public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
      *            a
      *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
      *            object.
-     * @param noiseLevel
-     *            a {@link java.lang.Float} object.
      * @param mzPeakWidthRange
      *            a {@link com.google.common.collect.Range} object.
      */
     public RecursiveCentroidingAlgorithm(@Nonnull DataPointStore dataPointStore,
-            @Nonnull Float noiseLevel,
             @Nonnull Range<Double> mzPeakWidthRange) {
         this.dataPointStore = dataPointStore;
-        this.noiseLevel = noiseLevel;
         this.mzPeakWidthRange = mzPeakWidthRange;
     }
 
@@ -83,7 +78,7 @@ public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
         // Run the recursive search algorithm
         recursiveThreshold(inputDataPoints, newDataPoints, 0,
-                inputDataPoints.getSize() - 1, noiseLevel, 0);
+                inputDataPoints.getSize() - 1, 0);
 
         // Store the new data points
         newScan.setDataPoints(newDataPoints);
@@ -97,7 +92,7 @@ public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
      */
     private int recursiveThreshold(MsSpectrumDataPointList inputDataPoints,
             MsSpectrumDataPointList newDataPoints, int startInd, int stopInd,
-            double currentNoiseLevel, int recuLevel) {
+            int recuLevel) {
 
         final double mzBuffer[] = inputDataPoints.getMzBuffer();
         final float intensityBuffer[] = inputDataPoints.getIntensityBuffer();
@@ -109,17 +104,12 @@ public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
             double localMinimum = Double.MAX_VALUE;
 
-            // Ignore intensities below curentNoiseLevel
-            if (intensityBuffer[ind] <= currentNoiseLevel)
-                continue;
-
             // Add initial point of the peak
             peakStartInd = ind;
             peakMaxInd = peakStartInd;
 
             // While peak is on
-            while ((ind < stopInd)
-                    && (intensityBuffer[ind] > currentNoiseLevel)) {
+            while (ind < stopInd) {
 
                 final boolean isLocalMinimum = (intensityBuffer[ind
                         - 1] > intensityBuffer[ind])
@@ -160,8 +150,7 @@ public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
             if (peakWidthMZ > mzPeakWidthRange.upperEndpoint()) {
                 if (localMinimum < Double.MAX_VALUE) {
                     ind = recursiveThreshold(inputDataPoints, newDataPoints,
-                            peakStartInd, peakStopInd, localMinimum,
-                            recuLevel + 1);
+                            peakStartInd, peakStopInd, recuLevel + 1);
                 }
 
             }

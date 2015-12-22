@@ -30,7 +30,6 @@ import io.github.msdk.util.MsScanUtil;
 public class ExactMassCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
     private final @Nonnull DataPointStore dataPointStore;
-    private final @Nonnull Float noiseLevel;
     private MsScan newScan;
 
     /**
@@ -45,10 +44,9 @@ public class ExactMassCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
      * @param noiseLevel
      *            a {@link java.lang.Float} object.
      */
-    public ExactMassCentroidingAlgorithm(@Nonnull DataPointStore dataPointStore,
-            @Nonnull Float noiseLevel) {
+    public ExactMassCentroidingAlgorithm(
+            @Nonnull DataPointStore dataPointStore) {
         this.dataPointStore = dataPointStore;
-        this.noiseLevel = noiseLevel;
     }
 
     /** {@inheritDoc} */
@@ -107,10 +105,8 @@ public class ExactMassCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
                 final int numOfDataPoints = rangeEnd - rangeBeginning;
 
-                // Add the m/z peak if it is above the noise level and has at
-                // least 4 data points
-                if ((intensityBuffer[localMaximumIndex] > noiseLevel)
-                        && (numOfDataPoints >= 4)) {
+                // Add the m/z peak if it has at least 4 data points
+                if (numOfDataPoints >= 4) {
 
                     // Calculate the "center" m/z value
                     double calculatedMz = calculateExactMass(mzBuffer,

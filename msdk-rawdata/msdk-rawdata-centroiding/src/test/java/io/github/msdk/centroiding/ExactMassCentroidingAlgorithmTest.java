@@ -54,9 +54,8 @@ public class ExactMassCentroidingAlgorithmTest {
 
         MsScan lastScan = scans.get(scans.size() - 1);
 
-        final float noiseLevel = 1E3f;
         ExactMassCentroidingAlgorithm centroider = new ExactMassCentroidingAlgorithm(
-                dataStore, noiseLevel);
+                dataStore);
         final MsScan centroidedScan = centroider.centroidScan(lastScan);
 
         centroidedScan.getDataPoints(dataPoints);

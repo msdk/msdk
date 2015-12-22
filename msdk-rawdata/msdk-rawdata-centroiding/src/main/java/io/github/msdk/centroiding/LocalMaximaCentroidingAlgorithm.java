@@ -36,7 +36,6 @@ public class LocalMaximaCentroidingAlgorithm
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final @Nonnull DataPointStore dataPointStore;
-    private final @Nonnull Float noiseLevel;
     private MsScan newScan;
 
     /**
@@ -52,9 +51,8 @@ public class LocalMaximaCentroidingAlgorithm
      *            a {@link java.lang.Float} object.
      */
     public LocalMaximaCentroidingAlgorithm(
-            @Nonnull DataPointStore dataPointStore, @Nonnull Float noiseLevel) {
+            @Nonnull DataPointStore dataPointStore) {
         this.dataPointStore = dataPointStore;
-        this.noiseLevel = noiseLevel;
     }
 
     /** {@inheritDoc} */
@@ -116,10 +114,8 @@ public class LocalMaximaCentroidingAlgorithm
 
                 final int numOfDataPoints = rangeEnd - rangeBeginning;
 
-                // Add the m/z peak if it is above the noise level and has at
-                // least 4 data points
-                if ((intensityBuffer[localMaximumIndex] > noiseLevel)
-                        && (numOfDataPoints >= 4)) {
+                // Add the m/z peak if it has at least 4 data points
+                if (numOfDataPoints >= 4) {
 
                     // Add the new data point
                     newDataPoints.add(mzBuffer[localMaximumIndex],
