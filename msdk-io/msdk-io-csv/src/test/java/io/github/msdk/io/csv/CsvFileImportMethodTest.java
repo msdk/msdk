@@ -31,7 +31,7 @@ public class CsvFileImportMethodTest {
 	private static final String TEST_DATA_PATH = "src/test/resources/";
 
 	@Test
-	public void testCsvImport() throws MSDKException {
+	public void CSV_Multi_Samples_Import() throws MSDKException {
 
 		// Create the data structures
 		DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
@@ -44,19 +44,78 @@ public class CsvFileImportMethodTest {
 		Assert.assertNotNull(featureTable);
 		Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
+		// The table has columns
+		Assert.assertFalse(featureTable.getColumns().isEmpty());
+		Assert.assertEquals(88, featureTable.getColumns().size());
+
 		// The table has 7 samples
 		List<Sample> samples = featureTable.getSamples();
 		Assert.assertNotNull(samples);
 		Assert.assertEquals(7, samples.size());
 
-		// The table has columns
-		Assert.assertFalse(featureTable.getColumns().isEmpty());
-
-		// The table has 298 rows
+		// The table has 298 features
 		Assert.assertFalse(featureTable.getRows().isEmpty());
 		Assert.assertEquals(298, featureTable.getRows().size());
 
 		featureTable.dispose();
 	}
 
+	@Test
+	public void CSV_Single_Data_Import() throws MSDKException {
+
+		// Create the data structures
+		DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
+
+		// Import the file
+		File inputFile = new File(TEST_DATA_PATH + "Standards.csv");
+		Assert.assertTrue(inputFile.canRead());
+		CsvFileImportMethod importer = new CsvFileImportMethod(inputFile, dataStore);
+		FeatureTable featureTable = importer.execute();
+		Assert.assertNotNull(featureTable);
+		Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+		// The table has columns
+		Assert.assertFalse(featureTable.getColumns().isEmpty());
+		Assert.assertEquals(16, featureTable.getColumns().size());
+
+		// The table has 12 samples
+		List<Sample> samples = featureTable.getSamples();
+		Assert.assertNotNull(samples);
+		Assert.assertEquals(12, samples.size());
+
+		// The table has 10 features
+		Assert.assertFalse(featureTable.getRows().isEmpty());
+		Assert.assertEquals(10, featureTable.getRows().size());
+
+		featureTable.dispose();
+	}
+
+	@Test
+	public void GCxGX_Import() throws MSDKException {
+
+		// Create the data structures
+		DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
+
+		// Import the file
+		File inputFile = new File(TEST_DATA_PATH + "GGT1.txt");
+		Assert.assertTrue(inputFile.canRead());
+		CsvFileImportMethod importer = new CsvFileImportMethod(inputFile, dataStore);
+		FeatureTable featureTable = importer.execute();
+		Assert.assertNotNull(featureTable);
+		Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+		// The table has columns
+		Assert.assertFalse(featureTable.getColumns().isEmpty());
+
+		// The table has 1 sample
+		List<Sample> samples = featureTable.getSamples();
+		Assert.assertNotNull(samples);
+		Assert.assertEquals(1, samples.size());
+
+		// The table has 15 features
+		Assert.assertFalse(featureTable.getRows().isEmpty());
+		Assert.assertEquals(15, featureTable.getRows().size());
+
+		featureTable.dispose();
+	}
 }
