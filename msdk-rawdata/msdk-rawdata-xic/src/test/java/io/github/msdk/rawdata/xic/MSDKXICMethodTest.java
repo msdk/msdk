@@ -27,6 +27,7 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -61,18 +62,27 @@ public class MSDKXICMethodTest {
         Assert.assertNotNull(newChromatogram);
         Assert.assertEquals(1.0f, xicMethod.getFinishedPercentage(), 0.0001f);
 
-        // Check if the resulting chromatogram matches the requested parameters
-        
-        /*
-        for (int i = 0; i < dataPoints.getSize(); i++) {
+        // The chromatogram should have one data point for each scan
+        Assert.assertEquals(new Integer(scans.size()),
+                newChromatogram.getNumberOfDataPoints());
 
-            Assert.assertNotNull(rtBuffer[i]);
+        // Check if the resulting chromatogram matches the requested parameters
+        double mzValues[] = newChromatogram.getMzValues();
+        float intensityValues[] = newChromatogram.getIntensityValues();
+        ChromatographyInfo rtValues[] = newChromatogram.getRetentionTimes();
+
+        for (int i = 0; i < newChromatogram.getNumberOfDataPoints(); i++) {
+
+            Assert.assertNotNull(rtValues[i]);
+
             Assert.assertEquals(
                     rawFile.getScans().get(i).getChromatographyInfo(),
-                    rtBuffer[i]);
+                    rtValues[i]);
 
+            Assert.assertTrue(mzRange.contains(mzValues[i]));
+
+            Assert.assertTrue(intensityValues[i] >= 0f);
         }
-        */
 
     }
 }
