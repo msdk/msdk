@@ -18,6 +18,4 @@ public class WaveletCentroidingAlgorithmTest {
 
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
-    
-    
 }

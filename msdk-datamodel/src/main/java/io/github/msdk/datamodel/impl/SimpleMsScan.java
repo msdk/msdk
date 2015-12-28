@@ -51,11 +51,18 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     private final @Nonnull List<IsolationInfo> isolations = new LinkedList<>();
 
     /**
-     * <p>Constructor for SimpleMsScan.</p>
+     * <p>
+     * Constructor for SimpleMsScan.
+     * </p>
      *
-     * @param dataPointStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
-     * @param scanNumber a {@link java.lang.Integer} object.
-     * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
+     * @param dataPointStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
+     * @param scanNumber
+     *            a {@link java.lang.Integer} object.
+     * @param msFunction
+     *            a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
      */
     public SimpleMsScan(@Nonnull DataPointStore dataPointStore,
             @Nonnull Integer scanNumber, @Nonnull MsFunction msFunction) {

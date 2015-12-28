@@ -39,9 +39,9 @@ public enum ChromatogramType {
     XIC,
 
     /**
-     * Single ion current (SIC) chromatogram. Only a narrow range of m/z
-     * values are detected in the analysis and a chromatogram similar to the XIC
-     * is generated.
+     * Single ion current (SIC) chromatogram. Only a narrow range of m/z values
+     * are detected in the analysis and a chromatogram similar to the XIC is
+     * generated.
      */
     SIC,
 

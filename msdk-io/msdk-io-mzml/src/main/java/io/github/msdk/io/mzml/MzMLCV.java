@@ -32,7 +32,7 @@ class MzMLCV {
     // MS level
     static final String cvMSLevel = "MS:1000511";
     static final String cvMS1Spectrum = "MS:1000579";
-    
+
     // m/z and charge state
     static final String cvMz = "MS:1000040";
     static final String cvChargeState = "MS:1000041";
@@ -92,5 +92,5 @@ class MzMLCV {
 
     // UV spectrum, actually "electromagnetic radiation spectrum"
     static final String cvUVSpectrum = "MS:1000804";
-    
+
 }

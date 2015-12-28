@@ -24,17 +24,21 @@ import javax.annotation.Nullable;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 
 /**
- * This provides the system with easy access to query data from external resources providing MassSpectra. Example ideas for implementation would be a MSP file based library, a third party REST service or other
- * massspectral repositories
+ * This provides the system with easy access to query data from external
+ * resources providing MassSpectra. Example ideas for implementation would be a
+ * MSP file based library, a third party REST service or other massspectral
+ * repositories
  */
 public interface Search {
 
     /**
      * finds a spectrum by it's provided id.
      *
-     * @param id a long.
+     * @param id
+     *            a long.
      * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException
+     *             if any.
      */
     @Nullable
     MsSpectrum findSpectrumById(long id) throws IOException;
@@ -42,22 +46,31 @@ public interface Search {
     /**
      * query by a specific property name and value
      *
-     * @param propertyName a {@link java.lang.String} object.
-     * @param propertyValue a {@link java.io.Serializable} object.
+     * @param propertyName
+     *            a {@link java.lang.String} object.
+     * @param propertyValue
+     *            a {@link java.io.Serializable} object.
      * @return a {@link java.util.Iterator} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException
+     *             if any.
      */
     @Nonnull
-    Iterator<MsSpectrum> findSpectrumByProperty(String propertyName, Serializable propertyValue) throws IOException;
+    Iterator<MsSpectrum> findSpectrumByProperty(String propertyName,
+            Serializable propertyValue) throws IOException;
 
     /**
      * searches for similar spectra
      *
-     * @param compare a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
-     * @param minSimilarity a {@link java.lang.Integer} object.
+     * @param compare
+     *            a {@link io.github.msdk.datamodel.msspectra.MsSpectrum}
+     *            object.
+     * @param minSimilarity
+     *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.Iterator} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException
+     *             if any.
      */
     @Nonnull
-    Iterator<MsSpectrum> findSimilarSpectra(MsSpectrum compare,Integer minSimilarity) throws IOException;
+    Iterator<MsSpectrum> findSimilarSpectra(MsSpectrum compare,
+            Integer minSimilarity) throws IOException;
 }

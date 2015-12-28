@@ -24,6 +24,8 @@ import org.openscience.cdk.DefaultChemObjectBuilder;
 import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
+import com.google.common.base.Strings;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
@@ -35,7 +37,6 @@ import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.id.localdatabasesearch.LocalDatabaseSearchMethod;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.msdk.util.IonTypeUtil;
 import io.github.msdk.util.MZTolerance;
@@ -65,9 +66,10 @@ public class LocalDatabaseSearchMethodTest {
                 .getColumn("Ion Annotation", null, IonAnnotation.class);
         int annotatedFeatures = 0;
         for (FeatureTableRow row : featureTable.getRows()) {
-            IonAnnotation ionAnnotation = row.getData(column);
-            if (ionAnnotation.getDescription() != null)
-                annotatedFeatures++;
+            List<IonAnnotation> ionAnnotations = (List) row.getData(column);
+            for (IonAnnotation annot : ionAnnotations)
+                if (!Strings.isNullOrEmpty(annot.getDescription()))
+                    annotatedFeatures++;
         }
         Assert.assertEquals(0, annotatedFeatures);
 
@@ -166,17 +168,17 @@ public class LocalDatabaseSearchMethodTest {
 
         // Verify that 7 of the features have an ion annotation
         for (FeatureTableRow row : featureTable.getRows()) {
-            IonAnnotation ionAnnotation = row.getData(column);
-            if (ionAnnotation.getDescription() != null)
-                annotatedFeatures++;
+            ionAnnotations = (List) row.getData(column);
+            for (IonAnnotation annot : ionAnnotations)
+                if (!Strings.isNullOrEmpty(annot.getDescription()))
+                    annotatedFeatures++;
         }
         Assert.assertEquals(7, annotatedFeatures);
 
         // Verify ion 2
-        FeatureTableColumn<IonAnnotation> ionAnnotationColumn = featureTable
-                .getColumn("Ion Annotation", null, IonAnnotation.class);
-        IonAnnotation ionAnnotation = featureTable.getRows().get(1)
-                .getData(ionAnnotationColumn);
+        IonAnnotation ionAnnotation = ((List<IonAnnotation>) featureTable
+                .getRows().get(1).getData(column)).get(0);
+
         Assert.assertEquals("3", ionAnnotation.getAnnotationId());
         Assert.assertEquals("HEPES", ionAnnotation.getDescription());
         Assert.assertEquals(239.1068954, ionAnnotation.getExpectedMz(), 0.0001);
@@ -184,8 +186,8 @@ public class LocalDatabaseSearchMethodTest {
         Assert.assertNull(ionType);
 
         // Verify ion 8
-        ionAnnotation = featureTable.getRows().get(7)
-                .getData(ionAnnotationColumn);
+        ionAnnotation = ((List<IonAnnotation>) featureTable.getRows().get(7)
+                .getData(column)).get(0);
         Assert.assertEquals("2", ionAnnotation.getAnnotationId());
         Assert.assertEquals("Glutathione disulfide",
                 ionAnnotation.getDescription());

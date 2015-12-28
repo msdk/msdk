@@ -25,15 +25,17 @@ import javax.annotation.Nonnull;
 public class MSDKVersion {
 
     /**
-     * <p>getMSDKVersion.</p>
+     * <p>
+     * getMSDKVersion.
+     * </p>
      *
      * @return a {@link java.lang.String} object.
      */
     public static @Nonnull String getMSDKVersion() {
         try {
             ClassLoader myClassLoader = MSDKVersion.class.getClassLoader();
-            InputStream inStream = myClassLoader.getResourceAsStream(
-                    "version.properties");
+            InputStream inStream = myClassLoader
+                    .getResourceAsStream("version.properties");
             if (inStream == null)
                 throw new MSDKRuntimeException("Cannot read MSDK version");
             Properties properties = new Properties();

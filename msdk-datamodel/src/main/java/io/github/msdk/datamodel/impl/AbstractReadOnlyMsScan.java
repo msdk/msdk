@@ -88,7 +88,8 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
      *            object.
      * @param isolations
      *            a {@link java.util.List} object.
-     * @param numOfDataPoints a {@link java.lang.Integer} object.
+     * @param numOfDataPoints
+     *            a {@link java.lang.Integer} object.
      */
     public AbstractReadOnlyMsScan(@Nonnull RawDataFile dataFile,
             @Nonnull MsSpectrumType spectrumType,

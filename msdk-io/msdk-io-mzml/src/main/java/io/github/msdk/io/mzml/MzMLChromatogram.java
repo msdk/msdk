@@ -231,6 +231,7 @@ class MzMLChromatogram implements Chromatogram {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Range<ChromatographyInfo> getRtRange() {

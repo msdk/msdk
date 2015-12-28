@@ -56,7 +56,10 @@ public class MSDKCentroidingMethod implements MSDKMethod<RawDataFile> {
      *            a
      *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
      *            object.
-     * @param centroidingAlgorithm a {@link io.github.msdk.rawdata.centroiding.MSDKCentroidingAlgorithm} object.
+     * @param centroidingAlgorithm
+     *            a
+     *            {@link io.github.msdk.rawdata.centroiding.MSDKCentroidingAlgorithm}
+     *            object.
      */
     public MSDKCentroidingMethod(@Nonnull RawDataFile rawDataFile,
             @Nonnull MSDKCentroidingAlgorithm centroidingAlgorithm,

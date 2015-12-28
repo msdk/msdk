@@ -348,6 +348,7 @@ public class MonaSpectrum
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @Nonnull Boolean isNA() {
         return false;

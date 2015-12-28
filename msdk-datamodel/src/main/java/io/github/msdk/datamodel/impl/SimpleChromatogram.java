@@ -245,6 +245,7 @@ class SimpleChromatogram implements Chromatogram {
         return ionAnnotation;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Range<ChromatographyInfo> getRtRange() {

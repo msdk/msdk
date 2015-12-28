@@ -147,7 +147,8 @@ class TmpFileDataStore implements DataPointStore {
 
     /** {@inheritDoc} */
     @Override
-    synchronized public void loadData(@Nonnull Object id, @Nonnull Object array) {
+    synchronized public void loadData(@Nonnull Object id,
+            @Nonnull Object array) {
 
         if (byteBuffer == null)
             throw new IllegalStateException("This object has been disposed");

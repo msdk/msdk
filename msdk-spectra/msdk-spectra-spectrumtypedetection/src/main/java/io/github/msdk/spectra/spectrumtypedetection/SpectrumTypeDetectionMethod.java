@@ -30,10 +30,15 @@ import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 public class SpectrumTypeDetectionMethod {
 
     /**
-     * <p>detectSpectrumType.</p>
+     * <p>
+     * detectSpectrumType.
+     * </p>
      *
-     * @param msSpectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
-     * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType} object.
+     * @param msSpectrum
+     *            a {@link io.github.msdk.datamodel.msspectra.MsSpectrum}
+     *            object.
+     * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType}
+     *         object.
      */
     public static MsSpectrumType detectSpectrumType(
             @Nonnull MsSpectrum msSpectrum) {
@@ -50,9 +55,12 @@ public class SpectrumTypeDetectionMethod {
      *
      * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType}
      *         object.
-     * @param mzValues an array of double.
-     * @param intensityValues an array of float.
-     * @param size a {@link java.lang.Integer} object.
+     * @param mzValues
+     *            an array of double.
+     * @param intensityValues
+     *            an array of float.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     public static MsSpectrumType detectSpectrumType(@Nonnull double mzValues[],
             @Nonnull float intensityValues[], @Nonnull Integer size) {

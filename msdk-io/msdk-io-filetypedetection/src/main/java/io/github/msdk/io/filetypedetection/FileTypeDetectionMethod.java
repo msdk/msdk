@@ -69,9 +69,12 @@ public class FileTypeDetectionMethod implements MSDKMethod<FileType> {
     private @Nullable Float finishedPercentage = null;
 
     /**
-     * <p>Constructor for FileTypeDetectionMethod.</p>
+     * <p>
+     * Constructor for FileTypeDetectionMethod.
+     * </p>
      *
-     * @param fileName a {@link java.io.File} object.
+     * @param fileName
+     *            a {@link java.io.File} object.
      */
     public FileTypeDetectionMethod(@Nonnull File fileName) {
         this.fileName = fileName;

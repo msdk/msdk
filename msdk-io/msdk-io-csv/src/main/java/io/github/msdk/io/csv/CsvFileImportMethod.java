@@ -50,18 +50,13 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
  * <p>
  * CsvFileImportMethod class.
  * </p>
- *
  */
 public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-<<<<<<< Upstream, based on upstream/master
-	private int parsedLines, totalLines = 0;
-	private int parsedColumns, totalColumns = 0;
-=======
     private int parsedLines, totalLines = 0;
->>>>>>> a7b36a6 Merged recent updates from  master branch
+    private int parsedColumns, totalColumns = 0;
 
     private final @Nonnull File sourceFile;
     private final @Nonnull DataPointStore dataStore;
@@ -203,19 +198,6 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
                             .equals("ChromatographyInfo")) {
                         ChromatographyInfo chromatographyInfo = null;
 
-<<<<<<< Upstream, based on upstream/master
-						// Two dimensional data (e.g. 360 , 1.630)
-						if (stringData.contains(",")) {
-							String[] rtValues = stringData.split(",");
-							Float rt1 = Float.parseFloat(rtValues[0].replace(" ", ""));
-							Float rt2 = Float.parseFloat(rtValues[1].replace(" ", ""));
-							chromatographyInfo = MSDKObjectBuilder.getChromatographyInfo2D(SeparationType.UNKNOWN_2D, rt1,
-									rt2);
-						} else {
-							Float rt = Float.parseFloat(stringData);
-							chromatographyInfo = MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
-						}
-=======
                         // Two dimensional data (e.g. 360 , 1.630)
                         if (stringData.contains(",")) {
                             String[] rtValues = stringData.split(",");
@@ -225,14 +207,14 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
                                     .parseFloat(rtValues[1].replace(" ", ""));
                             chromatographyInfo = MSDKObjectBuilder
                                     .getChromatographyInfo2D(
-                                            SeparationType.UNKNOWN, rt1, rt2);
+                                            SeparationType.UNKNOWN_2D, rt1,
+                                            rt2);
                         } else {
                             Float rt = Float.parseFloat(stringData);
                             chromatographyInfo = MSDKObjectBuilder
                                     .getChromatographyInfo1D(
                                             SeparationType.UNKNOWN, rt);
                         }
->>>>>>> a7b36a6 Merged recent updates from  master branch
 
                         // Add the data
                         row.setData(currentColumn, chromatographyInfo);
@@ -327,45 +309,24 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
                 newColumnName = defaultName;
         }
 
-<<<<<<< Upstream, based on upstream/master
-		// If no match, then check common matches
-		if (newColumnName == null) {
-			if (columnName.toLowerCase().contains("retention time"))
-				newColumnName = ColumnName.RT;
-			if (columnName.toLowerCase().contains("r.t."))
-				newColumnName = ColumnName.RT;
-			if (columnName.toLowerCase().contains("name"))
-				newColumnName = ColumnName.IONANNOTATION;
-			if (columnName.toLowerCase().contains("formula"))
-				newColumnName = ColumnName.IONANNOTATION;
-		}
-=======
         // If no match, then check common matches
         if (newColumnName == null) {
             if (columnName.toLowerCase().contains("retention time"))
                 newColumnName = ColumnName.RT;
-            if (columnName.toLowerCase().contains("R.T."))
+            if (columnName.toLowerCase().contains("r.t."))
                 newColumnName = ColumnName.RT;
             if (columnName.toLowerCase().contains("name"))
                 newColumnName = ColumnName.IONANNOTATION;
             if (columnName.toLowerCase().contains("formula"))
                 newColumnName = ColumnName.IONANNOTATION;
         }
->>>>>>> a7b36a6 Merged recent updates from  master branch
 
-<<<<<<< Upstream, based on upstream/master
-		// If no samples were found, then assume that all data in the file is
-		// from one sample
-		if (sampleNames.size() == 0) {
-			if (newColumnName != ColumnName.IONANNOTATION)
-				sample = fileSample;
-		}
-=======
         // If no samples were found, then assume that all data in the file is
         // from one sample
-        if (sampleNames.size() == 0)
-            sample = fileSample;
->>>>>>> a7b36a6 Merged recent updates from  master branch
+        if (sampleNames.size() == 0) {
+            if (newColumnName != ColumnName.IONANNOTATION)
+                sample = fileSample;
+        }
 
         // If still no match, then create a new column with String.class
         FeatureTableColumn<?> column = null;
@@ -389,14 +350,9 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
         List<String> colums = new ArrayList<String>();
         List<String> samples = new ArrayList<String>();
 
-<<<<<<< Upstream, based on upstream/master
-		// Split string based on separator
-		String[] columns = firstLine.split(separator);
-		totalColumns = columns.length*2;
-=======
         // Split string based on separator
         String[] columns = firstLine.split(separator);
->>>>>>> a7b36a6 Merged recent updates from  master branch
+        totalColumns = columns.length * 2;
 
         // 1st iteration: Loop through all column names to find sample names.
         // Assumption: Two or more data columns are present for each sample.
@@ -471,21 +427,13 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
                 sampleName = null;
             }
 
-<<<<<<< Upstream, based on upstream/master
-			// Add the sample name to the sample list
-			if (sampleName != null & !samples.contains(sampleName)) {
-				if (sampleName.length() > 0)
-					samples.add(sampleName);
-			}
-
-			parsedColumns++;
-=======
             // Add the sample name to the sample list
             if (sampleName != null & !samples.contains(sampleName)) {
                 if (sampleName.length() > 0)
                     samples.add(sampleName);
             }
->>>>>>> a7b36a6 Merged recent updates from  master branch
+
+            parsedColumns++;
 
         }
 
@@ -577,12 +525,8 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
                 }
             }
 
-<<<<<<< Upstream, based on upstream/master
-			parsedColumns++;
-		}
-=======
+            parsedColumns++;
         }
->>>>>>> a7b36a6 Merged recent updates from  master branch
 
         // 3rd iteration: All column names are unique columns.
         // Assumption: The CSV file corresponds to one sample.
@@ -623,14 +567,10 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
             }
         }
 
-<<<<<<< Upstream, based on upstream/master
-		// Update counter
-		parsedColumns = totalColumns;
+        // Update counter
+        parsedColumns = totalColumns;
 
-	}
-=======
     }
->>>>>>> a7b36a6 Merged recent updates from  master branch
 
     private Boolean containsIntegers(String firstName) {
         for (int i = 0; i < firstName.length(); i++) {
@@ -640,6 +580,15 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
         return false;
     }
 
+    /**
+     * <p>
+     * isInteger.
+     * </p>
+     *
+     * @param input
+     *            a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public boolean isInteger(String input) {
         try {
             Integer.parseInt(input);
@@ -656,31 +605,20 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
         return newFeatureTable;
     }
 
-<<<<<<< Upstream, based on upstream/master
-	/** {@inheritDoc} */
-	@Override
-	public Float getFinishedPercentage() {
-		if (totalLines == 0)
-			return 0f;
-
-		float columns = 0, lines = 0;
-		if (totalLines != 0)
-			lines = (float) parsedLines/totalLines*0.2f;
-		if (totalColumns != 0) {
-			columns = (float) parsedColumns/totalColumns*0.8f;
-		}
-		return lines + columns;
-	}
-=======
     /** {@inheritDoc} */
     @Override
     public Float getFinishedPercentage() {
-        return totalLines == 0 ? null : (float) parsedLines / totalLines;
-        /*
-         * TODO add counter to findNames() since this is taking most of the time
-         */
+        if (totalLines == 0)
+            return 0f;
+
+        float columns = 0, lines = 0;
+        if (totalLines != 0)
+            lines = (float) parsedLines / totalLines * 0.2f;
+        if (totalColumns != 0) {
+            columns = (float) parsedColumns / totalColumns * 0.8f;
+        }
+        return lines + columns;
     }
->>>>>>> a7b36a6 Merged recent updates from  master branch
 
     /** {@inheritDoc} */
     @Override

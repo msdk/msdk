@@ -25,7 +25,8 @@ import io.github.msdk.datamodel.featuretables.Sample;
 /**
  * Implementation of FeatureTableColumn
  */
-class SimpleFeatureTableColumn<DataType> implements FeatureTableColumn<DataType> {
+class SimpleFeatureTableColumn<DataType>
+        implements FeatureTableColumn<DataType> {
 
     private @Nonnull String name;
     private @Nonnull Class<DataType> dataTypeClass;

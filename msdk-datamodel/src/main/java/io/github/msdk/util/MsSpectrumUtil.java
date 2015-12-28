@@ -86,6 +86,10 @@ public class MsSpectrumUtil {
      *            an array of float.
      * @param size
      *            a {@link java.lang.Integer} object.
+     * @param mzValues
+     *            an array of double.
+     * @param mzRange
+     *            a {@link com.google.common.collect.Range} object.
      */
     public static @Nonnull Float getTIC(@Nonnull double mzValues[],
             @Nonnull float intensityValues[], @Nonnull Integer size,
@@ -140,6 +144,10 @@ public class MsSpectrumUtil {
      *            an array of float.
      * @param size
      *            a {@link java.lang.Integer} object.
+     * @param mzValues
+     *            an array of double.
+     * @param mzRange
+     *            a {@link com.google.common.collect.Range} object.
      */
     public static @Nonnull Float getMaxIntensity(@Nonnull double mzValues[],
             @Nonnull float intensityValues[], @Nonnull Integer size,

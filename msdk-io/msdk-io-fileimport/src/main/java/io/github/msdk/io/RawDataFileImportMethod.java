@@ -47,10 +47,16 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
     MSDKMethod<RawDataFile> parser = null;
 
     /**
-     * <p>Constructor for RawDataFileImportMethod.</p>
+     * <p>
+     * Constructor for RawDataFileImportMethod.
+     * </p>
      *
-     * @param sourceFile a {@link java.io.File} object.
-     * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param sourceFile
+     *            a {@link java.io.File} object.
+     * @param dataStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
      */
     public RawDataFileImportMethod(@Nonnull File sourceFile,
             @Nonnull DataPointStore dataStore) {

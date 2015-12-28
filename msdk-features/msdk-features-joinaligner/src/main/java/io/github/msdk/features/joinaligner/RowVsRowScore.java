@@ -66,10 +66,14 @@ class RowVsRowScore implements Comparable<RowVsRowScore> {
     }
 
     /**
-     * <p>compareTo.</p>
+     * <p>
+     * compareTo.
+     * </p>
      *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
-     * @param object a {@link io.github.msdk.features.joinaligner.RowVsRowScore} object.
+     * @param object
+     *            a {@link io.github.msdk.features.joinaligner.RowVsRowScore}
+     *            object.
      * @return a int.
      */
     public int compareTo(RowVsRowScore object) {

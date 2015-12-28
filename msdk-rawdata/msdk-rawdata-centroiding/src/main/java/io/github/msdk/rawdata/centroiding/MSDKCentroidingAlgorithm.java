@@ -26,9 +26,12 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 public interface MSDKCentroidingAlgorithm {
 
     /**
-     * <p>centroidScan.</p>
+     * <p>
+     * centroidScan.
+     * </p>
      *
-     * @param input a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+     * @param input
+     *            a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
      * @return a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
      */
     @Nonnull

@@ -26,12 +26,10 @@ class MzDataCV {
     // Polarity
     static final String cvPolarity = "PSI:1000037";
 
-    
     // Precursor m/z
     static final String cvPrecursorMz = "PSI:1000040";
 
     // Precursor charge
     static final String cvPrecursorCharge = "PSI:1000041";
-
 
 }

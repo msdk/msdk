@@ -70,7 +70,8 @@ public class ChromatogramBuilderMethod
      *            a {@link java.lang.Double} object.
      * @param mzTolerance
      *            a {@link io.github.msdk.util.MZTolerance} object.
-     * @param noiseLevel a {@link java.lang.Float} object.
+     * @param noiseLevel
+     *            a {@link java.lang.Float} object.
      */
     public ChromatogramBuilderMethod(@Nonnull DataPointStore dataPointStore,
             @Nonnull RawDataFile inputFile, @Nonnull Float noiseLevel,
@@ -99,7 +100,8 @@ public class ChromatogramBuilderMethod
      *            a {@link java.lang.Double} object.
      * @param mzTolerance
      *            a {@link io.github.msdk.util.MZTolerance} object.
-     * @param noiseLevel a {@link java.lang.Float} object.
+     * @param noiseLevel
+     *            a {@link java.lang.Float} object.
      */
     public ChromatogramBuilderMethod(@Nonnull DataPointStore dataPointStore,
             @Nonnull RawDataFile inputFile, @Nonnull List<MsScan> inputScans,

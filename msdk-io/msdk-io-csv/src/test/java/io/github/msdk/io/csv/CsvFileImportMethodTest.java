@@ -92,13 +92,8 @@ public class CsvFileImportMethodTest {
         featureTable.dispose();
     }
 
-<<<<<<< Upstream, based on upstream/master
-	@Test
-	public void GCxGC_Import() throws MSDKException {
-=======
     @Test
-    public void GCxGX_Import() throws MSDKException {
->>>>>>> a7b36a6 Merged recent updates from  master branch
+    public void GCxGC_Import() throws MSDKException {
 
         // Create the data structures
         DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();

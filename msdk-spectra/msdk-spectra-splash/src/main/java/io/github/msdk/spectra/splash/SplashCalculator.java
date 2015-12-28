@@ -154,9 +154,12 @@ public class SplashCalculator {
      * </p>
      *
      * @return a {@link java.lang.String} object.
-     * @param mzValues an array of double.
-     * @param intValues an array of float.
-     * @param size a {@link java.lang.Integer} object.
+     * @param mzValues
+     *            an array of double.
+     * @param intValues
+     *            an array of float.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     public static String calculateSplash(double mzValues[], float intValues[],
             Integer size) {

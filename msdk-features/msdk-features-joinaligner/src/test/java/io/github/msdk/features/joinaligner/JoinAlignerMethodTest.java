@@ -39,8 +39,7 @@ public class JoinAlignerMethodTest {
     public void testMzTab_Samples() throws MSDKException {
 
         // Create the data structures
-        DataPointStore dataStore = DataPointStoreFactory
-                .getTmpFileDataStore();
+        DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
 
         // Import file 1
         File inputFile = new File(TEST_DATA_PATH + "Sample 1.mzTab");
@@ -82,8 +81,8 @@ public class JoinAlignerMethodTest {
         // Verify that feature 1 has two ion annotations
         FeatureTableColumn column = featureTable.getColumn("Ion Annotation",
                 null, IonAnnotation.class);
-        List<IonAnnotation> ionAnnotations = featureTable.getRows().get(0)
-                .getData(column);
+        List<IonAnnotation> ionAnnotations = (List) featureTable.getRows()
+                .get(0).getData(column);
         Assert.assertEquals(2, ionAnnotations.size());
         Assert.assertEquals("PE(17:0/17:0)",
                 ionAnnotations.get(0).getDescription());
@@ -91,7 +90,7 @@ public class JoinAlignerMethodTest {
                 ionAnnotations.get(1).getDescription());
 
         // Verify that feature 3 has one ion annotation
-        ionAnnotations = featureTable.getRows().get(2).getData(column);
+        ionAnnotations = (List) featureTable.getRows().get(2).getData(column);
         Assert.assertEquals(1, ionAnnotations.size());
         Assert.assertEquals("Cer(d18:1/17:0)",
                 ionAnnotations.get(0).getDescription());

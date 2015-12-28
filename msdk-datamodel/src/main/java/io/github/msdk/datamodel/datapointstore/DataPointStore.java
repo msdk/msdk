@@ -31,17 +31,23 @@ public interface DataPointStore {
      * calling this method.
      *
      * @return Storage ID for the newly stored data.
-     * @param data a {@link java.lang.Object} object.
-     * @param size a {@link java.lang.Integer} object.
+     * @param data
+     *            a {@link java.lang.Object} object.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     @Nonnull
     Object storeData(@Nonnull Object data, @Nonnull Integer size);
 
     /**
-     * <p>loadData.</p>
+     * <p>
+     * loadData.
+     * </p>
      *
-     * @param id a {@link java.lang.Object} object.
-     * @param array a {@link java.lang.Object} object.
+     * @param id
+     *            a {@link java.lang.Object} object.
+     * @param array
+     *            a {@link java.lang.Object} object.
      */
     void loadData(@Nonnull Object id, @Nonnull Object array);
 

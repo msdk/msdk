@@ -26,24 +26,31 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
  */
 public enum ColumnName {
 
-    ID("Id", Integer.class),
-    GROUPID("Group ID", Integer.class),
-    IONANNOTATION("Ion Annotation", (Class<List<IonAnnotation>>) (Class<?>) List.class),
-    MZ("m/z", Double.class),
-    PPM("ppm", Double.class),
-    RT("RT", ChromatographyInfo.class),
-    RTSTART("RT Start", Double.class),
-    RTEND("RT End", Double.class),
-    DURATION("Duration", Double.class),
-    AREA("Area", Double.class),
-    HEIGHT("Height", Double.class),
-    CHARGE("Charge", Integer.class),
-    NUMBEROFDATAPOINTS("# Data Points", Integer.class),
-    FWHM("FWHM", Double.class),
-    TAILINGFACTOR("Tailing Factor", Double.class),
-    ASYMMETRYFACTOR("Asymmetry Factor", Double.class),
-    CHROMATOGRAM("Chromatogram", Chromatogram.class),
-    RETENTIONINDEX("Retention Index", Double.class);
+    ID("Id", Integer.class), GROUPID("Group ID", Integer.class), IONANNOTATION(
+            "Ion Annotation",
+            (Class<List<IonAnnotation>>) (Class<?>) List.class), MZ("m/z",
+                    Double.class), PPM("ppm", Double.class), RT("RT",
+                            ChromatographyInfo.class), RTSTART("RT Start",
+                                    Double.class), RTEND("RT End",
+                                            Double.class), DURATION("Duration",
+                                                    Double.class), AREA("Area",
+                                                            Double.class), HEIGHT(
+                                                                    "Height",
+                                                                    Double.class), CHARGE(
+                                                                            "Charge",
+                                                                            Integer.class), NUMBEROFDATAPOINTS(
+                                                                                    "# Data Points",
+                                                                                    Integer.class), FWHM(
+                                                                                            "FWHM",
+                                                                                            Double.class), TAILINGFACTOR(
+                                                                                                    "Tailing Factor",
+                                                                                                    Double.class), ASYMMETRYFACTOR(
+                                                                                                            "Asymmetry Factor",
+                                                                                                            Double.class), CHROMATOGRAM(
+                                                                                                                    "Chromatogram",
+                                                                                                                    Chromatogram.class), RETENTIONINDEX(
+                                                                                                                            "Retention Index",
+                                                                                                                            Double.class);
 
     @Nonnull
     private final String name;

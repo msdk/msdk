@@ -35,7 +35,6 @@ import io.github.msdk.search.mona.pojo.Result;
 import io.github.msdk.search.mona.pojo.SimilaritySearchQuery;
 import io.github.msdk.search.mona.pojo.SimilaritySearchResult;
 
-
 /**
  * MoNA specific implementation of the Search Interface
  */
@@ -52,7 +51,9 @@ public class MonaSearch implements Search, MonaConfiguration {
      * returns a mass spectra by it's property name
      */
     @Override
-    public @Nonnull Iterator<MsSpectrum> findSpectrumByProperty(String propertyName, Serializable propertyValue) throws IOException {
+    public @Nonnull Iterator<MsSpectrum> findSpectrumByProperty(
+            String propertyName, Serializable propertyValue)
+                    throws IOException {
         return getMsSpectrumIterator(null);
     }
 
@@ -61,7 +62,8 @@ public class MonaSearch implements Search, MonaConfiguration {
      *
      * searches for similar spectra based on an existing mona id
      */
-    public Iterator<MsSpectrum> findSimilarSpectra(long id, Integer minSimilarity) throws IOException {
+    public Iterator<MsSpectrum> findSimilarSpectra(long id,
+            Integer minSimilarity) throws IOException {
         SimilaritySearchQuery query = new SimilaritySearchQuery();
         query.setMinSimilarity(minSimilarity);
         query.setSpectra(String.valueOf(id));
@@ -74,26 +76,35 @@ public class MonaSearch implements Search, MonaConfiguration {
      * searches for similar spectra, based on the provided Spectrum
      */
     @Override
-    public @Nonnull Iterator<MsSpectrum> findSimilarSpectra(MsSpectrum compare, Integer minSimilarity) throws IOException  {
+    public @Nonnull Iterator<MsSpectrum> findSimilarSpectra(MsSpectrum compare,
+            Integer minSimilarity) throws IOException {
         SimilaritySearchQuery query = buildQuery(compare, minSimilarity);
         return getMsSpectrumIterator(query);
     }
 
     /**
-     * runs the actual query against the server and provides us with an iterator to access the results
+     * runs the actual query against the server and provides us with an iterator
+     * to access the results
+     * 
      * @param query
      * @return
      */
-    private @Nonnull Iterator<MsSpectrum> getMsSpectrumIterator(SimilaritySearchQuery query) throws IOException {
-        //create a client and send data to the server
-        final Client client = ClientBuilder.newBuilder().register(JacksonFeature.class).register(new LoggingFilter()).build();
+    private @Nonnull Iterator<MsSpectrum> getMsSpectrumIterator(
+            SimilaritySearchQuery query) throws IOException {
+        // create a client and send data to the server
+        final Client client = ClientBuilder.newBuilder()
+                .register(JacksonFeature.class).register(new LoggingFilter())
+                .build();
 
-        WebTarget target = client.target(MONA_URL).path("/rest/spectra/similarity");
-        Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(query, MediaType.APPLICATION_JSON));
+        WebTarget target = client.target(MONA_URL)
+                .path("/rest/spectra/similarity");
+        Response response = target.request(MediaType.APPLICATION_JSON)
+                .post(Entity.entity(query, MediaType.APPLICATION_JSON));
 
-        SimilaritySearchResult results = response.readEntity(SimilaritySearchResult.class);
+        SimilaritySearchResult results = response
+                .readEntity(SimilaritySearchResult.class);
 
-        //fetch results
+        // fetch results
         final Iterator<Result> resultIterator = results.getResult().iterator();
 
         /**
@@ -125,17 +136,19 @@ public class MonaSearch implements Search, MonaConfiguration {
 
     /**
      * builds our similarity query search object
+     * 
      * @param compare
      * @param minSimilarity
      * @return
      */
-    private SimilaritySearchQuery buildQuery(MsSpectrum compare, Integer minSimilarity) {
-        //builds a standard mona spectra string ion:intensity ion:intensity
+    private SimilaritySearchQuery buildQuery(MsSpectrum compare,
+            Integer minSimilarity) {
+        // builds a standard mona spectra string ion:intensity ion:intensity
         StringBuffer spectraString = new StringBuffer();
 
         double mzValues[] = compare.getMzValues();
         float intValues[] = compare.getIntensityValues();
-        
+
         for (int i = 0; i < mzValues.length; i++) {
             spectraString.append(mzValues[i]);
             spectraString.append(":");
@@ -143,7 +156,7 @@ public class MonaSearch implements Search, MonaConfiguration {
             spectraString.append(" ");
         }
 
-        //build our query object
+        // build our query object
         SimilaritySearchQuery query = new SimilaritySearchQuery();
         query.setSpectra(spectraString.toString().trim());
         query.setMinSimilarity(minSimilarity);

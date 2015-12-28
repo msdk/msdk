@@ -34,8 +34,12 @@ public class ChromatogramUtil {
      * feature.
      *
      * @return a {@link com.google.common.collect.Range} object.
-     * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} objects.
-     * @param size a {@link java.lang.Integer} object.
+     * @param rtValues
+     *            an array of
+     *            {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *            objects.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     @Nonnull
     public static Range<ChromatographyInfo> getDataPointsChromatographyRange(
@@ -56,8 +60,10 @@ public class ChromatogramUtil {
      * chromatogram.
      *
      * @return a {@link com.google.common.collect.Range} object.
-     * @param intensityValues an array of {@link java.lang.Float} objects.
-     * @param size a {@link java.lang.Integer} object.
+     * @param intensityValues
+     *            an array of {@link java.lang.Float} objects.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     public static @Nullable Range<Float> getDataPointsIntensityRange(
             @Nonnull Float intensityValues[], @Nonnull Integer size) {
@@ -103,7 +109,8 @@ public class ChromatogramUtil {
      *            a {@link io.github.msdk.util.ChromatogramUtil.calcMethod}
      *            object.
      * @return a {@link java.lang.Double} object.
-     * @param size a {@link java.lang.Integer} object.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     public static @Nullable Double calculateMz(@Nonnull double[] mzValues,
             @Nonnull float[] intensityValues, @Nonnull Integer size,
@@ -171,9 +178,14 @@ public class ChromatogramUtil {
      * Returns the retention time of this feature.
      *
      * @return a float.
-     * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} objects.
-     * @param intensityValues an array of float.
-     * @param size a {@link java.lang.Integer} object.
+     * @param rtValues
+     *            an array of
+     *            {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *            objects.
+     * @param intensityValues
+     *            an array of float.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     public static @Nullable Float getRt(@Nonnull ChromatographyInfo rtValues[],
             @Nonnull float[] intensityValues, @Nonnull Integer size) {
@@ -203,8 +215,12 @@ public class ChromatogramUtil {
      * Returns the start retention time of this feature.
      *
      * @return a Float.
-     * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} objects.
-     * @param size a {@link java.lang.Integer} object.
+     * @param rtValues
+     *            an array of
+     *            {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *            objects.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     public static @Nullable Float getRtStart(
             @Nonnull ChromatographyInfo rtValues[], @Nonnull Integer size) {
@@ -224,8 +240,12 @@ public class ChromatogramUtil {
      * Returns the end retention time of this feature.
      *
      * @return a Float.
-     * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} objects.
-     * @param size a {@link java.lang.Integer} object.
+     * @param rtValues
+     *            an array of
+     *            {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *            objects.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     public static Float getRtEnd(@Nonnull ChromatographyInfo rtValues[],
             @Nonnull Integer size) {
@@ -246,8 +266,12 @@ public class ChromatogramUtil {
      * Returns the duration of this feature.
      *
      * @return a float.
-     * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} objects.
-     * @param size a {@link java.lang.Integer} object.
+     * @param rtValues
+     *            an array of
+     *            {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *            objects.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     public static @Nullable Float getDuration(
             @Nonnull ChromatographyInfo rtValues[], @Nonnull Integer size) {
@@ -270,8 +294,10 @@ public class ChromatogramUtil {
      * Returns the maximum height of this feature.
      *
      * @return a float.
-     * @param intensityValues an array of float.
-     * @param size a {@link java.lang.Integer} object.
+     * @param intensityValues
+     *            an array of float.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     public static @Nullable Float getMaxHeight(@Nonnull float[] intensityValues,
             @Nonnull Integer size) {
@@ -300,9 +326,14 @@ public class ChromatogramUtil {
      * Returns the area of this feature.
      *
      * @return a float.
-     * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} objects.
-     * @param intensityValues an array of float.
-     * @param size a {@link java.lang.Integer} object.
+     * @param rtValues
+     *            an array of
+     *            {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *            objects.
+     * @param intensityValues
+     *            an array of float.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     public static @Nullable Float getArea(
             @Nonnull ChromatographyInfo rtValues[],
@@ -333,9 +364,14 @@ public class ChromatogramUtil {
      * Returns the full width at half maximum (FWHM) of this feature.
      *
      * @return a {@link java.lang.Double} object.
-     * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} objects.
-     * @param intensityValues an array of float.
-     * @param size a {@link java.lang.Integer} object.
+     * @param rtValues
+     *            an array of
+     *            {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *            objects.
+     * @param intensityValues
+     *            an array of float.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     public static @Nullable Double getFwhm(
             @Nonnull ChromatographyInfo rtValues[],
@@ -366,9 +402,14 @@ public class ChromatogramUtil {
      * Returns the tailing factor of this feature.
      *
      * @return a {@link java.lang.Double} object.
-     * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} objects.
-     * @param intensityValues an array of float.
-     * @param size a {@link java.lang.Integer} object.
+     * @param rtValues
+     *            an array of
+     *            {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *            objects.
+     * @param intensityValues
+     *            an array of float.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     public static @Nullable Double getTailingFactor(
             @Nonnull ChromatographyInfo rtValues[],
@@ -403,9 +444,14 @@ public class ChromatogramUtil {
      * Returns the asymmetry factor of this feature.
      *
      * @return a {@link java.lang.Double} object.
-     * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} objects.
-     * @param intensityValues an array of float.
-     * @param size a {@link java.lang.Integer} object.
+     * @param rtValues
+     *            an array of
+     *            {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *            objects.
+     * @param intensityValues
+     *            an array of float.
+     * @param size
+     *            a {@link java.lang.Integer} object.
      */
     public static @Nullable Double getAsymmetryFactor(
             @Nonnull ChromatographyInfo rtValues[],

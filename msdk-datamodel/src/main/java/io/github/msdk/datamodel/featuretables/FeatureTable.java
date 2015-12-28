@@ -29,7 +29,9 @@ import com.google.common.collect.Range;
 public interface FeatureTable {
 
     /**
-     * <p>getName.</p>
+     * <p>
+     * getName.
+     * </p>
      *
      * @return Short descriptive name for the feature table
      */
@@ -141,12 +143,15 @@ public interface FeatureTable {
     void dispose();
 
     /**
-     * Shortcut to return an immutable list of {@link FeatureTableRow}s found in this
-     * feature table with average m/z and RT values within the given ranges.
+     * Shortcut to return an immutable list of {@link FeatureTableRow}s found in
+     * this feature table with average m/z and RT values within the given
+     * ranges.
      *
      * @return the list of feature table rows.
-     * @param rtRange a {@link com.google.common.collect.Range} object.
-     * @param mzRange a {@link com.google.common.collect.Range} object.
+     * @param rtRange
+     *            a {@link com.google.common.collect.Range} object.
+     * @param mzRange
+     *            a {@link com.google.common.collect.Range} object.
      */
     List<FeatureTableRow> getRowsInsideRange(Range<Double> rtRange,
             Range<Double> mzRange);

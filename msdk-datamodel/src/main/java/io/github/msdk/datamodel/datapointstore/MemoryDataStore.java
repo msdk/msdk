@@ -39,7 +39,8 @@ class MemoryDataStore implements DataPointStore {
      * Stores new array of data points.
      */
     @Override
-    public @Nonnull Object storeData(@Nonnull Object data, @Nonnull Integer size) {
+    public @Nonnull Object storeData(@Nonnull Object data,
+            @Nonnull Integer size) {
 
         if (storageMap == null)
             throw new IllegalStateException("This object has been disposed");

@@ -185,7 +185,8 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 
             // Check m/z
             if (filterByMz) {
-                if (!mzRange.contains(row.getMz()))
+                final Double mz = row.getMz();
+                if ((mz == null) || (!mzRange.contains(mz)))
                     continue;
             }
 

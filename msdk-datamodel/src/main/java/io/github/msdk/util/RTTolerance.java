@@ -31,10 +31,14 @@ public class RTTolerance {
     private final boolean isAbsolute;
 
     /**
-     * <p>Constructor for RTTolerance.</p>
+     * <p>
+     * Constructor for RTTolerance.
+     * </p>
      *
-     * @param rtTolerance a {@link java.lang.Double} object.
-     * @param isAbsolute a {@link java.lang.Boolean} object.
+     * @param rtTolerance
+     *            a {@link java.lang.Double} object.
+     * @param isAbsolute
+     *            a {@link java.lang.Boolean} object.
      */
     public RTTolerance(final double rtTolerance, final boolean isAbsolute) {
         this.rtTolerance = rtTolerance;
@@ -42,7 +46,9 @@ public class RTTolerance {
     }
 
     /**
-     * <p>isAbsolute.</p>
+     * <p>
+     * isAbsolute.
+     * </p>
      *
      * @return a boolean.
      */
@@ -51,7 +57,9 @@ public class RTTolerance {
     }
 
     /**
-     * <p>getTolerance.</p>
+     * <p>
+     * getTolerance.
+     * </p>
      *
      * @return a double.
      */
@@ -60,23 +68,30 @@ public class RTTolerance {
     }
 
     /**
-     * <p>getToleranceRange.</p>
+     * <p>
+     * getToleranceRange.
+     * </p>
      *
-     * @param rtValue a double.
+     * @param rtValue
+     *            a double.
      * @return a {@link com.google.common.collect.Range} object.
      */
     public Range<Double> getToleranceRange(final double rtValue) {
-        final double absoluteTolerance = isAbsolute ? rtTolerance : rtValue
-                * rtTolerance;
-        return Range.closed(rtValue - absoluteTolerance, rtValue
-                + absoluteTolerance);
+        final double absoluteTolerance = isAbsolute ? rtTolerance
+                : rtValue * rtTolerance;
+        return Range.closed(rtValue - absoluteTolerance,
+                rtValue + absoluteTolerance);
     }
 
     /**
-     * <p>checkWithinTolerance.</p>
+     * <p>
+     * checkWithinTolerance.
+     * </p>
      *
-     * @param rt1 a double.
-     * @param rt2 a double.
+     * @param rt1
+     *            a double.
+     * @param rt2
+     *            a double.
      * @return a boolean.
      */
     public boolean checkWithinTolerance(final double rt1, final double rt2) {

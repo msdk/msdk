@@ -29,28 +29,33 @@ public enum SeparationType {
     /**
      * Gas chromatography.
      */
-    GC(1), /**
-            * Comprehensive two-dimensional liquid chromatography.
-            */
-    GCxGC(2), /**
-               * Liquid chromatography.
-               */
-    LC(1), /**
-            * Comprehensive two-dimensional liquid chromatography.
-            */
-    LCxLC(2), /**
-               * Capillary electrophoresis chromatography.
-               */
-    CE(1), /**
-            * Ion mobility spectrometry. First dimension is retention time,
-            * second dimension is ion drift time.
-            */
-    IMS(2), /**
-             * Unknown separation method. Expect 1 feature dimension, e.g.
-             * retention time.
-             */
-    UNKNOWN(1),
-    UNKNOWN_2D(2);
+    GC(1),
+    /**
+     * Comprehensive two-dimensional liquid chromatography.
+     */
+    GCxGC(2),
+    /**
+     * Liquid chromatography.
+     */
+    LC(1),
+    /**
+     * Comprehensive two-dimensional liquid chromatography.
+     */
+    LCxLC(2),
+    /**
+     * Capillary electrophoresis chromatography.
+     */
+    CE(1),
+    /**
+     * Ion mobility spectrometry. First dimension is retention time, second
+     * dimension is ion drift time.
+     */
+    IMS(2),
+    /**
+     * Unknown separation method. Expect 1 feature dimension, e.g. retention
+     * time.
+     */
+    UNKNOWN(1), UNKNOWN_2D(2);
 
     private final int featureDimensions;
 

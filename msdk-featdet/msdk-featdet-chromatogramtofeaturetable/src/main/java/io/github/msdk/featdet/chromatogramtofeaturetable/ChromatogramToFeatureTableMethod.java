@@ -119,7 +119,8 @@ public class ChromatogramToFeatureTableMethod
 
             if (chromatogram.getIonAnnotation() != null) {
                 column = featureTable.getColumn(ColumnName.IONANNOTATION, null);
-                List<IonAnnotation> ionAnnotations = newRow.getData(column);
+                List<IonAnnotation> ionAnnotations = (List) newRow
+                        .getData(column);
                 if (ionAnnotations == null)
                     ionAnnotations = new ArrayList<IonAnnotation>();
                 ionAnnotations.add(chromatogram.getIonAnnotation());

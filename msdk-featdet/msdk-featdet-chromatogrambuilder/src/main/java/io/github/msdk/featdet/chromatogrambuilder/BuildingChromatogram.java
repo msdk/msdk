@@ -144,7 +144,7 @@ class BuildingChromatogram {
         }
         return array;
     }
-    
+
     int size() {
         return mzValues.size();
     }

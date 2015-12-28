@@ -42,7 +42,7 @@ public interface WritableRawDataFile extends RawDataFile {
      * Updates the file type of this raw data file.
      */
     void setRawDataFileType(@Nonnull FileType rawDataFileType);
-    
+
     /**
      * {@inheritDoc}
      *

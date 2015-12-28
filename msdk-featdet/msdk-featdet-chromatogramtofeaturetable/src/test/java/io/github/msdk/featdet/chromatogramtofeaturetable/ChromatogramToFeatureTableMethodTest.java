@@ -64,24 +64,24 @@ public class ChromatogramToFeatureTableMethodTest {
         IonAnnotation ion1 = MSDKObjectBuilder.getSimpleIonAnnotation();
         ion1.setExpectedMz(332.56);
         ion1.setAnnotationId("Feature 332.56");
-        ion1.setChromatographyInfo(MSDKObjectBuilder.getChromatographyInfo1D(
-                SeparationType.LC, (float) 772.8));
+        ion1.setChromatographyInfo(MSDKObjectBuilder
+                .getChromatographyInfo1D(SeparationType.LC, (float) 772.8));
         ionAnnotations.add(ion1);
 
         // Ion 2
         IonAnnotation ion2 = MSDKObjectBuilder.getSimpleIonAnnotation();
         ion2.setExpectedMz(508.004);
         ion2.setAnnotationId("Feature 508.004");
-        ion2.setChromatographyInfo(MSDKObjectBuilder.getChromatographyInfo1D(
-                SeparationType.LC, (float) 868.8));
+        ion2.setChromatographyInfo(MSDKObjectBuilder
+                .getChromatographyInfo1D(SeparationType.LC, (float) 868.8));
         ionAnnotations.add(ion2);
 
         // Ion 3
         IonAnnotation ion3 = MSDKObjectBuilder.getSimpleIonAnnotation();
         ion3.setExpectedMz(362.102);
         ion3.setAnnotationId("Feature 362.102");
-        ion3.setChromatographyInfo(MSDKObjectBuilder.getChromatographyInfo1D(
-                SeparationType.LC, (float) 643.2));
+        ion3.setChromatographyInfo(MSDKObjectBuilder
+                .getChromatographyInfo1D(SeparationType.LC, (float) 643.2));
         ionAnnotations.add(ion3);
 
         // Variables
@@ -100,8 +100,8 @@ public class ChromatogramToFeatureTableMethodTest {
         Assert.assertEquals(3, chromatograms.size());
 
         // Create a new feature table
-        FeatureTable featureTable = MSDKObjectBuilder.getFeatureTable(
-                "orbitrap_300-600mz", dataStore);
+        FeatureTable featureTable = MSDKObjectBuilder
+                .getFeatureTable("orbitrap_300-600mz", dataStore);
         Sample sample = MSDKObjectBuilder.getSimpleSample("orbitrap_300-600mz");
 
         ChromatogramToFeatureTableMethod tableBuilder = new ChromatogramToFeatureTableMethod(
@@ -123,13 +123,13 @@ public class ChromatogramToFeatureTableMethodTest {
                 chromatographyInfo.getRetentionTime() / 60, 0.000001);
 
         // Sample specific columns
-        FeatureTableColumn<Integer> idColumn = featureTable.getColumn(
-                ColumnName.ID, null);
+        FeatureTableColumn<Integer> idColumn = featureTable
+                .getColumn(ColumnName.ID, null);
         int id = (int) row.getData(idColumn);
         Assert.assertEquals(2, id);
 
-        FeatureTableColumn<Double> mzColumn = featureTable.getColumn(
-                ColumnName.MZ, sample);
+        FeatureTableColumn<Double> mzColumn = featureTable
+                .getColumn(ColumnName.MZ, sample);
         double mz = row.getData(mzColumn);
         Assert.assertEquals(508.0034287396599, mz, 0.000001);
 
@@ -139,38 +139,38 @@ public class ChromatogramToFeatureTableMethodTest {
         Float rt = chromInfo.getRetentionTime();
         Assert.assertEquals(14.481896, rt / 60, 0.000001);
 
-        FeatureTableColumn<Double> rtStartColumn = featureTable.getColumn(
-                ColumnName.RTSTART, sample);
+        FeatureTableColumn<Double> rtStartColumn = featureTable
+                .getColumn(ColumnName.RTSTART, sample);
         double rtStart = row.getData(rtStartColumn);
         Assert.assertEquals(14.16822, rtStart / 60, 0.000001);
 
-        FeatureTableColumn<Double> rtEndColumn = featureTable.getColumn(
-                ColumnName.RTEND, sample);
+        FeatureTableColumn<Double> rtEndColumn = featureTable
+                .getColumn(ColumnName.RTEND, sample);
         double rtEnd = row.getData(rtEndColumn);
         Assert.assertEquals(14.9408865, rtEnd / 60, 0.000001);
 
-        FeatureTableColumn<Double> durationColumn = featureTable.getColumn(
-                ColumnName.DURATION, sample);
+        FeatureTableColumn<Double> durationColumn = featureTable
+                .getColumn(ColumnName.DURATION, sample);
         double duration = row.getData(durationColumn);
         Assert.assertEquals(46.3599853515625, duration, 0.000001);
 
-        FeatureTableColumn<Double> heightColumn = featureTable.getColumn(
-                ColumnName.HEIGHT, sample);
+        FeatureTableColumn<Double> heightColumn = featureTable
+                .getColumn(ColumnName.HEIGHT, sample);
         double height = row.getData(heightColumn);
         Assert.assertEquals(6317753.0, height, 0.000001);
 
-        FeatureTableColumn<Double> areaColumn = featureTable.getColumn(
-                ColumnName.AREA, sample);
+        FeatureTableColumn<Double> areaColumn = featureTable
+                .getColumn(ColumnName.AREA, sample);
         double area = row.getData(areaColumn);
         Assert.assertEquals(8.4486608E7, area, 0.000001);
 
-        FeatureTableColumn<Integer> ndataPointsColumn = featureTable.getColumn(
-                ColumnName.NUMBEROFDATAPOINTS, sample);
+        FeatureTableColumn<Integer> ndataPointsColumn = featureTable
+                .getColumn(ColumnName.NUMBEROFDATAPOINTS, sample);
         int datapoints = (int) row.getData(ndataPointsColumn);
         Assert.assertEquals(18, datapoints, 0.000001);
 
-        FeatureTableColumn<Double> fhwmColumn = featureTable.getColumn(
-                ColumnName.FWHM, sample);
+        FeatureTableColumn<Double> fhwmColumn = featureTable
+                .getColumn(ColumnName.FWHM, sample);
         double fwhm = row.getData(fhwmColumn);
         Assert.assertEquals(0.19513144, fwhm / 60, 0.000001);
 
@@ -179,8 +179,8 @@ public class ChromatogramToFeatureTableMethodTest {
         double tf = row.getData(tailingFactorColumn);
         Assert.assertEquals(1.3311329466690036, tf, 0.000001);
 
-        FeatureTableColumn<Double> assymFactorColumn = featureTable.getColumn(
-                ColumnName.ASYMMETRYFACTOR, sample);
+        FeatureTableColumn<Double> assymFactorColumn = featureTable
+                .getColumn(ColumnName.ASYMMETRYFACTOR, sample);
         double af = row.getData(assymFactorColumn);
         Assert.assertEquals(1.7337219745465573, af, 0.000001);
 

@@ -41,7 +41,7 @@ public class MonaSpectrumTest {
     }
 
     @Ignore("Ignored because MoNA API is throwing HTTP 500 error")
-    @Test 
+    @Test
     public void testGetSpectrumType() throws Exception {
         assertTrue(spectrum.getSpectrumType() != null);
     }

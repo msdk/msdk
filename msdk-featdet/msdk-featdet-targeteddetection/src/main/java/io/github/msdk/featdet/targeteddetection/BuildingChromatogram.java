@@ -27,7 +27,7 @@ class BuildingChromatogram {
     private ChromatographyInfo[] rtValues = new ChromatographyInfo[100];
     private double[] mzValues = new double[100];
     private float[] intensityValues = new float[100];
-    
+
     void addDataPoint(@Nonnull ChromatographyInfo rt, @Nonnull Double mz,
             @Nonnull Float intensity) {
 
@@ -56,11 +56,16 @@ class BuildingChromatogram {
     }
 
     /**
-     * <p>cropChromatogram.</p>
+     * <p>
+     * cropChromatogram.
+     * </p>
      *
-     * @param rtRange a {@link com.google.common.collect.Range} object.
-     * @param intensityTolerance a {@link java.lang.Double} object.
-     * @param noiseLevel a {@link java.lang.Double} object.
+     * @param rtRange
+     *            a {@link com.google.common.collect.Range} object.
+     * @param intensityTolerance
+     *            a {@link java.lang.Double} object.
+     * @param noiseLevel
+     *            a {@link java.lang.Double} object.
      */
     public void cropChromatogram(Range<Double> rtRange,
             Double intensityTolerance, Double noiseLevel) {
@@ -69,8 +74,7 @@ class BuildingChromatogram {
         Integer apexDataPoint = null;
         for (int i = 0; i < size; i++) {
             Float currentIntensity = intensityValues[i];
-            Double currentRt = (double) rtValues[i]
-                    .getRetentionTime();
+            Double currentRt = (double) rtValues[i].getRetentionTime();
 
             // Verify data point
             if ((apexDataPoint == null
@@ -109,10 +113,11 @@ class BuildingChromatogram {
             }
 
             // Shift the peakPoints
-            int peakPoints = endIndex-startIndex+1;
+            int peakPoints = endIndex - startIndex + 1;
             System.arraycopy(rtValues, startIndex, rtValues, 0, peakPoints);
             System.arraycopy(mzValues, startIndex, mzValues, 0, peakPoints);
-            System.arraycopy(intensityValues, startIndex, intensityValues, 0, peakPoints);
+            System.arraycopy(intensityValues, startIndex, intensityValues, 0,
+                    peakPoints);
             size = peakPoints;
 
         }
@@ -120,9 +125,12 @@ class BuildingChromatogram {
     }
 
     /**
-     * <p>allocate.</p>
+     * <p>
+     * allocate.
+     * </p>
      *
-     * @param newSize a int.
+     * @param newSize
+     *            a int.
      */
     public void allocate(int newSize) {
 
@@ -132,7 +140,7 @@ class BuildingChromatogram {
         ChromatographyInfo[] rtValuesNew = new ChromatographyInfo[newSize];
         double[] mzValuesNew = new double[newSize];
         float[] intensityValuesNew = new float[newSize];
-        
+
         if (size > 0) {
             System.arraycopy(rtValues, 0, rtValuesNew, 0, size);
             System.arraycopy(mzValues, 0, mzValuesNew, 0, size);
@@ -145,7 +153,9 @@ class BuildingChromatogram {
     }
 
     /**
-     * <p>Getter for the field <code>size</code>.</p>
+     * <p>
+     * Getter for the field <code>size</code>.
+     * </p>
      *
      * @return a int.
      */

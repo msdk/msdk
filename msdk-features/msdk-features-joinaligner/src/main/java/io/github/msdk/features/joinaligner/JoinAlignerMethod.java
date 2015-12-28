@@ -68,6 +68,7 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
      * </p>
      *
      * @param featureTables
+     *            a {@link java.util.List} object.
      * @param dataStore
      *            a
      *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}

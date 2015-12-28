@@ -315,6 +315,7 @@ class MzDataSaxHandler extends DefaultHandler {
      * {@inheritDoc}
      *
      * characters()
+     * 
      * @see org.xml.sax.ContentHandler#characters(char[], int, int)
      */
     public void characters(char buf[], int offset, int len)

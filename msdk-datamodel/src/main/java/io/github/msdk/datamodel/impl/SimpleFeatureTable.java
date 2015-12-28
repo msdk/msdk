@@ -178,8 +178,10 @@ class SimpleFeatureTable implements FeatureTable {
             Range<Double> mzRange) {
         List<FeatureTableRow> result = new ArrayList<FeatureTableRow>();
         for (FeatureTableRow row : featureTableRows) {
-            ChromatographyInfo rowChromatographyInfo = row.getChromatographyInfo();
-            if (rtRange.contains((double) rowChromatographyInfo.getRetentionTime())
+            ChromatographyInfo rowChromatographyInfo = row
+                    .getChromatographyInfo();
+            if (rtRange
+                    .contains((double) rowChromatographyInfo.getRetentionTime())
                     && mzRange.contains(row.getMz()))
                 result.add(row);
         }
