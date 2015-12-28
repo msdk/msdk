@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -66,8 +66,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
      *            a list of {@link io.github.msdk.datamodel.rawdata.MsScan}
      *            objects.
      * @param dataPointStore
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param mzTolerance
      *            a {@link io.github.msdk.util.MZTolerance} object.

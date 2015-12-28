@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
 
@@ -47,8 +47,7 @@ public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
      * </p>
      *
      * @param dataPointStore
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param mzPeakWidthRange
      *            a {@link com.google.common.collect.Range} object.

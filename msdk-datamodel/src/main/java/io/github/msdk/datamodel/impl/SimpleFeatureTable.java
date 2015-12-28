@@ -23,7 +23,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;

@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.identification;
+package io.github.msdk.id;
 
 import java.io.IOException;
 import java.io.Serializable;

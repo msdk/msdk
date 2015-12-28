@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -53,8 +53,7 @@ public class MSDKCentroidingMethod implements MSDKMethod<RawDataFile> {
      * @param rawDataFile
      *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
      * @param store
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param centroidingAlgorithm
      *            a

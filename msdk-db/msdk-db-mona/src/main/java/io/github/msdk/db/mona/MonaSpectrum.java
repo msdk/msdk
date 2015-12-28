@@ -48,7 +48,7 @@ import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.search.mona.pojo.Spectra;
+import io.github.msdk.db.mona.pojo.Spectra;
 
 /**
  * A basic MoNA record, which describes a MassBank of Northern America Spectra.

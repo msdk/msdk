@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.datapointstore;
+package io.github.msdk.datamodel.datastore;
 
 import java.io.File;
 import java.io.IOException;

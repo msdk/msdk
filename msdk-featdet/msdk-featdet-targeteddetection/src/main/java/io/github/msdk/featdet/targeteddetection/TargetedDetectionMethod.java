@@ -26,7 +26,7 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -73,8 +73,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
      * @param rawDataFile
      *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
      * @param dataPointStore
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param mzTolerance
      *            a {@link io.github.msdk.util.MZTolerance} object.

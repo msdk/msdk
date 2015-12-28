@@ -17,6 +17,9 @@ package io.github.msdk.datamodel.datapointstore;
 import org.junit.Assert;
 import org.junit.Test;
 
+import io.github.msdk.datamodel.datastore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
+
 /**
  * Tests for TmpFileDataPointStore
  */

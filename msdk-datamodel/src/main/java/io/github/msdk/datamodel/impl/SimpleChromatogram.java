@@ -25,7 +25,7 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
@@ -56,8 +56,7 @@ class SimpleChromatogram implements Chromatogram {
      * </p>
      *
      * @param dataPointStore
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param chromatogramNumber
      *            a {@link java.lang.Integer} object.

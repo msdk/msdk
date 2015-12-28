@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.filetypedetection.FileTypeDetectionMethod;
@@ -30,7 +30,7 @@ import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 import io.github.msdk.io.nativeformats.ThermoRawImportMethod;
 import io.github.msdk.io.nativeformats.WatersRawImportMethod;
-import io.github.msdk.io.rawdataimport.netcdf.NetCDFFileImportMethod;
+import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
 
 /**
  * This class detects the type of the given data file using the
@@ -54,8 +54,7 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
      * @param sourceFile
      *            a {@link java.io.File} object.
      * @param dataStore
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      */
     public RawDataFileImportMethod(@Nonnull File sourceFile,
