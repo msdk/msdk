@@ -46,6 +46,16 @@ public interface MsSpectrum {
     void setSpectrumType(@Nonnull MsSpectrumType spectrumType);
 
     /**
+     * <p>
+     * getNumberOfDataPoints.
+     * </p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
+    @Nonnull
+    Integer getNumberOfDataPoints();
+
+    /**
      * Loads the data points of this spectrum into the given DataPointList. If
      * the DataPointList is not empty, it is cleared first. This method allows
      * the internal arrays of the DataPointList to be reused for loading
@@ -54,10 +64,22 @@ public interface MsSpectrum {
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
      *
-     * @param dataPointList
-     *            DataPointList into which the data points should be loaded
+     * @return an array of double.
      */
-    void getDataPoints(@Nonnull MsSpectrumDataPointList dataPointList);
+    @Nonnull
+    double[] getMzValues();
+
+    /**
+     * <p>
+     * getMzValues.
+     * </p>
+     *
+     * @param array
+     *            an array of double.
+     * @return an array of double.
+     */
+    @Nonnull
+    double[] getMzValues(@Nullable double array[]);
 
     /**
      * Returns data points in given m/z and intensity ranges. Importantly, a new
@@ -66,30 +88,37 @@ public interface MsSpectrum {
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
      *
-     * @param mzRange
-     *            range of m/z values to select
-     * @param intensityRange
-     *            range of intensity values to select
-     * @param dataPointList a {@link io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList} object.
+     * @return an array of float.
      */
-    void getDataPointsByMzAndIntensity(
-            @Nonnull MsSpectrumDataPointList dataPointList,
-            @Nonnull Range<Double> mzRange,
-            @Nonnull Range<Float> intensityRange);
+    @Nonnull
+    float[] getIntensityValues();
 
     /**
-     * Updates the data points of this mass spectrum. If this MassSpectrum has
-     * been added to a raw data file or a feature table, the data points will be
-     * immediately stored in a temporary file. Therefore, the DataPointList in
-     * the parameter can be reused for other purposes.
+     * <p>
+     * getIntensityValues.
+     * </p>
      *
-     * Note: this method may need to write data to disk, therefore it may be
-     * quite slow.
-     *
-     * @param newDataPoints
-     *            new data points
+     * @param array
+     *            an array of float.
+     * @return an array of float.
      */
-    void setDataPoints(@Nonnull MsSpectrumDataPointList newDataPoints);
+    @Nonnull
+    float[] getIntensityValues(@Nullable float array[]);
+
+    /**
+     * <p>
+     * setDataPoints.
+     * </p>
+     *
+     * @param mzValues
+     *            an array of double.
+     * @param intensityValues
+     *            an array of float.
+     * @param size
+     *            a {@link java.lang.Integer} object.
+     */
+    void setDataPoints(@Nonnull double mzValues[],
+            @Nonnull float intensityValues[], @Nonnull Integer size);
 
     /**
      * Returns the sum of intensities of all data points (total ion current or

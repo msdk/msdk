@@ -30,8 +30,6 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -41,7 +39,10 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
+import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionMethod;
+import io.github.msdk.util.DataPointSorter;
+import io.github.msdk.util.DataPointSorter.SortingDirection;
+import io.github.msdk.util.DataPointSorter.SortingProperty;
 import io.github.msdk.util.MsSpectrumUtil;
 import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
 import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLFile;
@@ -63,9 +64,12 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
     private long totalScans = 0, parsedScans;
 
     /**
-     * <p>Constructor for MzXMLFileImportMethod.</p>
+     * <p>
+     * Constructor for MzXMLFileImportMethod.
+     * </p>
      *
-     * @param sourceFile a {@link java.io.File} object.
+     * @param sourceFile
+     *            a {@link java.io.File} object.
      */
     public MzXMLFileImportMethod(@Nonnull File sourceFile) {
         this.sourceFile = sourceFile;
@@ -88,8 +92,8 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
             List<MsFunction> msFunctionsList = new ArrayList<>();
             List<MsScan> scansList = new ArrayList<>();
             List<Chromatogram> chromatogramsList = new ArrayList<>();
-            MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
-                    .getMsSpectrumDataPointList();
+            double mzValues[] = new double[10000];
+            float intensityValues[] = new float[10000];
 
             // Create the XMLBasedRawDataFile object
             newRawFile = new MzXMLRawDataFile(sourceFile, fileType, parser,
@@ -125,21 +129,32 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
                 // Extract the scan data points, so we can check the m/z range
                 // and detect the spectrum type (profile/centroid)
-                MzXMLConverter.extractDataPoints(spectrum, dataPoints);
+                mzValues = MzXMLConverter.extractMzValues(spectrum, mzValues);
+                intensityValues = MzXMLConverter
+                        .extractIntensityValues(spectrum, intensityValues);
+                final int numOfDataPoints = spectrum.getPeakList().size();
+
+                // Sort the data points, because the jmzreader library returns
+                // them in weird order
+                DataPointSorter.sortDataPoints(mzValues, intensityValues,
+                        numOfDataPoints, SortingProperty.MZ,
+                        SortingDirection.ASCENDING);
 
                 // Get the m/z range
-                Range<Double> mzRange = MsSpectrumUtil.getMzRange(dataPoints);
+                Range<Double> mzRange = MsSpectrumUtil.getMzRange(mzValues,
+                        numOfDataPoints);
 
                 // Get the instrument scanning range
                 Range<Double> scanningRange = null;
 
                 // Get the TIC
-                Float tic = MsSpectrumUtil.getTIC(dataPoints);
+                Float tic = MsSpectrumUtil.getTIC(intensityValues,
+                        numOfDataPoints);
 
                 // Auto-detect whether this scan is centroided
-                SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
-                        dataPoints);
-                MsSpectrumType spectrumType = detector.execute();
+                MsSpectrumType spectrumType = SpectrumTypeDetectionMethod
+                        .detectSpectrumType(mzValues, intensityValues,
+                                numOfDataPoints);
 
                 // Get the MS scan type
                 MsScanType scanType = converter.extractScanType(spectrum);
@@ -156,11 +171,11 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
                         .extractIsolations(spectrum);
 
                 // Create a new MsScan instance
-                MzXMLMsScan scan = new MzXMLMsScan(newRawFile,
-                        spectrumId, spectrumType, msFunction, chromData,
-                        scanType, mzRange, scanningRange, scanNumber,
-                        scanDefinition, tic, polarity, sourceFragmentation,
-                        isolations);
+                MzXMLMsScan scan = new MzXMLMsScan(newRawFile, spectrumId,
+                        spectrumType, msFunction, chromData, scanType, mzRange,
+                        scanningRange, scanNumber, scanDefinition, tic,
+                        polarity, sourceFragmentation, isolations,
+                        numOfDataPoints);
 
                 // Add the scan to the final raw data file
                 scansList.add(scan);

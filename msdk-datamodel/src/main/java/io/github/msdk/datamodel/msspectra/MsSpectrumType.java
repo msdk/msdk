@@ -17,8 +17,8 @@ package io.github.msdk.datamodel.msspectra;
 /**
  * Defines a type of the mass spectrum. For exact definition of the different
  * spectra types, see Deutsch, E. W. (2012). File Formats Commonly Used in Mass
- * Spectrometry Proteomics. Molecular &amp; Cellular Proteomics, 11(12), 1612–1621.
- * doi:10.1074/mcp.R112.019695
+ * Spectrometry Proteomics. Molecular &amp; Cellular Proteomics, 11(12),
+ * 1612–1621. doi:10.1074/mcp.R112.019695
  */
 public enum MsSpectrumType {
 

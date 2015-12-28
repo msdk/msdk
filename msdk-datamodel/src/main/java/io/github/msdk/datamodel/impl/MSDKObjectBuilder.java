@@ -26,7 +26,6 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.ColumnName;
@@ -36,7 +35,6 @@ import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonType;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -133,7 +131,6 @@ public class MSDKObjectBuilder {
      *            a {@link java.lang.Integer} object.
      * @return a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
      */
-    @SuppressWarnings("null")
     public static final @Nonnull MsFunction getMsFunction(
             @Nullable Integer msLevel) {
         return getMsFunction(MsFunction.DEFAULT_MS_FUNCTION_NAME, msLevel);
@@ -309,26 +306,6 @@ public class MSDKObjectBuilder {
         }
         return new SimpleChromatographyInfo(rt1, null, ionDriftTime,
                 separationType);
-    }
-
-    /**
-     * Creates a new SpectrumDataPointList instance with no data points and
-     * initial capacity of 100.
-     *
-     * @return new DataPointList
-     */
-    public static final @Nonnull MsSpectrumDataPointList getMsSpectrumDataPointList() {
-        return new SimpleMSSpectrumDataPointList();
-    }
-
-    /**
-     * Creates a new ChromatogramDataPointList instance with no data points and
-     * initial capacity of 100.
-     *
-     * @return new DataPointList
-     */
-    public static final @Nonnull ChromatogramDataPointList getChromatogramDataPointList() {
-        return new SimpleChromatogramDataPointList();
     }
 
     /**

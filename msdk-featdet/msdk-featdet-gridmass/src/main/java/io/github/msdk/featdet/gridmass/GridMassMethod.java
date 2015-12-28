@@ -26,7 +26,9 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
- * <p>GridMassMethod class.</p>
+ * <p>
+ * GridMassMethod class.
+ * </p>
  */
 public class GridMassMethod implements MSDKMethod<List<Chromatogram>> {
 
@@ -37,9 +39,12 @@ public class GridMassMethod implements MSDKMethod<List<Chromatogram>> {
     private int processedScans = 0, totalScans = 0;
 
     /**
-     * <p>Constructor for GridMassMethod.</p>
+     * <p>
+     * Constructor for GridMassMethod.
+     * </p>
      *
-     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param rawDataFile
+     *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
      */
     public GridMassMethod(@Nonnull RawDataFile rawDataFile) {
         this.rawDataFile = rawDataFile;

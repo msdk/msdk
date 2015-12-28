@@ -42,10 +42,16 @@ public class FeatureTableImportMethod implements MSDKMethod<FeatureTable> {
     MSDKMethod<FeatureTable> parser = null;
 
     /**
-     * <p>Constructor for FeatureTableImportMethod.</p>
+     * <p>
+     * Constructor for FeatureTableImportMethod.
+     * </p>
      *
-     * @param sourceFile a {@link java.io.File} object.
-     * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param sourceFile
+     *            a {@link java.io.File} object.
+     * @param dataStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
      */
     public FeatureTableImportMethod(@Nonnull File sourceFile,
             @Nonnull DataPointStore dataStore) {

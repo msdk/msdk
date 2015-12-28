@@ -31,8 +31,6 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKVersion;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
@@ -75,8 +73,10 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
      * Constructor for MzMLFileExportMethod.
      * </p>
      *
-     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-     * @param target a {@link java.io.File} object.
+     * @param rawDataFile
+     *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param target
+     *            a {@link java.io.File} object.
      */
     public MzMLFileExportMethod(@Nonnull RawDataFile rawDataFile,
             @Nonnull File target) {
@@ -147,6 +147,9 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
             final BinaryDataArray bdaMz = new BinaryDataArray();
             final BinaryDataArray bdaInt = new BinaryDataArray();
 
+            double mzBuffer[] = new double[10000];
+            float intensityBuffer[] = new float[10000];
+
             for (MsScan scan : scans) {
 
                 if (canceled) {
@@ -156,16 +159,15 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
                 }
 
                 // Convert data points to BinaryDataArrays
-                MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
-                        .getMsSpectrumDataPointList();
-                scan.getDataPoints(dataPoints);
-                bdaMz.set64BitFloatArrayAsBinaryData(dataPoints.getMzBuffer(),
-                        true, CommonCvParams.MZ_PARAM.getCv());
-                bdaInt.set32BitFloatArrayAsBinaryData(
-                        dataPoints.getIntensityBuffer(), true,
+                mzBuffer = scan.getMzValues(mzBuffer);
+                intensityBuffer = scan.getIntensityValues(intensityBuffer);
+                int size = scan.getNumberOfDataPoints();
+                bdaMz.set64BitFloatArrayAsBinaryData(mzBuffer, true,
+                        CommonCvParams.MZ_PARAM.getCv());
+                bdaInt.set32BitFloatArrayAsBinaryData(intensityBuffer, true,
                         CommonCvParams.INTENSITY_PARAM.getCv());
-                bdaMz.setArrayLength(dataPoints.getSize());
-                bdaInt.setArrayLength(dataPoints.getSize());
+                bdaMz.setArrayLength(size);
+                bdaInt.setArrayLength(size);
                 BinaryDataArrayList bdal = new BinaryDataArrayList();
                 bdal.setCount(2);
                 bdal.getBinaryDataArray().add(bdaMz);

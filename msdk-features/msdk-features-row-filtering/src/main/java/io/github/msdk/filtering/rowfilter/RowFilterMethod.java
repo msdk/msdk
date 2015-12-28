@@ -44,15 +44,15 @@ import io.github.msdk.util.RTTolerance;
 public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 
     // Boolean values
-    private final @Nonnull boolean filterByMz;
-    private final @Nonnull boolean filterByRt;
-    private final @Nonnull boolean filterByDuration;
-    private final @Nonnull boolean filterByCount;
-    private final @Nonnull boolean filterByIsotopes;
-    private final @Nonnull boolean filterByIonAnnotation;
-    private final @Nonnull boolean requireAnnotation;
-    private final @Nonnull boolean removeDuplicates;
-    private final @Nonnull boolean duplicateRequireSameID;
+    private final boolean filterByMz;
+    private final boolean filterByRt;
+    private final boolean filterByDuration;
+    private final boolean filterByCount;
+    private final boolean filterByIsotopes;
+    private final boolean filterByIonAnnotation;
+    private final boolean requireAnnotation;
+    private final boolean removeDuplicates;
+    private final boolean duplicateRequireSameID;
 
     // Ranges values
     private final @Nullable Range<Double> mzRange;
@@ -125,18 +125,16 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
      */
     public RowFilterMethod(@Nonnull FeatureTable featureTable,
             @Nonnull DataPointStore dataStore, @Nonnull String nameSuffix,
-            @Nonnull boolean filterByMz, @Nonnull boolean filterByRt,
-            @Nonnull boolean filterByDuration, @Nonnull boolean filterByCount,
-            @Nonnull boolean filterByIsotopes,
-            @Nonnull boolean filterByIonAnnotation,
-            @Nonnull boolean requireAnnotation, @Nullable Range<Double> mzRange,
-            @Nullable Range<Double> rtRange,
+            boolean filterByMz, boolean filterByRt, boolean filterByDuration,
+            boolean filterByCount, boolean filterByIsotopes,
+            boolean filterByIonAnnotation, boolean requireAnnotation,
+            @Nullable Range<Double> mzRange, @Nullable Range<Double> rtRange,
             @Nullable Range<Double> durationRange, @Nullable Integer minCount,
             @Nullable Integer minIsotopes, @Nullable String ionAnnotation,
-            @Nonnull boolean removeDuplicates,
+            boolean removeDuplicates,
             @Nullable MZTolerance duplicateMzTolerance,
             @Nullable RTTolerance duplicateRtTolerance,
-            @Nonnull boolean duplicateRequireSameID) {
+            boolean duplicateRequireSameID) {
 
         this.featureTable = featureTable;
         this.dataStore = dataStore;
@@ -278,6 +276,9 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
             // Loop through all rows
             for (int firstRowIndex = 0; firstRowIndex < rowCount; firstRowIndex++) {
                 FeatureTableRow firstRow = rows.get(firstRowIndex);
+                final Double mz = firstRow.getMz();
+                if (mz == null)
+                    continue;
 
                 // Loop through all the rows below the current
                 for (int secondRowIndex = firstRowIndex
@@ -288,8 +289,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 
                     // Compare m/z
                     final boolean sameMz = duplicateMzTolerance
-                            .getToleranceRange(firstRow.getMz())
-                            .contains(secondRow.getMz());
+                            .getToleranceRange(mz).contains(secondRow.getMz());
 
                     // Compare rt
                     ChromatographyInfo chromatographyInfo1 = firstRow

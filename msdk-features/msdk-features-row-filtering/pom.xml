@@ -7,7 +7,6 @@
         <version>0.0.3-SNAPSHOT</version>
     </parent>
     <artifactId>msdk-features-row-filtering</artifactId>
-    <name>MSDK feature table row filter algorithm</name>
 
     <dependencies>
 

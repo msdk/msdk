@@ -190,9 +190,9 @@ public class FeatureTableUtil {
                 if (combineData) {
                     switch (sourceColumn.getName()) {
                     case "Ion Annotation":
-                        List<IonAnnotation> targetIonAnnotations = targetFeatureTableRow
+                        List<IonAnnotation> targetIonAnnotations = (List) targetFeatureTableRow
                                 .getData(targetColumn);
-                        List<IonAnnotation> sourceIonAnnotations = sourceFeatureTableRow
+                        List<IonAnnotation> sourceIonAnnotations = (List) sourceFeatureTableRow
                                 .getData(sourceColumn);
                         if (targetIonAnnotations == null)
                             targetIonAnnotations = new ArrayList<IonAnnotation>();
@@ -215,8 +215,13 @@ public class FeatureTableUtil {
                         break;
                     }
                 } else {
-                    targetFeatureTableRow.setData(targetColumn,
-                            sourceFeatureTableRow.getData(sourceColumn));
+                    // Only add common values
+                    if (sourceColumn.getSample() == null) {
+                        final Object data = sourceFeatureTableRow
+                                .getData(sourceColumn);
+                        if (data != null)
+                            targetFeatureTableRow.setData(targetColumn, data);
+                    }
                 }
             }
         }
@@ -246,7 +251,7 @@ public class FeatureTableUtil {
         List<FeatureTableColumn<?>> targetColumns = targetFeatureTableRow
                 .getFeatureTable().getColumns();
 
-        for (FeatureTableColumn<?> sourceColumn : sourceColumns) {
+        for (final FeatureTableColumn<?> sourceColumn : sourceColumns) {
 
             // Only add sample specific values
             if (sourceColumn.getSample() != null) {
@@ -269,9 +274,10 @@ public class FeatureTableUtil {
                         }
                     }
 
-                    if (sourceFeatureTableRow.getData(sourceColumn) != null) {
-                        targetFeatureTableRow.setData(targetColumn,
-                                sourceFeatureTableRow.getData(sourceColumn));
+                    final Object data = sourceFeatureTableRow
+                            .getData(sourceColumn);
+                    if (data != null) {
+                        targetFeatureTableRow.setData(targetColumn, data);
                     }
 
                 }

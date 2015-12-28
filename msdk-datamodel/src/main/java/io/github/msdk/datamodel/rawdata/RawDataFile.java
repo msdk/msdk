@@ -61,10 +61,10 @@ public interface RawDataFile {
      * Sets the original file name and path of the raw data file.
      *
      * @param newOriginalFile
-     *          Original filename and path.
+     *            Original filename and path.
      */
     void setOriginalFile(@Nullable File newOriginalFile);
-    
+
     /**
      * Returns the file type of this raw data file.
      *
@@ -77,10 +77,10 @@ public interface RawDataFile {
      * Sets the file type of this raw data file.
      *
      * @param rawDataFileType
-     *          Raw data file type
+     *            Raw data file type
      */
     void setRawDataFileType(@Nonnull FileType rawDataFileType);
-    
+
     /**
      * Returns all MS functions found in this raw data file.
      *
@@ -126,14 +126,18 @@ public interface RawDataFile {
     /**
      * Adds a new chromatogram to this file.
      *
-     * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+     * @param chromatogram
+     *            a {@link io.github.msdk.datamodel.chromatograms.Chromatogram}
+     *            object.
      */
     void addChromatogram(@Nonnull Chromatogram chromatogram);
 
     /**
      * Removes a chromatogram from this file.
      *
-     * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+     * @param chromatogram
+     *            a {@link io.github.msdk.datamodel.chromatograms.Chromatogram}
+     *            object.
      */
     void removeChromatogram(@Nonnull Chromatogram chromatogram);
 

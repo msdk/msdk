@@ -20,20 +20,29 @@ import com.google.common.base.Preconditions;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
- * <p>MsScanUtil class.</p>
+ * <p>
+ * MsScanUtil class.
+ * </p>
  */
 public class MsScanUtil {
 
     /**
-     * <p>clone.</p>
+     * <p>
+     * clone.
+     * </p>
      *
-     * @param newStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
-     * @param scan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
-     * @param copyDataPoints a {@link java.lang.Boolean} object.
+     * @param newStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
+     * @param scan
+     *            a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+     * @param copyDataPoints
+     *            a {@link java.lang.Boolean} object.
      * @return a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
      */
     @Nonnull
@@ -55,11 +64,15 @@ public class MsScanUtil {
                 scan.getSourceInducedFragmentation());
         newScan.getIsolations().addAll(scan.getIsolations());
 
+        final RawDataFile rawFile = scan.getRawDataFile();
+        if (rawFile != null)
+            newScan.setRawDataFile(rawFile);
+
         if (copyDataPoints) {
-            final MsSpectrumDataPointList dataPointList = MSDKObjectBuilder
-                    .getMsSpectrumDataPointList();
-            scan.getDataPoints(dataPointList);
-            newScan.setDataPoints(dataPointList);
+            double mzValues[] = scan.getMzValues();
+            float intensityValues[] = scan.getIntensityValues();
+            newScan.setDataPoints(mzValues, intensityValues,
+                    scan.getNumberOfDataPoints());
         }
 
         return newScan;

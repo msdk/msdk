@@ -124,7 +124,7 @@ class SimpleFeatureTable implements FeatureTable {
     /** {@inheritDoc} */
     @Override
     public <DATATYPE> FeatureTableColumn<DATATYPE> getColumn(
-            ColumnName columnName, Sample sample) {
+            @Nonnull ColumnName columnName, Sample sample) {
         FeatureTableColumn<?> column = getColumn(columnName.getName(), sample,
                 columnName.getDataTypeClass());
         if (column != null) {
@@ -178,8 +178,10 @@ class SimpleFeatureTable implements FeatureTable {
             Range<Double> mzRange) {
         List<FeatureTableRow> result = new ArrayList<FeatureTableRow>();
         for (FeatureTableRow row : featureTableRows) {
-            ChromatographyInfo rowChromatographyInfo = row.getChromatographyInfo();
-            if (rtRange.contains((double) rowChromatographyInfo.getRetentionTime())
+            ChromatographyInfo rowChromatographyInfo = row
+                    .getChromatographyInfo();
+            if (rtRange
+                    .contains((double) rowChromatographyInfo.getRetentionTime())
                     && mzRange.contains(row.getMz()))
                 result.add(row);
         }

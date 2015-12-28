@@ -196,12 +196,14 @@ class SimpleIonAnnotation implements IonAnnotation {
         this.chromatographyInfo = chromatographyInfo;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     public Boolean isNA() {
         if (this.chemicalStructure == null & this.formula == null
                 & this.ionType == null & this.expectedMz == null
-                & this.description == null & (this.annotationId == null || this.annotationId == "")
+                & this.description == null
+                & (this.annotationId == null || this.annotationId == "")
                 & this.accessionURL == null & this.chromatographyInfo == null)
             return true;
         else

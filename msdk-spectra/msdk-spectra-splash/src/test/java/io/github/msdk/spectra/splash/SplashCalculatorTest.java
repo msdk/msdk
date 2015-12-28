@@ -18,24 +18,18 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 
 public class SplashCalculatorTest {
 
     @Test
     public void testSplash() throws MSDKException {
 
-        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
-                .getMsSpectrumDataPointList();
-        dataPoints.allocate(10);
         double mzValues[] = new double[] { 100.0, 101.0, 102.0 };
         float intValues[] = new float[] { 1.0f, 2.0f, 3.0f };
-        dataPoints.setBuffers(mzValues, intValues, mzValues.length);
 
         final String correctSplash = "splash10-0z00000000-f5bf6f6a4a1520a35d4f";
         final String calculatedSplash = SplashCalculator
-                .calculateSplash(dataPoints);
+                .calculateSplash(mzValues, intValues, mzValues.length);
 
         Assert.assertEquals(correctSplash, calculatedSplash);
 

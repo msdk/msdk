@@ -35,10 +35,14 @@ public class MZTolerance {
     private final @Nonnull Double ppmTolerance;
 
     /**
-     * <p>Constructor for MZTolerance.</p>
+     * <p>
+     * Constructor for MZTolerance.
+     * </p>
      *
-     * @param toleranceMZ a {@link java.lang.Double} object.
-     * @param tolerancePPM a {@link java.lang.Double} object.
+     * @param toleranceMZ
+     *            a {@link java.lang.Double} object.
+     * @param tolerancePPM
+     *            a {@link java.lang.Double} object.
      */
     public MZTolerance(final @Nonnull Double toleranceMZ,
             final @Nonnull Double tolerancePPM) {
@@ -47,7 +51,9 @@ public class MZTolerance {
     }
 
     /**
-     * <p>Getter for the field <code>mzTolerance</code>.</p>
+     * <p>
+     * Getter for the field <code>mzTolerance</code>.
+     * </p>
      *
      * @return a {@link java.lang.Double} object.
      */
@@ -56,7 +62,9 @@ public class MZTolerance {
     }
 
     /**
-     * <p>Getter for the field <code>ppmTolerance</code>.</p>
+     * <p>
+     * Getter for the field <code>ppmTolerance</code>.
+     * </p>
      *
      * @return a {@link java.lang.Double} object.
      */
@@ -65,9 +73,12 @@ public class MZTolerance {
     }
 
     /**
-     * <p>getToleranceRange.</p>
+     * <p>
+     * getToleranceRange.
+     * </p>
      *
-     * @param mzValue a {@link java.lang.Double} object.
+     * @param mzValue
+     *            a {@link java.lang.Double} object.
      * @return a {@link com.google.common.collect.Range} object.
      */
     @SuppressWarnings("null")

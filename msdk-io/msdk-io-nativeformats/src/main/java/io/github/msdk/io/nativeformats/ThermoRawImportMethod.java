@@ -34,7 +34,9 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
- * <p>ThermoRawImportMethod class.</p>
+ * <p>
+ * ThermoRawImportMethod class.
+ * </p>
  */
 public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
 
@@ -51,10 +53,16 @@ public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
     private RawDumpParser parser = null;
 
     /**
-     * <p>Constructor for ThermoRawImportMethod.</p>
+     * <p>
+     * Constructor for ThermoRawImportMethod.
+     * </p>
      *
-     * @param sourceFile a {@link java.io.File} object.
-     * @param dataStore a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @param sourceFile
+     *            a {@link java.io.File} object.
+     * @param dataStore
+     *            a
+     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            object.
      */
     public ThermoRawImportMethod(@Nonnull File sourceFile,
             @Nonnull DataPointStore dataStore) {

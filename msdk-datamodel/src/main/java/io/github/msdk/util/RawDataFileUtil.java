@@ -28,15 +28,21 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
- * <p>RawDataFileUtil class.</p>
+ * <p>
+ * RawDataFileUtil class.
+ * </p>
  */
 public class RawDataFileUtil {
 
     /**
-     * <p>getScans.</p>
+     * <p>
+     * getScans.
+     * </p>
      *
-     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-     * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
+     * @param rawDataFile
+     *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param msFunction
+     *            a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
      * @return a {@link java.util.List} object.
      */
     @Nonnull
@@ -54,10 +60,14 @@ public class RawDataFileUtil {
     }
 
     /**
-     * <p>getScans.</p>
+     * <p>
+     * getScans.
+     * </p>
      *
-     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-     * @param rtRange a {@link com.google.common.collect.Range} object.
+     * @param rawDataFile
+     *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param rtRange
+     *            a {@link com.google.common.collect.Range} object.
      * @return a {@link java.util.List} object.
      */
     @Nonnull
@@ -78,11 +88,16 @@ public class RawDataFileUtil {
     }
 
     /**
-     * <p>getScans.</p>
+     * <p>
+     * getScans.
+     * </p>
      *
-     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-     * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
-     * @param rtRange a {@link com.google.common.collect.Range} object.
+     * @param rawDataFile
+     *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param msFunction
+     *            a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
+     * @param rtRange
+     *            a {@link com.google.common.collect.Range} object.
      * @return a {@link java.util.List} object.
      */
     @Nonnull
@@ -104,17 +119,21 @@ public class RawDataFileUtil {
     }
 
     /**
-     * <p>getNextChromatogramNumber.</p>
+     * <p>
+     * getNextChromatogramNumber.
+     * </p>
      *
-     * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param rawDataFile
+     *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
      * @return a {@link java.lang.Integer} object.
      */
     @Nonnull
-    static public Integer getNextChromatogramNumber(RawDataFile rawDataFile){
+    static public Integer getNextChromatogramNumber(RawDataFile rawDataFile) {
         int chromatogramNumber = 1;
         List<Chromatogram> chromatograms = rawDataFile.getChromatograms();
         for (Chromatogram chromatogram : chromatograms) {
-            int currentChromatogramNumber = chromatogram.getChromatogramNumber();
+            int currentChromatogramNumber = chromatogram
+                    .getChromatogramNumber();
             if (currentChromatogramNumber > chromatogramNumber)
                 chromatogramNumber = currentChromatogramNumber;
         }

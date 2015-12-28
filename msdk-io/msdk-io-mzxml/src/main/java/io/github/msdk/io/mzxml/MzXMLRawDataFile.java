@@ -46,14 +46,22 @@ class MzXMLRawDataFile implements RawDataFile {
     private @Nonnull String name;
 
     /**
-     * <p>Constructor for MzXMLRawDataFile.</p>
+     * <p>
+     * Constructor for MzXMLRawDataFile.
+     * </p>
      *
-     * @param sourceFile a {@link java.io.File} object.
-     * @param fileType a {@link io.github.msdk.datamodel.files.FileType} object.
-     * @param parser a {@link uk.ac.ebi.pride.tools.mzxml_parser.MzXMLFile} object.
-     * @param msFunctions a {@link java.util.List} object.
-     * @param msScans a {@link java.util.List} object.
-     * @param chromatograms a {@link java.util.List} object.
+     * @param sourceFile
+     *            a {@link java.io.File} object.
+     * @param fileType
+     *            a {@link io.github.msdk.datamodel.files.FileType} object.
+     * @param parser
+     *            a {@link uk.ac.ebi.pride.tools.mzxml_parser.MzXMLFile} object.
+     * @param msFunctions
+     *            a {@link java.util.List} object.
+     * @param msScans
+     *            a {@link java.util.List} object.
+     * @param chromatograms
+     *            a {@link java.util.List} object.
      */
     @SuppressWarnings("null")
     public MzXMLRawDataFile(@Nonnull File sourceFile,

@@ -52,7 +52,8 @@ public interface MsScan extends MsSpectrum {
      * Updates the raw data file reference. This method can be called only once.
      * Any subsequent calls will throw the IllegalOperationException.
      *
-     * @param newRawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param newRawDataFile
+     *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
      */
     void setRawDataFile(@Nonnull RawDataFile newRawDataFile);
 
@@ -125,7 +126,8 @@ public interface MsScan extends MsSpectrum {
     /**
      * Updates the MS scan type.
      *
-     * @param newMsScanType a {@link io.github.msdk.datamodel.rawdata.MsScanType} object.
+     * @param newMsScanType
+     *            a {@link io.github.msdk.datamodel.rawdata.MsScanType} object.
      */
     void setMsScanType(@Nonnull MsScanType newMsScanType);
 
@@ -141,7 +143,9 @@ public interface MsScan extends MsSpectrum {
     /**
      * Updates the associated chromatography data.
      *
-     * @param chromatographyInfo a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} object.
+     * @param chromatographyInfo
+     *            a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *            object.
      */
     void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo);
 

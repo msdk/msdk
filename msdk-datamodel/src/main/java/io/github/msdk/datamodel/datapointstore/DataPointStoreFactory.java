@@ -16,31 +16,33 @@ package io.github.msdk.datamodel.datapointstore;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.MSDKException;
-
 /**
  * Data store provider
  */
 public class DataPointStoreFactory {
 
     /**
-     * <p>getMemoryDataStore.</p>
+     * <p>
+     * getMemoryDataStore.
+     * </p>
      *
-     * @return a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
+     * @return a {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *         object.
      */
     public static final @Nonnull DataPointStore getMemoryDataStore() {
-        return new MemoryDataPointStore();
+        return new MemoryDataStore();
     }
 
     /**
-     * <p>getTmpFileDataPointStore.</p>
+     * <p>
+     * getTmpFileDataPointStore.
+     * </p>
      *
-     * @return a {@link io.github.msdk.datamodel.datapointstore.DataPointStore} object.
-     * @throws io.github.msdk.MSDKException if any.
+     * @return a {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *         object.
      */
-    public static final @Nonnull DataPointStore getTmpFileDataPointStore()
-            throws MSDKException {
-        return new TmpFileDataPointStore();
+    public static final @Nonnull DataPointStore getTmpFileDataStore() {
+        return new TmpFileDataStore();
     }
 
 }

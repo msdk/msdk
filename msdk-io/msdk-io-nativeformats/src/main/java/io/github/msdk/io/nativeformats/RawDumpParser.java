@@ -26,7 +26,6 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
@@ -35,7 +34,7 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
+import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionMethod;
 
 class RawDumpParser {
 
@@ -43,7 +42,7 @@ class RawDumpParser {
 
     private int parsedScans, totalScans = 0;
 
-    private int scanNumber = 0, msLevel = 0, numOfDataPoints;
+    private int scanNumber = 0, msLevel = 0;
     private String scanId;
     private PolarityType polarity;
     private Range<Double> scanningMzRange;
@@ -55,8 +54,9 @@ class RawDumpParser {
     private final DataPointStore dataStore;
     private byte byteBuffer[] = new byte[100000];
 
-    private final MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
-            .getMsSpectrumDataPointList();
+    private double mzValues[] = new double[10000];
+    private float intensityValues[] = new float[10000];
+    private int numOfDataPoints;
 
     RawDumpParser(RawDataFile newRawFile, DataPointStore dataStore) {
         this.newRawFile = newRawFile;
@@ -153,8 +153,12 @@ class RawDumpParser {
             if (!m.matches())
                 throw new MSDKException("Could not parse line " + line);
             numOfDataPoints = Integer.parseInt(m.group(1));
-            dataPoints.allocate(numOfDataPoints);
-            dataPoints.setSize(numOfDataPoints);
+
+            // Allocate space
+            if (mzValues.length < numOfDataPoints)
+                mzValues = new double[numOfDataPoints * 2];
+            if (intensityValues.length < numOfDataPoints)
+                intensityValues = new float[numOfDataPoints * 2];
 
             final int byteSize = Integer.parseInt(m.group(2));
 
@@ -166,13 +170,11 @@ class RawDumpParser {
             ByteBuffer mzByteBuffer = ByteBuffer.wrap(byteBuffer, 0, numOfBytes)
                     .order(ByteOrder.LITTLE_ENDIAN);
 
-            double mzValuesBuffer[] = dataPoints.getMzBuffer();
-
             for (int i = 0; i < numOfDataPoints; i++) {
                 if (byteSize == 8)
-                    mzValuesBuffer[i] = mzByteBuffer.getDouble();
+                    mzValues[i] = mzByteBuffer.getDouble();
                 else
-                    mzValuesBuffer[i] = mzByteBuffer.getFloat();
+                    mzValues[i] = mzByteBuffer.getFloat();
             }
 
         }
@@ -201,23 +203,21 @@ class RawDumpParser {
                     .wrap(byteBuffer, 0, numOfBytes)
                     .order(ByteOrder.LITTLE_ENDIAN);
 
-            float intensityValuesBuffer[] = dataPoints.getIntensityBuffer();
-
             for (int i = 0; i < numOfDataPoints; i++) {
                 if (byteSize == 8)
-                    intensityValuesBuffer[i] = (float) intensityByteBuffer
+                    intensityValues[i] = (float) intensityByteBuffer
                             .getDouble();
                 else
-                    intensityValuesBuffer[i] = intensityByteBuffer.getFloat();
+                    intensityValues[i] = intensityByteBuffer.getFloat();
             }
         }
 
         if (line.startsWith("END OF SCAN")) {
 
             // Auto-detect whether this scan is centroided
-            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
-                    dataPoints);
-            MsSpectrumType spectrumType = detector.execute();
+            MsSpectrumType spectrumType = SpectrumTypeDetectionMethod
+                    .detectSpectrumType(mzValues, intensityValues,
+                            numOfDataPoints);
 
             // Create a new scan
             MsFunction msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
@@ -230,7 +230,7 @@ class RawDumpParser {
                             retentionTime);
             newScan.setChromatographyInfo(chromInfo);
 
-            newScan.setDataPoints(dataPoints);
+            newScan.setDataPoints(mzValues, intensityValues, numOfDataPoints);
             newScan.setSpectrumType(spectrumType);
             newScan.setPolarity(polarity);
             newScan.setScanningRange(scanningMzRange);

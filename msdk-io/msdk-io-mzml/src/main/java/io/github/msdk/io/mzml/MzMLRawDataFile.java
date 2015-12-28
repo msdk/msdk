@@ -43,13 +43,20 @@ class MzMLRawDataFile implements RawDataFile {
     private @Nonnull String name;
 
     /**
-     * <p>Constructor for MzMLRawDataFile.</p>
+     * <p>
+     * Constructor for MzMLRawDataFile.
+     * </p>
      *
-     * @param sourceFile a {@link java.io.File} object.
-     * @param parser a {@link uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller} object.
-     * @param msFunctions a {@link java.util.List} object.
-     * @param msScans a {@link java.util.List} object.
-     * @param chromatograms a {@link java.util.List} object.
+     * @param sourceFile
+     *            a {@link java.io.File} object.
+     * @param parser
+     *            a {@link uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller} object.
+     * @param msFunctions
+     *            a {@link java.util.List} object.
+     * @param msScans
+     *            a {@link java.util.List} object.
+     * @param chromatograms
+     *            a {@link java.util.List} object.
      */
     @SuppressWarnings("null")
     public MzMLRawDataFile(@Nonnull File sourceFile,

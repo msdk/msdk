@@ -19,8 +19,10 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import com.google.common.collect.Range;
+
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -28,7 +30,7 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 /**
  * Represents a single chromatogram.
  */
-public interface Chromatogram extends Cloneable {
+public interface Chromatogram {
 
     /**
      * Returns the raw data file that contains this chromatogram. This might
@@ -47,7 +49,8 @@ public interface Chromatogram extends Cloneable {
      * Updates the raw data file reference. This method can be called only once.
      * Any subsequent calls will throw the IllegalOperationException.
      *
-     * @param newRawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param newRawDataFile
+     *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
      */
     void setRawDataFile(@Nonnull RawDataFile newRawDataFile);
 
@@ -89,6 +92,16 @@ public interface Chromatogram extends Cloneable {
     void setChromatogramType(@Nonnull ChromatogramType newChromatogramType);
 
     /**
+     * <p>
+     * getNumberOfDataPoints.
+     * </p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
+    @Nonnull
+    Integer getNumberOfDataPoints();
+
+    /**
      * Loads the data points of this chromatogram into the given DataPointList.
      * If the DataPointList is not empty, it is cleared first. This method
      * allows the internal arrays of the DataPointList to be reused for loading
@@ -97,23 +110,93 @@ public interface Chromatogram extends Cloneable {
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
      *
-     * @param dataPointList a {@link io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList} object.
+     * @return an array of
+     *         {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *         objects.
      */
-    void getDataPoints(@Nonnull ChromatogramDataPointList dataPointList);
+    @Nonnull
+    ChromatographyInfo[] getRetentionTimes();
 
     /**
-     * Updates the data points of this chromatogram. If this Chromatogram has
-     * been added to a raw data file or a feature table, the data points will be
-     * immediately stored in a temporary file. Therefore, the DataPointList in
-     * the parameter can be reused for other purposes.
+     * <p>
+     * getRetentionTimes.
+     * </p>
      *
-     * Note: this method may need to write data to disk, therefore it may be
-     * quite slow.
-     *
-     * @param newDataPoints
-     *            new data points
+     * @param array
+     *            an array of
+     *            {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *            objects.
+     * @return an array of
+     *         {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *         objects.
      */
-    void setDataPoints(@Nonnull ChromatogramDataPointList newDataPoints);
+    @Nonnull
+    ChromatographyInfo[] getRetentionTimes(
+            @Nullable ChromatographyInfo array[]);
+
+    /**
+     * <p>
+     * getIntensityValues.
+     * </p>
+     *
+     * @return an array of float.
+     */
+    @Nonnull
+    float[] getIntensityValues();
+
+    /**
+     * <p>
+     * getIntensityValues.
+     * </p>
+     *
+     * @param array
+     *            an array of float.
+     * @return an array of float.
+     */
+    @Nonnull
+    float[] getIntensityValues(@Nullable float array[]);
+
+    /**
+     * <p>
+     * getMzValues.
+     * </p>
+     *
+     * @return an array of double.
+     */
+    @Nullable
+    double[] getMzValues();
+
+    /**
+     * <p>
+     * getMzValues.
+     * </p>
+     *
+     * @param array
+     *            an array of double.
+     * @return an array of double.
+     */
+    @Nullable
+    double[] getMzValues(@Nullable double array[]);
+
+    /**
+     * <p>
+     * setDataPoints.
+     * </p>
+     *
+     * @param rtValues
+     *            an array of
+     *            {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *            objects.
+     * @param mzValues
+     *            an array of double.
+     * @param intensityValues
+     *            an array of float.
+     * @param size
+     *            a {@link java.lang.Integer} object.
+     */
+    void setDataPoints(@Nonnull ChromatographyInfo rtValues[],
+            @Nullable double mzValues[], @Nonnull float intensityValues[],
+            @Nonnull Integer size);
 
     /**
      * Returns the m/z value of this chromatogram, or null if no m/z value is
@@ -127,7 +210,8 @@ public interface Chromatogram extends Cloneable {
     /**
      * Sets the m/z value of the chromatogram
      *
-     * @param newMz a {@link java.lang.Double} object.
+     * @param newMz
+     *            a {@link java.lang.Double} object.
      */
     void setMz(@Nullable Double newMz);
 
@@ -174,14 +258,12 @@ public interface Chromatogram extends Cloneable {
     void setSeparationType(@Nonnull SeparationType separationType);
 
     /**
-     * Returns a deep clone of this object.
+     * Returns the range of retention times. This can return null if the
+     * chromatogram has no data points.
      *
-     * @param newStore
-     *            data points of the newly created MsScan will be stored in this
-     *            store
-     * @return A clone of this MsScan.
+     * @return RT range
      */
-    @Nonnull
-    Chromatogram clone(@Nonnull DataPointStore newStore);
+    @Nullable
+    Range<ChromatographyInfo> getRtRange();
 
 }

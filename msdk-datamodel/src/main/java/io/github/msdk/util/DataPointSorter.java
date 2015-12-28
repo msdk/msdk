@@ -22,7 +22,9 @@ import java.util.List;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
- * <p>DataPointSorter class.</p>
+ * <p>
+ * DataPointSorter class.
+ * </p>
  */
 public class DataPointSorter {
 
@@ -74,11 +76,18 @@ public class DataPointSorter {
     /**
      * Sort the given data points by m/z order
      *
-     * @param mzBuffer an array of double.
-     * @param intensityBuffer an array of float.
-     * @param size a int.
-     * @param prop a {@link io.github.msdk.util.DataPointSorter.SortingProperty} object.
-     * @param dir a {@link io.github.msdk.util.DataPointSorter.SortingDirection} object.
+     * @param mzBuffer
+     *            an array of double.
+     * @param intensityBuffer
+     *            an array of float.
+     * @param size
+     *            a int.
+     * @param prop
+     *            a {@link io.github.msdk.util.DataPointSorter.SortingProperty}
+     *            object.
+     * @param dir
+     *            a {@link io.github.msdk.util.DataPointSorter.SortingDirection}
+     *            object.
      */
     public static void sortDataPoints(final double mzBuffer[],
             final float intensityBuffer[], final int size, SortingProperty prop,
@@ -118,9 +127,14 @@ public class DataPointSorter {
     /**
      * Sort the given data points by RT order
      *
-     * @param rtBuffer an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} objects.
-     * @param intensityBuffer an array of float.
-     * @param size a int.
+     * @param rtBuffer
+     *            an array of
+     *            {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+     *            objects.
+     * @param intensityBuffer
+     *            an array of float.
+     * @param size
+     *            a int.
      */
     public static void sortDataPoints(final ChromatographyInfo rtBuffer[],
             final float intensityBuffer[], final int size) {

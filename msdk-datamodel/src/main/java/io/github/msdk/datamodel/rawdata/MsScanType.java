@@ -48,7 +48,7 @@ public enum MsScanType {
 
     /**
      * Data Independent Acquisition (DIA) scan.
-     */    
+     */
     DIA,
 
     /**
