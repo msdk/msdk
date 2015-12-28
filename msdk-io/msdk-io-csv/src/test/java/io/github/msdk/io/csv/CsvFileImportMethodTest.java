@@ -91,7 +91,7 @@ public class CsvFileImportMethodTest {
 	}
 
 	@Test
-	public void GCxGX_Import() throws MSDKException {
+	public void GCxGC_Import() throws MSDKException {
 
 		// Create the data structures
 		DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
