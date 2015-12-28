@@ -94,6 +94,7 @@ public class FeatureTableUtil {
             if (ionAnnotationColumn != null) {
                 List<IonAnnotation> ionAnnotations = row
                         .getData(ionAnnotationColumn);
+<<<<<<< Upstream, based on upstream/master
                 if (ionAnnotations != null) {
                     Double totalIonMz = 0d;
                     Integer counter = 0;
@@ -104,8 +105,19 @@ public class FeatureTableUtil {
                                 totalIonMz = totalIonMz + ionMz;
                                 counter++;
                             }
+=======
+                Double totalIonMz = 0d;
+                Integer counter = 0;
+                for (IonAnnotation ionAnnotation : ionAnnotations) {
+                    if (ionAnnotation != null) {
+                        Double ionMz = ionAnnotation.getExpectedMz();
+                        if (ionMz != null) {
+                            totalIonMz = totalIonMz + ionMz;
+                            counter++;
+>>>>>>> a7b36a6 Merged recent updates from  master branch
                         }
                     }
+<<<<<<< Upstream, based on upstream/master
                     if (counter > 0) {
                         Double ionMz = totalIonMz / counter;
                         FeatureTableColumn<Double> ppmColumn = featureTable
@@ -113,6 +125,15 @@ public class FeatureTableUtil {
                         Double diff = Math.abs(newMz - ionMz);
                         row.setData(ppmColumn, (diff / ionMz) * 1000000);
                     }
+=======
+                }
+                if (counter > 0) {
+                    Double ionMz = totalIonMz / counter;
+                    FeatureTableColumn<Double> ppmColumn = featureTable
+                            .getColumn(ColumnName.PPM, null);
+                    Double diff = Math.abs(newMz - ionMz);
+                    row.setData(ppmColumn, (diff / ionMz) * 1000000);
+>>>>>>> a7b36a6 Merged recent updates from  master branch
                 }
             }
 
@@ -215,6 +236,7 @@ public class FeatureTableUtil {
                         break;
                     }
                 } else {
+<<<<<<< Upstream, based on upstream/master
                     targetFeatureTableRow.setData(targetColumn,
                             sourceFeatureTableRow.getData(sourceColumn));
                 }
@@ -224,11 +246,12 @@ public class FeatureTableUtil {
 =======
                 // Only add common values
                 if (sourceColumn.getSample() == null) {
+=======
+>>>>>>> a7b36a6 Merged recent updates from  master branch
                     final Object data = sourceFeatureTableRow
                             .getData(sourceColumn);
                     if (data != null)
                         targetFeatureTableRow.setData(targetColumn, data);
->>>>>>> 68c368c Data model overhaul - removed data point lists
                 }
             }
         }
@@ -258,7 +281,7 @@ public class FeatureTableUtil {
         List<FeatureTableColumn<?>> targetColumns = targetFeatureTableRow
                 .getFeatureTable().getColumns();
 
-        for (FeatureTableColumn<?> sourceColumn : sourceColumns) {
+        for (final FeatureTableColumn<?> sourceColumn : sourceColumns) {
 
             // Only add sample specific values
             if (sourceColumn.getSample() != null) {
@@ -281,9 +304,16 @@ public class FeatureTableUtil {
                         }
                     }
 
+<<<<<<< Upstream, based on upstream/master
                     if (sourceFeatureTableRow.getData(sourceColumn) != null) {
                         targetFeatureTableRow.setData(targetColumn,
                                 sourceFeatureTableRow.getData(sourceColumn));
+=======
+                    final Object data = sourceFeatureTableRow
+                            .getData(sourceColumn);
+                    if (data != null) {
+                        targetFeatureTableRow.setData(targetColumn, data);
+>>>>>>> a7b36a6 Merged recent updates from  master branch
                     }
 
                 }

@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.search.mona;
+package io.github.msdk.db.mona;
 
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
@@ -23,6 +23,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.db.mona.MonaSearch;
+import io.github.msdk.db.mona.MonaSpectrum;
 import io.github.msdk.identification.Search;
 
 /**

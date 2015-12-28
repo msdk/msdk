@@ -34,7 +34,6 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.util.FeatureTableUtil;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
@@ -69,7 +68,6 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
      * </p>
      *
      * @param featureTables
-     *            a {@link java.util.List} object.
      * @param dataStore
      *            a
      *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
@@ -138,15 +136,14 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
             // Calculate scores for all possible alignments of this row
             for (FeatureTableRow row : featureTable.getRows()) {
 
-                final Double mz =row.getMz();
-                final ChromatographyInfo rt = row.getChromatographyInfo();
-                if ((mz == null) || (rt == null)) continue;
-                
+                final Double mz = row.getMz();
+                if (mz == null)
+                    continue;
+
                 // Calculate range limits for the current row
-                Range<Double> mzRange = mzTolerance
-                        .getToleranceRange(mz);
+                Range<Double> mzRange = mzTolerance.getToleranceRange(mz);
                 Range<Double> rtRange = rtTolerance.getToleranceRange(
-                        rt.getRetentionTime());
+                        row.getChromatographyInfo().getRetentionTime());
 
                 // Get all rows of the aligned feature table within the m/z and
                 // RT limits
@@ -169,16 +166,28 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
 
                     // Check ion annotation
                     if (requireSameAnnotation) {
-                        FeatureTableColumn<IonAnnotation> ionAnnotationColumn1 = featureTable
-                                .getColumn("Ion Annotation", null,
-                                        IonAnnotation.class);
-                        FeatureTableColumn<IonAnnotation> ionAnnotationColumn2 = result
-                                .getColumn("Ion Annotation", null,
-                                        IonAnnotation.class);
-                        if (row.getData(ionAnnotationColumn1)
-                                .compareTo(candidateRow
-                                        .getData(ionAnnotationColumn2)) != 0)
+                        FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn1 = featureTable
+                                .getColumn(ColumnName.IONANNOTATION, null);
+                        FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn2 = result
+                                .getColumn(ColumnName.IONANNOTATION, null);
+                        List<IonAnnotation> ionAnnotations1 = row
+                                .getData(ionAnnotationColumn1);
+                        List<IonAnnotation> ionAnnotations2 = candidateRow
+                                .getData(ionAnnotationColumn2);
+
+                        // Check that all ion annotations in first row are in
+                        // the candidate row
+                        boolean equalIons = false;
+                        for (IonAnnotation ionAnnotation : ionAnnotations1) {
+                            for (IonAnnotation targetIonAnnotation : ionAnnotations2) {
+                                if (targetIonAnnotation
+                                        .compareTo(ionAnnotation) == 0)
+                                    equalIons = true;
+                            }
+                        }
+                        if (!equalIons)
                             continue;
+
                     }
 
                     // Calculate score
@@ -241,9 +250,9 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
                             sample);
                 }
 
-                // Add all common values from the original row to the aligned
+                // Combine common values from the original row with the aligned
                 // row
-                FeatureTableUtil.copyCommonValues(sourceRow, targetRow);
+                FeatureTableUtil.copyCommonValues(sourceRow, targetRow, true);
 
                 processedFeatures++;
             }

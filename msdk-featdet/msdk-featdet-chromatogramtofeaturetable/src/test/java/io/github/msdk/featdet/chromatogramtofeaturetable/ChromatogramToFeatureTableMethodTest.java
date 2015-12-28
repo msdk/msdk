@@ -11,6 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
+
 package io.github.msdk.featdet.chromatogramtofeaturetable;
 
 import java.io.File;
@@ -34,7 +35,6 @@ import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
 import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.util.MZTolerance;
@@ -44,7 +44,6 @@ public class ChromatogramToFeatureTableMethodTest {
 
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
-    @SuppressWarnings({ "unchecked", "null" })
     @Test
     public void testOrbitrap() throws MSDKException {
 

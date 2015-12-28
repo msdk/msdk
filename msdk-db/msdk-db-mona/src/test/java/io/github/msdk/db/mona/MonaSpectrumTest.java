@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.search.mona;
+package io.github.msdk.db.mona;
 
 import static org.junit.Assert.assertTrue;
 
@@ -24,6 +24,7 @@ import org.junit.Test;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.db.mona.MonaSpectrum;
 
 public class MonaSpectrumTest {
 

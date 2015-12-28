@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.filtering.featurefilter;
+package io.github.msdk.features.filtering;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -183,8 +183,7 @@ public class FeatureFilterMethodTest {
     public void testMzTab_Sample() throws MSDKException {
 
         // Create the data structures
-        DataPointStore dataStore = DataPointStoreFactory
-                .getTmpFileDataStore();
+        DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
 
         // Import the file
         File inputFile = new File(TEST_DATA_PATH + "Sample-2.3.mzTab");
@@ -265,29 +264,23 @@ public class FeatureFilterMethodTest {
         // Row ID 176, ID: L-Arginine
         FeatureTableRow row = filteredTable.getRows().get(110);
         Assert.assertEquals(176, row.getId(), 0.0001);
-<<<<<<< Upstream, based on upstream/master
         FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = filteredTable
                 .getColumn(ColumnName.IONANNOTATION, null);
         List<IonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
         IonAnnotation ionAnnotation = ionAnnotations.get(0);
-=======
-        FeatureTableColumn<IonAnnotation> annotColumn = filteredTable
-        .getColumn("Ion Annotation", null, IonAnnotation.class);
-        Assert.assertNotNull(annotColumn);
-        IonAnnotation ionAnnotation = row.getData(annotColumn);
->>>>>>> 68c368c Data model overhaul - removed data point lists
         Assert.assertEquals("L-Arginine", ionAnnotation.getDescription());
 
         // BLANK sample
         Sample sample = filteredTable.getSamples().get(0);
-        FeatureTableColumn<Double> areaColumn = filteredTable.getColumn(ColumnName.AREA,
-                sample);
+        FeatureTableColumn<Double> areaColumn = filteredTable
+                .getColumn(ColumnName.AREA, sample);
         Assert.assertNull(row.getData(areaColumn));
 
         // 26C sample 1
         sample = filteredTable.getSamples().get(1);
         areaColumn = filteredTable.getColumn(ColumnName.AREA, sample);
-        Assert.assertEquals(2.559630988648635E8, row.getData(areaColumn), 0.00001);
+        Assert.assertEquals(2.559630988648635E8, row.getData(areaColumn),
+                0.00001);
 
     }
 

@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.search.mona;
+package io.github.msdk.db.mona;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -69,8 +69,6 @@ public class MonaSpectrum
      * unless otherwise said, MoNA spectra are always centroided
      */
     private MsSpectrumType spectrumType = MsSpectrumType.CENTROIDED;
-
-
 
     /**
      * chemical structure of this compound
@@ -140,7 +138,7 @@ public class MonaSpectrum
      *            a {@link java.lang.Float} object.
      */
     protected void addDataPoint(Double mass, Float intensity) {
-    
+
     }
 
     /** {@inheritDoc} */
@@ -155,7 +153,6 @@ public class MonaSpectrum
     public void setSpectrumType(@Nonnull MsSpectrumType spectrumType) {
         this.spectrumType = spectrumType;
     }
-
 
     /** {@inheritDoc} */
     @Nullable
@@ -332,7 +329,7 @@ public class MonaSpectrum
     public void setDataPoints(@Nonnull double[] mzValues,
             @Nonnull float[] intensityValues, @Nonnull Integer size) {
         // TODO Auto-generated method stub
-        
+
     }
 
     /** {@inheritDoc} */
@@ -351,9 +348,9 @@ public class MonaSpectrum
         return null;
     }
 
-	@Override
-	public Boolean isNA() {
-		return false;
-	}
+    @Override
+    public @Nonnull Boolean isNA() {
+        return false;
+    }
 
 }

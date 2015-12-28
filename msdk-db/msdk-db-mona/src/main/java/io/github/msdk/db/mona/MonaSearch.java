@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.search.mona;
+package io.github.msdk.db.mona;
 
 import java.io.IOException;
 import java.io.Serializable;

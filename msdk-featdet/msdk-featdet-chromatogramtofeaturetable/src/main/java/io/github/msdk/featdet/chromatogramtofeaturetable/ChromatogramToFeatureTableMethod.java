@@ -53,12 +53,6 @@ public class ChromatogramToFeatureTableMethod
     private boolean canceled = false;
     private int processedChromatograms = 0, totalChromatograms = 0;
 
-    // Data structures
-    private @Nonnull ChromatographyInfo rtBuffer[] = new ChromatographyInfo[10000];
-    private @Nullable double mzBuffer[] = new double[10000];
-    private @Nonnull float intensityBuffer[] = new float[10000];
-    private int numOfDataPoints;
-
     /**
      * <p>
      * Constructor for ChromatogramToFeatureTableMethod.
@@ -102,13 +96,17 @@ public class ChromatogramToFeatureTableMethod
                     .getId();
         }
 
+        // Data structures
+        ChromatographyInfo rtBuffer[] = new ChromatographyInfo[10000];
+        float intensityBuffer[] = new float[10000];
+        int numOfDataPoints;
+
         // Loop through all chromatograms and add values to the feature table
         FeatureTableColumn column;
         for (Chromatogram chromatogram : chromatograms) {
 
-            // Load data points
+            // Load data
             rtBuffer = chromatogram.getRetentionTimes(rtBuffer);
-            mzBuffer = chromatogram.getMzValues(mzBuffer);
             intensityBuffer = chromatogram.getIntensityValues(intensityBuffer);
             numOfDataPoints = chromatogram.getNumberOfDataPoints();
 
@@ -120,9 +118,12 @@ public class ChromatogramToFeatureTableMethod
             newRow.setData(column, lastID);
 
             if (chromatogram.getIonAnnotation() != null) {
-                column = featureTable.getColumn("Ion Annotation", null,
-                        IonAnnotation.class);
-                newRow.setData(column, chromatogram.getIonAnnotation());
+                column = featureTable.getColumn(ColumnName.IONANNOTATION, null);
+                List<IonAnnotation> ionAnnotations = newRow.getData(column);
+                if (ionAnnotations == null)
+                    ionAnnotations = new ArrayList<IonAnnotation>();
+                ionAnnotations.add(chromatogram.getIonAnnotation());
+                newRow.setData(column, ionAnnotations);
             }
 
             column = tableColumns.get(ColumnName.CHROMATOGRAM);
@@ -217,7 +218,7 @@ public class ChromatogramToFeatureTableMethod
                     .getPpmFeatureTableColumn();
             FeatureTableColumn<ChromatographyInfo> chromatographyInfoColumn = MSDKObjectBuilder
                     .getChromatographyInfoFeatureTableColumn();
-            FeatureTableColumn<IonAnnotation> ionAnnotationColumn = MSDKObjectBuilder
+            FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = MSDKObjectBuilder
                     .getIonAnnotationFeatureTableColumn();
             featureTable.addColumn(idColumn);
             featureTable.addColumn(mzColumn);

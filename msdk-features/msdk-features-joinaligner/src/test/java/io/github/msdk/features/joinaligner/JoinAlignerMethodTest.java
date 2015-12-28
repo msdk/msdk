@@ -25,6 +25,8 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
+import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
@@ -37,7 +39,8 @@ public class JoinAlignerMethodTest {
     public void testMzTab_Samples() throws MSDKException {
 
         // Create the data structures
-        DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
+        DataPointStore dataStore = DataPointStoreFactory
+                .getTmpFileDataStore();
 
         // Import file 1
         File inputFile = new File(TEST_DATA_PATH + "Sample 1.mzTab");
@@ -75,6 +78,23 @@ public class JoinAlignerMethodTest {
         FeatureTable featureTable = method.execute();
         Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
         Assert.assertEquals(10, featureTable.getRows().size());
+
+        // Verify that feature 1 has two ion annotations
+        FeatureTableColumn column = featureTable.getColumn("Ion Annotation",
+                null, IonAnnotation.class);
+        List<IonAnnotation> ionAnnotations = featureTable.getRows().get(0)
+                .getData(column);
+        Assert.assertEquals(2, ionAnnotations.size());
+        Assert.assertEquals("PE(17:0/17:0)",
+                ionAnnotations.get(0).getDescription());
+        Assert.assertEquals("1. PE(17:0/17:0)",
+                ionAnnotations.get(1).getDescription());
+
+        // Verify that feature 3 has one ion annotation
+        ionAnnotations = featureTable.getRows().get(2).getData(column);
+        Assert.assertEquals(1, ionAnnotations.size());
+        Assert.assertEquals("Cer(d18:1/17:0)",
+                ionAnnotations.get(0).getDescription());
 
         // 2. Test alignment based on m/z, RT and same annotation
         requireSameAnnotation = true;

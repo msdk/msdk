@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.featuretableimport;
+package io.github.msdk.io.mztab;
 
 import java.io.File;
 import java.util.List;
@@ -34,7 +34,6 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.io.mztab.MzTabFileImportMethod;
 
 public class MzTabFileImportMethodTest {
 
@@ -157,16 +156,10 @@ public class MzTabFileImportMethodTest {
 
         // Annotation 27 - PC32:1
         FeatureTableRow row = featureTable.getRows().get(27);
-<<<<<<< Upstream, based on upstream/master
         FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = featureTable
                 .getColumn(ColumnName.IONANNOTATION, null);
         List<IonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
         IonAnnotation ionAnnotation = ionAnnotations.get(0);
-=======
-        FeatureTableColumn<IonAnnotation> column = featureTable
-                .getColumn("Ion Annotation", null, IonAnnotation.class);
-        IonAnnotation ionAnnotation = row.getData(column);
->>>>>>> 68c368c Data model overhaul - removed data point lists
         Assert.assertEquals("PC32:1", ionAnnotation.getAnnotationId());
         IChemObjectBuilder builder = DefaultChemObjectBuilder.getInstance();
         IMolecularFormula cdkFormula = MolecularFormulaManipulator

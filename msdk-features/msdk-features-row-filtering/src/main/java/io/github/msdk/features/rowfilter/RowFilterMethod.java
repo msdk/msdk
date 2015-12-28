@@ -25,6 +25,7 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
@@ -167,23 +168,24 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
     public FeatureTable execute() throws MSDKException {
         // Total features
         totalRows = featureTable.getRows().size();
+
         // If remove duplicates is selected, the features will looped twice
         if (removeDuplicates)
             totalRows = totalRows * 2;
 
         // Add columns
-        for (FeatureTableColumn column : featureTable.getColumns()) {
+        for (FeatureTableColumn<?> column : featureTable.getColumns()) {
             result.addColumn(column);
         }
 
         // Loop through all features
         for (FeatureTableRow row : featureTable.getRows()) {
-            FeatureTableColumn column;
+            FeatureTableColumn<?> column;
             processedRows++;
 
             // Check m/z
             if (filterByMz) {
-                if ((row.getMz() == null) || (!mzRange.contains(row.getMz())))
+                if (!mzRange.contains(row.getMz()))
                     continue;
             }
 
@@ -221,29 +223,36 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 
             // Check ion annotation
             if (filterByIonAnnotation && ionAnnotation != null) {
-                column = featureTable.getColumn("Ion Annotation", null,
-                        IonAnnotation.class);
+                column = featureTable.getColumn(ColumnName.IONANNOTATION, null);
                 if (column == null)
                     continue;
                 if (row.getData(column) != null) {
-                    final IonAnnotation rowIonAnnotation = (IonAnnotation) row
+                    final List<IonAnnotation> rowIonAnnotations = (List<IonAnnotation>) row
                             .getData(column);
-                    if (!rowIonAnnotation.getAnnotationId()
-                            .contains(ionAnnotation)) {
-                        continue;
+                    Boolean keep = false;
+                    for (IonAnnotation rowIonAnnotation : rowIonAnnotations) {
+                        if (!rowIonAnnotation.getAnnotationId()
+                                .contains(ionAnnotation))
+                            keep = true;
                     }
+                    if (!keep)
+                        continue;
                 }
             }
 
             // Require ion annotation?
             if (requireAnnotation) {
-                column = featureTable.getColumn("Ion Annotation", null,
-                        IonAnnotation.class);
+                column = featureTable.getColumn(ColumnName.IONANNOTATION, null);
                 if (column == null)
                     continue;
-                IonAnnotation ionAnnotation = (IonAnnotation) row
+                final List<IonAnnotation> rowIonAnnotations = (List<IonAnnotation>) row
                         .getData(column);
-                if (ionAnnotation.getDescription() == null)
+                Boolean keep = false;
+                for (IonAnnotation rowIonAnnotation : rowIonAnnotations) {
+                    if (rowIonAnnotation.getDescription() != null)
+                        keep = true;
+                }
+                if (!keep)
                     continue;
             }
 
@@ -267,8 +276,9 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
             // Loop through all rows
             for (int firstRowIndex = 0; firstRowIndex < rowCount; firstRowIndex++) {
                 FeatureTableRow firstRow = rows.get(firstRowIndex);
-
-                final Double firstRowMz = firstRow.getMz();
+                final Double mz = firstRow.getMz();
+                if (mz == null)
+                    continue;
 
                 // Loop through all the rows below the current
                 for (int secondRowIndex = firstRowIndex
@@ -278,12 +288,8 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
                         continue;
 
                     // Compare m/z
-                    boolean sameMz = false;
-                    if (firstRowMz != null) {
-                        sameMz = duplicateMzTolerance
-                                .getToleranceRange(firstRowMz)
-                                .contains(secondRow.getMz());
-                    }
+                    final boolean sameMz = duplicateMzTolerance
+                            .getToleranceRange(mz).contains(secondRow.getMz());
 
                     // Compare rt
                     ChromatographyInfo chromatographyInfo1 = firstRow
@@ -297,11 +303,11 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
                                     .getRetentionTime());
 
                     // Compare identifications
-                    FeatureTableColumn column = result.getColumn(
-                            "Ion Annotation", null, IonAnnotation.class);
-                    IonAnnotation ionAnnotation1 = (IonAnnotation) firstRow
+                    FeatureTableColumn<?> column = result
+                            .getColumn(ColumnName.IONANNOTATION, null);
+                    List<IonAnnotation> ionAnnotation1 = (List<IonAnnotation>) firstRow
                             .getData(column);
-                    IonAnnotation ionAnnotation2 = (IonAnnotation) firstRow
+                    List<IonAnnotation> ionAnnotation2 = (List<IonAnnotation>) secondRow
                             .getData(column);
                     final boolean sameId = !duplicateRequireSameID
                             || ionAnnotation1.equals(ionAnnotation2);
@@ -337,7 +343,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
         // Create a new row with the common feature data
         final FeatureTableRow newRow = MSDKObjectBuilder
                 .getFeatureTableRow(result, row.getId());
-        FeatureTableUtil.copyCommonValues(row, newRow);
+        FeatureTableUtil.copyCommonValues(row, newRow, false);
 
         // Copy the feature data for the samples
         for (Sample sample : row.getFeatureTable().getSamples()) {

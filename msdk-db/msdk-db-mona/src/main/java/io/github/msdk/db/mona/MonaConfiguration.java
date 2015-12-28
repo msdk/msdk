@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.search.mona;
+package io.github.msdk.db.mona;
 
 /**
  * a simple configuration interface for the MoNA system. It basically points you to the right endpoints, for it's web services

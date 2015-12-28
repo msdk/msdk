@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.filtering.featurefilter;
+package io.github.msdk.features.filtering;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -141,33 +141,17 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
                 featureTable.getName() + nameSuffix, dataStore);
     }
 
-<<<<<<< Upstream, based on upstream/master
-	/** {@inheritDoc} */
-	@Override
-	public FeatureTable execute() throws MSDKException {
-		// Total features
-		totalFeatures = featureTable.getRows().size() * featureTable.getSamples().size();
-=======
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
     @Override
     public FeatureTable execute() throws MSDKException {
         // Total features
         totalFeatures = featureTable.getRows().size()
                 * featureTable.getSamples().size();
->>>>>>> 68c368c Data model overhaul - removed data point lists
 
-<<<<<<< Upstream, based on upstream/master
-		// Add columns
-		for (FeatureTableColumn<?> column : featureTable.getColumns()) {
-			result.addColumn(column);
-		}
-=======
         // Add columns
-        for (FeatureTableColumn column : featureTable.getColumns()) {
+        for (FeatureTableColumn<?> column : featureTable.getColumns()) {
             result.addColumn(column);
         }
->>>>>>> 68c368c Data model overhaul - removed data point lists
 
         // Loop through all features
         for (FeatureTableRow row : featureTable.getRows()) {
@@ -180,13 +164,8 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
             // Loop through all samples for the feature
             for (Sample sample : featureTable.getSamples()) {
 
-<<<<<<< Upstream, based on upstream/master
-				FeatureTableColumn<?> column;
-				keepFeature[i] = true;
-=======
-                FeatureTableColumn column;
+                FeatureTableColumn<?> column;
                 keepFeature[i] = true;
->>>>>>> 68c368c Data model overhaul - removed data point lists
 
                 // Check Duration
                 if (filterByDuration) {
@@ -323,16 +302,10 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
         if (noSamples)
             return null;
 
-<<<<<<< Upstream, based on upstream/master
-		// Create a new row with the common feature data
-		final FeatureTableRow newRow = MSDKObjectBuilder.getFeatureTableRow(result, row.getId());
-		FeatureTableUtil.copyCommonValues(row, newRow, false);
-=======
         // Create a new row with the common feature data
         final FeatureTableRow newRow = MSDKObjectBuilder
                 .getFeatureTableRow(result, row.getId());
-        FeatureTableUtil.copyCommonValues(row, newRow);
->>>>>>> 68c368c Data model overhaul - removed data point lists
+        FeatureTableUtil.copyCommonValues(row, newRow, false);
 
         // Copy the feature data for the samples
         int i = 0;
