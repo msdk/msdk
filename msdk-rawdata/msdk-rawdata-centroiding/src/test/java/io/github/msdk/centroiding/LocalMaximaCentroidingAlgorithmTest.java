@@ -54,9 +54,8 @@ public class LocalMaximaCentroidingAlgorithmTest {
 
         MsScan lastScan = scans.get(scans.size() - 1);
 
-        final float noiseLevel = 1E3f;
         LocalMaximaCentroidingAlgorithm centroider = new LocalMaximaCentroidingAlgorithm(
-                dataStore, noiseLevel);
+                dataStore);
         final MsScan centroidedScan = centroider.centroidScan(lastScan);
 
         centroidedScan.getDataPoints(dataPoints);
