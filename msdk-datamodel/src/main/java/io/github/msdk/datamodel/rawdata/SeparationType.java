@@ -49,7 +49,8 @@ public enum SeparationType {
              * Unknown separation method. Expect 1 feature dimension, e.g.
              * retention time.
              */
-    UNKNOWN(1);
+    UNKNOWN(1),
+    UNKNOWN_2D(2);
 
     private final int featureDimensions;
 

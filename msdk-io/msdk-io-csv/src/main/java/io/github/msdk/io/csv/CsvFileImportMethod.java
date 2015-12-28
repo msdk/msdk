@@ -57,6 +57,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private int parsedLines, totalLines = 0;
+	private int parsedColumns, totalColumns = 0;
 
 	private final @Nonnull File sourceFile;
 	private final @Nonnull DataPointStore dataStore;
@@ -194,7 +195,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
 							String[] rtValues = stringData.split(",");
 							Float rt1 = Float.parseFloat(rtValues[0].replace(" ", ""));
 							Float rt2 = Float.parseFloat(rtValues[1].replace(" ", ""));
-							chromatographyInfo = MSDKObjectBuilder.getChromatographyInfo2D(SeparationType.UNKNOWN, rt1,
+							chromatographyInfo = MSDKObjectBuilder.getChromatographyInfo2D(SeparationType.UNKNOWN_2D, rt1,
 									rt2);
 						} else {
 							Float rt = Float.parseFloat(stringData);
@@ -292,7 +293,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
 		if (newColumnName == null) {
 			if (columnName.toLowerCase().contains("retention time"))
 				newColumnName = ColumnName.RT;
-			if (columnName.toLowerCase().contains("R.T."))
+			if (columnName.toLowerCase().contains("r.t."))
 				newColumnName = ColumnName.RT;
 			if (columnName.toLowerCase().contains("name"))
 				newColumnName = ColumnName.IONANNOTATION;
@@ -302,8 +303,10 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
 
 		// If no samples were found, then assume that all data in the file is
 		// from one sample
-		if (sampleNames.size() == 0)
-			sample = fileSample;
+		if (sampleNames.size() == 0) {
+			if (newColumnName != ColumnName.IONANNOTATION)
+				sample = fileSample;
+		}
 
 		// If still no match, then create a new column with String.class
 		FeatureTableColumn<?> column = null;
@@ -327,6 +330,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
 
 		// Split string based on separator
 		String[] columns = firstLine.split(separator);
+		totalColumns = columns.length*2;
 
 		// 1st iteration: Loop through all column names to find sample names.
 		// Assumption: Two or more data columns are present for each sample.
@@ -399,6 +403,8 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
 				if (sampleName.length() > 0)
 					samples.add(sampleName);
 			}
+
+			parsedColumns++;
 
 		}
 
@@ -479,6 +485,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
 				}
 			}
 
+			parsedColumns++;
 		}
 
 		// 3rd iteration: All column names are unique columns.
@@ -518,6 +525,9 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
 			}
 		}
 
+		// Update counter
+		parsedColumns = totalColumns;
+
 	}
 
 	private Boolean containsIntegers(String firstName) {
@@ -547,10 +557,16 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
 	/** {@inheritDoc} */
 	@Override
 	public Float getFinishedPercentage() {
-		return totalLines == 0 ? null : (float) parsedLines / totalLines;
-		/*
-		 * TODO add counter to findNames() since this is taking most of the time
-		 */
+		if (totalLines == 0)
+			return 0f;
+
+		float columns = 0, lines = 0;
+		if (totalLines != 0)
+			lines = (float) parsedLines/totalLines*0.2f;
+		if (totalColumns != 0) {
+			columns = (float) parsedColumns/totalColumns*0.8f;
+		}
+		return lines + columns;
 	}
 
 	/** {@inheritDoc} */
