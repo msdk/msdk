@@ -73,7 +73,7 @@ public class SpectrumTypeDetectionMethod {
         int basePeakIndex = 0;
         boolean hasZeroDataPoint = false;
 
-        final double scanMzSpan = mzValues[mzValues.length - 1] - mzValues[0];
+        final double scanMzSpan = mzValues[size - 1] - mzValues[0];
 
         // Go through the data points and find the highest one
         for (int i = 0; i < size; i++) {
