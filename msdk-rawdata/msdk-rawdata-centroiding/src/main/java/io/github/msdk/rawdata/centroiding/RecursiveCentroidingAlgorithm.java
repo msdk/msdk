@@ -35,10 +35,10 @@ public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
     private MsScan newScan;
 
     // Data structures
-    private double mzBuffer[] = new double[10000];
-    private float intensityBuffer[] = new float[10000];
-    private double newMzBuffer[] = new double[10000];
-    private float newIntensityBuffer[] = new float[10000];
+    private @Nonnull double mzBuffer[] = new double[10000];
+    private @Nonnull float intensityBuffer[] = new float[10000];
+    private @Nonnull double newMzBuffer[] = new double[10000];
+    private @Nonnull float newIntensityBuffer[] = new float[10000];
     private int numOfDataPoints, newNumOfDataPoints;
 
     /**

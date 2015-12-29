@@ -59,8 +59,8 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
     private int processedScans = 0, totalScans = 0;
 
     // Data structures
-    private double mzBuffer[] = new double[10000];
-    private float intensityBuffer[] = new float[10000];
+    private @Nonnull double mzBuffer[] = new double[10000];
+    private @Nonnull float intensityBuffer[] = new float[10000];
     private int numOfDataPoints;
 
     /**
