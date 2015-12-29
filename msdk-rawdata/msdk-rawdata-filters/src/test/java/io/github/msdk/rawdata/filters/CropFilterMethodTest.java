@@ -78,6 +78,7 @@ public class CropFilterMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testNoMatch() throws MSDKException {
 

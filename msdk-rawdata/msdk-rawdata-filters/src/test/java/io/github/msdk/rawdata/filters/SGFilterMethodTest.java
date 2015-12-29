@@ -30,6 +30,7 @@ import io.github.msdk.io.mzml.MzMLFileImportMethod;
 public class SGFilterMethodTest {
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
+    @SuppressWarnings("null")
     @Test
     public void testSGFilter() throws MSDKException {
 

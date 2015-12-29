@@ -100,6 +100,7 @@ public class MonaSpectrum
         URL url = getAccessionURL();
 
         ObjectMapper mapper = new ObjectMapper();
+        @SuppressWarnings("null")
         Spectra spectra = mapper.readValue(url.openStream(), Spectra.class);
 
         build(spectra);
@@ -123,6 +124,7 @@ public class MonaSpectrum
 
         // assign compound information
 
+        @SuppressWarnings("unused")
         String molFile = monaRecord.getBiologicalCompound().getMolFile();
 
         // done
@@ -142,6 +144,7 @@ public class MonaSpectrum
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("null")
     @Nonnull
     @Override
     public MsSpectrumType getSpectrumType() {
