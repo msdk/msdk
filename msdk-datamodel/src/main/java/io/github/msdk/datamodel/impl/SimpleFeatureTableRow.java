@@ -20,6 +20,7 @@ import com.google.common.base.Preconditions;
 
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
+import io.github.msdk.datamodel.featuretables.FeatureTableDataConverter;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import java.util.HashMap;
@@ -83,6 +84,14 @@ class SimpleFeatureTableRow implements FeatureTableRow {
             @Nonnull FeatureTableColumn<DataType> column) {
         Preconditions.checkNotNull(column);
         return column.getDataTypeClass().cast(rowData.get(column));
+    }
+
+    @Override
+    public <DataType> void copyData(FeatureTableColumn<DataType> sourceColumn,
+            FeatureTableRow targetRow,
+            FeatureTableColumn<DataType> targetColumn,
+            FeatureTableDataConverter converter) {
+        converter.convert(this, sourceColumn, targetRow, targetColumn);
     }
 
 }
