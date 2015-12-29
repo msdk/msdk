@@ -11,13 +11,13 @@
 	<url>https://msdk.github.io</url>
 
 	<modules>
+		<module>msdk-all</module>
 		<module>msdk-datamodel</module>
 		<module>msdk-io</module>
 		<module>msdk-rawdata</module>
 		<module>msdk-featdet</module>
 		<module>msdk-id</module>
 		<module>msdk-features</module>
-		<module>msdk-all</module>
 		<module>msdk-spectra</module>
 		<module>msdk-db</module>
 	</modules>
@@ -151,6 +151,21 @@
 					<serverId>ossrh</serverId>
 					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-publish-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<checkoutDirectory>${project.build.directory}/apirepo</checkoutDirectory>
+					<checkinComment>Publishing javadoc for
+						${project.artifactId}:${project.version}</checkinComment>
+					<content>${project.reporting.outputDirectory}/apidocs</content>
+					<skipDeletedFiles>false</skipDeletedFiles>
+					<pubScmUrl>scm:git:git@github.com:msdk/api.git</pubScmUrl>
+					<scmBranch>gh-pages</scmBranch>
 				</configuration>
 			</plugin>
 
