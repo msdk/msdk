@@ -25,7 +25,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<cdk.version>1.5.11</cdk.version>
+		<cdk.version>1.5.12</cdk.version>
 		<junit.version>4.12</junit.version>
 		<guava.version>18.0</guava.version>
 		<slf4j.version>1.7.12</slf4j.version>
