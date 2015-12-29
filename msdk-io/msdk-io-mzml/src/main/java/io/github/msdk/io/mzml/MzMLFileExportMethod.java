@@ -51,7 +51,8 @@ import uk.ac.ebi.jmzml.model.mzml.utilities.CommonCvParams;
 import uk.ac.ebi.jmzml.xml.io.MzMLInstantMarshaller;
 
 /**
- * This class reads mzML data format using the jmzml library.
+ * This class exports RawDataFile objects into mzML data format using the jmzml
+ * library.
  */
 public class MzMLFileExportMethod implements MSDKMethod<Void> {
 
