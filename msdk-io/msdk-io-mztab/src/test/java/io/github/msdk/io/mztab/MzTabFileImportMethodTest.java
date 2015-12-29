@@ -66,11 +66,14 @@ public class MzTabFileImportMethodTest {
         Assert.assertFalse(featureTable.getRows().isEmpty());
         Assert.assertEquals(298, featureTable.getRows().size());
 
+        // ********************
         // Annotation 7 - HEPES
+        // ********************
         FeatureTableRow row = featureTable.getRows().get(7);
         FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = featureTable
                 .getColumn(ColumnName.IONANNOTATION, null);
         List<IonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
+        Assert.assertNotNull(ionAnnotations);
         IonAnnotation ionAnnotation = ionAnnotations.get(0);
         Assert.assertEquals("HEPES", ionAnnotation.getDescription());
         IChemObjectBuilder builder = DefaultChemObjectBuilder.getInstance();
@@ -81,38 +84,52 @@ public class MzTabFileImportMethodTest {
         String formula2 = MolecularFormulaManipulator.getString(cdkFormula);
         Assert.assertTrue(formula.equals(formula2));
 
+        // ********************
         // Row 5
+        // ********************
         row = featureTable.getRows().get(5);
         FeatureTableColumn<Double> mzColumn = featureTable
                 .getColumn(ColumnName.MZ, null);
         Double averageMZ = row.getData(mzColumn);
+        Assert.assertNotNull(averageMZ);
         Assert.assertEquals(520.334738595145, averageMZ, 0.0000001);
         Sample sample = featureTable.getSamples().get(5);
         Assert.assertEquals("36C sample 2", sample.getName());
 
+        // ********************
         // Last row
+        // ********************
         row = featureTable.getRows().get(297);
         sample = featureTable.getSamples().get(5);
+
         // Area
         FeatureTableColumn<Double> areaColumn = featureTable
                 .getColumn(ColumnName.AREA, sample);
         Double area = row.getData(areaColumn);
+        Assert.assertNotNull(area);
         Assert.assertEquals(11480605.3259747, area, 0.0000001);
+
         // RT
         FeatureTableColumn<ChromatographyInfo> chromInfoColumn = featureTable
                 .getColumn("Chromatography Info", null,
                         ChromatographyInfo.class);
         ChromatographyInfo chromatographyInfo = row.getData(chromInfoColumn);
+        Assert.assertNotNull(chromatographyInfo);
         Float rt = chromatographyInfo.getRetentionTime();
+        Assert.assertNotNull(rt);
         Assert.assertEquals(30.324697494506836, rt, 0.0000001);
+
         // Height
         FeatureTableColumn<Double> heightColumn = featureTable
                 .getColumn(ColumnName.HEIGHT, sample);
         Double height = row.getData(heightColumn);
+        Assert.assertNotNull(height);
         Assert.assertEquals(312942.149147727, height, 0.0000001);
+
         // m/z
         mzColumn = featureTable.getColumn(ColumnName.MZ, sample);
         Double mz = row.getData(mzColumn);
+        Assert.assertNotNull(mz);
         Assert.assertEquals(144.927825927734, mz, 0.0000001);
 
         featureTable.dispose();
@@ -159,6 +176,7 @@ public class MzTabFileImportMethodTest {
         FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = featureTable
                 .getColumn(ColumnName.IONANNOTATION, null);
         List<IonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
+        Assert.assertNotNull(ionAnnotations);
         IonAnnotation ionAnnotation = ionAnnotations.get(0);
         Assert.assertEquals("PC32:1", ionAnnotation.getAnnotationId());
         IChemObjectBuilder builder = DefaultChemObjectBuilder.getInstance();

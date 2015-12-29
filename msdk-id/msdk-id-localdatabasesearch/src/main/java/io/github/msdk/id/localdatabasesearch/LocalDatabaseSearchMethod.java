@@ -14,6 +14,7 @@
 
 package io.github.msdk.id.localdatabasesearch;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -27,7 +28,6 @@ import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.util.MZTolerance;
@@ -97,6 +97,10 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
             List<IonAnnotation> rowIonAnnotations = row
                     .getData(ionAnnotationColumn);
 
+            // Empty rowIonAnnotations
+            if (rowIonAnnotations == null)
+                rowIonAnnotations = new ArrayList<IonAnnotation>();
+
             // Loop through all ion annotations from the local database
             for (IonAnnotation ionAnnotation : ionAnnotations) {
 
@@ -114,7 +118,8 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
 
                 // If match, add the ion annotation to the list
                 if (mzMatch && rtMatch) {
-                    // Is first ion annotation is empty then remove it
+
+                    // If first ion annotation is empty then remove it
                     IonAnnotation firstionAnnotation = rowIonAnnotations.get(0);
                     if (firstionAnnotation.isNA())
                         rowIonAnnotations.remove(0);

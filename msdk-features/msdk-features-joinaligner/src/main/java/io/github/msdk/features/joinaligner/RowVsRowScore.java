@@ -15,6 +15,7 @@
 package io.github.msdk.features.joinaligner;
 
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * This class represents a score between a feature table row and an aligned
@@ -32,11 +33,29 @@ class RowVsRowScore implements Comparable<RowVsRowScore> {
         this.featureTableRow = featureTableRow;
         this.alignedRow = alignedRow;
 
-        // Calculate differences between m/z and RT values
-        double mzDiff = Math.abs(featureTableRow.getMz() - alignedRow.getMz());
-        double rtDiff = Math.abs(featureTableRow.getChromatographyInfo()
-                .getRetentionTime()
-                - alignedRow.getChromatographyInfo().getRetentionTime());
+        // Get m/z and RT values
+        Double mz1 = featureTableRow.getMz();
+        Double mz2 = alignedRow.getMz();
+        ChromatographyInfo ChromatographyInfo1 = featureTableRow.getChromatographyInfo();
+        ChromatographyInfo ChromatographyInfo2 = alignedRow.getChromatographyInfo();
+        Float rt1 = null;
+        Float rt2 = null;
+        if (ChromatographyInfo1 != null) {
+            rt1 = ChromatographyInfo1.getRetentionTime();
+        }
+        if (ChromatographyInfo2 != null) {
+            rt2 = ChromatographyInfo2.getRetentionTime();
+        }
+
+        // Calculate difference between m/z
+        double mzDiff = 999;
+        if (mz1 != null && mz2 != null)
+            mzDiff = Math.abs(mz1 - mz2);
+
+        // Calculate difference between RT values
+        double rtDiff = 999;
+        if (rt1 != null && rt2 != null)
+            rtDiff = Math.abs(rt1 - rt2);
 
         score = ((1 - mzDiff / mzMaxDiff) * mzWeight)
                 + ((1 - rtDiff / rtMaxDiff) * rtWeight);
@@ -74,7 +93,7 @@ class RowVsRowScore implements Comparable<RowVsRowScore> {
      * @param object
      *            a {@link io.github.msdk.features.joinaligner.RowVsRowScore}
      *            object.
-     * @return a int.
+     * @return an int.
      */
     public int compareTo(RowVsRowScore object) {
         if (score < object.getScore())

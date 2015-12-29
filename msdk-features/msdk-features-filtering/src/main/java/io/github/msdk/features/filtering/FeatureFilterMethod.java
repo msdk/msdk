@@ -74,19 +74,19 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
      *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param filterByDuration
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param filterByArea
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param filterByHeight
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param filterByDataPoints
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param filterByFWHM
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param filterByTailingFactor
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param filterByAsymmetryFactor
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param durationRange
      *            a {@link com.google.common.collect.Range} object.
      * @param areaRange
@@ -163,17 +163,16 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
             // Loop through all samples for the feature
             for (Sample sample : featureTable.getSamples()) {
 
-                FeatureTableColumn<?> column;
+                FeatureTableColumn<Object> column;
                 keepFeature[i] = true;
 
                 // Check Duration
-                if (filterByDuration) {
+                if (filterByDuration && durationRange != null) {
                     column = featureTable.getColumn(ColumnName.DURATION,
                             sample);
                     if (column != null) {
                         if (row.getData(column) != null) {
-                            final Double peakDuration = (Double) row
-                                    .getData(column);
+                            final Double peakDuration = (Double) row.getData(column);
                             if (!durationRange.contains(peakDuration))
                                 keepFeature[i] = false;
                         }
@@ -181,7 +180,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
                 }
 
                 // Check Area
-                if (filterByArea) {
+                if (filterByArea && areaRange != null) {
                     column = featureTable.getColumn(ColumnName.AREA, sample);
                     if (column != null) {
                         if (row.getData(column) != null) {
@@ -194,7 +193,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
                 }
 
                 // Check Height
-                if (filterByHeight) {
+                if (filterByHeight && heightRange != null) {
                     column = featureTable.getColumn(ColumnName.HEIGHT, sample);
                     if (column != null) {
                         if (row.getData(column) != null) {
@@ -207,7 +206,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
                 }
 
                 // Check # Data Points
-                if (filterByDataPoints) {
+                if (filterByDataPoints && dataPointsRange != null) {
                     column = featureTable
                             .getColumn(ColumnName.NUMBEROFDATAPOINTS, sample);
                     if (column != null) {
@@ -221,7 +220,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
                 }
 
                 // Check FWHM
-                if (filterByFWHM) {
+                if (filterByFWHM && fwhmRange != null) {
                     column = featureTable.getColumn(ColumnName.FWHM, sample);
                     if (column != null) {
                         if (row.getData(column) != null) {
@@ -234,7 +233,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
                 }
 
                 // Check Tailing Factor
-                if (filterByTailingFactor) {
+                if (filterByTailingFactor && tailingFactorRange != null) {
                     column = featureTable.getColumn(ColumnName.TAILINGFACTOR,
                             sample);
                     if (column != null) {
@@ -247,7 +246,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
                 }
 
                 // Check Asymmetry Factor
-                if (filterByAsymmetryFactor) {
+                if (filterByAsymmetryFactor && asymmetryFactorRange != null) {
                     column = featureTable.getColumn(ColumnName.ASYMMETRYFACTOR,
                             sample);
                     if (column != null) {

@@ -99,7 +99,8 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
         if (totalScans == 0)
             return result;
 
-        // Create a new scan data array
+        // Create a new scan data array with three values for each scan:
+        // m/z, rt, intensity
         double[][] scanData = new double[totalScans][3];
 
         // Loop through all MS/MS scans
@@ -119,7 +120,11 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
                     .lowerEndpoint();
 
             // RT value
-            double scanRt = scan.getChromatographyInfo().getRetentionTime();
+            ChromatographyInfo scanChromatographyInfo = scan
+                    .getChromatographyInfo();
+            double scanRt = 0;
+            if (scanChromatographyInfo != null)
+                scanRt = scanChromatographyInfo.getRetentionTime();
 
             // Add the data to the array
             scanData[processedScans][0] = selectedMz;

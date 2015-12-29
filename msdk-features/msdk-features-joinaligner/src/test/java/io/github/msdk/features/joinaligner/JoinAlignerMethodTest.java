@@ -24,6 +24,7 @@ import org.junit.Test;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
@@ -79,10 +80,11 @@ public class JoinAlignerMethodTest {
         Assert.assertEquals(10, featureTable.getRows().size());
 
         // Verify that feature 1 has two ion annotations
-        FeatureTableColumn column = featureTable.getColumn("Ion Annotation",
-                null, IonAnnotation.class);
-        List<IonAnnotation> ionAnnotations = (List) featureTable.getRows()
-                .get(0).getData(column);
+        FeatureTableColumn<List<IonAnnotation>> column = featureTable
+                .getColumn(ColumnName.IONANNOTATION, null);
+        List<IonAnnotation> ionAnnotations = (List<IonAnnotation>) featureTable
+                .getRows().get(0).getData(column);
+        Assert.assertNotNull(ionAnnotations);
         Assert.assertEquals(2, ionAnnotations.size());
         Assert.assertEquals("PE(17:0/17:0)",
                 ionAnnotations.get(0).getDescription());
@@ -90,7 +92,8 @@ public class JoinAlignerMethodTest {
                 ionAnnotations.get(1).getDescription());
 
         // Verify that feature 3 has one ion annotation
-        ionAnnotations = (List) featureTable.getRows().get(2).getData(column);
+        ionAnnotations = featureTable.getRows().get(2).getData(column);
+        Assert.assertNotNull(ionAnnotations);
         Assert.assertEquals(1, ionAnnotations.size());
         Assert.assertEquals("Cer(d18:1/17:0)",
                 ionAnnotations.get(0).getDescription());
@@ -104,5 +107,6 @@ public class JoinAlignerMethodTest {
         Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
         Assert.assertEquals(12, featureTable.getRows().size());
 
+        featureTable.dispose();
     }
 }

@@ -28,6 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.openscience.cdk.DefaultChemObjectBuilder;
+import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IChemObjectBuilder;
 import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
@@ -254,7 +255,7 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
                 .getSmallMolecules();
         for (SmallMolecule smallMolecule : smallMolecules) {
             parsedRows++;
-            FeatureTableColumn column;
+            FeatureTableColumn<Object> column;
             FeatureTableRow currentRow = MSDKObjectBuilder
                     .getFeatureTableRow(featureTable, parsedRows);
 
@@ -309,7 +310,8 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
                 /*
                  * TODO: Add checmical structure
                  */
-                // ionAnnotation.setChemicalStructure();
+                IAtomContainer chemicalStructure = null;
+                ionAnnotation.setChemicalStructure(chemicalStructure);
             }
 
             // Add common data to columns
@@ -322,13 +324,14 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
             currentRow.setData(column, mzExp);
 
             // Common column: Chromatography Info
-            column = featureTable.getColumn("Chromatography Info", null,
-                    ChromatographyInfo.class);
-            currentRow.setData(column, chromatographyInfo);
+            FeatureTableColumn<ChromatographyInfo> ciColumn = featureTable
+                    .getColumn("Chromatography Info", null,
+                            ChromatographyInfo.class);
+            currentRow.setData(ciColumn, chromatographyInfo);
 
             // Common column: Ion Annotation
             column = featureTable.getColumn(ColumnName.IONANNOTATION, null);
-            List<IonAnnotation> ionAnnotations = (List) currentRow
+            List<IonAnnotation> ionAnnotations = (List<IonAnnotation>) currentRow
                     .getData(column);
             if (ionAnnotations == null)
                 ionAnnotations = new ArrayList<IonAnnotation>();
@@ -352,7 +355,7 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
                         .getAbundanceColumnValue(sampleAssay) != null) {
                     featureArea = Double.parseDouble(smallMolecule
                             .getAbundanceColumnValue(sampleAssay).toString());
-                    column = tableColumns.get(
+                    column = (FeatureTableColumn<Object>) tableColumns.get(
                             "[" + sampleKey + "]_" + ColumnName.AREA.getName());
                     currentRow.setData(column, featureArea);
                 }
@@ -362,7 +365,7 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
                     if (smallMolecule.getOptionColumnValue(sampleAssay,
                             columnName) != null) {
 
-                        column = tableColumns.get(
+                        column = (FeatureTableColumn<Object>) tableColumns.get(
                                 "opt_assay[" + sampleKey + "]_" + columnName);
                         String classType = getDataTypeClass(columnName)
                                 .getSimpleName();

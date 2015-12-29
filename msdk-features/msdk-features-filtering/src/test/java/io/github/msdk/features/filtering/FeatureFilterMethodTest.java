@@ -139,7 +139,9 @@ public class FeatureFilterMethodTest {
 
         // 1. Verify data
         FeatureTable filteredTable = filterMethod.getResult();
-        Assert.assertEquals(3, filteredTable.getRows().size());
+        Assert.assertNotNull(filteredTable);
+        if (filteredTable != null)
+            Assert.assertEquals(3, filteredTable.getRows().size());
 
         // 2. Filter parameters
         filterByDataPoints = false;
@@ -157,7 +159,9 @@ public class FeatureFilterMethodTest {
 
         // 2. Verify data
         filteredTable = filterMethod.getResult();
-        Assert.assertEquals(3, filteredTable.getRows().size());
+        Assert.assertNotNull(filteredTable);
+        if (filteredTable != null)
+            Assert.assertEquals(3, filteredTable.getRows().size());
 
         // 3. Filter parameters
         filterByDataPoints = true;
@@ -176,7 +180,11 @@ public class FeatureFilterMethodTest {
 
         // 3. Verify data
         filteredTable = filterMethod.getResult();
-        Assert.assertEquals(1, filteredTable.getRows().size());
+        Assert.assertNotNull(filteredTable);
+        if (filteredTable != null)
+            Assert.assertEquals(1, filteredTable.getRows().size());
+
+        featureTable.dispose();
     }
 
     @Test
@@ -224,7 +232,9 @@ public class FeatureFilterMethodTest {
 
         // 1. Verify data - no filter was applied
         FeatureTable filteredTable = filterMethod.getResult();
-        Assert.assertEquals(298, filteredTable.getRows().size());
+        Assert.assertNotNull(filteredTable);
+        if (filteredTable != null)
+            Assert.assertEquals(298, filteredTable.getRows().size());
 
         // 2. Filter parameters
         filterByArea = true;
@@ -241,7 +251,9 @@ public class FeatureFilterMethodTest {
 
         // 2. Verify data
         filteredTable = filterMethod.getResult();
-        Assert.assertEquals(116, filteredTable.getRows().size());
+        Assert.assertNotNull(filteredTable);
+        if (filteredTable != null)
+            Assert.assertEquals(116, filteredTable.getRows().size());
 
         // 3. Filter parameters
         filterByArea = true;
@@ -259,7 +271,9 @@ public class FeatureFilterMethodTest {
 
         // 3. Verify data
         filteredTable = filterMethod.getResult();
-        Assert.assertEquals(115, filteredTable.getRows().size());
+        Assert.assertNotNull(filteredTable);
+        if (filteredTable != null)
+            Assert.assertEquals(115, filteredTable.getRows().size());
 
         // Row ID 176, ID: L-Arginine
         FeatureTableRow row = filteredTable.getRows().get(110);
@@ -267,6 +281,7 @@ public class FeatureFilterMethodTest {
         FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = filteredTable
                 .getColumn(ColumnName.IONANNOTATION, null);
         List<IonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
+        Assert.assertNotNull(ionAnnotations);
         IonAnnotation ionAnnotation = ionAnnotations.get(0);
         Assert.assertEquals("L-Arginine", ionAnnotation.getDescription());
 
@@ -279,9 +294,11 @@ public class FeatureFilterMethodTest {
         // 26C sample 1
         sample = filteredTable.getSamples().get(1);
         areaColumn = filteredTable.getColumn(ColumnName.AREA, sample);
-        Assert.assertEquals(2.559630988648635E8, row.getData(areaColumn),
-                0.00001);
+        Double area = row.getData(areaColumn);
+        Assert.assertNotNull(area);
+        Assert.assertEquals(2.559630988648635E8, area, 0.00001);
 
+        featureTable.dispose();
     }
 
 }

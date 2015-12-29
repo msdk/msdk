@@ -22,7 +22,7 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 class BuildingChromatogram {
 
-    // m/z array
+    // Initial variables
     private int size = 0;
     private ChromatographyInfo[] rtValues = new ChromatographyInfo[100];
     private double[] mzValues = new double[100];
@@ -70,7 +70,7 @@ class BuildingChromatogram {
     public void cropChromatogram(Range<Double> rtRange,
             Double intensityTolerance, Double noiseLevel) {
 
-        // Find peak apex (=most intense data point which fulfill the criteria)
+        // Find peak apex (= most intense data point which fulfill the criteria)
         Integer apexDataPoint = null;
         for (int i = 0; i < size; i++) {
             Float currentIntensity = intensityValues[i];
@@ -130,7 +130,7 @@ class BuildingChromatogram {
      * </p>
      *
      * @param newSize
-     *            a int.
+     *            a {@link java.lang.Integer} object.
      */
     public void allocate(int newSize) {
 
@@ -157,7 +157,7 @@ class BuildingChromatogram {
      * Getter for the field <code>size</code>.
      * </p>
      *
-     * @return a int.
+     * @return a {@link java.lang.Integer} object.
      */
     public int getSize() {
         return size;
