@@ -14,8 +14,11 @@
 
 package io.github.msdk.spectra.splash;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.codec.digest.DigestUtils;
 
+import com.google.common.base.Preconditions;
 import com.google.common.primitives.Doubles;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
@@ -24,7 +27,7 @@ import io.github.msdk.util.MsSpectrumUtil;
 /**
  * the reference implementation of the Spectral Hash Key
  */
-public class SplashCalculator {
+public class SplashCalculationMethod {
 
     private static final int BINS = 10;
     private static final int BIN_SIZE = 100;
@@ -161,11 +164,17 @@ public class SplashCalculator {
      * @param size
      *            a {@link java.lang.Integer} object.
      */
-    public static String calculateSplash(double mzValues[], float intValues[],
-            Integer size) {
+    public static String calculateSplash(@Nonnull double mzValues[],
+            @Nonnull float intValues[], @Nonnull Integer size) {
+
+        // Parameter check
+        Preconditions.checkNotNull(mzValues);
+        Preconditions.checkNotNull(intValues);
+        Preconditions.checkNotNull(size);
 
         // convert the spectrum to relative values
         float relativeIntensities[] = intValues.clone();
+
         MsSpectrumUtil.convertToRelative(relativeIntensities, size,
                 scalingOfRelativeIntensity);
 

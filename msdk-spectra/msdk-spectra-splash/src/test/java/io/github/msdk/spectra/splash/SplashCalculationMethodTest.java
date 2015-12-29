@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 
-public class SplashCalculatorTest {
+public class SplashCalculationMethodTest {
 
     @Test
     public void testSplash() throws MSDKException {
@@ -28,7 +28,7 @@ public class SplashCalculatorTest {
         float intValues[] = new float[] { 1.0f, 2.0f, 3.0f };
 
         final String correctSplash = "splash10-0z00000000-f5bf6f6a4a1520a35d4f";
-        final String calculatedSplash = SplashCalculator
+        final String calculatedSplash = SplashCalculationMethod
                 .calculateSplash(mzValues, intValues, mzValues.length);
 
         Assert.assertEquals(correctSplash, calculatedSplash);
