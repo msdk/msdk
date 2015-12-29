@@ -41,8 +41,8 @@ import io.github.msdk.util.RTTolerance;
 import io.github.msdk.util.RawDataFileUtil;
 
 /**
- * This class creates a list of Chromatograms for a RawDataFile based the
- * inputted list of IonAnnotations.
+ * This class creates a list of Chromatograms from a RawDataFile based on a list
+ * of IonAnnotations.
  */
 public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 
@@ -112,7 +112,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
         BuildingChromatogram buildingChromatogram;
         int ionNr;
 
-        // Create at new building chromatogram for all ions
+        // Create a new BuildingChromatogram for all ions
         for (int i = 0; i < ionAnnotations.size(); i++) {
             BuildingChromatogram newChromatogram = new BuildingChromatogram();
             tempChromatogramList.add(newChromatogram);
@@ -122,8 +122,11 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
         List<MsScan> allScans = rawDataFile.getScans();
         List<MsScan> msScans = new ArrayList<MsScan>();
         for (MsScan scan : allScans) {
-            if (scan.getMsFunction().getMsLevel().equals(1))
-                msScans.add(scan);
+            Integer msLevel = scan.getMsFunction().getMsLevel();
+            if (msLevel != null) {
+                if (msLevel.equals(1))
+                    msScans.add(scan);
+            }
         }
 
         // Loop through all scans
@@ -146,8 +149,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
                     Range<Double> mzRange = mzTolerance
                             .getToleranceRange(ionMz);
 
-                    // Get highest data point from the MS dataPointList which
-                    // has a m/z within the mzRange
+                    // Get highest data point which has a m/z within the mzRange
                     Double mz = 0d;
                     Float intensity = 0f;
                     Integer index = MsSpectrumUtil.getBasePeakIndex(mzBuffer,
@@ -182,11 +184,14 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 
             // Find the most intense data point and crop the chromatogram based
             // on the input parameters
-            Double ionRt = (double) ionAnnotation.getChromatographyInfo()
-                    .getRetentionTime();
-            Range<Double> rtRange = rtTolerance.getToleranceRange(ionRt);
-            buildingChromatogram.cropChromatogram(rtRange, intensityTolerance,
-                    noiseLevel);
+            ChromatographyInfo chromatographyInfo = ionAnnotation
+                    .getChromatographyInfo();
+            if (chromatographyInfo != null) {
+                double ionRt = (double) chromatographyInfo.getRetentionTime();
+                Range<Double> rtRange = rtTolerance.getToleranceRange(ionRt);
+                buildingChromatogram.cropChromatogram(rtRange,
+                        intensityTolerance, noiseLevel);
+            }
 
             // Final chromatogram
             chromatogram = MSDKObjectBuilder.getChromatogram(dataPointStore,
@@ -201,8 +206,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
             chromatogram.setDataPoints(rtValues, mzValues, intensityValues,
                     size);
 
-            double newMz;
-
+            Double newMz;
             if (mzValues != null) {
                 newMz = ChromatogramUtil.calculateMz(mzValues, intensityValues,
                         size, calcMethod.allAverage);

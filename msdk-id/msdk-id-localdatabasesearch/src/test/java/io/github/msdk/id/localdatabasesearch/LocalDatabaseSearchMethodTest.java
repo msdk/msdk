@@ -29,6 +29,7 @@ import com.google.common.base.Strings;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
@@ -62,14 +63,15 @@ public class LocalDatabaseSearchMethodTest {
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
         // Verify that none of the features have an ion annotation
-        FeatureTableColumn<IonAnnotation> column = featureTable
-                .getColumn("Ion Annotation", null, IonAnnotation.class);
+        FeatureTableColumn<List<IonAnnotation>> column = featureTable
+                .getColumn(ColumnName.IONANNOTATION, null);
         int annotatedFeatures = 0;
         for (FeatureTableRow row : featureTable.getRows()) {
-            List<IonAnnotation> ionAnnotations = (List) row.getData(column);
-            for (IonAnnotation annot : ionAnnotations)
-                if (!Strings.isNullOrEmpty(annot.getDescription()))
-                    annotatedFeatures++;
+            List<IonAnnotation> ionAnnotations = row.getData(column);
+            if (ionAnnotations != null)
+                for (IonAnnotation annot : ionAnnotations)
+                    if (!Strings.isNullOrEmpty(annot.getDescription()))
+                        annotatedFeatures++;
         }
         Assert.assertEquals(0, annotatedFeatures);
 
@@ -168,30 +170,37 @@ public class LocalDatabaseSearchMethodTest {
 
         // Verify that 7 of the features have an ion annotation
         for (FeatureTableRow row : featureTable.getRows()) {
-            ionAnnotations = (List) row.getData(column);
-            for (IonAnnotation annot : ionAnnotations)
-                if (!Strings.isNullOrEmpty(annot.getDescription()))
-                    annotatedFeatures++;
+            ionAnnotations = (List<IonAnnotation>) row.getData(column);
+            if (ionAnnotations != null)
+                for (IonAnnotation annot : ionAnnotations)
+                    if (!Strings.isNullOrEmpty(annot.getDescription()))
+                        annotatedFeatures++;
         }
         Assert.assertEquals(7, annotatedFeatures);
 
         // Verify ion 2
-        IonAnnotation ionAnnotation = ((List<IonAnnotation>) featureTable
-                .getRows().get(1).getData(column)).get(0);
+        ionAnnotations = featureTable.getRows().get(1).getData(column);
+        Assert.assertNotNull(ionAnnotations);
+        IonAnnotation ionAnnotation = ionAnnotations.get(0);
 
         Assert.assertEquals("3", ionAnnotation.getAnnotationId());
         Assert.assertEquals("HEPES", ionAnnotation.getDescription());
-        Assert.assertEquals(239.1068954, ionAnnotation.getExpectedMz(), 0.0001);
+        Double mz = ionAnnotation.getExpectedMz();
+        Assert.assertNotNull(mz);
+        Assert.assertEquals(239.1068954, mz, 0.0001);
         IonType ionType = ionAnnotation.getIonType();
         Assert.assertNull(ionType);
 
         // Verify ion 8
-        ionAnnotation = ((List<IonAnnotation>) featureTable.getRows().get(7)
-                .getData(column)).get(0);
+        ionAnnotations = featureTable.getRows().get(7).getData(column);
+        Assert.assertNotNull(ionAnnotations);
+        ionAnnotation = ionAnnotations.get(0);
         Assert.assertEquals("2", ionAnnotation.getAnnotationId());
         Assert.assertEquals("Glutathione disulfide",
                 ionAnnotation.getDescription());
-        Assert.assertEquals(613.1625235, ionAnnotation.getExpectedMz(), 0.0001);
+        mz = ionAnnotation.getExpectedMz();
+        Assert.assertNotNull(mz);
+        Assert.assertEquals(613.1625235, mz, 0.0001);
         ionType = ionAnnotation.getIonType();
         Assert.assertNotNull(ionType);
         Assert.assertEquals("H4N", ionType.getAdductFormula());
@@ -202,6 +211,7 @@ public class LocalDatabaseSearchMethodTest {
         Assert.assertEquals("C20H32N6O12S2",
                 MolecularFormulaManipulator.getString(ionFormula));
 
+        featureTable.dispose();
     }
 
 }

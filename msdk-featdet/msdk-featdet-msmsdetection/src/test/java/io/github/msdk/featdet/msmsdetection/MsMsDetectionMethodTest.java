@@ -25,6 +25,7 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -53,8 +54,11 @@ public class MsMsDetectionMethodTest {
         // MS2 scans
         List<MsScan> msScans = new ArrayList<MsScan>();
         for (MsScan scan : rawFile.getScans()) {
-            if (scan.getMsFunction().getMsLevel().equals(2))
-                msScans.add(scan);
+            Integer msLevel = scan.getMsFunction().getMsLevel();
+            if (msLevel != null) {
+                if (msLevel.equals(2))
+                    msScans.add(scan);
+            }
         }
 
         // Parameters
@@ -70,58 +74,72 @@ public class MsMsDetectionMethodTest {
 
         // Verify ions
         Assert.assertEquals(13, ionAnnotations.size());
-        Assert.assertEquals(809.6484375, ionAnnotations.get(0).getExpectedMz(),
-                0.0001);
-        Assert.assertEquals(435.9, ionAnnotations.get(0).getChromatographyInfo()
-                .getRetentionTime(), 0.1);
-        Assert.assertEquals(534.5249023, ionAnnotations.get(1).getExpectedMz(),
-                0.0001);
-        Assert.assertEquals(453.6, ionAnnotations.get(1).getChromatographyInfo()
-                .getRetentionTime(), 0.1);
-        Assert.assertEquals(797.6456299, ionAnnotations.get(2).getExpectedMz(),
-                0.0001);
-        Assert.assertEquals(449.2, ionAnnotations.get(2).getChromatographyInfo()
-                .getRetentionTime(), 0.1);
-        Assert.assertEquals(806.5674438, ionAnnotations.get(3).getExpectedMz(),
-                0.0001);
-        Assert.assertEquals(420.1, ionAnnotations.get(3).getChromatographyInfo()
-                .getRetentionTime(), 0.1);
-        Assert.assertEquals(750.5430298, ionAnnotations.get(4).getExpectedMz(),
-                0.0001);
-        Assert.assertEquals(427.4, ionAnnotations.get(4).getChromatographyInfo()
-                .getRetentionTime(), 0.1);
-        Assert.assertEquals(796.6193848, ionAnnotations.get(5).getExpectedMz(),
-                0.0001);
-        Assert.assertEquals(435.0, ionAnnotations.get(5).getChromatographyInfo()
-                .getRetentionTime(), 0.1);
-        Assert.assertEquals(753.5879517, ionAnnotations.get(6).getExpectedMz(),
-                0.0001);
-        Assert.assertEquals(444.3, ionAnnotations.get(6).getChromatographyInfo()
-                .getRetentionTime(), 0.1);
-        Assert.assertEquals(776.5801392, ionAnnotations.get(7).getExpectedMz(),
-                0.0001);
-        Assert.assertEquals(409.0, ionAnnotations.get(7).getChromatographyInfo()
-                .getRetentionTime(), 0.1);
-        Assert.assertEquals(816.5888062, ionAnnotations.get(8).getExpectedMz(),
-                0.0001);
-        Assert.assertEquals(422.7, ionAnnotations.get(8).getChromatographyInfo()
-                .getRetentionTime(), 0.1);
-        Assert.assertEquals(756.5533447, ionAnnotations.get(9).getExpectedMz(),
-                0.0001);
-        Assert.assertEquals(443.3, ionAnnotations.get(9).getChromatographyInfo()
-                .getRetentionTime(), 0.1);
-        Assert.assertEquals(774.5436401, ionAnnotations.get(10).getExpectedMz(),
-                0.0001);
-        Assert.assertEquals(416.1, ionAnnotations.get(10)
-                .getChromatographyInfo().getRetentionTime(), 0.1);
-        Assert.assertEquals(754.5394897, ionAnnotations.get(11).getExpectedMz(),
-                0.0001);
-        Assert.assertEquals(409.8, ionAnnotations.get(11)
-                .getChromatographyInfo().getRetentionTime(), 0.1);
-        Assert.assertEquals(715.5751953, ionAnnotations.get(12).getExpectedMz(),
-                0.0001);
-        Assert.assertEquals(402.7, ionAnnotations.get(12)
-                .getChromatographyInfo().getRetentionTime(), 0.1);
+        for (int i = 0; i < ionAnnotations.size(); i++) {
+            Assert.assertNotNull(ionAnnotations.get(i));
+            Double mz = ionAnnotations.get(i).getExpectedMz();
+            Assert.assertNotNull(mz);
+            ChromatographyInfo chromatographyInfo = ionAnnotations.get(i)
+                    .getChromatographyInfo();
+            Assert.assertNotNull(chromatographyInfo);
+
+            float rt = 0;
+            if (mz != null && chromatographyInfo.getRetentionTime() != null)
+                rt = chromatographyInfo.getRetentionTime();
+            switch (i) {
+                case 0:
+                    Assert.assertEquals(809.6484375, mz, 0.0001);
+                    Assert.assertEquals(435.9, rt, 0.1);
+                    break;
+                case 1:
+                    Assert.assertEquals(534.5249023, mz, 0.0001);
+                    Assert.assertEquals(453.6, rt, 0.1);
+                    break;
+                case 2:
+                    Assert.assertEquals(797.6456299, mz, 0.0001);
+                    Assert.assertEquals(449.2, rt, 0.1);
+                    break;
+                case 3:
+                    Assert.assertEquals(806.5674438, mz, 0.0001);
+                    Assert.assertEquals(420.1, rt, 0.1);
+                    break;
+                case 4:
+                    Assert.assertEquals(750.5430298, mz, 0.0001);
+                    Assert.assertEquals(427.4, rt, 0.1);
+                    break;
+                case 5:
+                    Assert.assertEquals(796.6193848, mz, 0.0001);
+                    Assert.assertEquals(435.0, rt, 0.1);
+                    break;
+                case 6:
+                    Assert.assertEquals(753.5879517, mz, 0.0001);
+                    Assert.assertEquals(444.3, rt, 0.1);
+                    break;
+                case 7:
+                    Assert.assertEquals(776.5801392, mz, 0.0001);
+                    Assert.assertEquals(409.0, rt, 0.1);
+                    break;
+                case 8:
+                    Assert.assertEquals(816.5888062, mz, 0.0001);
+                    Assert.assertEquals(422.7, rt, 0.1);
+                    break;
+                case 9:
+                    Assert.assertEquals(756.5533447, mz, 0.0001);
+                    Assert.assertEquals(443.3, rt, 0.1);
+                    break;
+                case 10:
+                    Assert.assertEquals(774.5436401, mz, 0.0001);
+                    Assert.assertEquals(416.1, rt, 0.1);
+                    break;
+                case 11:
+                    Assert.assertEquals(754.5394897, mz, 0.0001);
+                    Assert.assertEquals(409.8, rt, 0.1);
+                    break;
+                case 12:
+                    Assert.assertEquals(715.5751953, mz, 0.0001);
+                    Assert.assertEquals(402.7, rt, 0.1);
+                    break;
+            }
+        }
 
     }
 

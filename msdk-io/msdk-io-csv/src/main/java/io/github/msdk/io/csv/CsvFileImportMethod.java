@@ -382,7 +382,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
                         // since these are typically part of the sample name
                         Boolean containsInts = containsIntegers(firstName);
 
-                        if (firstName.equals(secondName) & !containsInts) {
+                        if (firstName.equals(secondName) && !containsInts) {
                             maxCharacters = currentCharacterLength;
                             break;
                         }
@@ -427,7 +427,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
             }
 
             // Add the sample name to the sample list
-            if (sampleName != null & !samples.contains(sampleName)) {
+            if (sampleName != null && !samples.contains(sampleName)) {
                 if (sampleName.length() > 0)
                     samples.add(sampleName);
             }
@@ -500,7 +500,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
                     }
 
                     // Only accept column names which are found multiple times
-                    if (nameCounter > 2 & !colums.contains(commonName)) {
+                    if (nameCounter > 2 && !colums.contains(commonName)) {
                         colums.add(commonName);
 
                         for (int i = 0; i < columns.length; i++) {

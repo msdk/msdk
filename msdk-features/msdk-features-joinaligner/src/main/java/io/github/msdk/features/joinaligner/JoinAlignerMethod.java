@@ -34,6 +34,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.util.FeatureTableUtil;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
@@ -140,10 +141,18 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
                 if (mz == null)
                     continue;
 
-                // Calculate range limits for the current row
+                // Calculate the m/z range limit for the current row
                 Range<Double> mzRange = mzTolerance.getToleranceRange(mz);
+
+                // Continue if no chromatography info is available
+                ChromatographyInfo chromatographyInfo = row
+                        .getChromatographyInfo();
+                if (chromatographyInfo == null)
+                    continue;
+
+                // Calculate the RT range limit for the current row
                 Range<Double> rtRange = rtTolerance.getToleranceRange(
-                        row.getChromatographyInfo().getRetentionTime());
+                        chromatographyInfo.getRetentionTime());
 
                 // Get all rows of the aligned feature table within the m/z and
                 // RT limits
@@ -159,8 +168,9 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
                                 .getColumn(ColumnName.CHARGE, null);
                         FeatureTableColumn<Integer> chargeColumn2 = result
                                 .getColumn(ColumnName.CHARGE, null);
-                        if (!row.getData(chargeColumn1)
-                                .equals(candidateRow.getData(chargeColumn2)))
+                        Integer charge1 = row.getData(chargeColumn1);
+                        Integer charge2 = candidateRow.getData(chargeColumn2);
+                        if (!charge1.equals(charge2))
                             continue;
                     }
 
@@ -178,11 +188,14 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
                         // Check that all ion annotations in first row are in
                         // the candidate row
                         boolean equalIons = false;
-                        for (IonAnnotation ionAnnotation : ionAnnotations1) {
-                            for (IonAnnotation targetIonAnnotation : ionAnnotations2) {
-                                if (targetIonAnnotation
-                                        .compareTo(ionAnnotation) == 0)
-                                    equalIons = true;
+                        if (ionAnnotations1 != null
+                                && ionAnnotations2 != null) {
+                            for (IonAnnotation ionAnnotation : ionAnnotations1) {
+                                for (IonAnnotation targetIonAnnotation : ionAnnotations2) {
+                                    if (targetIonAnnotation
+                                            .compareTo(ionAnnotation) == 0)
+                                        equalIons = true;
+                                }
                             }
                         }
                         if (!equalIons)

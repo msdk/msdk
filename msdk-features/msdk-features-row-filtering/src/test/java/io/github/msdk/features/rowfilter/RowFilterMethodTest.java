@@ -140,6 +140,7 @@ public class RowFilterMethodTest {
 
         // 1. Verify data
         FeatureTable filteredTable = filterMethod.getResult();
+        Assert.assertNotNull(filteredTable);
         Assert.assertEquals(3, filteredTable.getRows().size());
 
         // 2. Filter parameters
@@ -158,6 +159,7 @@ public class RowFilterMethodTest {
 
         // 2. Verify data
         filteredTable = filterMethod.getResult();
+        Assert.assertNotNull(filteredTable);
         Assert.assertEquals(1, filteredTable.getRows().size());
 
         // 3. Filter parameters
@@ -175,7 +177,11 @@ public class RowFilterMethodTest {
 
         // 3. Verify data
         filteredTable = filterMethod.getResult();
+        Assert.assertNotNull(filteredTable);
         Assert.assertEquals(0, filteredTable.getRows().size());
+
+        featureTable.dispose();
+        filteredTable.dispose();
     }
 
 }

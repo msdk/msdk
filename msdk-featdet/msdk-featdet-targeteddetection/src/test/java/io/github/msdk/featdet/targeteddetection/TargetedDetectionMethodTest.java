@@ -18,9 +18,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -100,7 +97,9 @@ public class TargetedDetectionMethodTest {
         Assert.assertNotNull(chromatograms);
         Assert.assertEquals(3, chromatograms.size());
 
+        // ************
         // Verify ion 1
+        // ************
         Chromatogram chromatogram1 = chromatograms.get(0);
         Assert.assertEquals(1,
                 chromatogram1.getChromatogramNumber().intValue());
@@ -110,31 +109,77 @@ public class TargetedDetectionMethodTest {
         numOfDataPoints = chromatogram1.getNumberOfDataPoints();
         Assert.assertEquals(20, numOfDataPoints);
         Assert.assertEquals(5513891.5, intensityBuffer[8], 0.000001);
-        Assert.assertEquals(332.5622270372179, chromatogram1.getMz(), 0.000001);
-        Assert.assertEquals(12.8835535, ChromatogramUtil.getRt(rtBuffer,
-                intensityBuffer, numOfDataPoints) / 60, 0.000001);
-        Assert.assertEquals(12.538729,
-                ChromatogramUtil.getRtStart(rtBuffer, numOfDataPoints) / 60,
-                0.000001);
-        Assert.assertEquals(13.3210535,
-                ChromatogramUtil.getRtEnd(rtBuffer, numOfDataPoints) / 60,
-                0.000001);
-        Assert.assertEquals(0.7823242,
-                ChromatogramUtil.getDuration(rtBuffer, numOfDataPoints) / 60,
-                0.000001);
-        Assert.assertEquals(5513891.5,
-                ChromatogramUtil.getMaxHeight(intensityBuffer, numOfDataPoints),
-                0.000001);
-        Assert.assertEquals(7.5199576E7, ChromatogramUtil.getArea(rtBuffer,
-                intensityBuffer, numOfDataPoints), 0.000001);
-        Assert.assertEquals(0.20610961, ChromatogramUtil.getFwhm(rtBuffer,
-                intensityBuffer, numOfDataPoints) / 60, 0.000001);
-        Assert.assertEquals(1.1181464, ChromatogramUtil.getTailingFactor(
-                rtBuffer, intensityBuffer, numOfDataPoints), 0.001);
-        Assert.assertEquals(1.1135141, ChromatogramUtil.getAsymmetryFactor(
-                rtBuffer, intensityBuffer, numOfDataPoints), 0.000001);
 
+        // m/z
+        Double mz = chromatogram1.getMz();
+        Assert.assertNotNull(mz);
+        if (mz != null)
+            Assert.assertEquals(332.5622270372179, mz, 0.000001);
+
+        // RT
+        Float rt = ChromatogramUtil.getRt(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(rt);
+        if (rt != null)
+            Assert.assertEquals(12.8835535, rt / 60, 0.000001);
+
+        // RT start
+        Float rtStart = ChromatogramUtil.getRtStart(rtBuffer, numOfDataPoints);
+        Assert.assertNotNull(rtStart);
+        if (rtStart != null)
+            Assert.assertEquals(12.538729, rtStart / 60, 0.000001);
+
+        // RT end
+        Float rtEnd = ChromatogramUtil.getRtEnd(rtBuffer, numOfDataPoints);
+        Assert.assertNotNull(rtEnd);
+        if (rtEnd != null)
+            Assert.assertEquals(13.3210535, rtEnd / 60, 0.000001);
+
+        // Duration
+        Float duration = ChromatogramUtil.getDuration(rtBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(duration);
+        if (duration != null)
+            Assert.assertEquals(0.7823242, duration / 60, 0.000001);
+
+        // Height
+        Double height = ChromatogramUtil.getMaxHeight(intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(height);
+        if (height != null)
+            Assert.assertEquals(5513891.5, height, 0.000001);
+
+        // Area
+        Double area = ChromatogramUtil.getArea(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(area);
+        if (area != null)
+            Assert.assertEquals(7.519958076518613E7, area, 0.000001);
+
+        // FWHM
+        Double fwhm = ChromatogramUtil.getFwhm(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(fwhm);
+        if (fwhm != null)
+            Assert.assertEquals(0.20610961, fwhm / 60, 0.000001);
+
+        // Tailing factor
+        Double tf = ChromatogramUtil.getTailingFactor(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(tf);
+        if (tf != null)
+            Assert.assertEquals(1.1181464, tf, 0.001);
+
+        // Asymmetry factor
+        Double af = ChromatogramUtil.getAsymmetryFactor(rtBuffer,
+                intensityBuffer, numOfDataPoints);
+        Assert.assertNotNull(af);
+        if (af != null)
+            Assert.assertEquals(1.1135141, af, 0.000001);
+
+        // ************
         // Verify ion 2
+        // ************
         Chromatogram chromatogram2 = chromatograms.get(1);
         Assert.assertEquals(2,
                 chromatogram2.getChromatogramNumber().intValue());
@@ -144,31 +189,75 @@ public class TargetedDetectionMethodTest {
         numOfDataPoints = chromatogram2.getNumberOfDataPoints();
         Assert.assertEquals(18, numOfDataPoints);
         Assert.assertEquals(6317753.0, intensityBuffer[7], 0.000001);
-        Assert.assertEquals(508.0034287396599, chromatogram2.getMz(), 0.000001);
-        Assert.assertEquals(14.481896, ChromatogramUtil.getRt(rtBuffer,
-                intensityBuffer, numOfDataPoints) / 60, 0.000001);
-        Assert.assertEquals(14.16822,
-                ChromatogramUtil.getRtStart(rtBuffer, numOfDataPoints) / 60,
-                0.000001);
-        Assert.assertEquals(14.9408865,
-                ChromatogramUtil.getRtEnd(rtBuffer, numOfDataPoints) / 60,
-                0.000001);
-        Assert.assertEquals(0.7726664,
-                ChromatogramUtil.getDuration(rtBuffer, numOfDataPoints) / 60,
-                0.000001);
-        Assert.assertEquals(6317753.0,
-                ChromatogramUtil.getMaxHeight(intensityBuffer, numOfDataPoints),
-                0.000001);
-        Assert.assertEquals(8.4486608E7, ChromatogramUtil.getArea(rtBuffer,
-                intensityBuffer, numOfDataPoints), 0.000001);
-        Assert.assertEquals(0.19513144, ChromatogramUtil.getFwhm(rtBuffer,
-                intensityBuffer, numOfDataPoints) / 60, 0.000001);
-        Assert.assertEquals(1.3311311, ChromatogramUtil.getTailingFactor(
-                rtBuffer, intensityBuffer, numOfDataPoints), 0.0001);
-        Assert.assertEquals(1.7337204, ChromatogramUtil.getAsymmetryFactor(
-                rtBuffer, intensityBuffer, numOfDataPoints), 0.0001);
 
+        // m/z
+        mz = chromatogram2.getMz();
+        Assert.assertNotNull(mz);
+        if (mz != null)
+            Assert.assertEquals(508.0034287396599, mz, 0.000001);
+
+        // RT
+        rt = ChromatogramUtil.getRt(rtBuffer, intensityBuffer, numOfDataPoints);
+        Assert.assertNotNull(rt);
+        if (rt != null)
+            Assert.assertEquals(14.481896, rt / 60, 0.000001);
+
+        // RT start
+        rtStart = ChromatogramUtil.getRtStart(rtBuffer, numOfDataPoints);
+        Assert.assertNotNull(rtStart);
+        if (rtStart != null)
+            Assert.assertEquals(14.16822, rtStart / 60, 0.000001);
+
+        // RT end
+        rtEnd = ChromatogramUtil.getRtEnd(rtBuffer, numOfDataPoints);
+        Assert.assertNotNull(rtEnd);
+        if (rtEnd != null)
+            Assert.assertEquals(14.9408865, rtEnd / 60, 0.000001);
+
+        // Duration
+        duration = ChromatogramUtil.getDuration(rtBuffer, numOfDataPoints);
+        Assert.assertNotNull(duration);
+        if (duration != null)
+            Assert.assertEquals(0.7726664, duration / 60, 0.000001);
+
+        // Height
+        height = ChromatogramUtil.getMaxHeight(intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(height);
+        if (height != null)
+            Assert.assertEquals(6317753.0, height, 0.000001);
+
+        // Area
+        area = ChromatogramUtil.getArea(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(area);
+        if (area != null)
+            Assert.assertEquals(8.448660371074352E7, area, 0.000001);
+
+        // FWHM
+        fwhm = ChromatogramUtil.getFwhm(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(fwhm);
+        if (fwhm != null)
+            Assert.assertEquals(0.19513144, fwhm / 60, 0.000001);
+
+        // Tailing factor
+        tf = ChromatogramUtil.getTailingFactor(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(tf);
+        if (tf != null)
+            Assert.assertEquals(1.3311311, tf, 0.001);
+
+        // Asymmetry factor
+        af = ChromatogramUtil.getAsymmetryFactor(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(af);
+        if (af != null)
+            Assert.assertEquals(1.7337219745465573, af, 0.000001);
+
+        // ************
         // Verify ion 3
+        // ************
         Chromatogram chromatogram3 = chromatograms.get(2);
         Assert.assertEquals(3,
                 chromatogram3.getChromatogramNumber().intValue());
@@ -178,29 +267,71 @@ public class TargetedDetectionMethodTest {
         numOfDataPoints = chromatogram3.getNumberOfDataPoints();
         Assert.assertEquals(17, numOfDataPoints);
         Assert.assertEquals(2609394.5, intensityBuffer[5], 0.000001);
-        Assert.assertEquals(362.1021836224724, chromatogram3.getMz(), 0.000001);
-        Assert.assertEquals(10.722553, ChromatogramUtil.getRt(rtBuffer,
-                intensityBuffer, numOfDataPoints) / 60, 0.000001);
-        Assert.assertEquals(10.48422,
-                ChromatogramUtil.getRtStart(rtBuffer, numOfDataPoints) / 60,
-                0.000001);
-        Assert.assertEquals(11.249222,
-                ChromatogramUtil.getRtEnd(rtBuffer, numOfDataPoints) / 60,
-                0.000001);
-        Assert.assertEquals(0.7650024,
-                ChromatogramUtil.getDuration(rtBuffer, numOfDataPoints) / 60,
-                0.000001);
-        Assert.assertEquals(2609394.5,
-                ChromatogramUtil.getMaxHeight(intensityBuffer, numOfDataPoints),
-                0.000001);
-        Assert.assertEquals(3.4154492E7, ChromatogramUtil.getArea(rtBuffer,
-                intensityBuffer, numOfDataPoints), 0.000001);
-        Assert.assertEquals(0.21855775, ChromatogramUtil.getFwhm(rtBuffer,
-                intensityBuffer, numOfDataPoints) / 60, 0.000001);
-        Assert.assertEquals(1.4721208, ChromatogramUtil.getTailingFactor(
-                rtBuffer, intensityBuffer, numOfDataPoints), 0.000001);
-        Assert.assertEquals(1.8304727, ChromatogramUtil.getAsymmetryFactor(
-                rtBuffer, intensityBuffer, numOfDataPoints), 0.0001);
+
+        // m/z
+        mz = chromatogram3.getMz();
+        Assert.assertNotNull(mz);
+        if (mz != null)
+            Assert.assertEquals(362.1021836224724, mz, 0.000001);
+
+        // RT
+        rt = ChromatogramUtil.getRt(rtBuffer, intensityBuffer, numOfDataPoints);
+        Assert.assertNotNull(rt);
+        if (rt != null)
+            Assert.assertEquals(10.722553, rt / 60, 0.000001);
+
+        // RT start
+        rtStart = ChromatogramUtil.getRtStart(rtBuffer, numOfDataPoints);
+        Assert.assertNotNull(rtStart);
+        if (rtStart != null)
+            Assert.assertEquals(10.48422, rtStart / 60, 0.000001);
+
+        // RT end
+        rtEnd = ChromatogramUtil.getRtEnd(rtBuffer, numOfDataPoints);
+        Assert.assertNotNull(rtEnd);
+        if (rtEnd != null)
+            Assert.assertEquals(11.249222, rtEnd / 60, 0.000001);
+
+        // Duration
+        duration = ChromatogramUtil.getDuration(rtBuffer, numOfDataPoints);
+        Assert.assertNotNull(duration);
+        if (duration != null)
+            Assert.assertEquals(0.7650024, duration / 60, 0.000001);
+
+        // Height
+        height = ChromatogramUtil.getMaxHeight(intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(height);
+        if (height != null)
+            Assert.assertEquals(2609394.5, height, 0.000001);
+
+        // Area
+        area = ChromatogramUtil.getArea(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(area);
+        if (area != null)
+            Assert.assertEquals(3.415448809043382E7, area, 0.000001);
+
+        // FWHM
+        fwhm = ChromatogramUtil.getFwhm(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(fwhm);
+        if (fwhm != null)
+            Assert.assertEquals(0.21855775, fwhm / 60, 0.000001);
+
+        // Tailing factor
+        tf = ChromatogramUtil.getTailingFactor(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(tf);
+        if (tf != null)
+            Assert.assertEquals(1.4721208, tf, 0.001);
+
+        // Asymmetry factor
+        af = ChromatogramUtil.getAsymmetryFactor(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        Assert.assertNotNull(af);
+        if (af != null)
+            Assert.assertEquals(1.8304700453905858, af, 0.000001);
 
     }
 

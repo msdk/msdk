@@ -88,19 +88,19 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
      * @param nameSuffix
      *            a {@link java.lang.String} object.
      * @param filterByMz
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param filterByRt
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param filterByDuration
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param filterByCount
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param filterByIsotopes
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param filterByIonAnnotation
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param requireAnnotation
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param mzRange
      *            a {@link com.google.common.collect.Range} object.
      * @param rtRange
@@ -114,7 +114,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
      * @param ionAnnotation
      *            a {@link java.lang.String} object.
      * @param removeDuplicates
-     *            a boolean.
+     *            a {@link java.lang.Boolean} object.
      * @param duplicateMzTolerance
      *            a {@link io.github.msdk.util.MZTolerance} object.
      * @param duplicateRtTolerance
@@ -162,7 +162,6 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
     @Override
     public FeatureTable execute() throws MSDKException {
         // Total features
@@ -179,26 +178,30 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 
         // Loop through all features
         for (FeatureTableRow row : featureTable.getRows()) {
-            FeatureTableColumn<?> column;
+            FeatureTableColumn<Object> column;
             processedRows++;
 
             // Check m/z
-            if (filterByMz) {
+            if (filterByMz && mzRange != null) {
                 final Double mz = row.getMz();
                 if ((mz == null) || (!mzRange.contains(mz)))
                     continue;
             }
 
             // Check RT
-            if (filterByRt) {
-                double rowRT = (double) row.getChromatographyInfo()
-                        .getRetentionTime();
-                if (!rtRange.contains(rowRT))
-                    continue;
+            if (filterByRt && rtRange != null) {
+                ChromatographyInfo chromatographyInfo = row
+                        .getChromatographyInfo();
+                if (chromatographyInfo != null) {
+                    double rowRT = (double) chromatographyInfo
+                            .getRetentionTime();
+                    if (!rtRange.contains(rowRT))
+                        continue;
+                }
             }
 
             // Check duration
-            if (filterByDuration) {
+            if (filterByDuration && durationRange != null) {
                 final Double averageDuration = FeatureTableUtil
                         .getAverageFeatureDuration(row);
                 if (averageDuration == null)
@@ -208,7 +211,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
             }
 
             // Check count
-            if (filterByCount) {
+            if (filterByCount && minCount != null) {
                 final int rowCount = FeatureTableUtil.getRowCount(row);
                 if (!(rowCount >= minCount))
                     continue;
@@ -223,17 +226,22 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 
             // Check ion annotation
             if (filterByIonAnnotation && ionAnnotation != null) {
-                column = featureTable.getColumn(ColumnName.IONANNOTATION, null);
-                if (column == null)
+                FeatureTableColumn<List<IonAnnotation>> ionColumn = featureTable
+                        .getColumn(ColumnName.IONANNOTATION, null);
+                if (ionColumn == null)
                     continue;
-                if (row.getData(column) != null) {
-                    final List<IonAnnotation> rowIonAnnotations = (List<IonAnnotation>) row
-                            .getData(column);
+                if (row.getData(ionColumn) != null) {
+                    final List<IonAnnotation> rowIonAnnotations = row
+                            .getData(ionColumn);
                     Boolean keep = false;
-                    for (IonAnnotation rowIonAnnotation : rowIonAnnotations) {
-                        if (!rowIonAnnotation.getAnnotationId()
-                                .contains(ionAnnotation))
-                            keep = true;
+                    if (rowIonAnnotations != null) {
+                        for (IonAnnotation rowIonAnnotation : rowIonAnnotations) {
+                            String annotationId = rowIonAnnotation
+                                    .getAnnotationId();
+                            if (annotationId != null)
+                                if (!annotationId.contains(ionAnnotation))
+                                    keep = true;
+                        }
                     }
                     if (!keep)
                         continue;
@@ -242,15 +250,18 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 
             // Require ion annotation?
             if (requireAnnotation) {
-                column = featureTable.getColumn(ColumnName.IONANNOTATION, null);
-                if (column == null)
+                FeatureTableColumn<List<IonAnnotation>> ionColumn = featureTable
+                        .getColumn(ColumnName.IONANNOTATION, null);
+                if (ionColumn == null)
                     continue;
-                final List<IonAnnotation> rowIonAnnotations = (List<IonAnnotation>) row
-                        .getData(column);
+                final List<IonAnnotation> rowIonAnnotations = row
+                        .getData(ionColumn);
                 Boolean keep = false;
-                for (IonAnnotation rowIonAnnotation : rowIonAnnotations) {
-                    if (rowIonAnnotation.getDescription() != null)
-                        keep = true;
+                if (rowIonAnnotations != null) {
+                    for (IonAnnotation rowIonAnnotation : rowIonAnnotations) {
+                        if (rowIonAnnotation.getDescription() != null)
+                            keep = true;
+                    }
                 }
                 if (!keep)
                     continue;
@@ -264,7 +275,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
         }
 
         // Remove duplicate features?
-        if (removeDuplicates) {
+        if (removeDuplicates && duplicateMzTolerance != null) {
 
             final int rowCount = result.getRows().size();
             List<FeatureTableRow> rows = result.getRows();
@@ -291,19 +302,23 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
                     final boolean sameMz = duplicateMzTolerance
                             .getToleranceRange(mz).contains(secondRow.getMz());
 
-                    // Compare rt
+                    // Compare retention time
                     ChromatographyInfo chromatographyInfo1 = firstRow
                             .getChromatographyInfo();
                     ChromatographyInfo chromatographyInfo2 = secondRow
                             .getChromatographyInfo();
-                    final boolean sameRt = duplicateRtTolerance
-                            .getToleranceRange(
-                                    chromatographyInfo1.getRetentionTime())
-                            .contains((double) chromatographyInfo2
-                                    .getRetentionTime());
+                    boolean sameRt = false;
+                    if (chromatographyInfo1 != null
+                            && chromatographyInfo2 != null) {
+                        sameRt = duplicateRtTolerance
+                                .getToleranceRange(
+                                        chromatographyInfo1.getRetentionTime())
+                                .contains((double) chromatographyInfo2
+                                        .getRetentionTime());
+                    }
 
                     // Compare identifications
-                    FeatureTableColumn<?> column = result
+                    FeatureTableColumn<List<IonAnnotation>> column = result
                             .getColumn(ColumnName.IONANNOTATION, null);
                     List<IonAnnotation> ionAnnotation1 = (List<IonAnnotation>) firstRow
                             .getData(column);
