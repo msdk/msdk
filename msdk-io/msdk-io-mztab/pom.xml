@@ -60,6 +60,12 @@
             <version>${cdk.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.openscience.cdk</groupId>
+            <artifactId>cdk-smiles</artifactId>
+            <version>${cdk.version}</version>
+        </dependency>
+        
     </dependencies>
 
 </project>
