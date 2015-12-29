@@ -27,7 +27,7 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
@@ -148,8 +148,7 @@ public class MSDKObjectBuilder {
      * @param rawDataFileType
      *            a {@link io.github.msdk.datamodel.files.FileType} object.
      * @param dataPointStore
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @return a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
      */
@@ -169,8 +168,7 @@ public class MSDKObjectBuilder {
      * @param featureTableName
      *            a {@link java.lang.String} object.
      * @param dataPointStore
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTable}
      *         object.
@@ -187,8 +185,7 @@ public class MSDKObjectBuilder {
      * </p>
      *
      * @param dataPointStore
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param scanNumber
      *            a {@link java.lang.Integer} object.
@@ -208,8 +205,7 @@ public class MSDKObjectBuilder {
      * </p>
      *
      * @param dataPointStore
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param chromatogramNumber
      *            a {@link java.lang.Integer} object.

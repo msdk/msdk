@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
 
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -36,8 +36,7 @@ public class MsScanUtil {
      * </p>
      *
      * @param newStore
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param scan
      *            a {@link io.github.msdk.datamodel.rawdata.MsScan} object.

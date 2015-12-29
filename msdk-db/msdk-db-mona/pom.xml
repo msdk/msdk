@@ -65,7 +65,7 @@
                 <version>0.4.8</version>
                 <configuration>
                     <sourceDirectory>src/main/resources/schema</sourceDirectory>
-                    <targetPackage>io.github.msdk.search.mona.pojo</targetPackage>
+                    <targetPackage>io.github.msdk.db.mona.pojo</targetPackage>
                 </configuration>
                 <executions>
                     <execution>

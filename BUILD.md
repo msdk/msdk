@@ -53,5 +53,7 @@ mvn package
 mvn deploy
 ```
 
+# To generate complete JavaDoc documentation in target/site/apidocs/
+mvn -DskipTests package javadoc:aggregate
 
 

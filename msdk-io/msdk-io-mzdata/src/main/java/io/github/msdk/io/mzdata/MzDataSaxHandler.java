@@ -24,7 +24,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -70,8 +70,7 @@ class MzDataSaxHandler extends DefaultHandler {
      * @param newRawFile
      *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
      * @param dataStore
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      */
     public MzDataSaxHandler(RawDataFile newRawFile, DataPointStore dataStore) {

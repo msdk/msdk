@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.datapointstore;
+package io.github.msdk.datamodel.datastore;
 
 import javax.annotation.Nonnull;
 
@@ -26,7 +26,7 @@ public class DataPointStoreFactory {
      * getMemoryDataStore.
      * </p>
      *
-     * @return a {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     * @return a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *         object.
      */
     public static final @Nonnull DataPointStore getMemoryDataStore() {
@@ -38,7 +38,7 @@ public class DataPointStoreFactory {
      * getTmpFileDataPointStore.
      * </p>
      *
-     * @return a {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     * @return a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *         object.
      */
     public static final @Nonnull DataPointStore getTmpFileDataStore() {

@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.io.filetypedetection.FileTypeDetectionMethod;
@@ -49,8 +49,7 @@ public class FeatureTableImportMethod implements MSDKMethod<FeatureTable> {
      * @param sourceFile
      *            a {@link java.io.File} object.
      * @param dataStore
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      */
     public FeatureTableImportMethod(@Nonnull File sourceFile,

@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
 
@@ -89,8 +89,7 @@ public class SGFilterAlgorithm implements MSDKFilteringAlgorithm {
      * @param sgDataPoints
      *            a int.
      * @param store
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      */
     public SGFilterAlgorithm(int sgDataPoints, @Nonnull DataPointStore store) {

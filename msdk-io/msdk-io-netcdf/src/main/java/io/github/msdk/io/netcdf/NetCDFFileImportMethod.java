@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.rawdataimport.netcdf;
+package io.github.msdk.io.netcdf;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
@@ -85,8 +85,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
      * @param sourceFile
      *            a {@link java.io.File} object.
      * @param dataStore
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      */
     public NetCDFFileImportMethod(@Nonnull File sourceFile,

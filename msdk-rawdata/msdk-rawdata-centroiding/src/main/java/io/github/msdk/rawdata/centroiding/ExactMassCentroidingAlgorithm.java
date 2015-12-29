@@ -16,7 +16,7 @@ package io.github.msdk.rawdata.centroiding;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
 
@@ -40,8 +40,7 @@ public class ExactMassCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
      * </p>
      *
      * @param dataPointStore
-     *            a
-     *            {@link io.github.msdk.datamodel.datapointstore.DataPointStore}
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      */
     public ExactMassCentroidingAlgorithm(

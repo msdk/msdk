@@ -30,10 +30,10 @@ import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.identification.Search;
-import io.github.msdk.search.mona.pojo.Result;
-import io.github.msdk.search.mona.pojo.SimilaritySearchQuery;
-import io.github.msdk.search.mona.pojo.SimilaritySearchResult;
+import io.github.msdk.db.mona.pojo.Result;
+import io.github.msdk.db.mona.pojo.SimilaritySearchQuery;
+import io.github.msdk.db.mona.pojo.SimilaritySearchResult;
+import io.github.msdk.id.Search;
 
 /**
  * MoNA specific implementation of the Search Interface
