@@ -41,6 +41,7 @@ public class ChromatogramUtil {
      * @param size
      *            a {@link java.lang.Integer} object.
      */
+    @SuppressWarnings("null")
     @Nonnull
     public static Range<ChromatographyInfo> getDataPointsChromatographyRange(
             @Nonnull ChromatographyInfo rtValues[], @Nonnull Integer size) {
@@ -106,7 +107,8 @@ public class ChromatogramUtil {
      * @param mzValues
      *            an array of double.
      * @param method
-     *            a {@link io.github.msdk.util.ChromatogramUtil.CalculationMethod}
+     *            a
+     *            {@link io.github.msdk.util.ChromatogramUtil.CalculationMethod}
      *            object.
      * @return a {@link java.lang.Double} object.
      * @param size
@@ -302,8 +304,8 @@ public class ChromatogramUtil {
      * @param size
      *            a {@link java.lang.Integer} object.
      */
-    public static @Nullable Double getMaxHeight(@Nonnull float[] intensityValues,
-            @Nonnull Integer size) {
+    public static @Nullable Double getMaxHeight(
+            @Nonnull float[] intensityValues, @Nonnull Integer size) {
 
         // Parameter check
         Preconditions.checkNotNull(intensityValues);
@@ -390,8 +392,12 @@ public class ChromatogramUtil {
         if (size == 0)
             return null;
 
-        double height = getMaxHeight(intensityValues, size);
-        float rt = getRt(rtValues, intensityValues, size);
+        Double height = getMaxHeight(intensityValues, size);
+        Float rt = getRt(rtValues, intensityValues, size);
+
+        if (height == null || rt == null)
+            return null;
+
         double rtVals[] = findRTs(height / 2, rt, rtValues, intensityValues,
                 size);
         Double fwhm = rtVals[1] - rtVals[0];
@@ -428,8 +434,12 @@ public class ChromatogramUtil {
         if (size == 0)
             return null;
 
-        double height = getMaxHeight(intensityValues, size);
-        float rt = getRt(rtValues, intensityValues, size);
+        Double height = getMaxHeight(intensityValues, size);
+        Float rt = getRt(rtValues, intensityValues, size);
+
+        if (height == null || rt == null)
+            return null;
+
         double rtVals[] = findRTs(height * 0.05, rt, rtValues, intensityValues,
                 size);
 
@@ -470,8 +480,12 @@ public class ChromatogramUtil {
         if (size == 0)
             return null;
 
-        double height = getMaxHeight(intensityValues, size);
-        float rt = getRt(rtValues, intensityValues, size);
+        Double height = getMaxHeight(intensityValues, size);
+        Float rt = getRt(rtValues, intensityValues, size);
+
+        if (height == null || rt == null)
+            return null;
+
         double rtValues3[] = findRTs(height * 0.1, rt, rtValues,
                 intensityValues, size);
         Double af = (rtValues3[1] - rt) / (rt - rtValues3[0]);
