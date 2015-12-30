@@ -13,5 +13,6 @@
 		<module>msdk-features-filtering</module>
 		<module>msdk-features-row-filtering</module>
 		<module>msdk-features-joinaligner</module>
+		<module>msdk-features-isotopegrouper</module>
 	</modules>
 </project>
