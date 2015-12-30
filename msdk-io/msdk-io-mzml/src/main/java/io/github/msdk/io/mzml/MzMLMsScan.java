@@ -42,7 +42,7 @@ class MzMLMsScan extends AbstractReadOnlyMsScan {
     MzMLMsScan(@Nonnull MzMLRawDataFile dataFile, @Nonnull String spectrumId,
             @Nonnull MsSpectrumType spectrumType,
             @Nonnull MsFunction msFunction,
-            @Nonnull ChromatographyInfo chromatographyInfo,
+            @Nullable ChromatographyInfo chromatographyInfo,
             @Nonnull MsScanType scanType, @Nullable Range<Double> mzRange,
             @Nullable Range<Double> scanningRange, @Nonnull Integer scanNumber,
             @Nullable String scanDefinition, @Nonnull Float tic,

@@ -44,7 +44,7 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
 
     private final @Nonnull MsSpectrumType spectrumType;
     private final @Nonnull MsFunction msFunction;
-    private final @Nonnull ChromatographyInfo chromatographyInfo;
+    private final @Nullable ChromatographyInfo chromatographyInfo;
     private final @Nonnull MsScanType scanType;
     private final @Nullable Range<Double> mzRange, scanningRange;
     private final @Nonnull Float tic;
@@ -94,7 +94,7 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
     public AbstractReadOnlyMsScan(@Nonnull RawDataFile dataFile,
             @Nonnull MsSpectrumType spectrumType,
             @Nonnull MsFunction msFunction,
-            @Nonnull ChromatographyInfo chromatographyInfo,
+            @Nullable ChromatographyInfo chromatographyInfo,
             @Nonnull MsScanType scanType, @Nullable Range<Double> mzRange,
             @Nullable Range<Double> scanningRange, @Nonnull Integer scanNumber,
             @Nullable String scanDefinition, @Nonnull Float tic,

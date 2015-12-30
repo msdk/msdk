@@ -58,7 +58,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
     private boolean canceled = false;
 
-    private MzMLRawDataFile newRawFile;
+    private RawDataFile newRawFile;
     private long totalScans = 0, totalChromatograms = 0, parsedScans,
             parsedChromatograms;
 
@@ -92,9 +92,10 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
         List<MsScan> scansList = new ArrayList<>();
         List<Chromatogram> chromatogramsList = new ArrayList<>();
 
-        // Create the XMLBasedRawDataFile object
-        newRawFile = new MzMLRawDataFile(sourceFile, parser, msFunctionsList,
-                scansList, chromatogramsList);
+        // Create the MzMLRawDataFile object
+        final MzMLRawDataFile newRawFile = new MzMLRawDataFile(sourceFile,
+                parser, msFunctionsList, scansList, chromatogramsList);
+        this.newRawFile = newRawFile;
 
         // Create the converter from jmzml data model to our data model
         final MzMLConverter converter = new MzMLConverter();
@@ -104,7 +105,9 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                     .unmarshalCollectionFromXpath("/run/spectrumList/spectrum",
                             Spectrum.class);
 
+            @Nonnull
             double mzValues[] = new double[1000];
+            @Nonnull
             float intensityValues[] = new float[1000];
 
             while (iterator.hasNext()) {
@@ -114,17 +117,19 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
                 Spectrum spectrum = iterator.next();
 
-                // Ignore scans that are not MS, e.g. UV
-                if (!converter.isMsSpectrum(spectrum)) {
-                    parsedScans++;
-                    continue;
-                }
-
                 // Get spectrum ID
                 String spectrumId = spectrum.getId();
 
                 // Get the scan number
                 Integer scanNumber = converter.extractScanNumber(spectrum);
+
+                // Ignore scans that are not MS, e.g. UV, or scans that have no
+                // ID or number
+                if ((!converter.isMsSpectrum(spectrum)) || (spectrumId == null)
+                        || (scanNumber == null)) {
+                    parsedScans++;
+                    continue;
+                }
 
                 // Get the scan definition
                 String scanDefinition = converter
