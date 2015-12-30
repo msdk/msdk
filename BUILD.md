@@ -53,7 +53,6 @@ mvn package
 mvn deploy
 ```
 
-# To generate complete JavaDoc documentation in target/site/apidocs/
-mvn -DskipTests package javadoc:aggregate
-
+# To generate complete JavaDoc documentation and upload it to http://msdk.github.io/api/
+mvn -DskipTests package javadoc:aggregate scm-publish:publish-scm
 

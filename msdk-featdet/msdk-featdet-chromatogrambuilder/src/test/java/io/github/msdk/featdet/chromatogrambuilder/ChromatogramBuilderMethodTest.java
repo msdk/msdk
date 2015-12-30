@@ -37,6 +37,7 @@ public class ChromatogramBuilderMethodTest {
     private static DataPointStore dataStore;
     private static RawDataFile rawFile;
 
+    @SuppressWarnings("null")
     @BeforeClass
     public static void loadData() throws MSDKException {
 
@@ -52,6 +53,7 @@ public class ChromatogramBuilderMethodTest {
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testOrbitrap() throws MSDKException {
 
@@ -69,6 +71,7 @@ public class ChromatogramBuilderMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testBigTimeSpan() throws MSDKException {
 
@@ -88,6 +91,7 @@ public class ChromatogramBuilderMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testBigMinHeight() throws MSDKException {
 

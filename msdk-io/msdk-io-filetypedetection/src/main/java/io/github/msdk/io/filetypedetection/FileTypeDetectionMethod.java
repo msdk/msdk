@@ -22,14 +22,14 @@ import java.io.InputStreamReader;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import io.github.msdk.MSDKException;
-import io.github.msdk.MSDKMethod;
+import com.google.common.base.Preconditions;
+
 import io.github.msdk.datamodel.files.FileType;
 
 /**
  * Detector of raw data file format
  */
-public class FileTypeDetectionMethod implements MSDKMethod<FileType> {
+public class FileTypeDetectionMethod {
 
     /*
      * See
@@ -51,10 +51,14 @@ public class FileTypeDetectionMethod implements MSDKMethod<FileType> {
      */
     private static final String MZXML_HEADER = "<msRun";
 
-    // See "http://www.psidev.info/sites/default/files/mzdata.xsd.txt"
+    /*
+     * See "http://www.psidev.info/sites/default/files/mzdata.xsd.txt"
+     */
     private static final String MZDATA_HEADER = "<mzData";
 
-    // See "https://code.google.com/p/unfinnigan/wiki/FileHeader"
+    /*
+     * See "https://code.google.com/p/unfinnigan/wiki/FileHeader"
+     */
     private static final String THERMO_HEADER = String
             .valueOf(new char[] { 0x01, 0xA1, 'F', 0, 'i', 0, 'n', 0, 'n', 0,
                     'i', 0, 'g', 0, 'a', 0, 'n', 0 });
@@ -64,37 +68,11 @@ public class FileTypeDetectionMethod implements MSDKMethod<FileType> {
      */
     private static final String MZTAB_HEADER = "mzTab-version";
 
-    private @Nonnull File fileName;
-    private @Nullable FileType result = null;
-    private @Nullable Float finishedPercentage = null;
+    public static @Nullable FileType detectDataFileType(@Nonnull File fileName)
+            throws IOException {
 
-    /**
-     * <p>
-     * Constructor for FileTypeDetectionMethod.
-     * </p>
-     *
-     * @param fileName
-     *            a {@link java.io.File} object.
-     */
-    public FileTypeDetectionMethod(@Nonnull File fileName) {
-        this.fileName = fileName;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public FileType execute() throws MSDKException {
-
-        try {
-            result = detectDataFileType(fileName);
-        } catch (IOException e) {
-            throw new MSDKException(e);
-        }
-        finishedPercentage = 1f;
-        return result;
-
-    }
-
-    private FileType detectDataFileType(File fileName) throws IOException {
+        // Parameter check
+        Preconditions.checkNotNull(fileName);
 
         if (fileName.isDirectory()) {
             // To check for Waters .raw directory, we look for _FUNC[0-9]{3}.DAT
@@ -136,25 +114,6 @@ public class FileTypeDetectionMethod implements MSDKMethod<FileType> {
 
         return null;
 
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Float getFinishedPercentage() {
-        return finishedPercentage;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public FileType getResult() {
-        return result;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void cancel() {
-        // This method is too fast to be canceled
     }
 
 }

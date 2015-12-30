@@ -34,8 +34,8 @@ public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
     private final @Nonnull DataPointStore store;
 
     // Data structures
-    private double mzBuffer[] = new double[10000];
-    private float intensityBuffer[] = new float[10000];
+    private @Nonnull double mzBuffer[] = new double[10000];
+    private @Nonnull float intensityBuffer[] = new float[10000];
     private int numOfDataPoints, newNumOfDataPoints;
 
     /**

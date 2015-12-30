@@ -28,13 +28,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.openscience.cdk.DefaultChemObjectBuilder;
+import org.openscience.cdk.exception.InvalidSmilesException;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IChemObjectBuilder;
 import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.openscience.cdk.smiles.SmilesParser;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 import com.google.common.math.DoubleMath;
 
@@ -242,7 +245,7 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
     private void addRows(@Nonnull FeatureTable featureTable,
             @Nonnull MZTabFile mzTabFile) {
 
-        String formula, smile, inchiKey, description, database, identifier;
+        String formula, smiles, inchiKey, description, database, identifier;
         // String dbVersion, reliability, url;
         Double mzCalc = null, featureArea = null;
         @Nonnull
@@ -260,7 +263,7 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
                     .getFeatureTableRow(featureTable, parsedRows);
 
             formula = smallMolecule.getChemicalFormula();
-            smile = smallMolecule.getSmiles().toString();
+            smiles = smallMolecule.getSmiles().toString();
             inchiKey = smallMolecule.getInchiKey().toString();
             description = smallMolecule.getDescription();
             database = smallMolecule.getDatabase();
@@ -296,7 +299,7 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
             ionAnnotation.setAnnotationId(identifier);
 
             // Convert formula to IMolecularFormula using CDK
-            if (formula != null) {
+            if (!Strings.isNullOrEmpty(formula)) {
                 IChemObjectBuilder builder = DefaultChemObjectBuilder
                         .getInstance();
                 IMolecularFormula cdkFormula = MolecularFormulaManipulator
@@ -304,14 +307,16 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
                 ionAnnotation.setFormula(cdkFormula);
             }
 
-            // Convert smile & INCHIkey to IAtomContainer using CDK
-            if ((smile != null && !smile.equals(""))
-                    || (inchiKey != null && !inchiKey.equals(""))) {
-                /*
-                 * TODO: Add checmical structure
-                 */
-                IAtomContainer chemicalStructure = null;
-                ionAnnotation.setChemicalStructure(chemicalStructure);
+            // Convert SMILES to IAtomContainer using CDK
+            if (!Strings.isNullOrEmpty(smiles)) {
+                try {
+                    SmilesParser sp = new SmilesParser(
+                            DefaultChemObjectBuilder.getInstance());
+                    IAtomContainer chemicalStructure = sp.parseSmiles(smiles);
+                    ionAnnotation.setChemicalStructure(chemicalStructure);
+                } catch (InvalidSmilesException e) {
+                    e.printStackTrace();
+                }
             }
 
             // Add common data to columns

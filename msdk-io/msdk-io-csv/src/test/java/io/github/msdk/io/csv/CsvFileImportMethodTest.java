@@ -30,6 +30,7 @@ public class CsvFileImportMethodTest {
 
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
+    @SuppressWarnings("null")
     @Test
     public void CSV_Multi_Samples_Import() throws MSDKException {
 
@@ -61,6 +62,7 @@ public class CsvFileImportMethodTest {
         featureTable.dispose();
     }
 
+    @SuppressWarnings("null")
     @Test
     public void CSV_Single_Data_Import() throws MSDKException {
 
@@ -92,6 +94,7 @@ public class CsvFileImportMethodTest {
         featureTable.dispose();
     }
 
+    @SuppressWarnings("null")
     @Test
     public void GCxGC_Import() throws MSDKException {
 

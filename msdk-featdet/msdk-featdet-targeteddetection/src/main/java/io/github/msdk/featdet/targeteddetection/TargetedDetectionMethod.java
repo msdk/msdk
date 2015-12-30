@@ -34,7 +34,7 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.ChromatogramUtil;
-import io.github.msdk.util.ChromatogramUtil.calcMethod;
+import io.github.msdk.util.ChromatogramUtil.CalculationMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.msdk.util.RTTolerance;
@@ -59,8 +59,8 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
     private int processedScans = 0, totalScans = 0;
 
     // Data structures
-    private double mzBuffer[] = new double[10000];
-    private float intensityBuffer[] = new float[10000];
+    private @Nonnull double mzBuffer[] = new double[10000];
+    private @Nonnull float intensityBuffer[] = new float[10000];
     private int numOfDataPoints;
 
     /**
@@ -209,7 +209,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
             Double newMz;
             if (mzValues != null) {
                 newMz = ChromatogramUtil.calculateMz(mzValues, intensityValues,
-                        size, calcMethod.allAverage);
+                        size, CalculationMethod.allAverage);
                 chromatogram.setMz(newMz);
 
                 // Add the ion annotation to the chromatogram

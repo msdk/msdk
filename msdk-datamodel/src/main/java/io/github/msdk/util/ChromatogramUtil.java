@@ -92,7 +92,7 @@ public class ChromatogramUtil {
      * Calculates the m/z value of the chromatogram based on the list of m/z
      * values
      */
-    public enum calcMethod {
+    public enum CalculationMethod {
         allAverage, allMedian, fwhmAverage, fwhmMedian
     }
 
@@ -106,7 +106,7 @@ public class ChromatogramUtil {
      * @param mzValues
      *            an array of double.
      * @param method
-     *            a {@link io.github.msdk.util.ChromatogramUtil.calcMethod}
+     *            a {@link io.github.msdk.util.ChromatogramUtil.CalculationMethod}
      *            object.
      * @return a {@link java.lang.Double} object.
      * @param size
@@ -114,7 +114,7 @@ public class ChromatogramUtil {
      */
     public static @Nullable Double calculateMz(@Nonnull double[] mzValues,
             @Nonnull float[] intensityValues, @Nonnull Integer size,
-            @Nonnull calcMethod method) {
+            @Nonnull CalculationMethod method) {
 
         // Parameter check
         Preconditions.checkNotNull(mzValues);

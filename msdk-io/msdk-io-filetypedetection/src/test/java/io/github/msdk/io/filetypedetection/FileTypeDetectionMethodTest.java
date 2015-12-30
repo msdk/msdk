@@ -15,6 +15,7 @@
 package io.github.msdk.io.filetypedetection;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,60 +28,60 @@ public class FileTypeDetectionMethodTest {
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
     @Test
-    public void testNetCDF() throws MSDKException {
+    public void testNetCDF() throws MSDKException, IOException {
         File fileName = new File(TEST_DATA_PATH + "wt15.CDF");
-        FileTypeDetectionMethod method = new FileTypeDetectionMethod(fileName);
-        FileType fileType = method.execute();
+        FileType fileType = FileTypeDetectionMethod
+                .detectDataFileType(fileName);
         Assert.assertEquals(FileType.NETCDF, fileType);
     }
 
     @Test
-    public void testMzXML() throws MSDKException {
+    public void testMzXML() throws MSDKException, IOException {
         File fileName = new File(TEST_DATA_PATH + "A1-0_A2.mzXML");
-        FileTypeDetectionMethod method = new FileTypeDetectionMethod(fileName);
-        FileType fileType = method.execute();
+        FileType fileType = FileTypeDetectionMethod
+                .detectDataFileType(fileName);
         Assert.assertEquals(FileType.MZXML, fileType);
     }
 
     @Test
-    public void testMzML() throws MSDKException {
+    public void testMzML() throws MSDKException, IOException {
         File fileName = new File(TEST_DATA_PATH
                 + "RawCentriodCidWithMsLevelInRefParamGroup.mzML");
-        FileTypeDetectionMethod method = new FileTypeDetectionMethod(fileName);
-        FileType fileType = method.execute();
+        FileType fileType = FileTypeDetectionMethod
+                .detectDataFileType(fileName);
         Assert.assertEquals(FileType.MZML, fileType);
     }
 
     @Test
-    public void testMzData() throws MSDKException {
+    public void testMzData() throws MSDKException, IOException {
         File fileName = new File(TEST_DATA_PATH + "test.mzData");
-        FileTypeDetectionMethod method = new FileTypeDetectionMethod(fileName);
-        FileType fileType = method.execute();
+        FileType fileType = FileTypeDetectionMethod
+                .detectDataFileType(fileName);
         Assert.assertEquals(FileType.MZDATA, fileType);
     }
 
     @Test
-    public void testThermoRaw() throws MSDKException {
+    public void testThermoRaw() throws MSDKException, IOException {
         File fileName = new File(TEST_DATA_PATH + "RP240K_01.raw");
-        FileTypeDetectionMethod method = new FileTypeDetectionMethod(fileName);
-        FileType fileType = method.execute();
+        FileType fileType = FileTypeDetectionMethod
+                .detectDataFileType(fileName);
         Assert.assertEquals(FileType.THERMO_RAW, fileType);
     }
 
     @Test
-    public void testWatersRaw() throws MSDKException {
+    public void testWatersRaw() throws MSDKException, IOException {
         File fileName = new File(TEST_DATA_PATH + "20150813-63.raw");
-        FileTypeDetectionMethod method = new FileTypeDetectionMethod(fileName);
-        FileType fileType = method.execute();
+        FileType fileType = FileTypeDetectionMethod
+                .detectDataFileType(fileName);
         Assert.assertEquals(FileType.WATERS_RAW, fileType);
     }
 
     @Test
-    public void testMzTAB() throws MSDKException {
+    public void testMzTAB() throws MSDKException, IOException {
         File fileName = new File(
                 TEST_DATA_PATH + "lipidomics-HFD-LD-study-PL-DG-SM.mzTab");
-        FileTypeDetectionMethod method = new FileTypeDetectionMethod(fileName);
-        FileType fileType = method.execute();
+        FileType fileType = FileTypeDetectionMethod
+                .detectDataFileType(fileName);
         Assert.assertEquals(FileType.MZTAB, fileType);
     }
 

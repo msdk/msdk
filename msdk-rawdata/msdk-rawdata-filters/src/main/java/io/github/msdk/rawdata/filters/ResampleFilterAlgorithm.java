@@ -33,8 +33,8 @@ public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
     private final @Nonnull DataPointStore store;
 
     // Data structures
-    private double mzBuffer[] = new double[10000];
-    private float intensityBuffer[] = new float[10000];
+    private @Nonnull double mzBuffer[] = new double[10000];
+    private @Nonnull float intensityBuffer[] = new float[10000];
     private int numOfDataPoints, newNumOfDataPoints;
 
     /**
@@ -67,6 +67,11 @@ public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
         newNumOfDataPoints = 0;
 
         Range<Double> mzRange = scan.getMzRange();
+
+        if (mzRange == null) {
+            MsScan result = MsScanUtil.clone(store, scan, true);
+            return result;
+        }
 
         if (binSize > mzRange.upperEndpoint()) {
             this.binSize = (int) Math.round(mzRange.upperEndpoint());

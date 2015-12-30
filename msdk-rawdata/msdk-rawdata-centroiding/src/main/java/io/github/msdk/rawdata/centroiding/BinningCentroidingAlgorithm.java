@@ -33,8 +33,8 @@ public class BinningCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
     private MsScan newScan;
 
     // Data structures
-    private double mzBuffer[] = new double[10000];
-    private float intensityBuffer[] = new float[10000];
+    private @Nonnull double mzBuffer[] = new double[10000];
+    private @Nonnull float intensityBuffer[] = new float[10000];
     private int numOfDataPoints, newNumOfDataPoints;
 
     /**

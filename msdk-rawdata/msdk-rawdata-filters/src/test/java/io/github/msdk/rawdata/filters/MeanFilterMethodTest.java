@@ -31,6 +31,7 @@ public class MeanFilterMethodTest {
 
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
+    @SuppressWarnings("null")
     @Test
     public void testMeanFilter() throws MSDKException {
 

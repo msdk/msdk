@@ -15,6 +15,7 @@
 package io.github.msdk.io;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,9 +68,12 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
     @Override
     public RawDataFile execute() throws MSDKException {
 
-        FileTypeDetectionMethod typeDetector = new FileTypeDetectionMethod(
-                sourceFile);
-        FileType fileType = typeDetector.execute();
+        FileType fileType;
+        try {
+            fileType = FileTypeDetectionMethod.detectDataFileType(sourceFile);
+        } catch (IOException e) {
+            throw new MSDKException(e);
+        }
 
         if (fileType == null)
             throw new MSDKException("Unknown file type of file " + sourceFile);

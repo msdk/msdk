@@ -197,6 +197,7 @@ public class MzMLFileImportMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCompressedAndUncompressed() throws MSDKException {
 
@@ -289,6 +290,7 @@ public class MzMLFileImportMethodTest {
         rawFile.dispose();
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testFileWithUV() throws MSDKException {
 

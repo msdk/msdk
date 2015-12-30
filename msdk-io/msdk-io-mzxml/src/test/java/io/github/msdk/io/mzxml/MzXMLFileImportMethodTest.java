@@ -30,6 +30,7 @@ public class MzXMLFileImportMethodTest {
 
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
+    @SuppressWarnings("null")
     @Test
     public void testA10A2() throws MSDKException {
 

@@ -6,6 +6,25 @@ Mass Spectrometry Development Kit (MSDK) is a Java library of algorithms for pro
 
 MSDK requires Java runtime (JRE) version 1.7 or newer.
 
+
+## Usage
+
+### API
+
+Please see the complete [MSDK API](http://msdk.github.io/api/).
+
+### Maven artifacts
+
+MSDK jars are automatically deployed to Maven Central. In order to use MSDK, simply add the following dependency to your pom.xml:
+
+```
+ <dependency>
+    <groupId>io.github.msdk</groupId>
+    <artifactId>msdk-all</artifactId>
+    <version>0.0.3</version>
+ </dependency>
+```
+
 ## Development
 
 

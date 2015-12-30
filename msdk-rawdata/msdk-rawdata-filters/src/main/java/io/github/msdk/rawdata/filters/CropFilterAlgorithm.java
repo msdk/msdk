@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.datastore.DataPointStore;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
 
@@ -65,8 +66,8 @@ public class CropFilterAlgorithm implements MSDKFilteringAlgorithm {
 
         // Do only if the scan's retention time is inside the user defined
         // retention time range
-        if ((scan.getChromatographyInfo() == null) || (!rtRange
-                .contains(scan.getChromatographyInfo().getRetentionTime())))
+        final ChromatographyInfo rt = scan.getChromatographyInfo();
+        if ((rt == null) || (!rtRange.contains(rt.getRetentionTime())))
             return null;
 
         // Load data points

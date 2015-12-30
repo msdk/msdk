@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.msdk</groupId>
 	<artifactId>msdk</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>MSDK - Mass Spectrometry Development Kit</name>
@@ -11,13 +11,13 @@
 	<url>https://msdk.github.io</url>
 
 	<modules>
+		<module>msdk-all</module>
 		<module>msdk-datamodel</module>
 		<module>msdk-io</module>
 		<module>msdk-rawdata</module>
 		<module>msdk-featdet</module>
 		<module>msdk-id</module>
 		<module>msdk-features</module>
-		<module>msdk-all</module>
 		<module>msdk-spectra</module>
 		<module>msdk-db</module>
 	</modules>
@@ -25,7 +25,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<cdk.version>1.5.11</cdk.version>
+		<cdk.version>1.5.12</cdk.version>
 		<junit.version>4.12</junit.version>
 		<guava.version>18.0</guava.version>
 		<slf4j.version>1.7.12</slf4j.version>
@@ -104,6 +104,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.10.3</version>
+				<configuration>
+					<excludePackageNames>io.github.msdk.db.mona.pojo</excludePackageNames>
+				</configuration>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -151,6 +154,21 @@
 					<serverId>ossrh</serverId>
 					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-publish-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<checkoutDirectory>${project.build.directory}/apirepo</checkoutDirectory>
+					<checkinComment>Publishing javadoc for
+						${project.artifactId}:${project.version}</checkinComment>
+					<content>${project.reporting.outputDirectory}/apidocs</content>
+					<skipDeletedFiles>false</skipDeletedFiles>
+					<pubScmUrl>scm:git:git@github.com:msdk/api.git</pubScmUrl>
+					<scmBranch>gh-pages</scmBranch>
 				</configuration>
 			</plugin>
 

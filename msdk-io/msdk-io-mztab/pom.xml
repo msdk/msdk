@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.github.msdk</groupId>
         <artifactId>msdk-io</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
+        <version>0.0.4-SNAPSHOT</version>
     </parent>
     <artifactId>msdk-io-mztab</artifactId>
 
@@ -60,6 +60,12 @@
             <version>${cdk.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.openscience.cdk</groupId>
+            <artifactId>cdk-smiles</artifactId>
+            <version>${cdk.version}</version>
+        </dependency>
+        
     </dependencies>
 
 </project>

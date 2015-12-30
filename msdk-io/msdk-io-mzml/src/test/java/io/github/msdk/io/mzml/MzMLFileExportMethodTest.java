@@ -32,6 +32,7 @@ public class MzMLFileExportMethodTest {
 
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
+    @SuppressWarnings("null")
     @Test
     public void test5peptideFT() throws MSDKException, IOException {
 

@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.github.msdk</groupId>
         <artifactId>msdk-featdet</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
+        <version>0.0.4-SNAPSHOT</version>
     </parent>
     <artifactId>msdk-featdet-targeteddetection</artifactId>
     <description>MSDK targeted feature detection algorithm</description>
