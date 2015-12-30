@@ -28,6 +28,7 @@ import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.util.MZTolerance;
@@ -82,6 +83,13 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
         FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = featureTable
                 .getColumn(ColumnName.IONANNOTATION, null);
 
+        // Create ion annotation column if it is not present in the table
+        if (ionAnnotationColumn == null) {
+            ionAnnotationColumn = MSDKObjectBuilder
+                    .getIonAnnotationFeatureTableColumn();
+            featureTable.addColumn(ionAnnotationColumn);
+        }
+
         // Loop through all features in the feature table
         for (FeatureTableRow row : featureTable.getRows()) {
 
@@ -120,11 +128,21 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
                 if (mzMatch && rtMatch) {
 
                     // If first ion annotation is empty then remove it
-                    IonAnnotation firstionAnnotation = rowIonAnnotations.get(0);
-                    if (firstionAnnotation.isNA())
-                        rowIonAnnotations.remove(0);
+                    if (rowIonAnnotations.size() > 0) {
+                        IonAnnotation firstionAnnotation = rowIonAnnotations
+                                .get(0);
+                        if (firstionAnnotation.isNA())
+                            rowIonAnnotations.remove(0);
+                    }
 
-                    rowIonAnnotations.add(ionAnnotation);
+                    // Only add annotation if it is not already present
+                    boolean addIon = true;
+                    for (IonAnnotation ionAnnotations : rowIonAnnotations) {
+                        if (ionAnnotations.compareTo(ionAnnotation) == 0)
+                            addIon = false;
+                    }
+                    if (addIon)
+                        rowIonAnnotations.add(ionAnnotation);
                 }
 
             }

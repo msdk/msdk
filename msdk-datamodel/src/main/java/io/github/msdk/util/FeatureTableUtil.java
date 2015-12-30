@@ -50,6 +50,17 @@ public class FeatureTableUtil {
         float totalRt;
         int mzCount, rtCount;
 
+        // Create row m/z and RT columns is they are missing in the table
+        FeatureTableColumn<?> column;
+        if (featureTable.getColumn(ColumnName.MZ, null) == null) {
+            column = MSDKObjectBuilder.getMzFeatureTableColumn();
+            featureTable.addColumn(column);
+        }
+        if (featureTable.getColumn("Chromatography Info", null, ChromatographyInfo.class) == null) {
+            column = MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn();
+            featureTable.addColumn(column);
+        }
+
         for (FeatureTableRow row : rows) {
             List<Sample> samples = featureTable.getSamples();
 

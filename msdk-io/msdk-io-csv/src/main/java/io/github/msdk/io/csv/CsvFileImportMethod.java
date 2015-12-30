@@ -45,6 +45,7 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.SeparationType;
+import io.github.msdk.util.FeatureTableUtil;
 
 /**
  * <p>
@@ -281,6 +282,10 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
 
         }
 
+        // Update average row m/z and RT values. This will also create the
+        // columns if they are missing.
+        FeatureTableUtil.recalculateAverages(newFeatureTable);
+
         return newFeatureTable;
 
     }
@@ -333,8 +338,22 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
             column = MSDKObjectBuilder.getFeatureTableColumn(columnName,
                     String.class, sample);
         } else {
-            column = MSDKObjectBuilder.getFeatureTableColumn(newColumnName,
-                    sample);
+            // Use special columns for Id, m/z, rt and ion annotation
+            if (sample == null) {
+                if (newColumnName.equals(ColumnName.ID))
+                    column = MSDKObjectBuilder.getIdFeatureTableColumn();
+                if (newColumnName.equals(ColumnName.MZ))
+                    column = MSDKObjectBuilder.getMzFeatureTableColumn();
+                if (newColumnName.equals(ColumnName.RT))
+                    column = MSDKObjectBuilder
+                            .getChromatographyInfoFeatureTableColumn();
+                if (newColumnName.equals(ColumnName.IONANNOTATION))
+                    column = MSDKObjectBuilder
+                            .getIonAnnotationFeatureTableColumn();
+            } else {
+                column = MSDKObjectBuilder.getFeatureTableColumn(newColumnName,
+                        sample);
+            }
         }
 
         return column;
