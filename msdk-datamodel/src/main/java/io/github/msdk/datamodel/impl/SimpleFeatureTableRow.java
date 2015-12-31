@@ -11,7 +11,6 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-
 package io.github.msdk.datamodel.impl;
 
 import javax.annotation.Nonnull;
@@ -44,54 +43,71 @@ class SimpleFeatureTableRow implements FeatureTableRow {
         rowData = new HashMap<>();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public @Nonnull FeatureTable getFeatureTable() {
         return featureTable;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public @Nonnull Integer getId() {
         return rowId;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Double getMz() {
         return getData(MSDKObjectBuilder.getMzFeatureTableColumn());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ChromatographyInfo getChromatographyInfo() {
-        return getData(
-                MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn());
+        return getData(MSDKObjectBuilder
+                .getChromatographyInfoFeatureTableColumn());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <DataType> void setData(FeatureTableColumn<DataType> column,
-            @Nonnull DataType data) {
+    public <DATATYPE> void setData(FeatureTableColumn<? extends DATATYPE> column,
+            @Nonnull DATATYPE data) {
         Preconditions.checkNotNull(column);
         Preconditions.checkNotNull(data);
         rowData.put(column, data);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <DataType> DataType getData(
-            @Nonnull FeatureTableColumn<DataType> column) {
+    public <DATATYPE> DATATYPE getData(
+            @Nonnull FeatureTableColumn<? extends DATATYPE> column) {
         Preconditions.checkNotNull(column);
         return column.getDataTypeClass().cast(rowData.get(column));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <DataType> void copyData(FeatureTableColumn<DataType> sourceColumn,
+    public <DATATYPE> void copyData(
+            FeatureTableColumn<? extends DATATYPE> sourceColumn,
             FeatureTableRow targetRow,
-            FeatureTableColumn<DataType> targetColumn,
-            FeatureTableDataConverter converter) {
-        converter.convert(this, sourceColumn, targetRow, targetColumn);
+            FeatureTableColumn<? extends DATATYPE> targetColumn,
+            FeatureTableDataConverter<DATATYPE> featureTableDataConverter) {
+        featureTableDataConverter.apply(this, sourceColumn, targetRow,
+                targetColumn);
     }
 
 }
