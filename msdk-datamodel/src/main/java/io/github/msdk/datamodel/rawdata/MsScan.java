@@ -50,10 +50,12 @@ public interface MsScan extends MsSpectrum {
 
     /**
      * Updates the raw data file reference. This method can be called only once.
-     * Any subsequent calls will throw the IllegalOperationException.
+     * Any subsequent calls will throw the MSDKRuntimeException.
      *
      * @param newRawDataFile
      *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @throws MSDKRuntimeException
+     *             If the raw data file reference had already been set.
      */
     void setRawDataFile(@Nonnull RawDataFile newRawDataFile);
 
