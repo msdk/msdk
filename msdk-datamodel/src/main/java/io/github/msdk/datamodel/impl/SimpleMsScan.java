@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
+import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -82,6 +83,10 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     /** {@inheritDoc} */
     @Override
     public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
+        if (this.dataFile != null) {
+            throw new MSDKRuntimeException(
+                    "Cannot set the raw data file reference to this scan, because it has already been set");
+        }
         this.dataFile = newRawDataFile;
     }
 
