@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.msdk</groupId>
-        <artifactId>msdk-id</artifactId>
+        <artifactId>msdk-features</artifactId>
         <version>0.0.4-SNAPSHOT</version>
     </parent>
     <artifactId>msdk-features-isotopegrouper</artifactId>
@@ -21,6 +21,7 @@
             <groupId>io.github.msdk</groupId>
             <artifactId>msdk-io-csv</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

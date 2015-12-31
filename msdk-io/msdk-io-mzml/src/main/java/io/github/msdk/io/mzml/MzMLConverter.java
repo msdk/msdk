@@ -64,8 +64,9 @@ class MzMLConverter {
 
         String spectrumId = spectrum.getId();
 
-        if (scanIdTable.containsKey(spectrumId))
-            return scanIdTable.get(spectrumId);
+        Integer storedScanNumber = scanIdTable.get(spectrumId);
+        if (storedScanNumber != null)
+            return storedScanNumber;
 
         final Pattern pattern = Pattern.compile("scan=([0-9]+)");
         final Matcher matcher = pattern.matcher(spectrumId);
@@ -180,6 +181,7 @@ class MzMLConverter {
         return null;
     }
 
+    @SuppressWarnings("null")
     @Nonnull
     String extractScanDefinition(Spectrum spectrum) {
         List<CVParam> cvParams = spectrum.getCvParam();
@@ -265,6 +267,7 @@ class MzMLConverter {
         return null;
     }
 
+    @SuppressWarnings("null")
     @Nonnull
     List<IsolationInfo> extractIsolations(Spectrum spectrum) {
         PrecursorList precursorListElement = spectrum.getPrecursorList();
@@ -382,6 +385,7 @@ class MzMLConverter {
      *            a {@link uk.ac.ebi.jmzml.model.mzml.Chromatogram} object.
      * @return a {@link java.util.List} object.
      */
+    @SuppressWarnings("null")
     @Nonnull
     public List<IsolationInfo> extractIsolations(
             uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {
@@ -459,12 +463,13 @@ class MzMLConverter {
 
     }
 
-    static double[] extractMzValues(Spectrum spectrum, double[] array) {
+    static @Nonnull double[] extractMzValues(Spectrum spectrum,
+            @Nullable double[] array) {
 
         BinaryDataArrayList dataList = spectrum.getBinaryDataArrayList();
 
         if ((dataList == null) || (dataList.getCount().equals(0)))
-            return array;
+            return new double[0];
 
         // Obtain the data arrays from spectrum
         final BinaryDataArray mzArray = dataList.getBinaryDataArray().get(0);
@@ -482,12 +487,13 @@ class MzMLConverter {
         return array;
     }
 
-    static float[] extractIntensityValues(Spectrum spectrum, float[] array) {
+    static @Nonnull float[] extractIntensityValues(Spectrum spectrum,
+            @Nullable float[] array) {
 
         BinaryDataArrayList dataList = spectrum.getBinaryDataArrayList();
 
         if ((dataList == null) || (dataList.getCount().equals(0)))
-            return array;
+            return new float[0];
 
         // Obtain the data arrays from spectrum
         final BinaryDataArray intensityArray = dataList.getBinaryDataArray()
@@ -508,9 +514,9 @@ class MzMLConverter {
 
     }
 
-    static ChromatographyInfo[] extractRtValues(
+    static @Nonnull ChromatographyInfo[] extractRtValues(
             uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram,
-            ChromatographyInfo[] array) {
+            @Nullable ChromatographyInfo[] array) {
 
         BinaryDataArrayList dataList = jmzChromatogram.getBinaryDataArrayList();
 
@@ -537,14 +543,14 @@ class MzMLConverter {
 
     }
 
-    static float[] extractIntensityValues(
+    static @Nonnull float[] extractIntensityValues(
             uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram,
-            float[] array) {
+            @Nullable float[] array) {
 
         BinaryDataArrayList dataList = jmzChromatogram.getBinaryDataArrayList();
 
         if ((dataList == null) || (dataList.getCount().equals(0)))
-            return array;
+            return new float[0];
 
         // Obtain the data arrays from chromatogram
         final BinaryDataArray intensityArray = dataList.getBinaryDataArray()

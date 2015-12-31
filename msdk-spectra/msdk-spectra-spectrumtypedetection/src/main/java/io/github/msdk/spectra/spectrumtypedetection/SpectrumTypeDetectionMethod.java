@@ -62,8 +62,9 @@ public class SpectrumTypeDetectionMethod {
      * @param size
      *            a {@link java.lang.Integer} object.
      */
-    public static MsSpectrumType detectSpectrumType(@Nonnull double mzValues[],
-            @Nonnull float intensityValues[], @Nonnull Integer size) {
+    public static @Nonnull MsSpectrumType detectSpectrumType(
+            @Nonnull double mzValues[], @Nonnull float intensityValues[],
+            @Nonnull Integer size) {
 
         // If the spectrum has less than 5 data points, it should be
         // centroided.
