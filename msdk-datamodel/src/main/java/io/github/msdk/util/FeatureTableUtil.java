@@ -24,6 +24,8 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.converter.CopyConverter;
+import io.github.msdk.datamodel.impl.converter.IonAnnotationConverter;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -201,37 +203,13 @@ public class FeatureTableUtil {
                 if (combineData) {
                     switch (sourceColumn.getName()) {
                     case "Ion Annotation":
-                        List<IonAnnotation> targetIonAnnotations = (List) targetFeatureTableRow
-                                .getData(targetColumn);
-                        List<IonAnnotation> sourceIonAnnotations = (List) sourceFeatureTableRow
-                                .getData(sourceColumn);
-                        if (targetIonAnnotations == null)
-                            targetIonAnnotations = new ArrayList<IonAnnotation>();
-                        if (sourceIonAnnotations != null) {
-                            for (IonAnnotation ionAnnotation : sourceIonAnnotations) {
-                                if (!ionAnnotation.isNA()) {
-                                    boolean addIon = true;
-                                    for (IonAnnotation targetIonAnnotation : targetIonAnnotations) {
-                                        if (targetIonAnnotation
-                                                .compareTo(ionAnnotation) == 0)
-                                            addIon = false;
-                                    }
-                                    if (addIon)
-                                        targetIonAnnotations.add(ionAnnotation);
-                                }
-                            }
-                            targetFeatureTableRow.setData(targetColumn,
-                                    targetIonAnnotations);
-                        }
+                        new IonAnnotationConverter().apply(sourceFeatureTableRow, sourceColumn, targetFeatureTableRow, targetColumn);
                         break;
                     }
                 } else {
                     // Only add common values
                     if (sourceColumn.getSample() == null) {
-                        final Object data = sourceFeatureTableRow
-                                .getData(sourceColumn);
-                        if (data != null)
-                            targetFeatureTableRow.setData(targetColumn, data);
+                        new CopyConverter().apply(sourceFeatureTableRow, sourceColumn, targetFeatureTableRow, targetColumn);
                     }
                 }
             }
@@ -285,11 +263,7 @@ public class FeatureTableUtil {
                         }
                     }
 
-                    final Object data = sourceFeatureTableRow
-                            .getData(sourceColumn);
-                    if (data != null) {
-                        targetFeatureTableRow.setData(targetColumn, data);
-                    }
+                    new CopyConverter().apply(sourceFeatureTableRow, sourceColumn, targetFeatureTableRow, targetColumn);
 
                 }
             }
