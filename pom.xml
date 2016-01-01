@@ -10,7 +10,6 @@
     <description>A java library for the development of mass spectrometry-related algorithms.</description>
     <url>https://msdk.github.io</url>
 
-<<<<<<< Upstream, based on origin/development
     <modules>
         <module>msdk-all</module>
         <module>msdk-datamodel</module>
