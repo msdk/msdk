@@ -83,7 +83,7 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     /** {@inheritDoc} */
     @Override
     public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
-        if (this.dataFile != null) {
+        if ((this.dataFile != null) && (this.dataFile != newRawDataFile)) {
             throw new MSDKRuntimeException(
                     "Cannot set the raw data file reference to this scan, because it has already been set");
         }
