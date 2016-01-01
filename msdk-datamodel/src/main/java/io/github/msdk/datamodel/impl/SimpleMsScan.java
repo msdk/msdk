@@ -210,7 +210,7 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("Scan ");
         final RawDataFile rawDataFile2 = dataFile;
         if (rawDataFile2 != null) {
