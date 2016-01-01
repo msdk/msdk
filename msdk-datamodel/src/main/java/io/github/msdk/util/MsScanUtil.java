@@ -63,9 +63,9 @@ public class MsScanUtil {
                 scan.getSourceInducedFragmentation());
         newScan.getIsolations().addAll(scan.getIsolations());
 
-        final RawDataFile rawFile = scan.getRawDataFile();
-        if (rawFile != null)
-            newScan.setRawDataFile(rawFile);
+//        final RawDataFile rawFile = scan.getRawDataFile();
+//        if (rawFile != null)
+//            newScan.setRawDataFile(rawFile);
 
         if (copyDataPoints) {
             double mzValues[] = scan.getMzValues();

@@ -39,9 +39,9 @@ class SimpleRawDataFile implements RawDataFile {
     private @Nonnull String rawDataFileName;
     private @Nullable File originalRawDataFile;
     private @Nonnull FileType rawDataFileType;
-    private @Nonnull ArrayList<MsScan> scans;
-    private @Nonnull ArrayList<Chromatogram> chromatograms;
-    private @Nonnull DataPointStore dataPointStore;
+    private final @Nonnull ArrayList<MsScan> scans;
+    private final @Nonnull ArrayList<Chromatogram> chromatograms;
+    private final @Nonnull DataPointStore dataPointStore;
 
     SimpleRawDataFile(@Nonnull String rawDataFileName,
             @Nullable File originalRawDataFile,
@@ -53,8 +53,8 @@ class SimpleRawDataFile implements RawDataFile {
         this.originalRawDataFile = originalRawDataFile;
         this.rawDataFileType = rawDataFileType;
         this.dataPointStore = dataPointStore;
-        this.scans = new ArrayList<MsScan>();
-        this.chromatograms = new ArrayList<Chromatogram>();
+        this.scans = new ArrayList<>();
+        this.chromatograms = new ArrayList<>();
     }
 
     /** {@inheritDoc} */
@@ -100,7 +100,7 @@ class SimpleRawDataFile implements RawDataFile {
     @Override
     @Nonnull
     public List<MsFunction> getMsFunctions() {
-        ArrayList<MsFunction> msFunctionList = new ArrayList<MsFunction>();
+        ArrayList<MsFunction> msFunctionList = new ArrayList<>();
         synchronized (scans) {
             for (MsScan scan : scans) {
                 MsFunction f = scan.getMsFunction();

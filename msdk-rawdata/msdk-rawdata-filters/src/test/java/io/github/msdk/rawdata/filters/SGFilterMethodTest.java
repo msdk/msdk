@@ -62,15 +62,32 @@ public class SGFilterMethodTest {
 
         }
 
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testSGFilterWrongParameters() throws MSDKException {
+
+        // Import the file
+        File inputFile = new File(TEST_DATA_PATH + "orbitrap_300-600mz.mzML");
+        Assert.assertTrue("Cannot read test data", inputFile.canRead());
+        MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
+
         // Execute the filter with wrong parameters
-        SGFilter = new SGFilterAlgorithm(110, store);
-        filterMethod = new MSDKFilteringMethod(rawFile, SGFilter, store);
-        newRawFile = filterMethod.execute();
+        SGFilterAlgorithm sgFilter = new SGFilterAlgorithm(110, store);
+        MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile,
+                sgFilter, store);
+        RawDataFile newRawFile = filterMethod.execute();
         // The result of the method can't be Null
         Assert.assertNotNull(newRawFile);
         Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
 
-        newScans = newRawFile.getScans();
+        List<MsScan> newScans = newRawFile.getScans();
         List<MsScan> scans = rawFile.getScans();
 
         // The resulting scans should be equal to the input scans
