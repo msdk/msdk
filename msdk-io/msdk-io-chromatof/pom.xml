@@ -6,6 +6,22 @@
         <artifactId>msdk-io</artifactId>
         <version>0.0.4-SNAPSHOT</version>
     </parent>
+    
     <artifactId>msdk-io-chromatof</artifactId>
-
+    
+    <dependencies>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>msdk-datamodel</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.openscience.cdk</groupId>
+            <artifactId>cdk-data</artifactId>
+            <version>${cdk.version}</version>
+        </dependency>
+        
+    </dependencies>
 </project>

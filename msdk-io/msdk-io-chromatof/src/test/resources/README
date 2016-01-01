@@ -1,0 +1,15 @@
+Folder 'full/1D' contains original full chromatof csv reports of a 1D GC-MS acquisition. Thanks to H. Kuich, Berlin Institute of Health for providing the file.
+
+Folder 'full/2D' contains original full chromatof csv reports for the C. reinhardtii 
+dataset [1]. The selection represents only a subset of the original data.
+
+Folder 'reduced/2D' contains chromatof reports with a reduced number of peaks, following
+the procedure described in [1].
+
+References: 
+
+[1] N. Hoffmann, M. Wilhelm, A. Doebbe, K. Niehaus, and J. Stoye,
+“BiPACE 2D—graph-based multiple alignment for comprehensive 2D gas
+ chromatography-mass spectrometry,” Bioinformatics, vol. 30, no. 7,
+ pp. 988–995, Apr. 2014.
+
