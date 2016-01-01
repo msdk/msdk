@@ -1,5 +1,5 @@
 /* 
- * (C) Copyright 2015 by MSDK Development Team
+ * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -49,7 +49,7 @@ public class MzMLFileExportMethodTest {
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
         // Export the file to a new mzML
-        File tempFile = File.createTempFile("mzmine", ".mzML");
+        File tempFile = File.createTempFile("msdk", ".mzML");
         MzMLFileExportMethod exporter = new MzMLFileExportMethod(rawFile,
                 tempFile);
         exporter.execute();
