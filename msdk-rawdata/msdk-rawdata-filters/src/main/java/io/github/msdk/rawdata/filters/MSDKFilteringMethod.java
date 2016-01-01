@@ -97,6 +97,9 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
             if (canceled)
                 return null;
 
+            if (scan == null)
+                continue;
+
             MsScan newScan = filteringAlgorithm.performFilter(scan);
 
             // Add the new scan to the created raw data file
