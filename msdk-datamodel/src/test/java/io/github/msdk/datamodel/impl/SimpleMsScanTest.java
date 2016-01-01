@@ -25,6 +25,7 @@ import org.junit.Test;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
+import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.files.FileType;
@@ -210,6 +211,30 @@ public class SimpleMsScanTest {
         }
         Assert.assertEquals(sumInt, scan.getTIC(), 0.00001);
 
+    }
+
+    @Test
+    public void testSetRawDataFile() throws MSDKException {
+        DataPointStore store = DataPointStoreFactory.getTmpFileDataStore();
+        RawDataFile rdf = MSDKObjectBuilder.getRawDataFile("test", null,
+                FileType.UNKNOWN, store);
+        MsFunction msf = MSDKObjectBuilder.getMsFunction(1);
+        MsScan scan = MSDKObjectBuilder.getMsScan(store, 1, msf);
+        scan.setRawDataFile(rdf);
+        Assert.assertEquals(rdf, scan.getRawDataFile());
+    }
+
+    @Test(expected = MSDKRuntimeException.class)
+    public void testSetRawDataFileFail() throws MSDKException {
+        DataPointStore store = DataPointStoreFactory.getTmpFileDataStore();
+        RawDataFile rdf = MSDKObjectBuilder.getRawDataFile("test", null,
+                FileType.UNKNOWN, store);
+        RawDataFile rdf2 = MSDKObjectBuilder.getRawDataFile("test2", null,
+                FileType.UNKNOWN, store);
+        MsFunction msf = MSDKObjectBuilder.getMsFunction(1);
+        MsScan scan = MSDKObjectBuilder.getMsScan(store, 1, msf);
+        scan.setRawDataFile(rdf);
+        scan.setRawDataFile(rdf2);
     }
 
 }
