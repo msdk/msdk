@@ -1,5 +1,5 @@
 /* 
- * (C) Copyright 2015 by MSDK Development Team
+ * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -21,7 +21,6 @@ import com.google.common.base.Preconditions;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
  * <p>
@@ -62,10 +61,6 @@ public class MsScanUtil {
         newScan.setSourceInducedFragmentation(
                 scan.getSourceInducedFragmentation());
         newScan.getIsolations().addAll(scan.getIsolations());
-
-//        final RawDataFile rawFile = scan.getRawDataFile();
-//        if (rawFile != null)
-//            newScan.setRawDataFile(rawFile);
 
         if (copyDataPoints) {
             double mzValues[] = scan.getMzValues();

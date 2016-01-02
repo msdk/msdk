@@ -1,5 +1,5 @@
 /* 
- * (C) Copyright 2015 by MSDK Development Team
+ * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -96,6 +96,9 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
 
             if (canceled)
                 return null;
+
+            if (scan == null)
+                continue;
 
             MsScan newScan = filteringAlgorithm.performFilter(scan);
 
