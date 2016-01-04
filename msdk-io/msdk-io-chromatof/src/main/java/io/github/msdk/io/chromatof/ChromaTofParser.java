@@ -35,9 +35,6 @@ import org.slf4j.LoggerFactory;
  * <p>
  * ChromaTofParser class.
  * </p>
- *
- * @author Nils Hoffmann
- *
  */
 public class ChromaTofParser {
 

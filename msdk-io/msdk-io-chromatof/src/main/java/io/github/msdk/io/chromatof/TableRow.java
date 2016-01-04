@@ -21,8 +21,6 @@ import java.util.LinkedHashMap;
  * TableRow class.
  * </p>
  *
- * @author Nils Hoffmann
- *
  */
 public class TableRow extends
         LinkedHashMap<ChromaTofParser.TableColumn, String> {

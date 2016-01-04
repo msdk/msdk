@@ -27,7 +27,6 @@ import org.junit.Test;
 
 /**
  *
- * @author nilshoffmann
  */
 public class ChromaTofFileImportMethodTest {
 
