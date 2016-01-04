@@ -30,7 +30,6 @@ import io.github.msdk.io.chromatof.ChromaTofParser.Mode;
 import io.github.msdk.io.chromatof.ChromaTofParser.TableColumn;
 import io.github.msdk.util.FeatureTableUtil;
 import java.io.File;
-import static java.io.File.separator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -46,8 +45,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- * @author nilshoffmann
+ * <p>
+ * ChromaTofFileImportMethod class.
+ * </p>
  */
 public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
 
