@@ -1,5 +1,5 @@
 /* 
- * (C) Copyright 2015 by MSDK Development Team
+ * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -11,6 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
+
 package io.github.msdk.test;
 
 import java.io.BufferedInputStream;
@@ -43,8 +44,10 @@ public class ZipResourceExtractor {
      * extract.
      * </p>
      *
-     * @param resourcePath a {@link java.lang.String} object.
-     * @param destDir a {@link java.io.File} object.
+     * @param resourcePath
+     *            a {@link java.lang.String} object.
+     * @param destDir
+     *            a {@link java.io.File} object.
      * @return a {@link java.io.File} object.
      */
     public static File extract(String resourcePath, File destDir) {
@@ -103,8 +106,10 @@ public class ZipResourceExtractor {
      * extractZipArchive.
      * </p>
      *
-     * @param istream a {@link java.io.InputStream} object.
-     * @param outputDir a {@link java.io.File} object.
+     * @param istream
+     *            a {@link java.io.InputStream} object.
+     * @param outputDir
+     *            a {@link java.io.File} object.
      * @return a {@link java.io.File} object.
      */
     public static File extractZipArchive(InputStream istream, File outputDir) {
@@ -124,8 +129,8 @@ public class ZipResourceExtractor {
                             outDir = outFile;
                         }
                     } else {
-                        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(
-                                outFile), buffer.length)) {
+                        try (BufferedOutputStream bos = new BufferedOutputStream(
+                                new FileOutputStream(outFile), buffer.length)) {
                             while ((size = zis.read(buffer, 0, buffer.length)) != -1) {
                                 bos.write(buffer, 0, size);
                             }
