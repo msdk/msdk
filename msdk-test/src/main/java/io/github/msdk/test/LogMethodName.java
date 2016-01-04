@@ -1,5 +1,5 @@
 /* 
- * (C) Copyright 2015 by MSDK Development Team
+ * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -11,6 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
+
 package io.github.msdk.test;
 
 import org.junit.rules.TestWatcher;
@@ -21,8 +22,7 @@ import org.junit.runner.Description;
  *
  * Activate in your tests by adding the following line to your test class:
  * {@code @Rule public LogMethodName logMethodName;}
- *
- * @author Nils Hoffmann
+ * 
  */
 public class LogMethodName extends TestWatcher {
 
