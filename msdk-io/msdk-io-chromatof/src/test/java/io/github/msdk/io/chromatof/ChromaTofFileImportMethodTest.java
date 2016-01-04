@@ -1,5 +1,5 @@
 /* 
- * (C) Copyright 2015 by MSDK Development Team
+ * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -30,9 +30,9 @@ import org.junit.Test;
  * @author nilshoffmann
  */
 public class ChromaTofFileImportMethodTest {
-    
+
     private static final String TEST_DATA_PATH = "src/test/resources/";
-    
+
     @SuppressWarnings("null")
     @Test
     public void GCxGC_Import() throws MSDKException {
@@ -43,8 +43,10 @@ public class ChromaTofFileImportMethodTest {
         // Import the file
         File inputFile = new File(TEST_DATA_PATH + "GGT1.txt");
         Assert.assertTrue(inputFile.canRead());
-        ChromaTofFileImportMethod importer = new ChromaTofFileImportMethod(inputFile,
-                dataStore, Locale.US, ChromaTofParser.FIELD_SEPARATOR_TAB, ChromaTofParser.QUOTATION_CHARACTER_NONE);
+        ChromaTofFileImportMethod importer = new ChromaTofFileImportMethod(
+                inputFile, dataStore, Locale.US,
+                ChromaTofParser.FIELD_SEPARATOR_TAB,
+                ChromaTofParser.QUOTATION_CHARACTER_NONE);
         FeatureTable featureTable = importer.execute();
         Assert.assertNotNull(featureTable);
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);

@@ -1,5 +1,5 @@
 /* 
- * (C) Copyright 2015 by MSDK Development Team
+ * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -11,6 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
+
 package io.github.msdk.io.chromatof;
 
 import io.github.msdk.MSDKException;
@@ -55,12 +56,9 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
 
     private int parsedLines, totalLines = 0;
 
-    private final @Nonnull
-    File sourceFile;
-    private final @Nonnull
-    DataPointStore dataStore;
-    private final @Nonnull
-    Locale locale;
+    private final @Nonnull File sourceFile;
+    private final @Nonnull DataPointStore dataStore;
+    private final @Nonnull Locale locale;
     private String fieldSeparator = ChromaTofParser.FIELD_SEPARATOR_TAB;
     private String quotationCharacter = ChromaTofParser.QUOTATION_CHARACTER_NONE;
 
@@ -75,19 +73,24 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
      * Constructor for ChromaTofFileImportMethod.
      * </p>
      *
-     * @param sourceFile a {@link java.io.File} object.
-     * @param dataStore a
-     * {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
-     * @param locale the locale and corresponding decimal point format to use
-     * for number parsing.
-     * @param fieldSeparator the field separator between fields on one line.
-     * @param quotationCharacter the quotation character for a field.
+     * @param sourceFile
+     *            a {@link java.io.File} object.
+     * @param dataStore
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
+     *            object.
+     * @param locale
+     *            the locale and corresponding decimal point format to use for
+     *            number parsing.
+     * @param fieldSeparator
+     *            the field separator between fields on one line.
+     * @param quotationCharacter
+     *            the quotation character for a field.
      *
      * @see ChromaTofParser
      */
     public ChromaTofFileImportMethod(@Nonnull File sourceFile,
-            @Nonnull DataPointStore dataStore, @Nonnull Locale locale, String fieldSeparator,
-            String quotationCharacter) {
+            @Nonnull DataPointStore dataStore, @Nonnull Locale locale,
+            String fieldSeparator, String quotationCharacter) {
         this.sourceFile = sourceFile;
         this.dataStore = dataStore;
         this.fileSample = MSDKObjectBuilder.getSimpleSample(sourceFile
@@ -103,9 +106,11 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
      * number parsing.
      * </p>
      *
-     * @param sourceFile a {@link java.io.File} object.
-     * @param dataStore a
-     * {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
+     * @param sourceFile
+     *            a {@link java.io.File} object.
+     * @param dataStore
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
+     *            object.
      */
     public ChromaTofFileImportMethod(@Nonnull File sourceFile,
             @Nonnull DataPointStore dataStore) {
@@ -128,8 +133,10 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
         logger.info("Using locale: " + locale.getDisplayName());
 
         if (fieldSeparator == null || quotationCharacter == null) {
-            //TODO guess fieldSeparator from first line, guess quotation char from second line?
-            throw new MSDKException("Field separator and quotation character must not be null!");
+            // TODO guess fieldSeparator from first line, guess quotation char
+            // from second line?
+            throw new MSDKException(
+                    "Field separator and quotation character must not be null!");
         }
 
         logger.info("Using field separator: '" + fieldSeparator + "'");
@@ -153,8 +160,7 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
             // Make sure that there is only one ion annotation column
             FeatureTableColumn<?> ionAnnotationColumn = newFeatureTable
                     .getColumn(ColumnName.IONANNOTATION, null);
-            if (column.getName().equals(
-                    ColumnName.IONANNOTATION.getName())) {
+            if (column.getName().equals(ColumnName.IONANNOTATION.getName())) {
                 if (ionAnnotationColumn != null) {
                     column = ionAnnotationColumn;
                 } else // Add the column to the feature table
@@ -191,7 +197,8 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
             // Loop through all the data and add it to the row
             int i = 0;
             for (TableColumn tableColumn : tableRow.keySet()) {
-                String value = tableRow.getValueForName(tableColumn.getColumnName());
+                String value = tableRow.getValueForName(tableColumn
+                        .getColumnName());
                 // Ignore null values
                 if (value == null || value.equals("") || value.equals("null")) {
                     continue;
@@ -203,52 +210,69 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
 
                 // Handle ChromatographyInfo and List (= Ion Annotation)
                 // class separately
-                if (currentClass.getSimpleName().equals(
-                        "ChromatographyInfo")) {
+                if (currentClass.getSimpleName().equals("ChromatographyInfo")) {
                     ChromatographyInfo chromatographyInfo = null;
                     switch (mode) {
-                        case RT_2D_FUSED:
-                            String[] rts = value.split(",");
-                            chromatographyInfo = MSDKObjectBuilder
-                                    .getChromatographyInfo2D(
-                                            SeparationType.UNKNOWN_2D, ParserUtilities.parseFloat(rts[0], locale), ParserUtilities.parseFloat(rts[1], locale));
-                            break;
-                        case RT_2D_SEPARATE:
-                            chromatographyInfo = row.getChromatographyInfo();
-                            switch (tableColumn.getColumnName()) {
-                                case FIRST_DIMENSION_TIME_SECONDS:
-                                    if (chromatographyInfo == null) {
-                                        chromatographyInfo = MSDKObjectBuilder
-                                                .getChromatographyInfo2D(
-                                                        SeparationType.UNKNOWN_2D, ParserUtilities.parseFloat(value, locale), null);
-                                    } else {
-                                        Float secondRetentionTime = chromatographyInfo.getSecondaryRetentionTime();
-                                        chromatographyInfo = MSDKObjectBuilder
-                                                .getChromatographyInfo2D(
-                                                        SeparationType.UNKNOWN_2D, ParserUtilities.parseFloat(value, locale), secondRetentionTime);
-                                    }
-                                    break;
-                                case SECOND_DIMENSION_TIME_SECONDS:
-                                    if (chromatographyInfo == null) {
-                                        chromatographyInfo = MSDKObjectBuilder
-                                                .getChromatographyInfo2D(
-                                                        SeparationType.UNKNOWN_2D, Float.NaN, ParserUtilities.parseFloat(value, locale));
-                                    } else {
-                                        Float firstRetentionTime = chromatographyInfo.getRetentionTime();
-                                        chromatographyInfo = MSDKObjectBuilder
-                                                .getChromatographyInfo2D(
-                                                        SeparationType.UNKNOWN_2D, firstRetentionTime, ParserUtilities.parseFloat(value, locale));
-                                    }
-                                    break;
-                                default:
-                                    throw new MSDKException("Unexpected column name: " + tableColumn.getColumnName());
+                    case RT_2D_FUSED:
+                        String[] rts = value.split(",");
+                        chromatographyInfo = MSDKObjectBuilder
+                                .getChromatographyInfo2D(
+                                        SeparationType.UNKNOWN_2D,
+                                        ParserUtilities.parseFloat(rts[0],
+                                                locale), ParserUtilities
+                                                .parseFloat(rts[1], locale));
+                        break;
+                    case RT_2D_SEPARATE:
+                        chromatographyInfo = row.getChromatographyInfo();
+                        switch (tableColumn.getColumnName()) {
+                        case FIRST_DIMENSION_TIME_SECONDS:
+                            if (chromatographyInfo == null) {
+                                chromatographyInfo = MSDKObjectBuilder
+                                        .getChromatographyInfo2D(
+                                                SeparationType.UNKNOWN_2D,
+                                                ParserUtilities.parseFloat(
+                                                        value, locale), null);
+                            } else {
+                                Float secondRetentionTime = chromatographyInfo
+                                        .getSecondaryRetentionTime();
+                                chromatographyInfo = MSDKObjectBuilder
+                                        .getChromatographyInfo2D(
+                                                SeparationType.UNKNOWN_2D,
+                                                ParserUtilities.parseFloat(
+                                                        value, locale),
+                                                secondRetentionTime);
                             }
                             break;
-                        case RT_1D:
+                        case SECOND_DIMENSION_TIME_SECONDS:
+                            if (chromatographyInfo == null) {
+                                chromatographyInfo = MSDKObjectBuilder
+                                        .getChromatographyInfo2D(
+                                                SeparationType.UNKNOWN_2D,
+                                                Float.NaN, ParserUtilities
+                                                        .parseFloat(value,
+                                                                locale));
+                            } else {
+                                Float firstRetentionTime = chromatographyInfo
+                                        .getRetentionTime();
+                                chromatographyInfo = MSDKObjectBuilder
+                                        .getChromatographyInfo2D(
+                                                SeparationType.UNKNOWN_2D,
+                                                firstRetentionTime,
+                                                ParserUtilities.parseFloat(
+                                                        value, locale));
+                            }
+                            break;
                         default:
-                            chromatographyInfo = MSDKObjectBuilder
-                                    .getChromatographyInfo1D(
-                                            SeparationType.UNKNOWN, ParserUtilities.parseFloat(value, locale));
+                            throw new MSDKException("Unexpected column name: "
+                                    + tableColumn.getColumnName());
+                        }
+                        break;
+                    case RT_1D:
+                    default:
+                        chromatographyInfo = MSDKObjectBuilder
+                                .getChromatographyInfo1D(
+                                        SeparationType.UNKNOWN, ParserUtilities
+                                                .parseFloat(value, locale));
                     }
 
                     // Add the data
@@ -258,9 +282,10 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
                     FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn = newFeatureTable
                             .getColumn(ColumnName.IONANNOTATION, null);
                     if (ionAnnotationColumn == null) {
-                        newFeatureTable.addColumn(MSDKObjectBuilder.getIonAnnotationFeatureTableColumn());
-                        ionAnnotationColumn = newFeatureTable
-                                .getColumn(ColumnName.IONANNOTATION, null);
+                        newFeatureTable.addColumn(MSDKObjectBuilder
+                                .getIonAnnotationFeatureTableColumn());
+                        ionAnnotationColumn = newFeatureTable.getColumn(
+                                ColumnName.IONANNOTATION, null);
                     }
                     List<IonAnnotation> ionAnnotations = row
                             .getData(ionAnnotationColumn);
@@ -275,17 +300,16 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
                     }
 
                     switch (tableColumn.getColumnName()) {
-                        case NAME:
-                            ionAnnotation.setDescription(value);
-                            break;
-                        case FORMULA:
-                            // Create chemical structure
-                            IMolecularFormula formula = MolecularFormulaManipulator
-                                    .getMolecularFormula(value,
-                                            DefaultChemObjectBuilder
-                                            .getInstance());
-                            ionAnnotation.setFormula(formula);
-                            break;
+                    case NAME:
+                        ionAnnotation.setDescription(value);
+                        break;
+                    case FORMULA:
+                        // Create chemical structure
+                        IMolecularFormula formula = MolecularFormulaManipulator
+                                .getMolecularFormula(value,
+                                        DefaultChemObjectBuilder.getInstance());
+                        ionAnnotation.setFormula(formula);
+                        break;
                     }
 
                     // Add the data
@@ -295,15 +319,15 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
 
                 } else {
                     switch (currentClass.getSimpleName()) {
-                        case "Integer":
-                            objectData = Integer.parseInt(value);
-                            break;
-                        case "Double":
-                            objectData = Double.parseDouble(value);
-                            break;
-                        default:
-                            objectData = value;
-                            break;
+                    case "Integer":
+                        objectData = Integer.parseInt(value);
+                        break;
+                    case "Double":
+                        objectData = Double.parseDouble(value);
+                        break;
+                    default:
+                        objectData = value;
+                        break;
                     }
                     // Add the data
                     row.setData(currentColumn, objectData);
@@ -329,8 +353,7 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
 
     }
 
-    private @Nonnull
-    String findSeparator(String line) {
+    private @Nonnull String findSeparator(String line) {
         // Default is a comma ","
         String result = ",";
 
@@ -342,7 +365,8 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
         return result;
     }
 
-    private FeatureTableColumn<?> createNewColumn(io.github.msdk.io.chromatof.ChromaTofParser.ColumnName columnName,
+    private FeatureTableColumn<?> createNewColumn(
+            io.github.msdk.io.chromatof.ChromaTofParser.ColumnName columnName,
             Sample sample) {
 
         ColumnName newColumnName = null;
@@ -350,29 +374,30 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
         // If no match, then check common matches
         if (newColumnName == null) {
             switch (columnName) {
-                case RETENTION_TIME_SECONDS:
-                case FIRST_DIMENSION_TIME_SECONDS:
-                case SECOND_DIMENSION_TIME_SECONDS:
-                    newColumnName = ColumnName.RT;
-                    break;
-                case NAME:
-                case FORMULA:
-                    newColumnName = ColumnName.IONANNOTATION;
-                    break;
+            case RETENTION_TIME_SECONDS:
+            case FIRST_DIMENSION_TIME_SECONDS:
+            case SECOND_DIMENSION_TIME_SECONDS:
+                newColumnName = ColumnName.RT;
+                break;
+            case NAME:
+            case FORMULA:
+                newColumnName = ColumnName.IONANNOTATION;
+                break;
             }
         }
 
         // If no samples were found, then assume that all data in the file is
         // from one sample
-//        if (newColumnName != ColumnName.IONANNOTATION) {
+        // if (newColumnName != ColumnName.IONANNOTATION) {
         sample = fileSample;
-//        }
+        // }
 
         // If still no match, then create a new column with String.class
         FeatureTableColumn<?> column = null;
 
         if (newColumnName == null) {
-            column = MSDKObjectBuilder.getFeatureTableColumn(columnName.name(), String.class, sample);
+            column = MSDKObjectBuilder.getFeatureTableColumn(columnName.name(),
+                    String.class, sample);
         } else // Use special columns for Id, m/z, rt and ion annotation
         {
             if (sample == null) {
