@@ -1,30 +1,17 @@
-/*
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
- * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
+/* 
+ * (C) Copyright 2015-2016 by MSDK Development Team
  *
- * Project website: http://maltcms.sf.net
+ * This software is dual-licensed under either
  *
- * Maltcms may be used under the terms of either the
+ * (a) the terms of the GNU Lesser General Public License version 2.1
+ * as published by the Free Software Foundation
  *
- * GNU Lesser General Public License (LGPL)
- * http://www.gnu.org/licenses/lgpl.html
+ * or (per the licensee's choosing)
  *
- * or the
- *
- * Eclipse Public License (EPL)
- * http://www.eclipse.org/org/documents/epl-v10.php
- *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
- * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
- * LICENSE file in the relevant directories.
- *
- * Maltcms is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
- * for details.
+ * (b) the terms of the Eclipse Public License v1.0 as published by
+ * the Eclipse Foundation.
  */
+
 package io.github.msdk.io.chromatof;
 
 import java.io.BufferedReader;
@@ -46,14 +33,16 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <p>
- ChromaTofParser class.</p>
+ * ChromaTofParser class.
+ * </p>
  *
  * @author Nils Hoffmann
  *
  */
 public class ChromaTofParser {
-    
-    private static final Logger log = LoggerFactory.getLogger(ChromaTofParser.class);
+
+    private static final Logger log = LoggerFactory
+            .getLogger(ChromaTofParser.class);
 
     public static String FIELD_SEPARATOR_TAB = "\t";
     public static String FIELD_SEPARATOR_COMMA = ",";
@@ -67,12 +56,14 @@ public class ChromaTofParser {
     private final String quotationCharacter;
     private final Locale locale;
     private final ParserUtilities parserUtils = new ParserUtilities();
-    
-    public ChromaTofParser(@Nonnull String fieldSeparator, @Nonnull String quotationCharacter) {
+
+    public ChromaTofParser(@Nonnull String fieldSeparator,
+            @Nonnull String quotationCharacter) {
         this(fieldSeparator, quotationCharacter, Locale.getDefault());
     }
-    
-    public ChromaTofParser(@Nonnull String fieldSeparator, @Nonnull String quotationCharacter, @Nonnull Locale locale) {
+
+    public ChromaTofParser(@Nonnull String fieldSeparator,
+            @Nonnull String quotationCharacter, @Nonnull Locale locale) {
         this.fieldSeparator = fieldSeparator;
         this.quotationCharacter = quotationCharacter;
         this.locale = locale;
@@ -365,128 +356,133 @@ public class ChromaTofParser {
 
         public static ColumnName fromString(String name) {
             switch (name) {
-                case "Name":
-                case "NAME":
-                    return NAME;
-                case "R.T. (s)":
-                case "R.T._(S)":
-                    return RETENTION_TIME_SECONDS;
-                case "1st Dimension Time (s)":
-                case "1ST_DIMENSION_TIME_(S)":
-                    return FIRST_DIMENSION_TIME_SECONDS;
-                case "2nd Dimension Time (s)":
-                case "2ND_DIMENSION_TIME_(S)":
-                    return SECOND_DIMENSION_TIME_SECONDS;
-                case "Type":
-                case "TYPE":
-                    return TYPE;
-                case "UniqueMass":
-                case "UNIQUEMASS":
-                    return UNIQUE_MASS;
-                case "Concentration":
-                case "CONCENTRATION":
-                    return CONCENTRATION;
-                case "Sample Concentration":
-                case "SAMPLE_CONCENTRATION":
-                    return SAMPLE_CONCENTRATION;
-                case "Match":
-                case "MATCH":
-                    return MATCH;
-                case "Quant Masses":
-                case "QUANT_MASSES":
-                    return QUANT_MASSES;
-                case "Quant S/N":
-                case "QUANT_S/N":
-                    return QUANT_SN;
-                case "Quant Mass":
-                case "QUANT_MASS":
-                    return QUANT_MASS;
-                case "Area":
-                case "AREA":
-                    return AREA;
-                case "Formula":
-                case "FORMULA":
-                    return FORMULA;
-                case "Cas":
-                case "CAS":
-                    return CAS;
-                case "Similarity":
-                case "SIMILARITY":
-                    return SIMILARITY;
-                case "Reverse":
-                case "REVERSE":
-                    return REVERSE;
-                case "Probability":
-                case "PROBABILITY":
-                    return PROBABILITY;
-                case "Purity":
-                case "PURITY":
-                    return PURITY;
-                case "Concerns":
-                case "CONCERNS":
-                    return CONCERNS;
-                case "s/n":
-                case "S/N":
-                    return SIGNAL_TO_NOISE;
-                case "BaselineModified":
-                case "BASELINEMODIFIED":
-                    return BASELINE_MODIFIED;
-                case "Quantification":
-                case "QUANTIFICATION":
-                    return QUANTIFICATION;
-                case "Full Width at Half Height":
-                case "FULL_WIDTH_AT_HALF_HEIGHT":
-                    return FULL_WIDTH_AT_HALF_HEIGHT;
-                case "IntegrationBegin":
-                case "INTEGRATIONBEGIN":
-                    return INTEGRATION_BEGIN;
-                case "IntegrationEnd":
-                case "INTEGRATIONEND":
-                    return INTEGRATION_END;
-                case "Hit 1 Name":
-                case "HIT_1_NAME":
-                    return HIT_1_NAME;
-                case "Hit 1 Similarity":
-                case "HIT_1_SIMILARITY":
-                    return HIT_1_SIMILARITY;
-                case "Hit 1 Reverse":
-                case "HIT_1_REVERSE":
-                    return HIT_1_REVERSE;
-                case "Hit 1 Probability":
-                case "HIT_1_PROBABILITY":
-                    return HIT_1_PROBABILITY;
-                case "Hit 1 CAS":
-                case "HIT_1_CAS":
-                    return HIT_1_CAS;
-                case "Hit 1 Library":
-                case "HIT_1_LIBRARY":
-                    return HIT_1_LIBRARY;
-                case "Hit 1 Id":
-                case "HIT_1_ID":
-                    return HIT_1_ID;
-                case "Hit 1 Formula":
-                case "HIT_1_FORMULA":
-                    return HIT_1_FORMULA;
-                case "Hit 1 Weight":
-                case "HIT_1_WEIGHT":
-                    return HIT_1_WEIGHT;
-                case "Hit 1 Contributor":
-                case "HIT_1_CONTRIBUTOR":
-                    return HIT_1_CONTRIBUTOR;
-                case "Spectra":
-                case "SPECTRA":
-                    return SPECTRA;
-                default:
-                    log.debug("Unsupported column name '" + name + "'");
-                    return UNMAPPED;
-//                    throw new IllegalArgumentException("Unsupported column name '" + name + "'");
+            case "Name":
+            case "NAME":
+                return NAME;
+            case "R.T. (s)":
+            case "R.T._(S)":
+                return RETENTION_TIME_SECONDS;
+            case "1st Dimension Time (s)":
+            case "1ST_DIMENSION_TIME_(S)":
+                return FIRST_DIMENSION_TIME_SECONDS;
+            case "2nd Dimension Time (s)":
+            case "2ND_DIMENSION_TIME_(S)":
+                return SECOND_DIMENSION_TIME_SECONDS;
+            case "Type":
+            case "TYPE":
+                return TYPE;
+            case "UniqueMass":
+            case "UNIQUEMASS":
+                return UNIQUE_MASS;
+            case "Concentration":
+            case "CONCENTRATION":
+                return CONCENTRATION;
+            case "Sample Concentration":
+            case "SAMPLE_CONCENTRATION":
+                return SAMPLE_CONCENTRATION;
+            case "Match":
+            case "MATCH":
+                return MATCH;
+            case "Quant Masses":
+            case "QUANT_MASSES":
+                return QUANT_MASSES;
+            case "Quant S/N":
+            case "QUANT_S/N":
+                return QUANT_SN;
+            case "Quant Mass":
+            case "QUANT_MASS":
+                return QUANT_MASS;
+            case "Area":
+            case "AREA":
+                return AREA;
+            case "Formula":
+            case "FORMULA":
+                return FORMULA;
+            case "Cas":
+            case "CAS":
+                return CAS;
+            case "Similarity":
+            case "SIMILARITY":
+                return SIMILARITY;
+            case "Reverse":
+            case "REVERSE":
+                return REVERSE;
+            case "Probability":
+            case "PROBABILITY":
+                return PROBABILITY;
+            case "Purity":
+            case "PURITY":
+                return PURITY;
+            case "Concerns":
+            case "CONCERNS":
+                return CONCERNS;
+            case "s/n":
+            case "S/N":
+                return SIGNAL_TO_NOISE;
+            case "BaselineModified":
+            case "BASELINEMODIFIED":
+                return BASELINE_MODIFIED;
+            case "Quantification":
+            case "QUANTIFICATION":
+                return QUANTIFICATION;
+            case "Full Width at Half Height":
+            case "FULL_WIDTH_AT_HALF_HEIGHT":
+                return FULL_WIDTH_AT_HALF_HEIGHT;
+            case "IntegrationBegin":
+            case "INTEGRATIONBEGIN":
+                return INTEGRATION_BEGIN;
+            case "IntegrationEnd":
+            case "INTEGRATIONEND":
+                return INTEGRATION_END;
+            case "Hit 1 Name":
+            case "HIT_1_NAME":
+                return HIT_1_NAME;
+            case "Hit 1 Similarity":
+            case "HIT_1_SIMILARITY":
+                return HIT_1_SIMILARITY;
+            case "Hit 1 Reverse":
+            case "HIT_1_REVERSE":
+                return HIT_1_REVERSE;
+            case "Hit 1 Probability":
+            case "HIT_1_PROBABILITY":
+                return HIT_1_PROBABILITY;
+            case "Hit 1 CAS":
+            case "HIT_1_CAS":
+                return HIT_1_CAS;
+            case "Hit 1 Library":
+            case "HIT_1_LIBRARY":
+                return HIT_1_LIBRARY;
+            case "Hit 1 Id":
+            case "HIT_1_ID":
+                return HIT_1_ID;
+            case "Hit 1 Formula":
+            case "HIT_1_FORMULA":
+                return HIT_1_FORMULA;
+            case "Hit 1 Weight":
+            case "HIT_1_WEIGHT":
+                return HIT_1_WEIGHT;
+            case "Hit 1 Contributor":
+            case "HIT_1_CONTRIBUTOR":
+                return HIT_1_CONTRIBUTOR;
+            case "Spectra":
+            case "SPECTRA":
+                return SPECTRA;
+            default:
+                log.debug("Unsupported column name '" + name + "'");
+                return UNMAPPED;
+                // throw new
+                // IllegalArgumentException("Unsupported column name '" + name +
+                // "'");
             }
         }
     };
 
-    public static Pair<LinkedHashSet<ChromaTofParser.TableColumn>, List<TableRow>> parseReport(ChromaTofParser parser, File f, boolean normalizeColumnNames) {
-        LinkedHashSet<ChromaTofParser.TableColumn> header = parser.parseHeader(f, normalizeColumnNames);
-        List<TableRow> table = parser.parseBody(header, f, normalizeColumnNames);
+    public static Pair<LinkedHashSet<ChromaTofParser.TableColumn>, List<TableRow>> parseReport(
+            ChromaTofParser parser, File f, boolean normalizeColumnNames) {
+        LinkedHashSet<ChromaTofParser.TableColumn> header = parser.parseHeader(
+                f, normalizeColumnNames);
+        List<TableRow> table = parser
+                .parseBody(header, f, normalizeColumnNames);
         return new Pair<>(header, table);
     }
 
@@ -500,20 +496,27 @@ public class ChromaTofParser {
         ChromaTofParser parser = create(f, locale);
         return parseReport(parser, f, normalizeColumnNames);
     }
-    
-    public static ChromaTofParser create(File f, boolean normalizeColumnNames, Locale locale) throws IllegalArgumentException {
+
+    public static ChromaTofParser create(File f, boolean normalizeColumnNames,
+            Locale locale) throws IllegalArgumentException {
         ChromaTofParser parser;
         if (f.getName().toLowerCase().endsWith("csv")) {
-            parser = new ChromaTofParser(FIELD_SEPARATOR_COMMA, QUOTATION_CHARACTER_DOUBLETICK, locale);
-        } else if (f.getName().toLowerCase().endsWith("tsv") || f.getName().toLowerCase().endsWith("txt")) {
-            parser = new ChromaTofParser(FIELD_SEPARATOR_TAB, QUOTATION_CHARACTER_NONE, locale);
+            parser = new ChromaTofParser(FIELD_SEPARATOR_COMMA,
+                    QUOTATION_CHARACTER_DOUBLETICK, locale);
+        } else if (f.getName().toLowerCase().endsWith("tsv")
+                || f.getName().toLowerCase().endsWith("txt")) {
+            parser = new ChromaTofParser(FIELD_SEPARATOR_TAB,
+                    QUOTATION_CHARACTER_NONE, locale);
         } else {
-            throw new IllegalArgumentException("Unsupported file extension '" + f.getName().toLowerCase() + "'! Supported are '.csv', '.tsv', '.txt'.");
+            throw new IllegalArgumentException("Unsupported file extension '"
+                    + f.getName().toLowerCase()
+                    + "'! Supported are '.csv', '.tsv', '.txt'.");
         }
         return parser;
     }
 
-    public static ChromaTofParser create(File f, Locale locale) throws IllegalArgumentException {
+    public static ChromaTofParser create(File f, Locale locale)
+            throws IllegalArgumentException {
         return create(f, true, locale);
     }
 
@@ -527,7 +530,7 @@ public class ChromaTofParser {
             }
             return v;
         }
-        return new double[]{parseDouble(row.get(fieldName))};
+        return new double[] { parseDouble(row.get(fieldName)) };
     }
 
     public double parseDouble(TableColumn fieldName, TableRow tr) {
@@ -551,17 +554,19 @@ public class ChromaTofParser {
 
     public Mode getMode(List<TableRow> body) {
         for (TableRow tr : body) {
-            
-            if (tr.getColumnForName(ChromaTofParser.ColumnName.RETENTION_TIME_SECONDS)!=TableColumn.NIL) {
-                //fused RT mode
-                String rt = tr.getValueForName(ChromaTofParser.ColumnName.RETENTION_TIME_SECONDS);
-                if (rt.contains(",")) {//2D mode
+
+            if (tr.getColumnForName(ChromaTofParser.ColumnName.RETENTION_TIME_SECONDS) != TableColumn.NIL) {
+                // fused RT mode
+                String rt = tr
+                        .getValueForName(ChromaTofParser.ColumnName.RETENTION_TIME_SECONDS);
+                if (rt.contains(",")) {// 2D mode
                     return ChromaTofParser.Mode.RT_2D_FUSED;
                 } else {
                     return ChromaTofParser.Mode.RT_1D;
                 }
             } else {
-                if (tr.getColumnForName(ChromaTofParser.ColumnName.FIRST_DIMENSION_TIME_SECONDS)!=TableColumn.NIL && tr.getColumnForName(ChromaTofParser.ColumnName.SECOND_DIMENSION_TIME_SECONDS)!=TableColumn.NIL) {
+                if (tr.getColumnForName(ChromaTofParser.ColumnName.FIRST_DIMENSION_TIME_SECONDS) != TableColumn.NIL
+                        && tr.getColumnForName(ChromaTofParser.ColumnName.SECOND_DIMENSION_TIME_SECONDS) != TableColumn.NIL) {
                     return ChromaTofParser.Mode.RT_2D_SEPARATE;
                 }
             }
@@ -572,12 +577,15 @@ public class ChromaTofParser {
     /**
      * Parse the header of the given file.
      *
-     * @param f the file to parse.
-     * @param normalizeColumnNames if true, column names are capitalized and
-     * spaces are replaced by '_'.
+     * @param f
+     *            the file to parse.
+     * @param normalizeColumnNames
+     *            if true, column names are capitalized and spaces are replaced
+     *            by '_'.
      * @return the set of unique column names in order of appearance.
      */
-    public LinkedHashSet<ChromaTofParser.TableColumn> parseHeader(File f, boolean normalizeColumnNames) {
+    public LinkedHashSet<ChromaTofParser.TableColumn> parseHeader(File f,
+            boolean normalizeColumnNames) {
         LinkedHashSet<ChromaTofParser.TableColumn> globalHeader = new LinkedHashSet<>();
         ArrayList<String> header = null;
         BufferedReader br = null;
@@ -586,16 +594,16 @@ public class ChromaTofParser {
             String line = "";
             while ((line = br.readLine()) != null) {
                 if (!line.isEmpty()) {
-                    String[] lineArray = splitLine(line, fieldSeparator, quotationCharacter);
+                    String[] lineArray = splitLine(line, fieldSeparator,
+                            quotationCharacter);
                     if (header == null) {
                         if (normalizeColumnNames) {
                             for (int i = 0; i < lineArray.length; i++) {
-                                lineArray[i] = lineArray[i].trim().toUpperCase().
-                                        replaceAll(" ", "_");
+                                lineArray[i] = lineArray[i].trim()
+                                        .toUpperCase().replaceAll(" ", "_");
                             }
                         }
-                        header = new ArrayList<>(Arrays.asList(
-                                lineArray));
+                        header = new ArrayList<>(Arrays.asList(lineArray));
                         break;
                     }
                 }
@@ -608,7 +616,9 @@ public class ChromaTofParser {
                     br.close();
                 }
             } catch (IOException ex) {
-                log.warn("Caught an IO Exception while trying to close stream of file " + f, ex);
+                log.warn(
+                        "Caught an IO Exception while trying to close stream of file "
+                                + f, ex);
             }
         }
         int index = 0;
@@ -627,41 +637,51 @@ public class ChromaTofParser {
     /**
      * Parse the header of the given file.
      *
-     * @param f the file to parse.
-     * @param normalizeColumnNames if true, column names are capitalized and spaces are replaced by '_'.
+     * @param f
+     *            the file to parse.
+     * @param normalizeColumnNames
+     *            if true, column names are capitalized and spaces are replaced
+     *            by '_'.
      * @return the set of unique column names in order of appearance.
-     * @deprecated use {@link #parseHeader(java.io.File, boolean, java.lang.String, java.lang.String)
+     * @deprecated use
+     *             {@link #parseHeader(java.io.File, boolean, java.lang.String, java.lang.String)
      * }
      */
-    public LinkedHashSet<ChromaTofParser.TableColumn> getHeader(File f, boolean normalizeColumnNames) {
+    public LinkedHashSet<ChromaTofParser.TableColumn> getHeader(File f,
+            boolean normalizeColumnNames) {
         return parseHeader(f, normalizeColumnNames);
     }
 
-    public String[] splitLine(String line, String fieldSeparator, String quoteSymbol) {
+    public String[] splitLine(String line, String fieldSeparator,
+            String quoteSymbol) {
         switch (fieldSeparator) {
-            case ",":
-                Pattern p = Pattern.compile("((\")([^\"]*)(\"))");
-                Matcher m = p.matcher(line);
-                List<String> results = new LinkedList<>();
-                int match = 1;
-                while (m.find()) {
-                    results.add(m.group(3).trim());
-                }
-                Pattern endPattern = Pattern.compile(",([\"]{0,1}([^\"]*)[^\"]{0,1}$)");
-                Matcher m2 = endPattern.matcher(line);
-                while (m2.find()) {
-                    results.add(m2.group(1).trim());
-                }
-                return results.toArray(new String[results.size()]);
-            case "\t":
-                return line.replaceAll("\"", "").split("\t");
-            default:
-                throw new IllegalArgumentException("Field separator " + fieldSeparator + " is not supported, only ',' and '\t' are valid!");
+        case ",":
+            Pattern p = Pattern.compile("((\")([^\"]*)(\"))");
+            Matcher m = p.matcher(line);
+            List<String> results = new LinkedList<>();
+            int match = 1;
+            while (m.find()) {
+                results.add(m.group(3).trim());
+            }
+            Pattern endPattern = Pattern
+                    .compile(",([\"]{0,1}([^\"]*)[^\"]{0,1}$)");
+            Matcher m2 = endPattern.matcher(line);
+            while (m2.find()) {
+                results.add(m2.group(1).trim());
+            }
+            return results.toArray(new String[results.size()]);
+        case "\t":
+            return line.replaceAll("\"", "").split("\t");
+        default:
+            throw new IllegalArgumentException("Field separator "
+                    + fieldSeparator
+                    + " is not supported, only ',' and '\t' are valid!");
         }
     }
 
-    public List<TableRow> parseBody(LinkedHashSet<ChromaTofParser.TableColumn> globalHeader,
-            File f, boolean normalizeColumnNames) {
+    public List<TableRow> parseBody(
+            LinkedHashSet<ChromaTofParser.TableColumn> globalHeader, File f,
+            boolean normalizeColumnNames) {
         List<TableRow> body = new ArrayList<>();
         BufferedReader br = null;
         try {
@@ -670,12 +690,14 @@ public class ChromaTofParser {
             List<ChromaTofParser.TableColumn> header = null;
             while ((line = br.readLine()) != null) {
                 if (!line.isEmpty()) {
-                    ArrayList<String> lineList = new ArrayList<>(Arrays.asList(splitLine(line, fieldSeparator, quotationCharacter)));//.split(String.valueOf(FIELD_SEPARATOR))));
+                    ArrayList<String> lineList = new ArrayList<>(
+                            Arrays.asList(splitLine(line, fieldSeparator,
+                                    quotationCharacter)));// .split(String.valueOf(FIELD_SEPARATOR))));
                     if (header == null) {
                         if (normalizeColumnNames) {
                             for (int i = 0; i < lineList.size(); i++) {
-                                lineList.set(i, lineList.get(i).trim().toUpperCase().
-                                        replaceAll(" ", "_"));
+                                lineList.set(i, lineList.get(i).trim()
+                                        .toUpperCase().replaceAll(" ", "_"));
                             }
                         }
                         header = new ArrayList<>();
@@ -691,10 +713,14 @@ public class ChromaTofParser {
 
                             int localIndex = getIndexOfHeaderColumn(header,
                                     headerColumn);
-                            if (localIndex >= 0 && localIndex < lineList.size()) {//found column name
+                            if (localIndex >= 0 && localIndex < lineList.size()) {// found
+                                                                                  // column
+                                                                                  // name
                                 tr.put(headerColumn, lineList.get(localIndex));
-                            } else {//did not find column name
-                                log.debug("Could not find index of column '{}'", headerColumn.getColumnName());
+                            } else {// did not find column name
+                                log.debug(
+                                        "Could not find index of column '{}'",
+                                        headerColumn.getColumnName());
                                 tr.put(headerColumn, null);
                             }
                         }
@@ -710,7 +736,9 @@ public class ChromaTofParser {
                     br.close();
                 }
             } catch (IOException ex) {
-                log.warn("Caught an IO Exception while trying to close stream of file " + f, ex);
+                log.warn(
+                        "Caught an IO Exception while trying to close stream of file "
+                                + f, ex);
             }
         }
         return body;
@@ -720,7 +748,8 @@ public class ChromaTofParser {
             ChromaTofParser.TableColumn column) {
         if (column != TableColumn.NIL) {
             for (ChromaTofParser.TableColumn str : header) {
-                if (str.getColumnName() == column.getColumnName() && (str.getName().equals(column.getName()))) {
+                if (str.getColumnName() == column.getColumnName()
+                        && (str.getName().equals(column.getName()))) {
                     return str.getIndex();
                 }
             }
