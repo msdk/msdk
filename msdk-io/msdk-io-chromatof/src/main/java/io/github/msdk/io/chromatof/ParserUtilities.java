@@ -73,6 +73,30 @@ public class ParserUtilities {
             }
         }
     }
+    
+    /**
+     * Parse a numeric string using the specified locale. When a ParseException
+     * is caught, the method returns Float.NaN.
+     *
+     * @param s the string to parse.
+     * @param locale the locale to use for numeric conversion.
+     * @return the float value. May be NaN if s is null, empty, or unparseable
+     */
+    public static float parseFloat(String s, Locale locale) {
+        if (s == null || s.isEmpty()) {
+            return Float.NaN;
+        }
+        try {
+            return NumberFormat.getNumberInstance(locale).parse(s).floatValue();
+        } catch (ParseException ex) {
+            try {
+                return NumberFormat.getNumberInstance(Locale.US).parse(s).
+                        floatValue();
+            } catch (ParseException ex1) {
+                return Float.NaN;
+            }
+        }
+    }
 
     public static HashMap<String, String> getFilenameToGroupMap(File f, String fieldSeparator) {
         List<String> header = null;
