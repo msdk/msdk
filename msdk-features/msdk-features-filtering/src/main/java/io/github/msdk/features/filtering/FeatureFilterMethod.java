@@ -155,122 +155,8 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
         // Loop through all features
         for (FeatureTableRow row : featureTable.getRows()) {
 
-            // Values for keeping track of features for a sample
-            boolean[] keepFeature = new boolean[featureTable.getSamples()
-                    .size()];
-            int i = 0;
-
-            // Loop through all samples for the feature
-            for (Sample sample : featureTable.getSamples()) {
-
-                FeatureTableColumn<Object> column;
-                keepFeature[i] = true;
-
-                // Check Duration
-                if (filterByDuration && durationRange != null) {
-                    column = featureTable.getColumn(ColumnName.DURATION,
-                            sample);
-                    if (column != null) {
-                        if (row.getData(column) != null) {
-                            final Double peakDuration = (Double) row.getData(column);
-                            if (!durationRange.contains(peakDuration))
-                                keepFeature[i] = false;
-                        }
-                    }
-                }
-
-                // Check Area
-                if (filterByArea && areaRange != null) {
-                    column = featureTable.getColumn(ColumnName.AREA, sample);
-                    if (column != null) {
-                        if (row.getData(column) != null) {
-                            final Double peakArea = (Double) row
-                                    .getData(column);
-                            if (!areaRange.contains(peakArea))
-                                keepFeature[i] = false;
-                        }
-                    }
-                }
-
-                // Check Height
-                if (filterByHeight && heightRange != null) {
-                    column = featureTable.getColumn(ColumnName.HEIGHT, sample);
-                    if (column != null) {
-                        if (row.getData(column) != null) {
-                            final Double peakHeight = (Double) row
-                                    .getData(column);
-                            if (!heightRange.contains(peakHeight))
-                                keepFeature[i] = false;
-                        }
-                    }
-                }
-
-                // Check # Data Points
-                if (filterByDataPoints && dataPointsRange != null) {
-                    column = featureTable
-                            .getColumn(ColumnName.NUMBEROFDATAPOINTS, sample);
-                    if (column != null) {
-                        if (row.getData(column) != null) {
-                            final Integer peakDataPoints = (Integer) row
-                                    .getData(column);
-                            if (!dataPointsRange.contains(peakDataPoints))
-                                keepFeature[i] = false;
-                        }
-                    }
-                }
-
-                // Check FWHM
-                if (filterByFWHM && fwhmRange != null) {
-                    column = featureTable.getColumn(ColumnName.FWHM, sample);
-                    if (column != null) {
-                        if (row.getData(column) != null) {
-                            final Double peakFWHM = (Double) row
-                                    .getData(column);
-                            if (!fwhmRange.contains(peakFWHM))
-                                keepFeature[i] = false;
-                        }
-                    }
-                }
-
-                // Check Tailing Factor
-                if (filterByTailingFactor && tailingFactorRange != null) {
-                    column = featureTable.getColumn(ColumnName.TAILINGFACTOR,
-                            sample);
-                    if (column != null) {
-                        if (row.getData(column) != null) {
-                            final Double peakTF = (Double) row.getData(column);
-                            if (!tailingFactorRange.contains(peakTF))
-                                keepFeature[i] = false;
-                        }
-                    }
-                }
-
-                // Check Asymmetry Factor
-                if (filterByAsymmetryFactor && asymmetryFactorRange != null) {
-                    column = featureTable.getColumn(ColumnName.ASYMMETRYFACTOR,
-                            sample);
-                    if (column != null) {
-                        if (row.getData(column) != null) {
-                            final Double peakAF = (Double) row.getData(column);
-                            if (!asymmetryFactorRange.contains(peakAF))
-                                keepFeature[i] = false;
-                        }
-                    }
-                }
-
-                // If no value is found in the m/z column for the sample then
-                // the feature is not present for this sample
-                column = featureTable.getColumn(ColumnName.MZ, sample);
-                if (row.getData(column) == null) {
-                    keepFeature[i] = false;
-                }
-
-                i++;
-                processedFeatures++;
-
-                if (canceled)
-                    return null;
-            }
+            // Find samples which should keep the feature
+            boolean[] keepFeature = checkFeature(row);
 
             // Add the feature row to the table if it is not null
             FeatureTableRow newRow = copyRow(row, keepFeature, result);
@@ -283,6 +169,106 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 
         // Return the new feature table
         return result;
+    }
+
+    /**
+     * Helper function to check which samples should keep the feature.
+     */
+    private boolean[] checkFeature(FeatureTableRow row) {
+
+        // Values for keeping track of features for a sample
+        boolean[] keepFeature = new boolean[featureTable.getSamples().size()];
+        int i = 0;
+
+        // Loop through all samples for the feature
+        for (Sample sample : featureTable.getSamples()) {
+
+            FeatureTableColumn<Object> column;
+            keepFeature[i] = true;
+
+            // Check Duration
+            if (filterByDuration && durationRange != null
+                    && keepFeature[i] != false)
+                keepFeature[i] = checkDoubleValue(durationRange,
+                        ColumnName.DURATION, sample, row);
+
+            // Check Area
+            if (filterByArea && areaRange != null && keepFeature[i] != false)
+                keepFeature[i] = checkDoubleValue(areaRange, ColumnName.AREA,
+                        sample, row);
+
+            // Check Height
+            if (filterByHeight && heightRange != null
+                    && keepFeature[i] != false)
+                keepFeature[i] = checkDoubleValue(heightRange,
+                        ColumnName.HEIGHT, sample, row);
+
+            // Check FWHM
+            if (filterByFWHM && fwhmRange != null && keepFeature[i] != false)
+                keepFeature[i] = checkDoubleValue(fwhmRange, ColumnName.FWHM,
+                        sample, row);
+
+            // Check Tailing Factor
+            if (filterByTailingFactor && tailingFactorRange != null
+                    && keepFeature[i] != false)
+                keepFeature[i] = checkDoubleValue(tailingFactorRange,
+                        ColumnName.TAILINGFACTOR, sample, row);
+
+            // Check Asymmetry Factor
+            if (filterByAsymmetryFactor && asymmetryFactorRange != null
+                    && keepFeature[i] != false)
+                keepFeature[i] = checkDoubleValue(asymmetryFactorRange,
+                        ColumnName.ASYMMETRYFACTOR, sample, row);
+
+            // Check # Data Points
+            if (filterByDataPoints && dataPointsRange != null) {
+                column = featureTable.getColumn(ColumnName.NUMBEROFDATAPOINTS,
+                        sample);
+                if (column != null) {
+                    if (row.getData(column) != null) {
+                        final Integer peakDataPoints = (Integer) row
+                                .getData(column);
+                        if (!dataPointsRange.contains(peakDataPoints))
+                            keepFeature[i] = false;
+                    }
+                }
+            }
+
+            // If no value is found in the m/z column for the sample then
+            // the feature is not present for this sample
+            column = featureTable.getColumn(ColumnName.MZ, sample);
+            if (row.getData(column) == null) {
+                keepFeature[i] = false;
+            }
+
+            i++;
+            processedFeatures++;
+
+            if (canceled)
+                return null;
+        }
+
+        return keepFeature;
+    }
+
+    /**
+     * Helper function to check if a specific double value from a sample is
+     * within a given range.
+     */
+    private boolean checkDoubleValue(Range<Double> range, ColumnName columnName,
+            Sample sample, FeatureTableRow row) {
+
+        FeatureTableColumn<Double> column = featureTable.getColumn(columnName,
+                sample);
+        if (column != null) {
+            if (row.getData(column) != null) {
+                final Double value = (Double) row.getData(column);
+                if (!range.contains(value))
+                    return false;
+            }
+        }
+
+        return true;
     }
 
     /**
