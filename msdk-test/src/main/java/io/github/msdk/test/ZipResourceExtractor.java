@@ -11,7 +11,6 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-
 package io.github.msdk.test;
 
 import java.io.BufferedInputStream;
@@ -21,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
@@ -49,13 +49,22 @@ public class ZipResourceExtractor {
      * @param destDir
      *            a {@link java.io.File} object.
      * @return a {@link java.io.File} object.
+     * @throws java.net.MalformedURLException
+     *             if the given resource path is malformed.
      */
-    public static File extract(String resourcePath, File destDir) {
+    public static File extract(String resourcePath, File destDir)
+            throws MalformedURLException {
         log.info("Extracting " + resourcePath + " to directory: " + destDir);
         if (!destDir.exists()) {
             destDir.mkdirs();
         }
-        URL resourceURL = ZipResourceExtractor.class.getResource(resourcePath);
+        URL resourceURL;
+        File f = new File(resourcePath);
+        if (f.isFile()) {
+            resourceURL = f.toURI().toURL();
+        } else {
+            resourceURL = ZipResourceExtractor.class.getResource(resourcePath);
+        }
         if (resourceURL == null) {
             throw new NullPointerException(
                     "Could not retrieve resource for path: " + resourcePath);

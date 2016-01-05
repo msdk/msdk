@@ -25,14 +25,6 @@ import java.util.LinkedHashMap;
 public class TableRow extends
         LinkedHashMap<ChromaTofParser.TableColumn, String> {
 
-    private ChromaTofParser.ColumnName getColumnName(
-            ChromaTofParser.TableColumn tableColumn) {
-        if (containsKey(tableColumn)) {
-            return tableColumn.getColumnName();
-        }
-        return ChromaTofParser.ColumnName.NIL;
-    }
-
     public String getValueForName(ChromaTofParser.ColumnName columnName) {
         return get(getColumnForName(columnName));
     }
