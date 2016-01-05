@@ -25,13 +25,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TreeMap;
-import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Generic utility methods for csv parsing and numeric conversion.
- *
  */
 public class ParserUtilities {
 
@@ -103,9 +101,6 @@ public class ParserUtilities {
                     String[] lineArray = line.split(String
                             .valueOf(fieldSeparator));
                     if (lineCount > 0) {
-                        // System.out.println(
-                        // "Adding file to group mapping: " + lineArray[0] + " "
-                        // + lineArray[1]);
                         filenameToGroupMap.put(lineArray[0], lineArray[1]);
                     }
                     lineCount++;
@@ -132,21 +127,21 @@ public class ParserUtilities {
             return new Pair<>(new double[0], new int[0]);
         }
         String[] mziTuples = massSpectrum.split(" ");
-        TreeMap<Float, Integer> tm = new TreeMap<>();
+        TreeMap<Double, Integer> tm = new TreeMap<>();
         for (String tuple : mziTuples) {
             if (tuple.contains(":")) {
                 String[] tplArray = tuple.split(":");
-                tm.put(Float.valueOf(tplArray[0]), Integer.valueOf(tplArray[1]));
+                tm.put(Double.valueOf(tplArray[0]), Integer.valueOf(tplArray[1]));
             } else {
                 log.warn(
-                        "Warning: encountered strange tuple: {} within ms: {}",
+                        "Warning: encountered malformed tuple: {} within ms: {}",
                         new Object[] { tuple, massSpectrum });
             }
         }
         double[] masses = new double[tm.keySet().size()];
         int[] intensities = new int[tm.keySet().size()];
         int i = 0;
-        for (Float key : tm.keySet()) {
+        for (Double key : tm.keySet()) {
             masses[i] = key;
             intensities[i] = tm.get(key);
             i++;

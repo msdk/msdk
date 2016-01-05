@@ -15,21 +15,28 @@
 package io.github.msdk.datamodel.featuretables;
 
 /**
+ * <p>
  * Convert data from a source feature table row and column to a target row and
  * column.
+ * </p>
  * 
- * @author nilshoffmann
  * @param <DATATYPE>
- * 
+ *            the generic type of the element values.
  */
 public interface FeatureTableDataConverter<DATATYPE> {
 
     /**
+     * Apply the conversion from the given source row and column to the given
+     * target row and column.
      * 
      * @param sourceRow
+     *            the source data's row.
      * @param sourceColumn
+     *            the source data's column.
      * @param targetRow
+     *            the target data's row.
      * @param targetColumn
+     *            the target data's column.
      */
     void apply(FeatureTableRow sourceRow,
             FeatureTableColumn<? extends DATATYPE> sourceColumn,
