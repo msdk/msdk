@@ -20,6 +20,7 @@
 		<module>msdk-features</module>
 		<module>msdk-spectra</module>
 		<module>msdk-db</module>
+		<module>msdk-test</module>
 	</modules>
 
 	<properties>

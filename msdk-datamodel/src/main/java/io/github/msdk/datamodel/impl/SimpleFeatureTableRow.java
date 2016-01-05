@@ -11,7 +11,6 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-
 package io.github.msdk.datamodel.impl;
 
 import javax.annotation.Nonnull;
@@ -20,6 +19,7 @@ import com.google.common.base.Preconditions;
 
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
+import io.github.msdk.datamodel.featuretables.FeatureTableDataConverter;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import java.util.HashMap;
@@ -43,46 +43,71 @@ class SimpleFeatureTableRow implements FeatureTableRow {
         rowData = new HashMap<>();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public @Nonnull FeatureTable getFeatureTable() {
         return featureTable;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public @Nonnull Integer getId() {
         return rowId;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Double getMz() {
         return getData(MSDKObjectBuilder.getMzFeatureTableColumn());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ChromatographyInfo getChromatographyInfo() {
-        return getData(
-                MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn());
+        return getData(MSDKObjectBuilder
+                .getChromatographyInfoFeatureTableColumn());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <DataType> void setData(FeatureTableColumn<DataType> column,
-            @Nonnull DataType data) {
+    public <DATATYPE> void setData(FeatureTableColumn<? extends DATATYPE> column,
+            @Nonnull DATATYPE data) {
         Preconditions.checkNotNull(column);
         Preconditions.checkNotNull(data);
         rowData.put(column, data);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <DataType> DataType getData(
-            @Nonnull FeatureTableColumn<DataType> column) {
+    public <DATATYPE> DATATYPE getData(
+            @Nonnull FeatureTableColumn<? extends DATATYPE> column) {
         Preconditions.checkNotNull(column);
         return column.getDataTypeClass().cast(rowData.get(column));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <DATATYPE> void copyData(
+            FeatureTableColumn<? extends DATATYPE> sourceColumn,
+            FeatureTableRow targetRow,
+            FeatureTableColumn<? extends DATATYPE> targetColumn,
+            FeatureTableDataConverter<DATATYPE> featureTableDataConverter) {
+        featureTableDataConverter.apply(this, sourceColumn, targetRow,
+                targetColumn);
     }
 
 }
