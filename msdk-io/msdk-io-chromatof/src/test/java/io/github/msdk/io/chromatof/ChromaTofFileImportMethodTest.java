@@ -11,7 +11,6 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-
 package io.github.msdk.io.chromatof;
 
 import io.github.msdk.MSDKException;
@@ -26,7 +25,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- *
+ * Test for the {@link ChromaTofFileImportMethod}.
  */
 public class ChromaTofFileImportMethodTest {
 

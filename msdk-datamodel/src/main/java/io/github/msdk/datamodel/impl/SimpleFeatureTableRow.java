@@ -43,53 +43,42 @@ class SimpleFeatureTableRow implements FeatureTableRow {
         rowData = new HashMap<>();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public @Nonnull FeatureTable getFeatureTable() {
         return featureTable;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public @Nonnull Integer getId() {
         return rowId;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Double getMz() {
         return getData(MSDKObjectBuilder.getMzFeatureTableColumn());
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public ChromatographyInfo getChromatographyInfo() {
         return getData(MSDKObjectBuilder
                 .getChromatographyInfoFeatureTableColumn());
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
-    public <DATATYPE> void setData(FeatureTableColumn<? extends DATATYPE> column,
+    public <DATATYPE> void setData(
+            FeatureTableColumn<? extends DATATYPE> column,
             @Nonnull DATATYPE data) {
         Preconditions.checkNotNull(column);
         Preconditions.checkNotNull(data);
         rowData.put(column, data);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public <DATATYPE> DATATYPE getData(
             @Nonnull FeatureTableColumn<? extends DATATYPE> column) {
@@ -97,9 +86,7 @@ class SimpleFeatureTableRow implements FeatureTableRow {
         return column.getDataTypeClass().cast(rowData.get(column));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public <DATATYPE> void copyData(
             FeatureTableColumn<? extends DATATYPE> sourceColumn,
