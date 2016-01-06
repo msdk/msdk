@@ -1,12 +1,13 @@
-MSDK may be used under the terms of either the
-
- * GNU Lesser General Public License (LGPL) 2.1
-   http://www.gnu.org/licenses/lgpl-2.1.html
-
-or the
-
- * Eclipse Public License (EPL) 1.0
-   http://www.eclipse.org/org/documents/epl-v10.php
-
-As a recipient of MSDK, you may choose
-which license to receive the code under.
+/* 
+ * (C) Copyright 2015-2016 by MSDK Development Team
+ *
+ * This software is dual-licensed under either
+ *
+ * (a) the terms of the GNU Lesser General Public License version 2.1
+ * as published by the Free Software Foundation
+ *
+ * or (per the licensee's choosing)
+ *
+ * (b) the terms of the Eclipse Public License v1.0 as published by
+ * the Eclipse Foundation.
+ */
