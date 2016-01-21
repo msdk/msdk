@@ -21,10 +21,12 @@ import java.nio.ByteOrder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
+import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -141,10 +143,29 @@ class RawDumpParser {
             String tokens[] = line.split(" ");
             double token2 = Double.parseDouble(tokens[1]);
             int token3 = Integer.parseInt(tokens[2]);
-            if (token2 > 0) {
-                precursorMz = token2;
-                precursorCharge = token3;
+
+            precursorMz = token2;
+            precursorCharge = token3;
+
+            // For Thermo RAW files, the MSFileReader library sometimes
+            // returns 0.0 for precursor m/z. In such case, we can parse
+            // the precursor m/z from the scan filter line (scanId).
+            if ((precursorMz == 0.0)
+                    && (newRawFile.getRawDataFileType() == FileType.THERMO_RAW)
+                    && (!Strings.isNullOrEmpty(scanId))) {
+                Pattern precursorPattern = Pattern.compile(".* (\\d+\\.\\d+)@");
+                Matcher m = precursorPattern.matcher(scanId);
+                if (m.find()) {
+                    String precursorMzString = m.group(1);
+                    try {
+                        precursorMz = Double.parseDouble(precursorMzString);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // ignore
+                    }
+                }
             }
+
         }
 
         if (line.startsWith("MASS VALUES: ")) {
