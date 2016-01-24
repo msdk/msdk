@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.github.msdk</groupId>
 		<artifactId>msdk-rawdata</artifactId>
-		<version>0.0.4</version>
+		<version>0.0.5-SNAPSHOT</version>
 	</parent>
 	<artifactId>msdk-rawdata-xic</artifactId>
 	<description>MSDK module to generate TIC/XIC chromatograms from raw data</description>

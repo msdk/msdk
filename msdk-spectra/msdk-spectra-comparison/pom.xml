@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.github.msdk</groupId>
 		<artifactId>msdk-spectra</artifactId>
-		<version>0.0.4</version>
+		<version>0.0.5-SNAPSHOT</version>
 	</parent>
 	<artifactId>msdk-spectra-comparison</artifactId>
 	<description>MSDK module for spectral comparison algorithms</description>

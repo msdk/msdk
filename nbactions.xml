@@ -30,4 +30,30 @@
                 <activatedProfile>msdk-release</activatedProfile>
             </activatedProfiles>
         </action>
+        <action>
+            <actionName>CUSTOM-MSDK Release Perform</actionName>
+            <displayName>MSDK Release Perform</displayName>
+            <goals>
+                <goal>package</goal>
+                <goal>deploy</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>msdk-release</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-MSDK Release Publish Javadoc</actionName>
+            <displayName>MSDK Release Publish Javadoc</displayName>
+            <goals>
+                <goal>package</goal>
+                <goal>javadoc:aggregate</goal>
+                <goal>scm-publish:publish-scm</goal>
+            </goals>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>msdk-release</activatedProfile>
+            </activatedProfiles>
+        </action>
     </actions>
