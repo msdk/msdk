@@ -20,15 +20,26 @@ import java.util.LinkedHashMap;
  * <p>
  * TableRow class.
  * </p>
- *
  */
 public class TableRow extends
         LinkedHashMap<ChromaTofParser.TableColumn, String> {
 
+    /**
+     * <p>getValueForName.</p>
+     *
+     * @param columnName a {@link io.github.msdk.io.chromatof.ChromaTofParser.ColumnName} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String getValueForName(ChromaTofParser.ColumnName columnName) {
         return get(getColumnForName(columnName));
     }
 
+    /**
+     * <p>getColumnForName.</p>
+     *
+     * @param columnName a {@link io.github.msdk.io.chromatof.ChromaTofParser.ColumnName} object.
+     * @return a {@link io.github.msdk.io.chromatof.ChromaTofParser.TableColumn} object.
+     */
     public ChromaTofParser.TableColumn getColumnForName(
             ChromaTofParser.ColumnName columnName) {
         if (columnName != ChromaTofParser.ColumnName.UNMAPPED) {

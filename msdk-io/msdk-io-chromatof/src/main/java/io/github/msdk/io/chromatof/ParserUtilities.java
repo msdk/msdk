@@ -89,6 +89,13 @@ public class ParserUtilities {
         }
     }
 
+    /**
+     * <p>getFilenameToGroupMap.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @param fieldSeparator a {@link java.lang.String} object.
+     * @return a {@link java.util.HashMap} object.
+     */
     public static HashMap<String, String> getFilenameToGroupMap(File f,
             String fieldSeparator) {
         List<String> header = null;

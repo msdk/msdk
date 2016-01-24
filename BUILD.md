@@ -47,12 +47,14 @@ mvn versions:set -DnewVersion=X.Y.Z versions:commit
 mvn -DfixTags=param,return,throws -Dforce javadoc:fix
 
 # Build the whole project
-mvn package
+mvn -Pmsdk-release package
 
-# Deploy
-mvn deploy
-```
+# Deploy after successful build
+mvn -Pmsdk-release deploy
 
 # To generate complete JavaDoc documentation and upload it to http://msdk.github.io/api/
-mvn -DskipTests package javadoc:aggregate scm-publish:publish-scm
+mvn -Pmsdk-release -DskipTests package javadoc:aggregate scm-publish:publish-scm
 
+# After a succesful release, set the versions to the next development version
+mvn versions:set -DnewVersion=X.Y.Z-SNAPSHOT versions:commit
+```

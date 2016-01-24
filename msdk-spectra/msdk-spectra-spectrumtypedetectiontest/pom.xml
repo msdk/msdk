@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.github.msdk</groupId>
 		<artifactId>msdk-spectra</artifactId>
-		<version>0.0.4-SNAPSHOT</version>
+		<version>0.0.5-SNAPSHOT</version>
 	</parent>
 	<artifactId>msdk-spectra-spectrumtypedetectiontest</artifactId>
 	<description>These tests are in a separate package because they depend on both msdk-spectra-spectrumtypedetection and msdk-io-mzml modules. If we add the tests to the msdk-spectra-spectrumtypedetection module, it would create a dependency cycle.</description>

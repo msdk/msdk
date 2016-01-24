@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
  * <p>
  * ZipResourceExtractor class.
  * </p>
- *
  */
 public class ZipResourceExtractor {
 

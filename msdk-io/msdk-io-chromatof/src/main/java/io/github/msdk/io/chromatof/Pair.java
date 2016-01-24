@@ -16,7 +16,7 @@ package io.github.msdk.io.chromatof;
 
 /**
  * A pair of two generic objects.
- * 
+ *
  * @param <F>
  *            the type of the first element in the pair.
  * @param <S>
@@ -25,18 +25,35 @@ package io.github.msdk.io.chromatof;
 public class Pair<F, S> extends
         java.util.AbstractMap.SimpleImmutableEntry<F, S> {
 
+    /**
+     * <p>Constructor for Pair.</p>
+     *
+     * @param f a F object.
+     * @param s a S object.
+     */
     public Pair(F f, S s) {
         super(f, s);
     }
 
+    /**
+     * <p>getFirst.</p>
+     *
+     * @return a F object.
+     */
     public F getFirst() {
         return getKey();
     }
 
+    /**
+     * <p>getSecond.</p>
+     *
+     * @return a S object.
+     */
     public S getSecond() {
         return getValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "[" + getKey() + "," + getValue() + "]";

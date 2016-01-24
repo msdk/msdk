@@ -1,244 +1,284 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>io.github.msdk</groupId>
-	<artifactId>msdk</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
-	<packaging>pom</packaging>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>io.github.msdk</groupId>
+    <artifactId>msdk</artifactId>
+    <version>0.0.5-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-	<name>MSDK - Mass Spectrometry Development Kit</name>
-	<description>A java library for the development of mass spectrometry-related algorithms.</description>
-	<url>https://msdk.github.io</url>
+    <name>MSDK - Mass Spectrometry Development Kit</name>
+    <description>A java library for the development of mass spectrometry-related algorithms.</description>
+    <url>https://msdk.github.io</url>
+    <modules>
+        <module>msdk-all</module>
+        <module>msdk-datamodel</module>
+        <module>msdk-io</module>
+        <module>msdk-rawdata</module>
+        <module>msdk-featdet</module>
+        <module>msdk-id</module>
+        <module>msdk-features</module>
+        <module>msdk-spectra</module>
+        <module>msdk-db</module>
+        <module>msdk-test</module>
+    </modules>
 
-	<modules>
-		<module>msdk-all</module>
-		<module>msdk-datamodel</module>
-		<module>msdk-io</module>
-		<module>msdk-rawdata</module>
-		<module>msdk-featdet</module>
-		<module>msdk-id</module>
-		<module>msdk-features</module>
-		<module>msdk-spectra</module>
-		<module>msdk-db</module>
-		<module>msdk-test</module>
-	</modules>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <cdk.version>1.5.12</cdk.version>
+        <junit.version>4.12</junit.version>
+        <guava.version>18.0</guava.version>
+        <slf4j.version>1.7.12</slf4j.version>
+        <java.version>1.7</java.version>
+        <jacoco.version>0.7.5.201505241946</jacoco.version>
+        <findbugs.version>3.0.0</findbugs.version>
+    </properties>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<cdk.version>1.5.12</cdk.version>
-		<junit.version>4.12</junit.version>
-		<guava.version>18.0</guava.version>
-		<slf4j.version>1.7.12</slf4j.version>
-		<java.version>1.7</java.version>
-		<jacoco.version>0.7.5.201505241946</jacoco.version>
-		<findbugs.version>3.0.0</findbugs.version>
-	</properties>
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License (LGPL) 2.1</name>
+            <url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
+            <distribution>repo</distribution>
+        </license>
+        <license>
+            <name>Eclipse Public License (EPL) 1.0</name>
+            <url>http://www.eclipse.org/org/documents/epl-v10.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-	<licenses>
-		<license>
-			<name>GNU Lesser General Public License (LGPL) 2.1</name>
-			<url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
-			<distribution>repo</distribution>
-		</license>
-		<license>
-			<name>Eclipse Public License (EPL) 1.0</name>
-			<url>http://www.eclipse.org/org/documents/epl-v10.php</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
+    <mailingLists>
+        <mailingList>
+            <name>msdk-devel</name>
+            <subscribe>msdk-devel+subscribe@googlegroups.com</subscribe>
+            <unsubscribe>msdk-devel+unsubscribe@googlegroups.com</unsubscribe>
+            <post>msdk-devel@googlegroups.com</post>
+            <archive>https://groups.google.com/forum/#!forum/msdk-devel</archive>
+        </mailingList>
+    </mailingLists>
 
-	<mailingLists>
-		<mailingList>
-			<name>msdk-devel</name>
-			<subscribe>msdk-devel+subscribe@googlegroups.com</subscribe>
-			<unsubscribe>msdk-devel+unsubscribe@googlegroups.com</unsubscribe>
-			<post>msdk-devel@googlegroups.com</post>
-			<archive>https://groups.google.com/forum/#!forum/msdk-devel</archive>
-		</mailingList>
-	</mailingLists>
+    <scm>
+        <url>https://github.com/msdk/msdk</url>
+        <connection>scm:git:git://github.com/msdk/msdk.git</connection>
+        <developerConnection>scm:git:github.com/msdk/msdk.git</developerConnection>
+    </scm>
 
-	<scm>
-		<url>https://github.com/msdk/msdk</url>
-		<connection>scm:git:git://github.com/msdk/msdk.git</connection>
-		<developerConnection>scm:git:github.com/msdk/msdk.git</developerConnection>
-	</scm>
+    <developers>
+        <developer>
+            <name>Tomáš Pluskal</name>
+            <email>plusik@gmail.com</email>
+        </developer>
+        <developer>
+            <name>Gert Wohlgemuth</name>
+            <email>berlinguyinca@gmail.com</email>
+        </developer>
+        <developer>
+            <name>Nils Hoffmann</name>
+            <email>nhoffmann@netbeans.org</email>
+        </developer>
+        <developer>
+            <name>Richard A. Scheltema</name>
+            <email>R.A.Scheltema@uu.nl</email>
+        </developer>
+        <developer>
+            <name>Thomas F. Dyrlund</name>
+            <email>thomas@dyrlund.dk</email>
+        </developer>
+    </developers>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.3</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
 
-	<developers>
-		<developer>
-			<name>Tomáš Pluskal</name>
-			<email>plusik@gmail.com</email>
-		</developer>
-		<developer>
-			<name>Gert Wohlgemuth</name>
-			<email>berlinguyinca@gmail.com</email>
-		</developer>
-		<developer>
-			<name>Nils Hoffmann</name>
-			<email>nhoffmann@netbeans.org</email>
-		</developer>
-		<developer>
-			<name>Richard A. Scheltema</name>
-			<email>R.A.Scheltema@uu.nl</email>
-		</developer>
-		<developer>
-			<name>Thomas F. Dyrlund</name>
-			<email>thomas@dyrlund.dk</email>
-		</developer>
-	</developers>
+    </build>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
 
-	<build>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
 
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
-				<configuration>
-					<excludePackageNames>io.github.msdk.db.mona.pojo</excludePackageNames>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.4</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${findbugs.version}</version>
+            </dependency>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.6</version>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.6</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-				</configuration>
-			</plugin>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-scm-publish-plugin</artifactId>
-				<version>1.1</version>
-				<configuration>
-					<checkoutDirectory>${project.build.directory}/apirepo</checkoutDirectory>
-					<checkinComment>Publishing javadoc for
-						${project.artifactId}:${project.version}</checkinComment>
-					<content>${project.reporting.outputDirectory}/apidocs</content>
-					<skipDeletedFiles>false</skipDeletedFiles>
-					<pubScmUrl>scm:git:git@github.com:msdk/api.git</pubScmUrl>
-					<scmBranch>gh-pages</scmBranch>
-				</configuration>
-			</plugin>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
 
-		</plugins>
-	</build>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+        </dependency>
 
-	<dependencies>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        
+    </dependencies>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
+    <profiles>
+        <profile>
+            <id>msdk-release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.3</version>
+                        <configuration>
+                            <excludePackageNames>io.github.msdk.db.mona.pojo</excludePackageNames>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.4</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>test</scope>
-		</dependency>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
 
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-			<version>${findbugs.version}</version>
-		</dependency>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.6</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
 
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
-		</dependency>
-
-	</dependencies>
-
-	<profiles>
-		<profile>
-			<id>jacoco</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.jacoco</groupId>
-						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>${jacoco.version}</version>
-						<executions>
-							<execution>
-								<id>default-prepare-agent</id>
-								<goals>
-									<goal>prepare-agent</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>default-report</id>
-								<phase>prepare-package</phase>
-								<goals>
-									<goal>report</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-scm-publish-plugin</artifactId>
+                        <version>1.1</version>
+                        <configuration>
+                            <checkoutDirectory>${project.build.directory}/apirepo</checkoutDirectory>
+                            <checkinComment>Publishing javadoc for ${project.artifactId}:${project.version}</checkinComment>
+                            <content>${project.reporting.outputDirectory}/apidocs</content>
+                            <skipDeletedFiles>false</skipDeletedFiles>
+                            <pubScmUrl>scm:git:git@github.com:msdk/api.git</pubScmUrl>
+                            <scmBranch>gh-pages</scmBranch>
+                        </configuration>
+                    </plugin>
+                </plugins>
+                    
+            </build>
+        </profile>
+        <profile>
+            <id>jacoco</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.version}</version>
+                        <executions>
+                            <execution>
+                                <id>default-prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>default-report</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

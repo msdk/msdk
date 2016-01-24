@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-MSDK Prepare Release</actionName>
+            <displayName>MSDK Prepare Release</displayName>
+            <goals>
+                <goal>versions:set</goal>
+                <goal>versions:commit</goal>
+            </goals>
+            <properties>
+                <newVersion>0.0.4</newVersion>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>ossrh</activatedProfile>
+                <activatedProfile>msdk-release</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-MSDK FixJavadoc Release</actionName>
+            <displayName>MSDK FixJavadoc Release</displayName>
+            <goals>
+                <goal>javadoc:fix</goal>
+            </goals>
+            <properties>
+                <fixTags>param,return,throws</fixTags>
+                <force></force>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>ossrh</activatedProfile>
+                <activatedProfile>msdk-release</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-MSDK Release Perform</actionName>
+            <displayName>MSDK Release Perform</displayName>
+            <goals>
+                <goal>package</goal>
+                <goal>deploy</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>msdk-release</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-MSDK Release Publish Javadoc</actionName>
+            <displayName>MSDK Release Publish Javadoc</displayName>
+            <goals>
+                <goal>package</goal>
+                <goal>javadoc:aggregate</goal>
+                <goal>scm-publish:publish-scm</goal>
+            </goals>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>msdk-release</activatedProfile>
+            </activatedProfiles>
+        </action>
+    </actions>

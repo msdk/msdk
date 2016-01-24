@@ -73,6 +73,7 @@ public class IsotopeGrouperMethod implements MSDKMethod<FeatureTable> {
 	 *            a {@link java.lang.Integer} object.
 	 * @param requireMonotonicShape
 	 *            a {@link java.lang.Boolean} object.
+	 * @param featureTableName a {@link java.lang.String} object.
 	 */
 	public IsotopeGrouperMethod(@Nonnull FeatureTable featureTable, @Nonnull DataPointStore dataStore,
 			@Nonnull MZTolerance mzTolerance, @Nonnull RTTolerance rtTolerance, @Nonnull Integer maximumCharge,
