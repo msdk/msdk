@@ -15,15 +15,26 @@
 package io.github.msdk;
 
 /**
+ * <p>MSDKConstraintViolationException class.</p>
  *
  * @author nilshoffmann
  */
 public class MSDKConstraintViolationException extends MSDKRuntimeException {
 
+    /**
+     * <p>Constructor for MSDKConstraintViolationException.</p>
+     *
+     * @param msg a {@link java.lang.String} object.
+     */
     public MSDKConstraintViolationException(String msg) {
         super(msg);
     }
 
+    /**
+     * <p>Constructor for MSDKConstraintViolationException.</p>
+     *
+     * @param exception a {@link java.lang.Throwable} object.
+     */
     public MSDKConstraintViolationException(Throwable exception) {
         super(exception);
     }

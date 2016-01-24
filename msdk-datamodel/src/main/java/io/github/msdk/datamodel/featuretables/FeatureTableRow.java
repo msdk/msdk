@@ -104,7 +104,7 @@ public interface FeatureTableRow {
      * @param featureTableDataConverter
      *            the data converter, may perform additional operations on the
      *            data.
-     * @throws MSDKConstraintViolationException
+     * @throws io.github.msdk.MSDKConstraintViolationException
      *             if the provided target column data type is not the same class
      *             or a compatible subclass as the source column data type.
      */

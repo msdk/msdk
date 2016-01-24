@@ -26,11 +26,11 @@ import java.util.List;
  * Implementation of {@link FeatureTableDataConverter} for lists of
  * {@link IonAnnotation}
  * </p>
- *
  */
 public class IonAnnotationConverter implements
         FeatureTableDataConverter<List<IonAnnotation>> {
 
+    /** {@inheritDoc} */
     @Override
     public void apply(FeatureTableRow sourceRow,
             FeatureTableColumn<? extends List<IonAnnotation>> sourceColumn,

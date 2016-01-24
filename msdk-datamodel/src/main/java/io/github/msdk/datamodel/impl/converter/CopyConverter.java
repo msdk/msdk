@@ -20,14 +20,14 @@ import io.github.msdk.datamodel.featuretables.FeatureTableDataConverter;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 
 /**
- * /**
- * <p>
+ * * <p>
  * Implementation of {@link FeatureTableDataConverter} for any kind of object
  * that should be copied as is to the new feature table.
  * </p>
  */
 public class CopyConverter implements FeatureTableDataConverter<Object> {
 
+    /** {@inheritDoc} */
     @Override
     public void apply(FeatureTableRow sourceRow,
             FeatureTableColumn<? extends Object> sourceColumn,

@@ -22,14 +22,10 @@ import org.junit.runner.Description;
  *
  * Activate in your tests by adding the following line to your test class:
  * {@code @Rule public LogMethodName logMethodName;}
- * 
  */
 public class LogMethodName extends TestWatcher {
 
-    /**
-     *
-     * @param method
-     */
+    /** {@inheritDoc} */
     @Override
     public void starting(Description method) {
         StringBuilder sb = new StringBuilder();

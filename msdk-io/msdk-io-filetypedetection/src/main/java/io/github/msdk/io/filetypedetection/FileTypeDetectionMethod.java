@@ -68,6 +68,13 @@ public class FileTypeDetectionMethod {
      */
     private static final String MZTAB_HEADER = "mzTab-version";
 
+    /**
+     * <p>detectDataFileType.</p>
+     *
+     * @param fileName a {@link java.io.File} object.
+     * @return a {@link io.github.msdk.datamodel.files.FileType} object.
+     * @throws java.io.IOException if any.
+     */
     public static @Nullable FileType detectDataFileType(@Nonnull File fileName)
             throws IOException {
 

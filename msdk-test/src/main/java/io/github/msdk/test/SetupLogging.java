@@ -27,14 +27,13 @@ import org.junit.rules.TestWatcher;
  *
  * Activate in your tests by adding the following line to your test class:
  * {@code @Rule public SetupLogging setupLogging;}
- * 
  */
 public class SetupLogging extends TestWatcher {
 
     private final Properties config;
 
     /**
-     *
+     * <p>Constructor for SetupLogging.</p>
      */
     public SetupLogging() {
         this(SetupLogging.class.getResource("/log4j.properties"));

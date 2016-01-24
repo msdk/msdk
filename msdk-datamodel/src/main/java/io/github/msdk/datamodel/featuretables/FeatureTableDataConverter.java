@@ -19,7 +19,7 @@ package io.github.msdk.datamodel.featuretables;
  * Convert data from a source feature table row and column to a target row and
  * column.
  * </p>
- * 
+ *
  * @param <DATATYPE>
  *            the generic type of the element values.
  */
@@ -28,7 +28,7 @@ public interface FeatureTableDataConverter<DATATYPE> {
     /**
      * Apply the conversion from the given source row and column to the given
      * target row and column.
-     * 
+     *
      * @param sourceRow
      *            the source data's row.
      * @param sourceColumn

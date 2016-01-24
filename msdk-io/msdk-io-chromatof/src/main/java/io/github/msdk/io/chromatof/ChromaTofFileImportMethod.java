@@ -85,7 +85,6 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
      *            the field separator between fields on one line.
      * @param quotationCharacter
      *            the quotation character for a field.
-     *
      * @see ChromaTofParser
      */
     public ChromaTofFileImportMethod(@Nonnull File sourceFile,
@@ -117,9 +116,7 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
         this(sourceFile, dataStore, Locale.US, null, null);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public FeatureTable execute() throws MSDKException {
 
@@ -424,18 +421,14 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
         return column;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public FeatureTable getResult() {
         return newFeatureTable;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Float getFinishedPercentage() {
         if (totalLines == 0) {
@@ -449,9 +442,7 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
         return lines;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void cancel() {
         this.canceled = true;

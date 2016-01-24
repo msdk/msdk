@@ -41,12 +41,18 @@ public class ChromaTofParser {
     private static final Logger log = LoggerFactory
             .getLogger(ChromaTofParser.class);
 
+    /** Constant <code>FIELD_SEPARATOR_TAB="\t"</code> */
     public static String FIELD_SEPARATOR_TAB = "\t";
+    /** Constant <code>FIELD_SEPARATOR_COMMA=","</code> */
     public static String FIELD_SEPARATOR_COMMA = ",";
+    /** Constant <code>FIELD_SEPARATOR_SEMICOLON=";"</code> */
     public static String FIELD_SEPARATOR_SEMICOLON = ";";
 
+    /** Constant <code>QUOTATION_CHARACTER_DOUBLETICK="\""</code> */
     public static String QUOTATION_CHARACTER_DOUBLETICK = "\"";
+    /** Constant <code>QUOTATION_CHARACTER_NONE=""</code> */
     public static String QUOTATION_CHARACTER_NONE = "";
+    /** Constant <code>QUOTATION_CHARACTER_SINGLETICK="\'"</code> */
     public static String QUOTATION_CHARACTER_SINGLETICK = "\'";
 
     private final String fieldSeparator;
@@ -54,11 +60,24 @@ public class ChromaTofParser {
     private final Locale locale;
     private final ParserUtilities parserUtils = new ParserUtilities();
 
+    /**
+     * <p>Constructor for ChromaTofParser.</p>
+     *
+     * @param fieldSeparator a {@link java.lang.String} object.
+     * @param quotationCharacter a {@link java.lang.String} object.
+     */
     public ChromaTofParser(@Nonnull String fieldSeparator,
             @Nonnull String quotationCharacter) {
         this(fieldSeparator, quotationCharacter, Locale.getDefault());
     }
 
+    /**
+     * <p>Constructor for ChromaTofParser.</p>
+     *
+     * @param fieldSeparator a {@link java.lang.String} object.
+     * @param quotationCharacter a {@link java.lang.String} object.
+     * @param locale a {@link java.util.Locale} object.
+     */
     public ChromaTofParser(@Nonnull String fieldSeparator,
             @Nonnull String quotationCharacter, @Nonnull Locale locale) {
         this.fieldSeparator = fieldSeparator;
@@ -66,18 +85,38 @@ public class ChromaTofParser {
         this.locale = locale;
     }
 
+    /**
+     * <p>Getter for the field <code>fieldSeparator</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getFieldSeparator() {
         return fieldSeparator;
     }
 
+    /**
+     * <p>Getter for the field <code>quotationCharacter</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getQuotationCharacter() {
         return quotationCharacter;
     }
 
+    /**
+     * <p>Getter for the field <code>locale</code>.</p>
+     *
+     * @return a {@link java.util.Locale} object.
+     */
     public Locale getLocale() {
         return locale;
     }
 
+    /**
+     * <p>Getter for the field <code>parserUtils</code>.</p>
+     *
+     * @return a {@link io.github.msdk.io.chromatof.ParserUtilities} object.
+     */
     public ParserUtilities getParserUtils() {
         return parserUtils;
     }
@@ -474,6 +513,14 @@ public class ChromaTofParser {
         }
     };
 
+    /**
+     * <p>parseReport.</p>
+     *
+     * @param parser a {@link io.github.msdk.io.chromatof.ChromaTofParser} object.
+     * @param f a {@link java.io.File} object.
+     * @param normalizeColumnNames a boolean.
+     * @return a {@link io.github.msdk.io.chromatof.Pair} object.
+     */
     public static Pair<LinkedHashSet<ChromaTofParser.TableColumn>, List<TableRow>> parseReport(
             ChromaTofParser parser, File f, boolean normalizeColumnNames) {
         LinkedHashSet<ChromaTofParser.TableColumn> header = parser.parseHeader(
@@ -483,17 +530,41 @@ public class ChromaTofParser {
         return new Pair<>(header, table);
     }
 
+    /**
+     * <p>parseReport.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @param locale a {@link java.util.Locale} object.
+     * @return a {@link io.github.msdk.io.chromatof.Pair} object.
+     */
     public static Pair<LinkedHashSet<ChromaTofParser.TableColumn>, List<TableRow>> parseReport(
             File f, Locale locale) {
         return parseReport(f, true, locale);
     }
 
+    /**
+     * <p>parseReport.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @param normalizeColumnNames a boolean.
+     * @param locale a {@link java.util.Locale} object.
+     * @return a {@link io.github.msdk.io.chromatof.Pair} object.
+     */
     public static Pair<LinkedHashSet<ChromaTofParser.TableColumn>, List<TableRow>> parseReport(
             File f, boolean normalizeColumnNames, Locale locale) {
         ChromaTofParser parser = create(f, locale);
         return parseReport(parser, f, normalizeColumnNames);
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @param normalizeColumnNames a boolean.
+     * @param locale a {@link java.util.Locale} object.
+     * @return a {@link io.github.msdk.io.chromatof.ChromaTofParser} object.
+     * @throws java.lang.IllegalArgumentException if any.
+     */
     public static ChromaTofParser create(File f, boolean normalizeColumnNames,
             Locale locale) throws IllegalArgumentException {
         ChromaTofParser parser;
@@ -512,11 +583,27 @@ public class ChromaTofParser {
         return parser;
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @param locale a {@link java.util.Locale} object.
+     * @return a {@link io.github.msdk.io.chromatof.ChromaTofParser} object.
+     * @throws java.lang.IllegalArgumentException if any.
+     */
     public static ChromaTofParser create(File f, Locale locale)
             throws IllegalArgumentException {
         return create(f, true, locale);
     }
 
+    /**
+     * <p>parseDoubleArray.</p>
+     *
+     * @param fieldName a {@link io.github.msdk.io.chromatof.ChromaTofParser.TableColumn} object.
+     * @param row a {@link io.github.msdk.io.chromatof.TableRow} object.
+     * @param elementSeparator a {@link java.lang.String} object.
+     * @return an array of double.
+     */
     public double[] parseDoubleArray(TableColumn fieldName, TableRow row,
             String elementSeparator) {
         if (row.get(fieldName).contains(elementSeparator)) {
@@ -530,14 +617,33 @@ public class ChromaTofParser {
         return new double[] { parseDouble(row.get(fieldName)) };
     }
 
+    /**
+     * <p>parseDouble.</p>
+     *
+     * @param fieldName a {@link io.github.msdk.io.chromatof.ChromaTofParser.TableColumn} object.
+     * @param tr a {@link io.github.msdk.io.chromatof.TableRow} object.
+     * @return a double.
+     */
     public double parseDouble(TableColumn fieldName, TableRow tr) {
         return parseDouble(tr.get(fieldName));
     }
 
+    /**
+     * <p>parseDouble.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     * @return a double.
+     */
     public double parseDouble(String s) {
         return ParserUtilities.parseDouble(s, locale);
     }
 
+    /**
+     * <p>parseIntegrationStartEnd.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     * @return a double.
+     */
     public double parseIntegrationStartEnd(String s) {
         if (s == null || s.isEmpty()) {
             return Double.NaN;
@@ -549,6 +655,12 @@ public class ChromaTofParser {
         return parseDouble(s);
     }
 
+    /**
+     * <p>getMode.</p>
+     *
+     * @param body a {@link java.util.List} object.
+     * @return a {@link io.github.msdk.io.chromatof.ChromaTofParser.Mode} object.
+     */
     public Mode getMode(List<TableRow> body) {
         for (TableRow tr : body) {
 
@@ -649,6 +761,14 @@ public class ChromaTofParser {
         return parseHeader(f, normalizeColumnNames);
     }
 
+    /**
+     * <p>splitLine.</p>
+     *
+     * @param line a {@link java.lang.String} object.
+     * @param fieldSeparator a {@link java.lang.String} object.
+     * @param quoteSymbol a {@link java.lang.String} object.
+     * @return an array of {@link java.lang.String} objects.
+     */
     public String[] splitLine(String line, String fieldSeparator,
             String quoteSymbol) {
         switch (fieldSeparator) {
@@ -676,6 +796,14 @@ public class ChromaTofParser {
         }
     }
 
+    /**
+     * <p>parseBody.</p>
+     *
+     * @param globalHeader a {@link java.util.LinkedHashSet} object.
+     * @param f a {@link java.io.File} object.
+     * @param normalizeColumnNames a boolean.
+     * @return a {@link java.util.List} object.
+     */
     public List<TableRow> parseBody(
             LinkedHashSet<ChromaTofParser.TableColumn> globalHeader, File f,
             boolean normalizeColumnNames) {
@@ -741,6 +869,13 @@ public class ChromaTofParser {
         return body;
     }
 
+    /**
+     * <p>getIndexOfHeaderColumn.</p>
+     *
+     * @param header a {@link java.util.List} object.
+     * @param column a {@link io.github.msdk.io.chromatof.ChromaTofParser.TableColumn} object.
+     * @return a int.
+     */
     public int getIndexOfHeaderColumn(List<ChromaTofParser.TableColumn> header,
             ChromaTofParser.TableColumn column) {
         if (column != TableColumn.NIL) {

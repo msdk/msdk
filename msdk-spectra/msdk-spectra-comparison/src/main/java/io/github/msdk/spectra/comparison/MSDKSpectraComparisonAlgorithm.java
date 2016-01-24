@@ -25,14 +25,14 @@ public interface MSDKSpectraComparisonAlgorithm {
 
     /**
      * Compares two MS spectra and returns a score.
-     * 
-     * @param mzValuesSpectrum1
-     * @param intensityValuesSpectrum1
-     * @param sizeSpectrum1
-     * @param mzValuesSpectrum2
-     * @param intensityValuesSpectrum2
-     * @param sizeSpectrum2
-     * @return
+     *
+     * @param mzValuesSpectrum1 an array of double.
+     * @param intensityValuesSpectrum1 an array of float.
+     * @param sizeSpectrum1 a {@link java.lang.Integer} object.
+     * @param mzValuesSpectrum2 an array of double.
+     * @param intensityValuesSpectrum2 an array of float.
+     * @param sizeSpectrum2 a {@link java.lang.Integer} object.
+     * @return a {@link java.lang.Double} object.
      */
     @Nonnull
     Double compareSpectra(@Nonnull double mzValuesSpectrum1[],
