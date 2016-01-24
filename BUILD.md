@@ -51,10 +51,10 @@ mvn -Pmsdk-release package
 
 # Deploy after successful build
 mvn -Pmsdk-release deploy
-```
 
 # To generate complete JavaDoc documentation and upload it to http://msdk.github.io/api/
 mvn -Pmsdk-release -DskipTests package javadoc:aggregate scm-publish:publish-scm
 
 # After a succesful release, set the versions to the next development version
 mvn versions:set -DnewVersion=X.Y.Z-SNAPSHOT versions:commit
+```
