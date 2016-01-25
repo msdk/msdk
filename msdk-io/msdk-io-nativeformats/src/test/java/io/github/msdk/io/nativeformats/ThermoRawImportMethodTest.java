@@ -95,4 +95,32 @@ public class ThermoRawImportMethodTest {
 
     }
 
+    @SuppressWarnings("null")
+    @Test
+    public void testDrugX01() throws Exception {
+
+        // Run this test only on Windows
+        assumeTrue(System.getProperty("os.name").startsWith("Windows"));
+
+        // Create the data structures
+        DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
+        double mzBuffer[] = new double[10000];
+        float intensityBuffer[] = new float[10000];
+
+        // Import the file
+        File inputFile = new File(TEST_DATA_PATH + "drugx_01.raw");
+        Assert.assertTrue(inputFile.canRead());
+        ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile,
+                dataStore);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        // The file has 315 scans
+        List<MsScan> scans = rawFile.getScans();
+        Assert.assertNotNull(scans);
+        Assert.assertEquals(315, scans.size());
+
+    }
+
 }
