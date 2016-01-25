@@ -121,6 +121,26 @@ public class ThermoRawImportMethodTest {
         Assert.assertNotNull(scans);
         Assert.assertEquals(315, scans.size());
 
+        // 220th scan, #220
+        MsScan scan220 = scans.get(219);
+        Assert.assertEquals(new Integer(220), scan220.getScanNumber());
+        Assert.assertEquals(MsSpectrumType.CENTROIDED,
+                scan220.getSpectrumType());
+        Assert.assertEquals(new Integer(2),
+                scan220.getMsFunction().getMsLevel());
+        Assert.assertEquals("srm", scan220.getMsFunction().getName());
+        Assert.assertEquals(293.97f,
+                scan220.getChromatographyInfo().getRetentionTime(), 0.01f);
+        Assert.assertEquals(1, scan220.getIsolations().size());
+        Assert.assertEquals(469.40,
+                scan220.getIsolations().get(0).getPrecursorMz(), 0.01);
+        Assert.assertEquals(PolarityType.POSITIVE, scan220.getPolarity());
+        mzBuffer = scan220.getMzValues(mzBuffer);
+        intensityBuffer = scan220.getIntensityValues(intensityBuffer);
+        Assert.assertEquals(3, (int) scan220.getNumberOfDataPoints());
+        Float scan220maxInt = MsSpectrumUtil.getMaxIntensity(intensityBuffer,
+                scan220.getNumberOfDataPoints());
+        Assert.assertEquals(2.03E5f, scan220maxInt, 1E3f);
     }
 
 }
