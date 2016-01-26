@@ -131,6 +131,18 @@ class RawDumpParser {
                 polarity = PolarityType.POSITIVE;
             else
                 polarity = PolarityType.UNKNOWN;
+
+            // For Thermo RAW files, the polarity is sometimes not recognized.
+            // In such case, we can parse it from the scan filter line (scanId).
+            if ((polarity == PolarityType.UNKNOWN)
+                    && (newRawFile.getRawDataFileType() == FileType.THERMO_RAW)
+                    && (!Strings.isNullOrEmpty(scanId))) {
+                if (scanId.startsWith("-"))
+                    polarity = PolarityType.NEGATIVE;
+                else if (scanId.startsWith("+"))
+                    polarity = PolarityType.POSITIVE;
+            }
+
         }
 
         if (line.startsWith("RETENTION TIME: ")) {
@@ -240,9 +252,25 @@ class RawDumpParser {
                     .detectSpectrumType(mzValues, intensityValues,
                             numOfDataPoints);
 
-            // Create a new scan
-            MsFunction msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
+            // Create a new MS function
+            MsFunction msFunction = null;
+            if ((newRawFile.getRawDataFileType() == FileType.THERMO_RAW)
+                    && (!Strings.isNullOrEmpty(scanId))) {
+                // Parse the MS function from the scan filter line, e.g.
+                // + c SRM ms2 469.40@cid23.00 [423.30-425.30]
+                Pattern precursorPattern = Pattern
+                        .compile("^[+-] [cp] (\\w+) ");
+                Matcher m = precursorPattern.matcher(scanId);
+                if (m.find()) {
+                    String msFunctionName = m.group(1).toLowerCase();
+                    msFunction = MSDKObjectBuilder.getMsFunction(msFunctionName,
+                            msLevel);
+                }
+            }
+            if (msFunction == null)
+                msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
 
+            // Create a new scan
             MsScan newScan = MSDKObjectBuilder.getMsScan(dataStore, scanNumber,
                     msFunction);
 
