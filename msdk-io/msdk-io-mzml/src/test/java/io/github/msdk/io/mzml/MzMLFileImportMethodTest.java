@@ -328,5 +328,45 @@ public class MzMLFileImportMethodTest {
 
         rawFile.dispose();
     }
+    
+    @SuppressWarnings("null")
+    @Test
+    public void testEmptyScan() throws MSDKException {
+
+        // Create the data structures
+        double mzBuffer[] = new double[10000];
+        float intensityBuffer[] = new float[10000];
+
+        // Import the file
+        File inputFile = new File(TEST_DATA_PATH + "emptyScan.mzML");
+        Assert.assertTrue(inputFile.canRead());
+        MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        // The file has 1 scan, with no data points
+        List<MsScan> scans = rawFile.getScans();
+        Assert.assertNotNull(scans);
+        Assert.assertEquals(1, scans.size());
+
+        // 1st scan, #422
+        MsScan scan2 = scans.get(0);
+        Assert.assertEquals(new Integer(422), scan2.getScanNumber());
+        Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
+        Assert.assertEquals(new Integer(2), scan2.getMsFunction().getMsLevel());
+        Assert.assertEquals(309.1878f,
+                scan2.getChromatographyInfo().getRetentionTime(), 0.01f);
+        Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
+        mzBuffer = scan2.getMzValues(mzBuffer);
+        intensityBuffer = scan2.getIntensityValues(intensityBuffer);
+        Assert.assertEquals(0, (int) scan2.getNumberOfDataPoints());
+        Float scan2maxInt = MsSpectrumUtil.getMaxIntensity(intensityBuffer,
+                scan2.getNumberOfDataPoints());
+        Assert.assertEquals(0f, scan2maxInt, 0.1f);
+
+        rawFile.dispose();
+
+    }
 
 }
