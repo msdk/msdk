@@ -328,7 +328,7 @@ public class MzMLFileImportMethodTest {
 
         rawFile.dispose();
     }
-    
+
     @SuppressWarnings("null")
     @Test
     public void testEmptyScan() throws MSDKException {
@@ -366,6 +366,18 @@ public class MzMLFileImportMethodTest {
         Assert.assertEquals(0f, scan2maxInt, 0.1f);
 
         rawFile.dispose();
+
+    }
+
+    @Test(expected = MSDKException.class)
+    public void testTruncated() throws MSDKException {
+
+        // Try importing an invalid (truncated file).
+        // Import should throw an MSDKException.
+        File inputFile = new File(TEST_DATA_PATH + "truncated.mzML");
+        Assert.assertTrue(inputFile.canRead());
+        MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+        importer.execute();
 
     }
 

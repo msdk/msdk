@@ -80,7 +80,15 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
         logger.info("Started parsing file " + sourceFile);
 
-        MzMLUnmarshaller parser = new MzMLUnmarshaller(sourceFile);
+        MzMLUnmarshaller parser;
+
+        // MzMLUnmarshaller throws IllegalStateException when the mzML file
+        // structure is invalid
+        try {
+            parser = new MzMLUnmarshaller(sourceFile);
+        } catch (Exception e) {
+            throw new MSDKException(e);
+        }
 
         totalScans = parser
                 .getObjectCountForXpath("/run/spectrumList/spectrum");
