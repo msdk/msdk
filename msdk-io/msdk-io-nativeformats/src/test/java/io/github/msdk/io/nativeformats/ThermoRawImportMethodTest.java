@@ -151,4 +151,50 @@ public class ThermoRawImportMethodTest {
 
     }
 
+    @SuppressWarnings("null")
+    @Test
+    public void testTSQQuantum() throws Exception {
+
+        // Run this test only on Windows
+        Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
+
+        // Create the data structures
+        DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
+        double mzBuffer[] = new double[10000];
+        float intensityBuffer[] = new float[10000];
+
+        // Import the file
+        File inputFile = new File(TEST_DATA_PATH + "tsq_quantum.raw");
+        Assert.assertTrue(inputFile.canRead());
+        ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile,
+                dataStore);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        // The file has 78 scans
+        List<MsScan> scans = rawFile.getScans();
+        Assert.assertNotNull(scans);
+        Assert.assertEquals(78, scans.size());
+
+        // 10th scan, #10
+        MsScan scan10 = scans.get(9);
+        Assert.assertEquals(new Integer(10), scan10.getScanNumber());
+        Assert.assertEquals(new Integer(1),
+                scan10.getMsFunction().getMsLevel());
+        Assert.assertEquals("q1ms", scan10.getMsFunction().getName());
+        Assert.assertEquals(14.422f,
+                scan10.getChromatographyInfo().getRetentionTime(), 0.01f);
+        Assert.assertEquals(PolarityType.POSITIVE, scan10.getPolarity());
+        mzBuffer = scan10.getMzValues(mzBuffer);
+        intensityBuffer = scan10.getIntensityValues(intensityBuffer);
+        Float scan10maxInt = MsSpectrumUtil.getMaxIntensity(intensityBuffer,
+                scan10.getNumberOfDataPoints());
+        Assert.assertEquals(4.64E6f, scan10maxInt, 1E4f);
+        Double scan10basePeakMz = mzBuffer[MsSpectrumUtil.getBasePeakIndex(
+                intensityBuffer, scan10.getNumberOfDataPoints())];
+        Assert.assertEquals(508.2080, scan10basePeakMz, 0.0001);
+
+    }
+
 }
