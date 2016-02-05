@@ -40,7 +40,8 @@ import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionMethod;
 
 class RawDumpParser {
 
-    private final String thermoMsFunctions[] = { "sim", "srm", "mrm", "q1ms" };
+    private final String thermoMsFunctions[] = { "sim", "srm", "mrm", "crm",
+            "q1ms", "q3ms" };
 
     private boolean canceled = false;
 
