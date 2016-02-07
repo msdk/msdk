@@ -40,6 +40,9 @@ import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionMethod;
 
 class RawDumpParser {
 
+    private final String thermoMsFunctions[] = { "sim", "srm", "mrm", "crm",
+            "q1ms", "q3ms" };
+
     private boolean canceled = false;
 
     private int parsedScans, totalScans = 0;
@@ -258,14 +261,18 @@ class RawDumpParser {
                     && (!Strings.isNullOrEmpty(scanId))) {
                 // Parse the MS function from the scan filter line, e.g.
                 // + c SRM ms2 469.40@cid23.00 [423.30-425.30]
-                Pattern precursorPattern = Pattern
-                        .compile("^[+-] [cp] (\\w+) ");
-                Matcher m = precursorPattern.matcher(scanId);
-                if (m.find()) {
-                    String msFunctionName = m.group(1).toLowerCase();
-                    msFunction = MSDKObjectBuilder.getMsFunction(msFunctionName,
-                            msLevel);
+                // + p ESI Q1MS [181.653-182.582, 507.779-508.708]
+
+                String scanIdLowerCase = scanId.toLowerCase();
+
+                for (String fn : thermoMsFunctions) {
+                    if (scanIdLowerCase.contains(fn)) {
+                        msFunction = MSDKObjectBuilder.getMsFunction(fn,
+                                msLevel);
+                        break;
+                    }
                 }
+
             }
             if (msFunction == null)
                 msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
