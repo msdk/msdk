@@ -84,7 +84,9 @@ class MzMLCV {
     static final String cvActivationCID = "MS:1000133";
 
     // Isolation
-    static final String cvIsolationWindow = "MS:1000827";
+    static final String cvIsolationWindowTarget = "MS:1000827";
+    static final String cvIsolationWindowLowerOffset = "MS:1000828";
+    static final String cvIsolationWindowUpperOffset = "MS:1000829";
 
     // Data arrays
     static final String cvMzArray = "MS:1000514";

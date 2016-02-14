@@ -25,7 +25,6 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
@@ -275,10 +274,16 @@ class MzMLConverter {
                 || (precursorListElement.getCount().equals(0)))
             return Collections.emptyList();
 
-        Double precursorMz = null;
-        Integer precursorCharge = null;
+        List<IsolationInfo> isolations = new ArrayList<>();
+
         List<Precursor> precursorList = precursorListElement.getPrecursor();
         for (Precursor parent : precursorList) {
+
+            Double precursorMz = null;
+            Double isolationWindowTarget = null;
+            Double isolationWindowLower = null;
+            Double isolationWindowUpper = null;
+            Integer precursorCharge = null;
 
             SelectedIonList selectedIonListElement = parent
                     .getSelectedIonList();
@@ -301,23 +306,56 @@ class MzMLConverter {
                     if (accession.equals(MzMLCV.cvMz)
                             || accession.equals(MzMLCV.cvPrecursorMz)) {
                         precursorMz = Double.parseDouble(value);
-
                     }
                     if (accession.equals(MzMLCV.cvChargeState)) {
                         precursorCharge = Integer.parseInt(value);
                     }
+
                 }
 
             }
+
+            ParamGroup isolationWindowPg = parent.getIsolationWindow();
+            if (isolationWindowPg != null) {
+                List<CVParam> precCvParams = isolationWindowPg.getCvParam();
+                if (precCvParams != null) {
+                    for (CVParam param : precCvParams) {
+                        String accession = param.getAccession();
+                        String value = param.getValue();
+                        if ((accession == null) || (value == null))
+                            continue;
+                        if (accession
+                                .equals(MzMLCV.cvIsolationWindowLowerOffset)) {
+                            isolationWindowLower = Double.parseDouble(value);
+                        }
+                        if (accession
+                                .equals(MzMLCV.cvIsolationWindowUpperOffset)) {
+                            isolationWindowUpper = Double.parseDouble(value);
+                        }
+                        if (accession.equals(MzMLCV.cvIsolationWindowTarget)) {
+                            isolationWindowTarget = Double.parseDouble(value);
+                        }
+                    }
+                }
+            }
+            if (precursorMz != null) {
+                if (isolationWindowTarget == null)
+                    isolationWindowTarget = precursorMz;
+                if (isolationWindowLower == null)
+                    isolationWindowLower = 0.5;
+                if (isolationWindowUpper == null)
+                    isolationWindowUpper = 0.5;
+                Range<Double> isolationRange = Range.closed(
+                        isolationWindowTarget - isolationWindowLower,
+                        isolationWindowTarget + isolationWindowUpper);
+                IsolationInfo isolation = MSDKObjectBuilder.getIsolationInfo(
+                        isolationRange, null, precursorMz, precursorCharge,
+                        null);
+                isolations.add(isolation);
+            }
         }
-        if (precursorMz != null) {
-            IsolationInfo isolation = MSDKObjectBuilder.getIsolationInfo(
-                    Range.singleton(precursorMz), null, precursorMz,
-                    precursorCharge, null);
-            return ImmutableList.<IsolationInfo> builder().add(isolation)
-                    .build();
-        }
-        return Collections.emptyList();
+
+        return Collections.unmodifiableList(isolations);
     }
 
     @Nonnull
@@ -401,7 +439,8 @@ class MzMLConverter {
                     .getCvParam();
             if (cvParams != null) {
                 for (CVParam param : cvParams) {
-                    if (param.getAccession().equals(MzMLCV.cvIsolationWindow)) {
+                    if (param.getAccession()
+                            .equals(MzMLCV.cvIsolationWindowTarget)) {
                         precursorIsolationMz = Double
                                 .parseDouble(param.getValue());
                         break;
@@ -426,7 +465,8 @@ class MzMLConverter {
                     .getCvParam();
             if (cvParams != null) {
                 for (CVParam param : cvParams) {
-                    if (param.getAccession().equals(MzMLCV.cvIsolationWindow)) {
+                    if (param.getAccession()
+                            .equals(MzMLCV.cvIsolationWindowTarget)) {
                         productIsolationMz = Double
                                 .parseDouble(param.getValue());
                         break;

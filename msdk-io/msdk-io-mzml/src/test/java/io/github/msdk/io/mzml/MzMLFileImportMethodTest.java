@@ -365,6 +365,17 @@ public class MzMLFileImportMethodTest {
                 scan2.getNumberOfDataPoints());
         Assert.assertEquals(0f, scan2maxInt, 0.1f);
 
+        // Test isolation data
+        List<IsolationInfo> scan2isolations = scan2.getIsolations();
+        Assert.assertEquals(1, scan2isolations.size());
+        IsolationInfo scan2isolation = scan2isolations.get(0);
+        Assert.assertEquals(574.144409179688, scan2isolation.getPrecursorMz(),
+                0.0000001);
+        Assert.assertEquals(573.14,
+                scan2isolation.getIsolationMzRange().lowerEndpoint(), 0.01);
+        Assert.assertEquals(575.14,
+                scan2isolation.getIsolationMzRange().upperEndpoint(), 0.01);
+
         rawFile.dispose();
 
     }
