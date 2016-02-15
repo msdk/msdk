@@ -27,7 +27,7 @@ import io.github.msdk.util.MsSpectrumUtil;
 /**
  * the reference implementation of the Spectral Hash Key
  */
-public class SplashCalculationMethod {
+public class SplashCalculationAlgorithm {
 
     private static final int BINS = 10;
     private static final int BIN_SIZE = 100;
