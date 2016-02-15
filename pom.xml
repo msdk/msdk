@@ -32,6 +32,7 @@
         <java.version>1.7</java.version>
         <jacoco.version>0.7.5.201505241946</jacoco.version>
         <findbugs.version>3.0.0</findbugs.version>
+        <commons-codec.version>1.10</commons-codec.version>
     </properties>
 
     <licenses>

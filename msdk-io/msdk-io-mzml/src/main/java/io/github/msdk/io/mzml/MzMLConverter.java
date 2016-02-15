@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
@@ -91,19 +91,14 @@ class MzMLConverter {
     @Nonnull
     Boolean isMsSpectrum(Spectrum spectrum) {
 
-        List<CVParam> cvParams = spectrum.getCvParam();
-        if (cvParams != null) {
-            for (CVParam param : cvParams) {
-                String accession = param.getAccession();
-                if (accession == null)
-                    continue;
+        String value = extractCVValue(spectrum.getCvParam(),
+                MzMLCV.cvUVSpectrum);
+        if (value != null)
+            return false;
 
-                if (accession.equals(MzMLCV.cvUVSpectrum))
-                    return false;
-                if (accession.equals(MzMLCV.cvMS1Spectrum))
-                    return true;
-            }
-        }
+        value = extractCVValue(spectrum.getCvParam(), MzMLCV.cvMS1Spectrum);
+        if (value != null)
+            return true;
 
         // By default, let's assume unidentified spectra are MS spectra
         return true;
@@ -112,20 +107,9 @@ class MzMLConverter {
     @Nonnull
     MsFunction extractMsFunction(Spectrum spectrum) {
         Integer msLevel = 1;
-        // Browse the spectrum parameters
-        List<CVParam> cvParams = spectrum.getCvParam();
-        if (cvParams != null) {
-            for (CVParam param : cvParams) {
-                String accession = param.getAccession();
-                String value = param.getValue();
-                if ((accession == null) || (value == null))
-                    continue;
-
-                if (accession.equals(MzMLCV.cvMSLevel)) {
-                    msLevel = Integer.parseInt(value);
-                }
-            }
-        }
+        String value = extractCVValue(spectrum.getCvParam(), MzMLCV.cvMSLevel);
+        if (!Strings.isNullOrEmpty(value))
+            msLevel = Integer.parseInt(value);
         return MSDKObjectBuilder.getMsFunction(msLevel);
     }
 
@@ -184,33 +168,21 @@ class MzMLConverter {
     @SuppressWarnings("null")
     @Nonnull
     String extractScanDefinition(Spectrum spectrum) {
-        List<CVParam> cvParams = spectrum.getCvParam();
-        if (cvParams != null) {
-            for (CVParam param : cvParams) {
-                String accession = param.getAccession();
 
-                if (accession == null)
-                    continue;
-                if (accession.equals(MzMLCV.cvScanFilterString))
-                    return param.getValue();
-            }
-        }
+        String scanFilter = extractCVValue(spectrum.getCvParam(),
+                MzMLCV.cvScanFilterString);
+        if (!Strings.isNullOrEmpty(scanFilter))
+            return scanFilter;
+
         ScanList scanListElement = spectrum.getScanList();
         if (scanListElement != null) {
             List<Scan> scanElements = scanListElement.getScan();
             if (scanElements != null) {
                 for (Scan scan : scanElements) {
-                    cvParams = scan.getCvParam();
-                    if (cvParams == null)
-                        continue;
-                    for (CVParam param : cvParams) {
-                        String accession = param.getAccession();
-                        if (accession == null)
-                            continue;
-                        if (accession.equals(MzMLCV.cvScanFilterString))
-                            return param.getValue();
-                    }
-
+                    scanFilter = extractCVValue(scan.getCvParam(),
+                            MzMLCV.cvScanFilterString);
+                    if (!Strings.isNullOrEmpty(scanFilter))
+                        return scanFilter;
                 }
             }
         }
@@ -224,36 +196,26 @@ class MzMLConverter {
 
     @Nonnull
     PolarityType extractPolarity(Spectrum spectrum) {
-        List<CVParam> cvParams = spectrum.getCvParam();
-        if (cvParams != null) {
-            for (CVParam param : cvParams) {
-                String accession = param.getAccession();
 
-                if (accession == null)
-                    continue;
-                if (accession.equals(MzMLCV.cvPolarityPositive))
-                    return PolarityType.POSITIVE;
-                if (accession.equals(MzMLCV.cvPolarityNegative))
-                    return PolarityType.NEGATIVE;
-            }
-        }
+        if (haveCVParam(spectrum.getCvParam(), MzMLCV.cvPolarityPositive))
+            return PolarityType.POSITIVE;
+
+        if (haveCVParam(spectrum.getCvParam(), MzMLCV.cvPolarityNegative))
+            return PolarityType.NEGATIVE;
+
         ScanList scanListElement = spectrum.getScanList();
         if (scanListElement != null) {
             List<Scan> scanElements = scanListElement.getScan();
             if (scanElements != null) {
                 for (Scan scan : scanElements) {
-                    cvParams = scan.getCvParam();
-                    if (cvParams == null)
-                        continue;
-                    for (CVParam param : cvParams) {
-                        String accession = param.getAccession();
-                        if (accession == null)
-                            continue;
-                        if (accession.equals(MzMLCV.cvPolarityPositive))
-                            return PolarityType.POSITIVE;
-                        if (accession.equals(MzMLCV.cvPolarityNegative))
-                            return PolarityType.NEGATIVE;
-                    }
+
+                    if (haveCVParam(scan.getCvParam(),
+                            MzMLCV.cvPolarityPositive))
+                        return PolarityType.POSITIVE;
+
+                    if (haveCVParam(scan.getCvParam(),
+                            MzMLCV.cvPolarityNegative))
+                        return PolarityType.NEGATIVE;
 
                 }
             }
@@ -275,10 +237,16 @@ class MzMLConverter {
                 || (precursorListElement.getCount().equals(0)))
             return Collections.emptyList();
 
-        Double precursorMz = null;
-        Integer precursorCharge = null;
+        List<IsolationInfo> isolations = new ArrayList<>();
+
         List<Precursor> precursorList = precursorListElement.getPrecursor();
         for (Precursor parent : precursorList) {
+
+            Double precursorMz = null;
+            Double isolationWindowTarget = null;
+            Double isolationWindowLower = null;
+            Double isolationWindowUpper = null;
+            Integer precursorCharge = null;
 
             SelectedIonList selectedIonListElement = parent
                     .getSelectedIonList();
@@ -291,33 +259,54 @@ class MzMLConverter {
                 continue;
 
             for (ParamGroup pg : selectedIonParams) {
-                List<CVParam> pgCvParams = pg.getCvParam();
-                for (CVParam param : pgCvParams) {
-                    String accession = param.getAccession();
-                    String value = param.getValue();
-                    if ((accession == null) || (value == null))
-                        continue;
-                    // cvMz is sometimes used is used in mzML 1.0 files
-                    if (accession.equals(MzMLCV.cvMz)
-                            || accession.equals(MzMLCV.cvPrecursorMz)) {
-                        precursorMz = Double.parseDouble(value);
+                // cvMz is sometimes used is used in mzML 1.0 files
+                String cvVal = extractCVValue(pg, MzMLCV.cvMz);
+                if (!Strings.isNullOrEmpty(cvVal))
+                    precursorMz = Double.parseDouble(cvVal);
 
-                    }
-                    if (accession.equals(MzMLCV.cvChargeState)) {
-                        precursorCharge = Integer.parseInt(value);
-                    }
-                }
+                cvVal = extractCVValue(pg, MzMLCV.cvPrecursorMz);
+                if (!Strings.isNullOrEmpty(cvVal))
+                    precursorMz = Double.parseDouble(cvVal);
+
+                cvVal = extractCVValue(pg, MzMLCV.cvChargeState);
+                if (!Strings.isNullOrEmpty(cvVal))
+                    precursorCharge = Integer.parseInt(cvVal);
 
             }
+
+            String cvVal = extractCVValue(parent.getIsolationWindow(),
+                    MzMLCV.cvIsolationWindowLowerOffset);
+            if (!Strings.isNullOrEmpty(cvVal))
+                isolationWindowLower = Double.parseDouble(cvVal);
+
+            cvVal = extractCVValue(parent.getIsolationWindow(),
+                    MzMLCV.cvIsolationWindowUpperOffset);
+            if (!Strings.isNullOrEmpty(cvVal))
+                isolationWindowUpper = Double.parseDouble(cvVal);
+
+            cvVal = extractCVValue(parent.getIsolationWindow(),
+                    MzMLCV.cvIsolationWindowTarget);
+            if (!Strings.isNullOrEmpty(cvVal))
+                isolationWindowTarget = Double.parseDouble(cvVal);
+
+            if (precursorMz != null) {
+                if (isolationWindowTarget == null)
+                    isolationWindowTarget = precursorMz;
+                if (isolationWindowLower == null)
+                    isolationWindowLower = 0.5;
+                if (isolationWindowUpper == null)
+                    isolationWindowUpper = 0.5;
+                Range<Double> isolationRange = Range.closed(
+                        isolationWindowTarget - isolationWindowLower,
+                        isolationWindowTarget + isolationWindowUpper);
+                IsolationInfo isolation = MSDKObjectBuilder.getIsolationInfo(
+                        isolationRange, null, precursorMz, precursorCharge,
+                        null);
+                isolations.add(isolation);
+            }
         }
-        if (precursorMz != null) {
-            IsolationInfo isolation = MSDKObjectBuilder.getIsolationInfo(
-                    Range.singleton(precursorMz), null, precursorMz,
-                    precursorCharge, null);
-            return ImmutableList.<IsolationInfo> builder().add(isolation)
-                    .build();
-        }
-        return Collections.emptyList();
+
+        return Collections.unmodifiableList(isolations);
     }
 
     @Nonnull
@@ -353,25 +342,19 @@ class MzMLConverter {
     @Nonnull
     public ChromatogramType extractChromatogramType(
             uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {
-        List<CVParam> cvParams = chromatogram.getCvParam();
-        cvParams = chromatogram.getCvParam();
 
-        if (cvParams != null) {
-            for (CVParam param : cvParams) {
-                String accession = param.getAccession();
+        if (haveCVParam(chromatogram.getCvParam(), MzMLCV.cvChromatogramTIC))
+            return ChromatogramType.TIC;
 
-                if (accession == null)
-                    continue;
-                if (accession.equals(MzMLCV.cvChromatogramTIC))
-                    return ChromatogramType.TIC;
-                if (accession.equals(MzMLCV.cvChromatogramMRM_SRM))
-                    return ChromatogramType.MRM_SRM;
-                if (accession.equals(MzMLCV.cvChromatogramSIC))
-                    return ChromatogramType.SIC;
-                if (accession.equals(MzMLCV.cvChromatogramBPC))
-                    return ChromatogramType.BPC;
-            }
-        }
+        if (haveCVParam(chromatogram.getCvParam(),
+                MzMLCV.cvChromatogramMRM_SRM))
+            return ChromatogramType.MRM_SRM;
+
+        if (haveCVParam(chromatogram.getCvParam(), MzMLCV.cvChromatogramSIC))
+            return ChromatogramType.SIC;
+
+        if (haveCVParam(chromatogram.getCvParam(), MzMLCV.cvChromatogramBPC))
+            return ChromatogramType.BPC;
 
         return ChromatogramType.UNKNOWN;
     }
@@ -390,49 +373,36 @@ class MzMLConverter {
     public List<IsolationInfo> extractIsolations(
             uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {
         if (extractChromatogramType(chromatogram) == ChromatogramType.MRM_SRM) {
-            List<CVParam> cvParams;
             Double precursorIsolationMz = null, productIsolationMz = null,
                     precursorActivationEnergy = null;
             ActivationType precursorActivation = ActivationType.UNKNOWN;
             ActivationInfo activationInfo = null;
 
             // Precursor isolation window
-            cvParams = chromatogram.getPrecursor().getIsolationWindow()
-                    .getCvParam();
-            if (cvParams != null) {
-                for (CVParam param : cvParams) {
-                    if (param.getAccession().equals(MzMLCV.cvIsolationWindow)) {
-                        precursorIsolationMz = Double
-                                .parseDouble(param.getValue());
-                        break;
-                    }
-                }
-            }
+            String cvVal = extractCVValue(chromatogram.getPrecursor()
+                    .getIsolationWindow().getCvParam(),
+                    MzMLCV.cvIsolationWindowTarget);
+            if (!Strings.isNullOrEmpty(cvVal))
+                precursorIsolationMz = Double.parseDouble(cvVal);
 
             // Precursor activation
-            cvParams = chromatogram.getPrecursor().getActivation().getCvParam();
-            if (cvParams != null) {
-                for (CVParam param : cvParams) {
-                    if (param.getAccession().equals(MzMLCV.cvActivationCID))
-                        precursorActivation = ActivationType.CID;
-                    if (param.getAccession().equals(MzMLCV.cvActivationEnergy))
-                        precursorActivationEnergy = Double
-                                .parseDouble(param.getValue());
-                }
-            }
+            if (haveCVParam(
+                    chromatogram.getPrecursor().getActivation().getCvParam(),
+                    MzMLCV.cvActivationCID))
+                precursorActivation = ActivationType.CID;
+
+            cvVal = extractCVValue(
+                    chromatogram.getPrecursor().getActivation().getCvParam(),
+                    MzMLCV.cvActivationEnergy);
+            if (!Strings.isNullOrEmpty(cvVal))
+                precursorActivationEnergy = Double.parseDouble(cvVal);
 
             // Product isolation window
-            cvParams = chromatogram.getProduct().getIsolationWindow()
-                    .getCvParam();
-            if (cvParams != null) {
-                for (CVParam param : cvParams) {
-                    if (param.getAccession().equals(MzMLCV.cvIsolationWindow)) {
-                        productIsolationMz = Double
-                                .parseDouble(param.getValue());
-                        break;
-                    }
-                }
-            }
+            cvVal = extractCVValue(
+                    chromatogram.getProduct().getIsolationWindow().getCvParam(),
+                    MzMLCV.cvIsolationWindowTarget);
+            if (!Strings.isNullOrEmpty(cvVal))
+                productIsolationMz = Double.parseDouble(cvVal);
 
             if (precursorActivationEnergy != null) {
                 activationInfo = MSDKObjectBuilder.getActivationInfo(
@@ -456,7 +426,7 @@ class MzMLConverter {
                 isolations.add(isolationInfo);
             }
 
-            return isolations;
+            return Collections.unmodifiableList(isolations);
         }
 
         return Collections.emptyList();
@@ -573,6 +543,43 @@ class MzMLConverter {
 
     @Nullable
     Double extractMz(uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram) {
+        return null;
+    }
+
+    private boolean haveCVParam(@Nullable List<CVParam> cvParams,
+            @Nonnull String cvParam) {
+        if (cvParams == null)
+            return false;
+        for (CVParam param : cvParams) {
+            String accession = param.getAccession();
+            if (accession == null)
+                continue;
+            if (accession.equals(cvParam)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private @Nullable String extractCVValue(@Nullable ParamGroup pg,
+            @Nonnull String cvParam) {
+        if (pg == null)
+            return null;
+        return extractCVValue(pg.getCvParam(), cvParam);
+    }
+
+    private @Nullable String extractCVValue(@Nullable List<CVParam> cvParams,
+            @Nonnull String cvParam) {
+        if (cvParams == null)
+            return null;
+        for (CVParam param : cvParams) {
+            String accession = param.getAccession();
+            if (accession == null)
+                continue;
+            if (accession.equals(cvParam)) {
+                return param.getValue();
+            }
+        }
         return null;
     }
 
