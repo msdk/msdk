@@ -43,9 +43,9 @@ public class IsotopePatternGeneratorAlgorithm {
     private static final Pattern formulaPattern = Pattern.compile(
             "^[\\[\\(]?(([A-Z][a-z]?[0-9]*)+)[\\]\\)]?(([0-9]*)([-+]))?$");
 
-    public static MsSpectrum generateIsotopes(@Nonnull String chemicalFormula,
-            @Nonnull Double minAbundance, @Nonnull Float intensityScale,
-            @Nonnull Double mzTolerance) {
+    public static @Nonnull MsSpectrum generateIsotopes(
+            @Nonnull String chemicalFormula, @Nonnull Double minAbundance,
+            @Nonnull Float intensityScale, @Nonnull Double mzTolerance) {
 
         Matcher m = formulaPattern.matcher(chemicalFormula);
         if (!m.matches())
@@ -76,7 +76,7 @@ public class IsotopePatternGeneratorAlgorithm {
 
     }
 
-    public static MsSpectrum generateIsotopes(
+    public static @Nonnull MsSpectrum generateIsotopes(
             @Nonnull IMolecularFormula cdkFormula, @Nonnull Integer charge,
             @Nonnull Double minAbundance, @Nonnull Float intensityScale,
             @Nonnull Double mzTolerance) {
