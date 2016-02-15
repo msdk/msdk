@@ -35,6 +35,8 @@ import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonType;
+import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -177,6 +179,13 @@ public class MSDKObjectBuilder {
             @Nonnull String featureTableName,
             @Nonnull DataPointStore dataPointStore) {
         return new SimpleFeatureTable(featureTableName, dataPointStore);
+    }
+
+    public static final @Nonnull MsSpectrum getMsSpectrum(
+            @Nonnull double mzValues[], @Nonnull float intensityValues[],
+            @Nonnull Integer size, @Nonnull MsSpectrumType spectrumType) {
+        return new SimpleMsSpectrum(mzValues, intensityValues, size,
+                spectrumType);
     }
 
     /**

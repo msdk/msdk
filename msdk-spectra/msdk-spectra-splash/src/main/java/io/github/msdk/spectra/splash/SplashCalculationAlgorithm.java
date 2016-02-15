@@ -42,7 +42,7 @@ public class SplashCalculationAlgorithm {
     /**
      * how to scale the spectrum
      */
-    public static final int scalingOfRelativeIntensity = 100;
+    public static final Float scalingOfRelativeIntensity = 100f;
 
     /**
      * how should ions in the string representation be separeted
@@ -175,7 +175,7 @@ public class SplashCalculationAlgorithm {
         // convert the spectrum to relative values
         float relativeIntensities[] = intValues.clone();
 
-        MsSpectrumUtil.convertToRelative(relativeIntensities, size,
+        MsSpectrumUtil.normalizeIntensity(relativeIntensities, size,
                 scalingOfRelativeIntensity);
 
         StringBuffer buffer = new StringBuffer();
