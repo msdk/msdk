@@ -34,7 +34,7 @@ import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionMethod;
+import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
@@ -364,7 +364,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
         scan.setDataPoints(mzValues, intensityValues, numOfDataPoints);
 
         // Auto-detect whether this scan is centroided
-        MsSpectrumType spectrumType = SpectrumTypeDetectionMethod
+        MsSpectrumType spectrumType = SpectrumTypeDetectionAlgorithm
                 .detectSpectrumType(mzValues, intensityValues, numOfDataPoints);
         scan.setSpectrumType(spectrumType);
 

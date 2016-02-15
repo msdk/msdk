@@ -34,7 +34,7 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionMethod;
+import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
 class MzDataSaxHandler extends DefaultHandler {
 
@@ -216,7 +216,7 @@ class MzDataSaxHandler extends DefaultHandler {
             spectrumInstrumentFlag = false;
 
             // Auto-detect whether this scan is centroided
-            MsSpectrumType spectrumType = SpectrumTypeDetectionMethod
+            MsSpectrumType spectrumType = SpectrumTypeDetectionAlgorithm
                     .detectSpectrumType(mzBuffer, intensityBuffer, peaksCount);
 
             // Create a new scan

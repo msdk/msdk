@@ -36,7 +36,7 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionMethod;
+import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
 class RawDumpParser {
 
@@ -254,7 +254,7 @@ class RawDumpParser {
         if (line.startsWith("END OF SCAN")) {
 
             // Auto-detect whether this scan is centroided
-            MsSpectrumType spectrumType = SpectrumTypeDetectionMethod
+            MsSpectrumType spectrumType = SpectrumTypeDetectionAlgorithm
                     .detectSpectrumType(mzValues, intensityValues,
                             numOfDataPoints);
 

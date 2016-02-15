@@ -40,7 +40,7 @@ import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionMethod;
+import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.MsSpectrumUtil;
 import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
@@ -171,7 +171,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                         numOfDataPoints);
 
                 // Auto-detect whether this scan is centroided
-                MsSpectrumType spectrumType = SpectrumTypeDetectionMethod
+                MsSpectrumType spectrumType = SpectrumTypeDetectionAlgorithm
                         .detectSpectrumType(mzValues, intensityValues,
                                 numOfDataPoints);
 

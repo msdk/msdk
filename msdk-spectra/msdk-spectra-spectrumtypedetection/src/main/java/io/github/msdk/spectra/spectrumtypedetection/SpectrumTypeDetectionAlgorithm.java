@@ -27,7 +27,7 @@ import io.github.msdk.datamodel.msspectra.MsSpectrumType;
  * thresholded spectra is not trivial. We use multiple checks for that purpose,
  * as described in the code comments.
  */
-public class SpectrumTypeDetectionMethod {
+public class SpectrumTypeDetectionAlgorithm {
 
     /**
      * <p>
