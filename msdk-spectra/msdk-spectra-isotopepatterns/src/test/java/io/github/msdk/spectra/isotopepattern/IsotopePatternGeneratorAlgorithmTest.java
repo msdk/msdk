@@ -76,7 +76,6 @@ public class IsotopePatternGeneratorAlgorithmTest {
         MsSpectrum pattern = IsotopePatternGeneratorAlgorithm
                 .generateIsotopes(formula, 0.01, 1000.0f, 0.005);
 
-        System.out.println(MsSpectrumUtil.msSpectrumToString(pattern));
         Assert.assertEquals(new Integer(2), pattern.getNumberOfDataPoints());
         Assert.assertEquals(1000.0f, pattern.getIntensityValues()[0], 0.000001);
         Assert.assertEquals(11.99945142009, pattern.getMzValues()[0],
