@@ -14,5 +14,6 @@
 		<module>msdk-spectra-splash</module>		
 		<module>msdk-spectra-comparison</module>
 		<module>msdk-spectra-shoulderpeaks</module>
+		<module>msdk-spectra-isotopepattern</module>
 	</modules>
 </project>

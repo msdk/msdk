@@ -70,7 +70,12 @@
 			<version>${project.version}</version>
 		</dependency>
 
-
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-txt</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-io-chromatof</artifactId>
@@ -179,6 +184,12 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-spectra-isotopepattern</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-spectra-shoulderpeaks</artifactId>
