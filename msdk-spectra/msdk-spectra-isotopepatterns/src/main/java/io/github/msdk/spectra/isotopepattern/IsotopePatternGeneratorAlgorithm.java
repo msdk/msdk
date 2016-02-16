@@ -40,6 +40,7 @@ import io.github.msdk.util.MsSpectrumUtil;
 public class IsotopePatternGeneratorAlgorithm {
 
     private static final double ELECTRON_MASS = 5.4857990943E-4;
+
     private static final Pattern formulaPattern = Pattern.compile(
             "^[\\[\\(]?(([A-Z][a-z]?[0-9]*)+)[\\]\\)]?(([0-9]*)([-+]))?$");
 
@@ -56,9 +57,16 @@ public class IsotopePatternGeneratorAlgorithm {
         String chargeCount = m.group(4);
         String chargeSign = m.group(5);
 
+        // Parse charge, 0 is default
         int charge = 0;
         if (!Strings.isNullOrEmpty(chargeCount))
             charge = Integer.parseInt(chargeCount);
+
+        // Simple + or - indicates charge 1
+        if ((charge == 0) && (!Strings.isNullOrEmpty(chargeSign)))
+            charge = 1;
+
+        // Check for negative charge
         if ("-".equals(chargeSign))
             charge *= -1;
 
