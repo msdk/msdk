@@ -26,6 +26,9 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
+import io.github.msdk.util.DataPointSorter;
+import io.github.msdk.util.DataPointSorter.SortingDirection;
+import io.github.msdk.util.DataPointSorter.SortingProperty;
 
 public class MsSpectrumParserAlgorithm {
 
@@ -35,8 +38,8 @@ public class MsSpectrumParserAlgorithm {
     public static @Nonnull MsSpectrum parseMsSpectrum(
             @Nonnull String spectrumText) {
 
-        DoubleBuffer mzValues = DoubleBuffer.allocate(16);
-        FloatBuffer intensityValues = FloatBuffer.allocate(16);
+        DoubleBuffer mzBuffer = DoubleBuffer.allocate(16);
+        FloatBuffer intensityBuffer = FloatBuffer.allocate(16);
 
         Scanner scanner = new Scanner(spectrumText);
         while (scanner.hasNextLine()) {
@@ -51,8 +54,8 @@ public class MsSpectrumParserAlgorithm {
             try {
                 double mz = Double.parseDouble(mzString);
                 float intensity = Float.parseFloat(intensityString);
-                mzValues.put(mz);
-                intensityValues.put(intensity);
+                mzBuffer.put(mz);
+                intensityBuffer.put(intensity);
             } catch (Exception e) {
                 // Ignore misformatted lines
                 continue;
@@ -60,11 +63,18 @@ public class MsSpectrumParserAlgorithm {
         }
         scanner.close();
 
+        final double mzValues[] = mzBuffer.array();
+        final float intensityValues[] = intensityBuffer.array();
+        final int size = mzBuffer.position();
+
+        // Sort the data points, in case they were not ordered
+        DataPointSorter.sortDataPoints(mzValues, intensityValues, size,
+                SortingProperty.MZ, SortingDirection.ASCENDING);
+
         MsSpectrumType specType = SpectrumTypeDetectionAlgorithm
-                .detectSpectrumType(mzValues.array(), intensityValues.array(),
-                        mzValues.position());
-        MsSpectrum result = MSDKObjectBuilder.getMsSpectrum(mzValues.array(),
-                intensityValues.array(), mzValues.position(), specType);
+                .detectSpectrumType(mzValues, intensityValues, size);
+        MsSpectrum result = MSDKObjectBuilder.getMsSpectrum(mzValues,
+                intensityValues, size, specType);
 
         return result;
 

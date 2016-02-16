@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
+import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
@@ -90,6 +91,13 @@ abstract class AbstractSpectrum implements MsSpectrum {
     public synchronized void setDataPoints(@Nonnull double mzValues[],
             @Nonnull float intensityValues[], @Nonnull Integer size) {
 
+        // Make sure the spectrum is sorted
+        for (int i = 0; i < size - 1; i++) {
+            if (mzValues[i] > mzValues[i + 1])
+                throw new MSDKRuntimeException(
+                        "m/z values must be sorted in ascending order");
+        }
+        
         if (dataStoreMzId != null)
             dataPointStore.removeData(dataStoreMzId);
         if (dataStoreIntensityId != null)

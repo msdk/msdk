@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
+import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.util.MsSpectrumUtil;
@@ -38,16 +39,24 @@ class SimpleMsSpectrum implements MsSpectrum {
     private @Nonnull MsSpectrumType spectrumType;
 
     SimpleMsSpectrum(@Nonnull double mzValues[],
-            @Nonnull float intensityValues[], @Nonnull Integer numOfDataPoints,
+            @Nonnull float intensityValues[], @Nonnull Integer size,
             @Nonnull MsSpectrumType spectrumType) {
         Preconditions.checkNotNull(mzValues);
         Preconditions.checkNotNull(intensityValues);
         Preconditions.checkNotNull(numOfDataPoints);
         Preconditions.checkNotNull(spectrumType);
+        
+        // Make sure the spectrum is sorted
+        for (int i = 0; i < size - 1; i++) {
+            if (mzValues[i] > mzValues[i + 1])
+                throw new MSDKRuntimeException(
+                        "m/z values must be sorted in ascending order");
+        }
+        
         this.mzValues = mzValues;
         this.intensityValues = intensityValues;
-        this.numOfDataPoints = numOfDataPoints;
-        this.mzRange = MsSpectrumUtil.getMzRange(mzValues, numOfDataPoints);
+        this.numOfDataPoints = size;
+        this.mzRange = MsSpectrumUtil.getMzRange(mzValues, size);
         this.totalIonCurrent = MsSpectrumUtil.getTIC(intensityValues,
                 numOfDataPoints);
         this.spectrumType = spectrumType;
@@ -97,6 +106,14 @@ class SimpleMsSpectrum implements MsSpectrum {
         Preconditions.checkNotNull(mzValues);
         Preconditions.checkNotNull(intensityValues);
         Preconditions.checkNotNull(size);
+        
+        // Make sure the spectrum is sorted
+        for (int i = 0; i < size - 1; i++) {
+            if (mzValues[i] > mzValues[i + 1])
+                throw new MSDKRuntimeException(
+                        "m/z values must be sorted in ascending order");
+        }
+        
         this.mzValues = mzValues;
         this.intensityValues = intensityValues;
         this.numOfDataPoints = size;
