@@ -30,7 +30,7 @@ import io.github.msdk.util.MsSpectrumUtil;
  * Simple implementation of the MassSpectrum interface, which stores its data in
  * a data point store.
  */
-abstract class AbstractSpectrum implements MsSpectrum {
+public abstract class AbstractSpectrum implements MsSpectrum {
 
     private final @Nonnull DataPointStore dataPointStore;
 
@@ -42,7 +42,7 @@ abstract class AbstractSpectrum implements MsSpectrum {
 
     private @Nonnull MsSpectrumType spectrumType;
 
-    AbstractSpectrum(@Nonnull DataPointStore dataPointStore) {
+    public AbstractSpectrum(@Nonnull DataPointStore dataPointStore) {
         Preconditions.checkNotNull(dataPointStore);
         this.dataPointStore = dataPointStore;
         totalIonCurrent = 0f;

@@ -1,0 +1,11 @@
+NAME: Molecule
+COMMENT: Sample MSP file from NIST documentation  
+FORMULA: C6H6
+MW: 78
+If the User spectrum Search contains a CAS registry number with its appropriate prefix (CAS: ), the display of the spectrum in the Plot, Compare, and Structure Windows will have the structure of the compound with that CAS registry number if it is present in the NIST/EPA/NIH Main Database.
+CAS: 71-43-2
+SYNONYM: some synonym
+Num Peaks: 18
+26 430; 27 340; 28 40; 37 480; 38 611; 39 1411; 49 300; 50 1792;
+51 2052; 52 1962; 63 340; 73 160; 74 480; 75 180;
+76 721; 77 1401; 78 9806; 79 651;

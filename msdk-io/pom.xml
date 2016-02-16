@@ -22,5 +22,6 @@
 		<module>msdk-io-chromatof</module>
 		<module>msdk-io-csv</module>
 		<module>msdk-io-txt</module>
+		<module>msdk-io-msp</module>
 	</modules>
 </project>
