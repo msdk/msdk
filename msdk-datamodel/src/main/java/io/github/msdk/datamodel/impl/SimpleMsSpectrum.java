@@ -43,7 +43,7 @@ class SimpleMsSpectrum implements MsSpectrum {
             @Nonnull MsSpectrumType spectrumType) {
         Preconditions.checkNotNull(mzValues);
         Preconditions.checkNotNull(intensityValues);
-        Preconditions.checkNotNull(numOfDataPoints);
+        Preconditions.checkNotNull(size);
         Preconditions.checkNotNull(spectrumType);
         
         // Make sure the spectrum is sorted
