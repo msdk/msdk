@@ -66,7 +66,7 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
      *            a {@link java.io.File} object.
      * @param separator
      *            a {@link java.lang.String} object.
-     * @param separatorIDs
+     * @param itemSeparator
      *            a {@link java.lang.String} object.
      * @param exportAllIds
      *            a {@link java.lang.Boolean} object.
