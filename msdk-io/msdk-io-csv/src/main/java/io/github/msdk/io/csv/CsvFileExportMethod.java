@@ -179,20 +179,28 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
                         strValue = strValue + rt2.toString();
                     }
                 }
-                // Ion annotations
+                // List
                 else if (object instanceof List<?>) {
-                    List<IonAnnotation> ionAnnotations = (List<IonAnnotation>) object;
-                    for (IonAnnotation ionAnnotation : ionAnnotations) {
+                    strValue = "";
+                    List<?> list = (List<?>) object;
+                    for (Object obj : list) {
                         if (strValue != "")
                             strValue = strValue + itemSeparator;
 
-                        if (ionAnnotation.getDescription() != null)
-                            strValue = strValue
-                                    + ionAnnotation.getDescription();
-                        else
-                            strValue = strValue
-                                    + ionAnnotation.getAnnotationId();
+                        // Ion annotations
+                        if (obj instanceof IonAnnotation) {
+                            IonAnnotation ionAnnotation = (IonAnnotation) obj;
+                            if (ionAnnotation.getDescription() != null)
+                                strValue = strValue
+                                        + ionAnnotation.getDescription();
+                            else
+                                strValue = strValue
+                                        + ionAnnotation.getAnnotationId();
+                        } else {
+                            strValue = strValue + obj.toString();
+                        }
                     }
+
                 }
                 // Everything else
                 else {
