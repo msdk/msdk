@@ -236,11 +236,10 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
         if (inputString == null)
             return "";
 
-        // Remove all special characters (particularly \n would mess up our CSV
-        // format).
+        // Remove all special characters (particularly \n would cause issues)
         String result = inputString.replaceAll("[\\p{Cntrl}]", " ");
 
-        // If the text contains separator, we will add parenthesis
+        // If the text contains the separator, add parenthesis
         if (result.contains(separator)) {
             result = "\"" + result.replaceAll("\"", "'") + "\"";
         }
