@@ -49,6 +49,7 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
     private @Nonnull String itemSeparator;
     private @Nonnull Boolean exportAllIds;
     private @Nonnull List<FeatureTableColumn<?>> columns;
+    String newLine = System.lineSeparator();
 
     // Other variables
     private int parsedRows, totalRows = 0;
@@ -179,20 +180,31 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
                         strValue = strValue + rt2.toString();
                     }
                 }
-                // Ion annotations
+                // List
                 else if (object instanceof List<?>) {
-                    List<IonAnnotation> ionAnnotations = (List<IonAnnotation>) object;
-                    for (IonAnnotation ionAnnotation : ionAnnotations) {
+                    strValue = "";
+                    List<?> list = (List<?>) object;
+                    for (Object obj : list) {
                         if (strValue != "")
                             strValue = strValue + itemSeparator;
 
-                        if (ionAnnotation.getDescription() != null)
-                            strValue = strValue
-                                    + ionAnnotation.getDescription();
-                        else
-                            strValue = strValue
-                                    + ionAnnotation.getAnnotationId();
+                        // Ion annotations
+                        if (obj instanceof IonAnnotation) {
+                            IonAnnotation ionAnnotation = (IonAnnotation) obj;
+                            if (ionAnnotation.getDescription() != null)
+                                strValue = strValue
+                                        + ionAnnotation.getDescription();
+                            else
+                                strValue = strValue
+                                        + ionAnnotation.getAnnotationId();
+
+                            if (!exportAllIds)
+                                break;
+                        } else {
+                            strValue = strValue + obj.toString();
+                        }
                     }
+
                 }
                 // Everything else
                 else {
@@ -207,7 +219,7 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
 
             // Write the line to the CSV file
             try {
-                writer.write("\n" + stringLine);
+                writer.write(newLine + stringLine);
             } catch (Exception e) {
                 logger.info("Could not write to file " + csvFile);
                 return;
@@ -215,6 +227,8 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
 
             if (canceled)
                 return;
+
+            parsedRows++;
         }
 
     }
@@ -223,11 +237,10 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
         if (inputString == null)
             return "";
 
-        // Remove all special characters (particularly \n would mess up our CSV
-        // format).
+        // Remove all special characters (particularly \n would cause issues)
         String result = inputString.replaceAll("[\\p{Cntrl}]", " ");
 
-        // If the text contains separator, we will add parenthesis
+        // If the text contains the separator, add parenthesis
         if (result.contains(separator)) {
             result = "\"" + result.replaceAll("\"", "'") + "\"";
         }
