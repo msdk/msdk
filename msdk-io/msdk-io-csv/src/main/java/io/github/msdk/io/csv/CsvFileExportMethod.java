@@ -49,6 +49,7 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
     private @Nonnull String itemSeparator;
     private @Nonnull Boolean exportAllIds;
     private @Nonnull List<FeatureTableColumn<?>> columns;
+    String newLine = System.lineSeparator();
 
     // Other variables
     private int parsedRows, totalRows = 0;
@@ -218,7 +219,7 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
 
             // Write the line to the CSV file
             try {
-                writer.write("\n" + stringLine);
+                writer.write(newLine + stringLine);
             } catch (Exception e) {
                 logger.info("Could not write to file " + csvFile);
                 return;
