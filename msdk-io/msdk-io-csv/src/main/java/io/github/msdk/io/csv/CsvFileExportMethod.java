@@ -196,6 +196,9 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
                             else
                                 strValue = strValue
                                         + ionAnnotation.getAnnotationId();
+
+                            if (!exportAllIds)
+                                break;
                         } else {
                             strValue = strValue + obj.toString();
                         }
@@ -223,6 +226,8 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
 
             if (canceled)
                 return;
+
+            parsedRows++;
         }
 
     }
