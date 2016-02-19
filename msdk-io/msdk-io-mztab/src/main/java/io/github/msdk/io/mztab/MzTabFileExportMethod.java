@@ -307,7 +307,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                         if (peakMZval != null) {
                             String peakMZ = peakMZval.toString();
                             sm.setOptionColumnValue(new Assay(sampleCounter),
-                                    "peak_mz", peakMZ);
+                                    "mz", peakMZ);
                         }
                     }
 
@@ -333,7 +333,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                             if (rtValue != null)
                                 sm.setRetentionTime(rtValue);
                             sm.setOptionColumnValue(new Assay(sampleCounter),
-                                    "peak_rt", rtValue);
+                                    "rt", rtValue);
                         }
                     }
 
@@ -345,7 +345,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                         if (peakHeightVal != null) {
                             String peakHeight = peakHeightVal.toString();
                             sm.setOptionColumnValue(new Assay(sampleCounter),
-                                    "peak_height", peakHeight);
+                                    "height", peakHeight);
                         }
                     }
 
@@ -357,8 +357,6 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                         sm.setAbundanceColumnValue(new Assay(sampleCounter),
                                 peakArea);
                     }
-                    sm.setAbundanceColumnValue(new Assay(sampleCounter),
-                            1.0);
 
                 }
 
@@ -376,6 +374,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
             if (canceled)
                 return;
 
+            parsedRows++;
         }
 
     }
