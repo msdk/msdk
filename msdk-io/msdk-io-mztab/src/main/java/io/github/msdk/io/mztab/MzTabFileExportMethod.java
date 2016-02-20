@@ -211,47 +211,52 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
         // Write data rows
         for (FeatureTableRow row : featureTable.getRows()) {
 
-            // Get ion annotation
+            // Get ion annotation column
             FeatureTableColumn<List<IonAnnotation>> column = featureTable
                     .getColumn(ColumnName.IONANNOTATION, null);
-            List<IonAnnotation> ionAnnotations = row.getData(column);
 
             SmallMolecule sm = new SmallMolecule(factory, mtd);
             Boolean writeFeature = false;
 
-            // Ion annotation information
+            // Ion annotation variables
             String identifier = "";
             // String database = "";
             String formula = "";
             String description = "";
             String url = "";
 
-            for (IonAnnotation ionAnnotation : ionAnnotations) {
-                String ionAnnotationId = ionAnnotation.getAnnotationId();
-                if (ionAnnotationId != null && ionAnnotationId != "") {
-                    identifier = identifier + itemSeparator
-                            + escapeString(ionAnnotationId);
-                    writeFeature = true;
-                }
+            // Get ion annotation
+            if (column != null) {
+                List<IonAnnotation> ionAnnotations = row.getData(column);
+                for (IonAnnotation ionAnnotation : ionAnnotations) {
+                    String ionAnnotationId = ionAnnotation.getAnnotationId();
+                    if (ionAnnotationId != null && ionAnnotationId != "") {
+                        identifier = identifier + itemSeparator
+                                + escapeString(ionAnnotationId);
+                        writeFeature = true;
+                    }
 
-                IMolecularFormula ionFormula = ionAnnotation.getFormula();
-                if (ionFormula != null) {
-                    formula = formula + itemSeparator + escapeString(
-                            MolecularFormulaManipulator.getString(ionFormula));
-                    writeFeature = true;
-                }
+                    IMolecularFormula ionFormula = ionAnnotation.getFormula();
+                    if (ionFormula != null) {
+                        formula = formula + itemSeparator
+                                + escapeString(MolecularFormulaManipulator
+                                        .getString(ionFormula));
+                        writeFeature = true;
+                    }
 
-                String ionDescription = ionAnnotation.getDescription();
-                if (ionDescription != null) {
-                    description = description + itemSeparator
-                            + escapeString(ionDescription);
-                    writeFeature = true;
-                }
+                    String ionDescription = ionAnnotation.getDescription();
+                    if (ionDescription != null) {
+                        description = description + itemSeparator
+                                + escapeString(ionDescription);
+                        writeFeature = true;
+                    }
 
-                URL ionUrl = ionAnnotation.getAccessionURL();
-                if (ionUrl != null) {
-                    url = url + itemSeparator + escapeString(ionUrl.toString());
-                    writeFeature = true;
+                    URL ionUrl = ionAnnotation.getAccessionURL();
+                    if (ionUrl != null) {
+                        url = url + itemSeparator
+                                + escapeString(ionUrl.toString());
+                        writeFeature = true;
+                    }
                 }
             }
 
@@ -302,7 +307,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                         if (peakMZval != null) {
                             String peakMZ = peakMZval.toString();
                             sm.setOptionColumnValue(new Assay(sampleCounter),
-                                    "peak_mz", peakMZ);
+                                    "mz", peakMZ);
                         }
                     }
 
@@ -328,7 +333,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                             if (rtValue != null)
                                 sm.setRetentionTime(rtValue);
                             sm.setOptionColumnValue(new Assay(sampleCounter),
-                                    "peak_rt", rtValue);
+                                    "rt", rtValue);
                         }
                     }
 
@@ -340,7 +345,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                         if (peakHeightVal != null) {
                             String peakHeight = peakHeightVal.toString();
                             sm.setOptionColumnValue(new Assay(sampleCounter),
-                                    "peak_height", peakHeight);
+                                    "height", peakHeight);
                         }
                     }
 
@@ -369,6 +374,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
             if (canceled)
                 return;
 
+            parsedRows++;
         }
 
     }
