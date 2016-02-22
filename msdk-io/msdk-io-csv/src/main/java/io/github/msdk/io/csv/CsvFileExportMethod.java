@@ -295,10 +295,10 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
         if (ionVal2 != "")
             ionVal2 = ionVal2 + itemSeparator;
         IMolecularFormula cdkFormula = ionAnnotation.getFormula();
-        String formula = MolecularFormulaManipulator.getString(cdkFormula);
-        if (formula != null)
+        if (cdkFormula != null) {
+            String formula = MolecularFormulaManipulator.getString(cdkFormula);
             ionVal2 += formula;
-        else
+        } else
             ionVal2 += "";
 
         // Ion type
