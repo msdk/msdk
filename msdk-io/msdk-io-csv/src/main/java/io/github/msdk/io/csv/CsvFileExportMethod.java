@@ -21,16 +21,23 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.openscience.cdk.exception.CDKException;
+import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.openscience.cdk.smiles.SmilesGenerator;
+import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
@@ -50,6 +57,12 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
     private @Nonnull Boolean exportAllIds;
     private @Nonnull List<FeatureTableColumn<?>> columns;
     String newLine = System.lineSeparator();
+
+    // Ion Annotation information variables
+    String ionVal1;
+    String ionVal2;
+    String ionVal3;
+    String ionVal4;
 
     // Other variables
     private int parsedRows, totalRows = 0;
@@ -122,6 +135,8 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
         // Buffer for writing
         StringBuffer line = new StringBuffer();
 
+        Boolean writeIonAnnotation = false;
+
         // Write column headers
         for (FeatureTableColumn<?> column : columns) {
             String columnName = column.getName();
@@ -133,6 +148,21 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
             }
 
             line.append(escapeStringForCSV(columnName) + separator);
+
+            // Add additional columns related to the IonAnnotation
+            if (column == featureTable.getColumn(ColumnName.IONANNOTATION,
+                    null)) {
+                String[] ionColumns = new String[4];
+                ionColumns[0] = "Expected m/z value";
+                ionColumns[1] = "Formula";
+                ionColumns[2] = "Ion type";
+                ionColumns[3] = "SMILES";
+
+                for (String s : ionColumns)
+                    line.append(escapeStringForCSV(s) + separator);
+
+                writeIonAnnotation = true;
+            }
         }
 
         // Remove last separator
@@ -160,6 +190,11 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
             for (FeatureTableColumn<?> column : columns) {
                 Object object = row.getData(column);
                 String strValue = "";
+                ionVal1 = "";
+                ionVal2 = "";
+                ionVal3 = "";
+                ionVal4 = "";
+                Boolean writeIonData = false;
 
                 if (object == null) {
                     strValue = "";
@@ -198,6 +233,12 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
                                 strValue = strValue
                                         + ionAnnotation.getAnnotationId();
 
+                            // Add additional data related to the IonAnnotation
+                            if (writeIonAnnotation) {
+                                getAdditionalIonAnnotationData(ionAnnotation);
+                                writeIonData = true;
+                            }
+
                             if (!exportAllIds)
                                 break;
                         } else {
@@ -212,6 +253,13 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
                 }
 
                 line.append(strValue + separator);
+
+                if (writeIonData) {
+                    line.append(ionVal1 + separator);
+                    line.append(ionVal2 + separator);
+                    line.append(ionVal3 + separator);
+                    line.append(ionVal4 + separator);
+                }
             }
 
             // Remove last separator
@@ -231,6 +279,54 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
             parsedRows++;
         }
 
+    }
+
+    private void getAdditionalIonAnnotationData(IonAnnotation ionAnnotation) {
+        // Expected m/z value
+        if (ionVal1 != "")
+            ionVal1 = ionVal1 + itemSeparator;
+        Double expectedMz = ionAnnotation.getExpectedMz();
+        if (expectedMz != null)
+            ionVal1 += expectedMz;
+        else
+            ionVal1 += "";
+
+        // Formula
+        if (ionVal2 != "")
+            ionVal2 = ionVal2 + itemSeparator;
+        IMolecularFormula cdkFormula = ionAnnotation.getFormula();
+        if (cdkFormula != null) {
+            String formula = MolecularFormulaManipulator.getString(cdkFormula);
+            ionVal2 += formula;
+        } else
+            ionVal2 += "";
+
+        // Ion type
+        if (ionVal3 != "")
+            ionVal3 = ionVal3 + itemSeparator;
+        IonType ionType = ionAnnotation.getIonType();
+        if (ionType != null)
+            ionVal3 += ionType.getName();
+        else
+            ionVal3 += "";
+
+        // Chemical structure = SMILES
+        if (ionVal4 != "")
+            ionVal4 = ionVal4 + itemSeparator;
+        IAtomContainer checmicalStructure = ionAnnotation
+                .getChemicalStructure();
+        SmilesGenerator sg = SmilesGenerator.generic();
+
+        if (checmicalStructure != null) {
+            try {
+                ionVal4 += sg.create(checmicalStructure);
+            } catch (CDKException e) {
+                logger.info("Could not create SMILE for "
+                        + ionAnnotation.getDescription());
+                return;
+            }
+        } else
+            ionVal4 += "";
     }
 
     private String escapeStringForCSV(final String inputString) {
