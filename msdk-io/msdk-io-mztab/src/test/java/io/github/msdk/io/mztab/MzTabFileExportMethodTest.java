@@ -73,7 +73,7 @@ public class MzTabFileExportMethodTest {
 
         // Clean up
         featureTable.dispose();
-        
+
         // Import the file again
         importer = new MzTabFileImportMethod(tempFile, dataStore);
         FeatureTable featureTable2 = importer.execute();

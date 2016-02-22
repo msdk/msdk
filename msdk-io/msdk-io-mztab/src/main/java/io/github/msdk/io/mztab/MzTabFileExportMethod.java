@@ -296,29 +296,10 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                 if (rowMZ != null)
                     sm.setExpMassToCharge(rowMZ);
 
-                // Common feature RT value
-                ChromatographyInfo chromatographyInfo = row
-                        .getChromatographyInfo();
-                if (chromatographyInfo != null) {
-                    Float rt1 = chromatographyInfo.getRetentionTime();
-                    Float rt2 = chromatographyInfo.getSecondaryRetentionTime();
-                    String rtValue = null;
-                    if (rt1 != null) {
-                        rtValue = rt1.toString();
-                    }
-                    if (rtValue != null && rt2 != null) {
-                        rtValue = rtValue + itemSeparator;
-                    }
-                    if (rt2 != null) {
-                        rtValue = rtValue + rt2.toString();
-                    }
-                    if (rtValue != null)
-                        sm.setRetentionTime(rtValue);
-                }
-
                 // Sample specific data
                 List<Sample> samples = featureTable.getSamples();
                 int sampleCounter = 0;
+                ChromatographyInfo chromatographyInfo;
                 for (Sample sample : samples) {
                     sampleCounter++;
 
@@ -381,6 +362,25 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                                 peakArea);
                     }
 
+                }
+
+                // Common feature RT value
+                chromatographyInfo = row.getChromatographyInfo();
+                if (chromatographyInfo != null) {
+                    Float rt1 = chromatographyInfo.getRetentionTime();
+                    Float rt2 = chromatographyInfo.getSecondaryRetentionTime();
+                    String rtValue = null;
+                    if (rt1 != null) {
+                        rtValue = rt1.toString();
+                    }
+                    if (rtValue != null && rt2 != null) {
+                        rtValue = rtValue + itemSeparator;
+                    }
+                    if (rt2 != null) {
+                        rtValue = rtValue + rt2.toString();
+                    }
+                    if (rtValue != null)
+                        sm.setRetentionTime(rtValue);
                 }
 
                 // Write to file
