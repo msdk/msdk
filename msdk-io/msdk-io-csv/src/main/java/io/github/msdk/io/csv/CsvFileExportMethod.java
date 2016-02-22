@@ -320,9 +320,10 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
         if (checmicalStructure != null) {
             try {
                 ionVal4 += sg.create(checmicalStructure);
-                System.out.println(sg.create(checmicalStructure));
             } catch (CDKException e) {
-                ionVal4 += "?";
+                logger.info("Could not create SMILE for "
+                        + ionAnnotation.getDescription());
+                return;
             }
         } else
             ionVal4 += "";

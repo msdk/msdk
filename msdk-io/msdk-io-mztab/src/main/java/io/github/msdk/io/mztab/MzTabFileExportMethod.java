@@ -23,7 +23,10 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.openscience.cdk.exception.CDKException;
+import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.openscience.cdk.smiles.SmilesGenerator;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +65,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
     private @Nonnull File mzTabFile;
     private @Nonnull Boolean exportAllFeatures;
     private String newLine = System.lineSeparator();
-    private String itemSeparator = ",";
+    private String itemSeparator = "|";
 
     // Other variables
     private int parsedRows, totalRows = 0;
@@ -220,15 +223,17 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
 
             // Ion annotation variables
             String identifier = "";
-            // String database = "";
             String formula = "";
+            String smiles = "";
             String description = "";
             String url = "";
+            // String database = "";
 
             // Get ion annotation
             if (column != null) {
                 List<IonAnnotation> ionAnnotations = row.getData(column);
                 for (IonAnnotation ionAnnotation : ionAnnotations) {
+                    // Annotation ID
                     String ionAnnotationId = ionAnnotation.getAnnotationId();
                     if (ionAnnotationId != null && ionAnnotationId != "") {
                         identifier = identifier + itemSeparator
@@ -236,6 +241,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                         writeFeature = true;
                     }
 
+                    // Formula
                     IMolecularFormula ionFormula = ionAnnotation.getFormula();
                     if (ionFormula != null) {
                         formula = formula + itemSeparator
@@ -244,6 +250,21 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                         writeFeature = true;
                     }
 
+                    // Chemical structure = SMILES
+                    IAtomContainer checmicalStructure = ionAnnotation
+                            .getChemicalStructure();
+                    SmilesGenerator sg = SmilesGenerator.generic();
+                    if (checmicalStructure != null) {
+                        try {
+                            smiles = smiles + itemSeparator
+                                    + sg.create(checmicalStructure);
+                        } catch (CDKException e) {
+                            logger.info("Could not create SMILE for "
+                                    + ionAnnotation.getDescription());
+                        }
+                    }
+
+                    // Description
                     String ionDescription = ionAnnotation.getDescription();
                     if (ionDescription != null) {
                         description = description + itemSeparator
@@ -251,6 +272,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                         writeFeature = true;
                     }
 
+                    // URL
                     URL ionUrl = ionAnnotation.getAccessionURL();
                     if (ionUrl != null) {
                         url = url + itemSeparator
@@ -263,10 +285,11 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
             // Write feature to file?
             if (exportAllFeatures || writeFeature) {
                 sm.setIdentifier(removeFirstCharacter(identifier));
-                // sm.setDatabase(database);
                 sm.setChemicalFormula(removeFirstCharacter(formula));
+                sm.setSmiles(removeFirstCharacter(smiles));
                 sm.setDescription(removeFirstCharacter(description));
                 sm.setURI(removeFirstCharacter(url));
+                // sm.setDatabase(database);
 
                 // Common feature m/z value
                 Double rowMZ = row.getMz();
