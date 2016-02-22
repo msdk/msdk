@@ -20,14 +20,14 @@ import org.junit.Test;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 
-public class MsSpectrumParserAlgorithmTest {
+public class TxtImportAlgorithmTest {
 
     @Test
     public void test4Peaks() throws MSDKException {
 
         String spectrumText = "10.0 20.0\n20.0 20.0\n30.0 100.0\n40.0 50.0";
 
-        MsSpectrum spectrum = MsSpectrumParserAlgorithm
+        MsSpectrum spectrum = TxtImportAlgorithm
                 .parseMsSpectrum(spectrumText);
 
         Assert.assertEquals(new Integer(4), spectrum.getNumberOfDataPoints());

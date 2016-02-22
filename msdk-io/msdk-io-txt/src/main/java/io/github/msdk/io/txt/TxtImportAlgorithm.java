@@ -14,6 +14,7 @@
 
 package io.github.msdk.io.txt;
 
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,7 +30,7 @@ import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.DataPointSorter.SortingDirection;
 import io.github.msdk.util.DataPointSorter.SortingProperty;
 
-public class MsSpectrumParserAlgorithm {
+public class TxtImportAlgorithm {
 
     private static final Pattern linePattern = Pattern
             .compile("(\\d+(\\.\\d+)?)[^\\d]+(\\d+(\\.\\d+)?)");

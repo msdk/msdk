@@ -16,8 +16,6 @@ package io.github.msdk.io.msp;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
