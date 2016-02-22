@@ -14,6 +14,7 @@
 
 package io.github.msdk.util;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -100,28 +101,32 @@ public class DataPointSorter {
             idx.add(i);
         Comparator<Integer> comp = new DataPointComparator(mzBuffer,
                 intensityBuffer, prop, dir);
-        Collections.sort(idx, comp);
 
+        Collections.sort(idx, comp);
         // Remap the values according to the index map idx
-        for (int i = 0; i < size; i++) {
+        remapArray(mzBuffer, idx);
+        remapArray(intensityBuffer, idx);
+
+    }
+
+    private static void remapArray(Object array, List<Integer> indices) {
+
+        // Make a copy of indices, to prevent modifying the list
+        List<Integer> idx = new ArrayList<>(indices);
+
+        for (int i = 0; i < idx.size(); i++) {
             final int newIndex = idx.get(i);
             if (newIndex == i)
                 continue;
 
-            final double tmpMz = mzBuffer[i];
-            final float tmpInt = intensityBuffer[i];
-
-            mzBuffer[i] = mzBuffer[newIndex];
-            intensityBuffer[i] = intensityBuffer[newIndex];
-
-            mzBuffer[newIndex] = tmpMz;
-            intensityBuffer[newIndex] = tmpInt;
+            Object tmp = Array.get(array, i);
+            Array.set(array, i, Array.get(array, newIndex));
 
             final int swapIndex = idx.indexOf(i);
+            Array.set(array, newIndex, tmp);
             idx.set(swapIndex, newIndex);
-
+            idx.set(i, i);
         }
-
     }
 
     /**
@@ -137,7 +142,8 @@ public class DataPointSorter {
      *            a int.
      */
     public static void sortDataPoints(final ChromatographyInfo rtBuffer[],
-            final float intensityBuffer[], final int size) {
+            final double mzBuffer[], final float intensityBuffer[],
+            final int size) {
 
         // Use Collections.sort to obtain index mapping from old arrays to the
         // new sorted array
@@ -151,24 +157,10 @@ public class DataPointSorter {
         });
 
         // Remap the values according to the index map idx
-        for (int i = 0; i < size; i++) {
-            final int newIndex = idx.get(i);
-            if (newIndex == i)
-                continue;
+        remapArray(rtBuffer, idx);
+        remapArray(mzBuffer, idx);
+        remapArray(intensityBuffer, idx);
 
-            final ChromatographyInfo tmpRt = rtBuffer[i];
-            final float tmpInt = intensityBuffer[i];
-
-            rtBuffer[i] = rtBuffer[newIndex];
-            intensityBuffer[i] = intensityBuffer[newIndex];
-
-            rtBuffer[newIndex] = tmpRt;
-            intensityBuffer[newIndex] = tmpInt;
-
-            final int swapIndex = idx.indexOf(i);
-            idx.set(swapIndex, newIndex);
-
-        }
     }
 
 }

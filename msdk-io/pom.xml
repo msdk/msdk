@@ -23,5 +23,6 @@
 		<module>msdk-io-csv</module>
 		<module>msdk-io-txt</module>
 		<module>msdk-io-msp</module>
+		<module>msdk-io-mgf</module>
 	</modules>
 </project>
