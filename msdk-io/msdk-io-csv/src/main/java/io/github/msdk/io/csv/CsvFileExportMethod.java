@@ -58,6 +58,12 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
     private @Nonnull List<FeatureTableColumn<?>> columns;
     String newLine = System.lineSeparator();
 
+    // Ion Annotation information variables
+    String ionVal1;
+    String ionVal2;
+    String ionVal3;
+    String ionVal4;
+
     // Other variables
     private int parsedRows, totalRows = 0;
     private boolean canceled = false;
@@ -184,7 +190,10 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
             for (FeatureTableColumn<?> column : columns) {
                 Object object = row.getData(column);
                 String strValue = "";
-                String ionVal1 = "", ionVal2 = "", ionVal3 = "", ionVal4 = "";
+                ionVal1 = "";
+                ionVal2 = "";
+                ionVal3 = "";
+                ionVal4 = "";
                 Boolean writeIonData = false;
 
                 if (object == null) {
@@ -226,8 +235,7 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
 
                             // Add additional data related to the IonAnnotation
                             if (writeIonAnnotation) {
-                                getAdditionalIonAnnotationData(ionAnnotation,
-                                        ionVal1, ionVal2, ionVal3, ionVal4);
+                                getAdditionalIonAnnotationData(ionAnnotation);
                                 writeIonData = true;
                             }
 
@@ -273,8 +281,7 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
 
     }
 
-    private void getAdditionalIonAnnotationData(IonAnnotation ionAnnotation,
-            String ionVal1, String ionVal2, String ionVal3, String ionVal4) {
+    private void getAdditionalIonAnnotationData(IonAnnotation ionAnnotation) {
         // Expected m/z value
         if (ionVal1 != "")
             ionVal1 = ionVal1 + itemSeparator;
@@ -313,6 +320,7 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
         if (checmicalStructure != null) {
             try {
                 ionVal4 += sg.create(checmicalStructure);
+                System.out.println(sg.create(checmicalStructure));
             } catch (CDKException e) {
                 ionVal4 += "?";
             }
