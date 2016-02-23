@@ -18,15 +18,87 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.Collection;
 import java.util.Collections;
 
 import javax.annotation.Nonnull;
 
+import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.IsolationInfo;
+import io.github.msdk.datamodel.rawdata.MsScan;
 
 public class MgfExportAlgorithm {
 
+    @SuppressWarnings("null")
+    public static void exportSpectrum(@Nonnull File exportFile,
+            @Nonnull MsSpectrum spectrum) throws IOException, MSDKException {
+        exportSpectra(exportFile, Collections.singleton(spectrum));
+    }
+
+    public static void exportSpectra(@Nonnull File exportFile,
+            @Nonnull Collection<MsSpectrum> spectra)
+                    throws IOException, MSDKException {
+
+        // Open the writer
+        final BufferedWriter writer = new BufferedWriter(
+                new FileWriter(exportFile));
+
+        double mzValues[] = null;
+        float intensityValues[] = null;
+        int numOfDataPoints;
+
+        // Write the data points
+        for (MsSpectrum spectrum : spectra) {
+
+            // Load data
+            mzValues = spectrum.getMzValues(mzValues);
+            intensityValues = spectrum.getIntensityValues(intensityValues);
+            numOfDataPoints = spectrum.getNumberOfDataPoints();
+
+            writer.write("BEGIN IONS");
+            writer.newLine();
+
+            if (spectrum instanceof MsScan) {
+                MsScan scan = (MsScan) spectrum;
+
+                for (IsolationInfo ii : scan.getIsolations()) {
+                    Double precursorMz = ii.getPrecursorMz();
+                    if (precursorMz == null)
+                        continue;
+                    writer.write("PEPMASS=" + precursorMz);
+                    writer.newLine();
+                    if (ii.getPrecursorCharge() != null) {
+                        writer.write("CHARGE=" + ii.getPrecursorCharge());
+                        writer.newLine();
+                    }
+                    break;
+                }
+
+                ChromatographyInfo rt = scan.getChromatographyInfo();
+                if (rt != null) {
+                    writer.write("RTINSECONDS=" + rt.getRetentionTime());
+                    writer.newLine();
+                }
+                writer.write("Title=Scan #" + scan.getScanNumber());
+                writer.newLine();
+
+            }
+
+            // Write ions
+            for (int i = 0; i < numOfDataPoints; i++) {
+                writer.write(mzValues[i] + " " + intensityValues[i]);
+                writer.newLine();
+            }
+
+            writer.write("END IONS");
+            writer.newLine();
+            writer.newLine();
+
+        }
+
+        writer.close();
+
+    }
 }
