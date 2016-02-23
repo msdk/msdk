@@ -115,9 +115,17 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
 
             // Isolation m/z for MS/MS scan (Precursor ion)
             // We assume a single isolation since only MS2 scans are accepted
+            double selectedMz = 0;
             List<IsolationInfo> isolationInfo = scan.getIsolations();
-            double selectedMz = isolationInfo.get(0).getIsolationMzRange()
-                    .lowerEndpoint();
+            if (isolationInfo.size() < 1)
+                continue;
+            else if (isolationInfo.get(isolationInfo.size() - 1)
+                    .getPrecursorMz() == null) {
+                continue;
+            } else {
+                selectedMz = isolationInfo.get(isolationInfo.size() - 1)
+                        .getPrecursorMz();
+            }
 
             // RT value
             ChromatographyInfo scanChromatographyInfo = scan
