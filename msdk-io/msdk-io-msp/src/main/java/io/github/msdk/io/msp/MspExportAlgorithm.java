@@ -23,6 +23,8 @@ import java.util.Collections;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Strings;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 
@@ -54,14 +56,33 @@ public class MspExportAlgorithm {
             intensityValues = spectrum.getIntensityValues(intensityValues);
             numOfDataPoints = spectrum.getNumberOfDataPoints();
 
+            if (spectrum instanceof MspSpectrum) {
+                MspSpectrum mspSpectrum = (MspSpectrum) spectrum;
+                String name = mspSpectrum.getProperty("NAME");
+                if (Strings.isNullOrEmpty(name))
+                    name = "Spectrum";
+                writer.write("NAME: " + spectrum.getNumberOfDataPoints());
+                writer.newLine();
+            } else {
+                writer.write("NAME: Spectrum");
+                writer.newLine();
+            }
+
+            writer.write("Num Peaks: " + numOfDataPoints);
+            writer.newLine();
+
             for (int i = 0; i < numOfDataPoints; i++) {
                 // Write data point row
                 writer.write(mzValues[i] + " " + intensityValues[i]);
                 writer.newLine();
             }
+
+            writer.newLine();
+
         }
-        
-        
+
+        writer.close();
+
     }
 
 }
