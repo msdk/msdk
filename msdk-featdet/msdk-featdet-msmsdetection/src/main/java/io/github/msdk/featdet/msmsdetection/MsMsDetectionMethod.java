@@ -105,6 +105,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
 
         // Loop through all MS/MS scans
         for (MsScan scan : msScans) {
+            Boolean addScan = true;
 
             // Calculate total intensity of the ions in the MS/MS spectrum
             intensityBuffer = scan.getIntensityValues(intensityBuffer);
@@ -115,8 +116,17 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
 
             // Isolation m/z for MS/MS scan (Precursor ion)
             // We assume a single isolation since only MS2 scans are accepted
+            double selectedMz = 0;
             List<IsolationInfo> isolationInfo = scan.getIsolations();
-            double selectedMz = isolationInfo.get(0).getPrecursorMz();
+            if (isolationInfo.size() < 1)
+                addScan = false;
+            else if (isolationInfo.get(isolationInfo.size() - 1)
+                    .getPrecursorMz() == null) {
+                addScan = false;
+            } else {
+                selectedMz = isolationInfo.get(isolationInfo.size() - 1)
+                        .getPrecursorMz();
+            }
 
             // RT value
             ChromatographyInfo scanChromatographyInfo = scan
@@ -126,9 +136,11 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
                 scanRt = scanChromatographyInfo.getRetentionTime();
 
             // Add the data to the array
-            scanData[processedScans][0] = selectedMz;
-            scanData[processedScans][1] = scanRt;
-            scanData[processedScans][2] = totalInteisity;
+            if (addScan) {
+                scanData[processedScans][0] = selectedMz;
+                scanData[processedScans][1] = scanRt;
+                scanData[processedScans][2] = totalInteisity;
+            }
 
             if (canceled)
                 return null;
