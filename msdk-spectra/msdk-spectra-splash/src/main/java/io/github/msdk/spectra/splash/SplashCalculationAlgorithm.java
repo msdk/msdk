@@ -42,10 +42,10 @@ public class SplashCalculationAlgorithm {
     /**
      * how to scale the spectrum
      */
-    public static final Float scalingOfRelativeIntensity = 100f;
+    private static final @Nonnull Float scalingOfRelativeIntensity = 100f;
 
     /**
-     * how should ions in the string representation be separeted
+     * how should ions in the string representation be separated
      */
     private static final String ION_SEPERATOR = " ";
 
@@ -144,7 +144,8 @@ public class SplashCalculationAlgorithm {
      *            object.
      * @return a {@link java.lang.String} object.
      */
-    public static String calculateSplash(MsSpectrum spectrum) {
+    public static @Nonnull String calculateSplash(
+            @Nonnull MsSpectrum spectrum) {
 
         return calculateSplash(spectrum.getMzValues(),
                 spectrum.getIntensityValues(),
@@ -164,7 +165,7 @@ public class SplashCalculationAlgorithm {
      * @param size
      *            a {@link java.lang.Integer} object.
      */
-    public static String calculateSplash(@Nonnull double mzValues[],
+    public static @Nonnull String calculateSplash(@Nonnull double mzValues[],
             @Nonnull float intValues[], @Nonnull Integer size) {
 
         // Parameter check
