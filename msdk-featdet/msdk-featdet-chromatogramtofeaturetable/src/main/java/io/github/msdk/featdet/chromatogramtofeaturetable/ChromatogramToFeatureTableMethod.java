@@ -47,9 +47,6 @@ public class ChromatogramToFeatureTableMethod
     private final @Nonnull FeatureTable featureTable;
     private final @Nonnull Sample sample;
 
-    private final Map<ColumnName, FeatureTableColumn<Object>> tableColumns = new EnumMap<>(
-            ColumnName.class);
-
     private boolean canceled = false;
     private int processedChromatograms = 0, totalChromatograms = 0;
 
@@ -78,13 +75,16 @@ public class ChromatogramToFeatureTableMethod
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
     @Override
     public FeatureTable execute() throws MSDKException {
         totalChromatograms = chromatograms.size();
 
-        // Add the columns to the table if needed
-        addColumns(featureTable);
+        // Add the common columns to the table if needed
+        addCommonColumns(featureTable);
+
+        // Add the sample columns to the table if needed
+        Map<ColumnName, FeatureTableColumn<Object>> tableColumns = addSampleColumns(
+                featureTable, sample);
 
         // Check if cancel is requested
         if (canceled)
@@ -98,110 +98,18 @@ public class ChromatogramToFeatureTableMethod
                     .getId();
         }
 
-        // Data structures
-        ChromatographyInfo rtBuffer[] = new ChromatographyInfo[10000];
-        float intensityBuffer[] = new float[10000];
-        int numOfDataPoints;
-
         // Loop through all chromatograms and add values to the feature table
         FeatureTableColumn<Object> column;
         for (Chromatogram chromatogram : chromatograms) {
 
-            // Load data
-            rtBuffer = chromatogram.getRetentionTimes(rtBuffer);
-            intensityBuffer = chromatogram.getIntensityValues(intensityBuffer);
-            numOfDataPoints = chromatogram.getNumberOfDataPoints();
-
             lastID++;
             FeatureTableRow newRow = MSDKObjectBuilder
                     .getFeatureTableRow(featureTable, lastID);
-
             column = featureTable.getColumn(ColumnName.ID, null);
             newRow.setData(column, lastID);
 
-            if (chromatogram.getIonAnnotation() != null) {
-                column = featureTable.getColumn(ColumnName.IONANNOTATION, null);
-                List<IonAnnotation> ionAnnotations = (List<IonAnnotation>) newRow
-                        .getData(column);
-                if (ionAnnotations == null)
-                    ionAnnotations = new ArrayList<IonAnnotation>();
-                ionAnnotations.add(chromatogram.getIonAnnotation());
-                newRow.setData(column, ionAnnotations);
-            }
-
-            column = tableColumns.get(ColumnName.CHROMATOGRAM);
-            newRow.setData(column, chromatogram);
-
-            Double mz = chromatogram.getMz();
-            column = tableColumns.get(ColumnName.MZ);
-            if (mz != null)
-                newRow.setData(column, mz);
-
-            Float rt = ChromatogramUtil.getRt(rtBuffer, intensityBuffer,
-                    numOfDataPoints);
-            ChromatographyInfo chromatographyInfo = MSDKObjectBuilder
-                    .getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
-            column = tableColumns.get(ColumnName.RT);
-            newRow.setData(column, chromatographyInfo);
-
-            Float rtStart = ChromatogramUtil.getRtStart(rtBuffer,
-                    numOfDataPoints);
-            column = tableColumns.get(ColumnName.RTSTART);
-            if (rtStart != null) {
-                double doubleVal = rtStart;
-                newRow.setData(column, doubleVal);
-            }
-
-            Float rtEnd = ChromatogramUtil.getRtEnd(rtBuffer, numOfDataPoints);
-            column = tableColumns.get(ColumnName.RTEND);
-            if (rtEnd != null) {
-                double doubleVal = rtEnd;
-                newRow.setData(column, doubleVal);
-            }
-
-            Float duration = ChromatogramUtil.getDuration(rtBuffer,
-                    numOfDataPoints);
-            column = tableColumns.get(ColumnName.DURATION);
-            if (duration != null) {
-                double doubleVal = duration;
-                newRow.setData(column, doubleVal);
-            }
-
-            Double area = ChromatogramUtil.getArea(rtBuffer, intensityBuffer,
-                    numOfDataPoints);
-            column = tableColumns.get(ColumnName.AREA);
-            if (area != null)
-                newRow.setData(column, area);
-
-            Double height = ChromatogramUtil.getMaxHeight(intensityBuffer,
-                    numOfDataPoints);
-            column = tableColumns.get(ColumnName.HEIGHT);
-            if (height != null)
-                newRow.setData(column, height);
-
-            column = tableColumns.get(ColumnName.NUMBEROFDATAPOINTS);
-            newRow.setData(column, numOfDataPoints);
-
-            Double fwhm = ChromatogramUtil.getFwhm(rtBuffer, intensityBuffer,
-                    numOfDataPoints);
-            if (fwhm != null) {
-                column = tableColumns.get(ColumnName.FWHM);
-                newRow.setData(column, fwhm);
-            }
-
-            Double tailingFactor = ChromatogramUtil.getTailingFactor(rtBuffer,
-                    intensityBuffer, numOfDataPoints);
-            if (tailingFactor != null) {
-                column = tableColumns.get(ColumnName.TAILINGFACTOR);
-                newRow.setData(column, tailingFactor);
-            }
-
-            Double asymmetryFactor = ChromatogramUtil.getAsymmetryFactor(
-                    rtBuffer, intensityBuffer, numOfDataPoints);
-            if (asymmetryFactor != null) {
-                column = tableColumns.get(ColumnName.ASYMMETRYFACTOR);
-                newRow.setData(column, asymmetryFactor);
-            }
+            // Add the data to the feature table row
+            addDataToRow(newRow, chromatogram, tableColumns);
 
             // Add row to feature table
             featureTable.addRow(newRow);
@@ -220,8 +128,115 @@ public class ChromatogramToFeatureTableMethod
         return featureTable;
     }
 
-    private void addColumns(@Nonnull FeatureTable featureTable) {
+    @SuppressWarnings("unchecked")
+    public static void addDataToRow(@Nonnull FeatureTableRow row,
+            @Nonnull Chromatogram chromatogram,
+            @Nullable Map<ColumnName, FeatureTableColumn<Object>> tableColumns) {
 
+        FeatureTable featureTable = row.getFeatureTable();
+
+        // Get tableColumns
+        if (tableColumns == null) {
+
+        }
+
+        // Data structures
+        ChromatographyInfo rtBuffer[] = new ChromatographyInfo[10000];
+        float intensityBuffer[] = new float[10000];
+
+        // Load data
+        rtBuffer = chromatogram.getRetentionTimes(rtBuffer);
+        intensityBuffer = chromatogram.getIntensityValues(intensityBuffer);
+        int numOfDataPoints = chromatogram.getNumberOfDataPoints();
+
+        FeatureTableColumn<Object> column;
+
+        if (chromatogram.getIonAnnotation() != null) {
+            column = featureTable.getColumn(ColumnName.IONANNOTATION, null);
+            List<IonAnnotation> ionAnnotations = (List<IonAnnotation>) row
+                    .getData(column);
+            if (ionAnnotations == null)
+                ionAnnotations = new ArrayList<IonAnnotation>();
+            ionAnnotations.add(chromatogram.getIonAnnotation());
+            row.setData(column, ionAnnotations);
+        }
+
+        column = tableColumns.get(ColumnName.CHROMATOGRAM);
+        row.setData(column, chromatogram);
+
+        Double mz = chromatogram.getMz();
+        column = tableColumns.get(ColumnName.MZ);
+        if (mz != null)
+            row.setData(column, mz);
+
+        Float rt = ChromatogramUtil.getRt(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        ChromatographyInfo chromatographyInfo = MSDKObjectBuilder
+                .getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
+        column = tableColumns.get(ColumnName.RT);
+        row.setData(column, chromatographyInfo);
+
+        Float rtStart = ChromatogramUtil.getRtStart(rtBuffer, numOfDataPoints);
+        column = tableColumns.get(ColumnName.RTSTART);
+        if (rtStart != null) {
+            double doubleVal = rtStart;
+            row.setData(column, doubleVal);
+        }
+
+        Float rtEnd = ChromatogramUtil.getRtEnd(rtBuffer, numOfDataPoints);
+        column = tableColumns.get(ColumnName.RTEND);
+        if (rtEnd != null) {
+            double doubleVal = rtEnd;
+            row.setData(column, doubleVal);
+        }
+
+        Float duration = ChromatogramUtil.getDuration(rtBuffer,
+                numOfDataPoints);
+        column = tableColumns.get(ColumnName.DURATION);
+        if (duration != null) {
+            double doubleVal = duration;
+            row.setData(column, doubleVal);
+        }
+
+        Double area = ChromatogramUtil.getArea(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        column = tableColumns.get(ColumnName.AREA);
+        if (area != null)
+            row.setData(column, area);
+
+        Double height = ChromatogramUtil.getMaxHeight(intensityBuffer,
+                numOfDataPoints);
+        column = tableColumns.get(ColumnName.HEIGHT);
+        if (height != null)
+            row.setData(column, height);
+
+        column = tableColumns.get(ColumnName.NUMBEROFDATAPOINTS);
+        row.setData(column, numOfDataPoints);
+
+        Double fwhm = ChromatogramUtil.getFwhm(rtBuffer, intensityBuffer,
+                numOfDataPoints);
+        if (fwhm != null) {
+            column = tableColumns.get(ColumnName.FWHM);
+            row.setData(column, fwhm);
+        }
+
+        Double tailingFactor = ChromatogramUtil.getTailingFactor(rtBuffer,
+                intensityBuffer, numOfDataPoints);
+        if (tailingFactor != null) {
+            column = tableColumns.get(ColumnName.TAILINGFACTOR);
+            row.setData(column, tailingFactor);
+        }
+
+        Double asymmetryFactor = ChromatogramUtil.getAsymmetryFactor(rtBuffer,
+                intensityBuffer, numOfDataPoints);
+        if (asymmetryFactor != null) {
+            column = tableColumns.get(ColumnName.ASYMMETRYFACTOR);
+            row.setData(column, asymmetryFactor);
+        }
+
+    }
+
+    private void addCommonColumns(@Nonnull FeatureTable featureTable) {
         // Common columns
         // Only add common columns if the feature table is empty
         if (featureTable.getColumns().isEmpty()) {
@@ -241,6 +256,13 @@ public class ChromatogramToFeatureTableMethod
             featureTable.addColumn(chromatographyInfoColumn);
             featureTable.addColumn(ionAnnotationColumn);
         }
+
+    }
+
+    public static Map<ColumnName, FeatureTableColumn<Object>> addSampleColumns(
+            @Nonnull FeatureTable featureTable, @Nonnull Sample sample) {
+        final Map<ColumnName, FeatureTableColumn<Object>> tableColumns = new EnumMap<>(
+                ColumnName.class);
 
         // Sample columns
         ArrayList<ColumnName> sampleColumns = new ArrayList<>();
@@ -268,6 +290,7 @@ public class ChromatogramToFeatureTableMethod
             tableColumns.put(columnName, column);
         }
 
+        return tableColumns;
     }
 
     /** {@inheritDoc} */

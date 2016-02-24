@@ -18,6 +18,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.ColumnName;
@@ -173,6 +174,7 @@ public class FeatureTableUtil {
      *            a {@link java.lang.Boolean} object which specifies if data
      *            will be added or replaced.
      */
+    @SuppressWarnings("null")
     public static void copyCommonValues(
             @Nonnull FeatureTableRow sourceFeatureTableRow,
             @Nonnull FeatureTableRow targetFeatureTableRow,
@@ -195,7 +197,13 @@ public class FeatureTableUtil {
                     boolean equalName = sourceColumn.getName()
                             .equals(column.getName());
                     boolean equalSample = true;
-                    if (sourceColumn.getSample() != null
+                    if (sourceColumn.getSample() == null
+                            & column.getSample() != null)
+                        equalSample = false;
+                    else if (sourceColumn.getSample() != null
+                            & column.getSample() == null)
+                        equalSample = false;
+                    else if (sourceColumn.getSample() != null
                             & column.getSample() != null)
                         equalSample = sourceColumn.getSample().getName()
                                 .equals(column.getSample().getName());
@@ -221,6 +229,7 @@ public class FeatureTableUtil {
                         new CopyConverter().apply(sourceFeatureTableRow,
                                 sourceColumn, targetFeatureTableRow,
                                 targetColumn);
+
                     }
                 }
             }
@@ -289,7 +298,7 @@ public class FeatureTableUtil {
     /**
      * Calculates in how many sample the feature is found. It is assumed that at
      * least one of the following columns are present in the feature table: m/z,
-     * area and height.
+     * area or height.
      *
      * @param featureTableRow
      *            the
@@ -396,6 +405,23 @@ public class FeatureTableUtil {
             FeatureTableColumn<?> newColumn = MSDKObjectBuilder
                     .getFeatureTableColumn(column.getName(),
                             column.getDataTypeClass(), column.getSample());
+
+            // Common columns
+            if (column.getSample() == null) {
+                if (column.getName() == ColumnName.MZ.getName())
+                    newColumn = MSDKObjectBuilder.getMzFeatureTableColumn();
+                if (column.getName() == ColumnName.CHARGE.getName())
+                    MSDKObjectBuilder.getChargeFeatureTableColumn();
+                if (column.getName() == "Chromatography Info")
+                    MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn();
+                if (column.getName() == ColumnName.ID.getName())
+                    MSDKObjectBuilder.getIdFeatureTableColumn();
+                if (column.getName() == "Ion Annotation")
+                    MSDKObjectBuilder.getIonAnnotationFeatureTableColumn();
+                if (column.getName() == ColumnName.PPM.getName())
+                    MSDKObjectBuilder.getPpmFeatureTableColumn();
+            }
+
             newFeatureTable.addColumn(newColumn);
         }
 
@@ -406,6 +432,11 @@ public class FeatureTableUtil {
             FeatureTableRow newRow = MSDKObjectBuilder
                     .getFeatureTableRow(newFeatureTable, row.getId());
             copyCommonValues(row, newRow, false);
+
+            // ID column
+            FeatureTableColumn<Integer> column = featureTable
+                    .getColumn(ColumnName.ID, null);
+            newRow.setData(column, row.getId());
 
             // Copy the feature data for the samples
             for (Sample sample : row.getFeatureTable().getSamples()) {
@@ -419,4 +450,53 @@ public class FeatureTableUtil {
 
         return newFeatureTable;
     }
+
+    public static Range<Double> getFeatureMzRange(FeatureTableRow row) {
+        FeatureTable featureTable = row.getFeatureTable();
+        FeatureTableColumn<?> column;
+        double min = 0d;
+        double max = 0d;
+
+        for (Sample sample : featureTable.getSamples()) {
+            column = featureTable.getColumn(ColumnName.MZ, sample);
+            if (column != null) {
+                if (row.getData(column) != null) {
+                    double mz = (double) row.getData(column);
+                    if (mz < min || min == 0d)
+                        min = mz;
+                    if (mz > max || max == 0d)
+                        max = mz;
+                }
+            }
+        }
+
+        return Range.closed(min, max);
+    }
+
+    public static Range<Float> getFeatureRt1Range(FeatureTableRow row) {
+        FeatureTable featureTable = row.getFeatureTable();
+        FeatureTableColumn<ChromatographyInfo> column;
+        float min = 0f;
+        float max = 0f;
+
+        for (Sample sample : featureTable.getSamples()) {
+            column = featureTable.getColumn(ColumnName.RT, sample);
+            if (column != null) {
+                if (row.getData(column) != null) {
+                    ChromatographyInfo chromatographyInfo = row.getData(column);
+                    if (chromatographyInfo.getRetentionTime() != null) {
+                        float rt = (float) chromatographyInfo
+                                .getRetentionTime();
+                        if (rt < min || min == 0d)
+                            min = rt;
+                        if (rt > max || max == 0d)
+                            max = rt;
+                    }
+                }
+            }
+        }
+
+        return Range.closed(min, max);
+    }
+
 }
