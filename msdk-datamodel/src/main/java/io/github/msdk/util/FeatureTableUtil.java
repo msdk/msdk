@@ -13,11 +13,13 @@
  */
 package io.github.msdk.util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Preconditions;
+
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
@@ -41,7 +43,9 @@ public class FeatureTableUtil {
      * Re-calculates the average m/z and RT values for a feature table
      *
      * @param featureTable
-     *            the {@link FeatureTable} to apply the recalculation on.
+     *            the
+     *            {@link io.github.msdk.datamodel.featuretables.FeatureTable} to
+     *            apply the recalculation on.
      */
     public static void recalculateAverages(@Nonnull FeatureTable featureTable) {
 
@@ -58,8 +62,10 @@ public class FeatureTableUtil {
             column = MSDKObjectBuilder.getMzFeatureTableColumn();
             featureTable.addColumn(column);
         }
-        if (featureTable.getColumn("Chromatography Info", null, ChromatographyInfo.class) == null) {
-            column = MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn();
+        if (featureTable.getColumn("Chromatography Info", null,
+                ChromatographyInfo.class) == null) {
+            column = MSDKObjectBuilder
+                    .getChromatographyInfoFeatureTableColumn();
             featureTable.addColumn(column);
         }
 
@@ -156,8 +162,9 @@ public class FeatureTableUtil {
      * source row to the target row.
      *
      * @param sourceFeatureTableRow
-     *            the source {@link FeatureTableRow} to copy the common values
-     *            from.
+     *            the source
+     *            {@link io.github.msdk.datamodel.featuretables.FeatureTableRow}
+     *            to copy the common values from.
      * @param targetFeatureTableRow
      *            a
      *            {@link io.github.msdk.datamodel.featuretables.FeatureTableRow}
@@ -203,13 +210,17 @@ public class FeatureTableUtil {
                 if (combineData) {
                     switch (sourceColumn.getName()) {
                     case "Ion Annotation":
-                        new IonAnnotationConverter().apply(sourceFeatureTableRow, sourceColumn, targetFeatureTableRow, targetColumn);
+                        new IonAnnotationConverter().apply(
+                                sourceFeatureTableRow, sourceColumn,
+                                targetFeatureTableRow, targetColumn);
                         break;
                     }
                 } else {
                     // Only add common values
                     if (sourceColumn.getSample() == null) {
-                        new CopyConverter().apply(sourceFeatureTableRow, sourceColumn, targetFeatureTableRow, targetColumn);
+                        new CopyConverter().apply(sourceFeatureTableRow,
+                                sourceColumn, targetFeatureTableRow,
+                                targetColumn);
                     }
                 }
             }
@@ -221,8 +232,9 @@ public class FeatureTableUtil {
      * row.
      *
      * @param sourceFeatureTableRow
-     *            the source {@link FeatureTableRow} to copy the common values
-     *            from.
+     *            the source
+     *            {@link io.github.msdk.datamodel.featuretables.FeatureTableRow}
+     *            to copy the common values from.
      * @param sample
      *            the target {@link Sample}.
      * @param targetFeatureTableRow
@@ -263,8 +275,12 @@ public class FeatureTableUtil {
                         }
                     }
 
-                    new CopyConverter().apply(sourceFeatureTableRow, sourceColumn, targetFeatureTableRow, targetColumn);
-
+                    Object data = sourceFeatureTableRow.getData(sourceColumn);
+                    if (data != null) {
+                        new CopyConverter().apply(sourceFeatureTableRow,
+                                sourceColumn, targetFeatureTableRow,
+                                targetColumn);
+                    }
                 }
             }
         }
@@ -276,7 +292,9 @@ public class FeatureTableUtil {
      * area and height.
      *
      * @param featureTableRow
-     *            the {@link FeatureTableRow} to apply the calculation on.
+     *            the
+     *            {@link io.github.msdk.datamodel.featuretables.FeatureTableRow}
+     *            to apply the calculation on.
      * @return a int.
      */
     public static int getRowCount(FeatureTableRow featureTableRow) {
@@ -314,7 +332,9 @@ public class FeatureTableUtil {
      * feature table row.
      *
      * @param featureTableRow
-     *            the {@link FeatureTableRow} to apply the calculation on.
+     *            the
+     *            {@link io.github.msdk.datamodel.featuretables.FeatureTableRow}
+     *            to apply the calculation on.
      * @return a {@link java.lang.Double} object.
      */
     public static Double getAverageFeatureDuration(
@@ -343,4 +363,60 @@ public class FeatureTableUtil {
         return averageDuration;
     }
 
+    /**
+     * <p>
+     * clone.
+     * </p>
+     *
+     * @param dataStore
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
+     *            object.
+     * @param featuretable
+     *            a {@link io.github.msdk.datamodel.featuretables.FeatureTable}
+     *            object.
+     * @param newName
+     *            {@link java.lang.String} object.
+     * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTable}
+     *         object.
+     */
+    @Nonnull
+    static public FeatureTable clone(@Nonnull DataPointStore dataStore,
+            @Nonnull FeatureTable featureTable, @Nonnull String newName) {
+
+        Preconditions.checkNotNull(dataStore);
+        Preconditions.checkNotNull(featureTable);
+        Preconditions.checkNotNull(newName);
+
+        // Create new feature table
+        FeatureTable newFeatureTable = MSDKObjectBuilder
+                .getFeatureTable(newName, dataStore);
+
+        // Copy columns
+        for (FeatureTableColumn<?> column : featureTable.getColumns()) {
+            FeatureTableColumn<?> newColumn = MSDKObjectBuilder
+                    .getFeatureTableColumn(column.getName(),
+                            column.getDataTypeClass(), column.getSample());
+            newFeatureTable.addColumn(newColumn);
+        }
+
+        // Copy rows
+        for (FeatureTableRow row : featureTable.getRows()) {
+
+            // Create a new row with the common feature data
+            FeatureTableRow newRow = MSDKObjectBuilder
+                    .getFeatureTableRow(newFeatureTable, row.getId());
+            copyCommonValues(row, newRow, false);
+
+            // Copy the feature data for the samples
+            for (Sample sample : row.getFeatureTable().getSamples()) {
+                copyFeatureValues(row, newRow, sample);
+            }
+
+            // Add the feature row to the table if it is not null
+            if (newRow != null)
+                newFeatureTable.addRow(newRow);
+        }
+
+        return newFeatureTable;
+    }
 }
