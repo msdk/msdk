@@ -15,11 +15,8 @@
 package io.github.msdk.features.gapfilling;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,7 +66,6 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
     private boolean canceled = false;
     private int processedGaps = 0, totalGaps = 0;
     private final @Nonnull FeatureTable result;
-    private static Map<FeatureTableRow, Sample> gapMap;
 
     /**
      * <p>
@@ -112,12 +108,17 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
         // Make a copy of the input feature table
         result = FeatureTableUtil.clone(dataStore, featureTable,
                 featureTable.getName() + nameSuffix);
+
+        // Copy ID values
+        FeatureTableUtil.copyIdValues(featureTable, result);
+
     }
 
     /** {@inheritDoc} */
     @Override
     public FeatureTable execute() throws MSDKException {
-        gapMap = new HashMap<FeatureTableRow, Sample>();
+        List<FeatureTableRow> gapRow = new ArrayList<FeatureTableRow>();
+        List<Sample> gapSample = new ArrayList<Sample>();
 
         // Total gaps
         for (FeatureTableRow row : result.getRows()) {
@@ -125,14 +126,16 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
                 FeatureTableColumn<Double> areaColumn = result
                         .getColumn(ColumnName.AREA, sample);
                 Double area = row.getData(areaColumn);
+
+                // Add the gap to arrays
                 if (area == null) {
-                    // Add the gap to the map
-                    gapMap.put(row, sample);
+                    gapRow.add(row);
+                    gapSample.add(sample);
                 }
             }
         }
 
-        totalGaps = gapMap.size();
+        totalGaps = gapRow.size();
         logger.info("Started gap filling " + totalGaps + " gap(s) in '"
                 + featureTable.getName() + "'");
 
@@ -140,13 +143,9 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
             return result;
 
         // Iterate over all the gaps
-        Iterator<Entry<FeatureTableRow, Sample>> it = gapMap.entrySet()
-                .iterator();
-        while (it.hasNext()) {
-            Map.Entry<FeatureTableRow, Sample> pair = (Map.Entry<FeatureTableRow, Sample>) it
-                    .next();
-            FeatureTableRow row = pair.getKey();
-            Sample sample = pair.getValue();
+        for (int i = 0; i < totalGaps; i++) {
+            FeatureTableRow row = gapRow.get(i);
+            Sample sample = gapSample.get(i);
             RawDataFile rawFile = sample.getRawDataFile();
 
             // Create an ion annotation
@@ -170,7 +169,9 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
                 ion.setExpectedMz(newMz);
 
                 // Set new mzTolerance
-                mzTolerance = new MZTolerance(toleranceMz, 0.0);
+                mzTolerance = new MZTolerance(
+                        mzTolerance.getMzTolerance() + toleranceMz,
+                        mzTolerance.getPpmTolerance());
             }
 
             // Use Row's RT as input
@@ -186,7 +187,8 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
                 ion.setChromatographyInfo(newCI);
 
                 // Set new rtTolerance
-                rtTolerance = new RTTolerance(toleranceRt, false);
+                rtTolerance = new RTTolerance(
+                        rtTolerance.getTolerance() + toleranceRt, false);
             }
 
             TargetedDetectionMethod chromBuilder = new TargetedDetectionMethod(
@@ -202,7 +204,6 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
             ChromatogramToFeatureTableMethod.addDataToRow(row, chromatogram,
                     tableColumns);
 
-            it.remove();
             processedGaps++;
 
             // Cancel?
