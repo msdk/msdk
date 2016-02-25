@@ -198,7 +198,7 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
 
             // Add the data to the feature table row
             Chromatogram chromatogram = chromatograms.get(0);
-            chromatogram.setIonAnnotation(null);
+            // chromatogram.setIonAnnotation(null);
             Map<ColumnName, FeatureTableColumn<Object>> tableColumns = ChromatogramToFeatureTableMethod
                     .addSampleColumns(result, sample);
             ChromatogramToFeatureTableMethod.addDataToRow(row, chromatogram,
