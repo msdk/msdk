@@ -96,6 +96,18 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-mgf</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-msp</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-rawdata-filters</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -241,6 +253,12 @@
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-featdet-msmsdetection</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-features-gapfilling</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
