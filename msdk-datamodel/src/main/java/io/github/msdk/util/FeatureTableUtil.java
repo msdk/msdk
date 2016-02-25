@@ -499,4 +499,22 @@ public class FeatureTableUtil {
         return Range.closed(min, max);
     }
 
+    public static void copyIdValues(FeatureTable featureTable,
+            FeatureTable result) {
+
+        // Copy rows
+        List<FeatureTableRow> sourceRows = featureTable.getRows();
+        List<FeatureTableRow> targetRows = result.getRows();
+        for (int i = 0; i < sourceRows.size(); i++) {
+            FeatureTableColumn<Integer> sourceIdColumn = featureTable
+                    .getColumn(ColumnName.ID, null);
+            FeatureTableColumn<Integer> targetIdColumn = result
+                    .getColumn(ColumnName.ID, null);
+            new CopyConverter().apply(sourceRows.get(i), sourceIdColumn,
+                    targetRows.get(i), targetIdColumn);
+
+        }
+
+    }
+
 }

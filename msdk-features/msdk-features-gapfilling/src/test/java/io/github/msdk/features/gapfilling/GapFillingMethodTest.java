@@ -25,10 +25,14 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
+import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
@@ -166,10 +170,10 @@ public class GapFillingMethodTest {
 
         // Variables
         mzTolerance = new MZTolerance(0.003, 5.0);
-        rtTolerance = new RTTolerance(0.1, false);
-        intensityTolerance = 10.0;
-        boolean sameRT = false;
-        boolean sameMZ = false;
+        rtTolerance = new RTTolerance(0.2, false);
+        intensityTolerance = 0.10d;
+        boolean sameRT = true;
+        boolean sameMZ = true;
         String nameSuffix = " gapFilled";
 
         GapFillingMethod gapFillMethod = new GapFillingMethod(featureTable,
@@ -178,10 +182,54 @@ public class GapFillingMethodTest {
         featureTable = gapFillMethod.execute();
         Assert.assertEquals(1.0, gapFillMethod.getFinishedPercentage(), 0.0001);
 
-        // Verify the data
-        /*
-         * TODO: Write verification part
-         */
+        //
+        // Verify the data of sample 2, feature 3
+        //
+
+        FeatureTableRow row = featureTable.getRows().get(2);
+        sample = featureTable.getSamples().get(1);
+        Sample sample0 = featureTable.getSamples().get(0);
+
+        // Area
+        FeatureTableColumn<Double> columnArea = featureTable
+                .getColumn(ColumnName.AREA, sample);
+        Assert.assertNotNull(columnArea);
+        Double area = row.getData(columnArea);
+        Assert.assertNotNull(area);
+        Assert.assertEquals(3.415448809043382E7, area, 0.0001);
+
+        // The area of sample 1 and 2 should be identical
+        FeatureTableColumn<Double> columnArea0 = featureTable
+                .getColumn(ColumnName.AREA, sample0);
+        Assert.assertNotNull(columnArea0);
+        Double area0 = row.getData(columnArea0);
+        Assert.assertNotNull(area0);
+        Assert.assertEquals(area0, area, 0.0001);
+
+        // Height
+        FeatureTableColumn<Double> columnHeight = featureTable
+                .getColumn(ColumnName.HEIGHT, sample);
+        Assert.assertNotNull(columnHeight);
+        Double height = row.getData(columnHeight);
+        Assert.assertNotNull(height);
+        Assert.assertEquals(2609394.5, height, 0.0001);
+
+        // RT
+        FeatureTableColumn<ChromatographyInfo> columnRt = featureTable
+                .getColumn(ColumnName.RT, sample);
+        Assert.assertNotNull(columnRt);
+        ChromatographyInfo rt = row.getData(columnRt);
+        Assert.assertNotNull(rt);
+        Assert.assertNotNull(rt.getRetentionTime());
+        Assert.assertEquals(643.3532, rt.getRetentionTime(), 0.0001);
+
+        // m/z
+        FeatureTableColumn<Double> columnMz = featureTable
+                .getColumn(ColumnName.MZ, sample);
+        Assert.assertNotNull(columnMz);
+        Double mz = row.getData(columnMz);
+        Assert.assertNotNull(mz);
+        Assert.assertEquals(362.1021303449358, mz, 0.0001);
 
     }
 
