@@ -63,7 +63,6 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
     private final @Nonnull Double intensityTolerance;
     private final @Nonnull Boolean useRowRt;
     private final @Nonnull Boolean useRowMz;
-    private final @Nonnull Boolean applyRtCorrection;
     private final @Nonnull String nameSuffix;
 
     // Helper variables
@@ -93,8 +92,6 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
      *            a {@link java.lang.Boolean} object.
      * @param useRowMz
      *            a {@link java.lang.Boolean} object.
-     * @param applyRtCorrection
-     *            a {@link java.lang.Boolean} object.
      * @param nameSuffix
      *            a {@link java.lang.String} object.
      */
@@ -102,8 +99,7 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
             @Nonnull DataPointStore dataStore, @Nonnull MZTolerance mzTolerance,
             @Nonnull RTTolerance rtTolerance,
             @Nonnull Double intensityTolerance, @Nonnull Boolean useRowRt,
-            @Nonnull Boolean useRowMz, @Nonnull Boolean applyRtCorrection,
-            @Nonnull String nameSuffix) {
+            @Nonnull Boolean useRowMz, @Nonnull String nameSuffix) {
         this.featureTable = featureTable;
         this.dataStore = dataStore;
         this.mzTolerance = mzTolerance;
@@ -111,7 +107,6 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
         this.intensityTolerance = intensityTolerance;
         this.useRowRt = useRowRt;
         this.useRowMz = useRowMz;
-        this.applyRtCorrection = applyRtCorrection;
         this.nameSuffix = nameSuffix;
 
         // Make a copy of the input feature table

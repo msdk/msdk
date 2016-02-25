@@ -170,12 +170,11 @@ public class GapFillingMethodTest {
         intensityTolerance = 10.0;
         boolean sameRT = false;
         boolean sameMZ = false;
-        boolean correctRT = false;
         String nameSuffix = " gapFilled";
 
         GapFillingMethod gapFillMethod = new GapFillingMethod(featureTable,
                 dataStore, mzTolerance, rtTolerance, intensityTolerance, sameRT,
-                sameMZ, correctRT, nameSuffix);
+                sameMZ, nameSuffix);
         featureTable = gapFillMethod.execute();
         Assert.assertEquals(1.0, gapFillMethod.getFinishedPercentage(), 0.0001);
 
