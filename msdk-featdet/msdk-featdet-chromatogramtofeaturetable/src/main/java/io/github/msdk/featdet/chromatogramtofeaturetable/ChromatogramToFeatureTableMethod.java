@@ -204,7 +204,7 @@ public class ChromatogramToFeatureTableMethod
         if (area != null)
             row.setData(column, area);
 
-        Double height = ChromatogramUtil.getMaxHeight(intensityBuffer,
+        Float height = ChromatogramUtil.getMaxHeight(intensityBuffer,
                 numOfDataPoints);
         column = tableColumns.get(ColumnName.HEIGHT);
         if (height != null)
