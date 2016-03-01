@@ -146,11 +146,11 @@ public class MzTabFileExportMethodTest {
         Assert.assertEquals(30.324697494506836, rt, 0.0000001);
 
         // Height
-        FeatureTableColumn<Double> heightColumn = featureTable2
+        FeatureTableColumn<Float> heightColumn = featureTable2
                 .getColumn(ColumnName.HEIGHT, sample);
-        Double height = row.getData(heightColumn);
+        Float height = row.getData(heightColumn);
         Assert.assertNotNull(height);
-        Assert.assertEquals(312942.149147727, height, 0.0000001);
+        Assert.assertEquals(312942.15625, height, 0.0000001);
 
         // m/z
         mzColumn = featureTable2.getColumn(ColumnName.MZ, sample);

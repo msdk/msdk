@@ -200,7 +200,7 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
             // Check Height
             if (filterByHeight && heightRange != null
                     && keepFeature[i] != false)
-                keepFeature[i] = checkDoubleValue(heightRange,
+                keepFeature[i] = checkFloatValue(heightRange,
                         ColumnName.HEIGHT, sample, row);
 
             // Check FWHM
@@ -264,6 +264,27 @@ public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
             if (row.getData(column) != null) {
                 final Double value = (Double) row.getData(column);
                 if (!range.contains(value))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Helper function to check if a specific float value from a sample is
+     * within a given range.
+     */
+    private boolean checkFloatValue(Range<Double> range, ColumnName columnName,
+            Sample sample, FeatureTableRow row) {
+
+        FeatureTableColumn<Float> column = featureTable.getColumn(columnName,
+                sample);
+        if (column != null) {
+            if (row.getData(column) != null) {
+                final Float value = (Float) row.getData(column);
+                final Double doubleValue = (double) value;
+                if (!range.contains(doubleValue))
                     return false;
             }
         }

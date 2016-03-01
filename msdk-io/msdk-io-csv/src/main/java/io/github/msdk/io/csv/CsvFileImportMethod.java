@@ -261,6 +261,9 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
                         case "Double":
                             objectData = Double.parseDouble(stringData);
                             break;
+                        case "Float":
+                            objectData = Float.parseFloat(stringData);
+                            break;
                         default:
                             objectData = stringData;
                             break;

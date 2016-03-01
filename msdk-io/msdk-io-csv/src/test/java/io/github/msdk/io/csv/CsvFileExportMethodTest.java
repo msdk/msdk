@@ -95,7 +95,7 @@ public class CsvFileExportMethodTest {
         Assert.assertEquals(175.119450157, Double.parseDouble(data[1]), 0.0001);
         Assert.assertEquals(22.814413, Double.parseDouble(data[2]), 0.0001);
         Assert.assertEquals("L-Arginine", data[3]);
-        Assert.assertEquals(93056.24408, Double.parseDouble(data[13]), 0.0001);
+        Assert.assertEquals(93056.24, Double.parseDouble(data[13]), 0.0001);
         Assert.assertEquals(4159043.95, Double.parseDouble(data[14]), 0.0001);
 
         // Clean up
