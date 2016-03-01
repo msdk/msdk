@@ -38,7 +38,7 @@ public enum ColumnName {
             RTEND("RT End", Double.class), //
             DURATION("Duration", Double.class), //
             AREA("Area", Double.class), //
-            HEIGHT("Height", Double.class), //
+            HEIGHT("Height", Float.class), //
             CHARGE("Charge", Integer.class), //
             NUMBEROFDATAPOINTS("# Data Points", Integer.class), //
             FWHM("FWHM", Double.class), //

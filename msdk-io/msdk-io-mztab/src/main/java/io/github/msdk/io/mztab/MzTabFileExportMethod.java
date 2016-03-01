@@ -342,10 +342,10 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                     }
 
                     // Height
-                    FeatureTableColumn<Double> columnHeight = featureTable
+                    FeatureTableColumn<Float> columnHeight = featureTable
                             .getColumn(ColumnName.HEIGHT, sample);
                     if (columnHeight != null) {
-                        Double peakHeightVal = row.getData(columnHeight);
+                        Float peakHeightVal = row.getData(columnHeight);
                         if (peakHeightVal != null) {
                             String peakHeight = peakHeightVal.toString();
                             sm.setOptionColumnValue(new Assay(sampleCounter),

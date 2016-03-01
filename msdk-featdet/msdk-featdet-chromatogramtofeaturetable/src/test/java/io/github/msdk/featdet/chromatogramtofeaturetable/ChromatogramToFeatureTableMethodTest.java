@@ -172,11 +172,11 @@ public class ChromatogramToFeatureTableMethodTest {
         double duration = row.getData(durationColumn);
         Assert.assertEquals(46.3599853515625, duration, 0.000001);
 
-        FeatureTableColumn<Double> heightColumn = featureTable
+        FeatureTableColumn<Float> heightColumn = featureTable
                 .getColumn(ColumnName.HEIGHT, sample);
         Assert.assertNotNull(heightColumn);
         Assert.assertNotNull(row.getData(heightColumn));
-        double height = row.getData(heightColumn);
+        Float height = row.getData(heightColumn);
         Assert.assertEquals(6317753.0, height, 0.000001);
 
         FeatureTableColumn<Double> areaColumn = featureTable

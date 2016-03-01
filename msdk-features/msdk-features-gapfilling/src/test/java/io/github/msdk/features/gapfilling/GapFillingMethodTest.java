@@ -207,10 +207,10 @@ public class GapFillingMethodTest {
         Assert.assertEquals(area0, area, 0.0001);
 
         // Height
-        FeatureTableColumn<Double> columnHeight = featureTable
+        FeatureTableColumn<Float> columnHeight = featureTable
                 .getColumn(ColumnName.HEIGHT, sample);
         Assert.assertNotNull(columnHeight);
-        Double height = row.getData(columnHeight);
+        Float height = row.getData(columnHeight);
         Assert.assertNotNull(height);
         Assert.assertEquals(2609394.5, height, 0.0001);
 
