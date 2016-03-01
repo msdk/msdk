@@ -144,7 +144,7 @@ public class TargetedDetectionMethodTest {
             Assert.assertEquals(0.7823242, duration / 60, 0.000001);
 
         // Height
-        Double height = ChromatogramUtil.getMaxHeight(intensityBuffer,
+        Float height = ChromatogramUtil.getMaxHeight(intensityBuffer,
                 numOfDataPoints);
         Assert.assertNotNull(height);
         if (height != null)

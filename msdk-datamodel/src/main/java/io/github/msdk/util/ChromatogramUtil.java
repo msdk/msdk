@@ -296,7 +296,7 @@ public class ChromatogramUtil {
     }
 
     /**
-     * Returns the maximum height of this feature.
+     * Returns the maximum height of this chromatogram, or null if size == 0.
      *
      * @return a double.
      * @param intensityValues
@@ -304,8 +304,8 @@ public class ChromatogramUtil {
      * @param size
      *            a {@link java.lang.Integer} object.
      */
-    public static @Nullable Double getMaxHeight(
-            @Nonnull float[] intensityValues, @Nonnull Integer size) {
+    public static @Nullable Float getMaxHeight(@Nonnull float[] intensityValues,
+            @Nonnull Integer size) {
 
         // Parameter check
         Preconditions.checkNotNull(intensityValues);
@@ -323,7 +323,7 @@ public class ChromatogramUtil {
             }
         }
 
-        return (double) intensityValues[max];
+        return intensityValues[max];
 
     }
 
@@ -392,7 +392,7 @@ public class ChromatogramUtil {
         if (size == 0)
             return null;
 
-        Double height = getMaxHeight(intensityValues, size);
+        Float height = getMaxHeight(intensityValues, size);
         Float rt = getRt(rtValues, intensityValues, size);
 
         if (height == null || rt == null)
@@ -434,7 +434,7 @@ public class ChromatogramUtil {
         if (size == 0)
             return null;
 
-        Double height = getMaxHeight(intensityValues, size);
+        Float height = getMaxHeight(intensityValues, size);
         Float rt = getRt(rtValues, intensityValues, size);
 
         if (height == null || rt == null)
@@ -480,7 +480,7 @@ public class ChromatogramUtil {
         if (size == 0)
             return null;
 
-        Double height = getMaxHeight(intensityValues, size);
+        Float height = getMaxHeight(intensityValues, size);
         Float rt = getRt(rtValues, intensityValues, size);
 
         if (height == null || rt == null)
