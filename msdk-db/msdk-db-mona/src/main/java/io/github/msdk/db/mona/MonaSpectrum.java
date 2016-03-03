@@ -357,4 +357,134 @@ public class MonaSpectrum
         return false;
     }
 
+	@Override
+	@Nullable
+	public String getInchiKey() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setInchiKey(@Nullable String inchiKey) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	@Nullable
+	public Integer getTaxId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setTaxId(@Nullable Integer taxId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	@Nullable
+	public String getSpecies() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSpecies(@Nullable String species) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	@Nullable
+	public String getDatabase() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setDatabase(@Nullable String database) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	@Nullable
+	public String getDatabaseVersion() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setDatabaseVersion(@Nullable String databaseVersion) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	@Nullable
+	public String getSpectraRef() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSpectraRef(@Nullable String spectraRef) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	@Nullable
+	public String getSearchEngine() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSearchEngine(@Nullable String searchEngine) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	@Nullable
+	public Double getBestSearchEngineScore() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setBestSearchEngineScore(@Nullable Double bestSearchEngineScore) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	@Nullable
+	public String getModifications() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setModifications(@Nullable String modifications) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	@Nullable
+	public Integer getReliability() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setReliability(@Nullable Integer reliability) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -40,6 +40,16 @@ class SimpleIonAnnotation implements IonAnnotation {
     private @Nullable String annotationId;
     private @Nullable URL accessionURL;
     private @Nullable ChromatographyInfo chromatographyInfo;
+    private @Nullable String inchiKey;
+    private @Nullable Integer taxId;
+    private @Nullable String species;
+    private @Nullable String database;
+    private @Nullable String databaseVersion;
+    private @Nullable String spectraRef;
+    private @Nullable String searchEngine;
+    private @Nullable Double bestSearchEngineScore;
+    private @Nullable String modifications;
+    private @Nullable Integer reliability;
 
     /** {@inheritDoc} */
     @Override
@@ -209,4 +219,116 @@ class SimpleIonAnnotation implements IonAnnotation {
         else
             return false;
     }
+
+    @Override
+    @Nullable
+    public String getInchiKey() {
+        return inchiKey;
+    }
+
+    @Override
+    public void setInchiKey(@Nullable String inchiKey) {
+        this.inchiKey = inchiKey;
+    }
+
+    @Override
+    @Nullable
+    public Integer getTaxId() {
+        return taxId;
+    }
+
+    @Override
+    public void setTaxId(@Nullable Integer taxId) {
+        this.taxId = taxId;
+    }
+
+    @Override
+    @Nullable
+    public String getSpecies() {
+        return species;
+    }
+
+    @Override
+    public void setSpecies(@Nullable String species) {
+        this.species = species;
+    }
+
+    @Override
+    @Nullable
+    public String getDatabase() {
+        return database;
+    }
+
+    @Override
+    public void setDatabase(@Nullable String database) {
+        this.database = database;
+    }
+
+    @Override
+    @Nullable
+    public String getDatabaseVersion() {
+        return databaseVersion;
+    }
+
+    @Override
+    public void setDatabaseVersion(@Nullable String databaseVersion) {
+        this.databaseVersion = databaseVersion;
+    }
+
+    @Override
+    @Nullable
+    public String getSpectraRef() {
+        return spectraRef;
+    }
+
+    @Override
+    public void setSpectraRef(@Nullable String spectraRef) {
+        this.spectraRef = spectraRef;
+    }
+
+    @Override
+    @Nullable
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    @Override
+    public void setSearchEngine(@Nullable String searchEngine) {
+        this.searchEngine = searchEngine;
+    }
+
+    @Override
+    @Nullable
+    public Double getBestSearchEngineScore() {
+        return bestSearchEngineScore;
+    }
+
+    @Override
+    public void setBestSearchEngineScore(
+            @Nullable Double bestSearchEngineScore) {
+        this.bestSearchEngineScore = bestSearchEngineScore;
+    }
+
+    @Override
+    @Nullable
+    public String getModifications() {
+        return modifications;
+    }
+
+    @Override
+    public void setModifications(@Nullable String modifications) {
+        this.modifications = modifications;
+    }
+
+    @Override
+    @Nullable
+    public Integer getReliability() {
+        return reliability;
+    }
+
+    @Override
+    public void setReliability(@Nullable Integer reliability) {
+        this.reliability = reliability;
+    }
+
 }
