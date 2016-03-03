@@ -83,10 +83,10 @@ public class CsvFileExportMethodTest {
         // The CSV file has 299 lines
         Assert.assertEquals(299, lines.size());
 
-        // The CSV file has 92 columns
+        // The CSV file has 102 columns
         String line = lines.get(0);
         int count = line.length() - line.replace(separator, "").length() + 1;
-        Assert.assertEquals(92, count);
+        Assert.assertEquals(102, count);
 
         // The 177th line is L-Arginine
         line = lines.get(176);
@@ -95,8 +95,8 @@ public class CsvFileExportMethodTest {
         Assert.assertEquals(175.119450157, Double.parseDouble(data[1]), 0.0001);
         Assert.assertEquals(22.814413, Double.parseDouble(data[2]), 0.0001);
         Assert.assertEquals("L-Arginine", data[3]);
-        Assert.assertEquals(93056.24, Double.parseDouble(data[13]), 0.0001);
-        Assert.assertEquals(4159043.95, Double.parseDouble(data[14]), 0.0001);
+        Assert.assertEquals(93056.24, Double.parseDouble(data[23]), 0.0001);
+        Assert.assertEquals(4159043.95, Double.parseDouble(data[24]), 0.0001);
 
         // Clean up
         tempFile.delete();
@@ -152,10 +152,10 @@ public class CsvFileExportMethodTest {
         // The CSV file has 11 lines
         Assert.assertEquals(11, lines.size());
 
-        // The CSV file has 20 columns
+        // The CSV file has 30 columns
         String line = lines.get(0);
         int count = line.length() - line.replace(separator, "").length() + 1;
-        Assert.assertEquals(20, count);
+        Assert.assertEquals(30, count);
 
         // Clean up
         tempFile.delete();

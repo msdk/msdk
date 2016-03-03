@@ -63,6 +63,16 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
     String ionVal2;
     String ionVal3;
     String ionVal4;
+    String ionVal5;
+    String ionVal6;
+    String ionVal7;
+    String ionVal8;
+    String ionVal9;
+    String ionVal10;
+    String ionVal11;
+    String ionVal12;
+    String ionVal13;
+    String ionVal14;
 
     // Other variables
     private int parsedRows, totalRows = 0;
@@ -152,11 +162,21 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
             // Add additional columns related to the IonAnnotation
             if (column == featureTable.getColumn(ColumnName.IONANNOTATION,
                     null)) {
-                String[] ionColumns = new String[4];
+                String[] ionColumns = new String[14];
                 ionColumns[0] = "Expected m/z value";
                 ionColumns[1] = "Formula";
                 ionColumns[2] = "Ion type";
-                ionColumns[3] = "SMILES";
+                ionColumns[3] = "Reliability";
+                ionColumns[4] = "SMILES";
+                ionColumns[5] = "InChI key";
+                ionColumns[6] = "Taxonomy id";
+                ionColumns[7] = "Species";
+                ionColumns[8] = "Database";
+                ionColumns[9] = "Database version";
+                ionColumns[10] = "SpectraRef";
+                ionColumns[11] = "Search engine";
+                ionColumns[12] = "Best search engine score";
+                ionColumns[13] = "Modifications";
 
                 for (String s : ionColumns)
                     line.append(escapeStringForCSV(s) + separator);
@@ -194,6 +214,16 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
                 ionVal2 = "";
                 ionVal3 = "";
                 ionVal4 = "";
+                ionVal5 = "";
+                ionVal6 = "";
+                ionVal7 = "";
+                ionVal8 = "";
+                ionVal9 = "";
+                ionVal10 = "";
+                ionVal11 = "";
+                ionVal12 = "";
+                ionVal13 = "";
+                ionVal14 = "";
                 Boolean writeIonData = false;
 
                 if (object == null) {
@@ -259,6 +289,16 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
                     line.append(ionVal2 + separator);
                     line.append(ionVal3 + separator);
                     line.append(ionVal4 + separator);
+                    line.append(ionVal5 + separator);
+                    line.append(ionVal6 + separator);
+                    line.append(ionVal7 + separator);
+                    line.append(ionVal8 + separator);
+                    line.append(ionVal9 + separator);
+                    line.append(ionVal10 + separator);
+                    line.append(ionVal11 + separator);
+                    line.append(ionVal12 + separator);
+                    line.append(ionVal13 + separator);
+                    line.append(ionVal14 + separator);
                 }
             }
 
@@ -310,23 +350,114 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
         else
             ionVal3 += "";
 
-        // Chemical structure = SMILES
+        // Reliability
         if (ionVal4 != "")
             ionVal4 = ionVal4 + itemSeparator;
+        Integer ionReliability = ionAnnotation.getReliability();
+        if (ionReliability != null)
+            ionVal4 += ionReliability.toString();
+        else
+            ionVal4 += "";
+
+        // Chemical structure = SMILES
+        if (ionVal5 != "")
+            ionVal5 = ionVal5 + itemSeparator;
         IAtomContainer checmicalStructure = ionAnnotation
                 .getChemicalStructure();
         SmilesGenerator sg = SmilesGenerator.generic();
 
         if (checmicalStructure != null) {
             try {
-                ionVal4 += sg.create(checmicalStructure);
+                ionVal5 += sg.create(checmicalStructure);
             } catch (CDKException e) {
                 logger.info("Could not create SMILE for "
                         + ionAnnotation.getDescription());
                 return;
             }
         } else
-            ionVal4 += "";
+            ionVal5 += "";
+
+        // InChI key
+        if (ionVal6 != "")
+            ionVal6 = ionVal6 + itemSeparator;
+        String ionInchiKey = ionAnnotation.getInchiKey();
+        if (ionInchiKey != null)
+            ionVal6 += ionInchiKey;
+        else
+            ionVal6 += "";
+
+        // Taxonomy id
+        if (ionVal7 != "")
+            ionVal7 = ionVal7 + itemSeparator;
+        Integer ionTaxonomyId = ionAnnotation.getTaxId();
+        if (ionTaxonomyId != null)
+            ionVal7 += ionTaxonomyId.toString();
+        else
+            ionVal7 += "";
+
+        // Species
+        if (ionVal8 != "")
+            ionVal8 = ionVal8 + itemSeparator;
+        String ionSpecies = ionAnnotation.getSpecies();
+        if (ionSpecies != null)
+            ionVal8 += ionSpecies;
+        else
+            ionVal8 += "";
+
+        // Database
+        if (ionVal9 != "")
+            ionVal9 = ionVal9 + itemSeparator;
+        String ionDatabase = ionAnnotation.getDatabase();
+        if (ionDatabase != null)
+            ionVal9 += ionDatabase;
+        else
+            ionVal9 += "";
+
+        // Database version
+        if (ionVal10 != "")
+            ionVal10 = ionVal10 + itemSeparator;
+        String ionDatabaseVersion = ionAnnotation.getDatabaseVersion();
+        if (ionDatabaseVersion != null)
+            ionVal10 += ionDatabaseVersion;
+        else
+            ionVal10 += "";
+
+        // Spectra Ref
+        if (ionVal11 != "")
+            ionVal11 = ionVal11 + itemSeparator;
+        String ionSpectraRef = ionAnnotation.getSpectraRef();
+        if (ionSpectraRef != null)
+            ionVal11 += ionSpectraRef;
+        else
+            ionVal11 += "";
+
+        // Search engine
+        if (ionVal12 != "")
+            ionVal12 = ionVal12 + itemSeparator;
+        String ionSearchEngine = ionAnnotation.getSearchEngine();
+        if (ionSearchEngine != null)
+            ionVal12 += ionSearchEngine;
+        else
+            ionVal12 += "";
+
+        // Best search engine score
+        if (ionVal13 != "")
+            ionVal13 = ionVal13 + itemSeparator;
+        Double ionSearchEngineScore = ionAnnotation.getBestSearchEngineScore();
+        if (ionSearchEngineScore != null)
+            ionVal13 += ionSearchEngineScore.toString();
+        else
+            ionVal13 += "";
+
+        // Modifications
+        if (ionVal14 != "")
+            ionVal14 = ionVal14 + itemSeparator;
+        String ionModifications = ionAnnotation.getModifications();
+        if (ionModifications != null)
+            ionVal14 += ionModifications;
+        else
+            ionVal14 += "";
+
     }
 
     private String escapeStringForCSV(final String inputString) {

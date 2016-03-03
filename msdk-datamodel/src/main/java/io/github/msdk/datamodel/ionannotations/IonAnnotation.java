@@ -211,4 +211,200 @@ public interface IonAnnotation extends Comparable<IonAnnotation> {
      */
     @Nonnull
     Boolean isNA();
+
+    /**
+     * <p>
+     * getInchiKey
+     * </p>
+     *
+     * @return InChI key of this annotation.
+     */
+    @Nullable
+    String getInchiKey();
+
+    /**
+     * Sets a new InChI key to this annotation.
+     *
+     * @param inchiKey
+     *            a {@link java.lang.String} object.
+     */
+    void setInchiKey(@Nullable String inchiKey);
+
+    /**
+     * <p>
+     * getTaxId
+     * </p>
+     *
+     * @return Taxonomy id for the species associated to this annotation.
+     */
+    @Nullable
+    Integer getTaxId();
+
+    /**
+     * Sets a new taxonomy id from the NEWT taxonomy for the species associated
+     * to this annotation.
+     *
+     * @param taxId
+     *            a {@link java.lang.Integer} object.
+     */
+    void setTaxId(@Nullable Integer taxId);
+
+    /**
+     * <p>
+     * getSpecies
+     * </p>
+     *
+     * @return Textual species description of this annotation.
+     */
+    @Nullable
+    String getSpecies();
+
+    /**
+     * Sets a new species description to this annotation
+     *
+     * @param species
+     *            a {@link java.lang.String} object.
+     */
+    void setSpecies(@Nullable String species);
+
+    /**
+     * <p>
+     * getDatabase
+     * </p>
+     *
+     * @return Textual database description of this annotation.
+     */
+    @Nullable
+    String getDatabase();
+
+    /**
+     * Sets a new database description to this annotation. Generally references
+     * the used identification or spectral library.
+     *
+     * @param database
+     *            a {@link java.lang.String} object.
+     */
+    void setDatabase(@Nullable String database);
+
+    /**
+     * <p>
+     * getDatabaseVersion
+     * </p>
+     *
+     * @return The version or date of creation of the used database.
+     */
+    @Nullable
+    String getDatabaseVersion();
+
+    /**
+     * Sets a new database version description to this annotation. Either the
+     * version of the used database if available or otherwise the date of
+     * creation. Additionally, the number of entries in the database MAY be
+     * reported in round brackets after the version in the format: {version}
+     * ({#entries} entries), for example "2011-11 (1234 entries)".
+     *
+     * @param databaseVersion
+     *            a {@link java.lang.String} object.
+     */
+    void setDatabaseVersion(@Nullable String databaseVersion);
+
+    /**
+     * <p>
+     * getSpectraRef
+     * </p>
+     *
+     * @return Textual reference to a spectrum in a spectrum file for this
+     *         annotation.
+     */
+    @Nullable
+    String getSpectraRef();
+
+    /**
+     * Sets a new textual reference to a spectrum in a spectrum file for this
+     * annotation. The reference must be in the format
+     * ms_run[1-n]:{SPECTRA_REF}. Multiple spectra can be referenced using a "|"
+     * delimited list.
+     *
+     * @param spectraRef
+     *            a {@link java.lang.String} object.
+     */
+    void setSpectraRef(@Nullable String spectraRef);
+
+    /**
+     * <p>
+     * getSearchEngine
+     * </p>
+     *
+     * @return Textual search engine description of this annotation.
+     */
+    @Nullable
+    String getSearchEngine();
+
+    /**
+     * Sets a "|" delimited list of search engine(s) that identified this
+     * annotation.
+     *
+     * @param searchEngine
+     *            a {@link java.lang.String} object.
+     */
+    void setSearchEngine(@Nullable String searchEngine);
+
+    /**
+     * <p>
+     * getBestSearchEngineScore
+     * </p>
+     *
+     * @return The best search engine score for this annotation.
+     */
+    @Nullable
+    Double getBestSearchEngineScore();
+
+    /**
+     * Sets the best search engine score for this annotation.
+     *
+     * @param bestSearchEngineScore
+     *            a {@link java.lang.Double} object.
+     */
+    void setBestSearchEngineScore(@Nullable Double bestSearchEngineScore);
+
+    /**
+     * <p>
+     * getModifications
+     * </p>
+     *
+     * @return Textual description of the annotation's modifications.
+     */
+    @Nullable
+    String getModifications();
+
+    /**
+     * Sets the annotation's modifications.
+     *
+     * @param modifications
+     *            a {@link java.lang.String} object.
+     */
+    void setModifications(@Nullable String modifications);
+
+    /**
+     * <p>
+     * getReliability
+     * </p>
+     *
+     * @return The reliability of the ion annotation identification.
+     */
+    @Nullable
+    Integer getReliability();
+
+    /**
+     * Sets the reliability of the identification. This must be reported as an
+     * integer between 1-4:
+     * 1: Identified metabolites
+     * 2: Putatively annotated compounds
+     * 3: Putatively characterized compound classes
+     * 4: Unknown compounds
+     *
+     * @param reliability
+     *            a {@link java.lang.Integer} object.
+     */
+    void setReliability(@Nullable Integer reliability);
 }
