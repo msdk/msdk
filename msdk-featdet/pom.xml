@@ -14,5 +14,6 @@
         <module>msdk-featdet-chromatogramtofeaturetable</module>
         <module>msdk-featdet-gridmass</module>
         <module>msdk-featdet-msmsdetection</module>
+        <module>msdk-featdet-srmdetection</module>
     </modules>
 </project>
