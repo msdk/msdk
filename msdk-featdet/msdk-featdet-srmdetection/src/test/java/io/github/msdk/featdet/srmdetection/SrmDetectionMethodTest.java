@@ -46,9 +46,13 @@ public class SrmDetectionMethodTest {
         Assert.assertNotNull(rawFile);
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
+        // Parameters
+        final Double minHeight = 100d;
+        final Double intensityTolerance = 0.10d;
+
         // MS/MS detection method
         SrmDetectionMethod msMethod = new SrmDetectionMethod(rawFile, dataStore,
-                " SRM");
+                minHeight, intensityTolerance, " SRM");
         final FeatureTable featureTable = msMethod.execute();
         Assert.assertEquals(1.0, msMethod.getFinishedPercentage(), 0.0001);
 
