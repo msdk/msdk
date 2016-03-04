@@ -14,7 +14,10 @@
 
 package io.github.msdk.featdet.srmdetection;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +32,6 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.util.ChromatogramUtil;
 
 /**
  * This class creates a feature table based on the SRM chromatograms from a raw
@@ -38,6 +40,8 @@ import io.github.msdk.util.ChromatogramUtil;
 public class SrmDetectionMethod implements MSDKMethod<FeatureTable> {
 
     private final @Nonnull RawDataFile rawDataFile;
+    private final @Nonnull Double minHeight;
+    private final @Nonnull Double intensityTolerance;
     private final @Nonnull DataPointStore dataStore;
 
     private FeatureTable result;
@@ -56,8 +60,11 @@ public class SrmDetectionMethod implements MSDKMethod<FeatureTable> {
      *            object.
      */
     public SrmDetectionMethod(@Nonnull RawDataFile rawDataFile,
-            @Nonnull DataPointStore dataStore, @Nonnull String nameSuffix) {
+            @Nonnull DataPointStore dataStore, @Nonnull Double minHeight,
+            @Nonnull Double intensityTolerance, @Nonnull String nameSuffix) {
         this.rawDataFile = rawDataFile;
+        this.minHeight = minHeight;
+        this.intensityTolerance = intensityTolerance;
         this.dataStore = dataStore;
 
         // Make a new feature table
@@ -88,7 +95,7 @@ public class SrmDetectionMethod implements MSDKMethod<FeatureTable> {
             for (IsolationInfo isolation : isolations) {
                 /*
                  * TODO: 1. Find Q1 and Q3 values. Possibly use the precursor or
-                 * product to the isolation?
+                 * product to the isolation? The Q1 value is the m/z value
                  */
             }
 
@@ -97,24 +104,50 @@ public class SrmDetectionMethod implements MSDKMethod<FeatureTable> {
             float[] intensityValues = chromatogram.getIntensityValues();
             Integer size = intensityValues.length;
 
-            // Correct values
-            System.out.println("RT : " + ChromatogramUtil.getRt(rtValues, intensityValues, size));
-            System.out.println("Height : " + ChromatogramUtil.getMaxHeight(intensityValues, size));
+            // Peak apex HashMap
+            Map<Float, ChromatographyInfo> peakMap = new HashMap<Float, ChromatographyInfo>();
 
-            // Wrong values
-            System.out.println("Data points : " + size);
-            System.out.println("RT start : " + ChromatogramUtil.getRtStart(rtValues, size));
-            System.out.println("RT end : " + ChromatogramUtil.getRtEnd(rtValues, size));
-            System.out.println("Duration : " + ChromatogramUtil.getDuration(rtValues, size));
-            System.out.println("Area : " + ChromatogramUtil.getArea(rtValues, intensityValues, size));
-            System.out.println("FWHM : " + ChromatogramUtil.getFwhm(rtValues, intensityValues, size));
-            System.out.println("TailingFactor : " + ChromatogramUtil.getTailingFactor(rtValues, intensityValues, size));
-            System.out.println("AsymmetryFactor : " + ChromatogramUtil.getAsymmetryFactor(rtValues, intensityValues, size));
-            System.out.println("");
+            // Iterate over all data points in the chromatogram to find the
+            // peaks
+            float intensity = 0f;
+            Boolean fallingIntensity = false;
+            for (int i = 0; i < size; i++) {
+                float currentIntensity = intensityValues[i];
 
-            /*
-             * TODO: Calculate the m/z value for the SRM chromatogram
-             */
+                // Ignore intensities below threshold
+                if (currentIntensity < minHeight)
+                    continue;
+
+                // Intensity is falling
+                if (currentIntensity < intensity) {
+                    if (!fallingIntensity) {
+                        // Add the peak apex to the peakMap
+                        peakMap.put(intensity, rtValues[i]);
+                        fallingIntensity = true;
+                    }
+                    intensity = currentIntensity;
+                } else {
+                    fallingIntensity = false;
+                    intensity = currentIntensity;
+                }
+
+            }
+
+            // Iterate over the peakMap
+            Iterator it = peakMap.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry)it.next();
+                intensity = (float) pair.getKey();
+                ChromatographyInfo chromatographyInfo = (ChromatographyInfo) pair.getValue();
+                Float rtValue = chromatographyInfo.getRetentionTime();
+                
+                /*
+                 * TODO: Generate the XIC for the features
+                 * If possible then re-use the method from the TargetedDetection module for this
+                 */
+                System.out.println(intensity + " : " + rtValue);
+                it.remove();
+            }
 
             /*
              * TODO: Group features by identical Q1 and RT values
