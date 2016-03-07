@@ -31,21 +31,22 @@ public enum ColumnName {
     GROUPID("Group ID", Integer.class), //
     @SuppressWarnings("unchecked") IONANNOTATION("Ion Annotation",
             (Class<List<IonAnnotation>>) (Class<?>) List.class), //
-            MZ("m/z", Double.class), //
-            PPM("ppm", Double.class), //
-            RT("RT", ChromatographyInfo.class), //
-            RTSTART("RT Start", Double.class), //
-            RTEND("RT End", Double.class), //
-            DURATION("Duration", Double.class), //
-            AREA("Area", Double.class), //
-            HEIGHT("Height", Float.class), //
-            CHARGE("Charge", Integer.class), //
-            NUMBEROFDATAPOINTS("# Data Points", Integer.class), //
-            FWHM("FWHM", Double.class), //
-            TAILINGFACTOR("Tailing Factor", Double.class), //
-            ASYMMETRYFACTOR("Asymmetry Factor", Double.class), //
-            CHROMATOGRAM("Chromatogram", Chromatogram.class), //
-            RETENTIONINDEX("Retention Index", Double.class); //
+    MZ("m/z", Double.class), //
+    PPM("ppm", Double.class), //
+    RT("RT", ChromatographyInfo.class), //
+    RTSTART("RT Start", Double.class), //
+    RTEND("RT End", Double.class), //
+    DURATION("Duration", Double.class), //
+    AREA("Area", Double.class), //
+    HEIGHT("Height", Float.class), //
+    CHARGE("Charge", Integer.class), //
+    NUMBEROFDATAPOINTS("# Data Points", Integer.class), //
+    FWHM("FWHM", Double.class), //
+    TAILINGFACTOR("Tailing Factor", Double.class), //
+    ASYMMETRYFACTOR("Asymmetry Factor", Double.class), //
+    CHROMATOGRAM("Chromatogram", Chromatogram.class), //
+    RETENTIONINDEX("Retention Index", Double.class), //
+    Q3("Q3", Double.class); //
 
     private final @Nonnull String name;
     private final @Nonnull Class<?> dataTypeClass;

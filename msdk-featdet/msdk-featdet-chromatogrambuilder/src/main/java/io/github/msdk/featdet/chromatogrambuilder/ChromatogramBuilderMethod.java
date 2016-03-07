@@ -148,8 +148,6 @@ public class ChromatogramBuilderMethod
             prevRT = s.getChromatographyInfo();
         }
 
-        // Create a new feature table
-
         HighestDataPointConnector massConnector = new HighestDataPointConnector(
                 noiseLevel, minimumTimeSpan, minimumHeight, mzTolerance);
 
