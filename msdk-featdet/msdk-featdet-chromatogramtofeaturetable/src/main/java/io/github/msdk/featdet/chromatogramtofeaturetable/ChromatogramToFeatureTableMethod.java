@@ -16,6 +16,7 @@ package io.github.msdk.featdet.chromatogramtofeaturetable;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
@@ -33,6 +35,7 @@ import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.msdk.util.FeatureTableUtil;
@@ -46,6 +49,11 @@ public class ChromatogramToFeatureTableMethod
     private final @Nonnull List<Chromatogram> chromatograms;
     private final @Nonnull FeatureTable featureTable;
     private final @Nonnull Sample sample;
+    private final @Nonnull FeatureTableColumn<Double> srmColumn = MSDKObjectBuilder
+            .getFeatureTableColumn(ColumnName.Q3, null);
+    private final @Nonnull FeatureTableColumn<Integer> groupIdColumn = MSDKObjectBuilder
+            .getFeatureTableColumn(ColumnName.GROUPID, null);
+    Map<Double, Integer> srmGroups = new HashMap<Double, Integer>();
 
     private boolean canceled = false;
     private int processedChromatograms = 0, totalChromatograms = 0;
@@ -101,7 +109,6 @@ public class ChromatogramToFeatureTableMethod
         // Loop through all chromatograms and add values to the feature table
         FeatureTableColumn<Object> column;
         for (Chromatogram chromatogram : chromatograms) {
-
             lastID++;
             FeatureTableRow newRow = MSDKObjectBuilder
                     .getFeatureTableRow(featureTable, lastID);
@@ -110,6 +117,44 @@ public class ChromatogramToFeatureTableMethod
 
             // Add the data to the feature table row
             addDataToRow(newRow, chromatogram, tableColumns);
+
+            // Add Q3 column and data for SRM chromatograms
+            if (chromatogram
+                    .getChromatogramType() == ChromatogramType.MRM_SRM) {
+
+                // Get Q1 and Q3 values
+                List<IsolationInfo> isolations = chromatogram.getIsolations();
+                Double mzQ1 = isolations.get(0).getPrecursorMz();
+                Double mzQ3 = isolations.get(1).getPrecursorMz();
+
+                // m/z column
+                column = featureTable.getColumn(ColumnName.MZ, sample);
+                newRow.setData(column, mzQ1);
+
+                // SRM Q3 column
+                column = featureTable.getColumn(ColumnName.Q3, null);
+                if (column == null)
+                    featureTable.addColumn(srmColumn);
+                column = featureTable.getColumn(ColumnName.Q3, null);
+                newRow.setData(column, mzQ3);
+
+                // Group ID column
+                column = featureTable.getColumn(ColumnName.GROUPID, null);
+                if (column == null)
+                    featureTable.addColumn(groupIdColumn);
+                column = featureTable.getColumn(ColumnName.GROUPID, null);
+
+                // Group ID
+                Integer groupID = srmGroups.get(mzQ1);
+                if (groupID == null) {
+                    srmGroups.put(mzQ1, processedChromatograms + 1);
+
+                    // Assign the first row to the 0 ID
+                    newRow.setData(column, 0);
+                } else {
+                    newRow.setData(column, groupID);
+                }
+            }
 
             // Add row to feature table
             featureTable.addRow(newRow);
