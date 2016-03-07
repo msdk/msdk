@@ -49,7 +49,9 @@ public class ChromatogramToFeatureTableMethod
     private final @Nonnull List<Chromatogram> chromatograms;
     private final @Nonnull FeatureTable featureTable;
     private final @Nonnull Sample sample;
-    private final @Nonnull FeatureTableColumn<Double> srmColumn = MSDKObjectBuilder
+    private final @Nonnull FeatureTableColumn<Double> q1Column = MSDKObjectBuilder
+            .getFeatureTableColumn(ColumnName.Q1, null);
+    private final @Nonnull FeatureTableColumn<Double> q3Column = MSDKObjectBuilder
             .getFeatureTableColumn(ColumnName.Q3, null);
     private final @Nonnull FeatureTableColumn<Integer> groupIdColumn = MSDKObjectBuilder
             .getFeatureTableColumn(ColumnName.GROUPID, null);
@@ -131,10 +133,17 @@ public class ChromatogramToFeatureTableMethod
                 column = featureTable.getColumn(ColumnName.MZ, sample);
                 newRow.setData(column, mzQ1);
 
+                // SRM Q1 column
+                column = featureTable.getColumn(ColumnName.Q1, null);
+                if (column == null)
+                    featureTable.addColumn(q1Column);
+                column = featureTable.getColumn(ColumnName.Q1, null);
+                newRow.setData(column, mzQ1);
+
                 // SRM Q3 column
                 column = featureTable.getColumn(ColumnName.Q3, null);
                 if (column == null)
-                    featureTable.addColumn(srmColumn);
+                    featureTable.addColumn(q3Column);
                 column = featureTable.getColumn(ColumnName.Q3, null);
                 newRow.setData(column, mzQ3);
 

@@ -46,6 +46,7 @@ public enum ColumnName {
     ASYMMETRYFACTOR("Asymmetry Factor", Double.class), //
     CHROMATOGRAM("Chromatogram", Chromatogram.class), //
     RETENTIONINDEX("Retention Index", Double.class), //
+    Q1("Q1", Double.class), //
     Q3("Q3", Double.class); //
 
     private final @Nonnull String name;
