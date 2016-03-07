@@ -47,7 +47,7 @@ public class MSDKCentroidingMethod implements MSDKMethod<RawDataFile> {
 
     /**
      * <p>
-     * Constructor for MSDKFilteringMethod.
+     * Constructor for MSDKCentroidingMethod.
      * </p>
      *
      * @param rawDataFile
