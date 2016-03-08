@@ -18,6 +18,7 @@ import java.io.File;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
@@ -96,6 +97,9 @@ public class SrmDetectionMethodTest {
     @SuppressWarnings("null")
     @Test
     public void test_Thermo() throws MSDKException {
+
+        // Run this test only on Windows
+        Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
         // Create the data structures
         final DataPointStore dataStore = DataPointStoreFactory
