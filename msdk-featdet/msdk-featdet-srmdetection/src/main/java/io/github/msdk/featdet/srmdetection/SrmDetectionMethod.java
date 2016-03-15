@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -132,13 +134,27 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
                 continue;
             }
 
-            // Q1 and Q3
+            // Q1 data
             Double q1 = scan.getIsolations().get(0).getPrecursorMz();
-            Double q3 = 1d;
+
+            // Q3 data
             /*
-             * TODO: Get q3 value from scan.getScanDefinition() ??? 
-             * Also update the Q3 IsolationMzRange value in the q3IsolationMzRangeMap below!
+             * TODO: This is a workaround for issue # 123:
+             * https://github.com/msdk/msdk/issues/127
              */
+            String scanDefinition = scan.getScanDefinition();
+            Pattern pattern = Pattern.compile("(?<=\\[)(.*)(?=\\])");
+            Matcher matcher = pattern.matcher(scanDefinition);
+            Double q3 = 1d;
+            Range<Double> q3IsolationMzRange = Range.singleton(q3);
+            if (matcher.find()) {
+                String str = matcher.group(0);
+                String[] mzValues = str.split("-");
+                double mz1 = Double.parseDouble(mzValues[0]);
+                double mz2 = Double.parseDouble(mzValues[1]);
+                q3 = (mz1 + mz2) / 2;
+                q3IsolationMzRange = Range.closed(mz1, mz2);
+            }
 
             // Get the chromatogram for the Q1 and Q3 value or generate a new
             BuildingChromatogram buildingChromatogram = chromatogramMap
@@ -150,13 +166,13 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
                 // Store the mz isolation range for the q1 and q3 values
                 q1IsolationMzRangeMap.put(q1,
                         scan.getIsolations().get(0).getIsolationMzRange());
-                q3IsolationMzRangeMap.put(q3,
-                        scan.getIsolations().get(0).getIsolationMzRange());
+                q3IsolationMzRangeMap.put(q3, q3IsolationMzRange);
             }
 
             // Add the new data point
             ChromatographyInfo rt = scan.getChromatographyInfo();
-            float intenstiy = scan.getIntensityValues()[0]; // Assume only 1 value
+            float intenstiy = scan.getIntensityValues()[0]; // Assume only 1
+                                                            // value
             buildingChromatogram.addDataPoint(rt, 0d, intenstiy);
 
             parsed++;

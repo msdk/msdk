@@ -165,8 +165,8 @@ public class SrmDetectionMethodTest {
         // Q3 values
         FeatureTableColumn<Double> columnQ3 = featureTable
                 .getColumn(ColumnName.Q3, null);
-        // Assert.assertEquals(103.1, rows.get(0).getData(columnQ3), 0.0001);
-        // Assert.assertEquals(119.1, rows.get(1).getData(columnQ3), 0.0001);
-        // Assert.assertEquals(408.0, rows.get(2).getData(columnQ3), 0.0001);
+        Assert.assertEquals(103.1, rows.get(0).getData(columnQ3), 0.0001);
+        Assert.assertEquals(119.1, rows.get(1).getData(columnQ3), 0.0001);
+        Assert.assertEquals(408.0, rows.get(2).getData(columnQ3), 0.0001);
     }
 }
