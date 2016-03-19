@@ -91,7 +91,7 @@ public interface FeatureTableRow {
      * Copy data from a source column value to a target column in the given
      * target row. The copy operation is performed by the passed in
      * {@code featureTableDataConverter}. See
-     * {@link FeatureTableIdentityDataConverter} for the default implementation.
+     * {@link FeatureTableDataConverter} for the default implementation.
      *
      * @param <DATATYPE>
      *            the generic element data type.

@@ -70,9 +70,9 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
      *            object.
      */
     public SrmDetectionMethod(@Nonnull RawDataFile rawDataFile,
-            @Nonnull DataPointStore dataStore) {
+            @Nonnull DataPointStore dataPointStore) {
         this.rawDataFile = rawDataFile;
-        this.dataStore = dataStore;
+        this.dataStore = dataPointStore;
 
         // Make a new array
         result = new ArrayList<>();
