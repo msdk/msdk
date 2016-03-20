@@ -234,6 +234,13 @@ public class MsSpectrumUtil {
         return topIndex;
     }
 
+    /**
+     * <p>normalizeIntensity.</p>
+     *
+     * @param intensityValues an array of float.
+     * @param size a {@link java.lang.Integer} object.
+     * @param scale a {@link java.lang.Float} object.
+     */
     public static void normalizeIntensity(@Nonnull float intensityValues[],
             @Nonnull Integer size, @Nonnull Float scale) {
 
@@ -251,6 +258,12 @@ public class MsSpectrumUtil {
 
     }
 
+    /**
+     * <p>msSpectrumToString.</p>
+     *
+     * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static @Nonnull String msSpectrumToString(MsSpectrum spectrum) {
 
         return msSpectrumToString(spectrum.getMzValues(),
@@ -259,6 +272,14 @@ public class MsSpectrumUtil {
 
     }
 
+    /**
+     * <p>msSpectrumToString.</p>
+     *
+     * @param mzValues an array of double.
+     * @param intensityValues an array of float.
+     * @param size a {@link java.lang.Integer} object.
+     * @return a {@link java.lang.String} object.
+     */
     @SuppressWarnings("null")
     public static @Nonnull String msSpectrumToString(@Nonnull double mzValues[],
             @Nonnull float intensityValues[], @Nonnull Integer size) {

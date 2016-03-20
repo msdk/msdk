@@ -357,6 +357,7 @@ public class MonaSpectrum
         return false;
     }
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public String getInchiKey() {
@@ -364,12 +365,14 @@ public class MonaSpectrum
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setInchiKey(@Nullable String inchiKey) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public Integer getTaxId() {
@@ -377,12 +380,14 @@ public class MonaSpectrum
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setTaxId(@Nullable Integer taxId) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public String getSpecies() {
@@ -390,12 +395,14 @@ public class MonaSpectrum
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setSpecies(@Nullable String species) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public String getDatabase() {
@@ -403,12 +410,14 @@ public class MonaSpectrum
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setDatabase(@Nullable String database) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public String getDatabaseVersion() {
@@ -416,12 +425,14 @@ public class MonaSpectrum
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setDatabaseVersion(@Nullable String databaseVersion) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public String getSpectraRef() {
@@ -429,12 +440,14 @@ public class MonaSpectrum
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setSpectraRef(@Nullable String spectraRef) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public String getSearchEngine() {
@@ -442,12 +455,14 @@ public class MonaSpectrum
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setSearchEngine(@Nullable String searchEngine) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public Double getBestSearchEngineScore() {
@@ -455,12 +470,14 @@ public class MonaSpectrum
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setBestSearchEngineScore(@Nullable Double bestSearchEngineScore) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public String getModifications() {
@@ -468,12 +485,14 @@ public class MonaSpectrum
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setModifications(@Nullable String modifications) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Nullable
 	public Integer getReliability() {
@@ -481,6 +500,7 @@ public class MonaSpectrum
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setReliability(@Nullable Integer reliability) {
 		// TODO Auto-generated method stub

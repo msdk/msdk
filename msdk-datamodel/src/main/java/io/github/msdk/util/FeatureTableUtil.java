@@ -451,6 +451,12 @@ public class FeatureTableUtil {
         return newFeatureTable;
     }
 
+    /**
+     * <p>getFeatureMzRange.</p>
+     *
+     * @param row a {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} object.
+     * @return a {@link com.google.common.collect.Range} object.
+     */
     public static Range<Double> getFeatureMzRange(FeatureTableRow row) {
         FeatureTable featureTable = row.getFeatureTable();
         FeatureTableColumn<?> column;
@@ -473,6 +479,12 @@ public class FeatureTableUtil {
         return Range.closed(min, max);
     }
 
+    /**
+     * <p>getFeatureRt1Range.</p>
+     *
+     * @param row a {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} object.
+     * @return a {@link com.google.common.collect.Range} object.
+     */
     public static Range<Float> getFeatureRt1Range(FeatureTableRow row) {
         FeatureTable featureTable = row.getFeatureTable();
         FeatureTableColumn<ChromatographyInfo> column;
@@ -499,6 +511,12 @@ public class FeatureTableUtil {
         return Range.closed(min, max);
     }
 
+    /**
+     * <p>copyIdValues.</p>
+     *
+     * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+     * @param result a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+     */
     public static void copyIdValues(FeatureTable featureTable,
             FeatureTable result) {
 

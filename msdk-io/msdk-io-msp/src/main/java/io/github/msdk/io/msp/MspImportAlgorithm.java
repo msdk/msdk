@@ -35,6 +35,10 @@ import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.DataPointSorter.SortingDirection;
 import io.github.msdk.util.DataPointSorter.SortingProperty;
 
+/**
+ * <p>MspImportAlgorithm class.</p>
+ *
+ */
 public class MspImportAlgorithm {
 
     private static final Pattern propertyPattern = Pattern
@@ -46,6 +50,14 @@ public class MspImportAlgorithm {
     private static final Pattern mzIntensityPattern = Pattern
             .compile("(\\d+(\\.\\d+)?)[^\\d]+(\\d+(\\.\\d+)?)");
 
+    /**
+     * <p>parseMspFromFile.</p>
+     *
+     * @param mspFile a {@link java.io.File} object.
+     * @return a {@link io.github.msdk.io.msp.MspSpectrum} object.
+     * @throws java.io.IOException if any.
+     * @throws io.github.msdk.MSDKException if any.
+     */
     public static @Nonnull MspSpectrum parseMspFromFile(@Nonnull File mspFile)
             throws IOException, MSDKException {
 
@@ -57,6 +69,13 @@ public class MspImportAlgorithm {
         return parseMspFromString(str);
     }
 
+    /**
+     * <p>parseMspFromString.</p>
+     *
+     * @param mspText a {@link java.lang.String} object.
+     * @return a {@link io.github.msdk.io.msp.MspSpectrum} object.
+     * @throws io.github.msdk.MSDKException if any.
+     */
     public static @Nonnull MspSpectrum parseMspFromString(
             @Nonnull String mspText) throws MSDKException {
 

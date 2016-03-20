@@ -44,6 +44,15 @@ public class IsotopePatternGeneratorAlgorithm {
     private static final Pattern formulaPattern = Pattern.compile(
             "^[\\[\\(]?(([A-Z][a-z]?[0-9]*)+)[\\]\\)]?(([0-9]*)([-+]))?$");
 
+    /**
+     * <p>generateIsotopes.</p>
+     *
+     * @param chemicalFormula a {@link java.lang.String} object.
+     * @param minAbundance a {@link java.lang.Double} object.
+     * @param intensityScale a {@link java.lang.Float} object.
+     * @param mzTolerance a {@link java.lang.Double} object.
+     * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     */
     public static @Nonnull MsSpectrum generateIsotopes(
             @Nonnull String chemicalFormula, @Nonnull Double minAbundance,
             @Nonnull Float intensityScale, @Nonnull Double mzTolerance) {
@@ -84,6 +93,16 @@ public class IsotopePatternGeneratorAlgorithm {
 
     }
 
+    /**
+     * <p>generateIsotopes.</p>
+     *
+     * @param cdkFormula a {@link org.openscience.cdk.interfaces.IMolecularFormula} object.
+     * @param charge a {@link java.lang.Integer} object.
+     * @param minAbundance a {@link java.lang.Double} object.
+     * @param intensityScale a {@link java.lang.Float} object.
+     * @param mzTolerance a {@link java.lang.Double} object.
+     * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     */
     public static @Nonnull MsSpectrum generateIsotopes(
             @Nonnull IMolecularFormula cdkFormula, @Nonnull Integer charge,
             @Nonnull Double minAbundance, @Nonnull Float intensityScale,

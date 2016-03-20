@@ -29,14 +29,34 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 
+/**
+ * <p>MgfExportAlgorithm class.</p>
+ *
+ */
 public class MgfExportAlgorithm {
 
+    /**
+     * <p>exportSpectrum.</p>
+     *
+     * @param exportFile a {@link java.io.File} object.
+     * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     * @throws java.io.IOException if any.
+     * @throws io.github.msdk.MSDKException if any.
+     */
     @SuppressWarnings("null")
     public static void exportSpectrum(@Nonnull File exportFile,
             @Nonnull MsSpectrum spectrum) throws IOException, MSDKException {
         exportSpectra(exportFile, Collections.singleton(spectrum));
     }
 
+    /**
+     * <p>exportSpectra.</p>
+     *
+     * @param exportFile a {@link java.io.File} object.
+     * @param spectra a {@link java.util.Collection} object.
+     * @throws java.io.IOException if any.
+     * @throws io.github.msdk.MSDKException if any.
+     */
     public static void exportSpectra(@Nonnull File exportFile,
             @Nonnull Collection<MsSpectrum> spectra)
                     throws IOException, MSDKException {

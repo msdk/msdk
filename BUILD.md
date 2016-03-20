@@ -50,7 +50,7 @@ mvn -DfixTags=param,return,throws -Dforce javadoc:fix
 mvn -Pmsdk-release package
 
 # Deploy after successful build
-mvn -Pmsdk-release deploy
+mvn -Pmsdk-release -DskipTests deploy
 
 # To generate complete JavaDoc documentation and upload it to http://msdk.github.io/api/
 mvn -Pmsdk-release -DskipTests package javadoc:aggregate scm-publish:publish-scm

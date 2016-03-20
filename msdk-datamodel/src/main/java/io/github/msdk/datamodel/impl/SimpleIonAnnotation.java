@@ -220,112 +220,132 @@ class SimpleIonAnnotation implements IonAnnotation {
             return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public String getInchiKey() {
         return inchiKey;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setInchiKey(@Nullable String inchiKey) {
         this.inchiKey = inchiKey;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Integer getTaxId() {
         return taxId;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setTaxId(@Nullable Integer taxId) {
         this.taxId = taxId;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public String getSpecies() {
         return species;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSpecies(@Nullable String species) {
         this.species = species;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public String getDatabase() {
         return database;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDatabase(@Nullable String database) {
         this.database = database;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public String getDatabaseVersion() {
         return databaseVersion;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDatabaseVersion(@Nullable String databaseVersion) {
         this.databaseVersion = databaseVersion;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public String getSpectraRef() {
         return spectraRef;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSpectraRef(@Nullable String spectraRef) {
         this.spectraRef = spectraRef;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public String getSearchEngine() {
         return searchEngine;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSearchEngine(@Nullable String searchEngine) {
         this.searchEngine = searchEngine;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Double getBestSearchEngineScore() {
         return bestSearchEngineScore;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setBestSearchEngineScore(
             @Nullable Double bestSearchEngineScore) {
         this.bestSearchEngineScore = bestSearchEngineScore;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public String getModifications() {
         return modifications;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setModifications(@Nullable String modifications) {
         this.modifications = modifications;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nullable
     public Integer getReliability() {
         return reliability;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setReliability(@Nullable Integer reliability) {
         this.reliability = reliability;

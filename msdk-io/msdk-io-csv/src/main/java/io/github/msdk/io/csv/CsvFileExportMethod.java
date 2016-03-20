@@ -94,6 +94,7 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
      *            a {@link java.lang.String} object.
      * @param exportAllIds
      *            a {@link java.lang.Boolean} object.
+     * @param columns a {@link java.util.List} object.
      */
     public CsvFileExportMethod(@Nonnull FeatureTable featureTable,
             @Nonnull File csvFile, @Nonnull String separator,
@@ -475,6 +476,12 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
         return result;
     }
 
+    /**
+     * <p>removeLastCharacter.</p>
+     *
+     * @param str a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String removeLastCharacter(String str) {
         if (str.length() > 0) {
             str = str.substring(0, str.length() - 1);

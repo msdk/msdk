@@ -27,14 +27,32 @@ import javax.annotation.Nonnull;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 
+/**
+ * <p>TxtExportAlgorithm class.</p>
+ *
+ */
 public class TxtExportAlgorithm {
 
+    /**
+     * <p>exportSpectrum.</p>
+     *
+     * @param exportFile a {@link java.io.File} object.
+     * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     * @throws java.io.IOException if any.
+     */
     @SuppressWarnings("null")
     public static void exportSpectrum(@Nonnull File exportFile,
             @Nonnull MsSpectrum spectrum) throws IOException {
         exportSpectra(exportFile, Collections.singleton(spectrum));
     }
 
+    /**
+     * <p>exportSpectra.</p>
+     *
+     * @param exportFile a {@link java.io.File} object.
+     * @param spectra a {@link java.util.Collection} object.
+     * @throws java.io.IOException if any.
+     */
     public static void exportSpectra(@Nonnull File exportFile,
             @Nonnull Collection<MsSpectrum> spectra) throws IOException {
 
@@ -51,6 +69,13 @@ public class TxtExportAlgorithm {
 
     }
 
+    /**
+     * <p>spectrumToWriter.</p>
+     *
+     * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     * @param writer a {@link java.io.Writer} object.
+     * @throws java.io.IOException if any.
+     */
     public static void spectrumToWriter(@Nonnull MsSpectrum spectrum,
             @Nonnull Writer writer) throws IOException {
 
@@ -66,6 +91,12 @@ public class TxtExportAlgorithm {
 
     }
 
+    /**
+     * <p>spectrumToString.</p>
+     *
+     * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     * @return a {@link java.lang.String} object.
+     */
     @SuppressWarnings("null")
     public static @Nonnull String spectrumToString(
             @Nonnull MsSpectrum spectrum) {

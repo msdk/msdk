@@ -62,6 +62,7 @@ public class IsotopeGrouperMethod implements MSDKMethod<FeatureTable> {
 	 * @param featureTable
 	 *            a {@link io.github.msdk.datamodel.featuretables.FeatureTable}
 	 *            object.
+	 * @param featureTableName a {@link java.lang.String} object.
 	 * @param dataStore
 	 *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
 	 *            object.
