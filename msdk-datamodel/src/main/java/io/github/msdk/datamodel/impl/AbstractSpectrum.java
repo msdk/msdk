@@ -42,6 +42,11 @@ public abstract class AbstractSpectrum implements MsSpectrum {
 
     private @Nonnull MsSpectrumType spectrumType;
 
+    /**
+     * <p>Constructor for AbstractSpectrum.</p>
+     *
+     * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
+     */
     public AbstractSpectrum(@Nonnull DataPointStore dataPointStore) {
         Preconditions.checkNotNull(dataPointStore);
         this.dataPointStore = dataPointStore;

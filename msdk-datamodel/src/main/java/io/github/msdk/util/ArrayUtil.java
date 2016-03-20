@@ -21,6 +21,14 @@ import javax.annotation.Nonnull;
  */
 public class ArrayUtil {
 
+    /**
+     * <p>addToArray.</p>
+     *
+     * @param array an array of double.
+     * @param value a double.
+     * @param pos a int.
+     * @return an array of double.
+     */
     public static @Nonnull double[] addToArray(@Nonnull double[] array,
             double value, int pos) {
 
@@ -35,6 +43,14 @@ public class ArrayUtil {
 
     }
 
+    /**
+     * <p>addToArray.</p>
+     *
+     * @param array an array of float.
+     * @param value a float.
+     * @param pos a int.
+     * @return an array of float.
+     */
     public static @Nonnull float[] addToArray(@Nonnull float[] array,
             float value, int pos) {
 

@@ -181,6 +181,15 @@ public class MSDKObjectBuilder {
         return new SimpleFeatureTable(featureTableName, dataPointStore);
     }
 
+    /**
+     * <p>getMsSpectrum.</p>
+     *
+     * @param mzValues an array of double.
+     * @param intensityValues an array of float.
+     * @param size a {@link java.lang.Integer} object.
+     * @param spectrumType a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType} object.
+     * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     */
     public static final @Nonnull MsSpectrum getMsSpectrum(
             @Nonnull double mzValues[], @Nonnull float intensityValues[],
             @Nonnull Integer size, @Nonnull MsSpectrumType spectrumType) {

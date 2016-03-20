@@ -410,6 +410,12 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
         return inputString.replaceAll("[\\p{Cntrl}]", " ");
     }
 
+    /**
+     * <p>removeFirstCharacter.</p>
+     *
+     * @param str a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String removeFirstCharacter(String str) {
         if (str.length() > 0) {
             str = str.substring(1, str.length());

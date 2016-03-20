@@ -3,7 +3,7 @@
   <parent>
     <groupId>io.github.msdk</groupId>
     <artifactId>msdk-spectra</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.6-SNAPSHOT</version>
   </parent>
   <artifactId>msdk-spectra-shoulderpeaks</artifactId>
   <description>MSDK method to filter away FTMS shoulder peaks </description>

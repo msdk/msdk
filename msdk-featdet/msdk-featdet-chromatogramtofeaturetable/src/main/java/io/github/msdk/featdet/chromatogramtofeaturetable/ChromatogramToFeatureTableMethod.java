@@ -182,6 +182,13 @@ public class ChromatogramToFeatureTableMethod
         return featureTable;
     }
 
+    /**
+     * <p>addDataToRow.</p>
+     *
+     * @param row a {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} object.
+     * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+     * @param tableColumns a {@link java.util.Map} object.
+     */
     @SuppressWarnings("unchecked")
     public static void addDataToRow(@Nonnull FeatureTableRow row,
             @Nonnull Chromatogram chromatogram,
@@ -313,6 +320,13 @@ public class ChromatogramToFeatureTableMethod
 
     }
 
+    /**
+     * <p>addSampleColumns.</p>
+     *
+     * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+     * @param sample a {@link io.github.msdk.datamodel.featuretables.Sample} object.
+     * @return a {@link java.util.Map} object.
+     */
     public static Map<ColumnName, FeatureTableColumn<Object>> addSampleColumns(
             @Nonnull FeatureTable featureTable, @Nonnull Sample sample) {
         final Map<ColumnName, FeatureTableColumn<Object>> tableColumns = new EnumMap<>(

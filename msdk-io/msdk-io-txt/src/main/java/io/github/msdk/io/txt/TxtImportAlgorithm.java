@@ -30,11 +30,21 @@ import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.DataPointSorter.SortingDirection;
 import io.github.msdk.util.DataPointSorter.SortingProperty;
 
+/**
+ * <p>TxtImportAlgorithm class.</p>
+ *
+ */
 public class TxtImportAlgorithm {
 
     private static final Pattern linePattern = Pattern
             .compile("(\\d+(\\.\\d+)?)[^\\d]+(\\d+(\\.\\d+)?)");
 
+    /**
+     * <p>parseMsSpectrum.</p>
+     *
+     * @param spectrumText a {@link java.lang.String} object.
+     * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     */
     public static @Nonnull MsSpectrum parseMsSpectrum(
             @Nonnull String spectrumText) {
 
