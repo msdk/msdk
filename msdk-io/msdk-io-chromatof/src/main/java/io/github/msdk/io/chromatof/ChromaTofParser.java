@@ -753,7 +753,7 @@ public class ChromaTofParser {
      *            by '_'.
      * @return the set of unique column names in order of appearance.
      * @deprecated use
-     *             {@link #parseHeader(java.io.File, boolean, java.lang.String, java.lang.String)
+     *             {@link #parseHeader(java.io.File, boolean)
      * }
      */
     public LinkedHashSet<ChromaTofParser.TableColumn> getHeader(File f,

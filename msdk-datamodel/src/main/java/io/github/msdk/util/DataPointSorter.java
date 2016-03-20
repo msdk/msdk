@@ -136,6 +136,8 @@ public class DataPointSorter {
      *            an array of
      *            {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
      *            objects.
+     * @param mzBuffer
+     *            an array of double.
      * @param intensityBuffer
      *            an array of float.
      * @param size

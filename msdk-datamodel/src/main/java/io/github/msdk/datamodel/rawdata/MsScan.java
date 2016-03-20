@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
+import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 
 /**

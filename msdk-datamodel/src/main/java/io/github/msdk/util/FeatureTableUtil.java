@@ -380,7 +380,7 @@ public class FeatureTableUtil {
      * @param dataStore
      *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
-     * @param featuretable
+     * @param featureTable
      *            a {@link io.github.msdk.datamodel.featuretables.FeatureTable}
      *            object.
      * @param newName
