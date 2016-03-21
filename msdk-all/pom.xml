@@ -192,6 +192,12 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-features-normalization-compound</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-features-isotopegrouper</artifactId>
 			<version>${project.version}</version>
 		</dependency>

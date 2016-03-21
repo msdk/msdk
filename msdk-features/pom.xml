@@ -15,5 +15,6 @@
 		<module>msdk-features-joinaligner</module>
 		<module>msdk-features-isotopegrouper</module>
 		<module>msdk-features-gapfilling</module>
+		<module>msdk-features-normalization-compound</module>
 	</modules>
 </project>
