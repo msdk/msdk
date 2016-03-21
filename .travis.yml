@@ -3,4 +3,4 @@ language: java
 jdk:
   - oraclejdk7
 
-script: mvn package -e
+script: mvn package -e -X
