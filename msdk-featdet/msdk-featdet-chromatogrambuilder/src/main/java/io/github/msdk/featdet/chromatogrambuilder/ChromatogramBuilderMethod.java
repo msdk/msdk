@@ -45,7 +45,7 @@ public class ChromatogramBuilderMethod
     private final @Nonnull DataPointStore dataPointStore;
     private final @Nonnull RawDataFile inputFile;
     private final @Nonnull List<MsScan> inputScans;
-    private final @Nonnull Float noiseLevel;
+    private final @Nonnull Double noiseLevel;
     private final @Nonnull Double minimumTimeSpan, minimumHeight;
     private final @Nonnull MZTolerance mzTolerance;
 
@@ -73,7 +73,7 @@ public class ChromatogramBuilderMethod
      *            a {@link java.lang.Float} object.
      */
     public ChromatogramBuilderMethod(@Nonnull DataPointStore dataPointStore,
-            @Nonnull RawDataFile inputFile, @Nonnull Float noiseLevel,
+            @Nonnull RawDataFile inputFile, @Nonnull Double noiseLevel,
             @Nonnull Double minimumTimeSpan, @Nonnull Double minimumHeight,
             @Nonnull MZTolerance mzTolerance) {
         this(dataPointStore, inputFile, inputFile.getScans(), noiseLevel,
@@ -103,7 +103,7 @@ public class ChromatogramBuilderMethod
      */
     public ChromatogramBuilderMethod(@Nonnull DataPointStore dataPointStore,
             @Nonnull RawDataFile inputFile, @Nonnull List<MsScan> inputScans,
-            @Nonnull Float noiseLevel, @Nonnull Double minimumTimeSpan,
+            @Nonnull Double noiseLevel, @Nonnull Double minimumTimeSpan,
             @Nonnull Double minimumHeight, @Nonnull MZTolerance mzTolerance) {
         this.dataPointStore = dataPointStore;
         this.inputFile = inputFile;

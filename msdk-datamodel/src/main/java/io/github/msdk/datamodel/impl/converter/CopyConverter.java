@@ -37,9 +37,7 @@ public class CopyConverter implements FeatureTableDataConverter<Object> {
         if (targetColumn.getDataTypeClass().isAssignableFrom(
                 sourceColumn.getDataTypeClass())) {
             if (data == null) {
-                throw new NullPointerException("Data for column "
-                        + sourceColumn.getName() + " for table row "
-                        + sourceRow.getId());
+                return;
             }
             targetRow.setData(targetColumn, data);
         } else {

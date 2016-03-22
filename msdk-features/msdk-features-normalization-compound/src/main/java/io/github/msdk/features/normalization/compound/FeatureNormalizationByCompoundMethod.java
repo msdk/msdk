@@ -14,6 +14,8 @@
 
 package io.github.msdk.features.normalization.compound;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -21,46 +23,76 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
+import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.util.FeatureTableUtil;
 
 /**
- * This class creates a normalized feature table based on a feature table and a
- * set of features.
+ * This class normalized a list of feature table columns based on a set of
+ * features.
  */
 public class FeatureNormalizationByCompoundMethod
         implements MSDKMethod<FeatureTable> {
 
+    // Variables
+    private final @Nonnull int mzRtWeight;
+    private final @Nonnull NormalizationType normalizationType;
+    private final @Nonnull List<FeatureTableColumn<?>> columnsToNormalize;
+    private final @Nonnull List<FeatureTableRow> internalStandardRows;
+
     // Other variables
     private final @Nonnull FeatureTable featureTable;
     private final @Nonnull String nameSuffix;
-    private final @Nonnull DataPointStore dataStore;
+    private final @Nonnull DataPointStore dataPointStore;
     private final @Nonnull FeatureTable result;
     private boolean canceled = false;
     private int processedFeatures = 0, totalFeatures = 0;
 
     /**
      * <p>
-     * Constructor for FeatureFilterMethod.
+     * Constructor for FeatureNormalizationByCompoundMethod.
      * </p>
      *
      * @param featureTable
      *            a {@link io.github.msdk.datamodel.featuretables.FeatureTable}
      *            object.
-     * @param dataStore
+     * @param dataPointStore
      *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
+     * @param normalizationType
+     *            a
+     *            {@link io.github.msdk.features.normalization.compound.NormalizationType}
+     *            object.
+     * @param columnsToNormalize
+     *            a {@link java.util.List} object of
+     *            {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn}
+     *            .
+     * @param internalStandardRows
+     *            a {@link java.util.List} object of
+     *            {@link io.github.msdk.datamodel.featuretables.FeatureTableRow}
+     *            .
+     * @param mzRtWeight
+     *            a {@link java.lang.Integer} object.
      * @param nameSuffix
      *            a {@link java.lang.String} object.
      */
     public FeatureNormalizationByCompoundMethod(
             @Nonnull FeatureTable featureTable,
-            @Nonnull DataPointStore dataStore, @Nonnull String nameSuffix) {
+            @Nonnull DataPointStore dataPointStore,
+            @Nonnull NormalizationType normalizationType,
+            @Nonnull List<FeatureTableColumn<?>> columnsToNormalize,
+            @Nonnull List<FeatureTableRow> internalStandardRows,
+            @Nonnull int mzRtWeight, @Nonnull String nameSuffix) {
         this.featureTable = featureTable;
-        this.dataStore = dataStore;
+        this.dataPointStore = dataPointStore;
+        this.normalizationType = normalizationType;
+        this.columnsToNormalize = columnsToNormalize;
+        this.mzRtWeight = mzRtWeight;
+        this.internalStandardRows = internalStandardRows;
         this.nameSuffix = nameSuffix;
 
         // Make a copy of the feature table
-        result = FeatureTableUtil.clone(dataStore, featureTable,
+        result = FeatureTableUtil.clone(dataPointStore, featureTable,
                 featureTable.getName() + nameSuffix);
     }
 
@@ -69,11 +101,12 @@ public class FeatureNormalizationByCompoundMethod
     public FeatureTable execute() throws MSDKException {
         // Total features
         totalFeatures = featureTable.getRows().size()
-                * featureTable.getSamples().size();
+                * columnsToNormalize.size();
 
         /*
          * TODO: Write method
          */
+        processedFeatures = totalFeatures;
 
         // Return the new feature table
         return result;
