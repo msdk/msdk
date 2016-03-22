@@ -15,6 +15,8 @@
 package io.github.msdk.features.normalization.compound;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,7 +24,11 @@ import org.junit.Test;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
+import io.github.msdk.datamodel.featuretables.FeatureTableRow;
+import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 
 public class FeatureNormalizationByCompoundMethodTest {
@@ -45,6 +51,34 @@ public class FeatureNormalizationByCompoundMethodTest {
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
         Assert.assertEquals(93, featureTable.getRows().size());
 
+        // Variables
+        int mzRtWeight = 1;
+        NormalizationType normalizationType = NormalizationType.NEAREST_STANDARD;
+
+        // Normalize the Area and Height columns
+        List<FeatureTableColumn<?>> columnsToNormalize = new ArrayList<FeatureTableColumn<?>>();
+        List<Sample> Samples = featureTable.getSamples();
+        columnsToNormalize
+                .add(featureTable.getColumn(ColumnName.AREA, Samples.get(0)));
+        columnsToNormalize
+                .add(featureTable.getColumn(ColumnName.HEIGHT, Samples.get(0)));
+
+        // Set the internal standards to the first 9 rows
+        List<FeatureTableRow> internalStandardRows = new ArrayList<FeatureTableRow>();
+        List<FeatureTableRow> featureTableRows = featureTable.getRows();
+        for (int i = 0; i < 9; i++) {
+            internalStandardRows.add(featureTableRows.get(i));
+        }
+
+        // 1. Test the normalization based on nearest standard
+        FeatureNormalizationByCompoundMethod method = new FeatureNormalizationByCompoundMethod(
+                featureTable, dataStore, normalizationType, columnsToNormalize,
+                internalStandardRows, mzRtWeight, " normalized");
+        FeatureTable normalizedFeatureTable = method.execute();
+        Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
+
+        // Clean-up
+        normalizedFeatureTable.dispose();
         featureTable.dispose();
     }
 

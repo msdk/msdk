@@ -44,7 +44,7 @@ class HighestDataPointConnector {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final @Nonnull Float noiseLevel;
+    private final @Nonnull Double noiseLevel;
     private final MZTolerance mzTolerance;
     private final double minimumTimeSpan, minimumHeight;
 
@@ -57,7 +57,7 @@ class HighestDataPointConnector {
     private float intensityBuffer[] = new float[10000];
     private int numOfDataPoints;
 
-    HighestDataPointConnector(@Nonnull Float noiseLevel, double minimumTimeSpan,
+    HighestDataPointConnector(@Nonnull Double noiseLevel, double minimumTimeSpan,
             double minimumHeight, MZTolerance mzTolerance) {
 
         this.noiseLevel = noiseLevel;
