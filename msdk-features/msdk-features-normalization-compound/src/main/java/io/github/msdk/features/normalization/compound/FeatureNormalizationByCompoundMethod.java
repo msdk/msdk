@@ -35,7 +35,7 @@ public class FeatureNormalizationByCompoundMethod
         implements MSDKMethod<FeatureTable> {
 
     // Variables
-    private final @Nonnull int mzRtWeight;
+    private final @Nonnull Integer mzRtWeight;
     private final @Nonnull NormalizationType normalizationType;
     private final @Nonnull List<FeatureTableColumn<?>> columnsToNormalize;
     private final @Nonnull List<FeatureTableRow> internalStandardRows;
@@ -82,7 +82,7 @@ public class FeatureNormalizationByCompoundMethod
             @Nonnull NormalizationType normalizationType,
             @Nonnull List<FeatureTableColumn<?>> columnsToNormalize,
             @Nonnull List<FeatureTableRow> internalStandardRows,
-            @Nonnull int mzRtWeight, @Nonnull String nameSuffix) {
+            @Nonnull Integer mzRtWeight, @Nonnull String nameSuffix) {
         this.featureTable = featureTable;
         this.dataPointStore = dataPointStore;
         this.normalizationType = normalizationType;
