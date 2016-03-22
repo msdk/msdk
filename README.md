@@ -22,7 +22,7 @@ MSDK jars are automatically deployed to Maven Central. In order to use MSDK, sim
  <dependency>
     <groupId>io.github.msdk</groupId>
     <artifactId>msdk-all</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.5</version>
  </dependency>
 ```
 
