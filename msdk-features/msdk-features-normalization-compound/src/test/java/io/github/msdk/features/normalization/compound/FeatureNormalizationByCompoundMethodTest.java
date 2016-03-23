@@ -39,7 +39,7 @@ public class FeatureNormalizationByCompoundMethodTest {
     public void testMzTab_Sample() throws MSDKException {
 
         // Create the data structures
-        DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
+        DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
 
         // Import the file
         File inputFile = new File(TEST_DATA_PATH + "singleSample.mzTab");
@@ -76,6 +76,10 @@ public class FeatureNormalizationByCompoundMethodTest {
                 internalStandardRows, mzRtWeight, " normalized");
         FeatureTable normalizedFeatureTable = method.execute();
         Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
+
+        // Verify data
+        Assert.assertEquals(93, normalizedFeatureTable.getRows().size());
+        //Assert.assertEquals(11, normalizedFeatureTable.getColumns().size());
 
         // Clean-up
         normalizedFeatureTable.dispose();
