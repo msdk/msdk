@@ -57,8 +57,7 @@ public class RansacAlignerMethod implements MSDKMethod<FeatureTable> {
     private final @Nonnull FeatureTable result;
     private boolean canceled = false;
     private int processedFeatures = 0, totalFeatures = 0;
-    private int k;
-    private double t, numRatePoints;
+    private double t;
     private boolean linear;
 
     // ID counter for the new feature table
@@ -84,27 +83,21 @@ public class RansacAlignerMethod implements MSDKMethod<FeatureTable> {
      *            a {@link java.lang.String} object.
      * @param rtTolerance
      *            a {@link io.github.msdk.util.RTTolerance} object.
-     * @param rtToleranceAfterCorrection
-     *            a {@link io.github.msdk.util.RTTolerance} object.
      * @param t a threshold value for determining when a data point fits
-     * a mode
-     * @param numRatePoints a double value representing the number of close data values required to assert that a model
-     * fits well to data
+     * a mode    
      * @param linear
-     *            a {@link java.lang.Boolean} object.  
-     * @param k a integer value representing the maximum number of iterations allowed
-     * in the algorithm
+     *            a {@link java.lang.Boolean} object.      
      */
     public RansacAlignerMethod(@Nonnull List<FeatureTable> featureTables,
             @Nonnull DataPointStore dataStore, @Nonnull MZTolerance mzTolerance,
-            @Nonnull RTTolerance rtTolerance, @Nonnull RTTolerance rtToleranceAfterCorrection,
+            @Nonnull RTTolerance rtTolerance,
             boolean requireSameCharge, boolean requireSameAnnotation,
-            @Nonnull String featureTableName, @Nonnull double t, @Nonnull double numRatePoints, @Nonnull boolean linear,int k) {
+            @Nonnull String featureTableName, @Nonnull double t, @Nonnull boolean linear) {
         this.featureTables = featureTables;
         this.dataStore = dataStore;
-        this.mzTolerance = mzTolerance;
-        this.rtTolerance = rtTolerance;
-        this.rtToleranceAfterCorrection = rtToleranceAfterCorrection;
+        this.mzTolerance = mzTolerance;        
+        this.rtToleranceAfterCorrection = rtTolerance;
+        this.rtTolerance = new RTTolerance(rtToleranceAfterCorrection.getTolerance()*2, false); 
         this.requireSameCharge = requireSameCharge;
         this.requireSameAnnotation = requireSameAnnotation;
         this.featureTableName = featureTableName;
@@ -364,7 +357,7 @@ public class RansacAlignerMethod implements MSDKMethod<FeatureTable> {
 	    FeatureTable peakList) {
 	List<AlignStructMol> list = this.getVectorAlignment(alignedPeakList,
 		peakList);
-	RANSAC ransac = new RANSAC(t,numRatePoints,linear,k);
+	RANSAC ransac = new RANSAC(t,linear,0);
 	ransac.alignment(list);
 	return list;
     }

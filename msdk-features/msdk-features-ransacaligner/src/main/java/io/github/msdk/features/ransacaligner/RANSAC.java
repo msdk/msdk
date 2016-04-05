@@ -38,12 +38,10 @@ public class RANSAC {
     private double d = 1;
     private int k = 0;
     private int AlsoNumber;
-    private final double numRatePoints, t;
+    private final double t;
     private final boolean Linear;
 
-    public RANSAC(double t, double numRatePoints, boolean linear,int k) {
-
-        this.numRatePoints = numRatePoints;
+    public RANSAC(double t, boolean linear,int k) {      
 
         this.t = t;
 
@@ -74,7 +72,7 @@ public class RANSAC {
             if (data.size() < 10) {
                 d = 3;
             } else {
-                d = data.size() * numRatePoints;
+                d = data.size() * 0.1;
             }
 
             // Calculate the number of trials if the user has not define them
@@ -95,7 +93,7 @@ public class RANSAC {
      * points.
      */
     private double getK() {
-        double w = numRatePoints;
+        double w = 0.1;
         double b = Math.pow(w, n);
         return Math.log10(1 - 0.99) / Math.log10(1 - b)
             + (Math.sqrt(1 - b) / b);

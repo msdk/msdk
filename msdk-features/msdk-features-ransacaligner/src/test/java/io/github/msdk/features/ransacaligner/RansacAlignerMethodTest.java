@@ -65,16 +65,15 @@ public class RansacAlignerMethodTest {
 
         // Variables
         MZTolerance mzTolerance = new MZTolerance(0.003, 5.0);
-        RTTolerance rtTolerance = new RTTolerance(0.3, false);   
-        RTTolerance rtToleranceAfterCorrection = new RTTolerance(0.1, false);   
+        RTTolerance rtTolerance = new RTTolerance(0.1, false);  
         boolean requireSameCharge = false;
         boolean requireSameAnnotation = false;
         String featureTableName = "Aligned Feature Table";
 
         // 1. Test alignment based on m/z and RT only
         RansacAlignerMethod method = new RansacAlignerMethod(featureTables,
-                dataStore, mzTolerance, rtTolerance,rtToleranceAfterCorrection,
-                requireSameCharge, requireSameAnnotation, featureTableName, 0.4, 20.0, true, 0);
+                dataStore, mzTolerance, rtTolerance,
+                requireSameCharge, requireSameAnnotation, featureTableName, 0.4, true);
    
         FeatureTable featureTable = method.execute();
         Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
