@@ -11,7 +11,6 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-
 package io.github.msdk.features.ransacaligner;
 
 import java.io.File;
@@ -27,6 +26,7 @@ import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
+import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.msdk.util.MZTolerance;
@@ -47,7 +47,7 @@ public class RansacAlignerMethodTest {
         File inputFile = new File(TEST_DATA_PATH + "Sample 1.mzTab");
         Assert.assertTrue(inputFile.canRead());
         MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile,
-                dataStore);
+            dataStore);
         FeatureTable featureTable1 = importer.execute();
         Assert.assertNotNull(featureTable1);
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -65,39 +65,90 @@ public class RansacAlignerMethodTest {
 
         // Variables
         MZTolerance mzTolerance = new MZTolerance(0.003, 5.0);
-        RTTolerance rtTolerance = new RTTolerance(0.1, false);  
+        RTTolerance rtTolerance = new RTTolerance(0.1, false);
         boolean requireSameCharge = false;
         boolean requireSameAnnotation = false;
         String featureTableName = "Aligned Feature Table";
 
-        // 1. Test alignment based on m/z and RT only
+        // 1. Test alignment based on m/z and RT only and linear model
         RansacAlignerMethod method = new RansacAlignerMethod(featureTables,
-                dataStore, mzTolerance, rtTolerance,
-                requireSameCharge, requireSameAnnotation, featureTableName, 0.4, true);
-   
+            dataStore, mzTolerance, rtTolerance,
+            requireSameCharge, requireSameAnnotation, featureTableName, 0.4, true);
+
         FeatureTable featureTable = method.execute();
         Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
         Assert.assertEquals(10, featureTable.getRows().size());
 
         // Verify that feature 1 has two ion annotations
         FeatureTableColumn<List<IonAnnotation>> column = featureTable
-                .getColumn(ColumnName.IONANNOTATION, null);
+            .getColumn(ColumnName.IONANNOTATION, null);
         List<IonAnnotation> ionAnnotations = (List<IonAnnotation>) featureTable
-                .getRows().get(0).getData(column);
+            .getRows().get(0).getData(column);
         Assert.assertNotNull(ionAnnotations);
         Assert.assertEquals(2, ionAnnotations.size());
         Assert.assertEquals("PE(17:0/17:0)",
-                ionAnnotations.get(0).getDescription());
+            ionAnnotations.get(0).getDescription());
         Assert.assertEquals("1. PE(17:0/17:0)",
-                ionAnnotations.get(1).getDescription());
+            ionAnnotations.get(1).getDescription());
 
         // Verify that feature 3 has one ion annotation
         ionAnnotations = featureTable.getRows().get(2).getData(column);
         Assert.assertNotNull(ionAnnotations);
         Assert.assertEquals(1, ionAnnotations.size());
         Assert.assertEquals("Cer(d18:1/17:0)",
-                ionAnnotations.get(0).getDescription());
+            ionAnnotations.get(0).getDescription());
 
+        // 2. Test alignment based on m/z and RT only and non-linear model
+        method = new RansacAlignerMethod(featureTables,
+            dataStore, mzTolerance, rtTolerance,
+            requireSameCharge, requireSameAnnotation, featureTableName, 0.4, false);
+
+        featureTable = method.execute();
+        Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
+        Assert.assertEquals(10, featureTable.getRows().size());
+
+        // Verify that feature 1 has two ion annotations
+        column = featureTable
+            .getColumn(ColumnName.IONANNOTATION, null);
+        ionAnnotations = (List<IonAnnotation>) featureTable
+            .getRows().get(0).getData(column);
+        Assert.assertNotNull(ionAnnotations);
+        Assert.assertEquals(2, ionAnnotations.size());
+        Assert.assertEquals("PE(17:0/17:0)",
+            ionAnnotations.get(0).getDescription());
+        Assert.assertEquals("1. PE(17:0/17:0)",
+            ionAnnotations.get(1).getDescription());
+
+        // Verify that feature 3 has one ion annotation
+        ionAnnotations = featureTable.getRows().get(2).getData(column);
+        Assert.assertNotNull(ionAnnotations);
+        Assert.assertEquals(1, ionAnnotations.size());
+        Assert.assertEquals("Cer(d18:1/17:0)",
+            ionAnnotations.get(0).getDescription());
+
+        // 2. Test alignment of the one file with itself based on m/z and RT only 
+        // Import file 1      
+        featureTables = new ArrayList<FeatureTable>();
+        featureTables.add(featureTable1);
+
+        // Add file 1 again
+        featureTables.add(featureTable1);
         
+        method = new RansacAlignerMethod(featureTables,
+            dataStore, mzTolerance, rtTolerance,
+            requireSameCharge, requireSameAnnotation, featureTableName, 0.4, true);
+
+        featureTable = method.execute();
+        Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
+        Assert.assertEquals(10, featureTable.getRows().size());
+
+        List<FeatureTableRow> rows = featureTable.getRows();
+        column = featureTable
+            .getColumn(ColumnName.IONANNOTATION, null);
+        for (FeatureTableRow row : rows) {           
+            ionAnnotations = row.getData(column);
+            Assert.assertNotNull(ionAnnotations);
+            Assert.assertEquals(1, ionAnnotations.size());
+        }
     }
 }
