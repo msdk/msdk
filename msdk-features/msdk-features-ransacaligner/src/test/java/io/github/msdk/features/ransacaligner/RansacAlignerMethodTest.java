@@ -73,7 +73,7 @@ public class RansacAlignerMethodTest {
         // 1. Test alignment based on m/z and RT only and linear model
         RansacAlignerMethod method = new RansacAlignerMethod(featureTables,
             dataStore, mzTolerance, rtTolerance,
-            requireSameCharge, requireSameAnnotation, featureTableName, 0.4, true);
+            requireSameCharge, requireSameAnnotation, featureTableName, 0.4, true, 0);
 
         FeatureTable featureTable = method.execute();
         Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
@@ -101,7 +101,7 @@ public class RansacAlignerMethodTest {
         // 2. Test alignment based on m/z and RT only and non-linear model
         method = new RansacAlignerMethod(featureTables,
             dataStore, mzTolerance, rtTolerance,
-            requireSameCharge, requireSameAnnotation, featureTableName, 0.4, false);
+            requireSameCharge, requireSameAnnotation, featureTableName, 0.4, false, 0);
 
         featureTable = method.execute();
         Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
@@ -136,7 +136,7 @@ public class RansacAlignerMethodTest {
         
         method = new RansacAlignerMethod(featureTables,
             dataStore, mzTolerance, rtTolerance,
-            requireSameCharge, requireSameAnnotation, featureTableName, 0.4, true);
+            requireSameCharge, requireSameAnnotation, featureTableName, 0.4, true, 0);
 
         featureTable = method.execute();
         Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);

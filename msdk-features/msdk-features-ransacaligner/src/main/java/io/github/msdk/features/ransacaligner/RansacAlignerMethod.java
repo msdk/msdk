@@ -57,8 +57,9 @@ public class RansacAlignerMethod implements MSDKMethod<FeatureTable> {
     private final @Nonnull FeatureTable result;
     private boolean canceled = false;
     private int processedFeatures = 0, totalFeatures = 0;
-    private double t;
+    private double t, dataPointsRate;
     private boolean linear;
+   
 
     // ID counter for the new feature table
     private int newRowID = 1;
@@ -87,12 +88,14 @@ public class RansacAlignerMethod implements MSDKMethod<FeatureTable> {
      * a mode    
      * @param linear
      *            a {@link java.lang.Boolean} object.      
+     * @param dataPointsRate  % of datapoints from the data required to assert that a model
+     * fits well to data.  If it is 0, the variable will be set as 0.1
      */
     public RansacAlignerMethod(@Nonnull List<FeatureTable> featureTables,
             @Nonnull DataPointStore dataStore, @Nonnull MZTolerance mzTolerance,
             @Nonnull RTTolerance rtTolerance,
             boolean requireSameCharge, boolean requireSameAnnotation,
-            @Nonnull String featureTableName, @Nonnull double t, @Nonnull boolean linear) {
+            @Nonnull String featureTableName, @Nonnull double t, @Nonnull boolean linear,@Nonnull double dataPointsRate) {
         this.featureTables = featureTables;
         this.dataStore = dataStore;
         this.mzTolerance = mzTolerance;        
@@ -101,6 +104,9 @@ public class RansacAlignerMethod implements MSDKMethod<FeatureTable> {
         this.requireSameCharge = requireSameCharge;
         this.requireSameAnnotation = requireSameAnnotation;
         this.featureTableName = featureTableName;
+        this.t = t;
+        this.linear = linear;
+        this.dataPointsRate = dataPointsRate;
 
         // Make a new feature table
         result = MSDKObjectBuilder.getFeatureTable(featureTableName, dataStore);
@@ -357,7 +363,7 @@ public class RansacAlignerMethod implements MSDKMethod<FeatureTable> {
 	    FeatureTable peakList) {
 	List<AlignStructMol> list = this.getVectorAlignment(alignedPeakList,
 		peakList);
-	RANSAC ransac = new RANSAC(t,linear,0);
+	RANSAC ransac = new RANSAC(t,linear, dataPointsRate);
 	ransac.alignment(list);
 	return list;
     }

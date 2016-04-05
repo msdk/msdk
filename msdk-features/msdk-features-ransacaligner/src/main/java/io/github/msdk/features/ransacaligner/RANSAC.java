@@ -40,14 +40,19 @@ public class RANSAC {
     private int AlsoNumber;
     private final double t;
     private final boolean Linear;
+    private final double dataPointsRate;
 
-    public RANSAC(double t, boolean linear,int k) {      
+    public RANSAC(double t, boolean linear, double dataPointsRate) {
 
         this.t = t;
 
-        this.k = k;
-
         this.Linear = linear;
+
+        if (dataPointsRate == 0) {
+            this.dataPointsRate = 0.1;
+        } else {
+            this.dataPointsRate = dataPointsRate;
+        }
 
     }
 
@@ -59,7 +64,7 @@ public class RANSAC {
      */
     public void alignment(List<AlignStructMol> data) {
         try {
-	    // If the model is non linear 4 points are taken to build the model,
+            // If the model is non linear 4 points are taken to build the model,
             // if it is linear only 2 points are taken.
             if (!Linear) {
                 n = 4;
@@ -67,18 +72,16 @@ public class RANSAC {
                 n = 2;
             }
 
-	    // Minimun number of points required to assert that a model fits
+            // Minimun number of points required to assert that a model fits
             // well to data
             if (data.size() < 10) {
                 d = 3;
             } else {
-                d = data.size() * 0.1;
+                d = data.size() * this.dataPointsRate;
             }
 
-            // Calculate the number of trials if the user has not define them
-            if (k == 0) {
-                k = (int) getK();
-            }
+            // Calculate the number of trials
+            k = (int) getK();
 
             ransac(data);
         } catch (Exception exception) {
