@@ -22,12 +22,26 @@ import io.github.msdk.MSDKException;
 public class SplashCalculationAlgorithmTest {
 
     @Test
-    public void testSplash() throws MSDKException {
+    public void testSplash1() throws MSDKException {
 
         double mzValues[] = new double[] { 100.0, 101.0, 102.0 };
         float intValues[] = new float[] { 1.0f, 2.0f, 3.0f };
 
-        final String correctSplash = "splash10-0z00000000-f5bf6f6a4a1520a35d4f";
+        final String correctSplash = "splash10-0udi-0900000000-f5bf6f6a4a1520a35d4f";
+        final String calculatedSplash = SplashCalculationAlgorithm
+                .calculateSplash(mzValues, intValues, mzValues.length);
+
+        Assert.assertEquals(correctSplash, calculatedSplash);
+
+    }
+
+    @Test
+    public void testSplash2() throws MSDKException {
+
+        double mzValues[] = new double[] { 100.0 };
+        float intValues[] = new float[] { 50f };
+
+        final String correctSplash = "splash10-0udi-0900000000-cc0ed451a7eca3bcb4a6";
         final String calculatedSplash = SplashCalculationAlgorithm
                 .calculateSplash(mzValues, intValues, mzValues.length);
 
