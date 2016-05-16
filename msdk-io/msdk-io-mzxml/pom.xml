@@ -33,7 +33,7 @@
         <dependency>
             <groupId>uk.ac.ebi.pride.tools</groupId>
             <artifactId>mzxml-parser</artifactId>
-            <version>1.3.3</version>
+            <version>1.3.4</version>
             <exclusions>
                 <exclusion>
                     <artifactId>log4j</artifactId>
