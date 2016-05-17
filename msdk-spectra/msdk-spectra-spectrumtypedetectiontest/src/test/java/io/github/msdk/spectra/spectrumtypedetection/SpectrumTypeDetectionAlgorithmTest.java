@@ -403,6 +403,31 @@ public class SpectrumTypeDetectionAlgorithmTest {
         rawFile.dispose();
 
     }
+    
+    @SuppressWarnings("null")
+    @Test
+    public void testCentroided16() throws Exception {
+
+        File inputFile = new File(TEST_DATA_PATH + "centroided16.mzML");
+        Assert.assertTrue(inputFile.canRead());
+        MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        for (MsScan scan : rawFile.getScans()) {
+            final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
+            final MsSpectrumType detectedType = SpectrumTypeDetectionAlgorithm
+                    .detectSpectrumType(scan);
+            Assert.assertEquals(
+                    "Scan type wrongly detected for scan "
+                            + scan.getScanNumber() + " in " + rawFile.getName(),
+                    expectedType, detectedType);
+        }
+
+        rawFile.dispose();
+
+    }
 
     @SuppressWarnings("null")
     @Test
