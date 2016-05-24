@@ -31,7 +31,6 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 
 /**
  * <p>MgfExportAlgorithm class.</p>
- *
  */
 public class MgfExportAlgorithm {
 

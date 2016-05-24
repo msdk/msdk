@@ -32,7 +32,6 @@ import io.github.msdk.util.DataPointSorter.SortingProperty;
 
 /**
  * <p>TxtImportAlgorithm class.</p>
- *
  */
 public class TxtImportAlgorithm {
 

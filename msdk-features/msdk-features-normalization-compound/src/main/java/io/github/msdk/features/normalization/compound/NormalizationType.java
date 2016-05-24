@@ -19,6 +19,10 @@
 
 package io.github.msdk.features.normalization.compound;
 
+/**
+ * <p>NormalizationType class.</p>
+ *
+ */
 public enum NormalizationType {
 
     NEAREST_STANDARD("Nearest standard"), WEIGHTED_CONTRIBUTION("Weighted contribution of all standards");
@@ -29,6 +33,7 @@ public enum NormalizationType {
         this.stringValue = stringValue;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return stringValue;

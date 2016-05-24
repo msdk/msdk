@@ -23,7 +23,6 @@ import io.github.msdk.datamodel.impl.AbstractSpectrum;
 
 /**
  * <p>MspSpectrum class.</p>
- *
  */
 public class MspSpectrum extends AbstractSpectrum {
 
