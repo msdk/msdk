@@ -29,7 +29,6 @@ import io.github.msdk.datamodel.msspectra.MsSpectrum;
 
 /**
  * <p>TxtExportAlgorithm class.</p>
- *
  */
 public class TxtExportAlgorithm {
 
