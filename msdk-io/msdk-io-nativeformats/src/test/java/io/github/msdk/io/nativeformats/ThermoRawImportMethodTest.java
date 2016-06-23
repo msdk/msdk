@@ -247,4 +247,101 @@ public class ThermoRawImportMethodTest {
 
     }
 
+    
+    @SuppressWarnings("null")
+    @Test
+    public void testParentScan() throws Exception {
+
+        // Run this test only on Windows
+        Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
+
+        // Create the data structures
+        DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
+        double mzBuffer[] = new double[10000];
+        float intensityBuffer[] = new float[10000];
+
+        // Import the file
+        File inputFile = new File(TEST_DATA_PATH + "pr.raw");
+        Assert.assertTrue(inputFile.canRead());
+        ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile,
+                dataStore);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        // The file has 148 scans
+        List<MsScan> scans = rawFile.getScans();
+        Assert.assertNotNull(scans);
+        Assert.assertEquals(148, scans.size());
+
+        // 10th scan, #10
+        MsScan scan10 = scans.get(9);
+        Assert.assertEquals(new Integer(10), scan10.getScanNumber());
+        Assert.assertEquals(MsSpectrumType.CENTROIDED,
+                scan10.getSpectrumType());
+        Assert.assertEquals(new Integer(1),
+                scan10.getMsFunction().getMsLevel());
+        Assert.assertEquals("pr", scan10.getMsFunction().getName());
+        Assert.assertEquals(5.115f,
+                scan10.getChromatographyInfo().getRetentionTime(), 0.01f);
+        Assert.assertEquals(PolarityType.NEGATIVE, scan10.getPolarity());
+        mzBuffer = scan10.getMzValues(mzBuffer);
+        intensityBuffer = scan10.getIntensityValues(intensityBuffer);
+        Float scan10maxInt = MsSpectrumUtil.getMaxIntensity(intensityBuffer,
+                scan10.getNumberOfDataPoints());
+        Assert.assertEquals(1.42E3f, scan10maxInt, 1E1f);
+        Double scan10basePeakMz = mzBuffer[MsSpectrumUtil.getBasePeakIndex(
+                intensityBuffer, scan10.getNumberOfDataPoints())];
+        Assert.assertEquals(604.0406, scan10basePeakMz, 0.0001);
+
+    }
+    
+    @SuppressWarnings("null")
+    @Test
+    public void testCNLScan() throws Exception {
+
+        // Run this test only on Windows
+        Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
+
+        // Create the data structures
+        DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
+        double mzBuffer[] = new double[10000];
+        float intensityBuffer[] = new float[10000];
+
+        // Import the file
+        File inputFile = new File(TEST_DATA_PATH + "cnl.raw");
+        Assert.assertTrue(inputFile.canRead());
+        ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile,
+                dataStore);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        // The file has 230 scans
+        List<MsScan> scans = rawFile.getScans();
+        Assert.assertNotNull(scans);
+        Assert.assertEquals(230, scans.size());
+
+        // 10th scan, #10
+        MsScan scan10 = scans.get(9);
+        Assert.assertEquals(new Integer(10), scan10.getScanNumber());
+        Assert.assertEquals(MsSpectrumType.CENTROIDED,
+                scan10.getSpectrumType());
+        Assert.assertEquals(new Integer(2),
+                scan10.getMsFunction().getMsLevel());
+        Assert.assertEquals("cnl", scan10.getMsFunction().getName());
+        Assert.assertEquals(5.045f,
+                scan10.getChromatographyInfo().getRetentionTime(), 0.01f);
+        Assert.assertEquals(PolarityType.POSITIVE, scan10.getPolarity());
+        mzBuffer = scan10.getMzValues(mzBuffer);
+        intensityBuffer = scan10.getIntensityValues(intensityBuffer);
+        Float scan10maxInt = MsSpectrumUtil.getMaxIntensity(intensityBuffer,
+                scan10.getNumberOfDataPoints());
+        Assert.assertEquals(2.08E4f, scan10maxInt, 1E2f);
+        Double scan10basePeakMz = mzBuffer[MsSpectrumUtil.getBasePeakIndex(
+                intensityBuffer, scan10.getNumberOfDataPoints())];
+        Assert.assertEquals(848.4695, scan10basePeakMz, 0.0001);
+
+    }
+    
 }
