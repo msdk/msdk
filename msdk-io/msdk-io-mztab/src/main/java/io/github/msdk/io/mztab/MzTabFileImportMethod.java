@@ -248,7 +248,6 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
         String formula, smiles, inchiKey, description, database, identifier;
         // String dbVersion, reliability, url;
         Double mzCalc = null, featureArea = null;
-        @Nonnull
         Double mzExp;
         Float rtAverageValue = null;
         Integer charge = null;
@@ -263,8 +262,8 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
                     .getFeatureTableRow(featureTable, parsedRows);
 
             formula = smallMolecule.getChemicalFormula();
-            smiles = smallMolecule.getSmiles().toString();
-            inchiKey = smallMolecule.getInchiKey().toString();
+            smiles = smallMolecule.getSmiles();
+            inchiKey = smallMolecule.getInchiKey();
             description = smallMolecule.getDescription();
             database = smallMolecule.getDatabase();
             // dbVersion = smallMolecule.getDatabaseVersion();
