@@ -9,12 +9,12 @@
 	<artifactId>msdk-io-mzml</artifactId>
 
 	<repositories>
-		<repository>
-			<!-- EBI repository -->
-			<id>ebi-repo</id>
+        <repository>
+            <!-- EBI repository -->
+			<id>nexus-ebi-release-repo</id>
 			<name>The EBI Maven repository</name>
-			<url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/</url>
-		</repository>
+			<url>http://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
+        </repository>
 	</repositories>
 
 	<dependencies>
@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>uk.ac.ebi.jmzml</groupId>
 			<artifactId>jmzml</artifactId>
-			<version>1.7.4</version>
+			<version>1.7.5</version>
 		</dependency>
 
 	</dependencies>

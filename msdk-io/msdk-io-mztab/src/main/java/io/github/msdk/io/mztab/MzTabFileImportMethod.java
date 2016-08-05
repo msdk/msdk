@@ -262,8 +262,8 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
                     .getFeatureTableRow(featureTable, parsedRows);
 
             formula = smallMolecule.getChemicalFormula();
-            smiles = smallMolecule.getSmiles();
-            inchiKey = smallMolecule.getInchiKey();
+            smiles = smallMolecule.getSmiles().toString();
+            inchiKey = smallMolecule.getInchiKey().toString();
             description = smallMolecule.getDescription();
             database = smallMolecule.getDatabase();
             // dbVersion = smallMolecule.getDatabaseVersion();
