@@ -122,6 +122,10 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
 
             MZTabFile mzTabFile = mzTabFileParser.getMZTabFile();
 
+            if (mzTabFile == null) {
+                return null;
+            }
+
             // Let's say the initial parsing took 10% of the time
             totalRows = mzTabFile.getSmallMolecules().size();
             samples = mzTabFile.getMetadata().getMsRunMap().size();

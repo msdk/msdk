@@ -150,8 +150,8 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
         mtd.addVariableModParam(1, new CVParam("MS", "MS:1002454",
                 "No variable modifications searched", null));
 
-        // Create stable columns - only available in jmztab 3.0.2
-        // factory.addDefaultStableColumns(); 
+        // Create stable columns - only available in jmztab 3.0.2 and later
+        factory.addDefaultStableColumns();
 
         // Add optional columns which have stable order
         factory.addURIOptionalColumn();
