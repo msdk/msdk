@@ -28,7 +28,7 @@ import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.chromatogrambuilder.ChromatogramBuilderMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
-import io.github.msdk.util.CombinedMZTolerance;
+import io.github.msdk.util.ConstantPPMTolerance;
 import io.github.msdk.util.MZTolerance;
 
 public class ChromatogramBuilderMethodTest {
@@ -61,7 +61,7 @@ public class ChromatogramBuilderMethodTest {
         double noiseLevel = 0;
         double minimumTimeSpan = 6; // 6s
         double minimumHeight = 1E4;
-        MZTolerance mzTolerance = new CombinedMZTolerance(0.001, 5.0);
+        MZTolerance mzTolerance = new ConstantPPMTolerance(5.0);
         ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(
                 dataStore, rawFile, noiseLevel, minimumTimeSpan, minimumHeight,
                 mzTolerance);
@@ -80,7 +80,7 @@ public class ChromatogramBuilderMethodTest {
         double noiseLevel = 0;
         double minimumTimeSpan = 1000000;
         double minimumHeight = 1E4;
-        MZTolerance mzTolerance = new CombinedMZTolerance(0.001, 5.0);
+        MZTolerance mzTolerance = new ConstantPPMTolerance(5.0);
         ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(
                 dataStore, rawFile, noiseLevel, minimumTimeSpan, minimumHeight,
                 mzTolerance);
@@ -100,7 +100,7 @@ public class ChromatogramBuilderMethodTest {
         double noiseLevel = 0f;
         double minimumTimeSpan = 6; // 6s
         double minimumHeight = 10000000;
-        MZTolerance mzTolerance = new CombinedMZTolerance(0.001, 5.0);
+        MZTolerance mzTolerance = new ConstantPPMTolerance(5.0);
         ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(
                 dataStore, rawFile, noiseLevel, minimumTimeSpan, minimumHeight,
                 mzTolerance);
