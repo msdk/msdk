@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
-public class ConstantPPMTolerance implements MzTolerance {
+public class ConstantPpmTolerance implements MzTolerance {
 
     // PPM conversion factor.
     private static final Double MILLION = 1_000_000.0;
@@ -26,13 +26,13 @@ public class ConstantPPMTolerance implements MzTolerance {
 
     /**
      * <p>
-     * Constructor for ConstantPPMTolerance.
+     * Constructor for ConstantPpmTolerance.
      * </p>
      *
      * @param tolerancePPM
      *            a {@link java.lang.Double} object.
      */
-    public ConstantPPMTolerance(final @Nonnull Double tolerancePPM) {
+    public ConstantPpmTolerance(final @Nonnull Double tolerancePPM) {
         ppmTolerance = tolerancePPM;
     }
 
