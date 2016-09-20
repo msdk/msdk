@@ -39,7 +39,7 @@ import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTa
 import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.features.joinaligner.JoinAlignerMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
-import io.github.msdk.util.MZTolerance;
+import io.github.msdk.util.CombinedMZTolerance;
 import io.github.msdk.util.RTTolerance;
 
 public class GapFillingMethodTest {
@@ -91,7 +91,7 @@ public class GapFillingMethodTest {
         ionAnnotations.add(ion3);
 
         // Variables
-        MZTolerance mzTolerance = new MZTolerance(0.003, 5.0);
+        CombinedMZTolerance mzTolerance = new CombinedMZTolerance(0.003, 5.0);
         RTTolerance rtTolerance = new RTTolerance(0.2, false);
         Double intensityTolerance = 0.10d;
         Double noiseLevel = 5000d;
@@ -142,7 +142,7 @@ public class GapFillingMethodTest {
         //
 
         // Variables
-        mzTolerance = new MZTolerance(0.003, 5.0);
+        mzTolerance = new CombinedMZTolerance(0.003, 5.0);
         rtTolerance = new RTTolerance(0.1, false);
         int mzWeight = 10;
         int rtWeight = 10;
@@ -169,7 +169,7 @@ public class GapFillingMethodTest {
         //
 
         // Variables
-        mzTolerance = new MZTolerance(0.003, 5.0);
+        mzTolerance = new CombinedMZTolerance(0.003, 5.0);
         rtTolerance = new RTTolerance(0.2, false);
         intensityTolerance = 0.10d;
         boolean sameRT = true;
