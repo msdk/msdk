@@ -34,8 +34,8 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.util.FeatureTableUtil;
-import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
  * This class creates a filtered feature table based on a feature table and a
@@ -60,7 +60,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
     private final @Nullable Range<Double> durationRange;
 
     // Tolerance values
-    private final @Nullable MZTolerance duplicateMzTolerance;
+    private final @Nullable MzTolerance duplicateMzTolerance;
     private final @Nullable RTTolerance duplicateRtTolerance;
 
     // Other variables
@@ -116,7 +116,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
      * @param removeDuplicates
      *            a {@link java.lang.Boolean} object.
      * @param duplicateMzTolerance
-     *            a {@link io.github.msdk.util.MZTolerance} object.
+     *            an object that implements the {@link io.github.msdk.util.tolerances.MZTolerance} interface.
      * @param duplicateRtTolerance
      *            a {@link io.github.msdk.util.RTTolerance} object.
      * @param duplicateRequireSameID
@@ -131,7 +131,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
             @Nullable Range<Double> durationRange, @Nullable Integer minCount,
             @Nullable Integer minIsotopes, @Nullable String ionAnnotation,
             boolean removeDuplicates,
-            @Nullable MZTolerance duplicateMzTolerance,
+            @Nullable MzTolerance duplicateMzTolerance,
             @Nullable RTTolerance duplicateRtTolerance,
             boolean duplicateRequireSameID) {
 

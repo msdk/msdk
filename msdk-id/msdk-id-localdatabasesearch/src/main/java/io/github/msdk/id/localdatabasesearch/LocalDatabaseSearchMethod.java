@@ -31,8 +31,8 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
  * This class searches through a feature table to find hits in a local database
@@ -42,7 +42,7 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
 
     private final @Nonnull FeatureTable featureTable;
     private final @Nonnull List<IonAnnotation> ionAnnotations;
-    private final @Nonnull MZTolerance mzTolerance;
+    private final @Nonnull MzTolerance mzTolerance;
     private final @Nonnull RTTolerance rtTolerance;
 
     private boolean canceled = false;
@@ -61,13 +61,13 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
      *            {@link io.github.msdk.datamodel.ionannotations.IonAnnotation}
      *            objects.
      * @param mzTolerance
-     *            a {@link io.github.msdk.util.MZTolerance} object.
+     *            an object that implements the {@link io.github.msdk.util.tolerances.MZTolerance} interface.
      * @param rtTolerance
      *            a {@link io.github.msdk.util.RTTolerance} object.
      */
     public LocalDatabaseSearchMethod(@Nonnull FeatureTable featureTable,
             @Nonnull List<IonAnnotation> ionAnnotations,
-            @Nonnull MZTolerance mzTolerance,
+            @Nonnull MzTolerance mzTolerance,
             @Nonnull RTTolerance rtTolerance) {
         this.featureTable = featureTable;
         this.ionAnnotations = ionAnnotations;

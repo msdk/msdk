@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.util;
+package io.github.msdk.util.tolerances;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -25,7 +25,7 @@ import com.google.common.collect.Range;
  * of the absolute and relative values.
  */
 @Immutable
-public class CombinedMZTolerance implements MZTolerance {
+public class CombinedMZTolerance implements MzTolerance {
 
     // PPM conversion factor.
     private static final Double MILLION = 1000000.0;

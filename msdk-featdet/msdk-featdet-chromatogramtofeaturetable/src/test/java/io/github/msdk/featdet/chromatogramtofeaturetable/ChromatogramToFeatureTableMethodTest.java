@@ -37,9 +37,9 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
-import io.github.msdk.util.CombinedMZTolerance;
-import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.CombinedMZTolerance;
+import io.github.msdk.util.tolerances.MzTolerance;
 
 public class ChromatogramToFeatureTableMethodTest {
 
@@ -87,7 +87,7 @@ public class ChromatogramToFeatureTableMethodTest {
         ionAnnotations.add(ion3);
 
         // Variables
-        final MZTolerance mzTolerance = new CombinedMZTolerance(0.003, 5.0);
+        final MzTolerance mzTolerance = new CombinedMZTolerance(0.003, 5.0);
         final RTTolerance rtTolerance = new RTTolerance(0.2, false);
         final Double intensityTolerance = 0.10d;
         final Double noiseLevel = 5000d;

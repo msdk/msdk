@@ -32,8 +32,8 @@ import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
  * This class creates a list of IonAnnotations for a RawDataFile based the MS2
@@ -44,7 +44,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
     private final @Nonnull RawDataFile rawDataFile;
     private final @Nonnull List<MsScan> msScans;
     private final @Nonnull DataPointStore dataPointStore;
-    private final @Nonnull MZTolerance mzTolerance;
+    private final @Nonnull MzTolerance mzTolerance;
     private final @Nonnull RTTolerance rtTolerance;
     private final @Nonnull Double intensityTolerance;
 
@@ -69,7 +69,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
      *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param mzTolerance
-     *            a {@link io.github.msdk.util.MZTolerance} object.
+     *            an objec that implements the {@link io.github.msdk.util.tolerances.MZTolerance} interface.
      * @param rtTolerance
      *            a {@link io.github.msdk.util.RTTolerance} object.
      * @param intensityTolerance
@@ -78,7 +78,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
     public MsMsDetectionMethod(@Nonnull RawDataFile rawDataFile,
             @Nonnull List<MsScan> msScans,
             @Nonnull DataPointStore dataPointStore,
-            @Nonnull MZTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
+            @Nonnull MzTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
             @Nonnull Double intensityTolerance) {
         this.rawDataFile = rawDataFile;
         this.msScans = msScans;

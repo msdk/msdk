@@ -35,7 +35,7 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.msdk.util.ChromatogramUtil.CalculationMethod;
-import io.github.msdk.util.MZTolerance;
+import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.msdk.util.RTTolerance;
 import io.github.msdk.util.RawDataFileUtil;
@@ -49,7 +49,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
     private final @Nonnull List<IonAnnotation> ionAnnotations;
     private final @Nonnull RawDataFile rawDataFile;
     private final @Nonnull DataPointStore dataPointStore;
-    private final @Nonnull MZTolerance mzTolerance;
+    private final @Nonnull MzTolerance mzTolerance;
     private final @Nonnull RTTolerance rtTolerance;
     private final @Nonnull Double intensityTolerance;
     private final @Nonnull Double noiseLevel;
@@ -76,7 +76,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
      *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param mzTolerance
-     *            a {@link io.github.msdk.util.MZTolerance} object.
+     *            an object that implements the {@link io.github.msdk.util.tolerances.MZTolerance} interface.
      * @param rtTolerance
      *            a {@link io.github.msdk.util.RTTolerance} object.
      * @param intensityTolerance
@@ -87,7 +87,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
     public TargetedDetectionMethod(@Nonnull List<IonAnnotation> ionAnnotations,
             @Nonnull RawDataFile rawDataFile,
             @Nonnull DataPointStore dataPointStore,
-            @Nonnull MZTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
+            @Nonnull MzTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
             @Nonnull Double intensityTolerance, @Nonnull Double noiseLevel) {
         this.ionAnnotations = ionAnnotations;
         this.rawDataFile = rawDataFile;

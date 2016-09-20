@@ -39,8 +39,8 @@ import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTa
 import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.features.joinaligner.JoinAlignerMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
-import io.github.msdk.util.CombinedMZTolerance;
 import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.CombinedMZTolerance;
 
 public class GapFillingMethodTest {
 

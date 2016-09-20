@@ -41,9 +41,9 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
 import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
-import io.github.msdk.util.CombinedMZTolerance;
 import io.github.msdk.util.FeatureTableUtil;
 import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.CombinedMZTolerance;
 
 /**
  * This class fills in the missing gaps in a FeatureTable.
@@ -79,7 +79,7 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
      *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param mzTolerance
-     *            a {@link io.github.msdk.util.MZTolerance} object.
+     *            a {@link io.github.msdk.util.tolerances.MZTolerance} object.
      * @param rtTolerance
      *            a {@link io.github.msdk.util.RTTolerance} object.
      * @param intensityTolerance
