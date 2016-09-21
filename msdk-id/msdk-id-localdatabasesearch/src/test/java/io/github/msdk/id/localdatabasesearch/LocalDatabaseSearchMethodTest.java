@@ -40,8 +40,9 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.msdk.util.IonTypeUtil;
-import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
+import io.github.msdk.util.tolerances.MzTolerance;
 
 public class LocalDatabaseSearchMethodTest {
 
@@ -77,7 +78,7 @@ public class LocalDatabaseSearchMethodTest {
         Assert.assertEquals(0, annotatedFeatures);
 
         // Variables
-        final MZTolerance mzTolerance = new MZTolerance(0.003, 5.0);
+        final MzTolerance mzTolerance = new MaximumMzTolerance(0.003, 5.0);
         final RTTolerance rtTolerance = new RTTolerance(0.1, false);
         List<IonAnnotation> ionAnnotations = new ArrayList<IonAnnotation>();
         IMolecularFormula formula;

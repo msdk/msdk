@@ -30,8 +30,9 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.io.csv.CsvFileImportMethod;
-import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
+import io.github.msdk.util.tolerances.MzTolerance;
 
 public class IsotopeGrouperMethodTest {
 
@@ -62,7 +63,7 @@ public class IsotopeGrouperMethodTest {
         Assert.assertNull(groupColumn);
 
         // Variables
-        MZTolerance mzTolerance = new MZTolerance(0.003, 5.0);
+        MzTolerance mzTolerance = new MaximumMzTolerance(0.003, 5.0);
         RTTolerance rtTolerance = new RTTolerance(0.1, false);
         int maximumCharge = 2;
         boolean requireMonotonicShape = false;
@@ -123,7 +124,7 @@ public class IsotopeGrouperMethodTest {
         Assert.assertNull(groupColumn);
 
         // Variables
-        MZTolerance mzTolerance = new MZTolerance(0.003, 5.0);
+        MzTolerance mzTolerance = new MaximumMzTolerance(0.003, 5.0);
         RTTolerance rtTolerance = new RTTolerance(0.1, false);
         int maximumCharge = 2;
         boolean requireMonotonicShape = false;

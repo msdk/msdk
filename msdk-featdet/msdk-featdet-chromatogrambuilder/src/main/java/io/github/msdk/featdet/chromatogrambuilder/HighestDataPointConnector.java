@@ -38,14 +38,14 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.DataPointSorter.SortingDirection;
 import io.github.msdk.util.DataPointSorter.SortingProperty;
-import io.github.msdk.util.MZTolerance;
+import io.github.msdk.util.tolerances.MzTolerance;
 
 class HighestDataPointConnector {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final @Nonnull Double noiseLevel;
-    private final MZTolerance mzTolerance;
+    private final MzTolerance mzTolerance;
     private final double minimumTimeSpan, minimumHeight;
 
     private final Set<BuildingChromatogram> buildingChromatograms,
@@ -58,7 +58,7 @@ class HighestDataPointConnector {
     private int numOfDataPoints;
 
     HighestDataPointConnector(@Nonnull Double noiseLevel, double minimumTimeSpan,
-            double minimumHeight, MZTolerance mzTolerance) {
+            double minimumHeight, MzTolerance mzTolerance) {
 
         this.noiseLevel = noiseLevel;
         this.mzTolerance = mzTolerance;
