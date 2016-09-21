@@ -24,8 +24,6 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Range;
-
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
@@ -58,8 +56,6 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
     private @Nonnull MzTolerance mzTolerance;
     private @Nonnull RTTolerance rtTolerance;
     private final @Nonnull Double intensityTolerance;
-    private final @Nonnull Boolean useRowRt;
-    private final @Nonnull Boolean useRowMz;
     private final @Nonnull String nameSuffix;
 
     // Helper variables
@@ -79,7 +75,8 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
      *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param mzTolerance
-     *            an object that implements the {@link io.github.msdk.util.tolerances.MzTolerance} interface.
+     *            an object that implements the
+     *            {@link io.github.msdk.util.tolerances.MzTolerance} interface.
      * @param rtTolerance
      *            a {@link io.github.msdk.util.tolerances.RTTolerance} object.
      * @param intensityTolerance
@@ -94,15 +91,12 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
     public GapFillingMethod(@Nonnull FeatureTable featureTable,
             @Nonnull DataPointStore dataStore, @Nonnull MzTolerance mzTolerance,
             @Nonnull RTTolerance rtTolerance,
-            @Nonnull Double intensityTolerance, @Nonnull Boolean useRowRt,
-            @Nonnull Boolean useRowMz, @Nonnull String nameSuffix) {
+            @Nonnull Double intensityTolerance, @Nonnull String nameSuffix) {
         this.featureTable = featureTable;
         this.dataStore = dataStore;
         this.mzTolerance = mzTolerance;
         this.rtTolerance = rtTolerance;
         this.intensityTolerance = intensityTolerance;
-        this.useRowRt = useRowRt;
-        this.useRowMz = useRowMz;
         this.nameSuffix = nameSuffix;
 
         // Make a copy of the input feature table
@@ -157,40 +151,6 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
             ion.setChromatographyInfo(row.getData(column));
             List<IonAnnotation> ionAnnotations = new ArrayList<IonAnnotation>();
             ionAnnotations.add(ion);
-
-            // Use Row's m/z as input
-            if (useRowMz) {
-                // Set expected m/z value of ion to average of m/z range
-                Range<Double> mzRange = FeatureTableUtil.getFeatureMzRange(row);
-                double lowMz = mzRange.lowerEndpoint();
-                double highMz = mzRange.upperEndpoint();
-                double toleranceMz = (highMz - lowMz) / 2;
-                double newMz = lowMz + toleranceMz;
-                ion.setExpectedMz(newMz);
-
-// TODO : see https://github.com/msdk/msdk/issues/146
-                // Set new mzTolerance
-//                mzTolerance = new MaximumMzTolerance(
-//                        mzTolerance.getMzTolerance() + toleranceMz,
-//                        mzTolerance.getPpmTolerance());
-            }
-
-            // Use Row's RT as input
-            if (useRowRt) {
-                // Set expected RT value of ion to average of RT range
-                Range<Float> rtRange = FeatureTableUtil.getFeatureRt1Range(row);
-                float lowRt = rtRange.lowerEndpoint();
-                float highRt = rtRange.upperEndpoint();
-                float toleranceRt = (highRt - lowRt) / 2;
-                float newRt = lowRt + toleranceRt;
-                ChromatographyInfo newCI = MSDKObjectBuilder
-                        .getChromatographyInfo1D(null, newRt);
-                ion.setChromatographyInfo(newCI);
-
-                // Set new rtTolerance
-                rtTolerance = new RTTolerance(
-                        rtTolerance.getTolerance() + toleranceRt, false);
-            }
 
             TargetedDetectionMethod chromBuilder = new TargetedDetectionMethod(
                     ionAnnotations, rawFile, dataStore, mzTolerance,

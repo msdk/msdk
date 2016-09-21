@@ -111,8 +111,7 @@ public class GapFillingMethodTest {
 
         FeatureTable featureTable1 = MSDKObjectBuilder
                 .getFeatureTable("orbitrap_300-600mz-1", dataStore);
-        Sample sample = MSDKObjectBuilder
-                .getSample("orbitrap_300-600mz-1");
+        Sample sample = MSDKObjectBuilder.getSample("orbitrap_300-600mz-1");
         sample.setRawDataFile(rawFile);
 
         ChromatogramToFeatureTableMethod tableBuilder = new ChromatogramToFeatureTableMethod(
@@ -128,8 +127,7 @@ public class GapFillingMethodTest {
         chromatograms.remove(2);
         FeatureTable featureTable2 = MSDKObjectBuilder
                 .getFeatureTable("orbitrap_300-600mz-2", dataStore);
-        Sample sample2 = MSDKObjectBuilder
-                .getSample("orbitrap_300-600mz-2");
+        Sample sample2 = MSDKObjectBuilder.getSample("orbitrap_300-600mz-2");
         sample2.setRawDataFile(rawFile);
         tableBuilder = new ChromatogramToFeatureTableMethod(chromatograms,
                 featureTable2, sample2);
@@ -172,13 +170,11 @@ public class GapFillingMethodTest {
         mzTolerance = new MaximumMzTolerance(0.003, 5.0);
         rtTolerance = new RTTolerance(0.2, false);
         intensityTolerance = 0.10d;
-        boolean sameRT = true;
-        boolean sameMZ = true;
         String nameSuffix = " gapFilled";
 
         GapFillingMethod gapFillMethod = new GapFillingMethod(featureTable,
-                dataStore, mzTolerance, rtTolerance, intensityTolerance, sameRT,
-                sameMZ, nameSuffix);
+                dataStore, mzTolerance, rtTolerance, intensityTolerance,
+                nameSuffix);
         featureTable = gapFillMethod.execute();
         Assert.assertEquals(1.0, gapFillMethod.getFinishedPercentage(), 0.0001);
 
