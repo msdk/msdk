@@ -25,7 +25,7 @@ import com.google.common.collect.Range;
  * of the absolute and relative values.
  */
 @Immutable
-public class CombinedMZTolerance implements MzTolerance {
+public class MaximumMzTolerance implements MzTolerance {
 
     // PPM conversion factor.
     private static final Double MILLION = 1000000.0;
@@ -44,7 +44,7 @@ public class CombinedMZTolerance implements MzTolerance {
      * @param tolerancePPM
      *            a {@link java.lang.Double} object.
      */
-    public CombinedMZTolerance(final @Nonnull Double toleranceMZ,
+    public MaximumMzTolerance(final @Nonnull Double toleranceMZ,
             final @Nonnull Double tolerancePPM) {
         mzTolerance = toleranceMZ;
         ppmTolerance = tolerancePPM;

@@ -30,7 +30,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.msdk.util.RTTolerance;
-import io.github.msdk.util.tolerances.CombinedMZTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.msdk.util.tolerances.MzTolerance;
 
 public class JoinAlignerMethodTest {
@@ -65,7 +65,7 @@ public class JoinAlignerMethodTest {
         featureTables.add(featureTable2);
 
         // Variables
-        MzTolerance mzTolerance = new CombinedMZTolerance(0.003, 5.0);
+        MzTolerance mzTolerance = new MaximumMzTolerance(0.003, 5.0);
         RTTolerance rtTolerance = new RTTolerance(0.1, false);
         int mzWeight = 10;
         int rtWeight = 10;

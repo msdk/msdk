@@ -41,7 +41,7 @@ import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.msdk.util.RTTolerance;
-import io.github.msdk.util.tolerances.CombinedMZTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.msdk.util.tolerances.MzTolerance;
 
 public class FeatureFilterMethodTest {
@@ -90,7 +90,7 @@ public class FeatureFilterMethodTest {
         ionAnnotations.add(ion3);
 
         // Variables
-        final MzTolerance mzTolerance = new CombinedMZTolerance(0.003, 5.0);
+        final MzTolerance mzTolerance = new MaximumMzTolerance(0.003, 5.0);
         final RTTolerance rtTolerance = new RTTolerance(3, false);
         final Double intensityTolerance = 0.10d;
         final Double noiseLevel = 5000d;

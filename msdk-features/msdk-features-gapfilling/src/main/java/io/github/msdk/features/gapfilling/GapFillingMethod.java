@@ -43,7 +43,7 @@ import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTa
 import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.util.FeatureTableUtil;
 import io.github.msdk.util.RTTolerance;
-import io.github.msdk.util.tolerances.CombinedMZTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
 
 /**
  * This class fills in the missing gaps in a FeatureTable.
@@ -55,7 +55,7 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
     // Input variables
     private final @Nonnull FeatureTable featureTable;
     private final @Nonnull DataPointStore dataStore;
-    private @Nonnull CombinedMZTolerance mzTolerance;
+    private @Nonnull MaximumMzTolerance mzTolerance;
     private @Nonnull RTTolerance rtTolerance;
     private final @Nonnull Double intensityTolerance;
     private final @Nonnull Boolean useRowRt;
@@ -92,7 +92,7 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
      *            a {@link java.lang.String} object.
      */
     public GapFillingMethod(@Nonnull FeatureTable featureTable,
-            @Nonnull DataPointStore dataStore, @Nonnull CombinedMZTolerance mzTolerance,
+            @Nonnull DataPointStore dataStore, @Nonnull MaximumMzTolerance mzTolerance,
             @Nonnull RTTolerance rtTolerance,
             @Nonnull Double intensityTolerance, @Nonnull Boolean useRowRt,
             @Nonnull Boolean useRowMz, @Nonnull String nameSuffix) {
@@ -169,7 +169,7 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
                 ion.setExpectedMz(newMz);
 
                 // Set new mzTolerance
-                mzTolerance = new CombinedMZTolerance(
+                mzTolerance = new MaximumMzTolerance(
                         mzTolerance.getMzTolerance() + toleranceMz,
                         mzTolerance.getPpmTolerance());
             }
