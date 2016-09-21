@@ -351,4 +351,10 @@ class SimpleIonAnnotation implements IonAnnotation {
         this.reliability = reliability;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return annotationId + " @ " + expectedMz;
+    }
+
 }

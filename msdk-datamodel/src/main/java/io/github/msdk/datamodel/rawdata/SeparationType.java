@@ -31,7 +31,7 @@ public enum SeparationType {
      */
     GC(1),
     /**
-     * Comprehensive two-dimensional liquid chromatography.
+     * Comprehensive two-dimensional gas chromatography.
      */
     GCxGC(2),
     /**
