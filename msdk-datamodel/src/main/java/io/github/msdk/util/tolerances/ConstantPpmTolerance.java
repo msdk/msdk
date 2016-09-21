@@ -61,8 +61,8 @@ public class ConstantPpmTolerance implements MzTolerance {
             final @Nonnull Double mzValue) {
         final @Nonnull Double absoluteTolerance = mzValue / MILLION
                 * ppmTolerance;
-        return Range.closed(mzValue - absoluteTolerance, mzValue
-                + absoluteTolerance);
+        return Range.closed(mzValue - absoluteTolerance,
+                mzValue + absoluteTolerance);
     }
 
     /** {@inheritDoc} */

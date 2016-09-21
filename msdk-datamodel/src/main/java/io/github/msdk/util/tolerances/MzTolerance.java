@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.Range;
 
 public interface MzTolerance {
-	
+
     /**
      * <p>
      * Get a m/z tolerance range for a given m/z.
@@ -29,6 +29,6 @@ public interface MzTolerance {
      *            a {@link java.lang.Double} object.
      * @return a {@link com.google.common.collect.Range} object.
      */
-	public @Nonnull Range<Double> getToleranceRange(
-			final @Nonnull Double mzValue);
+    public @Nonnull Range<Double> getToleranceRange(
+            final @Nonnull Double mzValue);
 }
