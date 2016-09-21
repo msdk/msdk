@@ -66,4 +66,10 @@ class SimpleFeatureTableColumn<DataType>
         return simpleSample;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return String.format("%s (%s)", name, dataTypeClass.getSimpleName());
+    }
+
 }

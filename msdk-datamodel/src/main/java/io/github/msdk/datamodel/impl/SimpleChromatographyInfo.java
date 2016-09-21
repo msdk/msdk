@@ -103,4 +103,17 @@ class SimpleChromatographyInfo implements ChromatographyInfo {
         return returnValue;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        if (separationType.getFeatureDimensions() == 1) {
+            return String.format("%s (%s)", retentionTime, separationType);
+        } else if (separationType.equals(SeparationType.IMS)) {
+            return String.format("%sx%s (%s)", retentionTime, ionDriftTime,
+                    separationType);
+        } else {
+            return String.format("%sx%s (%s)", retentionTime,
+                    secondaryRetentionTime, separationType);
+        }
+    }
 }

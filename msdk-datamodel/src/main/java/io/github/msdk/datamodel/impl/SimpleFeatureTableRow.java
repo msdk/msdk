@@ -22,8 +22,12 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableDataConverter;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 import javax.annotation.concurrent.NotThreadSafe;
 
 /**
@@ -97,4 +101,15 @@ class SimpleFeatureTableRow implements FeatureTableRow {
                 targetColumn);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        List<FeatureTableColumn<?>> columns = featureTable.getColumns();
+        List<String> contents = new ArrayList<String>();
+        for (FeatureTableColumn<?> column : columns) {
+            contents.add(column.getName() + "=" + getData(column).toString());
+        }
+
+        return contents.toString();
+    }
 }

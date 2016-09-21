@@ -251,4 +251,10 @@ class SimpleChromatogram implements Chromatogram {
         return rtRange;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return String.format("Chromatogram #%d (%s)", chromatogramNumber,
+                chromatogramType);
+    }
 }
