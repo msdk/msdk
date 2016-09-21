@@ -197,7 +197,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
 
                 // Create ion
                 IonAnnotation ionAnnotation = MSDKObjectBuilder
-                        .getSimpleIonAnnotation();
+                        .getIonAnnotation();
                 ionAnnotation.setExpectedMz(mzValue);
                 ChromatographyInfo chromatographyInfo = MSDKObjectBuilder
                         .getChromatographyInfo1D(SeparationType.UNKNOWN,

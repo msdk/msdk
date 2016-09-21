@@ -505,24 +505,24 @@ public class MSDKObjectBuilder {
     }
 
     /**
-     * Creates a new SimpleSample reference.
+     * Creates a new Sample instance.
      *
      * @param sampleName
      *            a {@link java.lang.String} object.
-     * @return new SimpleSample
+     * @return new Sample
      */
-    public static final @Nonnull SimpleSample getSimpleSample(
+    public static final @Nonnull Sample getSample(
             @Nonnull String sampleName) {
         SimpleSample newSample = new SimpleSample(sampleName);
         return newSample;
     }
 
     /**
-     * Creates a new SimpleSample reference.
+     * Creates a new IonAnnotation instance.
      *
-     * @return new SimpleSample
+     * @return new IonAnnotation
      */
-    public static final @Nonnull SimpleIonAnnotation getSimpleIonAnnotation() {
+    public static final @Nonnull IonAnnotation getIonAnnotation() {
         SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
         return ionAnnotation;
     }

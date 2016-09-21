@@ -66,7 +66,7 @@ public class FeatureFilterMethodTest {
 
         // Ion 1
         List<IonAnnotation> ionAnnotations = new ArrayList<IonAnnotation>();
-        IonAnnotation ion1 = MSDKObjectBuilder.getSimpleIonAnnotation();
+        IonAnnotation ion1 = MSDKObjectBuilder.getIonAnnotation();
         ion1.setExpectedMz(332.56);
         ion1.setAnnotationId("Feature 332.56");
         ion1.setChromatographyInfo(MSDKObjectBuilder
@@ -74,7 +74,7 @@ public class FeatureFilterMethodTest {
         ionAnnotations.add(ion1);
 
         // Ion 2
-        IonAnnotation ion2 = MSDKObjectBuilder.getSimpleIonAnnotation();
+        IonAnnotation ion2 = MSDKObjectBuilder.getIonAnnotation();
         ion2.setExpectedMz(508.004);
         ion2.setAnnotationId("Feature 508.004");
         ion2.setChromatographyInfo(MSDKObjectBuilder
@@ -82,7 +82,7 @@ public class FeatureFilterMethodTest {
         ionAnnotations.add(ion2);
 
         // Ion 3
-        IonAnnotation ion3 = MSDKObjectBuilder.getSimpleIonAnnotation();
+        IonAnnotation ion3 = MSDKObjectBuilder.getIonAnnotation();
         ion3.setExpectedMz(362.102);
         ion3.setAnnotationId("Feature 362.102");
         ion3.setChromatographyInfo(MSDKObjectBuilder
@@ -106,7 +106,7 @@ public class FeatureFilterMethodTest {
         // Create a new feature table
         FeatureTable featureTable = MSDKObjectBuilder
                 .getFeatureTable("orbitrap_300-600mz", dataStore);
-        Sample sample = MSDKObjectBuilder.getSimpleSample("orbitrap_300-600mz");
+        Sample sample = MSDKObjectBuilder.getSample("orbitrap_300-600mz");
 
         ChromatogramToFeatureTableMethod tableBuilder = new ChromatogramToFeatureTableMethod(
                 chromatograms, featureTable, sample);

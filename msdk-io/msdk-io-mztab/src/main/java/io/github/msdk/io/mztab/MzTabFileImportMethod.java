@@ -208,7 +208,7 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
             // Sample
             File file = new File(entry.getValue().getLocation().getPath());
             String fileName = file.getName();
-            Sample sample = MSDKObjectBuilder.getSimpleSample(fileName);
+            Sample sample = MSDKObjectBuilder.getSample(fileName);
             int msRunKey = entry.getKey();
 
             // Abundance (= Area) column
@@ -295,7 +295,7 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
 
             // Ion Annotation
             IonAnnotation ionAnnotation = MSDKObjectBuilder
-                    .getSimpleIonAnnotation();
+                    .getIonAnnotation();
             ionAnnotation.setAnnotationId(database);
             ionAnnotation.setDescription(description);
             ionAnnotation.setExpectedMz(mzCalc);

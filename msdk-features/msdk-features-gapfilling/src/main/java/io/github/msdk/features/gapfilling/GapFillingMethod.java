@@ -149,7 +149,7 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
             RawDataFile rawFile = sample.getRawDataFile();
 
             // Create an ion annotation
-            IonAnnotation ion = MSDKObjectBuilder.getSimpleIonAnnotation();
+            IonAnnotation ion = MSDKObjectBuilder.getIonAnnotation();
             ion.setAnnotationId(row.getId().toString());
             FeatureTableColumn<ChromatographyInfo> column = result.getColumn(
                     "Chromatography Info", null, ChromatographyInfo.class);

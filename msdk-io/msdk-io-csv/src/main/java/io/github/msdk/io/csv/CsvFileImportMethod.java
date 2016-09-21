@@ -88,7 +88,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
         this.sourceFile = sourceFile;
         this.dataStore = dataStore;
         this.fileSample = MSDKObjectBuilder
-                .getSimpleSample(sourceFile.getName());
+                .getSample(sourceFile.getName());
     }
 
     /** {@inheritDoc} */
@@ -231,7 +231,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
                             ionAnnotation = ionAnnotations.get(0);
                         } else {
                             ionAnnotation = MSDKObjectBuilder
-                                    .getSimpleIonAnnotation();
+                                    .getIonAnnotation();
                         }
 
                         switch (columnNames.get(i).toLowerCase()) {
@@ -563,7 +563,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
         if (samples.size() > 0) {
             for (String sampleName : samples) {
                 // Create a new sample
-                Sample sample = MSDKObjectBuilder.getSimpleSample(sampleName);
+                Sample sample = MSDKObjectBuilder.getSample(sampleName);
 
                 // Find all columns which have the sample in their name
                 for (int i = 0; i < columns.length; i++) {

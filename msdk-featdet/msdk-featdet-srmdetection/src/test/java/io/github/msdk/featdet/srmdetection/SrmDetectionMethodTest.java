@@ -68,7 +68,7 @@ public class SrmDetectionMethodTest {
         // Build feature table from chromatograms
         FeatureTable featureTable = MSDKObjectBuilder
                 .getFeatureTable("SRM srmDetection", dataStore);
-        Sample sample = MSDKObjectBuilder.getSimpleSample("SRM");
+        Sample sample = MSDKObjectBuilder.getSample("SRM");
         ChromatogramToFeatureTableMethod chromMethod = new ChromatogramToFeatureTableMethod(
                 chromatograms, featureTable, sample);
         featureTable = chromMethod.execute();
@@ -145,7 +145,7 @@ public class SrmDetectionMethodTest {
         // Build feature table from chromatograms
         FeatureTable featureTable = MSDKObjectBuilder
                 .getFeatureTable("Thermo-SRM srmDetection", dataStore);
-        Sample sample = MSDKObjectBuilder.getSimpleSample("Thermo-SRM");
+        Sample sample = MSDKObjectBuilder.getSample("Thermo-SRM");
         ChromatogramToFeatureTableMethod chromMethod = new ChromatogramToFeatureTableMethod(
                 chromatograms, featureTable, sample);
         featureTable = chromMethod.execute();

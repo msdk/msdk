@@ -92,7 +92,7 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
             String fieldSeparator, String quotationCharacter) {
         this.sourceFile = sourceFile;
         this.dataStore = dataStore;
-        this.fileSample = MSDKObjectBuilder.getSimpleSample(sourceFile
+        this.fileSample = MSDKObjectBuilder.getSample(sourceFile
                 .getName());
         this.locale = locale;
         this.fieldSeparator = fieldSeparator;
@@ -293,7 +293,7 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
                         ionAnnotation = ionAnnotations.get(0);
                     } else {
                         ionAnnotation = MSDKObjectBuilder
-                                .getSimpleIonAnnotation();
+                                .getIonAnnotation();
                     }
 
                     switch (tableColumn.getColumnName()) {

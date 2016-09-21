@@ -67,7 +67,7 @@ public class GapFillingMethodTest {
 
         // Ion 1
         List<IonAnnotation> ionAnnotations = new ArrayList<>();
-        IonAnnotation ion1 = MSDKObjectBuilder.getSimpleIonAnnotation();
+        IonAnnotation ion1 = MSDKObjectBuilder.getIonAnnotation();
         ion1.setExpectedMz(332.56);
         ion1.setAnnotationId("Feature 332.56");
         ion1.setChromatographyInfo(MSDKObjectBuilder
@@ -75,7 +75,7 @@ public class GapFillingMethodTest {
         ionAnnotations.add(ion1);
 
         // Ion 2
-        IonAnnotation ion2 = MSDKObjectBuilder.getSimpleIonAnnotation();
+        IonAnnotation ion2 = MSDKObjectBuilder.getIonAnnotation();
         ion2.setExpectedMz(508.004);
         ion2.setAnnotationId("Feature 508.004");
         ion2.setChromatographyInfo(MSDKObjectBuilder
@@ -83,7 +83,7 @@ public class GapFillingMethodTest {
         ionAnnotations.add(ion2);
 
         // Ion 3
-        IonAnnotation ion3 = MSDKObjectBuilder.getSimpleIonAnnotation();
+        IonAnnotation ion3 = MSDKObjectBuilder.getIonAnnotation();
         ion3.setExpectedMz(362.102);
         ion3.setAnnotationId("Feature 362.102");
         ion3.setChromatographyInfo(MSDKObjectBuilder
@@ -112,7 +112,7 @@ public class GapFillingMethodTest {
         FeatureTable featureTable1 = MSDKObjectBuilder
                 .getFeatureTable("orbitrap_300-600mz-1", dataStore);
         Sample sample = MSDKObjectBuilder
-                .getSimpleSample("orbitrap_300-600mz-1");
+                .getSample("orbitrap_300-600mz-1");
         sample.setRawDataFile(rawFile);
 
         ChromatogramToFeatureTableMethod tableBuilder = new ChromatogramToFeatureTableMethod(
@@ -129,7 +129,7 @@ public class GapFillingMethodTest {
         FeatureTable featureTable2 = MSDKObjectBuilder
                 .getFeatureTable("orbitrap_300-600mz-2", dataStore);
         Sample sample2 = MSDKObjectBuilder
-                .getSimpleSample("orbitrap_300-600mz-2");
+                .getSample("orbitrap_300-600mz-2");
         sample2.setRawDataFile(rawFile);
         tableBuilder = new ChromatogramToFeatureTableMethod(chromatograms,
                 featureTable2, sample2);

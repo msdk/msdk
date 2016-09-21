@@ -84,7 +84,7 @@ public class LocalDatabaseSearchMethodTest {
         IMolecularFormula formula;
 
         // Ion 1
-        IonAnnotation ion1 = MSDKObjectBuilder.getSimpleIonAnnotation();
+        IonAnnotation ion1 = MSDKObjectBuilder.getIonAnnotation();
         ion1.setAnnotationId("1");
         ion1.setExpectedMz(508.0047259);
         ion1.setDescription("ATP");
@@ -97,7 +97,7 @@ public class LocalDatabaseSearchMethodTest {
         ionAnnotations.add(ion1);
 
         // Ion 2
-        IonAnnotation ion2 = MSDKObjectBuilder.getSimpleIonAnnotation();
+        IonAnnotation ion2 = MSDKObjectBuilder.getIonAnnotation();
         ion2.setAnnotationId("2");
         ion2.setExpectedMz(613.1625235);
         ion2.setDescription("Glutathione disulfide");
@@ -110,7 +110,7 @@ public class LocalDatabaseSearchMethodTest {
         ionAnnotations.add(ion2);
 
         // Ion 3
-        IonAnnotation ion3 = MSDKObjectBuilder.getSimpleIonAnnotation();
+        IonAnnotation ion3 = MSDKObjectBuilder.getIonAnnotation();
         ion3.setAnnotationId("3");
         ion3.setExpectedMz(239.1068954);
         ion3.setDescription("HEPES");
@@ -119,7 +119,7 @@ public class LocalDatabaseSearchMethodTest {
         ionAnnotations.add(ion3);
 
         // Ion 4
-        IonAnnotation ion4 = MSDKObjectBuilder.getSimpleIonAnnotation();
+        IonAnnotation ion4 = MSDKObjectBuilder.getIonAnnotation();
         ion4.setAnnotationId("4");
         ion4.setExpectedMz(175.1194502);
         ion4.setDescription("L-Arginine");
@@ -131,7 +131,7 @@ public class LocalDatabaseSearchMethodTest {
         ionAnnotations.add(ion4);
 
         // Ion 5
-        IonAnnotation ion5 = MSDKObjectBuilder.getSimpleIonAnnotation();
+        IonAnnotation ion5 = MSDKObjectBuilder.getIonAnnotation();
         ion5.setAnnotationId("5");
         ion5.setExpectedMz(664.118587);
         ion5.setDescription("NAD+");
@@ -143,7 +143,7 @@ public class LocalDatabaseSearchMethodTest {
         ionAnnotations.add(ion5);
 
         // Ion 6
-        IonAnnotation ion6 = MSDKObjectBuilder.getSimpleIonAnnotation();
+        IonAnnotation ion6 = MSDKObjectBuilder.getIonAnnotation();
         ion6.setAnnotationId("6");
         ion6.setExpectedMz(666.1328387);
         ion6.setDescription("NADH");
@@ -155,7 +155,7 @@ public class LocalDatabaseSearchMethodTest {
         ionAnnotations.add(ion6);
 
         // Ion 7
-        IonAnnotation ion7 = MSDKObjectBuilder.getSimpleIonAnnotation();
+        IonAnnotation ion7 = MSDKObjectBuilder.getIonAnnotation();
         ion7.setAnnotationId("7");
         ion7.setExpectedMz(303.0693468);
         ion7.setDescription("PIPES");
