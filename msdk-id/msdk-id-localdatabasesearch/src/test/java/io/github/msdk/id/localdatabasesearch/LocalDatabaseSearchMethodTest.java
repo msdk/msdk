@@ -40,9 +40,9 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.msdk.util.IonTypeUtil;
-import io.github.msdk.util.RTTolerance;
 import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.msdk.util.tolerances.MzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 
 public class LocalDatabaseSearchMethodTest {
 

@@ -36,8 +36,8 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.msdk.util.ChromatogramUtil.CalculationMethod;
 import io.github.msdk.util.tolerances.MzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 import io.github.msdk.util.MsSpectrumUtil;
-import io.github.msdk.util.RTTolerance;
 import io.github.msdk.util.RawDataFileUtil;
 
 /**
@@ -78,7 +78,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
      * @param mzTolerance
      *            an object that implements the {@link io.github.msdk.util.tolerances.MZTolerance} interface.
      * @param rtTolerance
-     *            a {@link io.github.msdk.util.RTTolerance} object.
+     *            a {@link io.github.msdk.util.tolerances.RTTolerance} object.
      * @param intensityTolerance
      *            a {@link java.lang.Double} object.
      * @param noiseLevel

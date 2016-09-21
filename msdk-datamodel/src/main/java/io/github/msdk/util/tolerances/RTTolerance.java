@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.util;
+package io.github.msdk.util.tolerances;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;

@@ -34,8 +34,8 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.util.FeatureTableUtil;
-import io.github.msdk.util.RTTolerance;
 import io.github.msdk.util.tolerances.MzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 
 /**
  * This class creates a filtered feature table based on a feature table and a
@@ -118,7 +118,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
      * @param duplicateMzTolerance
      *            an object that implements the {@link io.github.msdk.util.tolerances.MZTolerance} interface.
      * @param duplicateRtTolerance
-     *            a {@link io.github.msdk.util.RTTolerance} object.
+     *            a {@link io.github.msdk.util.tolerances.RTTolerance} object.
      * @param duplicateRequireSameID
      *            a boolean.
      */

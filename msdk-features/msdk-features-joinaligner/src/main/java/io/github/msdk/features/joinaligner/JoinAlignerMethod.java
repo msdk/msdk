@@ -36,8 +36,8 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.util.FeatureTableUtil;
-import io.github.msdk.util.RTTolerance;
 import io.github.msdk.util.tolerances.MzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 
 /**
  * This class aligns feature tables based on a match score. The score is
@@ -86,7 +86,7 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
      * @param featureTableName
      *            a {@link java.lang.String} object.
      * @param rtTolerance
-     *            a {@link io.github.msdk.util.RTTolerance} object.
+     *            a {@link io.github.msdk.util.tolerances.RTTolerance} object.
      */
     public JoinAlignerMethod(@Nonnull List<FeatureTable> featureTables,
             @Nonnull DataPointStore dataStore, @Nonnull MzTolerance mzTolerance,

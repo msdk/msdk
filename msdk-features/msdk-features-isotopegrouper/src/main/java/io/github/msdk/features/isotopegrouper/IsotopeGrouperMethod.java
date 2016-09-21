@@ -23,8 +23,8 @@ import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.util.RTTolerance;
 import io.github.msdk.util.tolerances.MzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 
 /**
  * This class searches through a feature table and groups isotopes under a
@@ -72,7 +72,7 @@ public class IsotopeGrouperMethod implements MSDKMethod<FeatureTable> {
 	 * @param mzTolerance
 	 *            a {@link io.github.msdk.util.tolerances.MZTolerance} object.
 	 * @param rtTolerance
-	 *            a {@link io.github.msdk.util.RTTolerance} object.
+	 *            a {@link io.github.msdk.util.tolerances.RTTolerance} object.
 	 * @param maximumCharge
 	 *            a {@link java.lang.Integer} object.
 	 * @param requireMonotonicShape

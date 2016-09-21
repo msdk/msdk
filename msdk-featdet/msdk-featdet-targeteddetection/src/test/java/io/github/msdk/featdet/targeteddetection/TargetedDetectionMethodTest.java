@@ -32,9 +32,9 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.util.ChromatogramUtil;
-import io.github.msdk.util.RTTolerance;
 import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.msdk.util.tolerances.MzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 
 public class TargetedDetectionMethodTest {
 

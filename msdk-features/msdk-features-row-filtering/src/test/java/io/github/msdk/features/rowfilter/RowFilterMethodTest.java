@@ -37,9 +37,9 @@ import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTa
 import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.features.rowfilter.RowFilterMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
-import io.github.msdk.util.RTTolerance;
 import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.msdk.util.tolerances.MzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 
 public class RowFilterMethodTest {
 

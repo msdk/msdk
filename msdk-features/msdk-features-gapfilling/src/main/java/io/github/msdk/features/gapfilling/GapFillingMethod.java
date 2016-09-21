@@ -42,8 +42,8 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
 import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.util.FeatureTableUtil;
-import io.github.msdk.util.RTTolerance;
 import io.github.msdk.util.tolerances.MzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 
 /**
  * This class fills in the missing gaps in a FeatureTable.
@@ -81,7 +81,7 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
      * @param mzTolerance
      *            an object that implements the {@link io.github.msdk.util.tolerances.MzTolerance} interface.
      * @param rtTolerance
-     *            a {@link io.github.msdk.util.RTTolerance} object.
+     *            a {@link io.github.msdk.util.tolerances.RTTolerance} object.
      * @param intensityTolerance
      *            a {@link java.lang.Double} object.
      * @param useRowRt

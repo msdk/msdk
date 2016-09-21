@@ -29,9 +29,9 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
-import io.github.msdk.util.RTTolerance;
 import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.msdk.util.tolerances.MzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 
 public class JoinAlignerMethodTest {
 
