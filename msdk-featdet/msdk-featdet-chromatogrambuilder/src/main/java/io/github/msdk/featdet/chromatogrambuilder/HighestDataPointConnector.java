@@ -55,7 +55,6 @@ class HighestDataPointConnector {
     private ChromatographyInfo rtBuffer[] = new ChromatographyInfo[10000];
     private double mzBuffer[] = new double[10000];
     private float intensityBuffer[] = new float[10000];
-    private int numOfDataPoints;
 
     HighestDataPointConnector(@Nonnull Double noiseLevel, double minimumTimeSpan,
             double minimumHeight, MzTolerance mzTolerance) {
@@ -78,7 +77,7 @@ class HighestDataPointConnector {
         // Load data points
         mzBuffer = scan.getMzValues(mzBuffer);
         intensityBuffer = scan.getIntensityValues(intensityBuffer);
-        numOfDataPoints = scan.getNumberOfDataPoints();
+        int numOfDataPoints = scan.getNumberOfDataPoints();
 
         // Sort m/z peaks by descending intensity
         DataPointSorter.sortDataPoints(mzBuffer, intensityBuffer,
