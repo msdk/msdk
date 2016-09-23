@@ -149,14 +149,14 @@ public class ChromatogramBuilderMethod
         }
 
         HighestDataPointConnector massConnector = new HighestDataPointConnector(
-                noiseLevel, minimumTimeSpan, minimumHeight, mzTolerance);
+                noiseLevel, minimumTimeSpan, minimumHeight);
 
         for (MsScan scan : inputScans) {
 
             if (canceled)
                 return null;
 
-            massConnector.addScan(inputFile, scan);
+            massConnector.addScan(inputFile, scan, mzTolerance);
             processedScans++;
         }
 

@@ -45,7 +45,6 @@ class HighestDataPointConnector {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final @Nonnull Double noiseLevel;
-    private final MzTolerance mzTolerance;
     private final double minimumTimeSpan, minimumHeight;
 
     private final Set<BuildingChromatogram> buildingChromatograms,
@@ -57,10 +56,9 @@ class HighestDataPointConnector {
     private float intensityBuffer[] = new float[10000];
 
     HighestDataPointConnector(@Nonnull Double noiseLevel, double minimumTimeSpan,
-            double minimumHeight, MzTolerance mzTolerance) {
+            double minimumHeight) {
 
         this.noiseLevel = noiseLevel;
-        this.mzTolerance = mzTolerance;
         this.minimumHeight = minimumHeight;
         this.minimumTimeSpan = minimumTimeSpan;
 
@@ -72,7 +70,7 @@ class HighestDataPointConnector {
 
     }
 
-    void addScan(RawDataFile dataFile, MsScan scan) {
+    void addScan(RawDataFile dataFile, MsScan scan, MzTolerance mzTolerance) {
 
         // Load data points
         mzBuffer = scan.getMzValues(mzBuffer);
