@@ -14,8 +14,6 @@
 
 package io.github.msdk.util.tolerances;
 
-import io.github.msdk.datamodel.rawdata.MsScan;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
@@ -27,7 +25,7 @@ import com.google.common.collect.Range;
  * of the absolute and relative values.
  */
 @Immutable
-public class MaximumMzTolerance implements MzTolerance, MzToleranceProvider {
+public class MaximumMzTolerance implements MzTolerance {
 
     // PPM conversion factor.
     private static final Double MILLION = 1000000.0;
@@ -98,8 +96,4 @@ public class MaximumMzTolerance implements MzTolerance, MzToleranceProvider {
         return mzTolerance + " m/z or " + ppmTolerance + " ppm";
     }
 
-    @Override
-    public MzTolerance getMzTolerance(MsScan scan) {
-        return this;
-    }
 }

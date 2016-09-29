@@ -14,13 +14,11 @@
 
 package io.github.msdk.util.tolerances;
 
-import io.github.msdk.datamodel.rawdata.MsScan;
-
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
-public class ConstantDaTolerance implements MzTolerance, MzToleranceProvider {
+public class ConstantDaTolerance implements MzTolerance {
 
     private final @Nonnull Double mzTolerance;
 
@@ -67,8 +65,4 @@ public class ConstantDaTolerance implements MzTolerance, MzToleranceProvider {
         return mzTolerance + " Da";
     }
 
-    @Override
-    public MzTolerance getMzTolerance(MsScan scan) {
-        return this;
-    }
 }

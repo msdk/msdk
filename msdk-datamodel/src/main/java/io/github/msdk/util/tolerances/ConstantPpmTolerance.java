@@ -14,13 +14,11 @@
 
 package io.github.msdk.util.tolerances;
 
-import io.github.msdk.datamodel.rawdata.MsScan;
-
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
-public class ConstantPpmTolerance implements MzTolerance, MzToleranceProvider {
+public class ConstantPpmTolerance implements MzTolerance {
 
     // PPM conversion factor.
     private static final Double MILLION = 1_000_000.0;
@@ -73,8 +71,4 @@ public class ConstantPpmTolerance implements MzTolerance, MzToleranceProvider {
         return ppmTolerance + " ppm";
     }
 
-    @Override
-    public MzTolerance getMzTolerance(MsScan scan) {
-        return this;
-    }
 }

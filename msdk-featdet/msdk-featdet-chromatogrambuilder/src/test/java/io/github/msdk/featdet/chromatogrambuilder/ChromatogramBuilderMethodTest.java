@@ -29,7 +29,7 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.chromatogrambuilder.ChromatogramBuilderMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.util.tolerances.ConstantPpmTolerance;
-import io.github.msdk.util.tolerances.MzToleranceProvider;
+import io.github.msdk.util.tolerances.MzTolerance;
 
 public class ChromatogramBuilderMethodTest {
 
@@ -61,10 +61,10 @@ public class ChromatogramBuilderMethodTest {
         double noiseLevel = 0;
         double minimumTimeSpan = 6; // 6s
         double minimumHeight = 1E4;
-        MzToleranceProvider mzToleranceProvider = new ConstantPpmTolerance(5.0);
+        MzTolerance mzTolerance = new ConstantPpmTolerance(5.0);
         ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(
                 dataStore, rawFile, noiseLevel, minimumTimeSpan, minimumHeight,
-                mzToleranceProvider);
+                mzTolerance);
         List<Chromatogram> detectedFeatures = chromBuilder.execute();
         Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
 
@@ -80,10 +80,10 @@ public class ChromatogramBuilderMethodTest {
         double noiseLevel = 0;
         double minimumTimeSpan = 1000000;
         double minimumHeight = 1E4;
-        MzToleranceProvider mzToleranceProvider = new ConstantPpmTolerance(5.0);
+        MzTolerance mzTolerance = new ConstantPpmTolerance(5.0);
         ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(
                 dataStore, rawFile, noiseLevel, minimumTimeSpan, minimumHeight,
-                mzToleranceProvider);
+                mzTolerance);
         List<Chromatogram> detectedFeatures = chromBuilder.execute();
         Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
 
@@ -100,10 +100,10 @@ public class ChromatogramBuilderMethodTest {
         double noiseLevel = 0f;
         double minimumTimeSpan = 6; // 6s
         double minimumHeight = 10000000;
-        MzToleranceProvider mzToleranceProvider = new ConstantPpmTolerance(5.0);
+        MzTolerance mzTolerance = new ConstantPpmTolerance(5.0);
         ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(
                 dataStore, rawFile, noiseLevel, minimumTimeSpan, minimumHeight,
-                mzToleranceProvider);
+                mzTolerance);
         List<Chromatogram> detectedFeatures = chromBuilder.execute();
         Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
 
