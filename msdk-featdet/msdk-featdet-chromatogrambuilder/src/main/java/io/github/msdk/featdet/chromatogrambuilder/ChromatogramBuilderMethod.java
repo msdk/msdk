@@ -30,7 +30,9 @@ import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.util.tolerances.ConstantMzToleranceProvider;
 import io.github.msdk.util.tolerances.MzTolerance;
+import io.github.msdk.util.tolerances.MzToleranceProvider;
 
 /**
  * <p>
@@ -47,7 +49,7 @@ public class ChromatogramBuilderMethod
     private final @Nonnull List<MsScan> inputScans;
     private final @Nonnull Double noiseLevel;
     private final @Nonnull Double minimumTimeSpan, minimumHeight;
-    private final @Nonnull MzTolerance mzTolerance;
+    private final @Nonnull MzToleranceProvider mzToleranceProvider;
 
     private int processedScans = 0, totalScans = 0;
     private boolean canceled = false;
@@ -55,7 +57,8 @@ public class ChromatogramBuilderMethod
 
     /**
      * <p>
-     * Constructor for ChromatogramBuilderMethod.
+     * Constructor for ChromatogramBuilderMethod. This version uses the same
+     * MzTolerance for every scan.
      * </p>
      *
      * @param dataPointStore
@@ -68,7 +71,8 @@ public class ChromatogramBuilderMethod
      * @param minimumHeight
      *            a {@link java.lang.Double} object.
      * @param mzTolerance
-     *            an object that implements the {@link io.github.msdk.util.tolerances.MZTolerance} interface.
+     *            an object that implements the
+     *            {@link io.github.msdk.util.tolerances.MZTolerance} interface.
      * @param noiseLevel
      *            a {@link java.lang.Float} object.
      */
@@ -77,7 +81,42 @@ public class ChromatogramBuilderMethod
             @Nonnull Double minimumTimeSpan, @Nonnull Double minimumHeight,
             @Nonnull MzTolerance mzTolerance) {
         this(dataPointStore, inputFile, inputFile.getScans(), noiseLevel,
-                minimumTimeSpan, minimumHeight, mzTolerance);
+                minimumTimeSpan, minimumHeight,
+                new ConstantMzToleranceProvider(mzTolerance));
+    }
+
+    /**
+     * <p>
+     * Constructor for ChromatogramBuilderMethod. This version uses the same
+     * MzTolerance for every scan.
+     * </p>
+     *
+     * @param dataPointStore
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
+     *            object.
+     * @param inputFile
+     *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param inputScans
+     *            a {@link java.util.List} object.
+     * @param minimumTimeSpan
+     *            a {@link java.lang.Double} object.
+     * @param minimumHeight
+     *            a {@link java.lang.Double} object.
+     * @param mzTolerance
+     *            an object that implements the
+     *            {@link io.github.msdk.util.tolerances.MZTolerance}
+     *            interface.
+     * @param noiseLevel
+     *            a {@link java.lang.Float} object.
+     */
+    public ChromatogramBuilderMethod(@Nonnull DataPointStore dataPointStore,
+            @Nonnull RawDataFile inputFile, @Nonnull List<MsScan> inputScans,
+            @Nonnull Double noiseLevel, @Nonnull Double minimumTimeSpan,
+            @Nonnull Double minimumHeight,
+            @Nonnull MzTolerance mzTolerance) {
+        this(dataPointStore, inputFile, inputFile.getScans(), noiseLevel,
+                minimumTimeSpan, minimumHeight,
+                new ConstantMzToleranceProvider(mzTolerance));
     }
 
     /**
@@ -96,22 +135,25 @@ public class ChromatogramBuilderMethod
      *            a {@link java.lang.Double} object.
      * @param minimumHeight
      *            a {@link java.lang.Double} object.
-     * @param mzTolerance
-     *            an object that implements the {@link io.github.msdk.util.tolerances.MZTolerance} interface.
+     * @param mzToleranceProvider
+     *            an object that implements the
+     *            {@link io.github.msdk.util.tolerances.MZToleranceProvider}
+     *            interface.
      * @param noiseLevel
      *            a {@link java.lang.Float} object.
      */
     public ChromatogramBuilderMethod(@Nonnull DataPointStore dataPointStore,
             @Nonnull RawDataFile inputFile, @Nonnull List<MsScan> inputScans,
             @Nonnull Double noiseLevel, @Nonnull Double minimumTimeSpan,
-            @Nonnull Double minimumHeight, @Nonnull MzTolerance mzTolerance) {
+            @Nonnull Double minimumHeight,
+            @Nonnull MzToleranceProvider mzToleranceProvider) {
         this.dataPointStore = dataPointStore;
         this.inputFile = inputFile;
         this.inputScans = inputScans;
         this.noiseLevel = noiseLevel;
         this.minimumTimeSpan = minimumTimeSpan;
         this.minimumHeight = minimumHeight;
-        this.mzTolerance = mzTolerance;
+        this.mzToleranceProvider = mzToleranceProvider;
     }
 
     /** {@inheritDoc} */
@@ -149,14 +191,15 @@ public class ChromatogramBuilderMethod
         }
 
         HighestDataPointConnector massConnector = new HighestDataPointConnector(
-                noiseLevel, minimumTimeSpan, minimumHeight, mzTolerance);
+                noiseLevel, minimumTimeSpan, minimumHeight);
 
         for (MsScan scan : inputScans) {
 
             if (canceled)
                 return null;
 
-            massConnector.addScan(inputFile, scan);
+            MzTolerance mzTolerance = mzToleranceProvider.getMzTolerance(scan);
+            massConnector.addScan(inputFile, scan, mzTolerance);
             processedScans++;
         }
 

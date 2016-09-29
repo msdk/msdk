@@ -70,4 +70,5 @@ public class ConstantPpmTolerance implements MzTolerance {
     public String toString() {
         return ppmTolerance + " ppm";
     }
+
 }

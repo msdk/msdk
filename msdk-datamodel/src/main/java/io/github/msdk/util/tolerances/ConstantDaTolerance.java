@@ -64,4 +64,5 @@ public class ConstantDaTolerance implements MzTolerance {
     public String toString() {
         return mzTolerance + " Da";
     }
+
 }

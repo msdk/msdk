@@ -95,4 +95,5 @@ public class MaximumMzTolerance implements MzTolerance {
     public String toString() {
         return mzTolerance + " m/z or " + ppmTolerance + " ppm";
     }
+
 }
