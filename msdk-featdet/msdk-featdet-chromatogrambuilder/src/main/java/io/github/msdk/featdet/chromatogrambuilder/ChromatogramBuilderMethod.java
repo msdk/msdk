@@ -87,6 +87,40 @@ public class ChromatogramBuilderMethod
 
     /**
      * <p>
+     * Constructor for ChromatogramBuilderMethod. This version uses the same
+     * MzTolerance for every scan.
+     * </p>
+     *
+     * @param dataPointStore
+     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
+     *            object.
+     * @param inputFile
+     *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+     * @param inputScans
+     *            a {@link java.util.List} object.
+     * @param minimumTimeSpan
+     *            a {@link java.lang.Double} object.
+     * @param minimumHeight
+     *            a {@link java.lang.Double} object.
+     * @param mzTolerance
+     *            an object that implements the
+     *            {@link io.github.msdk.util.tolerances.MZTolerance}
+     *            interface.
+     * @param noiseLevel
+     *            a {@link java.lang.Float} object.
+     */
+    public ChromatogramBuilderMethod(@Nonnull DataPointStore dataPointStore,
+            @Nonnull RawDataFile inputFile, @Nonnull List<MsScan> inputScans,
+            @Nonnull Double noiseLevel, @Nonnull Double minimumTimeSpan,
+            @Nonnull Double minimumHeight,
+            @Nonnull MzTolerance mzTolerance) {
+        this(dataPointStore, inputFile, inputFile.getScans(), noiseLevel,
+                minimumTimeSpan, minimumHeight,
+                new ConstantMzToleranceProvider(mzTolerance));
+    }
+
+    /**
+     * <p>
      * Constructor for ChromatogramBuilderMethod.
      * </p>
      *
