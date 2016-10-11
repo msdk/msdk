@@ -41,8 +41,10 @@ public class MgfExportAlgorithmTest {
 		MsSpectrum spectrum = mockMsSpectrum(mzValues1, intensityValues1);
 		File file = folder.newFile();
 
-		MgfExportAlgorithm.exportSpectrum(file, spectrum);
+		MgfExportAlgorithm algorithm = new MgfExportAlgorithm(spectrum, file);
+		algorithm.execute();
 
+		assertThat((double) algorithm.getFinishedPercentage(), closeTo(1.0, 0.001));
 		List<String> lines = Files.readAllLines(file.toPath(),
 				Charset.defaultCharset());
 		assertThat(lines.toArray(new String[lines.size()]),
@@ -60,8 +62,10 @@ public class MgfExportAlgorithmTest {
 		spectra.add(mockMsSpectrum(mzValues2, intensityValues2));
 		File file = folder.newFile();
 
-		MgfExportAlgorithm.exportSpectra(file, spectra);
+		MgfExportAlgorithm algorithm = new MgfExportAlgorithm(spectra, file);
+		algorithm.execute();
 
+		assertThat((double) algorithm.getFinishedPercentage(), closeTo(1.0, 0.001));
 		List<String> lines = Files.readAllLines(file.toPath(),
 				Charset.defaultCharset());
 		assertThat(lines.toArray(new String[lines.size()]),
@@ -78,8 +82,10 @@ public class MgfExportAlgorithmTest {
 		MsScan scan = mockMsScan(mzValues1, intensityValues1, ii, null, 1);
 		File file = folder.newFile();
 
-		MgfExportAlgorithm.exportSpectrum(file, scan);
+		MgfExportAlgorithm algorithm = new MgfExportAlgorithm(scan, file);
+		algorithm.execute();
 
+		assertThat((double) algorithm.getFinishedPercentage(), closeTo(1.0, 0.001));
 		List<String> lines = Files.readAllLines(file.toPath(),
 				Charset.defaultCharset());
 		assertThat(lines.toArray(new String[lines.size()]),
@@ -98,8 +104,10 @@ public class MgfExportAlgorithmTest {
 		MsScan scan = mockMsScan(mzValues1, intensityValues1, ii, ci, 1);
 		File file = folder.newFile();
 
-		MgfExportAlgorithm.exportSpectrum(file, scan);
+		MgfExportAlgorithm algorithm = new MgfExportAlgorithm(scan, file);
+		algorithm.execute();
 
+		assertThat((double) algorithm.getFinishedPercentage(), closeTo(1.0, 0.001));
 		List<String> lines = Files.readAllLines(file.toPath(),
 				Charset.defaultCharset());
 		assertThat(lines.toArray(new String[lines.size()]),

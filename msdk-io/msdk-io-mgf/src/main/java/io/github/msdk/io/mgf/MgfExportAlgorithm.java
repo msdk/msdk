@@ -22,8 +22,13 @@ import java.util.Collection;
 import java.util.Collections;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
+import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
@@ -32,92 +37,142 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 /**
  * <p>MgfExportAlgorithm class.</p>
  */
-public class MgfExportAlgorithm {
+public class MgfExportAlgorithm implements MSDKMethod<Void> {
+
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private final @Nonnull Collection<MsSpectrum> spectra;
+    private final @Nonnull File target;
+
+    private boolean canceled = false;
+
+    private long processedSpectra = 0;
 
     /**
-     * <p>exportSpectrum.</p>
+     * <p>
+     * Constructor for MgfExportAlgorithm.
+     * </p>
      *
-     * @param exportFile a {@link java.io.File} object.
-     * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
-     * @throws java.io.IOException if any.
-     * @throws io.github.msdk.MSDKException if any.
+     * @param spectra
+     *            a collection of {@link io.github.msdk.datamodel.msspectra.MsSpectrum} objects.
+     * @param target
+     *            a {@link java.io.File} object.
      */
-    @SuppressWarnings("null")
-    public static void exportSpectrum(@Nonnull File exportFile,
-            @Nonnull MsSpectrum spectrum) throws IOException, MSDKException {
-        exportSpectra(exportFile, Collections.singleton(spectrum));
+    public MgfExportAlgorithm(@Nonnull Collection<MsSpectrum> spectra,
+            @Nonnull File target) {
+        this.spectra = spectra;
+        this.target = target;
     }
 
     /**
-     * <p>exportSpectra.</p>
+     * <p>
+     * Constructor for MgfExportAlgorithm.
+     * </p>
      *
-     * @param exportFile a {@link java.io.File} object.
-     * @param spectra a {@link java.util.Collection} object.
-     * @throws java.io.IOException if any.
-     * @throws io.github.msdk.MSDKException if any.
+     * @param spectra
+     *            a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     * @param target
+     *            a {@link java.io.File} object.
      */
-    public static void exportSpectra(@Nonnull File exportFile,
-            @Nonnull Collection<MsSpectrum> spectra)
-                    throws IOException, MSDKException {
+    public MgfExportAlgorithm(@Nonnull MsSpectrum spectrum,
+            @Nonnull File target) {
+        this.spectra = Collections.singleton(spectrum);
+        this.target = target;
+    }
 
-        // Open the writer
-        final BufferedWriter writer = new BufferedWriter(
-                new FileWriter(exportFile));
+	@Override
+	public Void execute() throws MSDKException {
+        logger.info(
+                "Started export of {} spectra to {}", spectra.size(), target);
 
-        double mzValues[] = null;
-        float intensityValues[] = null;
-        int numOfDataPoints;
+		// Open the writer
+		try (final BufferedWriter writer = new BufferedWriter(new FileWriter(
+				target))) {
 
-        // Write the data points
-        for (MsSpectrum spectrum : spectra) {
+			double mzValues[] = null;
+			float intensityValues[] = null;
+			int numOfDataPoints;
 
-            // Load data
-            mzValues = spectrum.getMzValues(mzValues);
-            intensityValues = spectrum.getIntensityValues(intensityValues);
-            numOfDataPoints = spectrum.getNumberOfDataPoints();
+			for (MsSpectrum spectrum : spectra) {
 
-            writer.write("BEGIN IONS");
-            writer.newLine();
+				if (canceled) {
+					writer.close();
+					target.delete();
+					return null;
+				}
 
-            if (spectrum instanceof MsScan) {
-                MsScan scan = (MsScan) spectrum;
+				mzValues = spectrum.getMzValues(mzValues);
+				intensityValues = spectrum.getIntensityValues(intensityValues);
+				numOfDataPoints = spectrum.getNumberOfDataPoints();
 
-                for (IsolationInfo ii : scan.getIsolations()) {
-                    Double precursorMz = ii.getPrecursorMz();
-                    if (precursorMz == null)
-                        continue;
-                    writer.write("PEPMASS=" + precursorMz);
-                    writer.newLine();
-                    if (ii.getPrecursorCharge() != null) {
-                        writer.write("CHARGE=" + ii.getPrecursorCharge());
-                        writer.newLine();
-                    }
-                    break;
-                }
+				writer.write("BEGIN IONS");
+				writer.newLine();
 
-                ChromatographyInfo rt = scan.getChromatographyInfo();
-                if (rt != null) {
-                    writer.write("RTINSECONDS=" + rt.getRetentionTime());
-                    writer.newLine();
-                }
-                writer.write("Title=Scan #" + scan.getScanNumber());
-                writer.newLine();
+				if (spectrum instanceof MsScan) {
+					MsScan scan = (MsScan) spectrum;
 
-            }
+					for (IsolationInfo ii : scan.getIsolations()) {
+						Double precursorMz = ii.getPrecursorMz();
+						if (precursorMz == null)
+							continue;
+						writer.write("PEPMASS=" + precursorMz);
+						writer.newLine();
+						if (ii.getPrecursorCharge() != null) {
+							writer.write("CHARGE=" + ii.getPrecursorCharge());
+							writer.newLine();
+						}
+						break;
+					}
 
-            // Write ions
-            for (int i = 0; i < numOfDataPoints; i++) {
-                writer.write(mzValues[i] + " " + intensityValues[i]);
-                writer.newLine();
-            }
+					ChromatographyInfo rt = scan.getChromatographyInfo();
+					if (rt != null) {
+						writer.write("RTINSECONDS=" + rt.getRetentionTime());
+						writer.newLine();
+					}
+					writer.write("Title=Scan #" + scan.getScanNumber());
+					writer.newLine();
 
-            writer.write("END IONS");
-            writer.newLine();
-            writer.newLine();
+				}
 
-        }
+				// Write ions
+				for (int i = 0; i < numOfDataPoints; i++) {
+					writer.write(mzValues[i] + " " + intensityValues[i]);
+					writer.newLine();
+				}
 
-        writer.close();
+				writer.write("END IONS");
+				writer.newLine();
+				writer.newLine();
 
+				processedSpectra++;
+			}
+
+		} catch (IOException e) {
+			throw new MSDKException(e);
+		}
+
+		logger.info("Finished export of spectra to {}", target);
+		return null;
+	}
+
+    /** {@inheritDoc} */
+    @Override
+	public Float getFinishedPercentage() {
+		int totalSpectra = spectra.size();
+		return totalSpectra == 0 ? null
+				: (float) (processedSpectra / totalSpectra);
+	}
+
+    /** {@inheritDoc} */
+    @Override
+    @Nullable
+	public Void getResult() {
+		return null;
+	}
+
+    /** {@inheritDoc} */
+    @Override
+    public void cancel() {
+        this.canceled = true;
     }
 }
