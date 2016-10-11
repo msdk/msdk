@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.ArgumentMatcher;
 
-public class MgfExportAlgorithmTest {
+public class MgfFileExportMethodTest {
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
@@ -41,8 +41,10 @@ public class MgfExportAlgorithmTest {
 		MsSpectrum spectrum = mockMsSpectrum(mzValues1, intensityValues1);
 		File file = folder.newFile();
 
-		MgfExportAlgorithm.exportSpectrum(file, spectrum);
+		MgfFileExportMethod method = new MgfFileExportMethod(spectrum, file);
+		method.execute();
 
+		assertThat((double) method.getFinishedPercentage(), closeTo(1.0, 0.001));
 		List<String> lines = Files.readAllLines(file.toPath(),
 				Charset.defaultCharset());
 		assertThat(lines.toArray(new String[lines.size()]),
@@ -60,8 +62,10 @@ public class MgfExportAlgorithmTest {
 		spectra.add(mockMsSpectrum(mzValues2, intensityValues2));
 		File file = folder.newFile();
 
-		MgfExportAlgorithm.exportSpectra(file, spectra);
+		MgfFileExportMethod method = new MgfFileExportMethod(spectra, file);
+		method.execute();
 
+		assertThat((double) method.getFinishedPercentage(), closeTo(1.0, 0.001));
 		List<String> lines = Files.readAllLines(file.toPath(),
 				Charset.defaultCharset());
 		assertThat(lines.toArray(new String[lines.size()]),
@@ -78,8 +82,10 @@ public class MgfExportAlgorithmTest {
 		MsScan scan = mockMsScan(mzValues1, intensityValues1, ii, null, 1);
 		File file = folder.newFile();
 
-		MgfExportAlgorithm.exportSpectrum(file, scan);
+		MgfFileExportMethod method = new MgfFileExportMethod(scan, file);
+		method.execute();
 
+		assertThat((double) method.getFinishedPercentage(), closeTo(1.0, 0.001));
 		List<String> lines = Files.readAllLines(file.toPath(),
 				Charset.defaultCharset());
 		assertThat(lines.toArray(new String[lines.size()]),
@@ -98,8 +104,10 @@ public class MgfExportAlgorithmTest {
 		MsScan scan = mockMsScan(mzValues1, intensityValues1, ii, ci, 1);
 		File file = folder.newFile();
 
-		MgfExportAlgorithm.exportSpectrum(file, scan);
+		MgfFileExportMethod method = new MgfFileExportMethod(scan, file);
+		method.execute();
 
+		assertThat((double) method.getFinishedPercentage(), closeTo(1.0, 0.001));
 		List<String> lines = Files.readAllLines(file.toPath(),
 				Charset.defaultCharset());
 		assertThat(lines.toArray(new String[lines.size()]),
