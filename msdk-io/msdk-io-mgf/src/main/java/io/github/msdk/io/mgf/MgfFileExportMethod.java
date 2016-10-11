@@ -37,7 +37,7 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 /**
  * <p>MgfExportAlgorithm class.</p>
  */
-public class MgfExportAlgorithm implements MSDKMethod<Void> {
+public class MgfFileExportMethod implements MSDKMethod<Void> {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -50,7 +50,7 @@ public class MgfExportAlgorithm implements MSDKMethod<Void> {
 
     /**
      * <p>
-     * Constructor for MgfExportAlgorithm.
+     * Constructor for MgfFileExportMethod.
      * </p>
      *
      * @param spectra
@@ -58,7 +58,7 @@ public class MgfExportAlgorithm implements MSDKMethod<Void> {
      * @param target
      *            a {@link java.io.File} object.
      */
-    public MgfExportAlgorithm(@Nonnull Collection<MsSpectrum> spectra,
+    public MgfFileExportMethod(@Nonnull Collection<MsSpectrum> spectra,
             @Nonnull File target) {
         this.spectra = spectra;
         this.target = target;
@@ -66,7 +66,7 @@ public class MgfExportAlgorithm implements MSDKMethod<Void> {
 
     /**
      * <p>
-     * Constructor for MgfExportAlgorithm.
+     * Constructor for MgfFileExportMethod.
      * </p>
      *
      * @param spectra
@@ -74,7 +74,7 @@ public class MgfExportAlgorithm implements MSDKMethod<Void> {
      * @param target
      *            a {@link java.io.File} object.
      */
-    public MgfExportAlgorithm(@Nonnull MsSpectrum spectrum,
+    public MgfFileExportMethod(@Nonnull MsSpectrum spectrum,
             @Nonnull File target) {
         this.spectra = Collections.singleton(spectrum);
         this.target = target;
@@ -83,7 +83,7 @@ public class MgfExportAlgorithm implements MSDKMethod<Void> {
 	@Override
 	public Void execute() throws MSDKException {
         logger.info(
-                "Started export of {} spectra to {}", spectra.size(), target);
+                "Started MGF export of {} spectra to {}", spectra.size(), target);
 
 		// Open the writer
 		try (final BufferedWriter writer = new BufferedWriter(new FileWriter(
