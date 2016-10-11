@@ -19,25 +19,40 @@ import org.junit.rules.TemporaryFolder;
 
 public class MgfExportAlgorithmTest {
 
-	@Rule public TemporaryFolder folder = new TemporaryFolder();
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
+
+	private static final String[] expectedSimpleResults = { "BEGIN IONS",
+			"100.0 10.0", "200.0 20.0", "END IONS", "" };
+	private static final double[] mzValues1 = { 100.0, 200.0 };
+	private static final float[] intensityValues1 = { 10.0f, 20.0f };
 
 	@Test
 	public void testSimple() throws IOException, MSDKException {
-		MsSpectrum spectrum = mock(MsSpectrum.class);
-		when(spectrum.getNumberOfDataPoints()).thenReturn(2);
-		when(spectrum.getMzValues(null)).thenReturn(new double[] { 100.0, 200.0 });
-		when(spectrum.getIntensityValues(null)).thenReturn(new float[]{ 10.0f, 20.0f});
-		
+		MsSpectrum spectrum = mockMsSpectrum(mzValues1, intensityValues1);
 		File file = folder.newFile();
+
 		MgfExportAlgorithm.exportSpectrum(file, spectrum);
 
-		List<String> lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
-		assertThat("Number of lines is not correct.", lines.size(), equalTo(5));
-		assertThat(lines.get(0), equalTo("BEGIN IONS"));
-		assertThat(lines.get(1), equalTo("100.0 10.0"));
-		assertThat(lines.get(2), equalTo("200.0 20.0"));
-		assertThat(lines.get(3), equalTo("END IONS"));
-		assertThat(lines.get(4), equalTo(""));
+		List<String> lines = Files.readAllLines(file.toPath(),
+				Charset.defaultCharset());
+		assertThat("Lines are not correct",
+				lines.toArray(new String[lines.size()]),
+				arrayContaining(expectedSimpleResults));
+	}
+
+	private MsSpectrum mockMsSpectrum(double[] mzValues, float[] intensityValues) {
+		if (mzValues.length != intensityValues.length) {
+			throw new IllegalArgumentException(
+					"Number of mzValues and intensityValues do not agree");
+		}
+
+		MsSpectrum spectrum = mock(MsSpectrum.class);
+		when(spectrum.getNumberOfDataPoints()).thenReturn(mzValues.length);
+		when(spectrum.getMzValues(null)).thenReturn(mzValues);
+		when(spectrum.getIntensityValues(null)).thenReturn(intensityValues);
+
+		return spectrum;
 	}
 
 }
