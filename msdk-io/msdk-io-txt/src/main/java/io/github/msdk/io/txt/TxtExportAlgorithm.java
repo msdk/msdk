@@ -28,16 +28,26 @@ import javax.annotation.Nonnull;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 
 /**
- * <p>TxtExportAlgorithm class.</p>
+ * <p>
+ * A class containing methods to export
+ * {@link io.github.msdk.datamodel.msspectra.MsSpectrum} objects to string
+ * representations or files.
+ * </p>
  */
 public class TxtExportAlgorithm {
 
     /**
-     * <p>exportSpectrum.</p>
+     * <p>
+     * Export a single spectrum to a file.
+     * </p>
      *
-     * @param exportFile a {@link java.io.File} object.
-     * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
-     * @throws java.io.IOException if any.
+     * @param exportFile
+     *            a {@link java.io.File} object.
+     * @param spectrum
+     *            a {@link io.github.msdk.datamodel.msspectra.MsSpectrum}
+     *            object.
+     * @throws java.io.IOException
+     *             if any.
      */
     @SuppressWarnings("null")
     public static void exportSpectrum(@Nonnull File exportFile,
@@ -46,14 +56,48 @@ public class TxtExportAlgorithm {
     }
 
     /**
-     * <p>exportSpectra.</p>
+     * <p>
+     * Export one or more spectra to a file. A single space is used as the
+     * delimiter.
+     * </p>
      *
-     * @param exportFile a {@link java.io.File} object.
-     * @param spectra a {@link java.util.Collection} object.
-     * @throws java.io.IOException if any.
+     * @param exportFile
+     *            a {@link java.io.File} object.
+     * @param spectra
+     *            a {@link java.util.Collection} object.
+     * @throws java.io.IOException
+     *             if any.
+     * @see exportSpectra(File exportFile, Collection<MsSpectrum> spectra,
+     *      String delimiter)
+     * @see spectrumToString(@Nonnull MsSpectrum spectrum, @Nonnull String
+     *      delimiter)
      */
     public static void exportSpectra(@Nonnull File exportFile,
             @Nonnull Collection<MsSpectrum> spectra) throws IOException {
+        exportSpectra(exportFile, spectra, " ");
+    }
+
+    /**
+     * <p>
+     * Export one or more spectra to a file.
+     * </p>
+     *
+     * @param exportFile
+     *            a {@link java.io.File} object.
+     * @param spectra
+     *            a {@link java.util.Collection} object.
+     * @param delimiter
+     *            a {@link java.lang.String} object.
+     * 
+     * @throws java.io.IOException
+     *             if any.
+     * 
+     * @see spectrumToString(@Nonnull MsSpectrum spectrum, @Nonnull String
+     *      delimiter)
+     */
+    public static void exportSpectra(@Nonnull File exportFile,
+            @Nonnull Collection<MsSpectrum> spectra, @Nonnull String delimiter)
+            throws IOException {
 
         // Open the writer
         final BufferedWriter writer = new BufferedWriter(
@@ -61,7 +105,7 @@ public class TxtExportAlgorithm {
 
         // Write the data points
         for (MsSpectrum spectrum : spectra) {
-            spectrumToWriter(spectrum, writer);
+            spectrumToWriter(spectrum, writer, delimiter);
         }
 
         writer.close();
@@ -69,14 +113,45 @@ public class TxtExportAlgorithm {
     }
 
     /**
-     * <p>spectrumToWriter.</p>
+     * <p>
+     * Export a spectrum to a writer. A single space is used as the delimiter.
+     * </p>
      *
-     * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
-     * @param writer a {@link java.io.Writer} object.
-     * @throws java.io.IOException if any.
+     * @param spectrum
+     *            a {@link io.github.msdk.datamodel.msspectra.MsSpectrum}
+     *            object.
+     * @param writer
+     *            a {@link java.io.Writer} object.
+     * 
+     * @throws java.io.IOException
+     *             if any.
+     * 
+     * @see spectrumToString(MsSpectrum spectrum, String delimiter)
      */
     public static void spectrumToWriter(@Nonnull MsSpectrum spectrum,
             @Nonnull Writer writer) throws IOException {
+        spectrumToWriter(spectrum, writer, " ");
+    }
+
+    /**
+     * <p>
+     * Export a spectrum to a writer.
+     * </p>
+     *
+     * @param spectrum
+     *            a {@link io.github.msdk.datamodel.msspectra.MsSpectrum}
+     *            object.
+     * @param writer
+     *            a {@link java.io.Writer} object.
+     * @param delimiter
+     *            a {@link java.lang.String object}.
+     * 
+     * @throws java.io.IOException
+     *             if any.
+     */
+    public static void spectrumToWriter(@Nonnull MsSpectrum spectrum,
+            @Nonnull Writer writer, @Nonnull String delimiter)
+            throws IOException {
 
         double mzValues[] = spectrum.getMzValues();
         float intensityValues[] = spectrum.getIntensityValues();
@@ -84,25 +159,56 @@ public class TxtExportAlgorithm {
 
         for (int i = 0; i < numOfDataPoints; i++) {
             // Write data point row
-            writer.write(mzValues[i] + " " + intensityValues[i]);
+            writer.write(mzValues[i] + delimiter + intensityValues[i]);
             writer.write(System.lineSeparator());
         }
 
     }
 
     /**
-     * <p>spectrumToString.</p>
+     * <p>
+     * Export a spectrum to a string. Uses a {@link java.io.StringWriter}
+     * object.
+     * </p>
+     * A single space is used as the delimiter.
      *
-     * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     * @param spectrum
+     *            a {@link io.github.msdk.datamodel.msspectra.MsSpectrum}
+     *            object.
      * @return a {@link java.lang.String} object.
+     * 
+     * @see spectrumToString(MsSpectrum spectrum, String delimiter)
+     * @see spectrumToWriter(MsSpectrum spectrum, Writer writer, String
+     *      delimiter)
      */
-    @SuppressWarnings("null")
     public static @Nonnull String spectrumToString(
             @Nonnull MsSpectrum spectrum) {
+        return spectrumToString(spectrum, " ");
+    }
+
+    /**
+     * <p>
+     * Export a spectrum to a string. Uses a {@link java.io.StringWriter}
+     * object.
+     * </p>
+     *
+     * @param spectrum
+     *            a {@link io.github.msdk.datamodel.msspectra.MsSpectrum}
+     *            object.
+     * @param delimiter
+     *            a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     * 
+     * @see spectrumToWriter(MsSpectrum spectrum, Writer writer, String
+     *      delimiter)
+     */
+    @SuppressWarnings("null")
+    public static @Nonnull String spectrumToString(@Nonnull MsSpectrum spectrum,
+            @Nonnull String delimiter) {
 
         StringWriter sw = new StringWriter();
         try {
-            spectrumToWriter(spectrum, sw);
+            spectrumToWriter(spectrum, sw, delimiter);
         } catch (IOException e) {
             e.printStackTrace();
         }
