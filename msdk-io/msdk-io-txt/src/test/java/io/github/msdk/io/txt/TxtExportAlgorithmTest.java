@@ -28,6 +28,7 @@ public class TxtExportAlgorithmTest {
 	private static final float[] intensityValues2 = { 30.0f, 40.0f };
 
 	private static final String[] expectedSimple = { "100.0 10.0", "200.0 20.0" };
+	private static final String[] expectedSimpleWithTabs = { "100.0\t10.0", "200.0\t20.0" };
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
@@ -66,6 +67,15 @@ public class TxtExportAlgorithmTest {
 		String result = TxtExportAlgorithm.spectrumToString(spectrum);
 		String lines[] = result.split("\\r?\\n");
 		assertThat(lines, arrayContaining(expectedSimple));
+	}
+
+	@Test
+	public void testSpectrumToStringWithTabs() {
+		MsSpectrum spectrum = mockSpectrum(mzValues1, intensityValues1);
+
+		String result = TxtExportAlgorithm.spectrumToString(spectrum, "\t");
+		String lines[] = result.split("\\r?\\n");
+		assertThat(lines, arrayContaining(expectedSimpleWithTabs));
 	}
 
 	private MsSpectrum mockSpectrum(double[] mzValues, float[] intensityValues) {
