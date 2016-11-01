@@ -17,18 +17,16 @@ package io.github.msdk.datamodel.datastore;
 import javax.annotation.Nonnull;
 
 /**
- * Represents a storage mechanism for data points represented by DataPointList.
- * Each RawDataFile and FeatureTable will use this mechanism to store their data
- * points somewhere, to avoid consuming too much memory. Multiple
- * implementations of this interface may be provided, depending on the method of
- * serialization and storage.
+ * Represents a storage mechanism for arrays of data. Each RawDataFile and
+ * FeatureTable will use this mechanism to store their data somewhere, to avoid
+ * consuming too much memory. Multiple implementations of this interface may be
+ * provided, depending on the method of serialization and storage.
  */
 public interface DataPointStore {
 
     /**
-     * Stores new data point list into this store. No reference to the
-     * DataPointList is saved, so it can be safely discarded or reused after
-     * calling this method.
+     * Adds new data array into this store. No reference to the data is saved,
+     * so it can be safely discarded or reused after calling this method.
      *
      * @return Storage ID for the newly stored data.
      * @param data
@@ -41,7 +39,7 @@ public interface DataPointStore {
 
     /**
      * <p>
-     * loadData.
+     * Load the data for the given ID into the given array.
      * </p>
      *
      * @param id
