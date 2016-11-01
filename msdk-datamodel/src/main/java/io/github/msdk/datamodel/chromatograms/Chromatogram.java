@@ -102,24 +102,28 @@ public interface Chromatogram {
     Integer getNumberOfDataPoints();
 
     /**
-     * Loads the data points of this chromatogram into the given DataPointList.
-     * If the DataPointList is not empty, it is cleared first. This method
-     * allows the internal arrays of the DataPointList to be reused for loading
-     * multiple spectra.
+     * Returns the info of this chromatogram. Generally, this method should pass
+     * null to the method that takes an array as a parameter.
      *
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
-     *
+     * 
      * @return an array of
      *         {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
      *         objects.
+     * @see getRetentionTimes(ChromatographyInfo array[])
      */
     @Nonnull
     ChromatographyInfo[] getRetentionTimes();
 
     /**
      * <p>
-     * getRetentionTimes.
+     * Loads the info of this chromatogram into the given array of
+     * ChromtagraphyInfo. If the given array is null or is not large enough to
+     * hold all values, a new array is created.
+     *
+     * Note: this method may need to read data from disk, therefore it may be
+     * quite slow.
      * </p>
      *
      * @param array
