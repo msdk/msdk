@@ -21,8 +21,8 @@ import javax.annotation.Nonnull;
 
 /**
  * A DataPointStore implementation that stores the data points in memory. Use
- * with caution. When DataPointLists are stored or retrieved, they are not
- * referenced but copied, so the original list can be used for other purpose.
+ * with caution. When data are stored or retrieved, they are not referenced but
+ * copied, so the original list can be used for other purpose.
  * 
  * The methods of this class are synchronized, therefore it can be safely used
  * by multiple threads.
@@ -35,8 +35,6 @@ class MemoryDataStore implements DataPointStore {
 
     /**
      * {@inheritDoc}
-     *
-     * Stores new array of data points.
      */
     @Override
     public @Nonnull Object storeData(@Nonnull Object data,

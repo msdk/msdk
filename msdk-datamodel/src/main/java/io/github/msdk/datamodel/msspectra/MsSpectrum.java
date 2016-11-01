@@ -56,22 +56,29 @@ public interface MsSpectrum {
     Integer getNumberOfDataPoints();
 
     /**
-     * Loads the data points of this spectrum into the given DataPointList. If
-     * the DataPointList is not empty, it is cleared first. This method allows
-     * the internal arrays of the DataPointList to be reused for loading
-     * multiple spectra.
+     * <p>
+     * Returns the m/z values of this spectrum. Generally, this method should
+     * pass null to the method that takes an array of double as a parameter.
      *
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
+     * </p>
      *
      * @return an array of double.
+     * 
+     * @see getMzValues(double array[])
      */
     @Nonnull
     double[] getMzValues();
 
     /**
      * <p>
-     * getMzValues.
+     * Copies the m/z values of this spectrum into the given array of double. If
+     * the array is null or is not large enough to contain all values, a new
+     * array should be created.
+     *
+     * Note: this method may need to read data from disk, therefore it may be
+     * quite slow.
      * </p>
      *
      * @param array
@@ -82,20 +89,29 @@ public interface MsSpectrum {
     double[] getMzValues(@Nullable double array[]);
 
     /**
-     * Returns data points in given m/z and intensity ranges. Importantly, a new
-     * instance of DataPointList is created by each call to this method.
+     * <p>
+     * Returns the intensity values of this spectrum. Generally, this method should
+     * pass null to the method that takes an array of float as a parameter.
      *
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
+     * </p>
      *
      * @return an array of float.
+     * 
+     * @see getIntensityValues(float array[])
      */
     @Nonnull
     float[] getIntensityValues();
 
     /**
      * <p>
-     * getIntensityValues.
+     * Copies the intensity values of this spectrum into the given array of
+     * double. If the array is null or is not large enough to contain all
+     * values, a new array should be created.
+     *
+     * Note: this method may need to read data from disk, therefore it may be
+     * quite slow.
      * </p>
      *
      * @param array
