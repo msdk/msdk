@@ -22,7 +22,6 @@ import java.io.StringReader;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -48,12 +47,12 @@ public class TxtImportAlgorithmTest {
         MsSpectrum spectrum = TxtImportAlgorithm
                 .parseMsSpectrum(spectrumText);
 
-        Assert.assertEquals(new Integer(4), spectrum.getNumberOfDataPoints());
+        assertThat(spectrum.getNumberOfDataPoints(), equalTo(4));
 
-        Assert.assertEquals(10.0, spectrum.getMzValues()[0], 0.0000001);
-        Assert.assertEquals(40.0, spectrum.getMzValues()[3], 0.0000001);
-        Assert.assertEquals(100.0f, spectrum.getIntensityValues()[0], 0.0001);
-        Assert.assertEquals(300.0f, spectrum.getIntensityValues()[2], 0.00001);
+        assertThat(spectrum.getMzValues()[0], equalTo(10.0));
+        assertThat(spectrum.getMzValues()[3], equalTo(40.0));
+        assertThat(spectrum.getIntensityValues()[0], equalTo(100.0f));
+        assertThat(spectrum.getIntensityValues()[2], equalTo(300.0f));
 
     }
 
@@ -67,12 +66,12 @@ public class TxtImportAlgorithmTest {
         MsSpectrum spectrum = TxtImportAlgorithm
                 .parseMsSpectrum(new FileReader(file));
 
-        Assert.assertEquals(new Integer(4), spectrum.getNumberOfDataPoints());
+        assertThat(spectrum.getNumberOfDataPoints(), equalTo(4));
 
-        Assert.assertEquals(10.0, spectrum.getMzValues()[0], 0.0000001);
-        Assert.assertEquals(40.0, spectrum.getMzValues()[3], 0.0000001);
-        Assert.assertEquals(100.0f, spectrum.getIntensityValues()[0], 0.0001);
-        Assert.assertEquals(300.0f, spectrum.getIntensityValues()[2], 0.00001);
+        assertThat(spectrum.getMzValues()[0], equalTo(10.0));
+        assertThat(spectrum.getMzValues()[3], equalTo(40.0));
+        assertThat(spectrum.getIntensityValues()[0], equalTo(100.0f));
+        assertThat(spectrum.getIntensityValues()[2], equalTo(300.0f));
     }
 
     @Test
