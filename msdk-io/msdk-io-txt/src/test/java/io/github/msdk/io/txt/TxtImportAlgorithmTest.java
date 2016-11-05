@@ -14,18 +14,28 @@
 
 package io.github.msdk.io.txt;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 
 public class TxtImportAlgorithmTest {
 
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
+    private static String spectrumText = "10.0 20.0\n20.0 20.0\n30.0 100.0\n40.0 50.0";
+
     @Test
     public void test4Peaks() throws MSDKException {
-
-        String spectrumText = "10.0 20.0\n20.0 20.0\n30.0 100.0\n40.0 50.0";
 
         MsSpectrum spectrum = TxtImportAlgorithm
                 .parseMsSpectrum(spectrumText);
@@ -37,6 +47,24 @@ public class TxtImportAlgorithmTest {
         Assert.assertEquals(20.0f, spectrum.getIntensityValues()[0], 0.0001);
         Assert.assertEquals(100.0f, spectrum.getIntensityValues()[2], 0.00001);
 
+    }
+
+    @Test
+    public void test4PeaksFromFile() throws IOException {
+        File file = folder.newFile();
+        FileWriter writer = new FileWriter(file);
+        writer.write(spectrumText);
+        writer.close();
+
+        MsSpectrum spectrum = TxtImportAlgorithm
+                .parseMsSpectrum(new FileReader(file));
+
+        Assert.assertEquals(new Integer(4), spectrum.getNumberOfDataPoints());
+
+        Assert.assertEquals(10.0, spectrum.getMzValues()[0], 0.0000001);
+        Assert.assertEquals(40.0, spectrum.getMzValues()[3], 0.0000001);
+        Assert.assertEquals(20.0f, spectrum.getIntensityValues()[0], 0.0001);
+        Assert.assertEquals(100.0f, spectrum.getIntensityValues()[2], 0.00001);
     }
 
 }

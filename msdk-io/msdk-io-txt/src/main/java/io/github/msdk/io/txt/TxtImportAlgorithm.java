@@ -14,6 +14,8 @@
 
 package io.github.msdk.io.txt;
 
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -39,16 +41,13 @@ public class TxtImportAlgorithm {
             .compile("(\\d+(\\.\\d+)?)[^\\d]+(\\d+(\\.\\d+)?)");
 
     /**
-     * Parse a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object from
-     * two-column text data.
-     * 
-     * <p>
-     * This version returns a SimpleMsSpectrum instance.
-     * </p>
+     * Parse a {@link io.github.msdk.datamodel.impl.SimpleMsSpectrum} object
+     * from the given string that has input data in two columns.
      * 
      * @param scanner
-     *            An open scanner object
-     * @return A MsSpectrum object containing the parsed data.
+     *            An open {@link java.util.Scanner} object.
+     * @return A {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object
+     *         containing the parsed data.
      */
     private static @Nonnull MsSpectrum parseMsSpectrum(
             @Nonnull Scanner scanner) {
@@ -88,15 +87,33 @@ public class TxtImportAlgorithm {
     }
 
     /**
-     * <p>parseMsSpectrum.</p>
-     *
-     * @param spectrumText a {@link java.lang.String} object.
-     * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     * Parse a {@link io.github.msdk.datamodel.impl.SimpleMsSpectrum} object
+     * from the given string that has input data in two columns.
+     * 
+     * @param spectrumText
+     *            A {@link java.lang.String} containing the input text.
+     * @return A {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object
+     *         containing the parsed data.
      */
     public static @Nonnull MsSpectrum parseMsSpectrum(
             @Nonnull String spectrumText) {
 
-        Scanner scanner = new Scanner(spectrumText);
+        return parseMsSpectrum(new StringReader(spectrumText));
+    }
+
+    /**
+     * Parse a {@link io.github.msdk.datamodel.impl.SimpleMsSpectrum} object
+     * from the given readers. The reader is closed when this method returns.
+     * 
+     * @param reader
+     *            An open @{java.io.Reader} object that provides the data in two
+     *            columns.
+     * @return A {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object
+     *         containing the parsed data.
+     */
+    public static @Nonnull MsSpectrum parseMsSpectrum(@Nonnull Reader reader) {
+
+        Scanner scanner = new Scanner(reader);
         MsSpectrum result = parseMsSpectrum(scanner);
         scanner.close();
 
