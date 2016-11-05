@@ -32,7 +32,7 @@ public class TxtImportAlgorithmTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
-    private static String spectrumText = "10.0 20.0\n20.0 20.0\n30.0 100.0\n40.0 50.0";
+    private static String spectrumText = "10.0 100.0\n20.0 200.0\n30.0 300.0\n40.0 400.0";
 
     @Test
     public void test4Peaks() throws MSDKException {
@@ -44,8 +44,8 @@ public class TxtImportAlgorithmTest {
 
         Assert.assertEquals(10.0, spectrum.getMzValues()[0], 0.0000001);
         Assert.assertEquals(40.0, spectrum.getMzValues()[3], 0.0000001);
-        Assert.assertEquals(20.0f, spectrum.getIntensityValues()[0], 0.0001);
-        Assert.assertEquals(100.0f, spectrum.getIntensityValues()[2], 0.00001);
+        Assert.assertEquals(100.0f, spectrum.getIntensityValues()[0], 0.0001);
+        Assert.assertEquals(300.0f, spectrum.getIntensityValues()[2], 0.00001);
 
     }
 
@@ -63,8 +63,8 @@ public class TxtImportAlgorithmTest {
 
         Assert.assertEquals(10.0, spectrum.getMzValues()[0], 0.0000001);
         Assert.assertEquals(40.0, spectrum.getMzValues()[3], 0.0000001);
-        Assert.assertEquals(20.0f, spectrum.getIntensityValues()[0], 0.0001);
-        Assert.assertEquals(100.0f, spectrum.getIntensityValues()[2], 0.00001);
+        Assert.assertEquals(100.0f, spectrum.getIntensityValues()[0], 0.0001);
+        Assert.assertEquals(300.0f, spectrum.getIntensityValues()[2], 0.00001);
     }
 
 }
