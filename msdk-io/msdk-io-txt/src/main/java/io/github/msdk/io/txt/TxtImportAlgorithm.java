@@ -39,19 +39,24 @@ public class TxtImportAlgorithm {
             .compile("(\\d+(\\.\\d+)?)[^\\d]+(\\d+(\\.\\d+)?)");
 
     /**
-     * <p>parseMsSpectrum.</p>
-     *
-     * @param spectrumText a {@link java.lang.String} object.
-     * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     * Parse a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object from
+     * two-column text data.
+     * 
+     * <p>
+     * This version returns a SimpleMsSpectrum instance.
+     * </p>
+     * 
+     * @param scanner
+     *            An open scanner object
+     * @return A MsSpectrum object containing the parsed data.
      */
-    public static @Nonnull MsSpectrum parseMsSpectrum(
-            @Nonnull String spectrumText) {
+    private static @Nonnull MsSpectrum parseMsSpectrum(
+            @Nonnull Scanner scanner) {
 
         double mzValues[] = new double[16];
         float intensityValues[] = new float[16];
         int size = 0;
 
-        Scanner scanner = new Scanner(spectrumText);
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             Matcher m = linePattern.matcher(line);
@@ -67,8 +72,8 @@ public class TxtImportAlgorithm {
             intensityValues = ArrayUtil.addToArray(intensityValues, intensity,
                     size);
             size++;
+
         }
-        scanner.close();
 
         // Sort the data points, in case they were not ordered
         DataPointSorter.sortDataPoints(mzValues, intensityValues, size,
@@ -80,6 +85,21 @@ public class TxtImportAlgorithm {
                 intensityValues, size, specType);
 
         return result;
+    }
 
+    /**
+     * <p>parseMsSpectrum.</p>
+     *
+     * @param spectrumText a {@link java.lang.String} object.
+     * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+     */
+    public static @Nonnull MsSpectrum parseMsSpectrum(
+            @Nonnull String spectrumText) {
+
+        Scanner scanner = new Scanner(spectrumText);
+        MsSpectrum result = parseMsSpectrum(scanner);
+        scanner.close();
+
+        return result;
     }
 }
