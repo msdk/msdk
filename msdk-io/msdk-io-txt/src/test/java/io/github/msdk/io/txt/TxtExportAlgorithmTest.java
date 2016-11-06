@@ -4,14 +4,18 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.isEmptyString;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,12 +48,15 @@ public class TxtExportAlgorithmTest {
 
         List<String> lines = Files.readAllLines(file.toPath(),
                 Charset.defaultCharset());
+        String empty = lines.remove(lines.size() - 1); // hack to remove empty
+                                                       // last line
+        assertThat(empty, isEmptyString());
         assertThat(lines.toArray(new String[lines.size()]),
                 arrayContaining(expectedSimple));
     }
 
     private static final String[] expectedTwoSpectra = { "100.0 10.0",
-            "200.0 20.0", "300.0 30.0", "400.0 40.0" };
+            "200.0 20.0", "", "300.0 30.0", "400.0 40.0", "" };
 
     @Test
     public void testExportSpectra() throws IOException {
@@ -65,6 +72,28 @@ public class TxtExportAlgorithmTest {
                 Charset.defaultCharset());
         assertThat(lines.toArray(new String[lines.size()]),
                 arrayContaining(expectedTwoSpectra));
+
+        Collection<MsSpectrum> importedSpectra = TxtImportAlgorithm
+                .parseMsSpectra(new FileReader(file));
+        assertThat(importedSpectra.size(), equalTo(2));
+
+        Iterator<MsSpectrum> iterator = importedSpectra.iterator();
+
+        MsSpectrum spectrum = iterator.next();
+        assertThat(spectrum.getMzValues()[0], equalTo(mzValues1[0]));
+        assertThat(spectrum.getMzValues()[1], equalTo(mzValues1[1]));
+        assertThat(spectrum.getIntensityValues()[0],
+                equalTo(intensityValues1[0]));
+        assertThat(spectrum.getIntensityValues()[1],
+                equalTo(intensityValues1[1]));
+
+        spectrum = iterator.next();
+        assertThat(spectrum.getMzValues()[0], equalTo(mzValues2[0]));
+        assertThat(spectrum.getMzValues()[1], equalTo(mzValues2[1]));
+        assertThat(spectrum.getIntensityValues()[0],
+                equalTo(intensityValues2[0]));
+        assertThat(spectrum.getIntensityValues()[1],
+                equalTo(intensityValues2[1]));
     }
 
     @Test

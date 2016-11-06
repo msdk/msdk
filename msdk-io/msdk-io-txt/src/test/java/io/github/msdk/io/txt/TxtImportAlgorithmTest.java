@@ -14,29 +14,139 @@
 
 package io.github.msdk.io.txt;
 
-import org.junit.Assert;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 
 public class TxtImportAlgorithmTest {
 
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
+    private static String spectrumText = "10.0 100.0\n20.0 200.0\n30.0 300.0\n40.0 400.0";
+    private static String spectraText = spectrumText + "\n\n50.0 500.0\n60.0 600.0";
+
     @Test
     public void test4Peaks() throws MSDKException {
-
-        String spectrumText = "10.0 20.0\n20.0 20.0\n30.0 100.0\n40.0 50.0";
 
         MsSpectrum spectrum = TxtImportAlgorithm
                 .parseMsSpectrum(spectrumText);
 
-        Assert.assertEquals(new Integer(4), spectrum.getNumberOfDataPoints());
+        assertThat(spectrum.getNumberOfDataPoints(), equalTo(4));
 
-        Assert.assertEquals(10.0, spectrum.getMzValues()[0], 0.0000001);
-        Assert.assertEquals(40.0, spectrum.getMzValues()[3], 0.0000001);
-        Assert.assertEquals(20.0f, spectrum.getIntensityValues()[0], 0.0001);
-        Assert.assertEquals(100.0f, spectrum.getIntensityValues()[2], 0.00001);
+        assertThat(spectrum.getMzValues()[0], equalTo(10.0));
+        assertThat(spectrum.getMzValues()[3], equalTo(40.0));
+        assertThat(spectrum.getIntensityValues()[0], equalTo(100.0f));
+        assertThat(spectrum.getIntensityValues()[2], equalTo(300.0f));
 
     }
 
+    @Test
+    public void test4PeaksFromFile() throws IOException {
+        File file = folder.newFile();
+        FileWriter writer = new FileWriter(file);
+        writer.write(spectrumText);
+        writer.close();
+
+        MsSpectrum spectrum = TxtImportAlgorithm
+                .parseMsSpectrum(new FileReader(file));
+
+        assertThat(spectrum.getNumberOfDataPoints(), equalTo(4));
+
+        assertThat(spectrum.getMzValues()[0], equalTo(10.0));
+        assertThat(spectrum.getMzValues()[3], equalTo(40.0));
+        assertThat(spectrum.getIntensityValues()[0], equalTo(100.0f));
+        assertThat(spectrum.getIntensityValues()[2], equalTo(300.0f));
+    }
+
+    @Test
+    public void testTwoSpetra() {
+
+        Collection<MsSpectrum> spectra = TxtImportAlgorithm
+                .parseMsSpectra(new StringReader(spectraText));
+        assertThat(spectra.size(), equalTo(2));
+
+        Iterator<MsSpectrum> iterator = spectra.iterator();
+
+        MsSpectrum spectrum = iterator.next();
+        assertThat(spectrum.getMzValues()[0], equalTo(10.0));
+        assertThat(spectrum.getMzValues()[3], equalTo(40.0));
+        assertThat(spectrum.getIntensityValues()[1], equalTo(200.0f));
+        assertThat(spectrum.getIntensityValues()[2], equalTo(300.0f));
+
+        spectrum = iterator.next();
+        assertThat(spectrum.getMzValues()[0], equalTo(50.0));
+        assertThat(spectrum.getMzValues()[1], equalTo(60.0));
+        assertThat(spectrum.getIntensityValues()[0], equalTo(500.0f));
+        assertThat(spectrum.getIntensityValues()[1], equalTo(600.0f));
+    }
+
+    @Test
+    public void testSpectrumWithHeader() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("# header line 1\n");
+        builder.append("header line 2\n");
+        builder.append(spectrumText);
+
+        Collection<MsSpectrum> spectra = TxtImportAlgorithm
+                .parseMsSpectra(new StringReader(builder.toString()));
+        assertThat(spectra.size(), equalTo(1));
+
+        Iterator<MsSpectrum> iterator = spectra.iterator();
+
+        MsSpectrum spectrum = iterator.next();
+        assertThat(spectrum.getMzValues()[0], equalTo(10.0));
+        assertThat(spectrum.getMzValues()[3], equalTo(40.0));
+        assertThat(spectrum.getIntensityValues()[1], equalTo(200.0f));
+        assertThat(spectrum.getIntensityValues()[2], equalTo(300.0f));
+    }
+
+    @Test
+    public void testSpectrumWithFooter() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(spectrumText);
+        builder.append("# footer line 1\n");
+        builder.append("footer line 2\n");
+
+        Collection<MsSpectrum> spectra = TxtImportAlgorithm
+                .parseMsSpectra(new StringReader(builder.toString()));
+        assertThat(spectra.size(), equalTo(1));
+
+        Iterator<MsSpectrum> iterator = spectra.iterator();
+
+        MsSpectrum spectrum = iterator.next();
+        assertThat(spectrum.getMzValues()[0], equalTo(10.0));
+        assertThat(spectrum.getMzValues()[3], equalTo(40.0));
+        assertThat(spectrum.getIntensityValues()[1], equalTo(200.0f));
+        assertThat(spectrum.getIntensityValues()[2], equalTo(300.0f));
+    }
+
+    @Test
+    public void testNoSpectrumAsString() {
+        MsSpectrum spectrum = TxtImportAlgorithm
+                .parseMsSpectrum("not a spectrum");
+        assertThat(spectrum, nullValue());
+    }
+
+    @Test
+    public void testNoSpectrumAsReader() {
+        MsSpectrum spectrum = TxtImportAlgorithm
+                .parseMsSpectrum(new StringReader("not a spectrum"));
+        assertThat(spectrum, nullValue());
+    }
 }

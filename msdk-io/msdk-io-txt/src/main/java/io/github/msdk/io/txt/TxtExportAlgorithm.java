@@ -106,6 +106,7 @@ public class TxtExportAlgorithm {
         // Write the data points
         for (MsSpectrum spectrum : spectra) {
             spectrumToWriter(spectrum, writer, delimiter);
+            writer.newLine();
         }
 
         writer.close();
