@@ -12,13 +12,13 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.rawdata.peakinvestigator.dialogs;
+package io.github.msdk.rawdata.peakinvestigator.providers;
 
 /**
  * An interface to (optionally) show estimated costs and ask the user for the
  * desired response time objective (RTO) of a PeakInvestigator job.
  *
  */
-public interface PeakInvestigatorInitDialog extends PeakInvestigatorDialog {
+public interface PeakInvestigatorInitProvider extends PeakInvestigatorProvider {
 	String getRto();
 }

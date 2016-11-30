@@ -12,15 +12,15 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.rawdata.peakinvestigator.dialogs;
+package io.github.msdk.rawdata.peakinvestigator.providers;
 
 import com.veritomyx.actions.InitAction;
 import com.veritomyx.actions.PiVersionsAction;
 
-import io.github.msdk.rawdata.peakinvestigator.dialogs.PeakInvestigatorDialog.Status;
+import io.github.msdk.rawdata.peakinvestigator.providers.PeakInvestigatorProvider.Status;
 
 /**
- * A dialog factory that returns dialogs with sensible defaults. Specifically,
+ * A dialog factory that returns providers with sensible defaults. Specifically,
  * the following behavior is used:
  * 
  * <ul>
@@ -33,18 +33,18 @@ import io.github.msdk.rawdata.peakinvestigator.dialogs.PeakInvestigatorDialog.St
  * </ul>
  *
  */
-public class PeakInvestigatorDefaultDialogFactory implements PeakInvestigatorDialogFactory {
+public class PeakInvestigatorDefaultProviderFactory implements PeakInvestigatorProviderFactory {
 
 	private final static String DEFAULT_RTO = "RTO-24";
 
 	@Override
-	public PeakInvestigatorOptionsDialog getOptionsDialog(PiVersionsAction action, final int dataStart,
+	public PeakInvestigatorOptionsProvider createOptionsProvider(PiVersionsAction action, final int dataStart,
 			final int dataEnd) {
 
 		final String version = action.getLastUsedVersion().isEmpty() ? action.getCurrentVersion()
 				: action.getLastUsedVersion();
 
-		return new PeakInvestigatorOptionsDialog() {
+		return new PeakInvestigatorOptionsProvider() {
 			@Override
 			public Status show() {
 				return Status.ACCEPT;
@@ -69,10 +69,10 @@ public class PeakInvestigatorDefaultDialogFactory implements PeakInvestigatorDia
 	}
 
 	@Override
-	public PeakInvestigatorInitDialog getInitDialog(InitAction action) {
+	public PeakInvestigatorInitProvider createInitProvider(InitAction action) {
 		final Status status = action.getMaxPotentialCost(DEFAULT_RTO) <= action.getFunds() ? Status.ACCEPT
 				: Status.CANCEL;
-		return new PeakInvestigatorInitDialog() {
+		return new PeakInvestigatorInitProvider() {
 
 			@Override
 			public Status show() {

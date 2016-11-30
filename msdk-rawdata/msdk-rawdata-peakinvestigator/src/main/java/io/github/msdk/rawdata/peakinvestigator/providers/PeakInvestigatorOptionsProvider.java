@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.rawdata.peakinvestigator.dialogs;
+package io.github.msdk.rawdata.peakinvestigator.providers;
 
 /**
  * An interface to provide the following options to PeakInvestigator:
@@ -23,7 +23,7 @@ package io.github.msdk.rawdata.peakinvestigator.dialogs;
  * </ul>
  *
  */
-public interface PeakInvestigatorOptionsDialog extends PeakInvestigatorDialog {
+public interface PeakInvestigatorOptionsProvider extends PeakInvestigatorProvider {
 	String getVersion();
 
 	int getStartMass();

@@ -12,21 +12,21 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.rawdata.peakinvestigator.dialogs;
+package io.github.msdk.rawdata.peakinvestigator.providers;
 
 /**
- * Base interface of all dialogs used to present information or query for user
+ * Base interface of all providers used to present information or query for user
  * input.
  *
  */
-public interface PeakInvestigatorDialog {
+public interface PeakInvestigatorProvider {
 
 	public enum Status {
 		ACCEPT, CANCEL
 	}
 
 	/**
-	 * Show the dialog to the user.
+	 * Show the provider to the user.
 	 * 
 	 * @return Status indicating whether a particular query has been accepted or
 	 *         canceled.
