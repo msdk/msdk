@@ -15,9 +15,18 @@
 package io.github.msdk.rawdata.peakinvestigator.dialogs;
 
 /**
- * An interface to provide the desired version of PeakInvestigator.
+ * An interface to provide the following options to PeakInvestigator:
+ * <ul>
+ * <li>The desired version (e.g. 1.3)</li>
+ * <li>The desired start mass</li>
+ * <li>The desired end mass</li>
+ * </ul>
  *
  */
-public interface PeakInvestigatorVersionDialog extends PeakInvestigatorDialog {
+public interface PeakInvestigatorOptionsDialog extends PeakInvestigatorDialog {
 	String getVersion();
+
+	int getStartMass();
+
+	int getEndMass();
 }

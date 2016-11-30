@@ -29,6 +29,8 @@ import com.veritomyx.actions.PiVersionsAction;
 public class PeakInvestigatorDefaultDialogFactoryTest {
 
 	private final PeakInvestigatorDialogFactory factory = new PeakInvestigatorDefaultDialogFactory();
+	private final int DATA_START = 100;
+	private final int DATA_END = 2000;
 
 	@Test
 	public void testVersionNoLastUsed() {
@@ -36,9 +38,11 @@ public class PeakInvestigatorDefaultDialogFactoryTest {
 		when(action.getLastUsedVersion()).thenReturn("");
 		when(action.getCurrentVersion()).thenReturn("1.3");
 
-		PeakInvestigatorVersionDialog dialog = factory.getVersionDialog(action);
+		PeakInvestigatorOptionsDialog dialog = factory.getOptionsDialog(action, DATA_START, DATA_END);
 		assertThat(dialog.show(), equalTo(PeakInvestigatorDialog.Status.ACCEPT));
 		assertThat(dialog.getVersion(), equalTo("1.3"));
+		assertThat(dialog.getStartMass(), equalTo(DATA_START));
+		assertThat(dialog.getEndMass(), equalTo(DATA_END));
 	}
 
 	@Test
@@ -47,9 +51,11 @@ public class PeakInvestigatorDefaultDialogFactoryTest {
 		when(action.getLastUsedVersion()).thenReturn("1.3");
 		when(action.getCurrentVersion()).thenReturn("2.0");
 
-		PeakInvestigatorVersionDialog dialog = factory.getVersionDialog(action);
+		PeakInvestigatorOptionsDialog dialog = factory.getOptionsDialog(action, DATA_START, DATA_END);
 		assertThat(dialog.show(), equalTo(PeakInvestigatorDialog.Status.ACCEPT));
 		assertThat(dialog.getVersion(), equalTo("1.3"));
+		assertThat(dialog.getStartMass(), equalTo(DATA_START));
+		assertThat(dialog.getEndMass(), equalTo(DATA_END));
 	}
 
 	@Test

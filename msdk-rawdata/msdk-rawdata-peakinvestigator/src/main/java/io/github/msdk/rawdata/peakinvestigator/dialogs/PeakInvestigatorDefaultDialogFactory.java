@@ -38,11 +38,13 @@ public class PeakInvestigatorDefaultDialogFactory implements PeakInvestigatorDia
 	private final static String DEFAULT_RTO = "RTO-24";
 
 	@Override
-	public PeakInvestigatorVersionDialog getVersionDialog(PiVersionsAction action) {
+	public PeakInvestigatorOptionsDialog getOptionsDialog(PiVersionsAction action, final int dataStart,
+			final int dataEnd) {
+
 		final String version = action.getLastUsedVersion().isEmpty() ? action.getCurrentVersion()
 				: action.getLastUsedVersion();
 
-		return new PeakInvestigatorVersionDialog() {
+		return new PeakInvestigatorOptionsDialog() {
 			@Override
 			public Status show() {
 				return Status.ACCEPT;
@@ -51,6 +53,16 @@ public class PeakInvestigatorDefaultDialogFactory implements PeakInvestigatorDia
 			@Override
 			public String getVersion() {
 				return version;
+			}
+
+			@Override
+			public int getStartMass() {
+				return dataStart;
+			}
+
+			@Override
+			public int getEndMass() {
+				return dataEnd;
 			}
 
 		};

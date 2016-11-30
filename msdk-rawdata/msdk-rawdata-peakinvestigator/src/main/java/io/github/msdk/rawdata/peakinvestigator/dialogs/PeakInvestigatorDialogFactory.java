@@ -18,6 +18,6 @@ import com.veritomyx.actions.InitAction;
 import com.veritomyx.actions.PiVersionsAction;
 
 public interface PeakInvestigatorDialogFactory {
-	PeakInvestigatorVersionDialog getVersionDialog(PiVersionsAction action);
+	PeakInvestigatorOptionsDialog getOptionsDialog(PiVersionsAction action, int dataStart, int dataEnd);
 	PeakInvestigatorInitDialog getInitDialog(InitAction action);
 }
