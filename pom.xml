@@ -30,6 +30,7 @@
 		<junit.version>4.12</junit.version>
 		<mockito.version>2.2.0</mockito.version>
 		<hamcrest.version>1.3</hamcrest.version>
+		<system-rules.version>1.16.1</system-rules.version>
 		<guava.version>19.0</guava.version>
 		<slf4j.version>1.7.21</slf4j.version>
 		<jacoco.version>0.7.6.201602180812</jacoco.version>
@@ -132,6 +133,13 @@
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-library</artifactId>
 			<version>${hamcrest.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.stefanbirkner</groupId>
+			<artifactId>system-rules</artifactId>
+			<version>${system-rules.version}</version>
 			<scope>test</scope>
 		</dependency>
 
