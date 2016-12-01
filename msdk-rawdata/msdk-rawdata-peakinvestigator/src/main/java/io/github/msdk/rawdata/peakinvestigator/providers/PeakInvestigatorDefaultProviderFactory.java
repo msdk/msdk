@@ -26,6 +26,13 @@ import io.github.msdk.rawdata.peakinvestigator.providers.PeakInvestigatorProvide
  * <ul>
  * <li>{@code show()} always returns {@code Status.ACCEPT} unless there aren't
  * sufficient funds during INIT.</li>
+ * <li>Project information is obtained from System properties, which can be set
+ * via -D flags to the JVM:
+ *   <ul>
+ *   <li>{@code peakinvestigator.username}</li>
+ *   <li>{@code peakinvestigator.password}</li>
+ *   <li>{@code peakinvestigator.project}</li>
+ *   </ul>
  * <li>The version is the last used, if available; otherwise, the current
  * version.</li>
  * <li>The most cost-effective response time objective (i.e. RTO-24) is
@@ -36,6 +43,38 @@ import io.github.msdk.rawdata.peakinvestigator.providers.PeakInvestigatorProvide
 public class PeakInvestigatorDefaultProviderFactory implements PeakInvestigatorProviderFactory {
 
 	private final static String DEFAULT_RTO = "RTO-24";
+
+	@Override
+	public PeakInvestigatorProjectProvider createProjectProvider() {
+		return new PeakInvestigatorProjectProvider() {
+
+			@Override
+			public Status show() {
+				if (System.getProperty("peakinvestigator.username") == null
+						|| System.getProperty("peakinvestigator.password") == null
+						|| System.getProperty("peakinvestigator.project") == null) {
+					return Status.CANCEL;
+				}
+
+				return Status.ACCEPT;
+			}
+
+			@Override
+			public String getUsername() {
+				return System.getProperty("peakinvestigator.username");
+			}
+
+			@Override
+			public String getPassword() {
+				return System.getProperty("peakinvestigator.password");
+			}
+
+			@Override
+			public int getProjectId() {
+				return Integer.parseInt(System.getProperty("peakinvestigator.project"));
+			}
+		};
+	}
 
 	@Override
 	public PeakInvestigatorOptionsProvider createOptionsProvider(PiVersionsAction action, final int dataStart,

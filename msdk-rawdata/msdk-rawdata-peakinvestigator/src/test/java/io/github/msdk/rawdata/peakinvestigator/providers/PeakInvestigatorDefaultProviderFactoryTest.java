@@ -21,7 +21,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.RestoreSystemProperties;
 
 import com.veritomyx.actions.InitAction;
 import com.veritomyx.actions.PiVersionsAction;
@@ -34,9 +36,31 @@ import io.github.msdk.rawdata.peakinvestigator.providers.PeakInvestigatorOptions
 
 public class PeakInvestigatorDefaultProviderFactoryTest {
 
+	@Rule
+	public final RestoreSystemProperties restoreSystemProperties = new RestoreSystemProperties();
+
 	private final PeakInvestigatorProviderFactory factory = new PeakInvestigatorDefaultProviderFactory();
 	private final int DATA_START = 100;
 	private final int DATA_END = 2000;
+
+	@Test
+	public void testProjectInfoMissing() {
+		PeakInvestigatorProjectProvider provider = factory.createProjectProvider();
+		assertThat(provider.show(), equalTo(PeakInvestigatorProvider.Status.CANCEL));
+	}
+
+	@Test
+	public void testProjectInfoAvailable() {
+		System.setProperty("peakinvestigator.username", "joe");
+		System.setProperty("peakinvestigator.password", "badpassword");
+		System.setProperty("peakinvestigator.project", "1234");
+
+		PeakInvestigatorProjectProvider provider = factory.createProjectProvider();
+		assertThat(provider.show(), equalTo(PeakInvestigatorProvider.Status.ACCEPT));
+		assertThat(provider.getUsername(), equalTo("joe"));
+		assertThat(provider.getPassword(), equalTo("badpassword"));
+		assertThat(provider.getProjectId(), equalTo(1234));
+	}
 
 	@Test
 	public void testVersionNoLastUsed() {

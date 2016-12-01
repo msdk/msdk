@@ -14,13 +14,15 @@
 
 package io.github.msdk.rawdata.peakinvestigator.providers;
 
-import com.veritomyx.actions.InitAction;
-import com.veritomyx.actions.PiVersionsAction;
+/**
+ * An interface to provide the username, password, and project ID to submit
+ * PeakInvestigator jobs.
+ *
+ */
+public interface PeakInvestigatorProjectProvider extends PeakInvestigatorProvider {
+	String getUsername();
 
-public interface PeakInvestigatorProviderFactory {
-	PeakInvestigatorProjectProvider createProjectProvider();
+	String getPassword();
 
-	PeakInvestigatorOptionsProvider createOptionsProvider(PiVersionsAction action, int dataStart, int dataEnd);
-
-	PeakInvestigatorInitProvider createInitProvider(InitAction action);
+	int getProjectId();
 }
