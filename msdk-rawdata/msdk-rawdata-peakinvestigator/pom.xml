@@ -33,6 +33,11 @@
         	<artifactId>commons-compress</artifactId>
         	<version>1.12</version>
         </dependency>
+        <dependency>
+        	<groupId>com.veritomyx</groupId>
+        	<artifactId>peakinvestigator-sdk</artifactId>
+        	<version>4.0</version>
+        </dependency>
     </dependencies>
 
 </project>
