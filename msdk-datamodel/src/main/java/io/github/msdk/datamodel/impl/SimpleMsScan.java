@@ -33,6 +33,7 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
  * Simple implementation of the Scan interface.
@@ -45,6 +46,7 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     private @Nonnull MsFunction msFunction;
     private @Nonnull PolarityType polarity = PolarityType.UNKNOWN;
     private @Nonnull MsScanType msScanType = MsScanType.UNKNOWN;
+	private @Nullable MzTolerance mzTolerance;
     private @Nullable Range<Double> scanningRange;
     private @Nullable ChromatographyInfo chromInfo;
     private @Nullable ActivationInfo sourceInducedFragInfo;
@@ -172,6 +174,16 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
         this.msScanType = newMsScanType;
     }
 
+	/** {@inheritDoc} */
+	@Override
+	public MzTolerance getMzTolerance() {
+		return mzTolerance;
+	}
+
+	public void setMzTolerance(MzTolerance mzTolerance) {
+		this.mzTolerance = mzTolerance;
+	}
+
     /** {@inheritDoc} */
     @Override
     @Nullable
@@ -222,5 +234,4 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
         buf.append(getScanNumber());
         return buf.toString();
     }
-
 }

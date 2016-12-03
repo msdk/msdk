@@ -30,6 +30,7 @@ import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
+import io.github.msdk.util.tolerances.MzTolerance;
 import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
@@ -92,5 +93,11 @@ class MzMLMsScan extends AbstractReadOnlyMsScan {
             throw (new MSDKRuntimeException(e));
         }
     }
+
+    /** {@inheritDoc} */
+	@Override
+	public MzTolerance getMzTolerance() {
+		return null;
+	}
 
 }

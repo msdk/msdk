@@ -27,7 +27,7 @@ import io.github.msdk.util.tolerances.MzTolerance;
  * PeakInvestigator by decorating an existing instance of MsSpectrum.
  *
  */
-public class PeakInvestigatorMsSpectrum implements MsSpectrum, MzTolerance {
+public class PeakInvestigatorMsSpectrum implements MsSpectrum {
 
 	private final MsSpectrum spectrum;
 	private final TreeMap<Double, Error> errors;
@@ -96,7 +96,6 @@ public class PeakInvestigatorMsSpectrum implements MsSpectrum, MzTolerance {
 		return spectrum.getMzRange();
 	}
 
-	@Override
 	public Range<Double> getToleranceRange(Double mzValue) {
 		Error error = errors.get(mzValue);
 		double mzError = multiplier * error.MZ_ERROR;
@@ -121,5 +120,11 @@ public class PeakInvestigatorMsSpectrum implements MsSpectrum, MzTolerance {
 			INTENSITY_ERROR = intensityError;
 			MIN_ERROR = minError;
 		}
+	}
+
+	@Override
+	public MzTolerance getMzTolerance() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
