@@ -48,6 +48,7 @@ import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.db.mona.pojo.Spectra;
 
 /**
@@ -506,5 +507,14 @@ public class MonaSpectrum
 		// TODO Auto-generated method stub
 		
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	@Nullable
+	public MzTolerance getMzTolerance() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

@@ -24,6 +24,7 @@ import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.util.MsSpectrumUtil;
+import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
  * Simple implementation of the MassSpectrum interface.
@@ -37,6 +38,7 @@ class SimpleMsSpectrum implements MsSpectrum {
     private @Nonnull Float totalIonCurrent;
 
     private @Nonnull MsSpectrumType spectrumType;
+    private @Nullable MzTolerance mzTolerance;
 
     SimpleMsSpectrum(@Nonnull double mzValues[],
             @Nonnull float intensityValues[], @Nonnull Integer size,
@@ -134,6 +136,16 @@ class SimpleMsSpectrum implements MsSpectrum {
         this.spectrumType = spectrumType;
     }
 
+    /** {@inheritDoc} */
+	@Override
+	public MzTolerance getMzTolerance() {
+		return mzTolerance;
+	}
+
+	public void setMzTolerance(MzTolerance mzTolerance) {
+		this.mzTolerance = mzTolerance;
+	}
+
     /**
      * <p>
      * getTIC.
@@ -151,4 +163,5 @@ class SimpleMsSpectrum implements MsSpectrum {
     public Range<Double> getMzRange() {
         return mzRange;
     }
+
 }
