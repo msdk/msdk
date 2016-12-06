@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>uk.ac.ebi.jmzml</groupId>
 			<artifactId>jmzml</artifactId>
-			<version>1.7.5</version>
+			<version>1.7.6-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>
