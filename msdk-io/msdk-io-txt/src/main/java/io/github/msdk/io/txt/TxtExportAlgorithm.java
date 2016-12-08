@@ -67,10 +67,6 @@ public class TxtExportAlgorithm {
      *            a {@link java.util.Collection} object.
      * @throws java.io.IOException
      *             if any.
-     * @see exportSpectra(File exportFile, Collection<MsSpectrum> spectra,
-     *      String delimiter)
-     * @see spectrumToString(@Nonnull MsSpectrum spectrum, @Nonnull String
-     *      delimiter)
      */
     public static void exportSpectra(@Nonnull File exportFile,
             @Nonnull Collection<MsSpectrum> spectra) throws IOException {
@@ -90,8 +86,6 @@ public class TxtExportAlgorithm {
      *            a {@link java.lang.String} object.
      * @throws java.io.IOException
      *             if any.
-     * @see spectrumToString(@Nonnull MsSpectrum spectrum, @Nonnull String
-     *      delimiter)
      */
     public static void exportSpectra(@Nonnull File exportFile,
             @Nonnull Collection<MsSpectrum> spectra, @Nonnull String delimiter)
@@ -123,7 +117,6 @@ public class TxtExportAlgorithm {
      *            a {@link java.io.Writer} object.
      * @throws java.io.IOException
      *             if any.
-     * @see spectrumToString(MsSpectrum spectrum, String delimiter)
      */
     public static void spectrumToWriter(@Nonnull MsSpectrum spectrum,
             @Nonnull Writer writer) throws IOException {
@@ -172,9 +165,6 @@ public class TxtExportAlgorithm {
      *            a {@link io.github.msdk.datamodel.msspectra.MsSpectrum}
      *            object.
      * @return a {@link java.lang.String} object.
-     * @see spectrumToString(MsSpectrum spectrum, String delimiter)
-     * @see spectrumToWriter(MsSpectrum spectrum, Writer writer, String
-     *      delimiter)
      */
     public static @Nonnull String spectrumToString(
             @Nonnull MsSpectrum spectrum) {
@@ -193,8 +183,6 @@ public class TxtExportAlgorithm {
      * @param delimiter
      *            a {@link java.lang.String} object.
      * @return a {@link java.lang.String} object.
-     * @see spectrumToWriter(MsSpectrum spectrum, Writer writer, String
-     *      delimiter)
      */
     @SuppressWarnings("null")
     public static @Nonnull String spectrumToString(@Nonnull MsSpectrum spectrum,

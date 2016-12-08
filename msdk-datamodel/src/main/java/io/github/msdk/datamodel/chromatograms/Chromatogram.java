@@ -40,7 +40,6 @@ public interface Chromatogram {
      * method to update this reference.
      *
      * @return RawDataFile containing this chromatogram, or null.
-     * @see RawDataFile
      */
     @Nullable
     RawDataFile getRawDataFile();
@@ -111,7 +110,6 @@ public interface Chromatogram {
      * @return an array of
      *         {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
      *         objects.
-     * @see getRetentionTimes(ChromatographyInfo array[])
      */
     @Nonnull
     ChromatographyInfo[] getRetentionTimes();

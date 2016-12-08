@@ -61,7 +61,7 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
      *            {@link io.github.msdk.datamodel.ionannotations.IonAnnotation}
      *            objects.
      * @param mzTolerance
-     *            an object that implements the {@link io.github.msdk.util.tolerances.MZTolerance} interface.
+     *            an object 
      * @param rtTolerance
      *            a {@link io.github.msdk.util.tolerances.RTTolerance} object.
      */

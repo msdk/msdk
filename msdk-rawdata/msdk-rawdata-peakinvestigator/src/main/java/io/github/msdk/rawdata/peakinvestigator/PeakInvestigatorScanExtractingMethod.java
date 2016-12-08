@@ -46,8 +46,7 @@ import io.github.msdk.util.ArrayUtil;
 
 /**
  * This class extracts scans from the results returned from PeakInvestigator.
- * Internally, it returns a
- * {@link io.github.msdk.datamodel.impl.SimpleMsSpectrum} object if no error
+ * Internally, it returns a SimpleMsSpectrum object if no error
  * bars are present. Otherwise, it returns a
  * {@link io.github.msdk.rawdata.peakinvestigator.PeakInvestigatorMsSpectrum},
  * which decorates a SimpleMsSpectrum.

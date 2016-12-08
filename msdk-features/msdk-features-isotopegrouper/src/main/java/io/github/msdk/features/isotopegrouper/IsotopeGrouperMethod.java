@@ -59,62 +59,6 @@ public class IsotopeGrouperMethod implements MSDKMethod<FeatureTable> {
 	 * Constructor for IsotopeGrouperMethod.
 	 * </p>
 	 *
-	 * @param featureTable
-	 *            a {@link io.github.msdk.datamodel.featuretables.FeatureTable}
-	 *            object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param dataStore
-	 *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
-	 *            object.
-	 * @param mzTolerance
-	 *            a {@link io.github.msdk.util.tolerances.MZTolerance} object.
-	 * @param rtTolerance
-	 *            a {@link io.github.msdk.util.tolerances.RTTolerance} object.
-	 * @param maximumCharge
-	 *            a {@link java.lang.Integer} object.
-	 * @param requireMonotonicShape
-	 *            a {@link java.lang.Boolean} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
-	 * @param featureTableName a {@link java.lang.String} object.
 	 */
 	public IsotopeGrouperMethod(@Nonnull FeatureTable featureTable, @Nonnull DataPointStore dataStore,
 			@Nonnull MzTolerance mzTolerance, @Nonnull RTTolerance rtTolerance, @Nonnull Integer maximumCharge,

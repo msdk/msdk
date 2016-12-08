@@ -67,7 +67,6 @@ public interface MsSpectrum {
      * </p>
      *
      * @return an array of double.
-     * @see getMzValues(double array[])
      */
     @Nonnull
     double[] getMzValues();
@@ -99,7 +98,6 @@ public interface MsSpectrum {
      * </p>
      *
      * @return an array of float.
-     * @see getIntensityValues(float array[])
      */
     @Nonnull
     float[] getIntensityValues();

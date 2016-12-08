@@ -76,7 +76,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
      *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param mzTolerance
-     *            an object that implements the {@link io.github.msdk.util.tolerances.MZTolerance} interface.
+     *            an object 
      * @param rtTolerance
      *            a {@link io.github.msdk.util.tolerances.RTTolerance} object.
      * @param intensityTolerance

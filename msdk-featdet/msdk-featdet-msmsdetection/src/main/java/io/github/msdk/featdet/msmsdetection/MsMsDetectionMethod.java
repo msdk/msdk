@@ -69,7 +69,6 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
      *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param mzTolerance
-     *            an objec that implements the {@link io.github.msdk.util.tolerances.MZTolerance} interface.
      * @param rtTolerance
      *            a {@link io.github.msdk.util.tolerances.RTTolerance} object.
      * @param intensityTolerance

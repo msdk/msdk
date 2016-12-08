@@ -116,7 +116,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
      * @param removeDuplicates
      *            a {@link java.lang.Boolean} object.
      * @param duplicateMzTolerance
-     *            an object that implements the {@link io.github.msdk.util.tolerances.MZTolerance} interface.
+     *            an object 
      * @param duplicateRtTolerance
      *            a {@link io.github.msdk.util.tolerances.RTTolerance} object.
      * @param duplicateRequireSameID

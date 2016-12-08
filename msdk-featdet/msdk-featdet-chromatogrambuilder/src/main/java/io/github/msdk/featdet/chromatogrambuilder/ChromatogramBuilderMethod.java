@@ -93,7 +93,7 @@ public class ChromatogramBuilderMethod
 	 *            a {@link java.lang.Double} object.
 	 * @param mzTolerance
 	 *            an object that implements the
-	 *            {@link io.github.msdk.util.tolerances.MZTolerance}
+	 *            MZTolerance
 	 *            interface.
 	 * @param noiseLevel
 	 *            a {@link java.lang.Float} object.
@@ -122,7 +122,7 @@ public class ChromatogramBuilderMethod
 	 *            a {@link java.lang.Double} object.
 	 * @param mzTolerance
 	 *            an object that implements the
-	 *            {@link io.github.msdk.util.tolerances.MZTolerance}
+	 *            MZTolerance
 	 *            interface.
 	 * @param noiseLevel
 	 *            a {@link java.lang.Float} object.

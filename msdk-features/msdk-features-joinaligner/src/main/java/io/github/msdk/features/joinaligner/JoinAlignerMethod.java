@@ -74,7 +74,7 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
      *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
      *            object.
      * @param mzTolerance
-     *            an object that implements the {@link io.github.msdk.util.tolerances.MZTolerance} interface.
+     *            an objectt
      * @param mzWeight
      *            a {@link java.lang.Integer} object.
      * @param rtWeight

@@ -43,7 +43,7 @@ public class TxtImportAlgorithm {
             .compile("(\\d+(\\.\\d+)?)[^\\d]+(\\d+(\\.\\d+)?)");
 
     /**
-     * Parse a {@link io.github.msdk.datamodel.impl.SimpleMsSpectrum} object
+     * Parse a MsSpectrum object
      * from the given string that has input data in two columns.
      * 
      * @param scanner
@@ -93,11 +93,11 @@ public class TxtImportAlgorithm {
     }
 
     /**
-     * Parse a {@link io.github.msdk.datamodel.impl.SimpleMsSpectrum} object
+     * Parse a MsSpectrum object
      * from the given string that has input data in two columns.
      *
      * @param spectrumText
-     *            A {@link java.lang.String} containing the input text.
+     *            A String containing the input text.
      * @return A {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object
      *         containing the parsed data.
      */
@@ -114,7 +114,7 @@ public class TxtImportAlgorithm {
     }
 
     /**
-     * Parse a {@link io.github.msdk.datamodel.impl.SimpleMsSpectrum} object
+     * Parse a MsSpectrum object
      * from the given readers. The reader is closed when this method returns.
      *
      * @param reader
@@ -142,7 +142,7 @@ public class TxtImportAlgorithm {
  
     /**
      * Parse a collection (i.e. ArrayList) of
-     * {@link io.github.msdk.datamodel.impl.SimpleMsSpectrum} objects from the
+     * MsSpectrum objects from the
      * given readers. The reader is closed when this method returns.
      *
      * @param reader
