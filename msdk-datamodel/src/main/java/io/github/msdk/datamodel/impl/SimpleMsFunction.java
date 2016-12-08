@@ -25,8 +25,6 @@ import io.github.msdk.datamodel.rawdata.MsFunction;
 /**
  * Simple implementation of the MsFunction interface.
  */
-@Immutable
-@Immutable
 class SimpleMsFunction implements MsFunction {
 
     private final @Nonnull String name;

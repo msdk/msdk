@@ -33,8 +33,6 @@ import javax.annotation.concurrent.NotThreadSafe;
 /**
  * Implementation of FeatureTableRow. Backed by a non-thread safe Map.
  */
-@NotThreadSafe
-@NotThreadSafe
 class SimpleFeatureTableRow implements FeatureTableRow {
 
     private final int rowId;
