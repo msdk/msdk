@@ -25,6 +25,7 @@ import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.util.MsSpectrumUtil;
+import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
  * Simple implementation of the MassSpectrum interface, which stores its data in
@@ -32,117 +33,126 @@ import io.github.msdk.util.MsSpectrumUtil;
  */
 public abstract class AbstractSpectrum implements MsSpectrum {
 
-    private final @Nonnull DataPointStore dataPointStore;
+	private final @Nonnull DataPointStore dataPointStore;
 
-    private Object dataStoreMzId = null, dataStoreIntensityId = null;
+	private Object dataStoreMzId = null, dataStoreIntensityId = null;
 
-    private @Nonnull Integer numOfDataPoints;
-    private @Nullable Range<Double> mzRange;
-    private @Nonnull Float totalIonCurrent;
+	private @Nonnull Integer numOfDataPoints;
+	private @Nullable Range<Double> mzRange;
+	private @Nonnull Float totalIonCurrent;
 
-    private @Nonnull MsSpectrumType spectrumType;
+	private @Nonnull MsSpectrumType spectrumType;
 
-    /**
-     * <p>Constructor for AbstractSpectrum.</p>
-     *
-     * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
-     */
-    public AbstractSpectrum(@Nonnull DataPointStore dataPointStore) {
-        Preconditions.checkNotNull(dataPointStore);
-        this.dataPointStore = dataPointStore;
-        totalIonCurrent = 0f;
-        numOfDataPoints = 0;
-        spectrumType = MsSpectrumType.CENTROIDED;
-    }
+	/**
+	 * <p>
+	 * Constructor for AbstractSpectrum.
+	 * </p>
+	 *
+	 * @param dataPointStore
+	 *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
+	 *            object.
+	 */
+	public AbstractSpectrum(@Nonnull DataPointStore dataPointStore) {
+		Preconditions.checkNotNull(dataPointStore);
+		this.dataPointStore = dataPointStore;
+		totalIonCurrent = 0f;
+		numOfDataPoints = 0;
+		spectrumType = MsSpectrumType.CENTROIDED;
+	}
 
-    /** {@inheritDoc} */
-    @Override
-    public @Nonnull Integer getNumberOfDataPoints() {
-        return numOfDataPoints;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public @Nonnull Integer getNumberOfDataPoints() {
+		return numOfDataPoints;
+	}
 
-    /** {@inheritDoc} */
-    @Override
-    public @Nonnull double[] getMzValues() {
-        return getMzValues(null);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public @Nonnull double[] getMzValues() {
+		return getMzValues(null);
+	}
 
-    /** {@inheritDoc} */
-    @Override
-    public @Nonnull double[] getMzValues(@Nullable double array[]) {
-        if ((array == null) || (array.length < numOfDataPoints))
-            array = new double[numOfDataPoints];
-        dataPointStore.loadData(dataStoreMzId, array);
-        return array;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public @Nonnull double[] getMzValues(@Nullable double array[]) {
+		if ((array == null) || (array.length < numOfDataPoints))
+			array = new double[numOfDataPoints];
+		dataPointStore.loadData(dataStoreMzId, array);
+		return array;
+	}
 
-    /** {@inheritDoc} */
-    @Override
-    public @Nonnull float[] getIntensityValues() {
-        return getIntensityValues(null);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public @Nonnull float[] getIntensityValues() {
+		return getIntensityValues(null);
+	}
 
-    /** {@inheritDoc} */
-    @Override
-    public @Nonnull float[] getIntensityValues(@Nullable float array[]) {
-        if ((array == null) || (array.length < numOfDataPoints))
-            array = new float[numOfDataPoints];
-        dataPointStore.loadData(dataStoreIntensityId, array);
-        return array;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public @Nonnull float[] getIntensityValues(@Nullable float array[]) {
+		if ((array == null) || (array.length < numOfDataPoints))
+			array = new float[numOfDataPoints];
+		dataPointStore.loadData(dataStoreIntensityId, array);
+		return array;
+	}
 
-    /** {@inheritDoc} */
-    @Override
-    public synchronized void setDataPoints(@Nonnull double mzValues[],
-            @Nonnull float intensityValues[], @Nonnull Integer size) {
+	/** {@inheritDoc} */
+	@Override
+	public synchronized void setDataPoints(@Nonnull double mzValues[], @Nonnull float intensityValues[],
+			@Nonnull Integer size) {
 
-        // Make sure the spectrum is sorted
-        for (int i = 0; i < size - 1; i++) {
-            if (mzValues[i] > mzValues[i + 1])
-                throw new MSDKRuntimeException(
-                        "m/z values must be sorted in ascending order");
-        }
-        
-        if (dataStoreMzId != null)
-            dataPointStore.removeData(dataStoreMzId);
-        if (dataStoreIntensityId != null)
-            dataPointStore.removeData(dataStoreIntensityId);
+		// Make sure the spectrum is sorted
+		for (int i = 0; i < size - 1; i++) {
+			if (mzValues[i] > mzValues[i + 1])
+				throw new MSDKRuntimeException("m/z values must be sorted in ascending order");
+		}
 
-        dataStoreMzId = dataPointStore.storeData(mzValues, size);
-        dataStoreIntensityId = dataPointStore.storeData(intensityValues, size);
-        this.numOfDataPoints = size;
-        this.mzRange = MsSpectrumUtil.getMzRange(mzValues, size);
-        this.totalIonCurrent = MsSpectrumUtil.getTIC(intensityValues, size);
-    }
+		if (dataStoreMzId != null)
+			dataPointStore.removeData(dataStoreMzId);
+		if (dataStoreIntensityId != null)
+			dataPointStore.removeData(dataStoreIntensityId);
 
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    public MsSpectrumType getSpectrumType() {
-        return spectrumType;
-    }
+		dataStoreMzId = dataPointStore.storeData(mzValues, size);
+		dataStoreIntensityId = dataPointStore.storeData(intensityValues, size);
+		this.numOfDataPoints = size;
+		this.mzRange = MsSpectrumUtil.getMzRange(mzValues, size);
+		this.totalIonCurrent = MsSpectrumUtil.getTIC(intensityValues, size);
+	}
 
-    /** {@inheritDoc} */
-    @Override
-    public void setSpectrumType(@Nonnull MsSpectrumType spectrumType) {
-        this.spectrumType = spectrumType;
-    }
+	/** {@inheritDoc} */
+	@Override
+	@Nonnull
+	public MsSpectrumType getSpectrumType() {
+		return spectrumType;
+	}
 
-    /**
-     * <p>
-     * getTIC.
-     * </p>
-     *
-     * @return a {@link java.lang.Float} object.
-     */
-    @Nonnull
-    public Float getTIC() {
-        return totalIonCurrent;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public void setSpectrumType(@Nonnull MsSpectrumType spectrumType) {
+		this.spectrumType = spectrumType;
+	}
 
-    /** {@inheritDoc} */
-    @Override
-    public Range<Double> getMzRange() {
-        return mzRange;
-    }
+	/**
+	 * <p>
+	 * getTIC.
+	 * </p>
+	 *
+	 * @return a {@link java.lang.Float} object.
+	 */
+	@Nonnull
+	public Float getTIC() {
+		return totalIonCurrent;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Range<Double> getMzRange() {
+		return mzRange;
+	}
+
+	@Override
+	public MzTolerance getMzTolerance() {
+		// By default, no m/z tolerance is defined
+		return null;
+	}
 }
