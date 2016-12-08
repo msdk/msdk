@@ -86,7 +86,7 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
             parser = new MzMLFileImportMethod(sourceFile);
             break;
         case MZXML:
-            parser = new MzXMLFileImportMethod(sourceFile);
+            parser = new MzXMLFileImportMethod(sourceFile, dataStore);
             break;
         case MZDATA:
             parser = new MzDataFileImportMethod(sourceFile, dataStore);

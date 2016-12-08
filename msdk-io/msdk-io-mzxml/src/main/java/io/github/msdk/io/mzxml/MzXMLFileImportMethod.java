@@ -14,24 +14,34 @@
 
 package io.github.msdk.io.mzxml;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.Date;
+import java.util.logging.Logger;
+import java.util.zip.DataFormatException;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.xml.bind.DatatypeConverter;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
@@ -39,179 +49,280 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
-import io.github.msdk.util.DataPointSorter;
-import io.github.msdk.util.DataPointSorter.SortingDirection;
-import io.github.msdk.util.DataPointSorter.SortingProperty;
-import io.github.msdk.util.MsSpectrumUtil;
-import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
-import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLFile;
 
 /**
- * This class reads XML-based mass spec data formats (mzData, mzXML, and mzML)
- * using the jmzreader library.
+ * This class reads mzXML file format.
  */
 public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private Logger logger = Logger.getLogger(this.getClass().getName());
 
-    private final @Nonnull File sourceFile;
-    private final @Nonnull FileType fileType = FileType.MZXML;
+	private final @Nonnull File sourceFile;
+	private final @Nonnull FileType fileType = FileType.MZXML;
 
-    private boolean canceled = false;
+	private RawDataFile newRawDataFile;
+	private final @Nonnull DataPointStore dataStore;
 
-    private MzXMLRawDataFile newRawFile;
-    private long totalScans = 0, parsedScans;
+	private int totalScans = 0, parsedScans;
 
-    /**
-     * <p>
-     * Constructor for MzXMLFileImportMethod.
-     * </p>
-     *
-     * @param sourceFile
-     *            a {@link java.io.File} object.
-     */
-    public MzXMLFileImportMethod(@Nonnull File sourceFile) {
-        this.sourceFile = sourceFile;
-    }
+	private int peaksCount = 0;
+	private boolean compressFlag = false;
 
-    /** {@inheritDoc} */
-    @SuppressWarnings("null")
-    @Override
-    public RawDataFile execute() throws MSDKException {
+	private final MzXMLHandler handler = new MzXMLHandler();
 
-        logger.info("Started parsing file " + sourceFile);
+	private String precision;
+	private Integer precursorCharge;
 
-        try {
+	// Buffers
+	private final StringBuilder charBuffer = new StringBuilder(1 << 18);
+	private double mzValues[] = new double[1000];
+	private float intensityValues[] = new float[1000];
 
-            MzXMLFile parser = new MzXMLFile(sourceFile);
+	// Retention time parser
+	private DatatypeFactory dataTypeFactory;
 
-            totalScans = parser.getSpectraCount();
+	private boolean canceled = false;
 
-            // Prepare data structures
-            List<MsFunction> msFunctionsList = new ArrayList<>();
-            List<MsScan> scansList = new ArrayList<>();
-            List<Chromatogram> chromatogramsList = new ArrayList<>();
-            double mzValues[] = new double[10000];
-            float intensityValues[] = new float[10000];
+	/*
+	 * This variable hold the present scan or fragment, it is send to the stack
+	 * when another scan/fragment appears as a parser.startElement
+	 */
+	private MsScan buildingScan;
 
-            // Create the XMLBasedRawDataFile object
-            newRawFile = new MzXMLRawDataFile(sourceFile, fileType, parser,
-                    msFunctionsList, scansList, chromatogramsList);
+	public MzXMLFileImportMethod(@Nonnull File sourceFile, @Nonnull DataPointStore dataStore) {
+		this.sourceFile = sourceFile;
+		this.dataStore = dataStore;
+	}
 
-            // Create the converter from jmzreader data model to our data model
-            final MzXMLConverter converter = new MzXMLConverter();
+	@Override
+	public RawDataFile execute() throws MSDKException {
 
-            final List<Long> scanNumbers = parser.getScanNumbers();
+		try {
 
-            for (int scanIndex = 0; scanIndex < totalScans; scanIndex++) {
+			logger.info("Started parsing file " + sourceFile);
 
-                if (canceled)
-                    return null;
+			// Create the XMLBasedRawDataFile object
+			newRawDataFile = MSDKObjectBuilder.getRawDataFile(sourceFile.getName(), sourceFile, fileType, dataStore);
 
-                // Parse the spectrum
-                Spectrum spectrum = parser.getSpectrumByIndex(scanIndex + 1);
+			// Use the default (non-validating) parser
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			dataTypeFactory = DatatypeFactory.newInstance();
+			SAXParser saxParser = factory.newSAXParser();
+			saxParser.parse(sourceFile, handler);
 
-                // Get the scan number
-                String spectrumId = spectrum.getId();
-                Integer scanNumber = scanNumbers.get(scanIndex).intValue();
+			logger.info("Finished parsing " + sourceFile + ", parsed " + parsedScans + " scans");
 
-                // For now, let's use the spectrum id as scan definition
-                String scanDefinition = spectrumId;
+			return newRawDataFile;
 
-                // Get the MS function
-                MsFunction msFunction = converter.extractMsFunction(spectrum);
-                msFunctionsList.add(msFunction);
+		} catch (Throwable e) {
 
-                // Store the chromatography data
-                ChromatographyInfo chromData = converter
-                        .extractChromatographyData(spectrum);
+			// We may already have set the status to CANCELED. In that case the
+			// caught exception simply indicates end of SAX parsing.
+			if (canceled)
+				return null;
+			else
+				throw new MSDKException(e);
 
-                // Extract the scan data points, so we can check the m/z range
-                // and detect the spectrum type (profile/centroid)
-                mzValues = MzXMLConverter.extractMzValues(spectrum, mzValues);
-                intensityValues = MzXMLConverter
-                        .extractIntensityValues(spectrum, intensityValues);
-                final int numOfDataPoints = spectrum.getPeakList().size();
+		}
 
-                // Sort the data points, because the jmzreader library returns
-                // them in weird order
-                DataPointSorter.sortDataPoints(mzValues, intensityValues,
-                        numOfDataPoints, SortingProperty.MZ,
-                        SortingDirection.ASCENDING);
+	}
 
-                // Get the m/z range
-                Range<Double> mzRange = MsSpectrumUtil.getMzRange(mzValues,
-                        numOfDataPoints);
+	@Override
+	public Float getFinishedPercentage() {
+		return totalScans == 0 ? 0 : (float) parsedScans / totalScans;
+	}
 
-                // Get the instrument scanning range
-                Range<Double> scanningRange = null;
+	@Override
+	public RawDataFile getResult() {
+		return newRawDataFile;
+	}
 
-                // Get the TIC
-                Float tic = MsSpectrumUtil.getTIC(intensityValues,
-                        numOfDataPoints);
+	@Override
+	public void cancel() {
+		this.canceled = true;
+	}
 
-                // Auto-detect whether this scan is centroided
-                MsSpectrumType spectrumType = SpectrumTypeDetectionAlgorithm
-                        .detectSpectrumType(mzValues, intensityValues,
-                                numOfDataPoints);
+	private class MzXMLHandler extends DefaultHandler {
 
-                // Get the MS scan type
-                MsScanType scanType = converter.extractScanType(spectrum);
+		public void startElement(String namespaceURI, String lName, // local
+				// name
+				String qName, // qualified name
+				Attributes attrs) throws SAXException {
 
-                // Get the polarity
-                PolarityType polarity = converter.extractPolarity(spectrum);
+			if (canceled)
+				throw new SAXException("Parsing Cancelled");
 
-                // Get the in-source fragmentation
-                ActivationInfo sourceFragmentation = converter
-                        .extractSourceFragmentation(spectrum);
+			// <msRun>
+			if (qName.equals("msRun")) {
+				String s = attrs.getValue("scanCount");
+				if (s != null)
+					totalScans = Integer.parseInt(s);
+			}
 
-                // Get the in-source fragmentation
-                List<IsolationInfo> isolations = converter
-                        .extractIsolations(spectrum);
+			// <scan>
+			if (qName.equalsIgnoreCase("scan")) {
 
-                // Create a new MsScan instance
-                MzXMLMsScan scan = new MzXMLMsScan(newRawFile, spectrumId,
-                        spectrumType, msFunction, chromData, scanType, mzRange,
-                        scanningRange, scanNumber, scanDefinition, tic,
-                        polarity, sourceFragmentation, isolations,
-                        numOfDataPoints);
+				/*
+				 * Only num, msLevel & peaksCount values are required according
+				 * with mzXML standard, the others are optional
+				 */
+				int scanNumber = Integer.parseInt(attrs.getValue("num"));
+				int msLevel = Integer.parseInt(attrs.getValue("msLevel"));
+				peaksCount = Integer.parseInt(attrs.getValue("peaksCount"));
 
-                // Add the scan to the final raw data file
-                scansList.add(scan);
+				// MS function
+				String msFuncName = attrs.getValue("scanType");
+				if (Strings.isNullOrEmpty(msFuncName))
+					msFuncName = MsFunction.DEFAULT_MS_FUNCTION_NAME;
+				MsFunction msFunc = MSDKObjectBuilder.getMsFunction(msFuncName, msLevel);
+				buildingScan = MSDKObjectBuilder.getMsScan(dataStore, scanNumber, msFunc);
+				buildingScan.setRawDataFile(newRawDataFile);
 
-                parsedScans++;
+				// Scan type & definition
+				buildingScan.setMsScanType(MsScanType.UNKNOWN);
+				String filterLine = attrs.getValue("filterLine");
+				buildingScan.setScanDefinition(filterLine);
 
-            }
+				// Polarity
+				PolarityType polarity;
+				String polarityAttr = attrs.getValue("polarity");
+				switch (polarityAttr) {
+				case "+":
+					polarity = PolarityType.POSITIVE;
+					break;
+				case "-":
+					polarity = PolarityType.NEGATIVE;
+					break;
+				default:
+					polarity = PolarityType.UNKNOWN;
+					break;
+				}
+				buildingScan.setPolarity(polarity);
 
-        } catch (Exception e) {
-            throw new MSDKException(e);
-        }
+				// Parse retention time
+				String retentionTimeStr = attrs.getValue("retentionTime");
+				if (retentionTimeStr != null) {
+					Date currentDate = new Date();
+					Duration dur = dataTypeFactory.newDuration(retentionTimeStr);
+					final float rt = (float) (dur.getTimeInMillis(currentDate) / 1000.0);
+					ChromatographyInfo rtInfo = MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
+					buildingScan.setChromatographyInfo(rtInfo);
+				}
 
-        logger.info("Finished importing " + sourceFile + ", parsed "
-                + parsedScans + " scans");
+			}
 
-        return newRawFile;
+			// <peaks>
+			if (qName.equalsIgnoreCase("peaks")) {
+				// clean the current char buffer for the new element
+				charBuffer.setLength(0);
+				compressFlag = false;
+				String compressionType = attrs.getValue("compressionType");
+				if ((compressionType == null) || (compressionType.equals("none")))
+					compressFlag = false;
+				else
+					compressFlag = true;
+				precision = attrs.getValue("precision");
 
-    }
+			}
 
-    /** {@inheritDoc} */
-    @Override
-    public Float getFinishedPercentage() {
-        return totalScans == 0 ? null : (float) parsedScans / totalScans;
-    }
+			// <precursorMz>
+			if (qName.equalsIgnoreCase("precursorMz")) {
+				// clean the current char buffer for the new element
+				charBuffer.setLength(0);
+				String precursorChargeAttr = attrs.getValue("precursorCharge");
+				if (precursorChargeAttr != null)
+					precursorCharge = Integer.parseInt(precursorChargeAttr);
+			}
 
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public RawDataFile getResult() {
-        return newRawFile;
-    }
+		}
 
-    /** {@inheritDoc} */
-    @Override
-    public void cancel() {
-        this.canceled = true;
-    }
+		/**
+		 * endElement()
+		 */
+		public void endElement(String namespaceURI, String sName, // simple name
+				String qName // qualified name
+		) throws SAXException {
+
+			// </scan>
+			if (qName.equalsIgnoreCase("scan")) {
+				newRawDataFile.addScan(buildingScan);
+				parsedScans++;
+				return;
+			}
+
+			// <precursorMz>
+			if (qName.equalsIgnoreCase("precursorMz")) {
+				final String textContent = charBuffer.toString();
+				double precursorMz = 0d;
+				if (!textContent.isEmpty())
+					precursorMz = Double.parseDouble(textContent);
+				IsolationInfo newIsolation = MSDKObjectBuilder.getIsolationInfo(Range.singleton(precursorMz), null,
+						precursorMz, precursorCharge, null);
+				buildingScan.getIsolations().add(newIsolation);
+
+				return;
+			}
+
+			// <peaks>
+			if (qName.equalsIgnoreCase("peaks")) {
+
+				// Base64 decoder
+				byte[] peakBytes = DatatypeConverter.parseBase64Binary(charBuffer.toString());
+
+				if (compressFlag) {
+					try {
+						peakBytes = ZlibCompressionUtil.decompress(peakBytes);
+					} catch (DataFormatException e) {
+						throw new SAXException(e);
+					}
+				}
+
+				// make a data input stream
+				DataInputStream peakStream = new DataInputStream(new ByteArrayInputStream(peakBytes));
+
+				if (peaksCount > mzValues.length) {
+					mzValues = new double[peaksCount];
+					intensityValues = new float[peaksCount];
+				}
+
+				try {
+					for (int i = 0; i < peaksCount; i++) {
+
+						// Always respect this order pairOrder="m/z-int"
+						if ("64".equals(precision)) {
+							mzValues[i] = peakStream.readDouble();
+							intensityValues[i] = (float) peakStream.readDouble();
+						} else {
+							mzValues[i] = (double) peakStream.readFloat();
+							intensityValues[i] = peakStream.readFloat();
+						}
+
+					}
+				} catch (IOException eof) {
+					throw new SAXException(eof);
+				}
+				// Set the final data points to the scan
+				buildingScan.setDataPoints(mzValues, intensityValues, peaksCount);
+
+				// Auto-detect whether this scan is centroided
+				MsSpectrumType spectrumType = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mzValues,
+						intensityValues, peaksCount);
+				buildingScan.setSpectrumType(spectrumType);
+
+				return;
+			}
+		}
+
+		/**
+		 * characters()
+		 * 
+		 * @see org.xml.sax.ContentHandler#characters(char[], int, int)
+		 */
+		public void characters(char buf[], int offset, int len) throws SAXException {
+			charBuffer.append(buf, offset, len);
+		}
+	}
 
 }
