@@ -33,9 +33,7 @@ class MemoryDataStore implements DataPointStore {
 
     private int lastStorageId = 0;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public @Nonnull Object storeData(@Nonnull Object data,
             @Nonnull Integer size) {

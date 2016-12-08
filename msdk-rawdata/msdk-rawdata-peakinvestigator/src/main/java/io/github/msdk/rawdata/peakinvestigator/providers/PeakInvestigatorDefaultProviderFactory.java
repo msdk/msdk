@@ -22,7 +22,7 @@ import io.github.msdk.rawdata.peakinvestigator.providers.PeakInvestigatorProvide
 /**
  * A dialog factory that returns providers with sensible defaults. Specifically,
  * the following behavior is used:
- * 
+ *
  * <ul>
  * <li>{@code show()} always returns {@code Status.ACCEPT} unless there aren't
  * sufficient funds during INIT.</li>
@@ -38,12 +38,12 @@ import io.github.msdk.rawdata.peakinvestigator.providers.PeakInvestigatorProvide
  * <li>The most cost-effective response time objective (i.e. RTO-24) is
  * used.</li>
  * </ul>
- *
  */
 public class PeakInvestigatorDefaultProviderFactory implements PeakInvestigatorProviderFactory {
 
 	private final static String DEFAULT_RTO = "RTO-24";
 
+	/** {@inheritDoc} */
 	@Override
 	public PeakInvestigatorProjectProvider createProjectProvider() {
 		return new PeakInvestigatorProjectProvider() {
@@ -76,6 +76,7 @@ public class PeakInvestigatorDefaultProviderFactory implements PeakInvestigatorP
 		};
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public PeakInvestigatorOptionsProvider createOptionsProvider(PiVersionsAction action, final int dataStart,
 			final int dataEnd) {
@@ -107,6 +108,7 @@ public class PeakInvestigatorDefaultProviderFactory implements PeakInvestigatorP
 		};
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public PeakInvestigatorInitProvider createInitProvider(InitAction action) {
 		final Status status = action.getMaxPotentialCost(DEFAULT_RTO) <= action.getFunds() ? Status.ACCEPT

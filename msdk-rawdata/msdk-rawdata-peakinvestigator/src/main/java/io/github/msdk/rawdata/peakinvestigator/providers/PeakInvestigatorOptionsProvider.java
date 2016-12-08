@@ -21,12 +21,26 @@ package io.github.msdk.rawdata.peakinvestigator.providers;
  * <li>The desired start mass</li>
  * <li>The desired end mass</li>
  * </ul>
- *
  */
 public interface PeakInvestigatorOptionsProvider extends PeakInvestigatorProvider {
+	/**
+	 * <p>getVersion.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getVersion();
 
+	/**
+	 * <p>getStartMass.</p>
+	 *
+	 * @return a int.
+	 */
 	int getStartMass();
 
+	/**
+	 * <p>getEndMass.</p>
+	 *
+	 * @return a int.
+	 */
 	int getEndMass();
 }

@@ -81,10 +81,6 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
      *            a {@link io.github.msdk.util.tolerances.RTTolerance} object.
      * @param intensityTolerance
      *            a {@link java.lang.Double} object.
-     * @param useRowRt
-     *            a {@link java.lang.Boolean} object.
-     * @param useRowMz
-     *            a {@link java.lang.Boolean} object.
      * @param nameSuffix
      *            a {@link java.lang.String} object.
      */

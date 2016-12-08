@@ -88,10 +88,8 @@ public class TxtExportAlgorithm {
      *            a {@link java.util.Collection} object.
      * @param delimiter
      *            a {@link java.lang.String} object.
-     * 
      * @throws java.io.IOException
      *             if any.
-     * 
      * @see spectrumToString(@Nonnull MsSpectrum spectrum, @Nonnull String
      *      delimiter)
      */
@@ -123,10 +121,8 @@ public class TxtExportAlgorithm {
      *            object.
      * @param writer
      *            a {@link java.io.Writer} object.
-     * 
      * @throws java.io.IOException
      *             if any.
-     * 
      * @see spectrumToString(MsSpectrum spectrum, String delimiter)
      */
     public static void spectrumToWriter(@Nonnull MsSpectrum spectrum,
@@ -146,7 +142,6 @@ public class TxtExportAlgorithm {
      *            a {@link java.io.Writer} object.
      * @param delimiter
      *            a {@link java.lang.String object}.
-     * 
      * @throws java.io.IOException
      *             if any.
      */
@@ -177,7 +172,6 @@ public class TxtExportAlgorithm {
      *            a {@link io.github.msdk.datamodel.msspectra.MsSpectrum}
      *            object.
      * @return a {@link java.lang.String} object.
-     * 
      * @see spectrumToString(MsSpectrum spectrum, String delimiter)
      * @see spectrumToWriter(MsSpectrum spectrum, Writer writer, String
      *      delimiter)
@@ -199,7 +193,6 @@ public class TxtExportAlgorithm {
      * @param delimiter
      *            a {@link java.lang.String} object.
      * @return a {@link java.lang.String} object.
-     * 
      * @see spectrumToWriter(MsSpectrum spectrum, Writer writer, String
      *      delimiter)
      */

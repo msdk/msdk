@@ -107,7 +107,7 @@ public interface Chromatogram {
      *
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
-     * 
+     *
      * @return an array of
      *         {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
      *         objects.

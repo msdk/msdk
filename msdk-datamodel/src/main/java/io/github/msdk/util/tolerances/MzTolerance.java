@@ -18,6 +18,10 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
+/**
+ * <p>MzTolerance interface.</p>
+ *
+ */
 public interface MzTolerance {
 
     /**

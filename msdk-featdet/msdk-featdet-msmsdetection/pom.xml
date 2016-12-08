@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.github.msdk</groupId>
         <artifactId>msdk-featdet</artifactId>
-        <version>0.0.7-SNAPSHOT</version>
+        <version>0.0.7</version>
     </parent>
     <artifactId>msdk-featdet-msmsdetection</artifactId>
     <description>MSDK MS/MS feature detection algorithm</description>

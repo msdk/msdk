@@ -25,6 +25,10 @@ public class ZlibCompressionUtil {
 	/**
 	 * Decompress the zlib-compressed bytes and return an array of decompressed
 	 * bytes
+	 *
+	 * @param compressedBytes an array of byte.
+	 * @return an array of byte.
+	 * @throws java.util.zip.DataFormatException if any.
 	 */
 	public static byte[] decompress(byte compressedBytes[]) throws DataFormatException {
 

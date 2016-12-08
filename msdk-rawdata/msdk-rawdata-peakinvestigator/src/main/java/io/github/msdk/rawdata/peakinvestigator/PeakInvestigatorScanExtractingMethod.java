@@ -141,6 +141,10 @@ public class PeakInvestigatorScanExtractingMethod implements MSDKMethod<List<MsS
 	 * returned via {@code MSDKObjectBuilder.getMsSpectrum()}. If five columns,
 	 * the simple MsSpectrum is decorated using the
 	 * {@link PeakInvestigatorMsSpectrum}.
+	 *
+	 * @param reader a {@link java.io.BufferedReader} object.
+	 * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+	 * @throws java.io.IOException if any.
 	 */
 	protected MsSpectrum parseMsSpectrum(BufferedReader reader) throws IOException {
 		String line;

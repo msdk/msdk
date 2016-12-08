@@ -18,6 +18,10 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
+/**
+ * <p>ConstantPpmTolerance class.</p>
+ *
+ */
 public class ConstantPpmTolerance implements MzTolerance {
 
     // PPM conversion factor.
@@ -48,14 +52,12 @@ public class ConstantPpmTolerance implements MzTolerance {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * <p>
      * Return the mass tolerance range that is constant in ppm, but changes vs.
      * m/z.
      * </p>
-     *
-     * @param mzValue
-     *            a {@link java.lang.Double} object.
-     * @return a {@link com.google.common.collect.Range} object.
      */
     public @Nonnull Range<Double> getToleranceRange(
             final @Nonnull Double mzValue) {

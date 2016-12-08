@@ -73,13 +73,11 @@ public class MaximumMzTolerance implements MzTolerance {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * <p>
      * getToleranceRange.
      * </p>
-     *
-     * @param mzValue
-     *            a {@link java.lang.Double} object.
-     * @return a {@link com.google.common.collect.Range} object.
      */
     @SuppressWarnings("null")
     public @Nonnull Range<Double> getToleranceRange(

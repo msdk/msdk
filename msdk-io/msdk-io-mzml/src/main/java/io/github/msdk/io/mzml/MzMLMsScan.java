@@ -94,7 +94,7 @@ class MzMLMsScan extends AbstractReadOnlyMsScan {
         }
     }
 
-    /** {@inheritDoc} */
+	/** {@inheritDoc} */
 	@Override
 	public MzTolerance getMzTolerance() {
 		return null;

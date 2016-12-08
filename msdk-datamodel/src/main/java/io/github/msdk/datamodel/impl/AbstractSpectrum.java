@@ -150,6 +150,7 @@ public abstract class AbstractSpectrum implements MsSpectrum {
 		return mzRange;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public MzTolerance getMzTolerance() {
 		// By default, no m/z tolerance is defined

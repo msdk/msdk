@@ -26,7 +26,7 @@ import io.github.msdk.datamodel.msspectra.MsSpectrum;
 
 /**
  * Represents a single MS scan in a raw data file. This interface extends
- * {@link io.github.msdk.datamodel.msspectra.MsSpectrum}, therefore the actual 
+ * {@link io.github.msdk.datamodel.msspectra.MsSpectrum}, therefore the actual
  * data points can be accessed through the inherited methods of MsSpectrum.
  *
  * If the scan is not added to any file, its data points are stored in memory.

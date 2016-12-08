@@ -136,12 +136,17 @@ class SimpleMsSpectrum implements MsSpectrum {
         this.spectrumType = spectrumType;
     }
 
-    /** {@inheritDoc} */
+	/** {@inheritDoc} */
 	@Override
 	public MzTolerance getMzTolerance() {
 		return mzTolerance;
 	}
 
+	/**
+	 * <p>Setter for the field <code>mzTolerance</code>.</p>
+	 *
+	 * @param mzTolerance a {@link io.github.msdk.util.tolerances.MzTolerance} object.
+	 */
 	public void setMzTolerance(MzTolerance mzTolerance) {
 		this.mzTolerance = mzTolerance;
 	}

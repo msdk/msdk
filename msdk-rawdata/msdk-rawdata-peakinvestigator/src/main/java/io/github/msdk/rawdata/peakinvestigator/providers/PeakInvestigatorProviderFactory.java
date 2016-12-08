@@ -17,10 +17,33 @@ package io.github.msdk.rawdata.peakinvestigator.providers;
 import com.veritomyx.actions.InitAction;
 import com.veritomyx.actions.PiVersionsAction;
 
+/**
+ * <p>PeakInvestigatorProviderFactory interface.</p>
+ *
+ */
 public interface PeakInvestigatorProviderFactory {
+	/**
+	 * <p>createProjectProvider.</p>
+	 *
+	 * @return a {@link io.github.msdk.rawdata.peakinvestigator.providers.PeakInvestigatorProjectProvider} object.
+	 */
 	PeakInvestigatorProjectProvider createProjectProvider();
 
+	/**
+	 * <p>createOptionsProvider.</p>
+	 *
+	 * @param action a {@link com.veritomyx.actions.PiVersionsAction} object.
+	 * @param dataStart a int.
+	 * @param dataEnd a int.
+	 * @return a {@link io.github.msdk.rawdata.peakinvestigator.providers.PeakInvestigatorOptionsProvider} object.
+	 */
 	PeakInvestigatorOptionsProvider createOptionsProvider(PiVersionsAction action, int dataStart, int dataEnd);
 
+	/**
+	 * <p>createInitProvider.</p>
+	 *
+	 * @param action a {@link com.veritomyx.actions.InitAction} object.
+	 * @return a {@link io.github.msdk.rawdata.peakinvestigator.providers.PeakInvestigatorInitProvider} object.
+	 */
 	PeakInvestigatorInitProvider createInitProvider(InitAction action);
 }

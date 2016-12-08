@@ -180,6 +180,11 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
 		return mzTolerance;
 	}
 
+	/**
+	 * <p>Setter for the field <code>mzTolerance</code>.</p>
+	 *
+	 * @param mzTolerance a {@link io.github.msdk.util.tolerances.MzTolerance} object.
+	 */
 	public void setMzTolerance(MzTolerance mzTolerance) {
 		this.mzTolerance = mzTolerance;
 	}

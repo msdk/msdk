@@ -25,7 +25,6 @@ import io.github.msdk.util.tolerances.MzTolerance;
 /**
  * This class is used provide m/z-dependent mass tolerances from
  * PeakInvestigator by decorating an existing instance of MsSpectrum.
- *
  */
 public class PeakInvestigatorMsSpectrum implements MsSpectrum {
 
@@ -33,69 +32,101 @@ public class PeakInvestigatorMsSpectrum implements MsSpectrum {
 	private final TreeMap<Double, Error> errors;
 	private double multiplier = 1.0;
 
+	/**
+	 * <p>Constructor for PeakInvestigatorMsSpectrum.</p>
+	 *
+	 * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+	 * @param errors a {@link java.util.TreeMap} object.
+	 */
 	public PeakInvestigatorMsSpectrum(MsSpectrum spectrum, TreeMap<Double, Error> errors) {
 		this.spectrum = spectrum;
 		this.errors = errors;
 	}
 
+	/**
+	 * <p>Getter for the field <code>multiplier</code>.</p>
+	 *
+	 * @return a double.
+	 */
 	public double getMultiplier() {
 		return this.multiplier;
 	}
 
+	/**
+	 * <p>Setter for the field <code>multiplier</code>.</p>
+	 *
+	 * @param multiplier a double.
+	 */
 	public void setMultiplier(double multiplier) {
 		this.multiplier = multiplier;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public MsSpectrumType getSpectrumType() {
 		return MsSpectrumType.CENTROIDED;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setSpectrumType(MsSpectrumType spectrumType) {
 		throw new RuntimeException("This class should not have a MsSpectrumType set.");
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Integer getNumberOfDataPoints() {
 		return spectrum.getNumberOfDataPoints();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public double[] getMzValues() {
 		return spectrum.getMzValues();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public double[] getMzValues(double[] array) {
 		return spectrum.getMzValues(array);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public float[] getIntensityValues() {
 		return spectrum.getIntensityValues();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public float[] getIntensityValues(float[] array) {
 		return spectrum.getIntensityValues(array);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setDataPoints(double[] mzValues, float[] intensityValues, Integer size) {
 		throw new RuntimeException("This class should never set its data points dynamically.");
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Float getTIC() {
 		return spectrum.getTIC();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Range<Double> getMzRange() {
 		return spectrum.getMzRange();
 	}
 
+	/**
+	 * <p>getToleranceRange.</p>
+	 *
+	 * @param mzValue a {@link java.lang.Double} object.
+	 * @return a {@link com.google.common.collect.Range} object.
+	 */
 	public Range<Double> getToleranceRange(Double mzValue) {
 		Error error = errors.get(mzValue);
 		double mzError = multiplier * error.MZ_ERROR;
@@ -106,6 +137,12 @@ public class PeakInvestigatorMsSpectrum implements MsSpectrum {
 		return Range.closed(mzValue - mzError, mzValue + mzError);
 	}
 
+	/**
+	 * <p>getError.</p>
+	 *
+	 * @param mzValue a {@link java.lang.Double} object.
+	 * @return a {@link io.github.msdk.rawdata.peakinvestigator.PeakInvestigatorMsSpectrum.Error} object.
+	 */
 	public Error getError(Double mzValue) {
 		return errors.get(mzValue);
 	}
@@ -122,6 +159,7 @@ public class PeakInvestigatorMsSpectrum implements MsSpectrum {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public MzTolerance getMzTolerance() {
 		// TODO Auto-generated method stub

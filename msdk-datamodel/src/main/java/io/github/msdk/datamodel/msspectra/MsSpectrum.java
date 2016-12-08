@@ -67,7 +67,6 @@ public interface MsSpectrum {
      * </p>
      *
      * @return an array of double.
-     * 
      * @see getMzValues(double array[])
      */
     @Nonnull
@@ -100,7 +99,6 @@ public interface MsSpectrum {
      * </p>
      *
      * @return an array of float.
-     * 
      * @see getIntensityValues(float array[])
      */
     @Nonnull
@@ -159,7 +157,7 @@ public interface MsSpectrum {
 	/**
 	 * Returns an object that implements the MzTolerance interface. If not
 	 * MzTolernace is available, then null is returned.
-	 * 
+	 *
 	 * @return m/z tolerance for the scan
 	 */
 	@Nullable

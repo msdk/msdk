@@ -17,12 +17,26 @@ package io.github.msdk.rawdata.peakinvestigator.providers;
 /**
  * An interface to provide the username, password, and project ID to submit
  * PeakInvestigator jobs.
- *
  */
 public interface PeakInvestigatorProjectProvider extends PeakInvestigatorProvider {
+	/**
+	 * <p>getUsername.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getUsername();
 
+	/**
+	 * <p>getPassword.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getPassword();
 
+	/**
+	 * <p>getProjectId.</p>
+	 *
+	 * @return a int.
+	 */
 	int getProjectId();
 }

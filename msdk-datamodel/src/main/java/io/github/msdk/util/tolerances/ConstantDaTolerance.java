@@ -18,6 +18,10 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
+/**
+ * <p>ConstantDaTolerance class.</p>
+ *
+ */
 public class ConstantDaTolerance implements MzTolerance {
 
     private final @Nonnull Double mzTolerance;
@@ -46,13 +50,11 @@ public class ConstantDaTolerance implements MzTolerance {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * <p>
      * Return the mass tolerance range that is constant vs. m/z.
      * </p>
-     *
-     * @param mzValue
-     *            a {@link java.lang.Double} object.
-     * @return a {@link com.google.common.collect.Range} object.
      */
     public @Nonnull Range<Double> getToleranceRange(
             final @Nonnull Double mzValue) {

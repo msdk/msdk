@@ -95,7 +95,7 @@ public class TxtImportAlgorithm {
     /**
      * Parse a {@link io.github.msdk.datamodel.impl.SimpleMsSpectrum} object
      * from the given string that has input data in two columns.
-     * 
+     *
      * @param spectrumText
      *            A {@link java.lang.String} containing the input text.
      * @return A {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object
@@ -116,7 +116,7 @@ public class TxtImportAlgorithm {
     /**
      * Parse a {@link io.github.msdk.datamodel.impl.SimpleMsSpectrum} object
      * from the given readers. The reader is closed when this method returns.
-     * 
+     *
      * @param reader
      *            An open @{java.io.Reader} object that provides the data in two
      *            columns.
@@ -144,7 +144,7 @@ public class TxtImportAlgorithm {
      * Parse a collection (i.e. ArrayList) of
      * {@link io.github.msdk.datamodel.impl.SimpleMsSpectrum} objects from the
      * given readers. The reader is closed when this method returns.
-     * 
+     *
      * @param reader
      *            An open @{java.io.Reader} object that provides the data in two
      *            columns.

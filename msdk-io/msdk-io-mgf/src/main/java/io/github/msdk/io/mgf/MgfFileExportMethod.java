@@ -69,10 +69,9 @@ public class MgfFileExportMethod implements MSDKMethod<Void> {
      * Constructor for MgfFileExportMethod.
      * </p>
      *
-     * @param spectra
-     *            a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
      * @param target
      *            a {@link java.io.File} object.
+     * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
      */
     public MgfFileExportMethod(@Nonnull MsSpectrum spectrum,
             @Nonnull File target) {
@@ -80,6 +79,7 @@ public class MgfFileExportMethod implements MSDKMethod<Void> {
         this.target = target;
     }
 
+	/** {@inheritDoc} */
 	@Override
 	public Void execute() throws MSDKException {
         logger.info(

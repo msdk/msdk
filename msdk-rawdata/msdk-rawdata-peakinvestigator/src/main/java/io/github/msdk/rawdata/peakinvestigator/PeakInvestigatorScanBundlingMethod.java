@@ -65,7 +65,7 @@ public class PeakInvestigatorScanBundlingMethod implements MSDKMethod<File> {
 	 *
 	 * @param rawDataFile
 	 *            a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-	 * @throws IOException
+	 * @throws java.io.IOException if any.
 	 */
 	public PeakInvestigatorScanBundlingMethod(@Nonnull RawDataFile rawDataFile) throws IOException {
 		this.rawDataFile = rawDataFile;
