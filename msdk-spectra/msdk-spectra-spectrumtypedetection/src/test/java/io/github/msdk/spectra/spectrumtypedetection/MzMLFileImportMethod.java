@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml;
+package io.github.msdk.spectra.spectrumtypedetection;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,11 +47,11 @@ import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 /**
- * A copy of the mzML reading code is provided within ghte spectrumtypedetection
+ * A copy of the mzML reading code is provided within the spectrumtypedetection
  * test package, otherwise a circular dependency would prevent compilation (a
  * limitation of maven).
  */
-public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
+class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
