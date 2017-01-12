@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml;
+package io.github.msdk.spectra.spectrumtypedetection;
 
 import java.util.ArrayList;
 import java.util.Collections;
