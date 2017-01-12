@@ -151,32 +151,36 @@ public class IsotopePatternGeneratorAlgorithm {
      * intensity is added together and new m/z value is calculated as a weighted
      * average.
      */
-    private static int mergeIsotopes(double mzValues[], float intensityValues[],
-            int size, double mzTolerance) {
+    private static int mergeIsotopes(double mzValues[], float intensityValues[], int size, double mzTolerance) {
+        if (mzValues.length != intensityValues.length)
+            throw new IllegalArgumentException("Mass and intensity arrays must be of the same size");
+        if (mzValues.length < 2)
+            return mzValues.length;
 
-        int newSize = 0;
+        int ptrCur = 0;
+        int ptrNex = 1;
+        for ( ; ptrNex < mzValues.length; ptrNex++) {
+            double mzCur = mzValues[ptrCur];
+            double mzNex = mzValues[ptrNex];
+            if (Math.abs(mzCur - mzNex) < mzTolerance) {
+                // merge, only next pointer moves
+                float abCur = intensityValues[ptrCur];
+                float abNex = intensityValues[ptrNex];
+                float abNew = abCur + abNex;
+                double mzNew = (mzCur * abCur + mzNex * abNex) / abNew;
+                mzValues[ptrCur] = mzNew;
+                intensityValues[ptrCur] = abNew;
 
-        for (int i = 0; i < size; i++) {
-
-            if ((i < size - 1) && (Math
-                    .abs(mzValues[i] - mzValues[i + 1]) < mzTolerance)) {
-                float newIntensity = intensityValues[i]
-                        + intensityValues[i + 1];
-                double newMZ = (mzValues[i] * intensityValues[i]
-                        + mzValues[i + 1] * intensityValues[i + 1])
-                        / newIntensity;
-                mzValues[newSize] = newMZ;
-                intensityValues[newSize] = newIntensity;
-                mzValues[i + 1] = newMZ;
-                intensityValues[i + 1] = newIntensity;
-                i++;
             } else {
-                mzValues[newSize] = mzValues[i];
-                intensityValues[newSize] = intensityValues[i];
+                // don't merge, move current pointer and copy the value there
+                ptrCur++;
+
+                mzValues[ptrCur] = mzValues[ptrNex];
+                intensityValues[ptrCur] = intensityValues[ptrNex];
             }
-            newSize++;
         }
-        return newSize;
+
+        return ptrCur + 1;
 
     }
 

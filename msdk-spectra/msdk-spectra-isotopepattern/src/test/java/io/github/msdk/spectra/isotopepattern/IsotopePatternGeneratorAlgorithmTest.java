@@ -37,6 +37,7 @@ public class IsotopePatternGeneratorAlgorithmTest {
 
     }
 
+    @Test
     public void testC39H60N14O14() throws MSDKException {
         String formula = "C39H60N14O14";
 
