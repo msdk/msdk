@@ -50,7 +50,6 @@ public class IsotopePatternGeneratorAlgorithmTest {
     }
 
     @Test
-    @Ignore("Ignored due to a bug in CDK 1.5.12, waiting for new CDK version")
     public void testC20H30Fe2P2S4Cl4() throws MSDKException {
 
         String formula = "C20H30Fe2P2S4Cl4";
