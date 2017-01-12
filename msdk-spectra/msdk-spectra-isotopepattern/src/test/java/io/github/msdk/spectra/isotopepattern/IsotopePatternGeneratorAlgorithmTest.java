@@ -15,7 +15,6 @@
 package io.github.msdk.spectra.isotopepattern;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
@@ -38,8 +37,19 @@ public class IsotopePatternGeneratorAlgorithmTest {
 
     }
 
+    public void testC39H60N14O14() throws MSDKException {
+        String formula = "C39H60N14O14";
+
+        MsSpectrum pattern = IsotopePatternGeneratorAlgorithm
+                .generateIsotopes(formula, 0.01, 1.0f, 0.1);
+
+        Assert.assertEquals(new Integer(4), pattern.getNumberOfDataPoints());
+        Assert.assertEquals(1.0f, pattern.getIntensityValues()[0], 0.000001);
+        Assert.assertEquals(951.4501830990874, pattern.getMzValues()[3],
+                0.00001);
+    }
+
     @Test
-    @Ignore("Ignored due to a bug in CDK 1.5.12, waiting for new CDK version") 
     public void testC20H30Fe2P2S4Cl4() throws MSDKException {
 
         String formula = "C20H30Fe2P2S4Cl4";
