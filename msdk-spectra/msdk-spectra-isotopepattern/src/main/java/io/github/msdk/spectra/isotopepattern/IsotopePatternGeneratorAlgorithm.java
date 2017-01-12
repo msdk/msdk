@@ -180,13 +180,6 @@ public class IsotopePatternGeneratorAlgorithm {
             }
         }
 
-        // ugly hack to make SimpleSpectrum not complain about masses not being sorted
-        // somewhere downstream
-        // TODO: should probably just return new arrays of proper lengths
-        for (int i = ptrCur + 1; i < mzValues.length; i++) {
-            mzValues[i] = mzValues[i - 1] + 1;
-        }
-
         return ptrCur + 1;
 
     }
