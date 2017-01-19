@@ -225,6 +225,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
             String identifier = "";
             String formula = "";
             String smiles = "";
+            String inchiKey = "";
             String description = "";
             String url = "";
             // String database = "";
@@ -251,18 +252,26 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                     }
 
                     // Chemical structure = SMILES
-                    IAtomContainer checmicalStructure = ionAnnotation
+                    IAtomContainer chemicalStructure = ionAnnotation
                             .getChemicalStructure();
-                    SmilesGenerator sg = SmilesGenerator.generic();
-                    if (checmicalStructure != null) {
+                    if (chemicalStructure != null) {
                         try {
+                            SmilesGenerator sg = SmilesGenerator.generic();
                             smiles = smiles + itemSeparator
-                                    + sg.create(checmicalStructure);
+                                    + sg.create(chemicalStructure);
                         } catch (CDKException e) {
                             logger.info("Could not create SMILE for "
                                     + ionAnnotation.getDescription());
                         }
                     }
+                    
+                    // InchiKey
+                    String ik = ionAnnotation.getInchiKey();
+                    if (ik != null) {
+                        inchiKey += itemSeparator
+                                + escapeString(ik);
+                        writeFeature = true;
+                    }            
 
                     // Description
                     String ionDescription = ionAnnotation.getDescription();
@@ -287,6 +296,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                 sm.setIdentifier(removeFirstCharacter(identifier));
                 sm.setChemicalFormula(removeFirstCharacter(formula));
                 sm.setSmiles(removeFirstCharacter(smiles));
+                sm.setInchiKey(removeFirstCharacter(inchiKey));
                 sm.setDescription(removeFirstCharacter(description));
                 sm.setURI(removeFirstCharacter(url));
                 // sm.setDatabase(database);
@@ -416,7 +426,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
      * @param str a {@link java.lang.String} object.
      * @return a {@link java.lang.String} object.
      */
-    public String removeFirstCharacter(String str) {
+    private String removeFirstCharacter(String str) {
         if (str.length() > 0) {
             str = str.substring(1, str.length());
         }
