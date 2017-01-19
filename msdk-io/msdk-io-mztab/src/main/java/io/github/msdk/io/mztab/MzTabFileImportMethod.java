@@ -16,6 +16,9 @@ package io.github.msdk.io.mztab;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -250,7 +253,8 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
             @Nonnull MZTabFile mzTabFile) {
 
         String formula, smiles, inchiKey, description, database, identifier;
-        // String dbVersion, reliability, url;
+        String dbVersion, reliability;
+        URI dbURL = null;
         Double mzCalc = null, featureArea = null;
         Double mzExp;
         Float rtAverageValue = null;
@@ -270,15 +274,15 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
             inchiKey = smallMolecule.getInchiKey().toString();
             description = smallMolecule.getDescription();
             database = smallMolecule.getDatabase();
-            // dbVersion = smallMolecule.getDatabaseVersion();
+            dbVersion = smallMolecule.getDatabaseVersion();
             identifier = smallMolecule.getIdentifier().toString();
             SplitList<Double> rt = smallMolecule.getRetentionTime();
             mzExp = smallMolecule.getExpMassToCharge();
 
             // if (smallMolecule.getReliability() != null)
             // reliability = smallMolecule.getReliability().toString();
-            // if (smallMolecule.getURI() != null)
-            // url = smallMolecule.getURI().toString();
+            if (smallMolecule.getURI() != null)
+                dbURL = smallMolecule.getURI();
             if (smallMolecule.getCalcMassToCharge() != null)
                 mzCalc = smallMolecule.getCalcMassToCharge();
             if (smallMolecule.getCharge() != null)
@@ -300,6 +304,13 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
             ionAnnotation.setDescription(description);
             ionAnnotation.setExpectedMz(mzCalc);
             ionAnnotation.setAnnotationId(identifier);
+            ionAnnotation.setInchiKey(inchiKey);
+            try {
+                if (dbURL != null)
+                    ionAnnotation.setAccessionURL(dbURL.toURL());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
 
             // Convert formula to IMolecularFormula using CDK
             if (!Strings.isNullOrEmpty(formula)) {
