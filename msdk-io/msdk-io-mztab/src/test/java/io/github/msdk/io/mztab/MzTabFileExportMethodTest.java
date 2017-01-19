@@ -41,7 +41,7 @@ public class MzTabFileExportMethodTest {
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
     @Test
-    public void testMzTab_Sample() throws MSDKException {
+    public void testMzTab_Sample() throws MSDKException, IOException {
 
         // Create the data structures
         DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
@@ -56,12 +56,7 @@ public class MzTabFileExportMethodTest {
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
         // Create temp file
-        File tempFile = null;
-        try {
-            tempFile = File.createTempFile("MZmine_TestFile_", ".mzTab");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        File tempFile = File.createTempFile("MZmine_TestFile_", ".mzTab");
 
         // Export the file
         Assert.assertNotNull(tempFile);
@@ -109,6 +104,8 @@ public class MzTabFileExportMethodTest {
                 .getString(ionAnnotation.getFormula());
         String formula2 = MolecularFormulaManipulator.getString(cdkFormula);
         Assert.assertTrue(formula.equals(formula2));
+        String inchiKey = ionAnnotation.getInchiKey();
+        Assert.assertEquals("JKMHFZQWWAIEOD-UHFFFAOYSA-N", inchiKey);
 
         // ********************
         // Row 5
@@ -157,7 +154,7 @@ public class MzTabFileExportMethodTest {
         Double mz = row.getData(mzColumn);
         Assert.assertNotNull(mz);
         Assert.assertEquals(144.927825927734, mz, 0.0000001);
-
+        
         // Clean up
         tempFile.delete();
         featureTable2.dispose();
