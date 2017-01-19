@@ -31,6 +31,8 @@ import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Strings;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKVersion;
@@ -236,7 +238,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                 for (IonAnnotation ionAnnotation : ionAnnotations) {
                     // Annotation ID
                     String ionAnnotationId = ionAnnotation.getAnnotationId();
-                    if (ionAnnotationId != null && ionAnnotationId != "") {
+                    if (! Strings.isNullOrEmpty(ionAnnotationId)) {
                         identifier = identifier + itemSeparator
                                 + escapeString(ionAnnotationId);
                         writeFeature = true;
@@ -267,7 +269,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
                     
                     // InchiKey
                     String ik = ionAnnotation.getInchiKey();
-                    if (ik != null) {
+                    if (! Strings.isNullOrEmpty(ik)) {
                         inchiKey += itemSeparator
                                 + escapeString(ik);
                         writeFeature = true;
@@ -275,7 +277,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
 
                     // Description
                     String ionDescription = ionAnnotation.getDescription();
-                    if (ionDescription != null) {
+                    if (! Strings.isNullOrEmpty(ionDescription)) {
                         description = description + itemSeparator
                                 + escapeString(ionDescription);
                         writeFeature = true;
