@@ -402,7 +402,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
         rawFile.dispose();
 
     }
-    
+
     @SuppressWarnings("null")
     @Test
     @Ignore("This case fails, but we don't have a better algorithm at the moment")
@@ -634,6 +634,31 @@ public class SpectrumTypeDetectionAlgorithmTest {
     public void testProfile9() throws Exception {
 
         File inputFile = new File(TEST_DATA_PATH + "profile9.mzML");
+        Assert.assertTrue(inputFile.canRead());
+        MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        for (MsScan scan : rawFile.getScans()) {
+            final MsSpectrumType expectedType = MsSpectrumType.PROFILE;
+            final MsSpectrumType detectedType = SpectrumTypeDetectionAlgorithm
+                    .detectSpectrumType(scan);
+            Assert.assertEquals(
+                    "Scan type wrongly detected for scan "
+                            + scan.getScanNumber() + " in " + rawFile.getName(),
+                    expectedType, detectedType);
+        }
+
+        rawFile.dispose();
+
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testProfile10() throws Exception {
+
+        File inputFile = new File(TEST_DATA_PATH + "profile10.mzML");
         Assert.assertTrue(inputFile.canRead());
         MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
         RawDataFile rawFile = importer.execute();
