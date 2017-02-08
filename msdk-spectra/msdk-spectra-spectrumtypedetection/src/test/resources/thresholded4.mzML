@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mzML xmlns="http://psi.hupo.org/ms/mzml" id="MZmine2 mzML export" version="1.1.0">
+<cvList xmlns="http://psi.hupo.org/ms/mzml"></cvList>
+<dataProcessingList xmlns="http://psi.hupo.org/ms/mzml" count="1">
+  <dataProcessing id="MSDK_mzml_export">
+    <processingMethod softwareRef="MSDK" order="0"></processingMethod>
+  </dataProcessing>
+</dataProcessingList>
+<run id="MZmine2 mzML export">
+<spectrumList count="1">
+<spectrum xmlns="http://psi.hupo.org/ms/mzml" defaultArrayLength="121" index="0" id="1">
+  <cvParam name="centroid mass spectrum" accession="MS:1000127"></cvParam>
+  <cvParam name="ms level" value="1" accession="MS:1000511"></cvParam>
+  <scanList count="1">
+    <scan>
+      <cvParam name="positive scan" accession="MS:1000130"></cvParam>
+    </scan>
+  </scanList>
+  <binaryDataArrayList count="2">
+    <binaryDataArray arrayLength="121">
+      <cvParam name="zlib compression" accession="MS:1000574"></cvParam>
+      <cvParam name="64-bit float" accession="MS:1000523"></cvParam>
+      <binary>eJzt0cuLzWEYB/CzshgluZdG47YYlyzGiqYmEiLmt0ImjUuSouOauzNn5riOZm2hJmMpKwoRWVvIZmQhsiELIZIs5H0e/4Hl57P59nTe93me33tqtVptfP76ntrf3L2hZO1pyf77b0p29C3bWLI1cdPf7Ok6sil+Pxd123jJt9WszaV+t6Lk6PVtWf/KbOst58Yml+wfmVKy8Wxhb/RfXHK0vjRy7c7euLc/zt8/mPfref9w1KeORr33ePTrPlWy1nkm+7ey77WY0zeSfUbz3O08dy/PPc5zT/Lci5z3Mvu/zv2+xH5d33LPXyWfPv8d56ZNquI9J0eOT61izvSSHXdmRrZmV9FvbhV9FlXRZ0kV37c87nWvyH492WdN9lkb96+vz34bIvs2Z98q+rZtib7ft1bxnjui/1h/1CO7ct6enFPPvY/kvGM552TOOR11/WzOO5/7P/w3Z0v8LzP64veL+2LurkaZU11pxJxHjfi+n43Ys2ug3J+zeiDe91Dm54G493Ugzi9oxj5Lm7H3qmbMXdeM72lG7h1uxpybkZ238tyrvPejZGPahMHYv20w9m0fjP6dkfX2ociVQ9HnXNbvo659GIp3aW/F/Hmt2LO/Fd91KPLdcNY3LsTcuxfie7dfLPWnA5dK/fzE5Xj/B5fj3c5cKfuOdVyN/T4Ol7zTfi3mAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMB/9gcWlO0I</binary>
+    </binaryDataArray>
+    <binaryDataArray arrayLength="121">
+      <cvParam name="zlib compression" accession="MS:1000574"></cvParam>
+      <cvParam name="32-bit float" accession="MS:1000521"></cvParam>
+      <binary>eJzt0MFNAzEQAEDrfrSQZ0QLqQDJ5plXGqANXlcCDSDly5MOoA66oACwF599SEgUMCNZ9sXZ9e6mx6dyOS115Ze3Y0nn93w5rTn2pZ3rmu/qOWLWFpcixxSzlPpb/U7nuxI5av5rifjY467HxZvjHHGR+zv+46HMNbUcz4f7XvcUU+oeb4ya5jzt+/azjD6WvPW/zWNt/2nnm9fSax3vH3tfZe67z2Sbw7jbeuv593NedrX8nv8c/1N33q/1zz0BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPBvXx+xkLs=</binary>
+    </binaryDataArray>
+  </binaryDataArrayList>
+</spectrum>
+</spectrumList>
+</run>
+</mzML>

@@ -405,7 +405,6 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
     @SuppressWarnings("null")
     @Test
-    @Ignore("This case fails, but we don't have a better algorithm at the moment")
     public void testCentroided16() throws Exception {
 
         File inputFile = new File(TEST_DATA_PATH + "centroided16.mzML");
@@ -709,6 +708,56 @@ public class SpectrumTypeDetectionAlgorithmTest {
     public void testThresholded2() throws Exception {
 
         File inputFile = new File(TEST_DATA_PATH + "thresholded2.mzML");
+        Assert.assertTrue(inputFile.canRead());
+        MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        for (MsScan scan : rawFile.getScans()) {
+            final MsSpectrumType expectedType = MsSpectrumType.THRESHOLDED;
+            final MsSpectrumType detectedType = SpectrumTypeDetectionAlgorithm
+                    .detectSpectrumType(scan);
+            Assert.assertEquals(
+                    "Scan type wrongly detected for scan "
+                            + scan.getScanNumber() + " in " + rawFile.getName(),
+                    expectedType, detectedType);
+        }
+
+        rawFile.dispose();
+
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testThresholded3() throws Exception {
+
+        File inputFile = new File(TEST_DATA_PATH + "thresholded3.mzML");
+        Assert.assertTrue(inputFile.canRead());
+        MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        for (MsScan scan : rawFile.getScans()) {
+            final MsSpectrumType expectedType = MsSpectrumType.THRESHOLDED;
+            final MsSpectrumType detectedType = SpectrumTypeDetectionAlgorithm
+                    .detectSpectrumType(scan);
+            Assert.assertEquals(
+                    "Scan type wrongly detected for scan "
+                            + scan.getScanNumber() + " in " + rawFile.getName(),
+                    expectedType, detectedType);
+        }
+
+        rawFile.dispose();
+
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testThresholded4() throws Exception {
+
+        File inputFile = new File(TEST_DATA_PATH + "thresholded4.mzML");
         Assert.assertTrue(inputFile.canRead());
         MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
         RawDataFile rawFile = importer.execute();
