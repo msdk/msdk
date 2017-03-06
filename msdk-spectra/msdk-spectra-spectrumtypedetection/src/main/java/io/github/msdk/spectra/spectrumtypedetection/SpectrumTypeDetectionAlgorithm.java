@@ -14,7 +14,16 @@
 
 package io.github.msdk.spectra.spectrumtypedetection;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nonnull;
+
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
+
+import com.google.common.math.Quantiles;
+import com.google.common.primitives.Doubles;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
@@ -48,6 +57,35 @@ public class SpectrumTypeDetectionAlgorithm {
         return detectSpectrumType(mzValues, intensityValues, size);
     }
 
+    public static @Nonnull MsSpectrumType detectSpectrumType(
+            @Nonnull double mzValues[], @Nonnull float intensityValues[],
+            @Nonnull Integer size) {
+        
+        // If the spectrum has less than 5 data points, it should be
+        // centroided.
+        if (size < 5)
+            return MsSpectrumType.CENTROIDED;
+        
+        // List<Float> intensityList = Floats.asList(intensityValues).subList(0, size - 1);
+        // double percentile90 = Quantiles.percentiles().index(90).compute(intensityList);
+
+        List<Double> diffs = new ArrayList<>();
+        for (int i = 1; i < size; i++) {
+            if (intensityValues[i] == 0f) continue;
+            double diff = mzValues[i] - mzValues[i-1];
+            diffs.add(diff);
+        }
+        DescriptiveStatistics ds = new DescriptiveStatistics();
+        for (Double d : diffs) ds.addValue(d);
+
+        double dev = ds.getStandardDeviation();
+        double err = dev / ds.getMean();
+        System.out.println("stderr " + err);
+        // double diffPercentile25 = Quantiles.percentiles().index(25).compute(diffs);
+        // System.out.println("diffperc25 " + diffPercentile25);
+        if (err >= 0.025) return MsSpectrumType.CENTROIDED; else return MsSpectrumType.PROFILE;
+        
+    }
     /**
      * <p>
      * detectSpectrumType.
@@ -62,7 +100,7 @@ public class SpectrumTypeDetectionAlgorithm {
      * @param size
      *            a {@link java.lang.Integer} object.
      */
-    public static @Nonnull MsSpectrumType detectSpectrumType(
+    public static @Nonnull MsSpectrumType detectSpectrumTypeOld(
             @Nonnull double mzValues[], @Nonnull float intensityValues[],
             @Nonnull Integer size) {
 
