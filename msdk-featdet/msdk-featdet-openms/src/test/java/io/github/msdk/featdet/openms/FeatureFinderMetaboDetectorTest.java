@@ -23,13 +23,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import io.github.msdk.MSDKException;
+
 public class FeatureFinderMetaboDetectorTest {
 
 	private static final String TEST_DATA_PATH = "src/test/resources/";
 
 	@Test
-	public void testValidmzMLfile()
-			throws SAXException, IOException, ParserConfigurationException, FeatureFinderMetaboException {
+	public void testValidmzMLfile() throws SAXException, IOException, ParserConfigurationException, MSDKException {
 
 		final String inputFileName = TEST_DATA_PATH + "msms.mzML";
 		final File inputFile = new File(inputFileName);
@@ -43,9 +44,8 @@ public class FeatureFinderMetaboDetectorTest {
 		Assert.assertEquals(233, mzDetector2.execute().size());
 	}
 
-	@Test(expected = FeatureFinderMetaboException.class)
-	public void testInvalidmzMLFile()
-			throws SAXException, IOException, ParserConfigurationException, FeatureFinderMetaboException {
+	@Test(expected = MSDKException.class)
+	public void testInvalidmzMLFile() throws SAXException, IOException, ParserConfigurationException, MSDKException {
 		final String truncatedFileName = TEST_DATA_PATH + "truncated.mzML";
 		final File truncatedFile = new File(truncatedFileName);
 

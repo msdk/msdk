@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
@@ -34,27 +35,32 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import io.github.msdk.MSDKException;
+
 public class FeatureFinderMetaboDetector {
 	private final String OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME;
 	private final File FEATURE_XML_FILE;
 
 	private final @Nonnull File mzMLFile;
 
-	public FeatureFinderMetaboDetector(String mzMLFileName) throws FeatureFinderMetaboException {
+	public FeatureFinderMetaboDetector(String mzMLFileName) throws MSDKException {
 		this(new File(mzMLFileName));
 	}
 
-	public FeatureFinderMetaboDetector(File mzMLFile) throws FeatureFinderMetaboException {
+	public FeatureFinderMetaboDetector(File mzMLFile) throws MSDKException {
 		this.mzMLFile = mzMLFile;
-		FEATURE_XML_FILE = new File(mzMLFile.getName() + "featureXML");
+		FEATURE_XML_FILE = new File(System.getProperty("java.io.tmpdir") + UUID.randomUUID() + ".featureXML");
 		OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME = FeatureFinderMetaboLocator.findFeatureFinderMetabo();
 	}
 
-	public List<Double> execute()
-			throws SAXException, IOException, ParserConfigurationException, FeatureFinderMetaboException {
+	public List<Double> execute() throws SAXException, IOException, ParserConfigurationException, MSDKException {
 		List<Double> mzValuesResult = new ArrayList<Double>();
 
-		if (!OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME.equals(null)) {
+		if (OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME.equals(null)) {
+			throw new MSDKException(
+					"FeatureFinderMetabo library not found. Please install OpenMS and add FeatureFinderMetabo to Path.");
+
+		} else {
 			createTempFeatureXMLFile();
 
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -78,30 +84,32 @@ public class FeatureFinderMetaboDetector {
 							Double.valueOf(featureElement.getElementsByTagName("position").item(1).getTextContent()));
 				}
 			}
-		} else {
-			throw new FeatureFinderMetaboException(
-					"FeatureFinderMetabo library not found. Please install OpenMS and add FeatureFinderMetabo to Path.");
+
 		}
 		return mzValuesResult;
 
 	}
 
-	private void createTempFeatureXMLFile() throws IOException, FeatureFinderMetaboException {
+	private void createTempFeatureXMLFile() throws IOException, MSDKException {
 		final Logger logger = LoggerFactory.getLogger(this.getClass());
 		logger.info(execShellCommand(OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME + " -in " + mzMLFile.getAbsolutePath()
 				+ " -out " + FEATURE_XML_FILE.getAbsolutePath()));
 		if (!FEATURE_XML_FILE.exists())
-			throw new FeatureFinderMetaboException("Could not create featureXML File");
+			throw new MSDKException("Could not create featureXML File");
 		FEATURE_XML_FILE.deleteOnExit();
 	}
 
-	private String execShellCommand(String cmd) throws IOException {
+	private String execShellCommand(String cmd) throws MSDKException {
 		String out = "";
-		Process cmdProc = Runtime.getRuntime().exec(cmd);
-		BufferedReader stdoutReader = new BufferedReader(new InputStreamReader(cmdProc.getInputStream()));
-		String line;
-		while ((line = stdoutReader.readLine()) != null) {
-			out += line + "\n";
+		try {
+			Process cmdProc = Runtime.getRuntime().exec(cmd);
+			BufferedReader stdoutReader = new BufferedReader(new InputStreamReader(cmdProc.getInputStream()));
+			String line;
+			while ((line = stdoutReader.readLine()) != null) {
+				out += line + "\n";
+			}
+		} catch (IOException e) {
+			throw new MSDKException(e.getMessage());
 		}
 		return out;
 	}

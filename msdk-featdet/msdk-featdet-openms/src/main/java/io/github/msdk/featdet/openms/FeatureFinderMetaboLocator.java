@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import io.github.msdk.MSDKException;
+
 public class FeatureFinderMetaboLocator {
 
 	private final static String OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME = "FeatureFinderMetabo";
@@ -27,39 +29,36 @@ public class FeatureFinderMetaboLocator {
 	private final static String OPENMS_DEFAULT_LOCATION_LINUX = "/usr/local/";
 	private final static String FEATURE_FINDER_METABO_EVAL = "No options given. Aborting!";
 
-	public static String findFeatureFinderMetabo() throws FeatureFinderMetaboException {
-		if (isFeatureFinderMetaboHere(OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME)) {
+	public static String findFeatureFinderMetabo() throws MSDKException {
+		if (!isFeatureFinderMetaboHere(OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME)) {
 			return OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME;
 		} else {
 			String OS = System.getProperty("os.name").toLowerCase();
 			if (OS.indexOf("win") >= 0) {
 				for (String s : new File(OPENMS_DEFAULT_LOCATION_WINDOWS).list()) {
 					if (s.toLowerCase().contains("openms")) {
-						String path = OPENMS_DEFAULT_LOCATION_WINDOWS + s + "\\bin\\"
-								+ OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME;
+						String path = "\"" + OPENMS_DEFAULT_LOCATION_WINDOWS + s + "\\bin\\"
+								+ OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME + "\"";
 						if (isFeatureFinderMetaboHere(path))
 							return path;
-						return null;
 					}
 				}
 			} else if (OS.indexOf("mac") >= 0) {
 				for (String s : new File(OPENMS_DEFAULT_LOCATION_MAC).list()) {
 					if (s.toLowerCase().contains("openms")) {
-						String path = OPENMS_DEFAULT_LOCATION_MAC + s + "\\bin\\"
-								+ OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME;
+						String path = "\"" + OPENMS_DEFAULT_LOCATION_MAC + s + "\\bin\\"
+								+ OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME + "\"";
 						if (isFeatureFinderMetaboHere(path))
 							return path;
-						return null;
 					}
 				}
 			} else if (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0) {
 				for (String s : new File(OPENMS_DEFAULT_LOCATION_LINUX).list()) {
 					if (s.toLowerCase().contains("openms")) {
-						String path = OPENMS_DEFAULT_LOCATION_LINUX + s + "\\bin\\"
-								+ OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME;
+						String path = "\"" + OPENMS_DEFAULT_LOCATION_LINUX + s + "\\bin\\"
+								+ OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME + "\"";
 						if (isFeatureFinderMetaboHere(path))
 							return path;
-						return null;
 					}
 
 				}
@@ -70,11 +69,11 @@ public class FeatureFinderMetaboLocator {
 		return null;
 	}
 
-	private static boolean isFeatureFinderMetaboHere(String path) throws FeatureFinderMetaboException {
+	private static boolean isFeatureFinderMetaboHere(String path) throws MSDKException {
 		return execShellCommand(path).contains(FEATURE_FINDER_METABO_EVAL);
 	}
 
-	private static String execShellCommand(String cmd) throws FeatureFinderMetaboException {
+	private static String execShellCommand(String cmd) {
 		String out = "";
 		try {
 			Process cmdProc = Runtime.getRuntime().exec(cmd);
@@ -84,7 +83,6 @@ public class FeatureFinderMetaboLocator {
 				out += line + "\n";
 			}
 		} catch (IOException ie) {
-			throw new FeatureFinderMetaboException(ie.getMessage());
 		}
 		return out;
 	}
