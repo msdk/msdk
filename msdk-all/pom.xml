@@ -268,5 +268,11 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-featdet-openms</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 	</dependencies>
 </project>
