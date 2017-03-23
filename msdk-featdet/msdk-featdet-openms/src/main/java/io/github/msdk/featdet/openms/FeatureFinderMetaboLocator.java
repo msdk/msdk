@@ -29,50 +29,79 @@ public class FeatureFinderMetaboLocator {
 	private final static String OPENMS_DEFAULT_LOCATION_LINUX = "/usr/local/";
 	private final static String FEATURE_FINDER_METABO_EVAL = "No options given. Aborting!";
 
+	/**
+	 * Check for FeatureFinderMetabo in PATH & default Installation directory on
+	 * various platforms.
+	 * 
+	 * @return <i>FeatureFinderMetabo</i> if found in path.
+	 *         <p>
+	 *         The full location to FeatureFinderMetabo if not found in path.
+	 *         <p>
+	 *         <i>null</i> if not found anywhere.
+	 */
 	public static String findFeatureFinderMetabo() throws MSDKException {
-		if (!isFeatureFinderMetaboHere(OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME)) {
+		if (isFeatureFinderMetaboHere(OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME)) {
 			return OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME;
-		} else {
-			String OS = System.getProperty("os.name").toLowerCase();
-			if (OS.indexOf("win") >= 0) {
-				for (String s : new File(OPENMS_DEFAULT_LOCATION_WINDOWS).list()) {
-					if (s.toLowerCase().contains("openms")) {
-						String path = "\"" + OPENMS_DEFAULT_LOCATION_WINDOWS + s + "\\bin\\"
-								+ OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME + "\"";
-						if (isFeatureFinderMetaboHere(path))
-							return path;
-					}
-				}
-			} else if (OS.indexOf("mac") >= 0) {
-				for (String s : new File(OPENMS_DEFAULT_LOCATION_MAC).list()) {
-					if (s.toLowerCase().contains("openms")) {
-						String path = "\"" + OPENMS_DEFAULT_LOCATION_MAC + s + "\\bin\\"
-								+ OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME + "\"";
-						if (isFeatureFinderMetaboHere(path))
-							return path;
-					}
-				}
-			} else if (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0) {
-				for (String s : new File(OPENMS_DEFAULT_LOCATION_LINUX).list()) {
-					if (s.toLowerCase().contains("openms")) {
-						String path = "\"" + OPENMS_DEFAULT_LOCATION_LINUX + s + "\\bin\\"
-								+ OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME + "\"";
-						if (isFeatureFinderMetaboHere(path))
-							return path;
-					}
+		}
 
+		final String OS = System.getProperty("os.name").toLowerCase();
+		if (OS.indexOf("win") >= 0) {
+			for (String s : new File(OPENMS_DEFAULT_LOCATION_WINDOWS).list()) {
+				if (s.toLowerCase().contains("openms")) {
+					String path = "\"" + OPENMS_DEFAULT_LOCATION_WINDOWS + s + "\\bin\\"
+							+ OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME + "\"";
+					if (isFeatureFinderMetaboHere(path))
+						return path;
 				}
-			} else {
-				return null;
+			}
+		} else if (OS.indexOf("mac") >= 0) {
+			for (String s : new File(OPENMS_DEFAULT_LOCATION_MAC).list()) {
+				if (s.toLowerCase().contains("openms")) {
+					String path = "\"" + OPENMS_DEFAULT_LOCATION_MAC + s + "\\bin\\"
+							+ OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME + "\"";
+					if (isFeatureFinderMetaboHere(path))
+						return path;
+				}
+			}
+		} else if (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0) {
+			for (String s : new File(OPENMS_DEFAULT_LOCATION_LINUX).list()) {
+				if (s.toLowerCase().contains("openms")) {
+					String path = "\"" + OPENMS_DEFAULT_LOCATION_LINUX + s + "\\bin\\"
+							+ OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME + "\"";
+					if (isFeatureFinderMetaboHere(path))
+						return path;
+				}
+
 			}
 		}
+
 		return null;
 	}
 
+	/**
+	 * FeatureFinderMetabo is tried to be executed from the given path.
+	 * 
+	 * @param path
+	 *            Location to check for FeatureFinderMetabo
+	 * 
+	 * @return true if the library was found in the given path
+	 */
 	private static boolean isFeatureFinderMetaboHere(String path) throws MSDKException {
+		/*
+		 * FEATURE_FINDER_METABO_EVAL is the text the binary returns when no
+		 * parameters are passed
+		 */
 		return execShellCommand(path).contains(FEATURE_FINDER_METABO_EVAL);
 	}
 
+	/**
+	 * Executes the specified string command in a separate process.
+	 * 
+	 * @param cmd
+	 *            The command to be executed
+	 * 
+	 * @return The output obtained after executing the passed cmd
+	 */
 	private static String execShellCommand(String cmd) {
 		String out = "";
 		try {

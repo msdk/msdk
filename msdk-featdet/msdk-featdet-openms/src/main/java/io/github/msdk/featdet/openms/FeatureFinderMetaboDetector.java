@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -35,70 +36,123 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.google.common.base.Strings;
+
 import io.github.msdk.MSDKException;
 
+/**
+ * 
+ * @author Adhithya
+ * 
+ *         This class creates a list m/z values (double) for a mzML input file
+ *         using OpenMS TOPP Tools
+ *
+ */
 public class FeatureFinderMetaboDetector {
 	private final String OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME;
-	private final File FEATURE_XML_FILE;
+	private final @Nonnull File FEATURE_XML_FILE;
+	private final @Nonnull String FEATURE_XML_FILE_PATH;
 
 	private final @Nonnull File mzMLFile;
+	private final @Nonnull String mzMLFILE_PATH;
 
-	public FeatureFinderMetaboDetector(String mzMLFileName) throws MSDKException {
-		this(new File(mzMLFileName));
+	/**
+	 * 
+	 * <p>
+	 * Constructor for FeatureFinderMetaboDetector.
+	 * </p>
+	 * 
+	 * @param mzMLFilePath
+	 *            Path to mzML File to be processed
+	 */
+	public FeatureFinderMetaboDetector(String mzMLFilePath) throws MSDKException {
+		this(new File(mzMLFilePath));
 	}
 
+	/**
+	 * 
+	 * <p>
+	 * Constructor for FeatureFinderMetaboDetector.
+	 * </p>
+	 * 
+	 * @param mzMLFile
+	 *            {@link java.io.File} reference to mzML File to be processed
+	 */
 	public FeatureFinderMetaboDetector(File mzMLFile) throws MSDKException {
 		this.mzMLFile = mzMLFile;
 		FEATURE_XML_FILE = new File(System.getProperty("java.io.tmpdir") + UUID.randomUUID() + ".featureXML");
 		OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME = FeatureFinderMetaboLocator.findFeatureFinderMetabo();
+		mzMLFILE_PATH = mzMLFile.getAbsolutePath();
+		FEATURE_XML_FILE_PATH = FEATURE_XML_FILE.getAbsolutePath();
 	}
 
+	/**
+	 * Runs FeatureFinderMetabo on the output file, processes the output file
+	 * for mz values data.
+	 * 
+	 * @return List of m/z Values
+	 */
 	public List<Double> execute() throws SAXException, IOException, ParserConfigurationException, MSDKException {
 		List<Double> mzValuesResult = new ArrayList<Double>();
 
-		if (OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME.equals(null)) {
-			throw new MSDKException(
-					"FeatureFinderMetabo library not found. Please install OpenMS and add FeatureFinderMetabo to Path.");
+		createTempFeatureXMLFile();
 
-		} else {
-			createTempFeatureXMLFile();
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(FEATURE_XML_FILE);
+		doc.getDocumentElement().normalize();
 
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(FEATURE_XML_FILE);
-			doc.getDocumentElement().normalize();
-
-			NodeList featureMap = doc.getElementsByTagName("featureMap").item(0).getChildNodes();
-			NodeList featureList = null;
-			for (int i = 0; i < featureMap.getLength(); i++) {
-				Node node = featureMap.item(i);
-				if (node.getNodeName().equals("featureList"))
-					featureList = node.getChildNodes();
-			}
-
-			for (int i = 0; i < featureList.getLength(); i++) {
-				Node node = featureList.item(i);
-				if (node.getNodeName().equals("feature")) {
-					Element featureElement = (Element) node;
-					mzValuesResult.add(
-							Double.valueOf(featureElement.getElementsByTagName("position").item(1).getTextContent()));
-				}
-			}
-
+		NodeList featureMap = doc.getElementsByTagName("featureMap").item(0).getChildNodes();
+		NodeList featureList = null;
+		for (int i = 0; i < featureMap.getLength(); i++) {
+			Node node = featureMap.item(i);
+			if (node.getNodeName().equals("featureList"))
+				featureList = node.getChildNodes();
 		}
+
+		for (int i = 0; i < featureList.getLength(); i++) {
+			Node node = featureList.item(i);
+			if (node.getNodeName().equals("feature")) {
+				Element featureElement = (Element) node;
+				mzValuesResult
+						.add(Double.valueOf(featureElement.getElementsByTagName("position").item(1).getTextContent()));
+			}
+		}
+
 		return mzValuesResult;
 
 	}
 
 	private void createTempFeatureXMLFile() throws IOException, MSDKException {
 		final Logger logger = LoggerFactory.getLogger(this.getClass());
-		logger.info(execShellCommand(OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME + " -in " + mzMLFile.getAbsolutePath()
-				+ " -out " + FEATURE_XML_FILE.getAbsolutePath()));
-		if (!FEATURE_XML_FILE.exists())
-			throw new MSDKException("Could not create featureXML File");
+		if (Strings.isNullOrEmpty(OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME)) {
+			throw new MSDKException("FeatureFinderMetabo not found. Please install OpenMS on your machine.");
+		}
+		final String cmdOutput = execShellCommand(
+				OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME + " -in " + mzMLFILE_PATH + " -out " + FEATURE_XML_FILE_PATH);
+		logger.info(cmdOutput);
+		if (!FEATURE_XML_FILE.exists()) {
+			String error = "";
+			Scanner cmdOutputParser = new Scanner(cmdOutput);
+			while (cmdOutputParser.hasNext()) {
+				String curLine = cmdOutputParser.nextLine();
+				if (curLine.toLowerCase().contains("error"))
+					error += curLine;
+			}
+			cmdOutputParser.close();
+			throw new MSDKException("The input mzML could not be processed.\n" + error);
+		}
 		FEATURE_XML_FILE.deleteOnExit();
 	}
 
+	/**
+	 * Executes the specified string command in a separate process.
+	 * 
+	 * @param cmd
+	 *            The command to be executed
+	 * 
+	 * @return The output obtained after executing the passed cmd
+	 */
 	private String execShellCommand(String cmd) throws MSDKException {
 		String out = "";
 		try {
