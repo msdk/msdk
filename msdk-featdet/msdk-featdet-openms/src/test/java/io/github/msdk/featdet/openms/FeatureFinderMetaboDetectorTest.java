@@ -20,8 +20,12 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
+
+import com.google.common.base.Strings;
 
 import io.github.msdk.MSDKException;
 
@@ -29,6 +33,13 @@ public class FeatureFinderMetaboDetectorTest {
 
 	private static final String TEST_DATA_PATH = "src/test/resources/";
 
+	@Before
+	public void runCondition() throws MSDKException {
+	    // This code will ensure that the tests are executed only when FeatureFinderMetabo is installed
+	    String programLocation = FeatureFinderMetaboLocator.findFeatureFinderMetabo();
+	    Assume.assumeFalse(Strings.isNullOrEmpty(programLocation));
+	}
+	
 	@Test
 	public void testValidmzMLfile() throws SAXException, IOException, ParserConfigurationException, MSDKException {
 
