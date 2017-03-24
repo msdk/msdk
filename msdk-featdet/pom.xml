@@ -15,5 +15,6 @@
         <module>msdk-featdet-gridmass</module>
         <module>msdk-featdet-msmsdetection</module>
         <module>msdk-featdet-srmdetection</module>
+        <module>msdk-featdet-openms</module>
     </modules>
 </project>
