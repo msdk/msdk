@@ -25,107 +25,96 @@ import io.github.msdk.datamodel.msspectra.MsSpectrum;
 
 public class TxtExportAlgorithmTest {
 
-    private static final double[] mzValues1 = { 100.0, 200.0 };
-    private static final float[] intensityValues1 = { 10.0f, 20.0f };
+  private static final double[] mzValues1 = {100.0, 200.0};
+  private static final float[] intensityValues1 = {10.0f, 20.0f};
 
-    private static final double[] mzValues2 = { 300.0, 400.0 };
-    private static final float[] intensityValues2 = { 30.0f, 40.0f };
+  private static final double[] mzValues2 = {300.0, 400.0};
+  private static final float[] intensityValues2 = {30.0f, 40.0f};
 
-    private static final String[] expectedSimple = { "100.0 10.0",
-            "200.0 20.0" };
-    private static final String[] expectedSimpleWithTabs = { "100.0\t10.0",
-            "200.0\t20.0" };
+  private static final String[] expectedSimple = {"100.0 10.0", "200.0 20.0"};
+  private static final String[] expectedSimpleWithTabs = {"100.0\t10.0", "200.0\t20.0"};
 
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+  @Rule
+  public TemporaryFolder folder = new TemporaryFolder();
 
-    @Test
-    public void testExportSpectrum() throws IOException {
-        File file = folder.newFile();
-        MsSpectrum spectrum = mockSpectrum(mzValues1, intensityValues1);
+  @Test
+  public void testExportSpectrum() throws IOException {
+    File file = folder.newFile();
+    MsSpectrum spectrum = mockSpectrum(mzValues1, intensityValues1);
 
-        TxtExportAlgorithm.exportSpectrum(file, spectrum);
+    TxtExportAlgorithm.exportSpectrum(file, spectrum);
 
-        List<String> lines = Files.readAllLines(file.toPath(),
-                Charset.defaultCharset());
-        String empty = lines.remove(lines.size() - 1); // hack to remove empty
-                                                       // last line
-        assertThat(empty, isEmptyString());
-        assertThat(lines.toArray(new String[lines.size()]),
-                arrayContaining(expectedSimple));
+    List<String> lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
+    String empty = lines.remove(lines.size() - 1); // hack to remove empty
+                                                   // last line
+    assertThat(empty, isEmptyString());
+    assertThat(lines.toArray(new String[lines.size()]), arrayContaining(expectedSimple));
+  }
+
+  private static final String[] expectedTwoSpectra =
+      {"100.0 10.0", "200.0 20.0", "", "300.0 30.0", "400.0 40.0", ""};
+
+  @Test
+  public void testExportSpectra() throws IOException {
+    File file = folder.newFile();
+    Collection<MsSpectrum> spectra = new ArrayList<>();
+
+    spectra.add(mockSpectrum(mzValues1, intensityValues1));
+    spectra.add(mockSpectrum(mzValues2, intensityValues2));
+
+    TxtExportAlgorithm.exportSpectra(file, spectra);
+
+    List<String> lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
+    assertThat(lines.toArray(new String[lines.size()]), arrayContaining(expectedTwoSpectra));
+
+    Collection<MsSpectrum> importedSpectra =
+        TxtImportAlgorithm.parseMsSpectra(new FileReader(file));
+    assertThat(importedSpectra.size(), equalTo(2));
+
+    Iterator<MsSpectrum> iterator = importedSpectra.iterator();
+
+    MsSpectrum spectrum = iterator.next();
+    assertThat(spectrum.getMzValues()[0], equalTo(mzValues1[0]));
+    assertThat(spectrum.getMzValues()[1], equalTo(mzValues1[1]));
+    assertThat(spectrum.getIntensityValues()[0], equalTo(intensityValues1[0]));
+    assertThat(spectrum.getIntensityValues()[1], equalTo(intensityValues1[1]));
+
+    spectrum = iterator.next();
+    assertThat(spectrum.getMzValues()[0], equalTo(mzValues2[0]));
+    assertThat(spectrum.getMzValues()[1], equalTo(mzValues2[1]));
+    assertThat(spectrum.getIntensityValues()[0], equalTo(intensityValues2[0]));
+    assertThat(spectrum.getIntensityValues()[1], equalTo(intensityValues2[1]));
+  }
+
+  @Test
+  public void testSpectrumToString() {
+    MsSpectrum spectrum = mockSpectrum(mzValues1, intensityValues1);
+
+    String result = TxtExportAlgorithm.spectrumToString(spectrum);
+    String lines[] = result.split("\\r?\\n");
+    assertThat(lines, arrayContaining(expectedSimple));
+  }
+
+  @Test
+  public void testSpectrumToStringWithTabs() {
+    MsSpectrum spectrum = mockSpectrum(mzValues1, intensityValues1);
+
+    String result = TxtExportAlgorithm.spectrumToString(spectrum, "\t");
+    String lines[] = result.split("\\r?\\n");
+    assertThat(lines, arrayContaining(expectedSimpleWithTabs));
+  }
+
+  private MsSpectrum mockSpectrum(double[] mzValues, float[] intensityValues) {
+
+    if (mzValues.length != intensityValues.length) {
+      fail("Inconsistent sizes when mocking spectrum.");
     }
 
-    private static final String[] expectedTwoSpectra = { "100.0 10.0",
-            "200.0 20.0", "", "300.0 30.0", "400.0 40.0", "" };
+    MsSpectrum spectrum = mock(MsSpectrum.class);
+    when(spectrum.getMzValues()).thenReturn(mzValues);
+    when(spectrum.getIntensityValues()).thenReturn(intensityValues);
+    when(spectrum.getNumberOfDataPoints()).thenReturn(mzValues.length);
 
-    @Test
-    public void testExportSpectra() throws IOException {
-        File file = folder.newFile();
-        Collection<MsSpectrum> spectra = new ArrayList<>();
-
-        spectra.add(mockSpectrum(mzValues1, intensityValues1));
-        spectra.add(mockSpectrum(mzValues2, intensityValues2));
-
-        TxtExportAlgorithm.exportSpectra(file, spectra);
-
-        List<String> lines = Files.readAllLines(file.toPath(),
-                Charset.defaultCharset());
-        assertThat(lines.toArray(new String[lines.size()]),
-                arrayContaining(expectedTwoSpectra));
-
-        Collection<MsSpectrum> importedSpectra = TxtImportAlgorithm
-                .parseMsSpectra(new FileReader(file));
-        assertThat(importedSpectra.size(), equalTo(2));
-
-        Iterator<MsSpectrum> iterator = importedSpectra.iterator();
-
-        MsSpectrum spectrum = iterator.next();
-        assertThat(spectrum.getMzValues()[0], equalTo(mzValues1[0]));
-        assertThat(spectrum.getMzValues()[1], equalTo(mzValues1[1]));
-        assertThat(spectrum.getIntensityValues()[0],
-                equalTo(intensityValues1[0]));
-        assertThat(spectrum.getIntensityValues()[1],
-                equalTo(intensityValues1[1]));
-
-        spectrum = iterator.next();
-        assertThat(spectrum.getMzValues()[0], equalTo(mzValues2[0]));
-        assertThat(spectrum.getMzValues()[1], equalTo(mzValues2[1]));
-        assertThat(spectrum.getIntensityValues()[0],
-                equalTo(intensityValues2[0]));
-        assertThat(spectrum.getIntensityValues()[1],
-                equalTo(intensityValues2[1]));
-    }
-
-    @Test
-    public void testSpectrumToString() {
-        MsSpectrum spectrum = mockSpectrum(mzValues1, intensityValues1);
-
-        String result = TxtExportAlgorithm.spectrumToString(spectrum);
-        String lines[] = result.split("\\r?\\n");
-        assertThat(lines, arrayContaining(expectedSimple));
-    }
-
-    @Test
-    public void testSpectrumToStringWithTabs() {
-        MsSpectrum spectrum = mockSpectrum(mzValues1, intensityValues1);
-
-        String result = TxtExportAlgorithm.spectrumToString(spectrum, "\t");
-        String lines[] = result.split("\\r?\\n");
-        assertThat(lines, arrayContaining(expectedSimpleWithTabs));
-    }
-
-    private MsSpectrum mockSpectrum(double[] mzValues,
-            float[] intensityValues) {
-
-        if (mzValues.length != intensityValues.length) {
-            fail("Inconsistent sizes when mocking spectrum.");
-        }
-
-        MsSpectrum spectrum = mock(MsSpectrum.class);
-        when(spectrum.getMzValues()).thenReturn(mzValues);
-        when(spectrum.getIntensityValues()).thenReturn(intensityValues);
-        when(spectrum.getNumberOfDataPoints()).thenReturn(mzValues.length);
-
-        return spectrum;
-    }
+    return spectrum;
+  }
 }

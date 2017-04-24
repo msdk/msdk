@@ -1,15 +1,14 @@
-/* 
+/*
  * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
- * (a) the terms of the GNU Lesser General Public License version 2.1
- * as published by the Free Software Foundation
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
  *
  * or (per the licensee's choosing)
  *
- * (b) the terms of the Eclipse Public License v1.0 as published by
- * the Eclipse Foundation.
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
 package io.github.msdk.test;
@@ -28,68 +27,66 @@ import org.junit.rules.TemporaryFolder;
  */
 public class ExtractClassPathFiles extends ExternalResource {
 
-    private final TemporaryFolder tf;
-    private final String[] resourcePaths;
-    private final List<File> files = new LinkedList<>();
-    private File baseFolder;
+  private final TemporaryFolder tf;
+  private final String[] resourcePaths;
+  private final List<File> files = new LinkedList<>();
+  private File baseFolder;
 
-    /**
-     * <p>
-     * Constructor for ExtractClassPathFiles.
-     * </p>
-     *
-     * @param tf
-     *            a {@link org.junit.rules.TemporaryFolder} object.
-     * @param resourcePaths
-     *            a {@link java.lang.String} object.
-     */
-    public ExtractClassPathFiles(TemporaryFolder tf, String... resourcePaths) {
-        this.tf = tf;
-        this.resourcePaths = resourcePaths;
-    }
+  /**
+   * <p>
+   * Constructor for ExtractClassPathFiles.
+   * </p>
+   *
+   * @param tf a {@link org.junit.rules.TemporaryFolder} object.
+   * @param resourcePaths a {@link java.lang.String} object.
+   */
+  public ExtractClassPathFiles(TemporaryFolder tf, String... resourcePaths) {
+    this.tf = tf;
+    this.resourcePaths = resourcePaths;
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected void before() throws Throwable {
-        try {
-            this.tf.create();
-        } catch (IOException ex) {
-            throw ex;
-        }
-        baseFolder = tf.newFolder();
-        for (String resource : resourcePaths) {
-            File file = ZipResourceExtractor.extract(resource, baseFolder);
-            files.add(file);
-        }
+  /** {@inheritDoc} */
+  @Override
+  protected void before() throws Throwable {
+    try {
+      this.tf.create();
+    } catch (IOException ex) {
+      throw ex;
     }
+    baseFolder = tf.newFolder();
+    for (String resource : resourcePaths) {
+      File file = ZipResourceExtractor.extract(resource, baseFolder);
+      files.add(file);
+    }
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected void after() {
-        for (File f : files) {
-            f.delete();
-        }
+  /** {@inheritDoc} */
+  @Override
+  protected void after() {
+    for (File f : files) {
+      f.delete();
     }
+  }
 
-    /**
-     * <p>
-     * Getter for the field <code>files</code>.
-     * </p>
-     *
-     * @return a {@link java.util.List} object.
-     */
-    public List<File> getFiles() {
-        return this.files;
-    }
+  /**
+   * <p>
+   * Getter for the field <code>files</code>.
+   * </p>
+   *
+   * @return a {@link java.util.List} object.
+   */
+  public List<File> getFiles() {
+    return this.files;
+  }
 
-    /**
-     * <p>
-     * getBaseDir.
-     * </p>
-     *
-     * @return a {@link java.io.File} object.
-     */
-    public File getBaseDir() {
-        return baseFolder;
-    }
+  /**
+   * <p>
+   * getBaseDir.
+   * </p>
+   *
+   * @return a {@link java.io.File} object.
+   */
+  public File getBaseDir() {
+    return baseFolder;
+  }
 }

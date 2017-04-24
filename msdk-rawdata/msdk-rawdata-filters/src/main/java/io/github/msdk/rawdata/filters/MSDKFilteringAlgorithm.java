@@ -1,15 +1,14 @@
-/* 
+/*
  * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
- * (a) the terms of the GNU Lesser General Public License version 2.1
- * as published by the Free Software Foundation
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
  *
  * or (per the licensee's choosing)
  *
- * (b) the terms of the Eclipse Public License v1.0 as published by
- * the Eclipse Foundation.
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
 package io.github.msdk.rawdata.filters;
@@ -25,16 +24,15 @@ import javax.annotation.Nullable;
  */
 public interface MSDKFilteringAlgorithm {
 
-    /**
-     * <p>
-     * performFilter.
-     * </p>
-     *
-     * @param input
-     *            a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
-     * @return a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
-     */
-    @Nullable
-    MsScan performFilter(@Nonnull MsScan input);
+  /**
+   * <p>
+   * performFilter.
+   * </p>
+   *
+   * @param input a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+   * @return a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+   */
+  @Nullable
+  MsScan performFilter(@Nonnull MsScan input);
 
 }

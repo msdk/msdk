@@ -1,15 +1,14 @@
-/* 
+/*
  * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
- * (a) the terms of the GNU Lesser General Public License version 2.1
- * as published by the Free Software Foundation
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
  *
  * or (per the licensee's choosing)
  *
- * (b) the terms of the Eclipse Public License v1.0 as published by
- * the Eclipse Foundation.
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
 package io.github.msdk.io.nativeformats;
@@ -40,133 +39,124 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  */
 public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final @Nonnull File sourceFile;
-    private final @Nonnull FileType fileType = FileType.THERMO_RAW;
-    private final @Nonnull DataPointStore dataStore;
+  private final @Nonnull File sourceFile;
+  private final @Nonnull FileType fileType = FileType.THERMO_RAW;
+  private final @Nonnull DataPointStore dataStore;
 
-    private RawDataFile newRawFile;
-    private boolean canceled = false;
+  private RawDataFile newRawFile;
+  private boolean canceled = false;
 
-    private Process dumperProcess = null;
-    private RawDumpParser parser = null;
+  private Process dumperProcess = null;
+  private RawDumpParser parser = null;
 
-    /**
-     * <p>
-     * Constructor for ThermoRawImportMethod.
-     * </p>
-     *
-     * @param sourceFile
-     *            a {@link java.io.File} object.
-     * @param dataStore
-     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
-     *            object.
-     */
-    public ThermoRawImportMethod(@Nonnull File sourceFile,
-            @Nonnull DataPointStore dataStore) {
-        this.sourceFile = sourceFile;
-        this.dataStore = dataStore;
+  /**
+   * <p>
+   * Constructor for ThermoRawImportMethod.
+   * </p>
+   *
+   * @param sourceFile a {@link java.io.File} object.
+   * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
+   */
+  public ThermoRawImportMethod(@Nonnull File sourceFile, @Nonnull DataPointStore dataStore) {
+    this.sourceFile = sourceFile;
+    this.dataStore = dataStore;
+  }
+
+  /** {@inheritDoc} */
+  @SuppressWarnings("null")
+  @Override
+  public RawDataFile execute() throws MSDKException {
+
+    String osName = System.getProperty("os.name").toUpperCase();
+    if (!osName.contains("WINDOWS")) {
+      throw new MSDKException("Native data format import only works on MS Windows");
     }
 
-    /** {@inheritDoc} */
-    @SuppressWarnings("null")
-    @Override
-    public RawDataFile execute() throws MSDKException {
+    logger.info("Started parsing file " + sourceFile);
 
-        String osName = System.getProperty("os.name").toUpperCase();
-        if (!osName.contains("WINDOWS")) {
-            throw new MSDKException(
-                    "Native data format import only works on MS Windows");
-        }
+    try {
 
-        logger.info("Started parsing file " + sourceFile);
+      // Decompress the thermo raw dump executable to a temporary folder
+      File tempFolder = Files.createTempDirectory("msdk").toFile();
+      tempFolder.deleteOnExit();
+      InputStream dumpArchive =
+          this.getClass().getClassLoader().getResourceAsStream("thermorawdump.zip");
+      if (dumpArchive == null)
+        throw new MSDKException("Failed to load the thermorawdump.zip archive from the MSDK jar");
+      ZipUtils.extractStreamToFolder(dumpArchive, tempFolder);
 
-        try {
+      // Path to the rawdump executable
+      File rawDumpPath = new File(tempFolder, "ThermoRawDump.exe");
 
-            // Decompress the thermo raw dump executable to a temporary folder
-            File tempFolder = Files.createTempDirectory("msdk").toFile();
-            tempFolder.deleteOnExit();
-            InputStream dumpArchive = this.getClass().getClassLoader()
-                    .getResourceAsStream("thermorawdump.zip");
-            if (dumpArchive == null)
-                throw new MSDKException(
-                        "Failed to load the thermorawdump.zip archive from the MSDK jar");
-            ZipUtils.extractStreamToFolder(dumpArchive, tempFolder);
+      if (!rawDumpPath.canExecute())
+        throw new MSDKException("Cannot execute program " + rawDumpPath);
 
-            // Path to the rawdump executable
-            File rawDumpPath = new File(tempFolder, "ThermoRawDump.exe");
+      // Create a separate process and execute RAWdump.exe
+      final String cmdLine[] = new String[] {rawDumpPath.getPath(), sourceFile.getPath()};
+      dumperProcess = Runtime.getRuntime().exec(cmdLine);
 
-            if (!rawDumpPath.canExecute())
-                throw new MSDKException(
-                        "Cannot execute program " + rawDumpPath);
+      // Get the stdout of RAWdump process as InputStream
+      InputStream dumpStream = dumperProcess.getInputStream();
 
-            // Create a separate process and execute RAWdump.exe
-            final String cmdLine[] = new String[] { rawDumpPath.getPath(),
-                    sourceFile.getPath() };
-            dumperProcess = Runtime.getRuntime().exec(cmdLine);
+      // Create the new RawDataFile
+      String fileName = sourceFile.getName();
+      newRawFile = MSDKObjectBuilder.getRawDataFile(fileName, sourceFile, fileType, dataStore);
 
-            // Get the stdout of RAWdump process as InputStream
-            InputStream dumpStream = dumperProcess.getInputStream();
+      // Read the dump data
+      parser = new RawDumpParser(newRawFile, dataStore);
+      parser.readRAWDump(dumpStream);
 
-            // Create the new RawDataFile
-            String fileName = sourceFile.getName();
-            newRawFile = MSDKObjectBuilder.getRawDataFile(fileName, sourceFile,
-                    fileType, dataStore);
+      // Cleanup
+      dumpStream.close();
+      dumperProcess.destroy();
 
-            // Read the dump data
-            parser = new RawDumpParser(newRawFile, dataStore);
-            parser.readRAWDump(dumpStream);
+      try {
+        FileUtils.deleteDirectory(tempFolder);
+      } catch (IOException e) {
+        // Ignore errors while deleting the tmp folder
+      }
 
-            // Cleanup
-            dumpStream.close();
-            dumperProcess.destroy();
+      if (canceled)
+        return null;
 
-            try {
-                FileUtils.deleteDirectory(tempFolder);
-            } catch (IOException e) {
-                // Ignore errors while deleting the tmp folder
-            }
+    } catch (Throwable e) {
+      if (dumperProcess != null)
+        dumperProcess.destroy();
 
-            if (canceled)
-                return null;
-
-        } catch (Throwable e) {
-            if (dumperProcess != null)
-                dumperProcess.destroy();
-
-            throw new MSDKException(e);
-        }
-
-        logger.info("Finished parsing " + sourceFile);
-
-        return newRawFile;
-
+      throw new MSDKException(e);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public RawDataFile getResult() {
-        return newRawFile;
-    }
+    logger.info("Finished parsing " + sourceFile);
 
-    /** {@inheritDoc} */
-    @Override
-    public Float getFinishedPercentage() {
-        if (parser == null)
-            return 0f;
-        else
-            return parser.getFinishedPercentage();
-    }
+    return newRawFile;
 
-    /** {@inheritDoc} */
-    @Override
-    public void cancel() {
-        this.canceled = true;
-        if (parser != null) {
-            parser.cancel();
-        }
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @Nullable
+  public RawDataFile getResult() {
+    return newRawFile;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Float getFinishedPercentage() {
+    if (parser == null)
+      return 0f;
+    else
+      return parser.getFinishedPercentage();
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void cancel() {
+    this.canceled = true;
+    if (parser != null) {
+      parser.cancel();
     }
+  }
 
 }

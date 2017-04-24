@@ -28,106 +28,110 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 public class PeakInvestigatorScanBundlingMethodTest {
 
-	@Rule
-	public TemporaryFolder folder = new TemporaryFolder();
+  @Rule
+  public TemporaryFolder folder = new TemporaryFolder();
 
-	private static int HEADER_SIZE = 512;
+  private static int HEADER_SIZE = 512;
 
-	private final static double[] mzValues1 = { 1.0, 2.0 };
-	private final static float[] intensityValues1 = { 10.0f, 20.0f };
+  private final static double[] mzValues1 = {1.0, 2.0};
+  private final static float[] intensityValues1 = {10.0f, 20.0f};
 
-	private final static double[] mzValues2 = { 3.0, 4.0 };
-	private final static float[] intensityValues2 = { 30.0f, 40.0f };
+  private final static double[] mzValues2 = {3.0, 4.0};
+  private final static float[] intensityValues2 = {30.0f, 40.0f};
 
-	@Test
-	public void testExecuteOneScan() throws IOException, MSDKException {
-		List<MsScan> scans = new LinkedList<>();
-		scans.add(mockScan(0, mzValues1, intensityValues1));
+  @Test
+  public void testExecuteOneScan() throws IOException, MSDKException {
+    List<MsScan> scans = new LinkedList<>();
+    scans.add(mockScan(0, mzValues1, intensityValues1));
 
-		RawDataFile rawDataFile = mockRawDataFile("SingleScan.raw", scans);
+    RawDataFile rawDataFile = mockRawDataFile("SingleScan.raw", scans);
 
-		PeakInvestigatorScanBundlingMethod method = new PeakInvestigatorScanBundlingMethod(rawDataFile,
-				folder.newFile());
-		File file = method.execute();
+    PeakInvestigatorScanBundlingMethod method =
+        new PeakInvestigatorScanBundlingMethod(rawDataFile, folder.newFile());
+    File file = method.execute();
 
-		assertThat(method.getFinishedPercentage(), equalTo(1.0f));
+    assertThat(method.getFinishedPercentage(), equalTo(1.0f));
 
-		try (GzipCompressorInputStream stream = new GzipCompressorInputStream(new FileInputStream(file))) {
-			TarArchiveEntry entry = getEntryFromStream(stream);
-			assertThat(entry.getName(), equalTo("scan00000.txt"));
+    try (GzipCompressorInputStream stream =
+        new GzipCompressorInputStream(new FileInputStream(file))) {
+      TarArchiveEntry entry = getEntryFromStream(stream);
+      assertThat(entry.getName(), equalTo("scan00000.txt"));
 
-			int size = (int) entry.getSize();
-			byte[] bytes = new byte[size];
-			assertThat(stream.read(bytes), equalTo(size));
+      int size = (int) entry.getSize();
+      byte[] bytes = new byte[size];
+      assertThat(stream.read(bytes), equalTo(size));
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
-			assertThat(reader.readLine(), equalTo("1.0\t10.0"));
-			assertThat(reader.readLine(), equalTo("2.0\t20.0"));
-		}
-	}
+      BufferedReader reader =
+          new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
+      assertThat(reader.readLine(), equalTo("1.0\t10.0"));
+      assertThat(reader.readLine(), equalTo("2.0\t20.0"));
+    }
+  }
 
-	@Test
-	public void testExecuteTwoScans() throws IOException, MSDKException {
-		List<MsScan> scans = new LinkedList<>();
-		scans.add(mockScan(0, mzValues1, intensityValues1));
-		scans.add(mockScan(12, mzValues2, intensityValues2));
+  @Test
+  public void testExecuteTwoScans() throws IOException, MSDKException {
+    List<MsScan> scans = new LinkedList<>();
+    scans.add(mockScan(0, mzValues1, intensityValues1));
+    scans.add(mockScan(12, mzValues2, intensityValues2));
 
-		RawDataFile rawDataFile = mockRawDataFile("TwoScans.raw", scans);
+    RawDataFile rawDataFile = mockRawDataFile("TwoScans.raw", scans);
 
-		PeakInvestigatorScanBundlingMethod method = new PeakInvestigatorScanBundlingMethod(rawDataFile,
-				folder.newFile());
-		File file = method.execute();
+    PeakInvestigatorScanBundlingMethod method =
+        new PeakInvestigatorScanBundlingMethod(rawDataFile, folder.newFile());
+    File file = method.execute();
 
-		assertThat(method.getFinishedPercentage(), equalTo(1.0f));
+    assertThat(method.getFinishedPercentage(), equalTo(1.0f));
 
-		try (GzipCompressorInputStream stream = new GzipCompressorInputStream(new FileInputStream(file))) {
-			TarArchiveEntry entry = getEntryFromStream(stream);
-			assertThat(entry.getName(), equalTo("scan00000.txt"));
+    try (GzipCompressorInputStream stream =
+        new GzipCompressorInputStream(new FileInputStream(file))) {
+      TarArchiveEntry entry = getEntryFromStream(stream);
+      assertThat(entry.getName(), equalTo("scan00000.txt"));
 
-			int size = (int) entry.getSize();
-			byte[] bytes = new byte[size];
-			assertThat(stream.read(bytes), equalTo(size));
+      int size = (int) entry.getSize();
+      byte[] bytes = new byte[size];
+      assertThat(stream.read(bytes), equalTo(size));
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
-			assertThat(reader.readLine(), equalTo("1.0\t10.0"));
-			assertThat(reader.readLine(), equalTo("2.0\t20.0"));
+      BufferedReader reader =
+          new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
+      assertThat(reader.readLine(), equalTo("1.0\t10.0"));
+      assertThat(reader.readLine(), equalTo("2.0\t20.0"));
 
-			stream.skip(HEADER_SIZE - size % HEADER_SIZE);
-			entry = getEntryFromStream(stream);
-			assertThat(entry.getName(), equalTo("scan00012.txt"));
+      stream.skip(HEADER_SIZE - size % HEADER_SIZE);
+      entry = getEntryFromStream(stream);
+      assertThat(entry.getName(), equalTo("scan00012.txt"));
 
-			size = (int) entry.getSize();
-			bytes = new byte[size];
-			assertThat(stream.read(bytes), equalTo(size));
+      size = (int) entry.getSize();
+      bytes = new byte[size];
+      assertThat(stream.read(bytes), equalTo(size));
 
-			reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
-			assertThat(reader.readLine(), equalTo("3.0\t30.0"));
-			assertThat(reader.readLine(), equalTo("4.0\t40.0"));
-		}
+      reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
+      assertThat(reader.readLine(), equalTo("3.0\t30.0"));
+      assertThat(reader.readLine(), equalTo("4.0\t40.0"));
+    }
 
-	}
+  }
 
-	private MsScan mockScan(int scanNumber, double[] mzValues, float[] intensityValues) {
-		MsScan scan = mock(MsScan.class);
-		when(scan.getNumberOfDataPoints()).thenReturn(mzValues.length);
-		when(scan.getMzValues()).thenReturn(mzValues);
-		when(scan.getIntensityValues()).thenReturn(intensityValues);
-		when(scan.getScanNumber()).thenReturn(scanNumber);
+  private MsScan mockScan(int scanNumber, double[] mzValues, float[] intensityValues) {
+    MsScan scan = mock(MsScan.class);
+    when(scan.getNumberOfDataPoints()).thenReturn(mzValues.length);
+    when(scan.getMzValues()).thenReturn(mzValues);
+    when(scan.getIntensityValues()).thenReturn(intensityValues);
+    when(scan.getScanNumber()).thenReturn(scanNumber);
 
-		return scan;
-	}
+    return scan;
+  }
 
-	private RawDataFile mockRawDataFile(String name, List<MsScan> scans) {
-		RawDataFile rawDataFile = mock(RawDataFile.class);
-		when(rawDataFile.getName()).thenReturn(name);
-		when(rawDataFile.getScans()).thenReturn(scans);
+  private RawDataFile mockRawDataFile(String name, List<MsScan> scans) {
+    RawDataFile rawDataFile = mock(RawDataFile.class);
+    when(rawDataFile.getName()).thenReturn(name);
+    when(rawDataFile.getScans()).thenReturn(scans);
 
-		return rawDataFile;
-	}
+    return rawDataFile;
+  }
 
-	private TarArchiveEntry getEntryFromStream(InputStream stream) throws IOException {
-		byte[] header = new byte[HEADER_SIZE];
-		stream.read(header);
-		return new TarArchiveEntry(header);
-	}
+  private TarArchiveEntry getEntryFromStream(InputStream stream) throws IOException {
+    byte[] header = new byte[HEADER_SIZE];
+    stream.read(header);
+    return new TarArchiveEntry(header);
+  }
 }

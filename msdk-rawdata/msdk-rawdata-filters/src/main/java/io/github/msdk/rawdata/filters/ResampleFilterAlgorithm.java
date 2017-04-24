@@ -1,15 +1,14 @@
-/* 
+/*
  * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
- * (a) the terms of the GNU Lesser General Public License version 2.1
- * as published by the Free Software Foundation
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
  *
  * or (per the licensee's choosing)
  *
- * (b) the terms of the Eclipse Public License v1.0 as published by
- * the Eclipse Foundation.
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
 package io.github.msdk.rawdata.filters;
@@ -29,93 +28,89 @@ import io.github.msdk.util.MsScanUtil;
  */
 public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
 
-    private double binSize;
-    private final @Nonnull DataPointStore store;
+  private double binSize;
+  private final @Nonnull DataPointStore store;
 
-    // Data structures
-    private @Nonnull double mzBuffer[] = new double[10000];
-    private @Nonnull float intensityBuffer[] = new float[10000];
-    private int numOfDataPoints, newNumOfDataPoints;
+  // Data structures
+  private @Nonnull double mzBuffer[] = new double[10000];
+  private @Nonnull float intensityBuffer[] = new float[10000];
+  private int numOfDataPoints, newNumOfDataPoints;
 
-    /**
-     * <p>
-     * Constructor for ResampleFilterAlgorithm.
-     * </p>
-     *
-     * @param binSize
-     *            a double.
-     * @param store
-     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
-     *            object.
-     */
-    public ResampleFilterAlgorithm(double binSize,
-            @Nonnull DataPointStore store) {
-        if (binSize <= 0.0)
-            throw new IllegalArgumentException("Bin size must be >0");
-        this.binSize = binSize;
-        this.store = store;
+  /**
+   * <p>
+   * Constructor for ResampleFilterAlgorithm.
+   * </p>
+   *
+   * @param binSize a double.
+   * @param store a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
+   */
+  public ResampleFilterAlgorithm(double binSize, @Nonnull DataPointStore store) {
+    if (binSize <= 0.0)
+      throw new IllegalArgumentException("Bin size must be >0");
+    this.binSize = binSize;
+    this.store = store;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public MsScan performFilter(@Nonnull MsScan scan) {
+
+    // Load data points
+    mzBuffer = scan.getMzValues(mzBuffer);
+    intensityBuffer = scan.getIntensityValues(intensityBuffer);
+    numOfDataPoints = scan.getNumberOfDataPoints();
+    newNumOfDataPoints = 0;
+
+    Range<Double> mzRange = scan.getMzRange();
+
+    if (mzRange == null) {
+      MsScan result = MsScanUtil.clone(store, scan, true);
+      return result;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public MsScan performFilter(@Nonnull MsScan scan) {
-
-        // Load data points
-        mzBuffer = scan.getMzValues(mzBuffer);
-        intensityBuffer = scan.getIntensityValues(intensityBuffer);
-        numOfDataPoints = scan.getNumberOfDataPoints();
-        newNumOfDataPoints = 0;
-
-        Range<Double> mzRange = scan.getMzRange();
-
-        if (mzRange == null) {
-            MsScan result = MsScanUtil.clone(store, scan, true);
-            return result;
-        }
-
-        if (binSize > mzRange.upperEndpoint()) {
-            this.binSize = (int) Math.round(mzRange.upperEndpoint());
-        }
-
-        int numberOfBins = (int) Math.round(
-                (mzRange.upperEndpoint() - mzRange.lowerEndpoint()) / binSize);
-        if (numberOfBins <= 0) {
-            numberOfBins++;
-        }
-
-        // Create the array with the intensity values for each bin
-        Float[] newY = new Float[numberOfBins];
-        int intVal = 0;
-        for (int i = 0; i < numberOfBins; i++) {
-            newY[i] = 0.0f;
-            int pointsInTheBin = 0;
-            for (int j = 0; j < binSize; j++) {
-                if (intVal < numOfDataPoints) {
-                    newY[i] += intensityBuffer[intVal++];
-                    pointsInTheBin++;
-                }
-            }
-            newY[i] /= pointsInTheBin;
-        }
-
-        // Set the new m/z value in the middle of the bin
-        double newX = mzRange.lowerEndpoint() + binSize / 2.0;
-
-        // Creates new DataPoints
-
-        for (Float newIntensity : newY) {
-            mzBuffer[newNumOfDataPoints] = newX;
-            intensityBuffer[newNumOfDataPoints] = newIntensity;
-            newNumOfDataPoints++;
-
-            newX += binSize;
-        }
-
-        // Return a new scan with the new data points
-        MsScan result = MsScanUtil.clone(store, scan, false);
-        result.setDataPoints(mzBuffer, intensityBuffer, newNumOfDataPoints);
-
-        return result;
+    if (binSize > mzRange.upperEndpoint()) {
+      this.binSize = (int) Math.round(mzRange.upperEndpoint());
     }
+
+    int numberOfBins =
+        (int) Math.round((mzRange.upperEndpoint() - mzRange.lowerEndpoint()) / binSize);
+    if (numberOfBins <= 0) {
+      numberOfBins++;
+    }
+
+    // Create the array with the intensity values for each bin
+    Float[] newY = new Float[numberOfBins];
+    int intVal = 0;
+    for (int i = 0; i < numberOfBins; i++) {
+      newY[i] = 0.0f;
+      int pointsInTheBin = 0;
+      for (int j = 0; j < binSize; j++) {
+        if (intVal < numOfDataPoints) {
+          newY[i] += intensityBuffer[intVal++];
+          pointsInTheBin++;
+        }
+      }
+      newY[i] /= pointsInTheBin;
+    }
+
+    // Set the new m/z value in the middle of the bin
+    double newX = mzRange.lowerEndpoint() + binSize / 2.0;
+
+    // Creates new DataPoints
+
+    for (Float newIntensity : newY) {
+      mzBuffer[newNumOfDataPoints] = newX;
+      intensityBuffer[newNumOfDataPoints] = newIntensity;
+      newNumOfDataPoints++;
+
+      newX += binSize;
+    }
+
+    // Return a new scan with the new data points
+    MsScan result = MsScanUtil.clone(store, scan, false);
+    result.setDataPoints(mzBuffer, intensityBuffer, newNumOfDataPoints);
+
+    return result;
+  }
 
 }
