@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -14,21 +13,4 @@
             <version>${project.version}</version>
    		</dependency>
    </dependencies>
-=======
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>io.github.msdk</groupId>
-    <artifactId>msdk-featdet</artifactId>
-    <version>0.0.8-SNAPSHOT</version>
-  </parent>
-  <artifactId>msdk-featdet-ADAP-3D</artifactId>
-  <dependencies>
-        <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-datamodel</artifactId>
-            <version>${project.version}</version>
-   		</dependency>
-   </dependencies>
->>>>>>> branch 'master' of https://github.com/du-lab/msdk
 </project>
