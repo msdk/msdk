@@ -1,21 +1,21 @@
-/* 
+/*
  * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
- * (a) the terms of the GNU Lesser General Public License version 2.1
- * as published by the Free Software Foundation
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
  *
  * or (per the licensee's choosing)
  *
- * (b) the terms of the Eclipse Public License v1.0 as published by
- * the Eclipse Foundation.
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
 package io.github.msdk.featdet.openms;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -24,18 +24,17 @@ import java.util.Scanner;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.Characters;
+import javax.xml.stream.events.StartElement;
+import javax.xml.stream.events.XMLEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
 import com.google.common.base.Strings;
 
 import io.github.msdk.MSDKException;
@@ -91,31 +90,38 @@ public class FeatureFinderMetaboDetector {
 	 * for mz values data.
 	 * 
 	 * @return List of m/z Values
+	 * @throws XMLStreamException
+	 * @throws IOException
+	 * @throws MSDKException
 	 */
-	public List<Double> execute() throws SAXException, IOException, ParserConfigurationException, MSDKException {
+	public List<Double> execute() throws XMLStreamException, IOException, MSDKException {
 		List<Double> mzValuesResult = new ArrayList<Double>();
-
 		createTempFeatureXMLFile();
 
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		Document doc = dBuilder.parse(FEATURE_XML_FILE);
-		doc.getDocumentElement().normalize();
+		XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+		XMLEventReader xmlEventReader = xmlInputFactory.createXMLEventReader(new FileReader(FEATURE_XML_FILE));
 
-		NodeList featureMap = doc.getElementsByTagName("featureMap").item(0).getChildNodes();
-		NodeList featureList = null;
-		for (int i = 0; i < featureMap.getLength(); i++) {
-			Node node = featureMap.item(i);
-			if (node.getNodeName().equals("featureList"))
-				featureList = node.getChildNodes();
-		}
+		while (xmlEventReader.hasNext()) {
+			XMLEvent xmlEvent = xmlEventReader.nextEvent();
+			if (xmlEvent.isStartElement()) {
+				StartElement startElement = xmlEvent.asStartElement();
+				if (startElement.getName().getLocalPart().equals("position") && xmlEventReader.hasNext()) {
+					xmlEvent = xmlEventReader.nextEvent();
+					Attribute idAttr = startElement.getAttributeByName(new QName("dim"));
+					if (idAttr.getValue().equals("1")) {
+						Characters characters = xmlEvent.asCharacters();
+						/*
+						 * Stores 1573.19798906671 in the ArrayList from the XML
+						 * line: <position dim="1">1573.19798906671</position>
+						 */
+						try {
+							mzValuesResult.add(Double.valueOf(characters.getData()));
+						} catch (NumberFormatException e) {
+							throw new MSDKException("The featureXML contains an invalid m/z value.\n" + e.getMessage());
+						}
+					}
 
-		for (int i = 0; i < featureList.getLength(); i++) {
-			Node node = featureList.item(i);
-			if (node.getNodeName().equals("feature")) {
-				Element featureElement = (Element) node;
-				mzValuesResult
-						.add(Double.valueOf(featureElement.getElementsByTagName("position").item(1).getTextContent()));
+				}
 			}
 		}
 
@@ -123,6 +129,16 @@ public class FeatureFinderMetaboDetector {
 
 	}
 
+	/**
+	 * Creates a temporary FeatureXML file based on the input mzML file using
+	 * the FeatureFinderMetabo library. The FeatureXML file is stored in a
+	 * temporary directory (specified by the environment variable
+	 * java.io.tmpdir)
+	 * 
+	 * @throws IOException
+	 * 
+	 * @throws MSDKException
+	 */
 	private void createTempFeatureXMLFile() throws IOException, MSDKException {
 		final Logger logger = LoggerFactory.getLogger(this.getClass());
 		if (Strings.isNullOrEmpty(OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME)) {
