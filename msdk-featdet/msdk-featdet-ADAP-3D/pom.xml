@@ -8,9 +8,24 @@
   <artifactId>msdk-featdet-ADAP-3D</artifactId>
   <dependencies>
         <dependency>
-            <groupId>io.github.msdk</groupId>
-            <artifactId>msdk-datamodel</artifactId>
-            <version>${project.version}</version>
-   		</dependency>
-   </dependencies>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>21.0</version>
+	    </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.6.1</version>
+        </dependency>
+        <dependency>
+   		 <groupId>org.apache.commons</groupId>
+    	<artifactId>commons-lang3</artifactId>
+    <version>3.0</version>
+</dependency>
+        <dependency>
+        	<groupId>io.github.msdk</groupId>
+        	<artifactId>msdk-datamodel</artifactId>
+        	<version>${project.version}</version>
+        </dependency>
+  </dependencies>
 </project>
