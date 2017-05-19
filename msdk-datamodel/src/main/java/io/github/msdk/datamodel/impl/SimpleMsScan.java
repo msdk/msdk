@@ -1,15 +1,14 @@
-/* 
+/*
  * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
- * (a) the terms of the GNU Lesser General Public License version 2.1
- * as published by the Free Software Foundation
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
  *
  * or (per the licensee's choosing)
  *
- * (b) the terms of the Eclipse Public License v1.0 as published by
- * the Eclipse Foundation.
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
 package io.github.msdk.datamodel.impl;
@@ -40,203 +39,199 @@ import io.github.msdk.util.tolerances.MzTolerance;
  */
 class SimpleMsScan extends AbstractSpectrum implements MsScan {
 
-    private @Nullable RawDataFile dataFile;
-    private @Nonnull Integer scanNumber;
-    private @Nullable String scanDefinition;
-    private @Nonnull MsFunction msFunction;
-    private @Nonnull PolarityType polarity = PolarityType.UNKNOWN;
-    private @Nonnull MsScanType msScanType = MsScanType.UNKNOWN;
-	private @Nullable MzTolerance mzTolerance;
-    private @Nullable Range<Double> scanningRange;
-    private @Nullable ChromatographyInfo chromInfo;
-    private @Nullable ActivationInfo sourceInducedFragInfo;
+  private @Nullable RawDataFile dataFile;
+  private @Nonnull Integer scanNumber;
+  private @Nullable String scanDefinition;
+  private @Nonnull MsFunction msFunction;
+  private @Nonnull PolarityType polarity = PolarityType.UNKNOWN;
+  private @Nonnull MsScanType msScanType = MsScanType.UNKNOWN;
+  private @Nullable MzTolerance mzTolerance;
+  private @Nullable Range<Double> scanningRange;
+  private @Nullable ChromatographyInfo chromInfo;
+  private @Nullable ActivationInfo sourceInducedFragInfo;
 
-    private final @Nonnull List<IsolationInfo> isolations = new LinkedList<>();
+  private final @Nonnull List<IsolationInfo> isolations = new LinkedList<>();
 
-    /**
-     * <p>
-     * Constructor for SimpleMsScan.
-     * </p>
-     *
-     * @param dataPointStore
-     *            a {@link io.github.msdk.datamodel.datastore.DataPointStore}
-     *            object.
-     * @param scanNumber
-     *            a {@link java.lang.Integer} object.
-     * @param msFunction
-     *            a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
-     */
-    public SimpleMsScan(@Nonnull DataPointStore dataPointStore,
-            @Nonnull Integer scanNumber, @Nonnull MsFunction msFunction) {
-        super(dataPointStore);
-        Preconditions.checkNotNull(scanNumber);
-        Preconditions.checkNotNull(msFunction);
-        this.scanNumber = scanNumber;
-        this.msFunction = msFunction;
+  /**
+   * <p>
+   * Constructor for SimpleMsScan.
+   * </p>
+   *
+   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
+   * @param scanNumber a {@link java.lang.Integer} object.
+   * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
+   */
+  public SimpleMsScan(@Nonnull DataPointStore dataPointStore, @Nonnull Integer scanNumber,
+      @Nonnull MsFunction msFunction) {
+    super(dataPointStore);
+    Preconditions.checkNotNull(scanNumber);
+    Preconditions.checkNotNull(msFunction);
+    this.scanNumber = scanNumber;
+    this.msFunction = msFunction;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @Nullable
+  public RawDataFile getRawDataFile() {
+    return dataFile;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
+    if ((this.dataFile != null) && (this.dataFile != newRawDataFile)) {
+      throw new MSDKRuntimeException(
+          "Cannot set the raw data file reference to this scan, because it has already been set");
     }
+    this.dataFile = newRawDataFile;
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public RawDataFile getRawDataFile() {
-        return dataFile;
+  /** {@inheritDoc} */
+  @Override
+  @Nonnull
+  public Integer getScanNumber() {
+    return scanNumber;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void setScanNumber(@Nonnull Integer scanNumber) {
+    Preconditions.checkNotNull(scanNumber);
+    this.scanNumber = scanNumber;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @Nullable
+  public String getScanDefinition() {
+    return scanDefinition;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void setScanDefinition(@Nullable String scanDefinition) {
+    this.scanDefinition = scanDefinition;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @Nonnull
+  public MsFunction getMsFunction() {
+    return msFunction;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void setMsFunction(@Nonnull MsFunction newFunction) {
+    Preconditions.checkNotNull(newFunction);
+    this.msFunction = newFunction;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @Nullable
+  public Range<Double> getScanningRange() {
+    return scanningRange;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void setScanningRange(@Nullable Range<Double> newScanRange) {
+    this.scanningRange = newScanRange;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @Nonnull
+  public PolarityType getPolarity() {
+    return polarity;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void setPolarity(@Nonnull PolarityType newPolarity) {
+    Preconditions.checkNotNull(newPolarity);
+    this.polarity = newPolarity;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @Nonnull
+  public MsScanType getMsScanType() {
+    return msScanType;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void setMsScanType(@Nonnull MsScanType newMsScanType) {
+    Preconditions.checkNotNull(newMsScanType);
+    this.msScanType = newMsScanType;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public MzTolerance getMzTolerance() {
+    return mzTolerance;
+  }
+
+  /**
+   * <p>
+   * Setter for the field <code>mzTolerance</code>.
+   * </p>
+   *
+   * @param mzTolerance a {@link io.github.msdk.util.tolerances.MzTolerance} object.
+   */
+  public void setMzTolerance(MzTolerance mzTolerance) {
+    this.mzTolerance = mzTolerance;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @Nullable
+  public ChromatographyInfo getChromatographyInfo() {
+    return chromInfo;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo) {
+    this.chromInfo = chromatographyInfo;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @Nullable
+  public ActivationInfo getSourceInducedFragmentation() {
+    return sourceInducedFragInfo;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void setSourceInducedFragmentation(@Nullable ActivationInfo newFragmentationInfo) {
+    this.sourceInducedFragInfo = newFragmentationInfo;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @Nonnull
+  public List<IsolationInfo> getIsolations() {
+    return isolations;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String toString() {
+    StringBuilder buf = new StringBuilder();
+    buf.append("Scan ");
+    final RawDataFile rawDataFile2 = dataFile;
+    if (rawDataFile2 != null) {
+      buf.append(rawDataFile2.getName());
+      buf.append(" ");
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
-        if ((this.dataFile != null) && (this.dataFile != newRawDataFile)) {
-            throw new MSDKRuntimeException(
-                    "Cannot set the raw data file reference to this scan, because it has already been set");
-        }
-        this.dataFile = newRawDataFile;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    public Integer getScanNumber() {
-        return scanNumber;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setScanNumber(@Nonnull Integer scanNumber) {
-        Preconditions.checkNotNull(scanNumber);
-        this.scanNumber = scanNumber;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public String getScanDefinition() {
-        return scanDefinition;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setScanDefinition(@Nullable String scanDefinition) {
-        this.scanDefinition = scanDefinition;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    public MsFunction getMsFunction() {
-        return msFunction;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setMsFunction(@Nonnull MsFunction newFunction) {
-        Preconditions.checkNotNull(newFunction);
-        this.msFunction = newFunction;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public Range<Double> getScanningRange() {
-        return scanningRange;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setScanningRange(@Nullable Range<Double> newScanRange) {
-        this.scanningRange = newScanRange;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    public PolarityType getPolarity() {
-        return polarity;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setPolarity(@Nonnull PolarityType newPolarity) {
-        Preconditions.checkNotNull(newPolarity);
-        this.polarity = newPolarity;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    public MsScanType getMsScanType() {
-        return msScanType;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setMsScanType(@Nonnull MsScanType newMsScanType) {
-        Preconditions.checkNotNull(newMsScanType);
-        this.msScanType = newMsScanType;
-    }
-
-	/** {@inheritDoc} */
-	@Override
-	public MzTolerance getMzTolerance() {
-		return mzTolerance;
-	}
-
-	/**
-	 * <p>Setter for the field <code>mzTolerance</code>.</p>
-	 *
-	 * @param mzTolerance a {@link io.github.msdk.util.tolerances.MzTolerance} object.
-	 */
-	public void setMzTolerance(MzTolerance mzTolerance) {
-		this.mzTolerance = mzTolerance;
-	}
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public ChromatographyInfo getChromatographyInfo() {
-        return chromInfo;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setChromatographyInfo(
-            @Nullable ChromatographyInfo chromatographyInfo) {
-        this.chromInfo = chromatographyInfo;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public ActivationInfo getSourceInducedFragmentation() {
-        return sourceInducedFragInfo;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setSourceInducedFragmentation(
-            @Nullable ActivationInfo newFragmentationInfo) {
-        this.sourceInducedFragInfo = newFragmentationInfo;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    public List<IsolationInfo> getIsolations() {
-        return isolations;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        StringBuilder buf = new StringBuilder();
-        buf.append("Scan ");
-        final RawDataFile rawDataFile2 = dataFile;
-        if (rawDataFile2 != null) {
-            buf.append(rawDataFile2.getName());
-            buf.append(" ");
-        }
-        buf.append(msFunction.getName());
-        buf.append(" #");
-        buf.append(getScanNumber());
-        return buf.toString();
-    }
+    buf.append(msFunction.getName());
+    buf.append(" #");
+    buf.append(getScanNumber());
+    return buf.toString();
+  }
 }

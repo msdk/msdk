@@ -1,15 +1,14 @@
-/* 
+/*
  * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
- * (a) the terms of the GNU Lesser General Public License version 2.1
- * as published by the Free Software Foundation
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
  *
  * or (per the licensee's choosing)
  *
- * (b) the terms of the Eclipse Public License v1.0 as published by
- * the Eclipse Foundation.
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
 package io.github.msdk.datamodel.datastore;
@@ -35,288 +34,272 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
- * A DataPointStore implementation that stores the data points in a temporary
- * file. This is a simple and efficient method, but has one disadvantage -
- * removing the data points is an expensive operation, so this implementation
- * actually only removes the reference but the data still remain in the
- * temporary file. If a single instance is continuously used to add and remove
- * data points, the file will grow indefinitely.
+ * A DataPointStore implementation that stores the data points in a temporary file. This is a simple
+ * and efficient method, but has one disadvantage - removing the data points is an expensive
+ * operation, so this implementation actually only removes the reference but the data still remain
+ * in the temporary file. If a single instance is continuously used to add and remove data points,
+ * the file will grow indefinitely.
  * 
- * Since this class stores data on disk, there is a risk that IOException may
- * occur. If that happens, the IOException is wrapped in a MSDKRuntimeException
- * and thrown.
+ * Since this class stores data on disk, there is a risk that IOException may occur. If that
+ * happens, the IOException is wrapped in a MSDKRuntimeException and thrown.
  * 
- * The methods of this class are synchronized, therefore it can be safely used
- * by multiple threads.
+ * The methods of this class are synchronized, therefore it can be safely used by multiple threads.
  */
 class TmpFileDataStore implements DataPointStore {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final File tmpDataFileName;
-    private final RandomAccessFile tmpDataFile;
+  private final File tmpDataFileName;
+  private final RandomAccessFile tmpDataFile;
 
-    // Start with a ~20 KB byte buffer, that will be expanded based on needs
-    private ByteBuffer byteBuffer = ByteBuffer.allocate(20000);
+  // Start with a ~20 KB byte buffer, that will be expanded based on needs
+  private ByteBuffer byteBuffer = ByteBuffer.allocate(20000);
 
-    private final HashMap<Integer, Long> dataPointsOffsets = new HashMap<>();
-    private final HashMap<Integer, Integer> dataPointsLengths = new HashMap<>();
+  private final HashMap<Integer, Long> dataPointsOffsets = new HashMap<>();
+  private final HashMap<Integer, Integer> dataPointsLengths = new HashMap<>();
 
-    private int lastStorageId = 0;
+  private int lastStorageId = 0;
 
-    TmpFileDataStore() {
+  TmpFileDataStore() {
 
-        try {
-            tmpDataFileName = File.createTempFile("msdk", ".tmp");
+    try {
+      tmpDataFileName = File.createTempFile("msdk", ".tmp");
 
-            logger.debug("Initializing a new tmp-file data store in "
-                    + tmpDataFileName);
+      logger.debug("Initializing a new tmp-file data store in " + tmpDataFileName);
 
-            tmpDataFile = new RandomAccessFile(tmpDataFileName, "rw");
+      tmpDataFile = new RandomAccessFile(tmpDataFileName, "rw");
 
-            /*
-             * Lock the temporary file.
-             */
-            FileChannel fileChannel = tmpDataFile.getChannel();
-            fileChannel.lock();
+      /*
+       * Lock the temporary file.
+       */
+      FileChannel fileChannel = tmpDataFile.getChannel();
+      fileChannel.lock();
 
-            tmpDataFileName.deleteOnExit();
+      tmpDataFileName.deleteOnExit();
 
-        } catch (IOException e) {
-            throw new MSDKRuntimeException(e);
-        }
-
+    } catch (IOException e) {
+      throw new MSDKRuntimeException(e);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    synchronized public Object storeData(@Nonnull Object array,
-            @Nonnull Integer size) {
+  }
 
-        if (byteBuffer == null)
-            throw new IllegalStateException("This object has been disposed");
+  /** {@inheritDoc} */
+  @Override
+  @Nonnull
+  synchronized public Object storeData(@Nonnull Object array, @Nonnull Integer size) {
 
-        try {
-            final long currentOffset = tmpDataFile.length();
+    if (byteBuffer == null)
+      throw new IllegalStateException("This object has been disposed");
 
-            int objectSize;
-            if (array.getClass().getComponentType().equals(Double.TYPE))
-                objectSize = Double.SIZE / 8;
-            else if (array.getClass().getComponentType().equals(Float.TYPE))
-                objectSize = Float.SIZE / 8;
-            else if (ChromatographyInfo.class
-                    .isAssignableFrom(array.getClass().getComponentType()))
-                objectSize = (Float.SIZE / 8) * 3;
-            else
-                throw new IllegalArgumentException("Unsupported array type");
+    try {
+      final long currentOffset = tmpDataFile.length();
 
-            // Calculate minimum necessary size of the byte buffer
-            final int numOfBytes = size * objectSize;
+      int objectSize;
+      if (array.getClass().getComponentType().equals(Double.TYPE))
+        objectSize = Double.SIZE / 8;
+      else if (array.getClass().getComponentType().equals(Float.TYPE))
+        objectSize = Float.SIZE / 8;
+      else if (ChromatographyInfo.class.isAssignableFrom(array.getClass().getComponentType()))
+        objectSize = (Float.SIZE / 8) * 3;
+      else
+        throw new IllegalArgumentException("Unsupported array type");
 
-            // Make sure we have enough space in the byte buffer
-            if (byteBuffer.capacity() < numOfBytes) {
-                byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
-            } else {
-                byteBuffer.clear();
-            }
+      // Calculate minimum necessary size of the byte buffer
+      final int numOfBytes = size * objectSize;
 
-            if (array.getClass().getComponentType().equals(Double.TYPE))
-                convertArrayToByteBuffer((double[]) array, size);
-            else if (array.getClass().getComponentType().equals(Float.TYPE))
-                convertArrayToByteBuffer((float[]) array, size);
-            else if (ChromatographyInfo.class
-                    .isAssignableFrom(array.getClass().getComponentType()))
-                convertArrayToByteBuffer((ChromatographyInfo[]) array, size);
+      // Make sure we have enough space in the byte buffer
+      if (byteBuffer.capacity() < numOfBytes) {
+        byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
+      } else {
+        byteBuffer.clear();
+      }
 
-            tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
+      if (array.getClass().getComponentType().equals(Double.TYPE))
+        convertArrayToByteBuffer((double[]) array, size);
+      else if (array.getClass().getComponentType().equals(Float.TYPE))
+        convertArrayToByteBuffer((float[]) array, size);
+      else if (ChromatographyInfo.class.isAssignableFrom(array.getClass().getComponentType()))
+        convertArrayToByteBuffer((ChromatographyInfo[]) array, size);
 
-            // Increase the storage ID
-            lastStorageId++;
+      tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
 
-            // Save the reference to the new items
-            dataPointsOffsets.put(lastStorageId, currentOffset);
-            dataPointsLengths.put(lastStorageId, size);
+      // Increase the storage ID
+      lastStorageId++;
 
-        } catch (IOException e) {
-            throw new MSDKRuntimeException(e);
-        }
+      // Save the reference to the new items
+      dataPointsOffsets.put(lastStorageId, currentOffset);
+      dataPointsLengths.put(lastStorageId, size);
 
-        return lastStorageId;
+    } catch (IOException e) {
+      throw new MSDKRuntimeException(e);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    synchronized public void loadData(@Nonnull Object id,
-            @Nonnull Object array) {
+    return lastStorageId;
+  }
 
-        if (byteBuffer == null)
-            throw new IllegalStateException("This object has been disposed");
+  /** {@inheritDoc} */
+  @Override
+  synchronized public void loadData(@Nonnull Object id, @Nonnull Object array) {
 
-        if (!dataPointsLengths.containsKey(id))
-            throw new IllegalArgumentException("ID " + id
-                    + " not found in storage file " + tmpDataFileName);
+    if (byteBuffer == null)
+      throw new IllegalStateException("This object has been disposed");
 
-        // Get file offset and number of data points
-        final long offset = dataPointsOffsets.get(id);
-        final int numOfDataPoints = dataPointsLengths.get(id);
+    if (!dataPointsLengths.containsKey(id))
+      throw new IllegalArgumentException(
+          "ID " + id + " not found in storage file " + tmpDataFileName);
 
-        if (!array.getClass().isArray())
-            throw new IllegalArgumentException(
-                    "The provided argument is not an array");
+    // Get file offset and number of data points
+    final long offset = dataPointsOffsets.get(id);
+    final int numOfDataPoints = dataPointsLengths.get(id);
 
-        if (Array.getLength(array) < numOfDataPoints)
-            throw new IllegalArgumentException(
-                    "The provided array does not fit all loaded objects");
+    if (!array.getClass().isArray())
+      throw new IllegalArgumentException("The provided argument is not an array");
 
-        int objectSize;
-        if (array.getClass().getComponentType().equals(Double.TYPE))
-            objectSize = Double.SIZE / 8;
-        else if (array.getClass().getComponentType().equals(Float.TYPE))
-            objectSize = Float.SIZE / 8;
-        else if (ChromatographyInfo.class
-                .isAssignableFrom(array.getClass().getComponentType()))
-            objectSize = (Float.SIZE / 8) * 3;
-        else
-            throw new IllegalArgumentException("Unsupported array type");
+    if (Array.getLength(array) < numOfDataPoints)
+      throw new IllegalArgumentException("The provided array does not fit all loaded objects");
 
-        // Calculate minimum necessary size of the byte buffer
-        final int numOfBytes = numOfDataPoints * objectSize;
+    int objectSize;
+    if (array.getClass().getComponentType().equals(Double.TYPE))
+      objectSize = Double.SIZE / 8;
+    else if (array.getClass().getComponentType().equals(Float.TYPE))
+      objectSize = Float.SIZE / 8;
+    else if (ChromatographyInfo.class.isAssignableFrom(array.getClass().getComponentType()))
+      objectSize = (Float.SIZE / 8) * 3;
+    else
+      throw new IllegalArgumentException("Unsupported array type");
 
-        // Make sure we have enough space in the byte buffer
-        if (byteBuffer.capacity() < numOfBytes) {
-            byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
-        } else {
-            byteBuffer.clear();
-        }
+    // Calculate minimum necessary size of the byte buffer
+    final int numOfBytes = numOfDataPoints * objectSize;
 
-        try {
-
-            // Read values
-            tmpDataFile.seek(offset);
-            tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
-
-            if (array.getClass().getComponentType().equals(Double.TYPE))
-                convertByteBufferToArray((double[]) array, numOfDataPoints);
-            else if (array.getClass().getComponentType().equals(Float.TYPE))
-                convertByteBufferToArray((float[]) array, numOfDataPoints);
-            else if (ChromatographyInfo.class
-                    .isAssignableFrom(array.getClass().getComponentType()))
-                convertByteBufferToArray((ChromatographyInfo[]) array,
-                        numOfDataPoints);
-
-        } catch (IOException e) {
-            throw new MSDKRuntimeException(e);
-        }
+    // Make sure we have enough space in the byte buffer
+    if (byteBuffer.capacity() < numOfBytes) {
+      byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
+    } else {
+      byteBuffer.clear();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    synchronized public void removeData(@Nonnull Object id) {
+    try {
 
-        if (byteBuffer == null)
-            throw new IllegalStateException("This object has been disposed");
+      // Read values
+      tmpDataFile.seek(offset);
+      tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
 
-        dataPointsOffsets.remove(id);
-        dataPointsLengths.remove(id);
+      if (array.getClass().getComponentType().equals(Double.TYPE))
+        convertByteBufferToArray((double[]) array, numOfDataPoints);
+      else if (array.getClass().getComponentType().equals(Float.TYPE))
+        convertByteBufferToArray((float[]) array, numOfDataPoints);
+      else if (ChromatographyInfo.class.isAssignableFrom(array.getClass().getComponentType()))
+        convertByteBufferToArray((ChromatographyInfo[]) array, numOfDataPoints);
 
+    } catch (IOException e) {
+      throw new MSDKRuntimeException(e);
     }
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    synchronized public void dispose() {
+  /** {@inheritDoc} */
+  @Override
+  synchronized public void removeData(@Nonnull Object id) {
 
-        // Discard the hash maps and byte buffer
-        dataPointsOffsets.clear();
-        dataPointsLengths.clear();
-        byteBuffer = null;
+    if (byteBuffer == null)
+      throw new IllegalStateException("This object has been disposed");
 
-        // Remove the temporary file
-        if (tmpDataFileName.exists()) {
-            logger.debug("Removing tmp-file " + tmpDataFileName);
+    dataPointsOffsets.remove(id);
+    dataPointsLengths.remove(id);
 
-            try {
-                tmpDataFile.close();
-                tmpDataFileName.delete();
-            } catch (IOException e) {
-                logger.warn("Could not close and remove temporary file "
-                        + tmpDataFileName + ": " + e.toString());
-                e.printStackTrace();
-            }
-        }
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  synchronized public void dispose() {
+
+    // Discard the hash maps and byte buffer
+    dataPointsOffsets.clear();
+    dataPointsLengths.clear();
+    byteBuffer = null;
+
+    // Remove the temporary file
+    if (tmpDataFileName.exists()) {
+      logger.debug("Removing tmp-file " + tmpDataFileName);
+
+      try {
+        tmpDataFile.close();
+        tmpDataFileName.delete();
+      } catch (IOException e) {
+        logger.warn(
+            "Could not close and remove temporary file " + tmpDataFileName + ": " + e.toString());
+        e.printStackTrace();
+      }
     }
+  }
 
-    /**
-     * {@inheritDoc}
-     *
-     * When this object is garbage collected, remove the associated temporary
-     * data file from disk.
-     */
-    @Override
-    protected void finalize() {
-        dispose();
+  /**
+   * {@inheritDoc}
+   *
+   * When this object is garbage collected, remove the associated temporary data file from disk.
+   */
+  @Override
+  protected void finalize() {
+    dispose();
+  }
+
+  private void convertArrayToByteBuffer(float[] data, int size) {
+    FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
+    for (int i = 0; i < size; i++)
+      fltBuffer.put(data[i]);
+  }
+
+  private void convertArrayToByteBuffer(double[] data, int size) {
+    DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
+    for (int i = 0; i < size; i++)
+      dblBuffer.put(data[i]);
+  }
+
+  private void convertArrayToByteBuffer(ChromatographyInfo[] data, int size) {
+
+    FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
+    Float f;
+    for (int i = 0; i < size; i++) {
+      f = data[i].getRetentionTime();
+      fltBuffer.put(f);
+      f = data[i].getSecondaryRetentionTime();
+      if (f == null)
+        f = Float.NaN;
+      fltBuffer.put(f);
+      f = data[i].getIonDriftTime();
+      if (f == null)
+        f = Float.NaN;
+      fltBuffer.put(f);
     }
+  }
 
-    private void convertArrayToByteBuffer(float[] data, int size) {
-        FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
-        for (int i = 0; i < size; i++)
-            fltBuffer.put(data[i]);
+  private void convertByteBufferToArray(float[] array, Integer size) {
+    FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
+    for (int i = 0; i < size; i++) {
+      array[i] = fltBuffer.get();
     }
+  }
 
-    private void convertArrayToByteBuffer(double[] data, int size) {
-        DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
-        for (int i = 0; i < size; i++)
-            dblBuffer.put(data[i]);
+  private void convertByteBufferToArray(double[] array, Integer size) {
+    DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
+    for (int i = 0; i < size; i++) {
+      array[i] = dblBuffer.get();
     }
+  }
 
-    private void convertArrayToByteBuffer(ChromatographyInfo[] data, int size) {
+  private void convertByteBufferToArray(ChromatographyInfo[] array, Integer size) {
+    FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
 
-        FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
-        Float f;
-        for (int i = 0; i < size; i++) {
-            f = data[i].getRetentionTime();
-            fltBuffer.put(f);
-            f = data[i].getSecondaryRetentionTime();
-            if (f == null)
-                f = Float.NaN;
-            fltBuffer.put(f);
-            f = data[i].getIonDriftTime();
-            if (f == null)
-                f = Float.NaN;
-            fltBuffer.put(f);
-        }
+    for (int i = 0; i < size; i++) {
+      Float rt = fltBuffer.get();
+      if (rt == Float.NaN)
+        rt = null;
+      Float srt = fltBuffer.get();
+      if (srt == Float.NaN)
+        srt = null;
+      Float idt = fltBuffer.get();
+      if (idt == Float.NaN)
+        idt = null;
+      array[i] = MSDKObjectBuilder.getChromatographyInfo2D(SeparationType.UNKNOWN, rt, srt);
     }
-
-    private void convertByteBufferToArray(float[] array, Integer size) {
-        FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
-        for (int i = 0; i < size; i++) {
-            array[i] = fltBuffer.get();
-        }
-    }
-
-    private void convertByteBufferToArray(double[] array, Integer size) {
-        DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
-        for (int i = 0; i < size; i++) {
-            array[i] = dblBuffer.get();
-        }
-    }
-
-    private void convertByteBufferToArray(ChromatographyInfo[] array,
-            Integer size) {
-        FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
-
-        for (int i = 0; i < size; i++) {
-            Float rt = fltBuffer.get();
-            if (rt == Float.NaN)
-                rt = null;
-            Float srt = fltBuffer.get();
-            if (srt == Float.NaN)
-                srt = null;
-            Float idt = fltBuffer.get();
-            if (idt == Float.NaN)
-                idt = null;
-            array[i] = MSDKObjectBuilder
-                    .getChromatographyInfo2D(SeparationType.UNKNOWN, rt, srt);
-        }
-    }
+  }
 }

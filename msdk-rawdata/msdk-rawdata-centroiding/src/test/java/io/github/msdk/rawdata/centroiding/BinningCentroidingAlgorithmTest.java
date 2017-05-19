@@ -1,15 +1,14 @@
-/* 
+/*
  * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
- * (a) the terms of the GNU Lesser General Public License version 2.1
- * as published by the Free Software Foundation
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
  *
  * or (per the licensee's choosing)
  *
- * (b) the terms of the Eclipse Public License v1.0 as published by
- * the Eclipse Foundation.
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
 package io.github.msdk.rawdata.centroiding;
@@ -30,46 +29,44 @@ import io.github.msdk.util.MsSpectrumUtil;
 
 public class BinningCentroidingAlgorithmTest {
 
-    private static final String TEST_DATA_PATH = "src/test/resources/";
+  private static final String TEST_DATA_PATH = "src/test/resources/";
 
-    @SuppressWarnings("null")
-    @Test
-    public void testOrbitrap() throws MSDKException {
+  @SuppressWarnings("null")
+  @Test
+  public void testOrbitrap() throws MSDKException {
 
-        // Create the data structures
-        DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
+    // Create the data structures
+    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
 
-        // Import the file
-        File inputFile = new File(TEST_DATA_PATH + "profile_orbitrap.mzML");
-        Assert.assertTrue(inputFile.canRead());
-        MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
-        RawDataFile rawFile = importer.execute();
-        Assert.assertNotNull(rawFile);
-        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
-        List<MsScan> scans = rawFile.getScans();
-        Assert.assertNotNull(scans);
+    // Import the file
+    File inputFile = new File(TEST_DATA_PATH + "profile_orbitrap.mzML");
+    Assert.assertTrue(inputFile.canRead());
+    MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+    RawDataFile rawFile = importer.execute();
+    Assert.assertNotNull(rawFile);
+    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+    List<MsScan> scans = rawFile.getScans();
+    Assert.assertNotNull(scans);
 
-        MsScan lastScan = scans.get(scans.size() - 1);
+    MsScan lastScan = scans.get(scans.size() - 1);
 
-        final double binSize = 1.0;
-        BinningCentroidingAlgorithm centroider = new BinningCentroidingAlgorithm(
-                dataStore, binSize);
-        final MsScan centroidedScan = centroider.centroidScan(lastScan);
+    final double binSize = 1.0;
+    BinningCentroidingAlgorithm centroider = new BinningCentroidingAlgorithm(dataStore, binSize);
+    final MsScan centroidedScan = centroider.centroidScan(lastScan);
 
-        double mzBuffer[] = centroidedScan.getMzValues();
-        float intensityBuffer[] = centroidedScan.getIntensityValues();
-        int numOfDataPoints = centroidedScan.getNumberOfDataPoints();
+    double mzBuffer[] = centroidedScan.getMzValues();
+    float intensityBuffer[] = centroidedScan.getIntensityValues();
+    int numOfDataPoints = centroidedScan.getNumberOfDataPoints();
 
-        Assert.assertTrue(numOfDataPoints > 50);
+    Assert.assertTrue(numOfDataPoints > 50);
 
-        Integer basePeak = MsSpectrumUtil.getBasePeakIndex(intensityBuffer,
-                numOfDataPoints);
+    Integer basePeak = MsSpectrumUtil.getBasePeakIndex(intensityBuffer, numOfDataPoints);
 
-        Assert.assertEquals(1.49854E8f, intensityBuffer[basePeak], 1E5);
-        Assert.assertEquals(281.4996043, mzBuffer[basePeak], 0.000001);
+    Assert.assertEquals(1.49854E8f, intensityBuffer[basePeak], 1E5);
+    Assert.assertEquals(281.4996043, mzBuffer[basePeak], 0.000001);
 
-        rawFile.dispose();
+    rawFile.dispose();
 
-    }
+  }
 
 }

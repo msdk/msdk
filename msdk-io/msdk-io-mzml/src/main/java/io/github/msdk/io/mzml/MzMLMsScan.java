@@ -1,15 +1,14 @@
-/* 
+/*
  * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
- * (a) the terms of the GNU Lesser General Public License version 2.1
- * as published by the Free Software Foundation
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
  *
  * or (per the licensee's choosing)
  *
- * (b) the terms of the Eclipse Public License v1.0 as published by
- * the Eclipse Foundation.
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
 package io.github.msdk.io.mzml;
@@ -37,67 +36,61 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 class MzMLMsScan extends AbstractReadOnlyMsScan {
 
-    private final @Nonnull MzMLRawDataFile dataFile;
-    private final @Nonnull String spectrumId;
+  private final @Nonnull MzMLRawDataFile dataFile;
+  private final @Nonnull String spectrumId;
 
-    MzMLMsScan(@Nonnull MzMLRawDataFile dataFile, @Nonnull String spectrumId,
-            @Nonnull MsSpectrumType spectrumType,
-            @Nonnull MsFunction msFunction,
-            @Nullable ChromatographyInfo chromatographyInfo,
-            @Nonnull MsScanType scanType, @Nullable Range<Double> mzRange,
-            @Nullable Range<Double> scanningRange, @Nonnull Integer scanNumber,
-            @Nullable String scanDefinition, @Nonnull Float tic,
-            @Nonnull PolarityType polarity,
-            @Nullable ActivationInfo sourceFragmentation,
-            @Nonnull List<IsolationInfo> isolations,
-            @Nonnull Integer numOfDataPoints) {
+  MzMLMsScan(@Nonnull MzMLRawDataFile dataFile, @Nonnull String spectrumId,
+      @Nonnull MsSpectrumType spectrumType, @Nonnull MsFunction msFunction,
+      @Nullable ChromatographyInfo chromatographyInfo, @Nonnull MsScanType scanType,
+      @Nullable Range<Double> mzRange, @Nullable Range<Double> scanningRange,
+      @Nonnull Integer scanNumber, @Nullable String scanDefinition, @Nonnull Float tic,
+      @Nonnull PolarityType polarity, @Nullable ActivationInfo sourceFragmentation,
+      @Nonnull List<IsolationInfo> isolations, @Nonnull Integer numOfDataPoints) {
 
-        super(dataFile, spectrumType, msFunction, chromatographyInfo, scanType,
-                mzRange, scanningRange, scanNumber, scanDefinition, tic,
-                polarity, sourceFragmentation, isolations, numOfDataPoints);
+    super(dataFile, spectrumType, msFunction, chromatographyInfo, scanType, mzRange, scanningRange,
+        scanNumber, scanDefinition, tic, polarity, sourceFragmentation, isolations,
+        numOfDataPoints);
 
-        this.dataFile = dataFile;
-        this.spectrumId = spectrumId;
+    this.dataFile = dataFile;
+    this.spectrumId = spectrumId;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @Nonnull
+  public double[] getMzValues(@Nullable double[] array) {
+    try {
+      MzMLUnmarshaller parser = dataFile.getParser();
+      if (parser == null) {
+        throw new MSDKRuntimeException("The raw data file object has been disposed");
+      }
+      Spectrum jmzSpectrum = parser.getSpectrumById(spectrumId);
+      return MzMLConverter.extractMzValues(jmzSpectrum, array);
+    } catch (MzMLUnmarshallerException e) {
+      throw (new MSDKRuntimeException(e));
     }
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    public double[] getMzValues(@Nullable double[] array) {
-        try {
-            MzMLUnmarshaller parser = dataFile.getParser();
-            if (parser == null) {
-                throw new MSDKRuntimeException(
-                        "The raw data file object has been disposed");
-            }
-            Spectrum jmzSpectrum = parser.getSpectrumById(spectrumId);
-            return MzMLConverter.extractMzValues(jmzSpectrum, array);
-        } catch (MzMLUnmarshallerException e) {
-            throw (new MSDKRuntimeException(e));
-        }
+  /** {@inheritDoc} */
+  @Override
+  @Nonnull
+  public float[] getIntensityValues(@Nullable float[] array) {
+    try {
+      MzMLUnmarshaller parser = dataFile.getParser();
+      if (parser == null) {
+        throw new MSDKRuntimeException("The raw data file object has been disposed");
+      }
+      Spectrum jmzSpectrum = parser.getSpectrumById(spectrumId);
+      return MzMLConverter.extractIntensityValues(jmzSpectrum, array);
+    } catch (MzMLUnmarshallerException e) {
+      throw (new MSDKRuntimeException(e));
     }
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    public float[] getIntensityValues(@Nullable float[] array) {
-        try {
-            MzMLUnmarshaller parser = dataFile.getParser();
-            if (parser == null) {
-                throw new MSDKRuntimeException(
-                        "The raw data file object has been disposed");
-            }
-            Spectrum jmzSpectrum = parser.getSpectrumById(spectrumId);
-            return MzMLConverter.extractIntensityValues(jmzSpectrum, array);
-        } catch (MzMLUnmarshallerException e) {
-            throw (new MSDKRuntimeException(e));
-        }
-    }
-
-	/** {@inheritDoc} */
-	@Override
-	public MzTolerance getMzTolerance() {
-		return null;
-	}
+  /** {@inheritDoc} */
+  @Override
+  public MzTolerance getMzTolerance() {
+    return null;
+  }
 
 }

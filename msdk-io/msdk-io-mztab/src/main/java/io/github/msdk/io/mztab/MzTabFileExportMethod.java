@@ -1,15 +1,14 @@
-/* 
+/*
  * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
- * (a) the terms of the GNU Lesser General Public License version 2.1
- * as published by the Free Software Foundation
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
  *
  * or (per the licensee's choosing)
  *
- * (b) the terms of the Eclipse Public License v1.0 as published by
- * the Eclipse Foundation.
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
 package io.github.msdk.io.mztab;
@@ -60,398 +59,374 @@ import uk.ac.ebi.pride.jmztab.model.SmallMoleculeColumn;
  */
 public class MzTabFileExportMethod implements MSDKMethod<File> {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    // Input variables
-    private @Nonnull FeatureTable featureTable;
-    private @Nonnull File mzTabFile;
-    private @Nonnull Boolean exportAllFeatures;
-    private String newLine = System.lineSeparator();
-    private String itemSeparator = "|";
+  // Input variables
+  private @Nonnull FeatureTable featureTable;
+  private @Nonnull File mzTabFile;
+  private @Nonnull Boolean exportAllFeatures;
+  private String newLine = System.lineSeparator();
+  private String itemSeparator = "|";
 
-    // Other variables
-    private int parsedRows, totalRows = 0;
-    private boolean canceled = false;
+  // Other variables
+  private int parsedRows, totalRows = 0;
+  private boolean canceled = false;
 
-    /**
-     * <p>
-     * Constructor for MzTabFileExportMethod.
-     * </p>
-     *
-     * @param featureTable
-     *            a {@link io.github.msdk.datamodel.featuretables.FeatureTable}
-     *            object.
-     * @param mzTabFile
-     *            a {@link java.io.File} object.
-     * @param exportAllFeatures
-     *            a {@link java.lang.Boolean} object.
-     */
-    public MzTabFileExportMethod(@Nonnull FeatureTable featureTable,
-            @Nonnull File mzTabFile, @Nonnull Boolean exportAllFeatures) {
-        this.featureTable = featureTable;
-        this.mzTabFile = mzTabFile;
-        this.exportAllFeatures = exportAllFeatures;
+  /**
+   * <p>
+   * Constructor for MzTabFileExportMethod.
+   * </p>
+   *
+   * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+   * @param mzTabFile a {@link java.io.File} object.
+   * @param exportAllFeatures a {@link java.lang.Boolean} object.
+   */
+  public MzTabFileExportMethod(@Nonnull FeatureTable featureTable, @Nonnull File mzTabFile,
+      @Nonnull Boolean exportAllFeatures) {
+    this.featureTable = featureTable;
+    this.mzTabFile = mzTabFile;
+    this.exportAllFeatures = exportAllFeatures;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public File execute() throws MSDKException {
+
+    logger.info("Started exporting " + featureTable.getName() + " to " + mzTabFile);
+
+    // Get number of rows
+    totalRows = featureTable.getRows().size();
+
+    // Open file
+    FileWriter writer;
+    try {
+      writer = new FileWriter(mzTabFile);
+    } catch (Exception e) {
+      logger.info("Could not open file " + mzTabFile + " for writing.");
+      return null;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public File execute() throws MSDKException {
+    // jmztab data holders
+    Metadata mtd = new Metadata();
+    MZTabColumnFactory factory = MZTabColumnFactory.getInstance(Section.Small_Molecule);
 
-        logger.info("Started exporting " + featureTable.getName() + " to "
-                + mzTabFile);
+    // Write meta data to mzTab file
+    writeMetaData(featureTable, writer, mtd, factory);
 
-        // Get number of rows
-        totalRows = featureTable.getRows().size();
+    // Write sample data to mzTab file
+    writeSampleData(featureTable, writer, mtd, factory);
 
-        // Open file
-        FileWriter writer;
-        try {
-            writer = new FileWriter(mzTabFile);
-        } catch (Exception e) {
-            logger.info("Could not open file " + mzTabFile + " for writing.");
-            return null;
-        }
-
-        // jmztab data holders
-        Metadata mtd = new Metadata();
-        MZTabColumnFactory factory = MZTabColumnFactory
-                .getInstance(Section.Small_Molecule);
-
-        // Write meta data to mzTab file
-        writeMetaData(featureTable, writer, mtd, factory);
-
-        // Write sample data to mzTab file
-        writeSampleData(featureTable, writer, mtd, factory);
-
-        // Close file
-        try {
-            writer.close();
-        } catch (Exception e) {
-            logger.info("Could not close file " + mzTabFile);
-            return null;
-        }
-
-        return mzTabFile;
+    // Close file
+    try {
+      writer.close();
+    } catch (Exception e) {
+      logger.info("Could not close file " + mzTabFile);
+      return null;
     }
 
-    private void writeMetaData(FeatureTable featureTable, FileWriter writer,
-            Metadata mtd, MZTabColumnFactory factory) {
+    return mzTabFile;
+  }
 
-        // Meta data
-        mtd.setMZTabMode(MZTabDescription.Mode.Summary);
-        mtd.setMZTabType(MZTabDescription.Type.Quantification);
-        mtd.setDescription(featureTable.getName());
-        mtd.addSoftwareParam(1, new CVParam("MS", "MS:1002342", "MSDK",
-                MSDKVersion.getMSDKVersion()));
-        mtd.setSmallMoleculeQuantificationUnit(new CVParam("PRIDE",
-                "PRIDE:0000330", "Arbitrary quantification unit", null));
-        mtd.addSmallMoleculeSearchEngineScoreParam(1, new CVParam("MS",
-                "MS:1001153", "search engine specific score", null));
-        mtd.addFixedModParam(1, new CVParam("MS", "MS:1002453",
-                "No fixed modifications searched", null));
-        mtd.addVariableModParam(1, new CVParam("MS", "MS:1002454",
-                "No variable modifications searched", null));
+  private void writeMetaData(FeatureTable featureTable, FileWriter writer, Metadata mtd,
+      MZTabColumnFactory factory) {
 
-        // Create stable columns - only available in jmztab 3.0.2 and later
-        factory.addDefaultStableColumns();
+    // Meta data
+    mtd.setMZTabMode(MZTabDescription.Mode.Summary);
+    mtd.setMZTabType(MZTabDescription.Type.Quantification);
+    mtd.setDescription(featureTable.getName());
+    mtd.addSoftwareParam(1, new CVParam("MS", "MS:1002342", "MSDK", MSDKVersion.getMSDKVersion()));
+    mtd.setSmallMoleculeQuantificationUnit(
+        new CVParam("PRIDE", "PRIDE:0000330", "Arbitrary quantification unit", null));
+    mtd.addSmallMoleculeSearchEngineScoreParam(1,
+        new CVParam("MS", "MS:1001153", "search engine specific score", null));
+    mtd.addFixedModParam(1,
+        new CVParam("MS", "MS:1002453", "No fixed modifications searched", null));
+    mtd.addVariableModParam(1,
+        new CVParam("MS", "MS:1002454", "No variable modifications searched", null));
 
-        // Add optional columns which have stable order
-        factory.addURIOptionalColumn();
-        factory.addBestSearchEngineScoreOptionalColumn(
-                SmallMoleculeColumn.BEST_SEARCH_ENGINE_SCORE, 1);
+    // Create stable columns - only available in jmztab 3.0.2 and later
+    factory.addDefaultStableColumns();
 
-        // Add sample columns
+    // Add optional columns which have stable order
+    factory.addURIOptionalColumn();
+    factory.addBestSearchEngineScoreOptionalColumn(SmallMoleculeColumn.BEST_SEARCH_ENGINE_SCORE, 1);
+
+    // Add sample columns
+    List<Sample> samples = featureTable.getSamples();
+    int sampleCounter = 0;
+    for (Sample sample : samples) {
+      sampleCounter++;
+      File originalFile = sample.getOriginalFile();
+
+      // MS run location
+      MsRun msRun = new MsRun(sampleCounter);
+      String filePath = sample.getName();
+      if (originalFile != null) {
+        filePath = originalFile.getAbsolutePath();
+      }
+
+      URL fileURL = null;
+      try {
+        fileURL = new URL("file:///" + filePath);
+      } catch (MalformedURLException e) {
+      }
+
+      msRun.setLocation(fileURL);
+      mtd.addMsRun(msRun);
+      mtd.addAssayMsRun(sampleCounter, msRun);
+
+      // Additional columns
+      factory.addAbundanceOptionalColumn(new Assay(sampleCounter));
+      factory.addOptionalColumn(new Assay(sampleCounter), "mz", String.class);
+      factory.addOptionalColumn(new Assay(sampleCounter), "rt", String.class);
+      factory.addOptionalColumn(new Assay(sampleCounter), "height", String.class);
+    }
+
+    // Write to file
+    try {
+      writer.write(mtd.toString());
+      writer.write(newLine);
+      writer.write(factory.toString());
+      writer.write(newLine);
+    } catch (Exception e) {
+      logger.info("Could not write to file " + mzTabFile);
+      return;
+    }
+
+    // Cancel?
+    if (canceled)
+      return;
+  }
+
+  private void writeSampleData(FeatureTable featureTable, FileWriter writer, Metadata mtd,
+      MZTabColumnFactory factory) {
+
+    // Write data rows
+    for (FeatureTableRow row : featureTable.getRows()) {
+
+      // Get ion annotation column
+      FeatureTableColumn<List<IonAnnotation>> column =
+          featureTable.getColumn(ColumnName.IONANNOTATION, null);
+
+      SmallMolecule sm = new SmallMolecule(factory, mtd);
+      Boolean writeFeature = false;
+
+      // Ion annotation variables
+      String identifier = "";
+      String formula = "";
+      String smiles = "";
+      String inchiKey = "";
+      String description = "";
+      String url = "";
+      // String database = "";
+
+      // Get ion annotation
+      if (column != null) {
+        List<IonAnnotation> ionAnnotations = row.getData(column);
+        for (IonAnnotation ionAnnotation : ionAnnotations) {
+          // Annotation ID
+          String ionAnnotationId = ionAnnotation.getAnnotationId();
+          if (!Strings.isNullOrEmpty(ionAnnotationId)) {
+            identifier = identifier + itemSeparator + escapeString(ionAnnotationId);
+            writeFeature = true;
+          }
+
+          // Formula
+          IMolecularFormula ionFormula = ionAnnotation.getFormula();
+          if (ionFormula != null) {
+            formula = formula + itemSeparator
+                + escapeString(MolecularFormulaManipulator.getString(ionFormula));
+            writeFeature = true;
+          }
+
+          // Chemical structure = SMILES
+          IAtomContainer chemicalStructure = ionAnnotation.getChemicalStructure();
+          if (chemicalStructure != null) {
+            try {
+              SmilesGenerator sg = SmilesGenerator.generic();
+              smiles = smiles + itemSeparator + sg.create(chemicalStructure);
+            } catch (CDKException e) {
+              logger.info("Could not create SMILE for " + ionAnnotation.getDescription());
+            }
+          }
+
+          // InchiKey
+          String ik = ionAnnotation.getInchiKey();
+          if (!Strings.isNullOrEmpty(ik)) {
+            inchiKey += itemSeparator + escapeString(ik);
+            writeFeature = true;
+          }
+
+          // Description
+          String ionDescription = ionAnnotation.getDescription();
+          if (!Strings.isNullOrEmpty(ionDescription)) {
+            description = description + itemSeparator + escapeString(ionDescription);
+            writeFeature = true;
+          }
+
+          // URL
+          URL ionUrl = ionAnnotation.getAccessionURL();
+          if (ionUrl != null) {
+            url = url + itemSeparator + escapeString(ionUrl.toString());
+            writeFeature = true;
+          }
+        }
+      }
+
+      // Write feature to file?
+      if (exportAllFeatures || writeFeature) {
+        sm.setIdentifier(removeFirstCharacter(identifier));
+        sm.setChemicalFormula(removeFirstCharacter(formula));
+        sm.setSmiles(removeFirstCharacter(smiles));
+        sm.setInchiKey(removeFirstCharacter(inchiKey));
+        sm.setDescription(removeFirstCharacter(description));
+        sm.setURI(removeFirstCharacter(url));
+        // sm.setDatabase(database);
+
+        // Common feature m/z value
+        Double rowMZ = row.getMz();
+        if (rowMZ != null)
+          sm.setExpMassToCharge(rowMZ);
+
+        // Sample specific data
         List<Sample> samples = featureTable.getSamples();
         int sampleCounter = 0;
+        ChromatographyInfo chromatographyInfo;
         for (Sample sample : samples) {
-            sampleCounter++;
-            File originalFile = sample.getOriginalFile();
+          sampleCounter++;
 
-            // MS run location
-            MsRun msRun = new MsRun(sampleCounter);
-            String filePath = sample.getName();
-            if (originalFile != null) {
-                filePath = originalFile.getAbsolutePath();
+          // m/z
+          FeatureTableColumn<Double> columnMZ = featureTable.getColumn(ColumnName.MZ, sample);
+          if (columnMZ != null) {
+            Double peakMZval = row.getData(columnMZ);
+            if (peakMZval != null) {
+              String peakMZ = peakMZval.toString();
+              sm.setOptionColumnValue(new Assay(sampleCounter), "mz", peakMZ);
             }
+          }
 
-            URL fileURL = null;
-            try {
-                fileURL = new URL("file:///" + filePath);
-            } catch (MalformedURLException e) {
+          // RT
+          FeatureTableColumn<ChromatographyInfo> columnRT =
+              featureTable.getColumn(ColumnName.RT, sample);
+          if (columnRT != null) {
+            chromatographyInfo = row.getData(columnRT);
+            if (chromatographyInfo != null) {
+              Float rt1 = chromatographyInfo.getRetentionTime();
+              Float rt2 = chromatographyInfo.getSecondaryRetentionTime();
+              String rtValue = null;
+              if (rt1 != null) {
+                rtValue = rt1.toString();
+              }
+              if (rtValue != null && rt2 != null) {
+                rtValue = rtValue + itemSeparator;
+              }
+              if (rt2 != null) {
+                rtValue = rtValue + rt2.toString();
+              }
+              if (rtValue != null)
+                sm.setRetentionTime(rtValue);
+              sm.setOptionColumnValue(new Assay(sampleCounter), "rt", rtValue);
             }
+          }
 
-            msRun.setLocation(fileURL);
-            mtd.addMsRun(msRun);
-            mtd.addAssayMsRun(sampleCounter, msRun);
+          // Height
+          FeatureTableColumn<Float> columnHeight =
+              featureTable.getColumn(ColumnName.HEIGHT, sample);
+          if (columnHeight != null) {
+            Float peakHeightVal = row.getData(columnHeight);
+            if (peakHeightVal != null) {
+              String peakHeight = peakHeightVal.toString();
+              sm.setOptionColumnValue(new Assay(sampleCounter), "height", peakHeight);
+            }
+          }
 
-            // Additional columns
-            factory.addAbundanceOptionalColumn(new Assay(sampleCounter));
-            factory.addOptionalColumn(new Assay(sampleCounter), "mz",
-                    String.class);
-            factory.addOptionalColumn(new Assay(sampleCounter), "rt",
-                    String.class);
-            factory.addOptionalColumn(new Assay(sampleCounter), "height",
-                    String.class);
+          // Area
+          FeatureTableColumn<Double> columnArea = featureTable.getColumn(ColumnName.AREA, sample);
+          if (columnArea != null) {
+            Double peakArea = row.getData(columnArea);
+            sm.setAbundanceColumnValue(new Assay(sampleCounter), peakArea);
+          }
+
+        }
+
+        // Common feature RT value
+        chromatographyInfo = row.getChromatographyInfo();
+        if (chromatographyInfo != null) {
+          Float rt1 = chromatographyInfo.getRetentionTime();
+          Float rt2 = chromatographyInfo.getSecondaryRetentionTime();
+          String rtValue = null;
+          if (rt1 != null) {
+            rtValue = rt1.toString();
+          }
+          if (rtValue != null && rt2 != null) {
+            rtValue = rtValue + itemSeparator;
+          }
+          if (rt2 != null) {
+            rtValue = rtValue + rt2.toString();
+          }
+          if (rtValue != null)
+            sm.setRetentionTime(rtValue);
         }
 
         // Write to file
         try {
-            writer.write(mtd.toString());
-            writer.write(newLine);
-            writer.write(factory.toString());
-            writer.write(newLine);
+          writer.write(sm.toString());
+          writer.write(newLine);
         } catch (Exception e) {
-            logger.info("Could not write to file " + mzTabFile);
-            return;
+          logger.info("Could not write to file " + mzTabFile);
+          return;
         }
+      }
 
-        // Cancel?
-        if (canceled)
-            return;
+      // Cancel?
+      if (canceled)
+        return;
+
+      parsedRows++;
     }
 
-    private void writeSampleData(FeatureTable featureTable, FileWriter writer,
-            Metadata mtd, MZTabColumnFactory factory) {
+  }
 
-        // Write data rows
-        for (FeatureTableRow row : featureTable.getRows()) {
+  private String escapeString(final String inputString) {
+    if (inputString == null)
+      return "";
 
-            // Get ion annotation column
-            FeatureTableColumn<List<IonAnnotation>> column = featureTable
-                    .getColumn(ColumnName.IONANNOTATION, null);
+    // Remove all special characters e.g. \n \t
+    return inputString.replaceAll("[\\p{Cntrl}]", " ");
+  }
 
-            SmallMolecule sm = new SmallMolecule(factory, mtd);
-            Boolean writeFeature = false;
-
-            // Ion annotation variables
-            String identifier = "";
-            String formula = "";
-            String smiles = "";
-            String inchiKey = "";
-            String description = "";
-            String url = "";
-            // String database = "";
-
-            // Get ion annotation
-            if (column != null) {
-                List<IonAnnotation> ionAnnotations = row.getData(column);
-                for (IonAnnotation ionAnnotation : ionAnnotations) {
-                    // Annotation ID
-                    String ionAnnotationId = ionAnnotation.getAnnotationId();
-                    if (! Strings.isNullOrEmpty(ionAnnotationId)) {
-                        identifier = identifier + itemSeparator
-                                + escapeString(ionAnnotationId);
-                        writeFeature = true;
-                    }
-
-                    // Formula
-                    IMolecularFormula ionFormula = ionAnnotation.getFormula();
-                    if (ionFormula != null) {
-                        formula = formula + itemSeparator
-                                + escapeString(MolecularFormulaManipulator
-                                        .getString(ionFormula));
-                        writeFeature = true;
-                    }
-
-                    // Chemical structure = SMILES
-                    IAtomContainer chemicalStructure = ionAnnotation
-                            .getChemicalStructure();
-                    if (chemicalStructure != null) {
-                        try {
-                            SmilesGenerator sg = SmilesGenerator.generic();
-                            smiles = smiles + itemSeparator
-                                    + sg.create(chemicalStructure);
-                        } catch (CDKException e) {
-                            logger.info("Could not create SMILE for "
-                                    + ionAnnotation.getDescription());
-                        }
-                    }
-                    
-                    // InchiKey
-                    String ik = ionAnnotation.getInchiKey();
-                    if (! Strings.isNullOrEmpty(ik)) {
-                        inchiKey += itemSeparator
-                                + escapeString(ik);
-                        writeFeature = true;
-                    }            
-
-                    // Description
-                    String ionDescription = ionAnnotation.getDescription();
-                    if (! Strings.isNullOrEmpty(ionDescription)) {
-                        description = description + itemSeparator
-                                + escapeString(ionDescription);
-                        writeFeature = true;
-                    }
-
-                    // URL
-                    URL ionUrl = ionAnnotation.getAccessionURL();
-                    if (ionUrl != null) {
-                        url = url + itemSeparator
-                                + escapeString(ionUrl.toString());
-                        writeFeature = true;
-                    }
-                }
-            }
-
-            // Write feature to file?
-            if (exportAllFeatures || writeFeature) {
-                sm.setIdentifier(removeFirstCharacter(identifier));
-                sm.setChemicalFormula(removeFirstCharacter(formula));
-                sm.setSmiles(removeFirstCharacter(smiles));
-                sm.setInchiKey(removeFirstCharacter(inchiKey));
-                sm.setDescription(removeFirstCharacter(description));
-                sm.setURI(removeFirstCharacter(url));
-                // sm.setDatabase(database);
-
-                // Common feature m/z value
-                Double rowMZ = row.getMz();
-                if (rowMZ != null)
-                    sm.setExpMassToCharge(rowMZ);
-
-                // Sample specific data
-                List<Sample> samples = featureTable.getSamples();
-                int sampleCounter = 0;
-                ChromatographyInfo chromatographyInfo;
-                for (Sample sample : samples) {
-                    sampleCounter++;
-
-                    // m/z
-                    FeatureTableColumn<Double> columnMZ = featureTable
-                            .getColumn(ColumnName.MZ, sample);
-                    if (columnMZ != null) {
-                        Double peakMZval = row.getData(columnMZ);
-                        if (peakMZval != null) {
-                            String peakMZ = peakMZval.toString();
-                            sm.setOptionColumnValue(new Assay(sampleCounter),
-                                    "mz", peakMZ);
-                        }
-                    }
-
-                    // RT
-                    FeatureTableColumn<ChromatographyInfo> columnRT = featureTable
-                            .getColumn(ColumnName.RT, sample);
-                    if (columnRT != null) {
-                        chromatographyInfo = row.getData(columnRT);
-                        if (chromatographyInfo != null) {
-                            Float rt1 = chromatographyInfo.getRetentionTime();
-                            Float rt2 = chromatographyInfo
-                                    .getSecondaryRetentionTime();
-                            String rtValue = null;
-                            if (rt1 != null) {
-                                rtValue = rt1.toString();
-                            }
-                            if (rtValue != null && rt2 != null) {
-                                rtValue = rtValue + itemSeparator;
-                            }
-                            if (rt2 != null) {
-                                rtValue = rtValue + rt2.toString();
-                            }
-                            if (rtValue != null)
-                                sm.setRetentionTime(rtValue);
-                            sm.setOptionColumnValue(new Assay(sampleCounter),
-                                    "rt", rtValue);
-                        }
-                    }
-
-                    // Height
-                    FeatureTableColumn<Float> columnHeight = featureTable
-                            .getColumn(ColumnName.HEIGHT, sample);
-                    if (columnHeight != null) {
-                        Float peakHeightVal = row.getData(columnHeight);
-                        if (peakHeightVal != null) {
-                            String peakHeight = peakHeightVal.toString();
-                            sm.setOptionColumnValue(new Assay(sampleCounter),
-                                    "height", peakHeight);
-                        }
-                    }
-
-                    // Area
-                    FeatureTableColumn<Double> columnArea = featureTable
-                            .getColumn(ColumnName.AREA, sample);
-                    if (columnArea != null) {
-                        Double peakArea = row.getData(columnArea);
-                        sm.setAbundanceColumnValue(new Assay(sampleCounter),
-                                peakArea);
-                    }
-
-                }
-
-                // Common feature RT value
-                chromatographyInfo = row.getChromatographyInfo();
-                if (chromatographyInfo != null) {
-                    Float rt1 = chromatographyInfo.getRetentionTime();
-                    Float rt2 = chromatographyInfo.getSecondaryRetentionTime();
-                    String rtValue = null;
-                    if (rt1 != null) {
-                        rtValue = rt1.toString();
-                    }
-                    if (rtValue != null && rt2 != null) {
-                        rtValue = rtValue + itemSeparator;
-                    }
-                    if (rt2 != null) {
-                        rtValue = rtValue + rt2.toString();
-                    }
-                    if (rtValue != null)
-                        sm.setRetentionTime(rtValue);
-                }
-
-                // Write to file
-                try {
-                    writer.write(sm.toString());
-                    writer.write(newLine);
-                } catch (Exception e) {
-                    logger.info("Could not write to file " + mzTabFile);
-                    return;
-                }
-            }
-
-            // Cancel?
-            if (canceled)
-                return;
-
-            parsedRows++;
-        }
-
+  /**
+   * <p>
+   * removeFirstCharacter.
+   * </p>
+   *
+   * @param str a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
+  private String removeFirstCharacter(String str) {
+    if (str.length() > 0) {
+      str = str.substring(1, str.length());
     }
+    return str;
+  }
 
-    private String escapeString(final String inputString) {
-        if (inputString == null)
-            return "";
+  /** {@inheritDoc} */
+  @Override
+  @Nullable
+  public File getResult() {
+    return mzTabFile;
+  }
 
-        // Remove all special characters e.g. \n \t
-        return inputString.replaceAll("[\\p{Cntrl}]", " ");
-    }
+  /** {@inheritDoc} */
+  @Override
+  public Float getFinishedPercentage() {
+    return totalRows == 0 ? null : (float) parsedRows / totalRows;
+  }
 
-    /**
-     * <p>removeFirstCharacter.</p>
-     *
-     * @param str a {@link java.lang.String} object.
-     * @return a {@link java.lang.String} object.
-     */
-    private String removeFirstCharacter(String str) {
-        if (str.length() > 0) {
-            str = str.substring(1, str.length());
-        }
-        return str;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public File getResult() {
-        return mzTabFile;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Float getFinishedPercentage() {
-        return totalRows == 0 ? null : (float) parsedRows / totalRows;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void cancel() {
-        this.canceled = true;
-    }
+  /** {@inheritDoc} */
+  @Override
+  public void cancel() {
+    this.canceled = true;
+  }
 
 }
