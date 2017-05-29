@@ -34,7 +34,7 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 
 public class ContinuousWaveletTransformTest {
 	
-	private static final String TEST_DATA_PATH = "..\\msdk-featdet-ADAP-3D\\src\\test\\resources\\";
+	private static final String TEST_DATA_PATH = "src/test/resources/";
 	private static RawDataFile rawFile;
 
 	@SuppressWarnings("null")
