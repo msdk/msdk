@@ -354,9 +354,9 @@ public interface IonAnnotation extends Comparable<IonAnnotation> {
   void setModifications(@Nullable String modifications);
 
   /**
-   * <p>
-   * getReliability
-   * </p>
+   * Returns the reliability of the identification. This must be reported as an integer between 1-4:
+   * 1: Identified metabolites 2: Putatively annotated compounds 3: Putatively characterized
+   * compound classes 4: Unknown compounds
    *
    * @return The reliability of the ion annotation identification.
    */
@@ -371,4 +371,5 @@ public interface IonAnnotation extends Comparable<IonAnnotation> {
    * @param reliability a {@link java.lang.Integer} object.
    */
   void setReliability(@Nullable Integer reliability);
+
 }
