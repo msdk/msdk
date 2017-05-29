@@ -13,6 +13,9 @@
 package io.github.msdk.featdet.ADAP3D.datamodel;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -21,6 +24,11 @@ import java.util.ArrayList;
  */
 public class Ridgeline {
     public int totalNumberOfScales;
+    public  int curBestInd = 0;
+    public  double curBestScale = 0.0;
+    public  double maxCorVal = 0.0;
+    
+    
     
     // These are public for priting reasons and debuging. When everything is
     // done they can be made private.
@@ -54,40 +62,49 @@ public class Ridgeline {
         int l = scales_.size();
         return scales_.get(l-1);
     }
-    public int getBestIndex(){
-        int curBestInd=-1;
-        double maxCorVal=Double.NEGATIVE_INFINITY;
-        for (int i=0; i< indecies_.size();i++){
+    
+    public void findBestValues(){
+    	
+    	int index = 0;
+    	int count = 0;
+    	double[] arrayMaxCorVal = new double[corValues_.size()];
+    	int[] arrayCurBestInd = new int[indecies_.size()];
+    	double[] arrayCurBestScale = new double[scales_.size()];
+    	
+    	for (int i=0; i< indecies_.size();i++){
             double curCor = corValues_.get(i);
-            if (curCor>maxCorVal){
-                maxCorVal = curCor;
-                curBestInd = indecies_.get(i);
+            double previousCurCor=0;
+            double nextCurCor=0;
+            
+            if(i-1>=0){
+            	previousCurCor = corValues_.get(i-1);
+            }
+            if(i+1<indecies_.size()){
+            	nextCurCor = corValues_.get(i+1);
+            }
+            
+            
+            if (curCor>previousCurCor && curCor>nextCurCor && i-1>=0 && i+1<=indecies_.size()){
+            	arrayMaxCorVal[count] = curCor;
+            	arrayCurBestInd[count] = indecies_.get(i);
+            	arrayCurBestScale[count] = scales_.get(i);
+            	count++;
             }
         }
-        return curBestInd;
-    }
-    public double getBestScale(){
-        double curBestScale=-1.0;
-        double maxCorVal=Double.NEGATIVE_INFINITY;
-        for (int i=0; i< scales_.size();i++){
-            double curCor = corValues_.get(i);
-            if (curCor>maxCorVal){
-                maxCorVal = curCor;
-                curBestScale = scales_.get(i);
+    	
+    	double minValue = arrayCurBestScale[0];
+        for (int i = 1; i < arrayCurBestScale.length; i++) {
+            if (arrayCurBestScale[i] < minValue && arrayCurBestScale[i]!=0.0) {
+                minValue = arrayCurBestScale[i];
+                index++;
             }
         }
-        return curBestScale;
+    	maxCorVal = arrayMaxCorVal[index];
+        curBestInd = arrayCurBestInd[index];
+        curBestScale = minValue;
     }
-    public double getMaxCor(){
-        double maxCorVal=0.0;
-        for (int i=0; i< corValues_.size();i++){
-            double curCor = corValues_.get(i);
-            if (curCor>maxCorVal){
-                maxCorVal = curCor;
-            }
-        }
-        return maxCorVal;
-    }
+    
+ 
     public boolean tryAddPoint(double scale, int index, double corValue)
     {
         // see if where this index is in relation to the last added

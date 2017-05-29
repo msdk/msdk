@@ -18,7 +18,13 @@ import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Arrays;
 import static java.util.Arrays.fill;
+
+import java.util.List;
+
+import com.google.common.collect.Range;
+
 import java.util.HashMap;
+import io.github.msdk.featdet.ADAP3D.datamodel.Result;
 
 import io.github.msdk.featdet.ADAP3D.datamodel.Ridgeline;
 
@@ -44,7 +50,8 @@ public class ContinuousWaveletTransform {
     private double avgXSpace;
     private double[][] allCoefficients;
     private ArrayList<Ridgeline> ridgeLineArr = new ArrayList<Ridgeline>();
-    
+    private Range<Double> peakWidth;
+    private double coefAreaRatioTolerance;
     
  
     
@@ -69,24 +76,144 @@ public class ContinuousWaveletTransform {
             mapScaleToIndex.put(curScale,index);
             index += 1;
         }
-        
-    
     }
-    // returns two arrays, one of the lower bounds of the peaks and one of the upper bounds of the peaks.
-    public double[][] findBoundries(){
+    
+    //setting peak width by taking input from user
+    public void setPeakWidth(double lowerbound,double upperbound){
+    	peakWidth = Range.closed(lowerbound,upperbound);
+    }
+    
+  //setting peak width by taking input from user
+    public void setPeakWidth(Range<Double> peakWidthObject){
+    	peakWidth = peakWidthObject;
+    }
+    
+    public void setcoefAreaRatioTolerance(double userInputCoefAreaRatioTolerance){
+    	coefAreaRatioTolerance = userInputCoefAreaRatioTolerance;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////Cropped Peak width/////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // It is possible for the bounds to contain null or 0 intensity points. 
+    // For example if for some reason the
+    // CWT finds a peak with only a single point in it but it thinks the bounds are a couple
+    // of points to the left and right then it would pass the above if statement. To make 
+    // sure we get rid of these points we need to do one more check which is below.
+    public int[] croppedPeakWidth(int peakLeft, int peakRight){
+    	 int croppedPeakLeft=-1;
+         int croppedPeakRight=-1;
+         
+         int [] toReturn = new int[2];
+         toReturn[0] = croppedPeakLeft;
+         toReturn[1] = croppedPeakRight;
+         
+         boolean allZero=true;
+         for (int alpha=peakLeft; alpha<peakRight; alpha++){
+             double curInt = signal[alpha];
+             if (curInt!=0.0){
+                 
+                 allZero = false;
+                 break;
+             }
+         }
+         if (allZero){
+             return toReturn;
+         }
+         for (int alpha=peakLeft; alpha<peakRight; alpha++){
+             double curInt = signal[alpha];
+             if (curInt!=0.0){
+                 
+                 croppedPeakLeft = alpha;
+                 break;
+             }
+         }
+         for (int alpha=peakRight; alpha>peakLeft; alpha--){
+             double curInt = signal[alpha];
+             if (curInt!=0.0){
+                 croppedPeakRight = alpha;
+                 break;
+             }
+         }
+
+         // the most left and right points could/should be zero so by adding/subtracting from alpha we can make sure that  remains the case
+         // Otherwise the peak width is not accurately being represented.
+         if (croppedPeakLeft!=peakLeft){
+             croppedPeakLeft-=1;
+         }
+         if (croppedPeakRight!=peakRight){
+             croppedPeakRight+=1;
+         }
+         if(croppedPeakLeft==-2){
+        	 // turn in to official log or raise exception or something
+             System.out.println("bug");
+         }
+         
+         toReturn[0] = croppedPeakLeft;
+         toReturn[1] = croppedPeakRight;
+         return toReturn;
+         
+    }
+    
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////Number of Zero Points /////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ALSO lest make sure the total number of non-zero points is greater than the number of 0.0 points
+    public boolean numberOfZeros(int peakLeft, int peakRight){
+    	  int numZeros = 0;
+          int numNotZero = 0;
+          double epsilon = 0.0001;
+   
+          for (int alpha=peakLeft; alpha<=peakRight;alpha++){
+              if (signal[alpha]< epsilon){
+                  numZeros +=1;
+              }
+              else {
+                  numNotZero += 1;
+              }
+          }
+          
+          if (numZeros>=numNotZero){
+              return true;
+          }
+          else{
+        	  return false;
+          }     
+    }
+    
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////Area/////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public double findArea(int peakLeft, int peakRight){
+    	  double curArea = FeatureTools.trapazoidAreaUnderCurve( signal,x, peakLeft,  peakRight);
+    	  return curArea;
+    } 
+    
+    
+    
+    //returns the list of objects of type result which has the variables
+    //lower bounds of the peaks, upper bounds of the peaks and best coefficient.
+    public List<Result> findPeaks(){
+    	//Calling the functions to build ridge lines and filtering the ridge lines.
+    	buildRidgelines();
+    	filterRidgelines();
+    	
+    	//create list of the type Result
+    	List<Result> resultList = new ArrayList<Result>();
+    	Result result = new Result();
+    	
         double [][] boundsAndBestCoef = new double[3][];
         for (int i=0; i<3;i++){
             boundsAndBestCoef[i]= new double[x.length];
             fill(boundsAndBestCoef[i],0.0);
         }
        
-        
-        int count = 0;
         for (Ridgeline curRL : ridgeLineArr){
-            int bestIndex = curRL.getBestIndex();
+        	curRL.findBestValues();
+            int bestIndex = curRL.curBestInd;
             // this is the actuale scale, not the index of the best scale.
-            double bestScale = curRL.getBestScale();
-            double bestCoefficient = curRL.getMaxCor();
+            double bestScale = curRL.curBestScale;
+            double bestCoefficient = curRL.maxCorVal;
             
             int curRightBound = bestIndex+(int) Math.round(bestScale);
             if (curRightBound>=x.length){
@@ -96,14 +223,44 @@ public class ContinuousWaveletTransform {
             if (curLeftBound<0){
                 curLeftBound = 0;
             }
+            curLeftBound = FeatureTools.fixLeftBoundry(signal, curLeftBound);
+            curRightBound = FeatureTools.fixRightBoundry(signal, curRightBound);
+           
+            int [] croppedBounds = new int[2];
+            croppedBounds = croppedPeakWidth(curLeftBound,curRightBound);
+            curLeftBound =croppedBounds[0];
+            curRightBound = croppedBounds[1];
+            if ((curLeftBound==-1)||(curRightBound==-1)){
+            	continue;
+            }
+            boolean checkNumberOfZeros = numberOfZeros(curLeftBound,curRightBound);
+            if(checkNumberOfZeros==true){
+            	continue;
+            }
             
-            boundsAndBestCoef[0][count] = curLeftBound;
-            boundsAndBestCoef[1][count] = curRightBound;
-            boundsAndBestCoef[2][count] = bestCoefficient;
+            double curArea = findArea(curLeftBound, curRightBound);
+            double normedCoef = bestCoefficient/curArea;
+      	  	if (normedCoef<coefAreaRatioTolerance){
+      	  		continue;
+            }
+      	  	
+            double retentionTimeRight = x[curRightBound];
+            double retentionTimeLeft = x[curLeftBound];
+            if(! peakWidth.contains(retentionTimeRight- retentionTimeLeft))
+            {
+                continue;
+            }
             
-            count+=1;
+            result.curLeftBound = curLeftBound;
+            result.curRightBound = curRightBound;
+            result.bestCoefficient = bestCoefficient;
+            result.curArea = curArea;
+            
+            //add the result object in the result list
+            resultList.add(result);
+            
         }
-        return boundsAndBestCoef;
+        return resultList;
     }
     
     public void filterRidgelines(){
