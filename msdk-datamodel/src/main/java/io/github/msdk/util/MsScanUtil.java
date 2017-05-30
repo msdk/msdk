@@ -39,14 +39,14 @@ public class MsScanUtil {
    * @return a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
    */
   @Nonnull
-  static public MsScan clone(@Nonnull DataPointStore newStore, @Nonnull MsScan scan,
+  static public SimpleMsScan clone(@Nonnull DataPointStore newStore, @Nonnull MsScan scan,
       @Nonnull Boolean copyDataPoints) {
 
     Preconditions.checkNotNull(newStore);
     Preconditions.checkNotNull(scan);
     Preconditions.checkNotNull(copyDataPoints);
 
-    MsScan newScan =
+    SimpleMsScan newScan =
         new SimpleMsScan(newStore, scan.getScanNumber(), scan.getMsFunction());
 
     newScan.setPolarity(scan.getPolarity());

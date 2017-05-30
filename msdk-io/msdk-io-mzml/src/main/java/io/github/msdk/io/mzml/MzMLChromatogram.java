@@ -106,35 +106,6 @@ class MzMLChromatogram implements Chromatogram {
     return null;
   }
 
-  /*
-   * Unsupported set-operations
-   */
-
-  /** {@inheritDoc} */
-  @Override
-  public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setChromatogramNumber(@Nonnull Integer chromatogramNumber) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setChromatogramType(@Nonnull ChromatogramType newChromatogramType) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setDataPoints(@Nonnull float rtValues[], @Nullable double mzValues[],
-      @Nonnull float intensityValues[], @Nonnull Integer size) {
-    throw new UnsupportedOperationException();
-  }
-
   /** {@inheritDoc} */
   @Override
   public void setMz(@Nullable Double newMz) {
@@ -205,13 +176,6 @@ class MzMLChromatogram implements Chromatogram {
   @Override
   @Nullable
   public double[] getMzValues() {
-    return null;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  @Nullable
-  public double[] getMzValues(@Nullable double[] array) {
     return null;
   }
 

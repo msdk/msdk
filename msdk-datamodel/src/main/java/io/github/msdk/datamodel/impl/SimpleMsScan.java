@@ -77,7 +77,6 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
     if ((this.dataFile != null) && (this.dataFile != newRawDataFile)) {
       throw new MSDKRuntimeException(
@@ -94,7 +93,6 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setScanNumber(@Nonnull Integer scanNumber) {
     Preconditions.checkNotNull(scanNumber);
     this.scanNumber = scanNumber;
@@ -108,7 +106,6 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setScanDefinition(@Nullable String scanDefinition) {
     this.scanDefinition = scanDefinition;
   }
@@ -121,7 +118,6 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setMsFunction(@Nonnull MsFunction newFunction) {
     Preconditions.checkNotNull(newFunction);
     this.msFunction = newFunction;
@@ -135,7 +131,6 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setScanningRange(@Nullable Range<Double> newScanRange) {
     this.scanningRange = newScanRange;
   }
@@ -148,7 +143,6 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setPolarity(@Nonnull PolarityType newPolarity) {
     Preconditions.checkNotNull(newPolarity);
     this.polarity = newPolarity;
@@ -162,7 +156,6 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setMsScanType(@Nonnull MsScanType newMsScanType) {
     Preconditions.checkNotNull(newMsScanType);
     this.msScanType = newMsScanType;
@@ -193,7 +186,6 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setRetentionTime(@Nullable Float rt) {
     this.rt = rt;
   }
@@ -206,7 +198,6 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setSourceInducedFragmentation(@Nullable ActivationInfo newFragmentationInfo) {
     this.sourceInducedFragInfo = newFragmentationInfo;
   }

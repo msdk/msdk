@@ -45,7 +45,6 @@ import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
-import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -88,7 +87,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
    * This variable hold the present scan or fragment, it is send to the stack when another
    * scan/fragment appears as a parser.startElement
    */
-  private MsScan buildingScan;
+  private SimpleMsScan buildingScan;
 
   /**
    * <p>

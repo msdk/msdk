@@ -24,7 +24,6 @@ import org.junit.Test;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
@@ -40,7 +39,7 @@ public class SimpleChromatogramTest {
 
   private static @Nonnull DataPointStore dataPointStore =
       DataPointStoreFactory.getMemoryDataStore();
-  private static @Nonnull Chromatogram chromatogram1 =
+  private static @Nonnull SimpleChromatogram chromatogram1 =
       new SimpleChromatogram(dataPointStore, 6, ChromatogramType.TIC, SeparationType.LC);
 
   @Test

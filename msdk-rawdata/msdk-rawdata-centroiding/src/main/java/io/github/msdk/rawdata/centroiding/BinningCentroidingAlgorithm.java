@@ -16,6 +16,7 @@ package io.github.msdk.rawdata.centroiding;
 import javax.annotation.Nonnull;
 
 import io.github.msdk.datamodel.datastore.DataPointStore;
+import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
 
@@ -29,7 +30,7 @@ public class BinningCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
   private final @Nonnull DataPointStore dataPointStore;
   private final @Nonnull Double binSize;
 
-  private MsScan newScan;
+  private SimpleMsScan newScan;
 
   // Data structures
   private @Nonnull double mzBuffer[] = new double[10000];

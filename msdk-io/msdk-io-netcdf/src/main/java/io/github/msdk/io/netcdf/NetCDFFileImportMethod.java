@@ -334,7 +334,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     // Scan number
     final Integer scanNumber = scanIndex + 1;
 
-    MsScan scan = new SimpleMsScan(dataStore, scanNumber, msFunction);
+    SimpleMsScan scan = new SimpleMsScan(dataStore, scanNumber, msFunction);
 
     // Extract and store the data points
     extractDataPoints(scanIndex);

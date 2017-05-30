@@ -117,7 +117,6 @@ public class SimpleRawDataFile implements RawDataFile {
     synchronized (scans) {
       scans.add(scan);
     }
-    scan.setRawDataFile(this);
   }
 
   /** {@inheritDoc} */

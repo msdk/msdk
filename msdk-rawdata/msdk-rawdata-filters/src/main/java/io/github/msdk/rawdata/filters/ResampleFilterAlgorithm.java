@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.datastore.DataPointStore;
+import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
 
@@ -107,7 +108,7 @@ public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
     }
 
     // Return a new scan with the new data points
-    MsScan result = MsScanUtil.clone(store, scan, false);
+    SimpleMsScan result = MsScanUtil.clone(store, scan, false);
     result.setDataPoints(mzBuffer, intensityBuffer, newNumOfDataPoints);
 
     return result;

@@ -16,6 +16,7 @@ package io.github.msdk.rawdata.centroiding;
 import javax.annotation.Nonnull;
 
 import io.github.msdk.datamodel.datastore.DataPointStore;
+import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
 
@@ -38,7 +39,7 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
   private final @Nonnull Integer scaleLevel;
   private final @Nonnull Double waveletWindow;
 
-  private MsScan newScan;
+  private SimpleMsScan newScan;
 
   // Data structures
   private @Nonnull double mzBuffer[];

@@ -42,14 +42,6 @@ public interface Chromatogram {
   RawDataFile getRawDataFile();
 
   /**
-   * Updates the raw data file reference. This method can be called only once. Any subsequent calls
-   * will throw the IllegalOperationException.
-   *
-   * @param newRawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-   */
-  void setRawDataFile(@Nonnull RawDataFile newRawDataFile);
-
-  /**
    * Returns the number of this chromatogram, represented by an integer, typically positive.
    * Typically, the chromatogram number will be unique within the file. However, the data model does
    * not guarantee that, and in some cases multiple chromatogram with the same number may be present
@@ -61,26 +53,12 @@ public interface Chromatogram {
   Integer getChromatogramNumber();
 
   /**
-   * Updates the chromatogram number.
-   *
-   * @param chromatogramNumber New chromatogram number.
-   */
-  void setChromatogramNumber(@Nonnull Integer chromatogramNumber);
-
-  /**
    * Returns the type of the chromatogram. If unknown, ChromatogramType.UNKNOWN is returned.
    *
    * @return Chromatogram type
    */
   @Nonnull
   ChromatogramType getChromatogramType();
-
-  /**
-   * Updates the chromatogram type.
-   *
-   * @param newChromatogramType New chromatogram type.
-   */
-  void setChromatogramType(@Nonnull ChromatogramType newChromatogramType);
 
   /**
    * <p>
@@ -133,31 +111,6 @@ public interface Chromatogram {
    */
   @Nullable
   double[] getMzValues();
-
-  /**
-   * <p>
-   * getMzValues.
-   * </p>
-   *
-   * @param array an array of double.
-   * @return an array of double.
-   */
-  @Nullable
-  double[] getMzValues(@Nullable double array[]);
-
-  /**
-   * <p>
-   * setDataPoints.
-   * </p>
-   *
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
-   *        objects.
-   * @param mzValues an array of double.
-   * @param intensityValues an array of float.
-   * @param size a {@link java.lang.Integer} object.
-   */
-  void setDataPoints(@Nonnull float rtValues[], @Nullable double mzValues[],
-      @Nonnull float intensityValues[], @Nonnull Integer size);
 
   /**
    * Returns the m/z value of this chromatogram, or null if no m/z value is set for the

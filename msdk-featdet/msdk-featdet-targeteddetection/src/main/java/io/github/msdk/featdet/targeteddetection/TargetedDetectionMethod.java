@@ -95,7 +95,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
     int chromatogramNumber = RawDataFileUtil.getNextChromatogramNumber(rawDataFile);
 
     // Variables
-    Chromatogram chromatogram;
+    SimpleChromatogram chromatogram;
     BuildingChromatogram buildingChromatogram;
     int ionNr;
 

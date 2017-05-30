@@ -47,15 +47,6 @@ public interface MsScan extends MsSpectrum {
   RawDataFile getRawDataFile();
 
   /**
-   * Updates the raw data file reference. This method can be called only once. Any subsequent calls
-   * will throw the MSDKRuntimeException.
-   *
-   * @param newRawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-   * @throws MSDKRuntimeException If the raw data file reference had already been set.
-   */
-  void setRawDataFile(@Nonnull RawDataFile newRawDataFile);
-
-  /**
    * Returns the number of this scan, represented by an integer, typically positive. Typically, the
    * scan number will be unique within the file. However, the data model does not guarantee that,
    * and in some cases multiple scans with the same number may be present in the file.
@@ -64,13 +55,6 @@ public interface MsScan extends MsSpectrum {
    */
   @Nonnull
   Integer getScanNumber();
-
-  /**
-   * Updates the scan number.
-   *
-   * @param scanNumber New scan number.
-   */
-  void setScanNumber(@Nonnull Integer scanNumber);
 
   /**
    * Returns the instrument-specific textual definition of the scan parameters. For example, in
@@ -86,26 +70,12 @@ public interface MsScan extends MsSpectrum {
   String getScanDefinition();
 
   /**
-   * Updates the scan definition (instrument-specific textual definition of the scan parameters).
-   *
-   * @param scanDefinition New scan definition.
-   */
-  void setScanDefinition(@Nullable String scanDefinition);
-
-  /**
    * Returns the MS function of this scan.
    *
    * @return MS function.
    */
   @Nonnull
   MsFunction getMsFunction();
-
-  /**
-   * Updates the MS function of this scan.
-   *
-   * @param newFunction New MS function.
-   */
-  void setMsFunction(@Nonnull MsFunction newFunction);
 
   /**
    * Returns the type of the MS scan. If unknown, MsScanType.UNKNOWN is returned.
@@ -116,26 +86,12 @@ public interface MsScan extends MsSpectrum {
   MsScanType getMsScanType();
 
   /**
-   * Updates the MS scan type.
-   *
-   * @param newMsScanType a {@link io.github.msdk.datamodel.rawdata.MsScanType} object.
-   */
-  void setMsScanType(@Nonnull MsScanType newMsScanType);
-
-  /**
    * Returns the retention time in seconds
    *
    * @return RT
    */
   @Nullable
   Float getRetentionTime();
-
-  /**
-   * Updates the associated retention time
-   *
-   * @param Retention time in seconds
-   */
-  void setRetentionTime(@Nullable Float rt);
 
   /**
    * Returns the scanning range of the instrument. Note that this value is different from that
@@ -152,13 +108,6 @@ public interface MsScan extends MsSpectrum {
   Range<Double> getScanningRange();
 
   /**
-   * Updates the instrument scanning m/z range.
-   *
-   * @param newScanRange New scanning range.
-   */
-  void setScanningRange(@Nullable Range<Double> newScanRange);
-
-  /**
    * Returns the polarity of this scan. If unknown, PolarityType.UNKNOWN is returned.
    *
    * @return Polarity of this scan.
@@ -166,12 +115,6 @@ public interface MsScan extends MsSpectrum {
   @Nonnull
   PolarityType getPolarity();
 
-  /**
-   * Updates the polarity of this scan.
-   *
-   * @param newPolarity New scan polarity.
-   */
-  void setPolarity(@Nonnull PolarityType newPolarity);
 
   /**
    * Returns the fragmentation parameters of ion source-induced fragmentation, or null if no such
@@ -181,13 +124,6 @@ public interface MsScan extends MsSpectrum {
    */
   @Nullable
   ActivationInfo getSourceInducedFragmentation();
-
-  /**
-   * Updates the fragmentation parameters of ion source-induced fragmentation.
-   *
-   * @param newFragmentationInfo New fragmentation parameters.
-   */
-  void setSourceInducedFragmentation(@Nullable ActivationInfo newFragmentationInfo);
 
   /**
    * Returns a list of isolations performed for this scan. These isolations may also include

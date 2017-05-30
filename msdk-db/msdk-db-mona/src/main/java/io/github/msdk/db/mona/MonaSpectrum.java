@@ -141,11 +141,6 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return this.spectrumType;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setSpectrumType(@Nonnull MsSpectrumType spectrumType) {
-    this.spectrumType = spectrumType;
-  }
 
   /** {@inheritDoc} */
   @Nullable
@@ -256,13 +251,6 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return new float[0];
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setDataPoints(@Nonnull double[] mzValues, @Nonnull float[] intensityValues,
-      @Nonnull Integer size) {
-    // TODO Auto-generated method stub
-
-  }
 
   /** {@inheritDoc} */
   @Override

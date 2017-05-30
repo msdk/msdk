@@ -177,7 +177,7 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
       BuildingChromatogram buildingChromatogram = entry.getValue();
 
       // Create the final chromatogram
-      Chromatogram chromatogram = new SimpleChromatogram(dataStore, chromatogramNumber,
+      SimpleChromatogram chromatogram = new SimpleChromatogram(dataStore, chromatogramNumber,
           ChromatogramType.MRM_SRM, SeparationType.UNKNOWN);
 
       // Add the data points to the final chromatogram

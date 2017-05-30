@@ -38,13 +38,6 @@ public interface MsSpectrum {
   MsSpectrumType getSpectrumType();
 
   /**
-   * Updates the type of this mass spectrum.
-   *
-   * @param spectrumType new spectrum type
-   */
-  void setSpectrumType(@Nonnull MsSpectrumType spectrumType);
-
-  /**
    * <p>
    * getNumberOfDataPoints.
    * </p>
@@ -77,18 +70,6 @@ public interface MsSpectrum {
    */
   @Nonnull
   float[] getIntensityValues();
-
-  /**
-   * <p>
-   * setDataPoints.
-   * </p>
-   *
-   * @param mzValues an array of double.
-   * @param intensityValues an array of float.
-   * @param size a {@link java.lang.Integer} object.
-   */
-  void setDataPoints(@Nonnull double mzValues[], @Nonnull float intensityValues[],
-      @Nonnull Integer size);
 
   /**
    * Returns the sum of intensities of all data points (total ion current or TIC).

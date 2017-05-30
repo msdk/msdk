@@ -32,7 +32,6 @@ import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
-import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
@@ -267,7 +266,7 @@ class RawDumpParser {
         msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
 
       // Create a new scan
-      MsScan newScan = new SimpleMsScan(dataStore, scanNumber, msFunction);
+      SimpleMsScan newScan = new SimpleMsScan(dataStore, scanNumber, msFunction);
 
       newScan.setRetentionTime(retentionTime);
       newScan.setDataPoints(mzValues, intensityValues, numOfDataPoints);

@@ -74,12 +74,6 @@ public class PeakInvestigatorMsSpectrum implements MsSpectrum {
 
   /** {@inheritDoc} */
   @Override
-  public void setSpectrumType(MsSpectrumType spectrumType) {
-    throw new RuntimeException("This class should not have a MsSpectrumType set.");
-  }
-
-  /** {@inheritDoc} */
-  @Override
   public Integer getNumberOfDataPoints() {
     return spectrum.getNumberOfDataPoints();
   }
@@ -94,12 +88,6 @@ public class PeakInvestigatorMsSpectrum implements MsSpectrum {
   @Override
   public float[] getIntensityValues() {
     return spectrum.getIntensityValues();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setDataPoints(double[] mzValues, float[] intensityValues, Integer size) {
-    throw new RuntimeException("This class should never set its data points dynamically.");
   }
 
   /** {@inheritDoc} */

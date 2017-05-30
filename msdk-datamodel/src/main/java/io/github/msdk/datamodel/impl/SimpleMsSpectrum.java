@@ -83,7 +83,6 @@ public class SimpleMsSpectrum implements MsSpectrum {
   }
 
   /** {@inheritDoc} */
-  @Override
   public synchronized void setDataPoints(@Nonnull double mzValues[],
       @Nonnull float intensityValues[], @Nonnull Integer size) {
 
@@ -112,7 +111,6 @@ public class SimpleMsSpectrum implements MsSpectrum {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setSpectrumType(@Nonnull MsSpectrumType spectrumType) {
     this.spectrumType = spectrumType;
   }

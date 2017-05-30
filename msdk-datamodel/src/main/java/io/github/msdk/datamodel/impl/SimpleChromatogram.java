@@ -77,7 +77,6 @@ public class SimpleChromatogram implements Chromatogram {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
     this.dataFile = newRawDataFile;
   }
@@ -90,7 +89,6 @@ public class SimpleChromatogram implements Chromatogram {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setChromatogramNumber(@Nonnull Integer chromatogramNumber) {
     this.chromatogramNumber = chromatogramNumber;
   }
@@ -103,7 +101,6 @@ public class SimpleChromatogram implements Chromatogram {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setChromatogramType(@Nonnull ChromatogramType newChromatogramType) {
     this.chromatogramType = newChromatogramType;
   }
@@ -131,14 +128,7 @@ public class SimpleChromatogram implements Chromatogram {
   /** {@inheritDoc} */
   @Override
   public @Nonnull double[] getMzValues() {
-    return getMzValues(null);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public @Nonnull double[] getMzValues(@Nullable double array[]) {
-    if ((array == null) || (array.length < numOfDataPoints))
-      array = new double[numOfDataPoints];
+    double [] array = new double[numOfDataPoints];
     dataPointStore.loadData(dataStoreMzId, array);
     return array;
   }
@@ -159,7 +149,6 @@ public class SimpleChromatogram implements Chromatogram {
   }
 
   /** {@inheritDoc} */
-  @Override
   public synchronized void setDataPoints(@Nonnull float rtValues[],
       @Nullable double mzValues[], @Nonnull float intensityValues[], @Nonnull Integer size) {
 

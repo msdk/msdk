@@ -43,9 +43,9 @@ public class TargetedDetectionMethodTest {
 
     // Create the data structures
     final DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
-    float rtBuffer[] = new float[10000];
-    double mzBuffer[] = new double[10000];
-    float intensityBuffer[] = new float[10000];
+    float rtBuffer[];
+    double mzBuffer[];
+    float intensityBuffer[];
     int numOfDataPoints;
 
     // Import the file
@@ -97,8 +97,8 @@ public class TargetedDetectionMethodTest {
     Chromatogram chromatogram1 = chromatograms.get(0);
     Assert.assertEquals(1, chromatogram1.getChromatogramNumber().intValue());
     rtBuffer = chromatogram1.getRetentionTimes();
-    mzBuffer = chromatogram1.getMzValues(mzBuffer);
-    intensityBuffer = chromatogram1.getIntensityValues(intensityBuffer);
+    mzBuffer = chromatogram1.getMzValues();
+    intensityBuffer = chromatogram1.getIntensityValues();
     numOfDataPoints = chromatogram1.getNumberOfDataPoints();
     Assert.assertEquals(20, numOfDataPoints);
     Assert.assertEquals(5513891.5, intensityBuffer[8], 0.000001);
@@ -169,7 +169,7 @@ public class TargetedDetectionMethodTest {
     Chromatogram chromatogram2 = chromatograms.get(1);
     Assert.assertEquals(2, chromatogram2.getChromatogramNumber().intValue());
     rtBuffer = chromatogram2.getRetentionTimes();
-    mzBuffer = chromatogram2.getMzValues(mzBuffer);
+    mzBuffer = chromatogram2.getMzValues();
     intensityBuffer = chromatogram2.getIntensityValues(intensityBuffer);
     numOfDataPoints = chromatogram2.getNumberOfDataPoints();
     Assert.assertEquals(18, numOfDataPoints);
@@ -241,7 +241,7 @@ public class TargetedDetectionMethodTest {
     Chromatogram chromatogram3 = chromatograms.get(2);
     Assert.assertEquals(3, chromatogram3.getChromatogramNumber().intValue());
     rtBuffer = chromatogram3.getRetentionTimes();
-    mzBuffer = chromatogram3.getMzValues(mzBuffer);
+    mzBuffer = chromatogram3.getMzValues();
     intensityBuffer = chromatogram3.getIntensityValues(intensityBuffer);
     numOfDataPoints = chromatogram3.getNumberOfDataPoints();
     Assert.assertEquals(17, numOfDataPoints);

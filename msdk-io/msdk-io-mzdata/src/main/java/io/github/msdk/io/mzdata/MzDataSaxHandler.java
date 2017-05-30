@@ -30,7 +30,6 @@ import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
-import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
@@ -212,7 +211,7 @@ class MzDataSaxHandler extends DefaultHandler {
       // Create a new scan
       MsFunction msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
 
-      MsScan newScan = new SimpleMsScan(dataStore, scanNumber, msFunction);
+      SimpleMsScan newScan = new SimpleMsScan(dataStore, scanNumber, msFunction);
 
       newScan.setDataPoints(mzBuffer, intensityBuffer, peaksCount);
       newScan.setSpectrumType(spectrumType);
