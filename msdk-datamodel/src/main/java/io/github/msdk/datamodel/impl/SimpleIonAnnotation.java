@@ -23,7 +23,6 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * Simple IonAnnotation implementation;
@@ -38,7 +37,7 @@ class SimpleIonAnnotation implements IonAnnotation {
   private @Nullable String identificationMethod;
   private @Nullable String annotationId;
   private @Nullable URL accessionURL;
-  private @Nullable ChromatographyInfo chromatographyInfo;
+  private @Nullable Float expectedRT;
   private @Nullable String inchiKey;
   private @Nullable Integer taxId;
   private @Nullable String species;
@@ -192,14 +191,14 @@ class SimpleIonAnnotation implements IonAnnotation {
   /** {@inheritDoc} */
   @Override
   @Nullable
-  public ChromatographyInfo getChromatographyInfo() {
-    return chromatographyInfo;
+  public Float getExpectedRetentionTime() {
+    return expectedRT;
   }
 
   /** {@inheritDoc} */
   @Override
-  public void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo) {
-    this.chromatographyInfo = chromatographyInfo;
+  public void setExpectedRetentionTime(@Nullable Float expectedRT) {
+    this.expectedRT = expectedRT;
   }
 
   /** {@inheritDoc} */
@@ -209,7 +208,7 @@ class SimpleIonAnnotation implements IonAnnotation {
     if (this.chemicalStructure == null & this.formula == null & this.ionType == null
         & this.expectedMz == null & this.description == null
         & (this.annotationId == null || this.annotationId == "") & this.accessionURL == null
-        & this.chromatographyInfo == null)
+        & this.expectedRT == null)
       return true;
     else
       return false;

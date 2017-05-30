@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
@@ -93,6 +94,7 @@ public class CsvFileImportMethodTest {
 
   @SuppressWarnings("null")
   @Test
+  @Ignore
   public void GCxGC_Import() throws MSDKException {
 
     // Create the data structures

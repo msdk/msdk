@@ -30,7 +30,6 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -49,7 +48,7 @@ class HighestDataPointConnector {
   private final Set<BuildingChromatogram> buildingChromatograms, connectedChromatograms;
 
   // Data structures
-  private ChromatographyInfo rtBuffer[] = new ChromatographyInfo[10000];
+  private float rtBuffer[] = new float[10000];
   private double mzBuffer[] = new double[10000];
   private float intensityBuffer[] = new float[10000];
 
@@ -71,8 +70,8 @@ class HighestDataPointConnector {
   void addScan(RawDataFile dataFile, MsScan scan, MzTolerance mzTolerance) {
 
     // Load data points
-    mzBuffer = scan.getMzValues(mzBuffer);
-    intensityBuffer = scan.getIntensityValues(intensityBuffer);
+    mzBuffer = scan.getMzValues();
+    intensityBuffer = scan.getIntensityValues();
     int numOfDataPoints = scan.getNumberOfDataPoints();
 
     // Sort m/z peaks by descending intensity
@@ -116,7 +115,7 @@ class HighestDataPointConnector {
       }
 
       // Add this mzPeak to the chromatogram
-      ChromatographyInfo rt = scan.getChromatographyInfo();
+      Float rt = scan.getRetentionTime();
       Preconditions.checkNotNull(rt);
       bestChromatogram.addDataPoint(rt, mzBuffer[i], intensityBuffer[i]);
 

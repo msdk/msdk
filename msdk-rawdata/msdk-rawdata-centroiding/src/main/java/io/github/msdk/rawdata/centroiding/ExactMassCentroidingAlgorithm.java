@@ -52,8 +52,8 @@ public class ExactMassCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
     this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
 
     // Load data points
-    mzBuffer = inputScan.getMzValues(mzBuffer);
-    intensityBuffer = inputScan.getIntensityValues(intensityBuffer);
+    mzBuffer = inputScan.getMzValues();
+    intensityBuffer = inputScan.getIntensityValues();
     final int numOfDataPoints = inputScan.getNumberOfDataPoints();
 
     // If there are no data points, just return the scan

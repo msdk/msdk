@@ -29,7 +29,6 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
 
@@ -85,13 +84,13 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
     for (FeatureTableRow row : featureTable.getRows()) {
 
       final Double mz = row.getMz();
-      final ChromatographyInfo rt = row.getChromatographyInfo();
+      final Float rt = row.getRT();
       if ((mz == null) || (rt == null))
         continue;
 
       // Row values
       Range<Double> mzRange = mzTolerance.getToleranceRange(mz);
-      Range<Double> rtRange = rtTolerance.getToleranceRange(rt.getRetentionTime());
+      Range<Float> rtRange = rtTolerance.getToleranceRange(rt);
       List<IonAnnotation> rowIonAnnotations = row.getData(ionAnnotationColumn);
 
       // Empty rowIonAnnotations
@@ -103,14 +102,14 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
 
         // Ion values
         final Double ionMz = ionAnnotation.getExpectedMz();
-        final ChromatographyInfo ionChromInfo = ionAnnotation.getChromatographyInfo();
-        if ((ionMz == null) || (ionChromInfo == null))
+        final Float ionRT = ionAnnotation.getExpectedRetentionTime();
+        if ((ionMz == null) || (ionRT == null))
           continue;
 
         // Convert from seconds to minutes
-        double ionRt = ionChromInfo.getRetentionTime() / 60.0;
+        float ionRtSec = ionRT / 60.0f;
         final boolean mzMatch = mzRange.contains(ionMz);
-        final boolean rtMatch = rtRange.contains(ionRt);
+        final boolean rtMatch = rtRange.contains(ionRtSec);
 
         // If match, add the ion annotation to the list
         if (mzMatch && rtMatch) {

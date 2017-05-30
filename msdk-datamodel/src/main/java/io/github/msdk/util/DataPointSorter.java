@@ -19,8 +19,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-
 /**
  * <p>
  * DataPointSorter class.
@@ -125,7 +123,7 @@ public class DataPointSorter {
    * @param intensityBuffer an array of float.
    * @param size a int.
    */
-  public static void sortDataPoints(final ChromatographyInfo rtBuffer[], final double mzBuffer[],
+  public static void sortDataPoints(final Float rtBuffer[], final double mzBuffer[],
       final float intensityBuffer[], final int size) {
 
     // Use Collections.sort to obtain index mapping from old arrays to the

@@ -28,13 +28,11 @@ import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
 class RawDumpParser {
@@ -270,10 +268,7 @@ class RawDumpParser {
       // Create a new scan
       MsScan newScan = MSDKObjectBuilder.getMsScan(dataStore, scanNumber, msFunction);
 
-      ChromatographyInfo chromInfo =
-          MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, retentionTime);
-      newScan.setChromatographyInfo(chromInfo);
-
+      newScan.setRetentionTime(retentionTime);
       newScan.setDataPoints(mzValues, intensityValues, numOfDataPoints);
       newScan.setSpectrumType(spectrumType);
       newScan.setPolarity(polarity);

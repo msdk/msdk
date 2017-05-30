@@ -25,7 +25,6 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -47,7 +46,7 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
   private @Nonnull MsScanType msScanType = MsScanType.UNKNOWN;
   private @Nullable MzTolerance mzTolerance;
   private @Nullable Range<Double> scanningRange;
-  private @Nullable ChromatographyInfo chromInfo;
+  private @Nullable Float rt;
   private @Nullable ActivationInfo sourceInducedFragInfo;
 
   private final @Nonnull List<IsolationInfo> isolations = new LinkedList<>();
@@ -189,14 +188,14 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
   /** {@inheritDoc} */
   @Override
   @Nullable
-  public ChromatographyInfo getChromatographyInfo() {
-    return chromInfo;
+  public Float getRetentionTime() {
+    return rt;
   }
 
   /** {@inheritDoc} */
   @Override
-  public void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo) {
-    this.chromInfo = chromatographyInfo;
+  public void setRetentionTime(@Nullable Float rt) {
+    this.rt = rt;
   }
 
   /** {@inheritDoc} */

@@ -58,8 +58,8 @@ public class BinningCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
     this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
 
     // Load data points
-    mzBuffer = inputScan.getMzValues(mzBuffer);
-    intensityBuffer = inputScan.getIntensityValues(intensityBuffer);
+    mzBuffer = inputScan.getMzValues();
+    intensityBuffer = inputScan.getIntensityValues();
     numOfDataPoints = inputScan.getNumberOfDataPoints();
     newNumOfDataPoints = 0;
 

@@ -12,6 +12,11 @@
  */
 package io.github.msdk.datamodel.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
@@ -20,14 +25,6 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableDataConverter;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * Implementation of FeatureTableRow. Backed by a non-thread safe Map.
@@ -65,8 +62,8 @@ class SimpleFeatureTableRow implements FeatureTableRow {
 
   /** {@inheritDoc} */
   @Override
-  public ChromatographyInfo getChromatographyInfo() {
-    return getData(MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn());
+  public Float getRT() {
+    return getData(MSDKObjectBuilder.getRetentionTimeFeatureTableColumn());
   }
 
   /** {@inheritDoc} */

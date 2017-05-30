@@ -92,20 +92,8 @@ public class PeakInvestigatorMsSpectrum implements MsSpectrum {
 
   /** {@inheritDoc} */
   @Override
-  public double[] getMzValues(double[] array) {
-    return spectrum.getMzValues(array);
-  }
-
-  /** {@inheritDoc} */
-  @Override
   public float[] getIntensityValues() {
     return spectrum.getIntensityValues();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public float[] getIntensityValues(float[] array) {
-    return spectrum.getIntensityValues(array);
   }
 
   /** {@inheritDoc} */

@@ -26,7 +26,6 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.util.tolerances.MzTolerance;
@@ -131,21 +130,21 @@ public class ChromatogramBuilderMethod implements MSDKMethod<List<Chromatogram>>
     }
 
     // Check if the scans are properly ordered by RT
-    ChromatographyInfo prevRT = null;
+    Float prevRT = null;
     for (MsScan s : inputScans) {
-      if (s.getChromatographyInfo() == null)
+      if (s.getRetentionTime() == null)
         continue;
       if (prevRT == null) {
-        prevRT = s.getChromatographyInfo();
+        prevRT = s.getRetentionTime();
         continue;
       }
-      if (prevRT.compareTo(s.getChromatographyInfo()) > 0) {
+      if (prevRT.compareTo(s.getRetentionTime()) > 0) {
         final String msg = "Retention time of scan #" + s.getScanNumber()
             + " is smaller then the retention time of the previous scan."
             + " Please make sure you only use scans with increasing retention times.";
         throw new MSDKException(msg);
       }
-      prevRT = s.getChromatographyInfo();
+      prevRT = s.getRetentionTime();
     }
 
     HighestDataPointConnector massConnector =

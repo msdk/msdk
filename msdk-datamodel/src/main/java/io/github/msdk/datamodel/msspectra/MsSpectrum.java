@@ -56,8 +56,7 @@ public interface MsSpectrum {
 
   /**
    * <p>
-   * Returns the m/z values of this spectrum. Generally, this method should pass null to the method
-   * that takes an array of double as a parameter.
+   * Returns the m/z values of this spectrum.
    *
    * Note: this method may need to read data from disk, therefore it may be quite slow.
    * </p>
@@ -69,22 +68,7 @@ public interface MsSpectrum {
 
   /**
    * <p>
-   * Copies the m/z values of this spectrum into the given array of double. If the array is null or
-   * is not large enough to contain all values, a new array should be created.
-   *
-   * Note: this method may need to read data from disk, therefore it may be quite slow.
-   * </p>
-   *
-   * @param array an array of double.
-   * @return an array of double.
-   */
-  @Nonnull
-  double[] getMzValues(@Nullable double array[]);
-
-  /**
-   * <p>
-   * Returns the intensity values of this spectrum. Generally, this method should pass null to the
-   * method that takes an array of float as a parameter.
+   * Returns the intensity values of this spectrum.
    *
    * Note: this method may need to read data from disk, therefore it may be quite slow.
    * </p>
@@ -93,20 +77,6 @@ public interface MsSpectrum {
    */
   @Nonnull
   float[] getIntensityValues();
-
-  /**
-   * <p>
-   * Copies the intensity values of this spectrum into the given array of double. If the array is
-   * null or is not large enough to contain all values, a new array should be created.
-   *
-   * Note: this method may need to read data from disk, therefore it may be quite slow.
-   * </p>
-   *
-   * @param array an array of float.
-   * @return an array of float.
-   */
-  @Nonnull
-  float[] getIntensityValues(@Nullable float array[]);
 
   /**
    * <p>

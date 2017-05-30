@@ -12,11 +12,10 @@
  */
 package io.github.msdk.datamodel.featuretables;
 
-import io.github.msdk.MSDKConstraintViolationException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.MSDKConstraintViolationException;
 
 /**
  * <p>
@@ -49,14 +48,14 @@ public interface FeatureTableRow {
    */
   @Nullable
   Double getMz();
-
+  
   /**
-   * Shortcut to return the chromatography info (=retention time etc.) column value of this row.
+   * Shortcut to return the m/z column value of this row
    *
-   * @return the {@link ChromatographyInfo}.
+   * @return the m/z column value of this row.
    */
   @Nullable
-  ChromatographyInfo getChromatographyInfo();
+  Float getRT();
 
   /**
    * Return data assigned to this row

@@ -31,7 +31,6 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -46,10 +45,9 @@ import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 /**
- * A copy of the mzML reading code is provided within the spectrumtypedetection test package,
- * otherwise a circular dependency would prevent compilation (a limitation of maven).
+ * This class reads mzML data format using the jmzml library. It generates a RawDataFile object.
  */
-class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
+public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -140,7 +138,7 @@ class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
         msFunctionsList.add(msFunction);
 
         // Store the chromatography data
-        ChromatographyInfo chromData = converter.extractChromatographyData(spectrum);
+        Float rt = converter.extractChromatographyData(spectrum);
 
         // Extract the scan data points, so we can check the m/z range
         // and detect the spectrum type (profile/centroid)
@@ -175,7 +173,7 @@ class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
         // Create a new MsScan instance
         MzMLMsScan scan = new MzMLMsScan(newRawFile, spectrumId, spectrumType, msFunction,
-            chromData, scanType, mzRange, scanningRange, scanNumber, scanDefinition, tic, polarity,
+            rt, scanType, mzRange, scanningRange, scanNumber, scanDefinition, tic, polarity,
             sourceFragmentation, isolations, numOfDataPoints);
 
         // Add the scan to the final raw data file
@@ -191,7 +189,7 @@ class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
           parser.unmarshalCollectionFromXpath("/run/chromatogramList/chromatogram",
               uk.ac.ebi.jmzml.model.mzml.Chromatogram.class);
 
-      ChromatographyInfo rtValues[] = new ChromatographyInfo[1000];
+      float rtValues[] = new float[1000];
 
       while (iterator.hasNext()) {
 
@@ -218,7 +216,7 @@ class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
         Integer numOfDataPoints = chromatogram.getDefaultArrayLength();
 
         rtValues = MzMLConverter.extractRtValues(chromatogram, rtValues);
-        Range<ChromatographyInfo> rtRange = null;
+        Range<Float> rtRange = null;
         if (numOfDataPoints > 0)
           rtRange = Range.closed(rtValues[0], rtValues[numOfDataPoints - 1]);
 

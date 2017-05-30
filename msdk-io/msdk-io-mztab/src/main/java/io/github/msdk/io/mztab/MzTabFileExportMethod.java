@@ -41,7 +41,6 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import uk.ac.ebi.pride.jmztab.model.Assay;
 import uk.ac.ebi.pride.jmztab.model.CVParam;
 import uk.ac.ebi.pride.jmztab.model.MZTabColumnFactory;
@@ -291,7 +290,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
         // Sample specific data
         List<Sample> samples = featureTable.getSamples();
         int sampleCounter = 0;
-        ChromatographyInfo chromatographyInfo;
+        Float rt;
         for (Sample sample : samples) {
           sampleCounter++;
 
@@ -306,26 +305,13 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
           }
 
           // RT
-          FeatureTableColumn<ChromatographyInfo> columnRT =
+          FeatureTableColumn<Float> columnRT =
               featureTable.getColumn(ColumnName.RT, sample);
           if (columnRT != null) {
-            chromatographyInfo = row.getData(columnRT);
-            if (chromatographyInfo != null) {
-              Float rt1 = chromatographyInfo.getRetentionTime();
-              Float rt2 = chromatographyInfo.getSecondaryRetentionTime();
-              String rtValue = null;
-              if (rt1 != null) {
-                rtValue = rt1.toString();
-              }
-              if (rtValue != null && rt2 != null) {
-                rtValue = rtValue + itemSeparator;
-              }
-              if (rt2 != null) {
-                rtValue = rtValue + rt2.toString();
-              }
-              if (rtValue != null)
-                sm.setRetentionTime(rtValue);
-              sm.setOptionColumnValue(new Assay(sampleCounter), "rt", rtValue);
+            rt = row.getData(columnRT);
+            if (rt != null) {
+              sm.setRetentionTime(rt.toString());
+              sm.setOptionColumnValue(new Assay(sampleCounter), "rt", rt.toString());
             }
           }
 
@@ -347,25 +333,6 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
             sm.setAbundanceColumnValue(new Assay(sampleCounter), peakArea);
           }
 
-        }
-
-        // Common feature RT value
-        chromatographyInfo = row.getChromatographyInfo();
-        if (chromatographyInfo != null) {
-          Float rt1 = chromatographyInfo.getRetentionTime();
-          Float rt2 = chromatographyInfo.getSecondaryRetentionTime();
-          String rtValue = null;
-          if (rt1 != null) {
-            rtValue = rt1.toString();
-          }
-          if (rtValue != null && rt2 != null) {
-            rtValue = rtValue + itemSeparator;
-          }
-          if (rt2 != null) {
-            rtValue = rtValue + rt2.toString();
-          }
-          if (rtValue != null)
-            sm.setRetentionTime(rtValue);
         }
 
         // Write to file

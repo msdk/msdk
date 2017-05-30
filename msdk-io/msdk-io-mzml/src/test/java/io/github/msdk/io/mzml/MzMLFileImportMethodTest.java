@@ -61,10 +61,10 @@ public class MzMLFileImportMethodTest {
     Assert.assertEquals(new Integer(2), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.PROFILE, scan2.getSpectrumType());
     Assert.assertEquals(new Integer(1), scan2.getMsFunction().getMsLevel());
-    Assert.assertEquals(0.474f, scan2.getChromatographyInfo().getRetentionTime(), 0.01f);
+    Assert.assertEquals(0.474f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
-    mzBuffer = scan2.getMzValues(mzBuffer);
-    intensityBuffer = scan2.getIntensityValues(intensityBuffer);
+    mzBuffer = scan2.getMzValues();
+    intensityBuffer = scan2.getIntensityValues();
     Assert.assertEquals(19800, (int) scan2.getNumberOfDataPoints());
     Float scan2maxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan2.getNumberOfDataPoints());
@@ -75,10 +75,10 @@ public class MzMLFileImportMethodTest {
     Assert.assertEquals(new Integer(5), scan5.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan5.getSpectrumType());
     Assert.assertEquals(new Integer(2), scan5.getMsFunction().getMsLevel());
-    Assert.assertEquals(2.094f, scan5.getChromatographyInfo().getRetentionTime(), 0.01f);
+    Assert.assertEquals(2.094f, scan5.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan5.getPolarity());
-    mzBuffer = scan5.getMzValues(mzBuffer);
-    intensityBuffer = scan5.getIntensityValues(intensityBuffer);
+    mzBuffer = scan5.getMzValues();
+    intensityBuffer = scan5.getIntensityValues();
     Assert.assertEquals(837, (int) scan5.getNumberOfDataPoints());
     Float scan5maxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan5.getNumberOfDataPoints());
@@ -93,8 +93,8 @@ public class MzMLFileImportMethodTest {
   public void testPwizTiny() throws MSDKException {
 
     // Create the data structures
-    double mzBuffer[] = new double[10000];
-    float intensityBuffer[] = new float[10000];
+    double mzBuffer[];
+    float intensityBuffer[];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "tiny.pwiz.idx.mzML");
@@ -114,10 +114,10 @@ public class MzMLFileImportMethodTest {
     Assert.assertEquals(new Integer(20), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
     Assert.assertEquals(new Integer(2), scan2.getMsFunction().getMsLevel());
-    Assert.assertEquals(359.43f, scan2.getChromatographyInfo().getRetentionTime(), 0.01f);
+    Assert.assertEquals(359.43f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
-    mzBuffer = scan2.getMzValues(mzBuffer);
-    intensityBuffer = scan2.getIntensityValues(intensityBuffer);
+    mzBuffer = scan2.getMzValues();
+    intensityBuffer = scan2.getIntensityValues();
     Assert.assertEquals(10, (int) scan2.getNumberOfDataPoints());
     Float scan2maxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan2.getNumberOfDataPoints());
@@ -161,10 +161,10 @@ public class MzMLFileImportMethodTest {
     Assert.assertEquals(new Integer(1001), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
     Assert.assertEquals(new Integer(2), scan2.getMsFunction().getMsLevel());
-    Assert.assertEquals(100.002f, scan2.getChromatographyInfo().getRetentionTime(), 0.01f);
+    Assert.assertEquals(100.002f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
-    mzBuffer = scan2.getMzValues(mzBuffer);
-    intensityBuffer = scan2.getIntensityValues(intensityBuffer);
+    mzBuffer = scan2.getMzValues();
+    intensityBuffer = scan2.getIntensityValues();
     Assert.assertEquals(33, (int) scan2.getNumberOfDataPoints());
     Float scan2maxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan2.getNumberOfDataPoints());
@@ -175,9 +175,9 @@ public class MzMLFileImportMethodTest {
     Assert.assertEquals(new Integer(1100), scan101.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan101.getSpectrumType());
     Assert.assertEquals(new Integer(1), scan101.getMsFunction().getMsLevel());
-    Assert.assertEquals(109.998f, scan101.getChromatographyInfo().getRetentionTime(), 0.01f);
-    mzBuffer = scan101.getMzValues(mzBuffer);
-    intensityBuffer = scan101.getIntensityValues(intensityBuffer);
+    Assert.assertEquals(109.998f, scan101.getRetentionTime(), 0.01f);
+    mzBuffer = scan101.getMzValues();
+    intensityBuffer = scan101.getIntensityValues();
     Assert.assertEquals(21, (int) scan101.getNumberOfDataPoints());
     Float scan5maxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan101.getNumberOfDataPoints());
@@ -293,10 +293,10 @@ public class MzMLFileImportMethodTest {
     Assert.assertEquals(new Integer(2101), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
     Assert.assertEquals(new Integer(1), scan2.getMsFunction().getMsLevel());
-    Assert.assertEquals(1126.57f, scan2.getChromatographyInfo().getRetentionTime(), 0.01f);
+    Assert.assertEquals(1126.57f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.NEGATIVE, scan2.getPolarity());
-    mzBuffer = scan2.getMzValues(mzBuffer);
-    intensityBuffer = scan2.getIntensityValues(intensityBuffer);
+    mzBuffer = scan2.getMzValues();
+    intensityBuffer = scan2.getIntensityValues();
     Assert.assertEquals(1315, (int) scan2.getNumberOfDataPoints());
     Float scan2maxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan2.getNumberOfDataPoints());
@@ -331,10 +331,10 @@ public class MzMLFileImportMethodTest {
     Assert.assertEquals(new Integer(422), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
     Assert.assertEquals(new Integer(2), scan2.getMsFunction().getMsLevel());
-    Assert.assertEquals(309.1878f, scan2.getChromatographyInfo().getRetentionTime(), 0.01f);
+    Assert.assertEquals(309.1878f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
-    mzBuffer = scan2.getMzValues(mzBuffer);
-    intensityBuffer = scan2.getIntensityValues(intensityBuffer);
+    mzBuffer = scan2.getMzValues();
+    intensityBuffer = scan2.getIntensityValues();
     Assert.assertEquals(0, (int) scan2.getNumberOfDataPoints());
     Float scan2maxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan2.getNumberOfDataPoints());

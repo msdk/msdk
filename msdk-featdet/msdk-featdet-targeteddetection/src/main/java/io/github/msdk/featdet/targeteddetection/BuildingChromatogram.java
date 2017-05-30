@@ -17,17 +17,15 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-
 class BuildingChromatogram {
 
   // Initial variables
   private int size = 0;
-  private ChromatographyInfo[] rtValues = new ChromatographyInfo[100];
+  private float[] rtValues = new float[100];
   private double[] mzValues = new double[100];
   private float[] intensityValues = new float[100];
 
-  void addDataPoint(@Nonnull ChromatographyInfo rt, @Nonnull Double mz, @Nonnull Float intensity) {
+  void addDataPoint(@Nonnull Float rt, @Nonnull Double mz, @Nonnull Float intensity) {
 
     // Make sure we have enough space to add a new data point
     if (size == mzValues.length) {
@@ -41,7 +39,7 @@ class BuildingChromatogram {
     size++;
   }
 
-  ChromatographyInfo[] getRtValues() {
+  float[] getRtValues() {
     return rtValues;
   }
 
@@ -62,14 +60,14 @@ class BuildingChromatogram {
    * @param intensityTolerance a {@link java.lang.Double} object.
    * @param noiseLevel a {@link java.lang.Double} object.
    */
-  public void cropChromatogram(Range<Double> rtRange, Double intensityTolerance,
+  public void cropChromatogram(Range<Float> rtRange, Double intensityTolerance,
       Double noiseLevel) {
 
     // Find peak apex (= most intense data point which fulfill the criteria)
     Integer apexDataPoint = null;
     for (int i = 0; i < size; i++) {
       Float currentIntensity = intensityValues[i];
-      Double currentRt = (double) rtValues[i].getRetentionTime();
+      Float currentRt = rtValues[i];
 
       // Verify data point
       if ((apexDataPoint == null || currentIntensity > intensityValues[apexDataPoint])
@@ -126,7 +124,7 @@ class BuildingChromatogram {
     if (mzValues.length >= newSize)
       return;
 
-    ChromatographyInfo[] rtValuesNew = new ChromatographyInfo[newSize];
+    float[] rtValuesNew = new float[newSize];
     double[] mzValuesNew = new double[newSize];
     float[] intensityValuesNew = new float[newSize];
 

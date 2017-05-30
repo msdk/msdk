@@ -30,14 +30,12 @@ import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
  * Tests for SimpleMsScan
@@ -126,18 +124,16 @@ public class SimpleMsScanTest {
 
   @SuppressWarnings("null")
   @Test
-  public void testChromatographyInfo() throws MSDKException {
-    // Verify scanning range
-    Assert.assertEquals(null, msScan1.getChromatographyInfo());
+  public void testRetentionTime() throws MSDKException {
+    // Verify RT
+    Assert.assertEquals(null, msScan1.getRetentionTime());
 
-    // Change scanning range
-    final @Nonnull ChromatographyInfo newChromatographyInfo =
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, 1.23f);
-    msScan1.setChromatographyInfo(newChromatographyInfo);
+    // Change RT
+    final @Nonnull Float newChromatographyInfo = 1.23f;
+    msScan1.setRetentionTime(newChromatographyInfo);
 
-    // Verify scanning range
-    Assert.assertEquals(SeparationType.LC, msScan1.getChromatographyInfo().getSeparationType());
-    Assert.assertEquals(new Float(1.23), msScan1.getChromatographyInfo().getRetentionTime());
+    // Verify RT
+    Assert.assertEquals(new Float(1.23), msScan1.getRetentionTime());
   }
 
   @SuppressWarnings("null")

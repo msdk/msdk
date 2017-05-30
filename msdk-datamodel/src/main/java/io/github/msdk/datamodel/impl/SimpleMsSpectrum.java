@@ -69,14 +69,7 @@ class SimpleMsSpectrum implements MsSpectrum {
   /** {@inheritDoc} */
   @Override
   public @Nonnull double[] getMzValues() {
-    return getMzValues(null);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public @Nonnull double[] getMzValues(@Nullable double array[]) {
-    if ((array == null) || (array.length < numOfDataPoints))
-      array = new double[numOfDataPoints];
+    double[] array = new double[numOfDataPoints];
     System.arraycopy(mzValues, 0, array, 0, numOfDataPoints);
     return array;
   }
@@ -84,14 +77,7 @@ class SimpleMsSpectrum implements MsSpectrum {
   /** {@inheritDoc} */
   @Override
   public @Nonnull float[] getIntensityValues() {
-    return getIntensityValues(null);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public @Nonnull float[] getIntensityValues(@Nullable float array[]) {
-    if ((array == null) || (array.length < numOfDataPoints))
-      array = new float[numOfDataPoints];
+    float array[] = new float[numOfDataPoints];
     System.arraycopy(intensityValues, 0, array, 0, numOfDataPoints);
     return array;
   }

@@ -34,10 +34,10 @@ public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
   private MsScan newScan;
 
   // Data structures
-  private @Nonnull double mzBuffer[] = new double[10000];
-  private @Nonnull float intensityBuffer[] = new float[10000];
-  private @Nonnull double newMzBuffer[] = new double[10000];
-  private @Nonnull float newIntensityBuffer[] = new float[10000];
+  private @Nonnull double mzBuffer[];
+  private @Nonnull float intensityBuffer[];
+  private @Nonnull double newMzBuffer[];
+  private @Nonnull float newIntensityBuffer[];
   private int numOfDataPoints, newNumOfDataPoints;
 
   /**
@@ -62,8 +62,8 @@ public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
     this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
 
     // Load data points
-    mzBuffer = inputScan.getMzValues(mzBuffer);
-    intensityBuffer = inputScan.getIntensityValues(intensityBuffer);
+    mzBuffer = inputScan.getMzValues();
+    intensityBuffer = inputScan.getIntensityValues();
     numOfDataPoints = inputScan.getNumberOfDataPoints();
     newNumOfDataPoints = 0;
 

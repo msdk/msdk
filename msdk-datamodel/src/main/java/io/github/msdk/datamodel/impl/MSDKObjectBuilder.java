@@ -38,7 +38,6 @@ import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -60,9 +59,9 @@ public class MSDKObjectBuilder {
       new SimpleFeatureTableColumn<Double>(ColumnName.MZ.getName(), Double.class, null);
   private static final @Nonnull SimpleFeatureTableColumn<Double> ppmFeatureTableColumn =
       new SimpleFeatureTableColumn<Double>(ColumnName.PPM.getName(), Double.class, null);
-  private static final @Nonnull SimpleFeatureTableColumn<ChromatographyInfo> ChromatographyInfoFeatureTableColumn =
-      new SimpleFeatureTableColumn<ChromatographyInfo>("Chromatography Info",
-          ChromatographyInfo.class, null);
+  private static final @Nonnull SimpleFeatureTableColumn<Float> RetentionTimeFeatureTableColumn =
+      new SimpleFeatureTableColumn<Float>(ColumnName.RT.getName(),
+          Float.class, null);
   private static final @Nonnull SimpleFeatureTableColumn<List<IonAnnotation>> IonAnnotationFeatureTableColumn =
       new SimpleFeatureTableColumn<List<IonAnnotation>>("Ion Annotation",
           (Class<List<IonAnnotation>>) (Class<?>) List.class, null);
@@ -213,64 +212,9 @@ public class MSDKObjectBuilder {
         separationType);
   }
 
-  /**
-   * <p>
-   * getChromatographyInfo1D.
-   * </p>
-   *
-   * @param separationType a {@link io.github.msdk.datamodel.rawdata.SeparationType} object.
-   * @param rt1 a {@link java.lang.Float} object.
-   * @return a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} object.
-   */
-  public static final @Nonnull ChromatographyInfo getChromatographyInfo1D(
-      SeparationType separationType, Float rt1) {
-    return new SimpleChromatographyInfo(rt1, null, null, separationType);
-  }
 
-  /**
-   * <p>
-   * getChromatographyInfo2D.
-   * </p>
-   *
-   * @param separationType a {@link io.github.msdk.datamodel.rawdata.SeparationType} object.
-   * @param rt1 a {@link java.lang.Float} object.
-   * @param rt2 a {@link java.lang.Float} object.
-   * @return a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} object.
-   */
-  public static final @Nonnull ChromatographyInfo getChromatographyInfo2D(
-      SeparationType separationType, Float rt1, Float rt2) {
-    if (separationType.getFeatureDimensions() < 2) {
-      throw new IllegalArgumentException(
-          "2D ChromatographyInfo requires at least 2 feature dimensions. Provided separation type "
-              + separationType + " has " + separationType.getFeatureDimensions());
-    }
-    return new SimpleChromatographyInfo(rt1, rt2, null, separationType);
-  }
 
-  /**
-   * <p>
-   * getImsInfo.
-   * </p>
-   *
-   * @param separationType a {@link io.github.msdk.datamodel.rawdata.SeparationType} object.
-   * @param rt1 a {@link java.lang.Float} object.
-   * @param ionDriftTime a {@link java.lang.Float} object.
-   * @return a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} object.
-   */
-  public static final @Nonnull ChromatographyInfo getImsInfo(SeparationType separationType,
-      Float rt1, Float ionDriftTime) {
-    if (separationType.getFeatureDimensions() < 2) {
-      throw new IllegalArgumentException(
-          "2D ChromatographyInfo requires at least 2 feature dimensions. Provided separation type "
-              + separationType + " has " + separationType.getFeatureDimensions());
-    }
-    if (separationType != SeparationType.IMS) {
-      throw new IllegalArgumentException(
-          "2D ChromatographyInfo for IMS separation requires IMS separation type. Provided separation type "
-              + separationType);
-    }
-    return new SimpleChromatographyInfo(rt1, null, ionDriftTime, separationType);
-  }
+
 
   /**
    * Creates a new FeatureTableColumn instance.
@@ -344,8 +288,8 @@ public class MSDKObjectBuilder {
    *
    * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
    */
-  public static @Nonnull FeatureTableColumn<ChromatographyInfo> getChromatographyInfoFeatureTableColumn() {
-    return ChromatographyInfoFeatureTableColumn;
+  public static @Nonnull FeatureTableColumn<Float> getRetentionTimeFeatureTableColumn() {
+    return RetentionTimeFeatureTableColumn;
   }
 
   /**

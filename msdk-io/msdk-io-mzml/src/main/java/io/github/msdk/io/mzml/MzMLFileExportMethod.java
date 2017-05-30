@@ -153,8 +153,8 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
         }
 
         // Convert data points to BinaryDataArrays
-        mzBuffer = scan.getMzValues(mzBuffer);
-        intensityBuffer = scan.getIntensityValues(intensityBuffer);
+        mzBuffer = scan.getMzValues();
+        intensityBuffer = scan.getIntensityValues();
         int size = scan.getNumberOfDataPoints();
         bdaMz.set64BitFloatArrayAsBinaryData(mzBuffer, true, CommonCvParams.MZ_PARAM.getCv());
         bdaInt.set32BitFloatArrayAsBinaryData(intensityBuffer, true,
@@ -204,8 +204,8 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
         scanList.getScan().add(mzMlScan);
 
         // retention time CV param
-        if (scan.getChromatographyInfo() != null) {
-          Float rt = scan.getChromatographyInfo().getRetentionTime();
+        if (scan.getRetentionTime() != null) {
+          Float rt = scan.getRetentionTime();
           CVParam rtCvParam = new CVParam();
           rtCvParam.setAccession(MzMLCV.cvScanStartTime);
           rtCvParam.setName("scan time");

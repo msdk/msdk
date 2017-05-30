@@ -29,8 +29,6 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.converter.CopyConverter;
 import io.github.msdk.datamodel.impl.converter.IonAnnotationConverter;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
  * <p>
@@ -60,8 +58,8 @@ public class FeatureTableUtil {
       column = MSDKObjectBuilder.getMzFeatureTableColumn();
       featureTable.addColumn(column);
     }
-    if (featureTable.getColumn("Chromatography Info", null, ChromatographyInfo.class) == null) {
-      column = MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn();
+    if (featureTable.getColumn(ColumnName.RT.getName(), null, Float.class) == null) {
+      column = MSDKObjectBuilder.getRetentionTimeFeatureTableColumn();
       featureTable.addColumn(column);
     }
 
@@ -82,18 +80,15 @@ public class FeatureTableUtil {
           }
         }
 
-        FeatureTableColumn<ChromatographyInfo> rtColumn =
+        FeatureTableColumn<Float> rtColumn =
             featureTable.getColumn(ColumnName.RT, sample);
         if (rtColumn != null) {
-          ChromatographyInfo ri = row.getData(rtColumn);
-          if (ri != null) {
-            rt = ri.getRetentionTime();
+            rt = row.getData(rtColumn);
             if (rt != null) {
               totalRt += rt;
               rtCount++;
             }
           }
-        }
       }
 
       // Update m/z
@@ -128,19 +123,10 @@ public class FeatureTableUtil {
       }
 
       // Update RT
-      FeatureTableColumn<ChromatographyInfo> chromInfoColumn =
-          featureTable.getColumn("Chromatography Info", null, ChromatographyInfo.class);
-      if (chromInfoColumn != null) {
-        ChromatographyInfo currentChromatographyInfo = row.getData(chromInfoColumn);
-        SeparationType separationType;
-        if (currentChromatographyInfo == null) {
-          separationType = SeparationType.UNKNOWN;
-        } else {
-          separationType = currentChromatographyInfo.getSeparationType();
-        }
-        ChromatographyInfo chromatographyInfo =
-            MSDKObjectBuilder.getChromatographyInfo1D(separationType, totalRt / rtCount);
-        row.setData(chromInfoColumn, chromatographyInfo);
+      FeatureTableColumn<Float> rtColumn  =
+          featureTable.getColumn("RetentionTime", null, Float.class);
+      if (rtColumn != null) {
+        row.setData(rtColumn, totalRt / rtCount);
       }
     }
   }
@@ -360,8 +346,8 @@ public class FeatureTableUtil {
           newColumn = MSDKObjectBuilder.getMzFeatureTableColumn();
         if (column.getName() == ColumnName.CHARGE.getName())
           MSDKObjectBuilder.getChargeFeatureTableColumn();
-        if (column.getName() == "Chromatography Info")
-          MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn();
+        if (column.getName() == "Retention Time")
+          MSDKObjectBuilder.getRetentionTimeFeatureTableColumn();
         if (column.getName() == ColumnName.ID.getName())
           MSDKObjectBuilder.getIdFeatureTableColumn();
         if (column.getName() == "Ion Annotation")
@@ -437,7 +423,7 @@ public class FeatureTableUtil {
    */
   public static Range<Float> getFeatureRt1Range(FeatureTableRow row) {
     FeatureTable featureTable = row.getFeatureTable();
-    FeatureTableColumn<ChromatographyInfo> column;
+    FeatureTableColumn<Float> column;
     float min = 0f;
     float max = 0f;
 
@@ -445,9 +431,8 @@ public class FeatureTableUtil {
       column = featureTable.getColumn(ColumnName.RT, sample);
       if (column != null) {
         if (row.getData(column) != null) {
-          ChromatographyInfo chromatographyInfo = row.getData(column);
-          if (chromatographyInfo.getRetentionTime() != null) {
-            float rt = (float) chromatographyInfo.getRetentionTime();
+          Float rt = row.getData(column);
+          if (rt != null) {
             if (rt < min || min == 0d)
               min = rt;
             if (rt > max || max == 0d)

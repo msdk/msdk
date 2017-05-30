@@ -134,6 +134,6 @@ public interface FeatureTable {
    * @param rtRange a {@link com.google.common.collect.Range} object.
    * @param mzRange a {@link com.google.common.collect.Range} object.
    */
-  List<FeatureTableRow> getRowsInsideRange(Range<Double> rtRange, Range<Double> mzRange);
+  List<FeatureTableRow> getRowsInsideRange(Range<Float> rtRange, Range<Double> mzRange);
 
 }

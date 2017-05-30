@@ -42,8 +42,6 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.FeatureTableUtil;
 
 /**
@@ -181,28 +179,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
           FeatureTableColumn currentColumn = columns.get(i);
           Class<?> currentClass = currentColumn.getDataTypeClass();
 
-          // Handle ChromatographyInfo and List (= Ion Annotation)
-          // class separately
-          if (currentClass.getSimpleName().equals("ChromatographyInfo")) {
-            ChromatographyInfo chromatographyInfo = null;
-
-            // Two dimensional data (e.g. 360 , 1.630)
-            if (stringData.contains(",")) {
-              String[] rtValues = stringData.split(",");
-              Float rt1 = Float.parseFloat(rtValues[0].replace(" ", ""));
-              Float rt2 = Float.parseFloat(rtValues[1].replace(" ", ""));
-              chromatographyInfo =
-                  MSDKObjectBuilder.getChromatographyInfo2D(SeparationType.UNKNOWN_2D, rt1, rt2);
-            } else {
-              Float rt = Float.parseFloat(stringData);
-              chromatographyInfo =
-                  MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
-            }
-
-            // Add the data
-            row.setData(currentColumn, chromatographyInfo);
-
-          } else if (currentClass.getSimpleName().equals("List")) {
+          if (currentClass.getSimpleName().equals("List")) {
             FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn =
                 newFeatureTable.getColumn(ColumnName.IONANNOTATION, null);
             List<IonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
@@ -324,7 +301,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
         if (newColumnName.equals(ColumnName.MZ))
           column = MSDKObjectBuilder.getMzFeatureTableColumn();
         if (newColumnName.equals(ColumnName.RT))
-          column = MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn();
+          column = MSDKObjectBuilder.getRetentionTimeFeatureTableColumn();
         if (newColumnName.equals(ColumnName.IONANNOTATION))
           column = MSDKObjectBuilder.getIonAnnotationFeatureTableColumn();
       } else {

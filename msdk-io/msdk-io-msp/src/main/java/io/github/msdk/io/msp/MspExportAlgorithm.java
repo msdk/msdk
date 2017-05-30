@@ -74,8 +74,8 @@ public class MspExportAlgorithm {
     for (MsSpectrum spectrum : spectra) {
 
       // Load data
-      mzValues = spectrum.getMzValues(mzValues);
-      intensityValues = spectrum.getIntensityValues(intensityValues);
+      mzValues = spectrum.getMzValues();
+      intensityValues = spectrum.getIntensityValues();
       numOfDataPoints = spectrum.getNumberOfDataPoints();
 
       if (spectrum instanceof MspSpectrum) {

@@ -41,14 +41,12 @@ import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
 /**
@@ -219,9 +217,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
           Date currentDate = new Date();
           Duration dur = dataTypeFactory.newDuration(retentionTimeStr);
           final float rt = (float) (dur.getTimeInMillis(currentDate) / 1000.0);
-          ChromatographyInfo rtInfo =
-              MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
-          buildingScan.setChromatographyInfo(rtInfo);
+          buildingScan.setRetentionTime(rt);
         }
 
       }

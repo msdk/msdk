@@ -13,6 +13,23 @@
 
 package io.github.msdk.io.chromatof;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.openscience.cdk.DefaultChemObjectBuilder;
+import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
@@ -23,25 +40,9 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.io.chromatof.ChromaTofParser.Mode;
 import io.github.msdk.io.chromatof.ChromaTofParser.TableColumn;
 import io.github.msdk.util.FeatureTableUtil;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.openscience.cdk.DefaultChemObjectBuilder;
-import org.openscience.cdk.interfaces.IMolecularFormula;
-import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -182,57 +183,7 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
         FeatureTableColumn currentColumn = columns.get(i);
         Class<?> currentClass = currentColumn.getDataTypeClass();
 
-        // Handle ChromatographyInfo and List (= Ion Annotation)
-        // class separately
-        if (currentClass.getSimpleName().equals("ChromatographyInfo")) {
-          ChromatographyInfo chromatographyInfo = null;
-          switch (mode) {
-            case RT_2D_FUSED:
-              String[] rts = value.split(",");
-              chromatographyInfo = MSDKObjectBuilder.getChromatographyInfo2D(
-                  SeparationType.UNKNOWN_2D, ParserUtilities.parseFloat(rts[0], locale),
-                  ParserUtilities.parseFloat(rts[1], locale));
-              break;
-            case RT_2D_SEPARATE:
-              chromatographyInfo = row.getChromatographyInfo();
-              switch (tableColumn.getColumnName()) {
-                case FIRST_DIMENSION_TIME_SECONDS:
-                  if (chromatographyInfo == null) {
-                    chromatographyInfo = MSDKObjectBuilder.getChromatographyInfo2D(
-                        SeparationType.UNKNOWN_2D, ParserUtilities.parseFloat(value, locale), null);
-                  } else {
-                    Float secondRetentionTime = chromatographyInfo.getSecondaryRetentionTime();
-                    chromatographyInfo =
-                        MSDKObjectBuilder.getChromatographyInfo2D(SeparationType.UNKNOWN_2D,
-                            ParserUtilities.parseFloat(value, locale), secondRetentionTime);
-                  }
-                  break;
-                case SECOND_DIMENSION_TIME_SECONDS:
-                  if (chromatographyInfo == null) {
-                    chromatographyInfo =
-                        MSDKObjectBuilder.getChromatographyInfo2D(SeparationType.UNKNOWN_2D,
-                            Float.NaN, ParserUtilities.parseFloat(value, locale));
-                  } else {
-                    Float firstRetentionTime = chromatographyInfo.getRetentionTime();
-                    chromatographyInfo =
-                        MSDKObjectBuilder.getChromatographyInfo2D(SeparationType.UNKNOWN_2D,
-                            firstRetentionTime, ParserUtilities.parseFloat(value, locale));
-                  }
-                  break;
-                default:
-                  throw new MSDKException("Unexpected column name: " + tableColumn.getColumnName());
-              }
-              break;
-            case RT_1D:
-            default:
-              chromatographyInfo = MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN,
-                  ParserUtilities.parseFloat(value, locale));
-          }
-
-          // Add the data
-          row.setData(currentColumn, chromatographyInfo);
-
-        } else if (currentClass.getSimpleName().equals("List")) {
+        if (currentClass.getSimpleName().equals("List")) {
           FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn =
               newFeatureTable.getColumn(ColumnName.IONANNOTATION, null);
           if (ionAnnotationColumn == null) {
@@ -355,7 +306,7 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
           column = MSDKObjectBuilder.getMzFeatureTableColumn();
         }
         if (newColumnName.equals(ColumnName.RT)) {
-          column = MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn();
+          column = MSDKObjectBuilder.getRetentionTimeFeatureTableColumn();
         }
         if (newColumnName.equals(ColumnName.IONANNOTATION)) {
           column = MSDKObjectBuilder.getIonAnnotationFeatureTableColumn();

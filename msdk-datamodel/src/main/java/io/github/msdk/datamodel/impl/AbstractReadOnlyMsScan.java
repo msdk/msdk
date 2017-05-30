@@ -22,7 +22,6 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -43,7 +42,7 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
 
   private final @Nonnull MsSpectrumType spectrumType;
   private final @Nonnull MsFunction msFunction;
-  private final @Nullable ChromatographyInfo chromatographyInfo;
+  private final @Nullable Float rt;
   private final @Nonnull MsScanType scanType;
   private final @Nullable Range<Double> mzRange, scanningRange;
   private final @Nonnull Float tic;
@@ -73,7 +72,7 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
    * @param numOfDataPoints a {@link java.lang.Integer} object.
    */
   public AbstractReadOnlyMsScan(@Nonnull RawDataFile dataFile, @Nonnull MsSpectrumType spectrumType,
-      @Nonnull MsFunction msFunction, @Nullable ChromatographyInfo chromatographyInfo,
+      @Nonnull MsFunction msFunction, @Nullable Float rt,
       @Nonnull MsScanType scanType, @Nullable Range<Double> mzRange,
       @Nullable Range<Double> scanningRange, @Nonnull Integer scanNumber,
       @Nullable String scanDefinition, @Nonnull Float tic, @Nonnull PolarityType polarity,
@@ -82,7 +81,7 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
     this.dataFile = dataFile;
     this.spectrumType = spectrumType;
     this.msFunction = msFunction;
-    this.chromatographyInfo = chromatographyInfo;
+    this.rt = rt;
     this.scanType = scanType;
     this.mzRange = mzRange;
     this.scanningRange = scanningRange;
@@ -154,8 +153,8 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
   /** {@inheritDoc} */
   @Override
   @Nullable
-  public ChromatographyInfo getChromatographyInfo() {
-    return chromatographyInfo;
+  public Float getRetentionTime() {
+    return rt;
   }
 
   /** {@inheritDoc} */
@@ -242,7 +241,7 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
 
   /** {@inheritDoc} */
   @Override
-  public void setChromatographyInfo(@Nullable ChromatographyInfo chromData) {
+  public void setRetentionTime(@Nullable Float rt) {
     throw new UnsupportedOperationException();
   }
 
@@ -262,20 +261,6 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
   @Override
   public void setSourceInducedFragmentation(@Nullable ActivationInfo newFragmentationInfo) {
     throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  @Nonnull
-  public double[] getMzValues() {
-    return getMzValues(null);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  @Nonnull
-  public float[] getIntensityValues() {
-    return getIntensityValues(null);
   }
 
 }

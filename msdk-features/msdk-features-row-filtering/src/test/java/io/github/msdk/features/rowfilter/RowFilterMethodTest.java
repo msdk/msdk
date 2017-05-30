@@ -64,24 +64,21 @@ public class RowFilterMethodTest {
     IonAnnotation ion1 = MSDKObjectBuilder.getIonAnnotation();
     ion1.setExpectedMz(332.56);
     ion1.setAnnotationId("Feature 332.56");
-    ion1.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 772.8));
+    ion1.setExpectedRetentionTime(772.8f);
     ionAnnotations.add(ion1);
 
     // Ion 2
     IonAnnotation ion2 = MSDKObjectBuilder.getIonAnnotation();
     ion2.setExpectedMz(508.004);
     ion2.setAnnotationId("Feature 508.004");
-    ion2.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 868.8));
+    ion2.setExpectedRetentionTime(868.8f);
     ionAnnotations.add(ion2);
 
     // Ion 3
     IonAnnotation ion3 = MSDKObjectBuilder.getIonAnnotation();
     ion3.setExpectedMz(362.102);
     ion3.setAnnotationId("Feature 362.102");
-    ion3.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 643.2));
+    ion3.setExpectedRetentionTime(643.2f);
     ionAnnotations.add(ion3);
 
     // Variables
@@ -116,10 +113,10 @@ public class RowFilterMethodTest {
     boolean removeDuplicates = false;
     boolean duplicateRequireSameID = true;
     Range<Double> mzRange = Range.closed(300.0, 600.0);
-    Range<Double> rtRange = Range.closed(600.0, 900.0); // Seconds
+    Range<Float> rtRange = Range.closed(600.0f, 900.0f); // Seconds
     Range<Double> durationRange = Range.closed(0.0, 47.0); // Seconds
     final MzTolerance duplicateMzTolerance = new MaximumMzTolerance(0.003, 5.0);
-    final RTTolerance duplicateRtTolerance = new RTTolerance(0.2, false);
+    final RTTolerance duplicateRtTolerance = new RTTolerance(0.2f, false);
     int minCount = 1;
     int minIsotopes = 1;
     String ionAnnotation = null;

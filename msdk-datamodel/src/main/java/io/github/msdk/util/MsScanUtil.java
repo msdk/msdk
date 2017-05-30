@@ -52,7 +52,7 @@ public class MsScanUtil {
     newScan.setPolarity(scan.getPolarity());
     newScan.setMsScanType(scan.getMsScanType());
     newScan.setScanningRange(scan.getScanningRange());
-    newScan.setChromatographyInfo(scan.getChromatographyInfo());
+    newScan.setRetentionTime(scan.getRetentionTime());
     newScan.setSourceInducedFragmentation(scan.getSourceInducedFragmentation());
     newScan.getIsolations().addAll(scan.getIsolations());
 

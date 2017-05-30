@@ -26,11 +26,9 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
 
@@ -51,7 +49,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
   private int processedScans = 0, totalScans = 0;
 
   // Data structures
-  private float intensityBuffer[] = new float[10000];
+  private float intensityBuffer[];
 
   /**
    * <p>
@@ -95,7 +93,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
     for (MsScan scan : msScans) {
 
       // Calculate total intensity of the ions in the MS/MS spectrum
-      intensityBuffer = scan.getIntensityValues(intensityBuffer);
+      intensityBuffer = scan.getIntensityValues();
       double totalInteisity = 0;
       for (int i = 0; i < scan.getNumberOfDataPoints(); i++) {
         totalInteisity = totalInteisity + intensityBuffer[i];
@@ -114,10 +112,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
       }
 
       // RT value
-      ChromatographyInfo scanChromatographyInfo = scan.getChromatographyInfo();
-      double scanRt = 0;
-      if (scanChromatographyInfo != null)
-        scanRt = scanChromatographyInfo.getRetentionTime();
+      Float scanRt = scan.getRetentionTime();
 
       // Add the data to the array
       scanData[processedScans][0] = selectedMz;
@@ -146,7 +141,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
     for (int firstIndex = 0; firstIndex < scanData.length; firstIndex++) {
 
       double floatMz1 = scanData[firstIndex][0];
-      double floatRt1 = scanData[firstIndex][1];
+      float floatRt1 = (float) scanData[firstIndex][1];
 
       // Loop through all the entries with lower intensity
       for (int secondIndex = firstIndex + 1; secondIndex < scanData.length; secondIndex++) {
@@ -155,7 +150,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
           continue;
 
         double floatMz2 = scanData[secondIndex][0];
-        double floatRt2 = scanData[secondIndex][1];
+        float floatRt2 = (float) scanData[secondIndex][1];
 
         // Compare m/z
         final boolean sameMz = mzTolerance.getToleranceRange(floatMz1).contains(floatMz2);
@@ -180,9 +175,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
         // Create ion
         IonAnnotation ionAnnotation = MSDKObjectBuilder.getIonAnnotation();
         ionAnnotation.setExpectedMz(mzValue);
-        ChromatographyInfo chromatographyInfo =
-            MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, rtValue);
-        ionAnnotation.setChromatographyInfo(chromatographyInfo);
+        ionAnnotation.setExpectedRetentionTime(rtValue);
 
         // add the ion to the result
         result.add(ionAnnotation);

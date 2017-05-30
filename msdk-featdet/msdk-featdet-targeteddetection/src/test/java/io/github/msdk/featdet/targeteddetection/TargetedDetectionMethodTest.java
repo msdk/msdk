@@ -26,9 +26,7 @@ import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.msdk.util.tolerances.MaximumMzTolerance;
@@ -45,7 +43,7 @@ public class TargetedDetectionMethodTest {
 
     // Create the data structures
     final DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
-    ChromatographyInfo rtBuffer[] = new ChromatographyInfo[10000];
+    float rtBuffer[] = new float[10000];
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
     int numOfDataPoints;
@@ -63,29 +61,29 @@ public class TargetedDetectionMethodTest {
     IonAnnotation ion1 = MSDKObjectBuilder.getIonAnnotation();
     ion1.setExpectedMz(332.56);
     ion1.setAnnotationId("Feature 332.56");
-    ion1.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 772.8));
+    ion1.setExpectedRetentionTime(
+         (float) 772.8);
     ionAnnotations.add(ion1);
 
     // Ion 2
     IonAnnotation ion2 = MSDKObjectBuilder.getIonAnnotation();
     ion2.setExpectedMz(508.004);
     ion2.setAnnotationId("Feature 508.004");
-    ion2.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 868.8));
+    ion2.setExpectedRetentionTime(
+         (float) 868.8);
     ionAnnotations.add(ion2);
 
     // Ion 3
     IonAnnotation ion3 = MSDKObjectBuilder.getIonAnnotation();
     ion3.setExpectedMz(362.102);
     ion3.setAnnotationId("Feature 362.102");
-    ion3.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 643.2));
+    ion3.setExpectedRetentionTime(
+         (float) 643.2);
     ionAnnotations.add(ion3);
 
     // Variables
     final MzTolerance mzTolerance = new MaximumMzTolerance(0.003, 5.0);
-    final RTTolerance rtTolerance = new RTTolerance(0.2, false);
+    final RTTolerance rtTolerance = new RTTolerance(0.2f, false);
     final Double intensityTolerance = 0.10d;
     final Double noiseLevel = 5000d;
 
@@ -101,7 +99,7 @@ public class TargetedDetectionMethodTest {
     // ************
     Chromatogram chromatogram1 = chromatograms.get(0);
     Assert.assertEquals(1, chromatogram1.getChromatogramNumber().intValue());
-    rtBuffer = chromatogram1.getRetentionTimes(rtBuffer);
+    rtBuffer = chromatogram1.getRetentionTimes();
     mzBuffer = chromatogram1.getMzValues(mzBuffer);
     intensityBuffer = chromatogram1.getIntensityValues(intensityBuffer);
     numOfDataPoints = chromatogram1.getNumberOfDataPoints();
@@ -173,7 +171,7 @@ public class TargetedDetectionMethodTest {
     // ************
     Chromatogram chromatogram2 = chromatograms.get(1);
     Assert.assertEquals(2, chromatogram2.getChromatogramNumber().intValue());
-    rtBuffer = chromatogram2.getRetentionTimes(rtBuffer);
+    rtBuffer = chromatogram2.getRetentionTimes();
     mzBuffer = chromatogram2.getMzValues(mzBuffer);
     intensityBuffer = chromatogram2.getIntensityValues(intensityBuffer);
     numOfDataPoints = chromatogram2.getNumberOfDataPoints();
@@ -245,7 +243,7 @@ public class TargetedDetectionMethodTest {
     // ************
     Chromatogram chromatogram3 = chromatograms.get(2);
     Assert.assertEquals(3, chromatogram3.getChromatogramNumber().intValue());
-    rtBuffer = chromatogram3.getRetentionTimes(rtBuffer);
+    rtBuffer = chromatogram3.getRetentionTimes();
     mzBuffer = chromatogram3.getMzValues(mzBuffer);
     intensityBuffer = chromatogram3.getIntensityValues(intensityBuffer);
     numOfDataPoints = chromatogram3.getNumberOfDataPoints();

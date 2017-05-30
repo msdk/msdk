@@ -34,7 +34,6 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
 import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
@@ -128,10 +127,10 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
       // Create an ion annotation
       IonAnnotation ion = MSDKObjectBuilder.getIonAnnotation();
       ion.setAnnotationId(row.getId().toString());
-      FeatureTableColumn<ChromatographyInfo> column =
-          result.getColumn("Chromatography Info", null, ChromatographyInfo.class);
+      FeatureTableColumn<Float> column =
+          result.getColumn(ColumnName.RT.getName(), null, Float.class);
       ion.setExpectedMz(row.getMz());
-      ion.setChromatographyInfo(row.getData(column));
+      ion.setExpectedRetentionTime(row.getData(column));
       List<IonAnnotation> ionAnnotations = new ArrayList<IonAnnotation>();
       ionAnnotations.add(ion);
 

@@ -26,13 +26,11 @@ import com.google.common.collect.Range;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
 class MzDataSaxHandler extends DefaultHandler {
@@ -220,9 +218,7 @@ class MzDataSaxHandler extends DefaultHandler {
       newScan.setPolarity(polarity);
 
       if (retentionTime != null) {
-        ChromatographyInfo chromInfo =
-            MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, retentionTime);
-        newScan.setChromatographyInfo(chromInfo);
+        newScan.setRetentionTime(retentionTime);
       }
 
       if (precursorMz != null) {

@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -65,12 +64,12 @@ public class RawDataFileUtil {
    * @return a {@link java.util.List} object.
    */
   @Nonnull
-  static public List<MsScan> getScans(RawDataFile rawDataFile, Range<ChromatographyInfo> rtRange) {
+  static public List<MsScan> getScans(RawDataFile rawDataFile, Range<Float> rtRange) {
     ArrayList<MsScan> msScanList = new ArrayList<MsScan>();
     List<MsScan> scans = rawDataFile.getScans();
     synchronized (scans) {
       for (MsScan scan : scans) {
-        ChromatographyInfo scanRT = scan.getChromatographyInfo();
+        Float scanRT = scan.getRetentionTime();
         if (scanRT != null) {
           if (rtRange.contains(scanRT))
             msScanList.add(scan);
@@ -92,12 +91,12 @@ public class RawDataFileUtil {
    */
   @Nonnull
   static public List<MsScan> getScans(RawDataFile rawDataFile, MsFunction msFunction,
-      Range<ChromatographyInfo> rtRange) {
+      Range<Float> rtRange) {
     ArrayList<MsScan> msScanList = new ArrayList<MsScan>();
     List<MsScan> scans = rawDataFile.getScans();
     synchronized (scans) {
       for (MsScan scan : scans) {
-        ChromatographyInfo scanRT = scan.getChromatographyInfo();
+        Float scanRT = scan.getRetentionTime();
         if (scanRT != null) {
           if (scan.getMsFunction().equals(msFunction) && rtRange.contains(scanRT))
             msScanList.add(scan);

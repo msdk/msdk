@@ -61,7 +61,7 @@ public class IsotopeGrouperMethodTest {
 
     // Variables
     MzTolerance mzTolerance = new MaximumMzTolerance(0.003, 5.0);
-    RTTolerance rtTolerance = new RTTolerance(0.1, false);
+    RTTolerance rtTolerance = new RTTolerance(0.1f, false);
     int maximumCharge = 2;
     boolean requireMonotonicShape = false;
     String featureTableName = featureTable.getName() + " deisotoped";
@@ -119,7 +119,7 @@ public class IsotopeGrouperMethodTest {
 
     // Variables
     MzTolerance mzTolerance = new MaximumMzTolerance(0.003, 5.0);
-    RTTolerance rtTolerance = new RTTolerance(0.1, false);
+    RTTolerance rtTolerance = new RTTolerance(0.1f, false);
     int maximumCharge = 2;
     boolean requireMonotonicShape = false;
     String featureTableName = featureTable.getName() + " deisotoped";

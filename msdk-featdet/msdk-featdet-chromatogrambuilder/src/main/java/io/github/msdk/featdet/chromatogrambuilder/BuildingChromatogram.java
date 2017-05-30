@@ -23,12 +23,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.primitives.Doubles;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 class BuildingChromatogram {
 
   private final @Nonnull Vector<Double> mzValues = new Vector<>();
-  private final @Nonnull Vector<ChromatographyInfo> rtValues = new Vector<>();
+  private final @Nonnull Vector<Float> rtValues = new Vector<>();
   private final @Nonnull Vector<Float> intensityValues = new Vector<>();
 
   // Number of scans in a segment that is currently being connected
@@ -55,14 +54,8 @@ class BuildingChromatogram {
     if (buildingSegmentLength < 2)
       return 0.0f;
 
-    ChromatographyInfo firstChromInfo = rtValues.get(rtValues.size() - buildingSegmentLength);
-    ChromatographyInfo lastChromInfo = rtValues.lastElement();
-
-    if ((firstChromInfo == null) || (lastChromInfo == null))
-      throw new MSDKRuntimeException("Scans do not contain retention times");
-
-    float firstRT = firstChromInfo.getRetentionTime();
-    float lastRT = lastChromInfo.getRetentionTime();
+    float firstRT = rtValues.get(rtValues.size() - buildingSegmentLength);
+    float lastRT = rtValues.lastElement();
 
     return (lastRT - firstRT);
   }
@@ -80,7 +73,7 @@ class BuildingChromatogram {
     buildingSegmentLength = 0;
   }
 
-  void addDataPoint(@Nonnull ChromatographyInfo rt, @Nonnull Double mz, @Nonnull Float intensity) {
+  void addDataPoint(@Nonnull Float rt, @Nonnull Double mz, @Nonnull Float intensity) {
     Preconditions.checkNotNull(rt);
     rtValues.add(rt);
     mzValues.add(mz);
@@ -109,9 +102,9 @@ class BuildingChromatogram {
     return maxIntensity;
   }
 
-  ChromatographyInfo[] getRtValues(ChromatographyInfo[] array) {
+  float[] getRtValues(float[] array) {
     if (array.length < rtValues.size())
-      array = new ChromatographyInfo[rtValues.size() * 2];
+      array = new float[rtValues.size() * 2];
 
     for (int i = 0; i < rtValues.size(); i++) {
       array[i] = rtValues.get(i);

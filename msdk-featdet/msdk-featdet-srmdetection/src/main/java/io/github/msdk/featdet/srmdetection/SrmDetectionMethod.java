@@ -35,7 +35,6 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -159,7 +158,7 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
       }
 
       // Add the new data point
-      ChromatographyInfo rt = scan.getChromatographyInfo();
+      Float rt = scan.getRetentionTime();
       float intenstiy = scan.getIntensityValues()[0]; // Assume only 1
                                                       // value
       buildingChromatogram.addDataPoint(rt, 0d, intenstiy);
@@ -181,7 +180,7 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
           ChromatogramType.MRM_SRM, SeparationType.UNKNOWN);
 
       // Add the data points to the final chromatogram
-      ChromatographyInfo[] rtValues = buildingChromatogram.getRtValues();
+      float[] rtValues = buildingChromatogram.getRtValues();
       double[] mzValues = buildingChromatogram.getMzValues();
       float[] intensityValues = buildingChromatogram.getIntensityValues();
       int size = buildingChromatogram.getSize();

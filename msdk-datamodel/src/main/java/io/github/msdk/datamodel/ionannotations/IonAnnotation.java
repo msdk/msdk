@@ -21,8 +21,6 @@ import javax.annotation.Nullable;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IMolecularFormula;
 
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-
 /**
  * Annotation of a detected feature with a chemical structure, formula, or textual description.
  */
@@ -169,20 +167,20 @@ public interface IonAnnotation extends Comparable<IonAnnotation> {
 
   /**
    * <p>
-   * getChromatographyInfo.
+   * getRetentionTime.
    * </p>
    *
-   * @return Chromatography info.
+   * @return RT
    */
   @Nullable
-  ChromatographyInfo getChromatographyInfo();
+  Float getExpectedRetentionTime();
 
   /**
-   * Sets a new chromatography info to this annotation.
+   * Sets a new RT to this annotation.
    *
    * @param chromatographyInfo a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} object.
    */
-  void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo);
+  void setExpectedRetentionTime(@Nullable Float rt);
 
   /**
    * <p>

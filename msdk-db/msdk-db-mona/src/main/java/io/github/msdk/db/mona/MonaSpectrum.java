@@ -45,9 +45,8 @@ import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.db.mona.pojo.Spectra;
+import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
  * A basic MoNA record, which describes a MassBank of Northern America Spectra. This is a readonly
@@ -263,18 +262,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     // not supported
   }
 
-  /** {@inheritDoc} */
-  @Override
-  @Nullable
-  public ChromatographyInfo getChromatographyInfo() {
-    return null;
-  }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo) {
-    // not supported
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -292,26 +280,11 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return new double[0];
   }
 
-  /** {@inheritDoc} */
-  @Override
-  @Nonnull
-  public double[] getMzValues(@Nullable double[] array) {
-    // TODO Auto-generated method stub
-    return new double[0];
-  }
 
   /** {@inheritDoc} */
   @Override
   @Nonnull
   public float[] getIntensityValues() {
-    // TODO Auto-generated method stub
-    return new float[0];
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  @Nonnull
-  public float[] getIntensityValues(@Nullable float[] array) {
     // TODO Auto-generated method stub
     return new float[0];
   }
@@ -502,6 +475,18 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
   public MzTolerance getMzTolerance() {
     // TODO Auto-generated method stub
     return null;
+  }
+
+  @Override
+  public Float getExpectedRetentionTime() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setExpectedRetentionTime(Float rt) {
+    // TODO Auto-generated method stub
+
   }
 
 

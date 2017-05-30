@@ -20,17 +20,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.featdet.ADAP3D.common.algorithms.ContinuousWaveletTransform;
-import io.github.msdk.featdet.ADAP3D.datamodel.Result;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.mzml.MzMLFileImportMethod;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-
 import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.featdet.ADAP3D.datamodel.Result;
+import io.github.msdk.io.mzml.MzMLFileImportMethod;
 
 public class ContinuousWaveletTransformTest {
 	
@@ -102,9 +99,9 @@ public class ContinuousWaveletTransformTest {
 		
 		for(int i=0;i<listOfScans.size();i++){
 			MsScan scan = listOfScans.get(i);
-			mzBuffer = scan.getMzValues(mzBuffer);
-			intensityBuffer = scan.getIntensityValues(intensityBuffer);
-			rtBuffer[i] = scan.getChromatographyInfo().getRetentionTime();
+			mzBuffer = scan.getMzValues();
+			intensityBuffer = scan.getIntensityValues();
+			rtBuffer[i] = scan.getRetentionTime();
 		}
 		Assert.assertNotNull(mzBuffer);
 		Assert.assertNotNull(intensityBuffer);

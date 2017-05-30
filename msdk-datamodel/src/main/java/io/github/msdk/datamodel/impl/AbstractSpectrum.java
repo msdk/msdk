@@ -65,29 +65,16 @@ public abstract class AbstractSpectrum implements MsSpectrum {
   /** {@inheritDoc} */
   @Override
   public @Nonnull double[] getMzValues() {
-    return getMzValues(null);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public @Nonnull double[] getMzValues(@Nullable double array[]) {
-    if ((array == null) || (array.length < numOfDataPoints))
-      array = new double[numOfDataPoints];
+    double array[] = new double[numOfDataPoints];
     dataPointStore.loadData(dataStoreMzId, array);
     return array;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public @Nonnull float[] getIntensityValues() {
-    return getIntensityValues(null);
-  }
 
   /** {@inheritDoc} */
   @Override
-  public @Nonnull float[] getIntensityValues(@Nullable float array[]) {
-    if ((array == null) || (array.length < numOfDataPoints))
-      array = new float[numOfDataPoints];
+  public @Nonnull float[] getIntensityValues() {
+    float[] array = new float[numOfDataPoints];
     dataPointStore.loadData(dataStoreIntensityId, array);
     return array;
   }

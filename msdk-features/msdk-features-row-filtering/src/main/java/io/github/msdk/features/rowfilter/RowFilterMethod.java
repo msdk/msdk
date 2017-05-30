@@ -31,7 +31,6 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.util.FeatureTableUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
@@ -54,7 +53,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 
   // Ranges values
   private final @Nullable Range<Double> mzRange;
-  private final @Nullable Range<Double> rtRange;
+  private final @Nullable Range<Float> rtRange;
   private final @Nullable Range<Double> durationRange;
 
   // Tolerance values
@@ -101,7 +100,7 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
   public RowFilterMethod(@Nonnull FeatureTable featureTable, @Nonnull DataPointStore dataStore,
       @Nonnull String nameSuffix, boolean filterByMz, boolean filterByRt, boolean filterByDuration,
       boolean filterByCount, boolean filterByIsotopes, boolean filterByIonAnnotation,
-      boolean requireAnnotation, @Nullable Range<Double> mzRange, @Nullable Range<Double> rtRange,
+      boolean requireAnnotation, @Nullable Range<Double> mzRange, @Nullable Range<Float> rtRange,
       @Nullable Range<Double> durationRange, @Nullable Integer minCount,
       @Nullable Integer minIsotopes, @Nullable String ionAnnotation, boolean removeDuplicates,
       @Nullable MzTolerance duplicateMzTolerance, @Nullable RTTolerance duplicateRtTolerance,
@@ -161,9 +160,8 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 
       // Check RT
       if (filterByRt && rtRange != null) {
-        ChromatographyInfo chromatographyInfo = row.getChromatographyInfo();
-        if (chromatographyInfo != null) {
-          double rowRT = (double) chromatographyInfo.getRetentionTime();
+        Float rowRT = row.getRT();
+        if (rowRT!=null) {
           if (!rtRange.contains(rowRT))
             continue;
         }
@@ -267,13 +265,10 @@ public class RowFilterMethod implements MSDKMethod<FeatureTable> {
               duplicateMzTolerance.getToleranceRange(mz).contains(secondRow.getMz());
 
           // Compare retention time
-          ChromatographyInfo chromatographyInfo1 = firstRow.getChromatographyInfo();
-          ChromatographyInfo chromatographyInfo2 = secondRow.getChromatographyInfo();
-          boolean sameRt = false;
-          if (chromatographyInfo1 != null && chromatographyInfo2 != null) {
-            sameRt = duplicateRtTolerance.getToleranceRange(chromatographyInfo1.getRetentionTime())
-                .contains((double) chromatographyInfo2.getRetentionTime());
-          }
+          Float rt1 = firstRow.getRT();
+          Float rt2 = secondRow.getRT();
+          boolean sameRt = duplicateRtTolerance.getToleranceRange(rt1)
+                .contains(rt2);
 
           // Compare identifications
           FeatureTableColumn<List<IonAnnotation>> column =

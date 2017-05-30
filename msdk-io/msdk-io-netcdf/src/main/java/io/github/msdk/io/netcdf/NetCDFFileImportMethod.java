@@ -28,11 +28,9 @@ import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
@@ -345,11 +343,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
         intensityValues, numOfDataPoints);
     scan.setSpectrumType(spectrumType);
 
-    // TODO set correct separation type from global netCDF file attributes
-    ChromatographyInfo chromData = MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN,
-        scanRetentionTimes[scanIndex]);
-
-    scan.setChromatographyInfo(chromData);
+    scan.setRetentionTime(scanRetentionTimes[scanIndex]);
 
     return scan;
 

@@ -32,8 +32,8 @@ public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
   private final @Nonnull DataPointStore store;
 
   // Data structures
-  private @Nonnull double mzBuffer[] = new double[10000];
-  private @Nonnull float intensityBuffer[] = new float[10000];
+  private @Nonnull double mzBuffer[];
+  private @Nonnull float intensityBuffer[];
   private int numOfDataPoints, newNumOfDataPoints;
 
   /**
@@ -56,8 +56,8 @@ public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
   public MsScan performFilter(@Nonnull MsScan scan) {
 
     // Load data points
-    mzBuffer = scan.getMzValues(mzBuffer);
-    intensityBuffer = scan.getIntensityValues(intensityBuffer);
+    mzBuffer = scan.getMzValues();
+    intensityBuffer = scan.getIntensityValues();
     numOfDataPoints = scan.getNumberOfDataPoints();
     newNumOfDataPoints = 0;
 

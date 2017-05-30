@@ -77,7 +77,7 @@ public class LocalDatabaseSearchMethodTest {
 
     // Variables
     final MzTolerance mzTolerance = new MaximumMzTolerance(0.003, 5.0);
-    final RTTolerance rtTolerance = new RTTolerance(0.1, false);
+    final RTTolerance rtTolerance = new RTTolerance(0.1f, false);
     List<IonAnnotation> ionAnnotations = new ArrayList<IonAnnotation>();
     IMolecularFormula formula;
 
@@ -86,8 +86,7 @@ public class LocalDatabaseSearchMethodTest {
     ion1.setAnnotationId("1");
     ion1.setExpectedMz(508.0047259);
     ion1.setDescription("ATP");
-    ion1.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 814.4));
+    ion1.setExpectedRetentionTime(814.4f);
     formula = MolecularFormulaManipulator.getMolecularFormula("C10H16N5O13P3",
         DefaultChemObjectBuilder.getInstance());
     ion1.setFormula(formula);
@@ -99,8 +98,7 @@ public class LocalDatabaseSearchMethodTest {
     ion2.setAnnotationId("2");
     ion2.setExpectedMz(613.1625235);
     ion2.setDescription("Glutathione disulfide");
-    ion2.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 878.1));
+    ion2.setExpectedRetentionTime(878.1f);
     formula = MolecularFormulaManipulator.getMolecularFormula("C20H32N6O12S2",
         DefaultChemObjectBuilder.getInstance());
     ion2.setFormula(formula);
@@ -112,8 +110,7 @@ public class LocalDatabaseSearchMethodTest {
     ion3.setAnnotationId("3");
     ion3.setExpectedMz(239.1068954);
     ion3.setDescription("HEPES");
-    ion3.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 409.0));
+    ion3.setExpectedRetentionTime(409.0f);
     ionAnnotations.add(ion3);
 
     // Ion 4
@@ -121,8 +118,7 @@ public class LocalDatabaseSearchMethodTest {
     ion4.setAnnotationId("4");
     ion4.setExpectedMz(175.1194502);
     ion4.setDescription("L-Arginine");
-    ion4.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 1368.9));
+    ion4.setExpectedRetentionTime(1368.9f);
     formula = MolecularFormulaManipulator.getMolecularFormula("C6H14N4O2",
         DefaultChemObjectBuilder.getInstance());
     ion4.setFormula(formula);
@@ -133,8 +129,7 @@ public class LocalDatabaseSearchMethodTest {
     ion5.setAnnotationId("5");
     ion5.setExpectedMz(664.118587);
     ion5.setDescription("NAD+");
-    ion5.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 680.8));
+    ion5.setExpectedRetentionTime(680.8f);
     formula = MolecularFormulaManipulator.getMolecularFormula("C21H28N7O14P2",
         DefaultChemObjectBuilder.getInstance());
     ion5.setFormula(formula);
@@ -145,8 +140,7 @@ public class LocalDatabaseSearchMethodTest {
     ion6.setAnnotationId("6");
     ion6.setExpectedMz(666.1328387);
     ion6.setDescription("NADH");
-    ion6.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 633.5));
+    ion6.setExpectedRetentionTime(633.5f);
     formula = MolecularFormulaManipulator.getMolecularFormula("C21H29N7O14P2",
         DefaultChemObjectBuilder.getInstance());
     ion6.setFormula(formula);
@@ -157,8 +151,7 @@ public class LocalDatabaseSearchMethodTest {
     ion7.setAnnotationId("7");
     ion7.setExpectedMz(303.0693468);
     ion7.setDescription("PIPES");
-    ion7.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 661.7));
+    ion7.setExpectedRetentionTime(661.7f);
     ionAnnotations.add(ion7);
 
     // Run identification using the local database search

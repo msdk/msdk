@@ -24,7 +24,6 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -63,7 +62,7 @@ public class MsMsDetectionMethodTest {
 
     // Parameters
     final MzTolerance mzTolerance = new MaximumMzTolerance(0.003, 5.0);
-    final RTTolerance rtTolerance = new RTTolerance(0.2, false);
+    final RTTolerance rtTolerance = new RTTolerance(0.2f, false);
     final Double intensityTolerance = 0.10d;
 
     // MS/MS detection method
@@ -78,12 +77,7 @@ public class MsMsDetectionMethodTest {
       Assert.assertNotNull(ionAnnotations.get(i));
       Double mz = ionAnnotations.get(i).getExpectedMz();
       Assert.assertNotNull(mz);
-      ChromatographyInfo chromatographyInfo = ionAnnotations.get(i).getChromatographyInfo();
-      Assert.assertNotNull(chromatographyInfo);
-
-      float rt = 0;
-      if (mz != null && chromatographyInfo.getRetentionTime() != null)
-        rt = chromatographyInfo.getRetentionTime();
+      Float rt = ionAnnotations.get(i).getExpectedRetentionTime();
       switch (i) {
         case 0:
           Assert.assertEquals(809.6484375, mz, 0.0001);

@@ -67,24 +67,21 @@ public class FeatureFilterMethodTest {
     IonAnnotation ion1 = MSDKObjectBuilder.getIonAnnotation();
     ion1.setExpectedMz(332.56);
     ion1.setAnnotationId("Feature 332.56");
-    ion1.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 772.8));
+    ion1.setExpectedRetentionTime(772.8f);
     ionAnnotations.add(ion1);
 
     // Ion 2
     IonAnnotation ion2 = MSDKObjectBuilder.getIonAnnotation();
     ion2.setExpectedMz(508.004);
     ion2.setAnnotationId("Feature 508.004");
-    ion2.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 868.8));
+    ion2.setExpectedRetentionTime(868.8f);
     ionAnnotations.add(ion2);
 
     // Ion 3
     IonAnnotation ion3 = MSDKObjectBuilder.getIonAnnotation();
     ion3.setExpectedMz(362.102);
     ion3.setAnnotationId("Feature 362.102");
-    ion3.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 643.2));
+    ion3.setExpectedRetentionTime(643.2f);
     ionAnnotations.add(ion3);
 
     // Variables

@@ -14,7 +14,6 @@
 package io.github.msdk.features.joinaligner;
 
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * This class represents a score between a feature table row and an aligned feature table row
@@ -33,16 +32,8 @@ class RowVsRowScore implements Comparable<RowVsRowScore> {
     // Get m/z and RT values
     Double mz1 = featureTableRow.getMz();
     Double mz2 = alignedRow.getMz();
-    ChromatographyInfo ChromatographyInfo1 = featureTableRow.getChromatographyInfo();
-    ChromatographyInfo ChromatographyInfo2 = alignedRow.getChromatographyInfo();
-    Float rt1 = null;
-    Float rt2 = null;
-    if (ChromatographyInfo1 != null) {
-      rt1 = ChromatographyInfo1.getRetentionTime();
-    }
-    if (ChromatographyInfo2 != null) {
-      rt2 = ChromatographyInfo2.getRetentionTime();
-    }
+    Float rt1 = featureTableRow.getRT();
+    Float rt2 = alignedRow.getRT();
 
     // Calculate difference between m/z
     double mzDiff = 999;

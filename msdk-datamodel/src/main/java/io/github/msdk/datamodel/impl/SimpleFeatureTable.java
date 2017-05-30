@@ -28,7 +28,6 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * Implementation of the FeatureTable interface.
@@ -169,11 +168,11 @@ class SimpleFeatureTable implements FeatureTable {
 
   /** {@inheritDoc} */
   @Override
-  public List<FeatureTableRow> getRowsInsideRange(Range<Double> rtRange, Range<Double> mzRange) {
+  public List<FeatureTableRow> getRowsInsideRange(Range<Float> rtRange, Range<Double> mzRange) {
     List<FeatureTableRow> result = new ArrayList<FeatureTableRow>();
     for (FeatureTableRow row : featureTableRows) {
-      ChromatographyInfo rowChromatographyInfo = row.getChromatographyInfo();
-      if (rtRange.contains((double) rowChromatographyInfo.getRetentionTime())
+      Float rowRT = row.getRT();
+      if ((rowRT != null) && rtRange.contains(rowRT)
           && mzRange.contains(row.getMz()))
         result.add(row);
     }

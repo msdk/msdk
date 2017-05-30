@@ -21,7 +21,6 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -102,21 +101,7 @@ public interface Chromatogram {
    * @return an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} objects.
    */
   @Nonnull
-  ChromatographyInfo[] getRetentionTimes();
-
-  /**
-   * <p>
-   * Loads the info of this chromatogram into the given array of ChromtagraphyInfo. If the given
-   * array is null or is not large enough to hold all values, a new array is created.
-   *
-   * Note: this method may need to read data from disk, therefore it may be quite slow.
-   * </p>
-   *
-   * @param array an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} objects.
-   * @return an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} objects.
-   */
-  @Nonnull
-  ChromatographyInfo[] getRetentionTimes(@Nullable ChromatographyInfo array[]);
+  float[] getRetentionTimes();
 
   /**
    * <p>
@@ -171,7 +156,7 @@ public interface Chromatogram {
    * @param intensityValues an array of float.
    * @param size a {@link java.lang.Integer} object.
    */
-  void setDataPoints(@Nonnull ChromatographyInfo rtValues[], @Nullable double mzValues[],
+  void setDataPoints(@Nonnull float rtValues[], @Nullable double mzValues[],
       @Nonnull float intensityValues[], @Nonnull Integer size);
 
   /**
@@ -235,6 +220,6 @@ public interface Chromatogram {
    * @return RT range
    */
   @Nullable
-  Range<ChromatographyInfo> getRtRange();
+  Range<Float> getRtRange();
 
 }

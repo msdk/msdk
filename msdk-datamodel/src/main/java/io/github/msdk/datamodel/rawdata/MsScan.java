@@ -123,20 +123,19 @@ public interface MsScan extends MsSpectrum {
   void setMsScanType(@Nonnull MsScanType newMsScanType);
 
   /**
-   * Returns the chromatography data (retention time, etc.) associated with this scan. Null is
-   * returned if no chromatography data is available.
+   * Returns the retention time in seconds
    *
-   * @return Associated chromatography data.
+   * @return RT
    */
   @Nullable
-  ChromatographyInfo getChromatographyInfo();
+  Float getRetentionTime();
 
   /**
-   * Updates the associated chromatography data.
+   * Updates the associated retention time
    *
-   * @param chromatographyInfo a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} object.
+   * @param Retention time in seconds
    */
-  void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo);
+  void setRetentionTime(@Nullable Float rt);
 
   /**
    * Returns the scanning range of the instrument. Note that this value is different from that

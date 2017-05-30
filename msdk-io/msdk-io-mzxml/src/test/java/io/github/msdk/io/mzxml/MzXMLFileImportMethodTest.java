@@ -36,8 +36,8 @@ public class MzXMLFileImportMethodTest {
   public void testA10A2() throws MSDKException {
 
     // Create the data structures
-    double mzBuffer[] = new double[10000];
-    float intensityBuffer[] = new float[10000];
+    double mzBuffer[];
+    float intensityBuffer[];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "A1-0_A2.mzXML");
@@ -58,8 +58,8 @@ public class MzXMLFileImportMethodTest {
     Assert.assertEquals(new Integer(1), scan1.getScanNumber());
     Assert.assertEquals(new Integer(1), scan1.getMsFunction().getMsLevel());
     Assert.assertEquals(PolarityType.POSITIVE, scan1.getPolarity());
-    mzBuffer = scan1.getMzValues(mzBuffer);
-    intensityBuffer = scan1.getIntensityValues(intensityBuffer);
+    mzBuffer = scan1.getMzValues();
+    intensityBuffer = scan1.getIntensityValues();
     Assert.assertEquals(22431, (int) scan1.getNumberOfDataPoints());
     Float scan1MaxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan1.getNumberOfDataPoints());
@@ -74,8 +74,8 @@ public class MzXMLFileImportMethodTest {
   public void testR1RG59B41() throws MSDKException {
 
     // Create the data structures
-    double mzBuffer[] = new double[10000];
-    float intensityBuffer[] = new float[10000];
+    double mzBuffer[];
+    float intensityBuffer[];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "R1_RG59_B4_1.mzXML");
@@ -95,10 +95,10 @@ public class MzXMLFileImportMethodTest {
     MsScan scan1 = scans.get(0);
     Assert.assertEquals(new Integer(1000), scan1.getScanNumber());
     Assert.assertEquals(new Integer(2), scan1.getMsFunction().getMsLevel());
-    Assert.assertEquals(1596.72f, scan1.getChromatographyInfo().getRetentionTime(), 0.01f);
+    Assert.assertEquals(1596.72f, scan1.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan1.getPolarity());
-    mzBuffer = scan1.getMzValues(mzBuffer);
-    intensityBuffer = scan1.getIntensityValues(intensityBuffer);
+    mzBuffer = scan1.getMzValues();
+    intensityBuffer = scan1.getIntensityValues();
     Assert.assertEquals(210, (int) scan1.getNumberOfDataPoints());
     Float scan1MaxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan1.getNumberOfDataPoints());
@@ -108,10 +108,10 @@ public class MzXMLFileImportMethodTest {
     MsScan scan299 = scans.get(299);
     Assert.assertEquals(new Integer(1299), scan299.getScanNumber());
     Assert.assertEquals(new Integer(1), scan299.getMsFunction().getMsLevel());
-    Assert.assertEquals(1765.578f, scan299.getChromatographyInfo().getRetentionTime(), 0.01f);
+    Assert.assertEquals(1765.578f, scan299.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan299.getPolarity());
-    mzBuffer = scan299.getMzValues(mzBuffer);
-    intensityBuffer = scan299.getIntensityValues(intensityBuffer);
+    mzBuffer = scan299.getMzValues();
+    intensityBuffer = scan299.getIntensityValues();
     Assert.assertEquals(1069, (int) scan299.getNumberOfDataPoints());
     Float scan299MaxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan299.getNumberOfDataPoints());

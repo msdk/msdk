@@ -19,7 +19,6 @@ import javax.annotation.Nonnull;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * Represents the name of the feature table columns.
@@ -32,7 +31,7 @@ public enum ColumnName {
   IONANNOTATION("Ion Annotation", (Class<List<IonAnnotation>>) (Class<?>) List.class), //
   MZ("m/z", Double.class), //
   PPM("ppm", Double.class), //
-  RT("RT", ChromatographyInfo.class), //
+  RT("RT", Float.class), //
   RTSTART("RT Start", Double.class), //
   RTEND("RT End", Double.class), //
   DURATION("Duration", Double.class), //

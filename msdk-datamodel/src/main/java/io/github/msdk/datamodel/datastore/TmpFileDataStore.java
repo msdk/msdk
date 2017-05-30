@@ -29,9 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
  * A DataPointStore implementation that stores the data points in a temporary file. This is a simple
@@ -99,8 +96,6 @@ class TmpFileDataStore implements DataPointStore {
         objectSize = Double.SIZE / 8;
       else if (array.getClass().getComponentType().equals(Float.TYPE))
         objectSize = Float.SIZE / 8;
-      else if (ChromatographyInfo.class.isAssignableFrom(array.getClass().getComponentType()))
-        objectSize = (Float.SIZE / 8) * 3;
       else
         throw new IllegalArgumentException("Unsupported array type");
 
@@ -118,8 +113,6 @@ class TmpFileDataStore implements DataPointStore {
         convertArrayToByteBuffer((double[]) array, size);
       else if (array.getClass().getComponentType().equals(Float.TYPE))
         convertArrayToByteBuffer((float[]) array, size);
-      else if (ChromatographyInfo.class.isAssignableFrom(array.getClass().getComponentType()))
-        convertArrayToByteBuffer((ChromatographyInfo[]) array, size);
 
       tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
 
@@ -163,8 +156,6 @@ class TmpFileDataStore implements DataPointStore {
       objectSize = Double.SIZE / 8;
     else if (array.getClass().getComponentType().equals(Float.TYPE))
       objectSize = Float.SIZE / 8;
-    else if (ChromatographyInfo.class.isAssignableFrom(array.getClass().getComponentType()))
-      objectSize = (Float.SIZE / 8) * 3;
     else
       throw new IllegalArgumentException("Unsupported array type");
 
@@ -188,8 +179,6 @@ class TmpFileDataStore implements DataPointStore {
         convertByteBufferToArray((double[]) array, numOfDataPoints);
       else if (array.getClass().getComponentType().equals(Float.TYPE))
         convertByteBufferToArray((float[]) array, numOfDataPoints);
-      else if (ChromatographyInfo.class.isAssignableFrom(array.getClass().getComponentType()))
-        convertByteBufferToArray((ChromatographyInfo[]) array, numOfDataPoints);
 
     } catch (IOException e) {
       throw new MSDKRuntimeException(e);
@@ -254,24 +243,6 @@ class TmpFileDataStore implements DataPointStore {
       dblBuffer.put(data[i]);
   }
 
-  private void convertArrayToByteBuffer(ChromatographyInfo[] data, int size) {
-
-    FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
-    Float f;
-    for (int i = 0; i < size; i++) {
-      f = data[i].getRetentionTime();
-      fltBuffer.put(f);
-      f = data[i].getSecondaryRetentionTime();
-      if (f == null)
-        f = Float.NaN;
-      fltBuffer.put(f);
-      f = data[i].getIonDriftTime();
-      if (f == null)
-        f = Float.NaN;
-      fltBuffer.put(f);
-    }
-  }
-
   private void convertByteBufferToArray(float[] array, Integer size) {
     FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
     for (int i = 0; i < size; i++) {
@@ -286,20 +257,4 @@ class TmpFileDataStore implements DataPointStore {
     }
   }
 
-  private void convertByteBufferToArray(ChromatographyInfo[] array, Integer size) {
-    FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
-
-    for (int i = 0; i < size; i++) {
-      Float rt = fltBuffer.get();
-      if (rt == Float.NaN)
-        rt = null;
-      Float srt = fltBuffer.get();
-      if (srt == Float.NaN)
-        srt = null;
-      Float idt = fltBuffer.get();
-      if (idt == Float.NaN)
-        idt = null;
-      array[i] = MSDKObjectBuilder.getChromatographyInfo2D(SeparationType.UNKNOWN, rt, srt);
-    }
-  }
 }

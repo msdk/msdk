@@ -65,8 +65,8 @@ public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
     int addi = 0;
 
     // Load data points
-    mzBuffer = scan.getMzValues(mzBuffer);
-    intensityBuffer = scan.getIntensityValues(intensityBuffer);
+    mzBuffer = scan.getMzValues();
+    intensityBuffer = scan.getIntensityValues();
     numOfDataPoints = scan.getNumberOfDataPoints();
     newNumOfDataPoints = 0;
 

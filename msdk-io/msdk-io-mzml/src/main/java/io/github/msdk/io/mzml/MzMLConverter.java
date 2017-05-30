@@ -31,7 +31,6 @@ import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScanType;
@@ -111,7 +110,7 @@ class MzMLConverter {
   }
 
   @Nullable
-  ChromatographyInfo extractChromatographyData(Spectrum spectrum) {
+  Float extractChromatographyData(Spectrum spectrum) {
 
     ScanList scanListElement = spectrum.getScanList();
     if (scanListElement == null)
@@ -144,9 +143,7 @@ class MzMLConverter {
               // Seconds
               retentionTime = Float.parseFloat(value);
             }
-            ChromatographyInfo chromInfo =
-                MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, retentionTime);
-            return chromInfo;
+            return retentionTime;
           } catch (Exception e) {
             // Ignore incorrectly formatted numbers, just dump the
             // exception
@@ -452,14 +449,14 @@ class MzMLConverter {
 
   }
 
-  static @Nonnull ChromatographyInfo[] extractRtValues(
+  static @Nonnull float[] extractRtValues(
       uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram,
-      @Nullable ChromatographyInfo[] array) {
+      @Nullable float[] array) {
 
     BinaryDataArrayList dataList = jmzChromatogram.getBinaryDataArrayList();
 
     if ((dataList == null) || (dataList.getCount().equals(0)))
-      return new ChromatographyInfo[0];
+      return new float[0];
 
     // Obtain the data arrays from chromatogram
     final BinaryDataArray rtArray = dataList.getBinaryDataArray().get(0);
@@ -467,14 +464,12 @@ class MzMLConverter {
 
     // Allocate space for the data points
     if ((array == null) || (array.length < rtValues.length))
-      array = new ChromatographyInfo[rtValues.length];
+      array = new float[rtValues.length];
 
     // Copy the actual data point values
     for (int i = 0; i < rtValues.length; i++) {
       final float rt = rtValues[i].floatValue();
-      final ChromatographyInfo chromatographyInfo =
-          MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
-      array[i] = chromatographyInfo;
+      array[i] = rt;
     }
 
     return array;

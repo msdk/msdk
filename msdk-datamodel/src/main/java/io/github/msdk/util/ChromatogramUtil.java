@@ -19,8 +19,6 @@ import javax.annotation.Nullable;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-
 /**
  * <p>
  * ChromatogramUtil class.
@@ -29,24 +27,24 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 public class ChromatogramUtil {
 
   /**
-   * Returns the range of ChromatographyInfo of all data points in this feature.
+   * Returns the range of Float of all data points in this feature.
    *
    * @return a {@link com.google.common.collect.Range} object.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
    *        objects.
    * @param size a {@link java.lang.Integer} object.
    */
   @SuppressWarnings("null")
   @Nonnull
-  public static Range<ChromatographyInfo> getDataPointsChromatographyRange(
-      @Nonnull ChromatographyInfo rtValues[], @Nonnull Integer size) {
+  public static Range<Float> getDataPointsChromatographyRange(
+      @Nonnull float rtValues[], @Nonnull Integer size) {
 
     // Parameter check
     Preconditions.checkNotNull(rtValues);
     Preconditions.checkNotNull(size);
     Preconditions.checkPositionIndex(size, rtValues.length);
 
-    final Range<ChromatographyInfo> chromatographyRange =
+    final Range<Float> chromatographyRange =
         Range.closed(rtValues[0], rtValues[size - 1]);
     return chromatographyRange;
   }
@@ -164,12 +162,12 @@ public class ChromatogramUtil {
    * Returns the retention time of this feature.
    *
    * @return a float.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
    *        objects.
    * @param intensityValues an array of float.
    * @param size a {@link java.lang.Integer} object.
    */
-  public static @Nullable Float getRt(@Nonnull ChromatographyInfo rtValues[],
+  public static @Nullable Float getRt(@Nonnull float rtValues[],
       @Nonnull float[] intensityValues, @Nonnull Integer size) {
 
     // Parameter check
@@ -190,18 +188,18 @@ public class ChromatogramUtil {
       }
     }
 
-    return rtValues[max].getRetentionTime();
+    return rtValues[max];
   }
 
   /**
    * Returns the start retention time of this feature.
    *
    * @return a Float.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
    *        objects.
    * @param size a {@link java.lang.Integer} object.
    */
-  public static @Nullable Float getRtStart(@Nonnull ChromatographyInfo rtValues[],
+  public static @Nullable Float getRtStart(@Nonnull float rtValues[],
       @Nonnull Integer size) {
 
     // Parameter check
@@ -212,18 +210,18 @@ public class ChromatogramUtil {
     if (size == 0)
       return null;
 
-    return rtValues[0].getRetentionTime();
+    return rtValues[0];
   }
 
   /**
    * Returns the end retention time of this feature.
    *
    * @return a Float.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
    *        objects.
    * @param size a {@link java.lang.Integer} object.
    */
-  public static Float getRtEnd(@Nonnull ChromatographyInfo rtValues[], @Nonnull Integer size) {
+  public static Float getRtEnd(@Nonnull float rtValues[], @Nonnull Integer size) {
 
     // Parameter check
     Preconditions.checkNotNull(rtValues);
@@ -233,7 +231,7 @@ public class ChromatogramUtil {
     if (size == 0)
       return null;
 
-    return rtValues[size - 1].getRetentionTime();
+    return rtValues[size - 1];
 
   }
 
@@ -241,11 +239,11 @@ public class ChromatogramUtil {
    * Returns the duration of this feature.
    *
    * @return a float.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
    *        objects.
    * @param size a {@link java.lang.Integer} object.
    */
-  public static @Nullable Float getDuration(@Nonnull ChromatographyInfo rtValues[],
+  public static @Nullable Float getDuration(@Nonnull float rtValues[],
       @Nonnull Integer size) {
 
     // Parameter check
@@ -299,12 +297,12 @@ public class ChromatogramUtil {
    * Returns the area of this feature.
    *
    * @return a double.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
    *        objects.
    * @param intensityValues an array of float.
    * @param size a {@link java.lang.Integer} object.
    */
-  public static @Nullable Double getArea(@Nonnull ChromatographyInfo rtValues[],
+  public static @Nullable Double getArea(@Nonnull float rtValues[],
       @Nonnull float[] intensityValues, @Nonnull Integer size) {
 
     // Parameter check
@@ -319,7 +317,7 @@ public class ChromatogramUtil {
 
     double area = 0, rtDifference = 0, intensityStart = 0, intensityEnd = 0;
     for (int i = 0; i < size - 1; i++) {
-      rtDifference = rtValues[i + 1].getRetentionTime() - rtValues[i].getRetentionTime();
+      rtDifference = rtValues[i + 1] - rtValues[i];
       intensityStart = intensityValues[i];
       intensityEnd = intensityValues[i + 1];
       area += (rtDifference * (intensityStart + intensityEnd) / 2);
@@ -331,12 +329,12 @@ public class ChromatogramUtil {
    * Returns the full width at half maximum (FWHM) of this feature.
    *
    * @return a {@link java.lang.Double} object.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
    *        objects.
    * @param intensityValues an array of float.
    * @param size a {@link java.lang.Integer} object.
    */
-  public static @Nullable Double getFwhm(@Nonnull ChromatographyInfo rtValues[],
+  public static @Nullable Double getFwhm(@Nonnull float rtValues[],
       @Nonnull float[] intensityValues, @Nonnull Integer size) {
 
     // Parameter check
@@ -367,12 +365,12 @@ public class ChromatogramUtil {
    * Returns the tailing factor of this feature.
    *
    * @return a {@link java.lang.Double} object.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
    *        objects.
    * @param intensityValues an array of float.
    * @param size a {@link java.lang.Integer} object.
    */
-  public static @Nullable Double getTailingFactor(@Nonnull ChromatographyInfo rtValues[],
+  public static @Nullable Double getTailingFactor(@Nonnull float rtValues[],
       @Nonnull float[] intensityValues, @Nonnull Integer size) {
 
     // Parameter check
@@ -407,12 +405,12 @@ public class ChromatogramUtil {
    * Returns the asymmetry factor of this feature.
    *
    * @return a {@link java.lang.Double} object.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
    *        objects.
    * @param intensityValues an array of float.
    * @param size a {@link java.lang.Integer} object.
    */
-  public static @Nullable Double getAsymmetryFactor(@Nonnull ChromatographyInfo rtValues[],
+  public static @Nullable Double getAsymmetryFactor(@Nonnull float rtValues[],
       @Nonnull float[] intensityValues, @Nonnull Integer size) {
 
     // Parameter check
@@ -440,7 +438,7 @@ public class ChromatogramUtil {
   }
 
   private static double[] findRTs(double intensity, float rt,
-      @Nonnull ChromatographyInfo rtValues[], @Nonnull float[] intensityValues,
+      @Nonnull float rtValues[], @Nonnull float[] intensityValues,
       @Nonnull Integer size) {
 
     // Parameter check
@@ -458,18 +456,18 @@ public class ChromatogramUtil {
     for (int i = 1; i < size - 1; i++) {
 
       currentDiff = Math.abs(intensity - intensityValues[i]);
-      currentRT = rtValues[i].getRetentionTime();
+      currentRT = rtValues[i];
 
       if (currentDiff < lastDiff1 & currentDiff > 0 & currentRT <= rt) {
-        x1 = rtValues[i].getRetentionTime();
+        x1 = rtValues[i];
         y1 = intensityValues[i];
-        x2 = rtValues[i + 1].getRetentionTime();
+        x2 = rtValues[i + 1];
         y2 = intensityValues[i + 1];
         lastDiff1 = currentDiff;
       } else if (currentDiff < lastDiff2 & currentDiff > 0 & currentRT >= rt) {
-        x3 = rtValues[i - 1].getRetentionTime();
+        x3 = rtValues[i - 1];
         y3 = intensityValues[i - 1];
-        x4 = rtValues[i].getRetentionTime();
+        x4 = rtValues[i];
         y4 = intensityValues[i];
         lastDiff2 = currentDiff;
       }
