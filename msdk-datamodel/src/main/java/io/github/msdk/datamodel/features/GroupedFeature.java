@@ -29,11 +29,7 @@ public interface GroupedFeature extends Feature {
   @Nonnull
   List<Feature> getIndividualFeatures();
 
-  void setIndividualFeatures(@Nonnull List<Feature> features);
-
   @Nullable
   Integer getCharge();
-
-  void setCharge(@Nullable Integer charge);
 
 }
