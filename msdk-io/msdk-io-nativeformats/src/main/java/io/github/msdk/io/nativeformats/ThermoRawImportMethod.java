@@ -65,7 +65,7 @@ public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   public RawDataFile execute() throws MSDKException {
 

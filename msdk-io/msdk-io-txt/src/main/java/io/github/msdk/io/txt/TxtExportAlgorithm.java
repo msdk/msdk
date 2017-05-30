@@ -43,7 +43,7 @@ public class TxtExportAlgorithm {
    * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
    * @throws java.io.IOException if any.
    */
-  @SuppressWarnings("null")
+
   public static void exportSpectrum(@Nonnull File exportFile, @Nonnull MsSpectrum spectrum)
       throws IOException {
     exportSpectra(exportFile, Collections.singleton(spectrum));
@@ -150,7 +150,7 @@ public class TxtExportAlgorithm {
    * @param delimiter a {@link java.lang.String} object.
    * @return a {@link java.lang.String} object.
    */
-  @SuppressWarnings("null")
+
   public static @Nonnull String spectrumToString(@Nonnull MsSpectrum spectrum,
       @Nonnull String delimiter) {
 

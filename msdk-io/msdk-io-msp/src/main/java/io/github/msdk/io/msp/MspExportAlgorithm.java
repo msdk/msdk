@@ -44,7 +44,7 @@ public class MspExportAlgorithm {
    * @throws java.io.IOException if any.
    * @throws io.github.msdk.MSDKException if any.
    */
-  @SuppressWarnings("null")
+
   public static void exportSpectrum(@Nonnull File exportFile, @Nonnull MsSpectrum spectrum)
       throws IOException, MSDKException {
     exportSpectra(exportFile, Collections.singleton(spectrum));

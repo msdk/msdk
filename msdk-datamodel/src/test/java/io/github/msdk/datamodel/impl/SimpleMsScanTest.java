@@ -93,7 +93,7 @@ public class SimpleMsScanTest {
     Assert.assertEquals(MsScanType.MRM_SRM, msScan1.getMsScanType());
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testRawDataFile() throws MSDKException {
     // Verify raw data file
@@ -122,7 +122,7 @@ public class SimpleMsScanTest {
     Assert.assertEquals(newScanRange, msScan1.getScanningRange());
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testRetentionTime() throws MSDKException {
     // Verify RT
@@ -136,7 +136,7 @@ public class SimpleMsScanTest {
     Assert.assertEquals(new Float(1.23), msScan1.getRetentionTime());
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testSourceInducedFragmentation() throws MSDKException {
     // Verify scanning range
@@ -154,7 +154,7 @@ public class SimpleMsScanTest {
         msScan1.getSourceInducedFragmentation().getActivationType());
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testIsolationInfo() throws MSDKException {
     // Verify isolation info

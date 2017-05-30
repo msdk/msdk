@@ -143,7 +143,7 @@ public class FeatureTableUtil {
    * @param combineData a {@link java.lang.Boolean} object which specifies if data will be added or
    *        replaced.
    */
-  @SuppressWarnings("null")
+
   public static void copyCommonValues(@Nonnull FeatureTableRow sourceFeatureTableRow,
       @Nonnull FeatureTableRow targetFeatureTableRow, @Nonnull Boolean combineData) {
 

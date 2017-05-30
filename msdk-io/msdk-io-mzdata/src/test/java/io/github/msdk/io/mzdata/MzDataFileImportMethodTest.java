@@ -32,7 +32,7 @@ public class MzDataFileImportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void testMzDataFile() throws MSDKException {
 
@@ -65,7 +65,7 @@ public class MzDataFileImportMethodTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testMM14() throws MSDKException {
 
@@ -119,7 +119,7 @@ public class MzDataFileImportMethodTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testMSMSposChallenge0() throws MSDKException {
 

@@ -34,7 +34,7 @@ public class WatersRawImportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void test20150813() throws Exception {
 

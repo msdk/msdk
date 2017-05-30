@@ -93,7 +93,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     URL url = getAccessionURL();
 
     ObjectMapper mapper = new ObjectMapper();
-    @SuppressWarnings("null")
+  
     Spectra spectra = mapper.readValue(url.openStream(), Spectra.class);
 
     build(spectra);
@@ -134,7 +134,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Nonnull
   @Override
   public MsSpectrumType getSpectrumType() {

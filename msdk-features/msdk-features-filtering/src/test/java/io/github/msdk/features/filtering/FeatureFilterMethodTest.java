@@ -47,7 +47,7 @@ public class FeatureFilterMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void testOrbitrap() throws MSDKException {
 
@@ -176,7 +176,7 @@ public class FeatureFilterMethodTest {
     featureTable.dispose();
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testMzTab_Sample() throws MSDKException {
 

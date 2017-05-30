@@ -35,7 +35,7 @@ class SimpleMsFunction implements MsFunction {
     msLevel = null;
   }
 
-  @SuppressWarnings("null")
+
   SimpleMsFunction(@Nullable Integer msLevel) {
     this.name = MsFunction.DEFAULT_MS_FUNCTION_NAME;
     this.msLevel = msLevel;

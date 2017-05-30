@@ -48,7 +48,6 @@ class BuildingChromatogram {
    *
    * @return a float.
    */
-  @SuppressWarnings("null")
   public float getBuildingSegmentLength() {
 
     if (buildingSegmentLength < 2)

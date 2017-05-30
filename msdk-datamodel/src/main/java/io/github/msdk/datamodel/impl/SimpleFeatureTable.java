@@ -62,7 +62,7 @@ class SimpleFeatureTable implements FeatureTable {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   public @Nonnull List<FeatureTableRow> getRows() {
     List<FeatureTableRow> featureTableRowCopy = ImmutableList.copyOf(featureTableRows);
@@ -88,7 +88,7 @@ class SimpleFeatureTable implements FeatureTable {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   public @Nonnull List<FeatureTableColumn<?>> getColumns() {
     List<FeatureTableColumn<?>> featureTableColumnsCopy = ImmutableList.copyOf(featureTableColumns);
@@ -146,7 +146,7 @@ class SimpleFeatureTable implements FeatureTable {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   public @Nonnull List<Sample> getSamples() {
     ArrayList<Sample> sampleList = new ArrayList<Sample>();

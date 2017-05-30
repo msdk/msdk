@@ -157,7 +157,7 @@ class MzMLConverter {
     return null;
   }
 
-  @SuppressWarnings("null")
+
   @Nonnull
   String extractScanDefinition(Spectrum spectrum) {
 
@@ -217,7 +217,7 @@ class MzMLConverter {
     return null;
   }
 
-  @SuppressWarnings("null")
+
   @Nonnull
   List<IsolationInfo> extractIsolations(Spectrum spectrum) {
     PrecursorList precursorListElement = spectrum.getPrecursorList();
@@ -343,7 +343,7 @@ class MzMLConverter {
    * @param chromatogram a {@link uk.ac.ebi.jmzml.model.mzml.Chromatogram} object.
    * @return a {@link java.util.List} object.
    */
-  @SuppressWarnings("null")
+
   @Nonnull
   public List<IsolationInfo> extractIsolations(
       uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {

@@ -32,7 +32,7 @@ public class NetCDFFileImportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void testWT15() throws MSDKException {
 

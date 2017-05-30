@@ -30,7 +30,7 @@ public class ChromaTofFileImportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void GCxGC_Import() throws MSDKException {
 

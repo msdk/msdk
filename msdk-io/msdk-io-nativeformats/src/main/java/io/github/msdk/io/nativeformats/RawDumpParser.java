@@ -97,7 +97,7 @@ class RawDumpParser {
 
   }
 
-  @SuppressWarnings("null")
+
   private void parseLine(String line, InputStream dumpStream) throws MSDKException, IOException {
 
     if (line.startsWith("ERROR: ")) {

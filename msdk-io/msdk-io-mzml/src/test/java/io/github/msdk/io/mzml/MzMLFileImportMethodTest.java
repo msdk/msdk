@@ -35,7 +35,7 @@ public class MzMLFileImportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void test5peptideFT() throws MSDKException {
 
@@ -88,7 +88,7 @@ public class MzMLFileImportMethodTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testPwizTiny() throws MSDKException {
 
@@ -135,7 +135,7 @@ public class MzMLFileImportMethodTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testParamGroup() throws MSDKException {
 
@@ -187,7 +187,7 @@ public class MzMLFileImportMethodTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCompressedAndUncompressed() throws MSDKException {
 
@@ -232,7 +232,7 @@ public class MzMLFileImportMethodTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testSRM() throws MSDKException {
 
@@ -267,7 +267,7 @@ public class MzMLFileImportMethodTest {
     rawFile.dispose();
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testFileWithUV() throws MSDKException {
 
@@ -305,7 +305,7 @@ public class MzMLFileImportMethodTest {
     rawFile.dispose();
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testEmptyScan() throws MSDKException {
 

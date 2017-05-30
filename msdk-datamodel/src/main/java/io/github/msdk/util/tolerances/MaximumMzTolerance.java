@@ -74,7 +74,7 @@ public class MaximumMzTolerance implements MzTolerance {
    * getToleranceRange.
    * </p>
    */
-  @SuppressWarnings("null")
+
   public @Nonnull Range<Double> getToleranceRange(final @Nonnull Double mzValue) {
     final @Nonnull Double absoluteTolerance =
         Math.max(mzTolerance, mzValue / MILLION * ppmTolerance);

@@ -251,7 +251,7 @@ public class MsSpectrumUtil {
    * @param size a {@link java.lang.Integer} object.
    * @return a {@link java.lang.String} object.
    */
-  @SuppressWarnings("null")
+
   public static @Nonnull String msSpectrumToString(@Nonnull double mzValues[],
       @Nonnull float intensityValues[], @Nonnull Integer size) {
 

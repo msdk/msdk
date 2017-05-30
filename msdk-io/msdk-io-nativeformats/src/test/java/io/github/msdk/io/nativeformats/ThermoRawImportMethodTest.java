@@ -32,7 +32,7 @@ public class ThermoRawImportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void testRP240K01() throws Exception {
 
@@ -93,7 +93,7 @@ public class ThermoRawImportMethodTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testDrugX01() throws Exception {
 
@@ -140,7 +140,7 @@ public class ThermoRawImportMethodTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testTSQQuantum() throws Exception {
 
@@ -183,7 +183,7 @@ public class ThermoRawImportMethodTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testSRM() throws Exception {
 
@@ -229,7 +229,7 @@ public class ThermoRawImportMethodTest {
   }
 
 
-  @SuppressWarnings("null")
+
   @Test
   public void testParentScan() throws Exception {
 
@@ -273,7 +273,7 @@ public class ThermoRawImportMethodTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCNLScan() throws Exception {
 

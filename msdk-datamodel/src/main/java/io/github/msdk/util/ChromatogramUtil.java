@@ -34,7 +34,7 @@ public class ChromatogramUtil {
    *        objects.
    * @param size a {@link java.lang.Integer} object.
    */
-  @SuppressWarnings("null")
+
   @Nonnull
   public static Range<Float> getDataPointsChromatographyRange(
       @Nonnull float rtValues[], @Nonnull Integer size) {

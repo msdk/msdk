@@ -49,7 +49,7 @@ public class SimpleChromatogramTest {
     Assert.assertEquals(new Integer(6), chromatogram1.getChromatogramNumber());
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testRawDataFile() throws MSDKException {
     // Verify raw data file
@@ -89,7 +89,7 @@ public class SimpleChromatogramTest {
     Assert.assertEquals(SeparationType.GCxGC, chromatogram1.getSeparationType());
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testIsolationInfo() throws MSDKException {
     // Verify isolation info

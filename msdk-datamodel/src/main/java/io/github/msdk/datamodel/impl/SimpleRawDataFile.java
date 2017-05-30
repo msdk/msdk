@@ -109,7 +109,7 @@ class SimpleRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   public @Nonnull List<MsScan> getScans() {
     return ImmutableList.copyOf(scans);
@@ -135,7 +135,7 @@ class SimpleRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   @Nonnull
   public List<Chromatogram> getChromatograms() {

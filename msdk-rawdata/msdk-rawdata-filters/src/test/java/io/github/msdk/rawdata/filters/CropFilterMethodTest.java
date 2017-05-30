@@ -32,7 +32,7 @@ public class CropFilterMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCropFilter() throws MSDKException {
 
@@ -72,7 +72,7 @@ public class CropFilterMethodTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testNoMatch() throws MSDKException {
 

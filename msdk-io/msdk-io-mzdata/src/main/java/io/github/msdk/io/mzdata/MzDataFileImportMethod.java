@@ -61,7 +61,7 @@ public class MzDataFileImportMethod implements MSDKMethod<RawDataFile> {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   public RawDataFile execute() throws MSDKException {
 

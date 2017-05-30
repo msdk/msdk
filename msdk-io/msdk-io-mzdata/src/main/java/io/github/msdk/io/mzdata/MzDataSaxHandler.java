@@ -183,7 +183,7 @@ class MzDataSaxHandler extends DefaultHandler {
    *
    * endElement()
    */
-  @SuppressWarnings("null")
+
   public void endElement(String namespaceURI, String sName, String qName) throws SAXException {
 
     if (canceled)

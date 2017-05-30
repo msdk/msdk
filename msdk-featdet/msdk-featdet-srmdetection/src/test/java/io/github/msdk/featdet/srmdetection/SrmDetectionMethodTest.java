@@ -39,7 +39,7 @@ public class SrmDetectionMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void test_mzML() throws MSDKException {
 
@@ -88,7 +88,7 @@ public class SrmDetectionMethodTest {
     Assert.assertEquals(722.35, rows.get(18).getData(columnMz), 0.0001);
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void test_Thermo() throws MSDKException {
 

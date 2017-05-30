@@ -37,7 +37,7 @@ public class JoinAlignerMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   @Ignore
   public void testMzTab_Samples() throws MSDKException {

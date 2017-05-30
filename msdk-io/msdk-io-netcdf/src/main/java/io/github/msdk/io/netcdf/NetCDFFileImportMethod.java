@@ -88,7 +88,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   public RawDataFile execute() throws MSDKException {
 
@@ -322,7 +322,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
    * @throws MSDKException
    * @throws InvalidRangeException
    */
-  @SuppressWarnings("null")
+
   private @Nonnull MsScan readNextScan(int scanIndex)
       throws IOException, MSDKException, InvalidRangeException {
 

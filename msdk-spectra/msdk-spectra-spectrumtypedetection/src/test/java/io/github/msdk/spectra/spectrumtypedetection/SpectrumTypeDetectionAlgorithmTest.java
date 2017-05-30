@@ -27,7 +27,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided1() throws Exception {
 
@@ -49,7 +49,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided2() throws Exception {
 
@@ -71,7 +71,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided3() throws Exception {
 
@@ -93,7 +93,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided4() throws Exception {
 
@@ -115,7 +115,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided5() throws Exception {
 
@@ -137,7 +137,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided6() throws Exception {
 
@@ -159,7 +159,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided7() throws Exception {
 
@@ -181,7 +181,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided8() throws Exception {
 
@@ -203,7 +203,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided9() throws Exception {
 
@@ -225,7 +225,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided10() throws Exception {
 
@@ -247,7 +247,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided11() throws Exception {
 
@@ -269,7 +269,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided12() throws Exception {
 
@@ -291,7 +291,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided13() throws Exception {
 
@@ -313,7 +313,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided14() throws Exception {
 
@@ -335,7 +335,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCentroided15() throws Exception {
 
@@ -357,7 +357,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   @Ignore("Algorithm fails on this test, need a better algorithm")
   public void testCentroided16() throws Exception {
@@ -380,7 +380,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testProfile1() throws Exception {
 
@@ -402,7 +402,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testProfile2() throws Exception {
 
@@ -424,7 +424,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testProfile3() throws Exception {
 
@@ -446,7 +446,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testProfile4() throws Exception {
 
@@ -468,7 +468,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testProfile5() throws Exception {
 
@@ -490,7 +490,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testProfile6() throws Exception {
 
@@ -512,7 +512,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testProfile7() throws Exception {
 
@@ -534,7 +534,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testProfile8() throws Exception {
 
@@ -556,7 +556,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testProfile9() throws Exception {
 
@@ -578,7 +578,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   @Ignore("Algorithm fails on this test, need a better algorithm")
   public void testProfile10() throws Exception {
@@ -601,7 +601,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testThresholded1() throws Exception {
 
@@ -623,7 +623,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testThresholded2() throws Exception {
 
@@ -645,7 +645,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   @Ignore("Algorithm fails on this test, need a better algorithm")
   public void testThresholded3() throws Exception {
@@ -668,7 +668,7 @@ public class SpectrumTypeDetectionAlgorithmTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   @Ignore("Algorithm fails on this test, need a better algorithm")
   public void testThresholded4() throws Exception {

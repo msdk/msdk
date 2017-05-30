@@ -53,7 +53,7 @@ public class MonaSpectrumTest {
   @Test
   public void testGetDataPoints() throws Exception {}
 
-  @SuppressWarnings("null")
+
   @Ignore("Ignored because MoNA API is throwing HTTP 500 error")
   @Test
   public void testGetMzRange() throws Exception {

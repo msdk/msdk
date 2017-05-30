@@ -36,7 +36,7 @@ public class RansacAlignerMethodTest {
 
     private static final String TEST_DATA_PATH = "src/test/resources/";
 
-    @SuppressWarnings("null")
+  
     @Test
     public void testMzTab_Samples() throws MSDKException {
 
