@@ -30,6 +30,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleSample;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -64,7 +65,7 @@ public class SrmDetectionMethodTest {
 
     // Build feature table from chromatograms
     FeatureTable featureTable = MSDKObjectBuilder.getFeatureTable("SRM srmDetection", dataStore);
-    Sample sample = MSDKObjectBuilder.getSample("SRM");
+    Sample sample = new SimpleSample("SRM");
     ChromatogramToFeatureTableMethod chromMethod =
         new ChromatogramToFeatureTableMethod(chromatograms, featureTable, sample);
     featureTable = chromMethod.execute();
@@ -133,7 +134,7 @@ public class SrmDetectionMethodTest {
     // Build feature table from chromatograms
     FeatureTable featureTable =
         MSDKObjectBuilder.getFeatureTable("Thermo-SRM srmDetection", dataStore);
-    Sample sample = MSDKObjectBuilder.getSample("Thermo-SRM");
+    Sample sample = new SimpleSample("Thermo-SRM");
     ChromatogramToFeatureTableMethod chromMethod =
         new ChromatogramToFeatureTableMethod(chromatograms, featureTable, sample);
     featureTable = chromMethod.execute();

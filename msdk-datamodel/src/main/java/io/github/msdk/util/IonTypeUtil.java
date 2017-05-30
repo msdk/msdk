@@ -24,6 +24,7 @@ import com.google.common.base.Strings;
 
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonType;
 import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 
@@ -87,7 +88,7 @@ public class IonTypeUtil {
 
       // Create ionType
       IonType ionType =
-          MSDKObjectBuilder.getIonType(adduct, polarity, numberOfMolecules, adductFormula, charge);
+           new SimpleIonType(adduct, polarity, numberOfMolecules, adductFormula, charge);
 
       return ionType;
 

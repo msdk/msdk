@@ -188,7 +188,6 @@ public class SimpleChromatogram implements Chromatogram {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setSeparationType(@Nonnull SeparationType separationType) {
     this.separationType = separationType;
   }
@@ -201,13 +200,11 @@ public class SimpleChromatogram implements Chromatogram {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setMz(@Nullable Double newMz) {
     this.mz = newMz;
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setIonAnnotation(@Nonnull IonAnnotation ionAnnotation) {
     this.ionAnnotation = ionAnnotation;
   }

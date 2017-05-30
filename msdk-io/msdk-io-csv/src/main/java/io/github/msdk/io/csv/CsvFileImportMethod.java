@@ -42,6 +42,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
+import io.github.msdk.datamodel.impl.SimpleSample;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.util.FeatureTableUtil;
 
@@ -82,7 +83,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
   public CsvFileImportMethod(@Nonnull File sourceFile, @Nonnull DataPointStore dataStore) {
     this.sourceFile = sourceFile;
     this.dataStore = dataStore;
-    this.fileSample = MSDKObjectBuilder.getSample(sourceFile.getName());
+    this.fileSample = new SimpleSample(sourceFile.getName());
   }
 
   /** {@inheritDoc} */
@@ -498,7 +499,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
     if (samples.size() > 0) {
       for (String sampleName : samples) {
         // Create a new sample
-        Sample sample = MSDKObjectBuilder.getSample(sampleName);
+        Sample sample = new SimpleSample(sampleName);
 
         // Find all columns which have the sample in their name
         for (int i = 0; i < columns.length; i++) {

@@ -32,6 +32,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
+import io.github.msdk.datamodel.impl.SimpleSample;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
@@ -106,7 +107,7 @@ public class GapFillingMethodTest {
 
     FeatureTable featureTable1 =
         MSDKObjectBuilder.getFeatureTable("orbitrap_300-600mz-1", dataStore);
-    Sample sample = MSDKObjectBuilder.getSample("orbitrap_300-600mz-1");
+    Sample sample = new SimpleSample("orbitrap_300-600mz-1");
     sample.setRawDataFile(rawFile);
 
     ChromatogramToFeatureTableMethod tableBuilder =
@@ -122,7 +123,7 @@ public class GapFillingMethodTest {
     chromatograms.remove(2);
     FeatureTable featureTable2 =
         MSDKObjectBuilder.getFeatureTable("orbitrap_300-600mz-2", dataStore);
-    Sample sample2 = MSDKObjectBuilder.getSample("orbitrap_300-600mz-2");
+    Sample sample2 = new SimpleSample("orbitrap_300-600mz-2");
     sample2.setRawDataFile(rawFile);
     tableBuilder = new ChromatogramToFeatureTableMethod(chromatograms, featureTable2, sample2);
     tableBuilder.execute();

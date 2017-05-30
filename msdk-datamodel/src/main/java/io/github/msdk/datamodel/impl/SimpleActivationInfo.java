@@ -29,11 +29,11 @@ public class SimpleActivationInfo implements ActivationInfo {
   private @Nonnull ActivationType fragmentationType = ActivationType.UNKNOWN;
   private @Nullable Double activationEnergy;
 
-  SimpleActivationInfo(@Nullable Double activationEnergy) {
+  public SimpleActivationInfo(@Nullable Double activationEnergy) {
     this.activationEnergy = activationEnergy;
   }
 
-  SimpleActivationInfo(@Nullable Double activationEnergy,
+  public SimpleActivationInfo(@Nullable Double activationEnergy,
       @Nonnull ActivationType fragmentationType) {
     Preconditions.checkNotNull(fragmentationType);
     this.activationEnergy = activationEnergy;

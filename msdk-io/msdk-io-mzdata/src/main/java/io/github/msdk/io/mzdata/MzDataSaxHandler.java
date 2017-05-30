@@ -25,6 +25,7 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
@@ -222,7 +223,7 @@ class MzDataSaxHandler extends DefaultHandler {
       }
 
       if (precursorMz != null) {
-        IsolationInfo isolation = MSDKObjectBuilder.getIsolationInfo(Range.singleton(precursorMz),
+        IsolationInfo isolation = new SimpleIsolationInfo(Range.singleton(precursorMz),
             null, precursorMz, precursorCharge, null);
         newScan.getIsolations().add(isolation);
       }

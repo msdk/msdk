@@ -40,6 +40,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
+import io.github.msdk.datamodel.impl.SimpleSample;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.io.chromatof.ChromaTofParser.Mode;
 import io.github.msdk.io.chromatof.ChromaTofParser.TableColumn;
@@ -85,7 +86,7 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
       @Nonnull Locale locale, String fieldSeparator, String quotationCharacter) {
     this.sourceFile = sourceFile;
     this.dataStore = dataStore;
-    this.fileSample = MSDKObjectBuilder.getSample(sourceFile.getName());
+    this.fileSample = new SimpleSample(sourceFile.getName());
     this.locale = locale;
     this.fieldSeparator = fieldSeparator;
     this.quotationCharacter = quotationCharacter;

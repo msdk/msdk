@@ -29,6 +29,8 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleActivationInfo;
+import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
@@ -280,7 +282,7 @@ class MzMLConverter {
           isolationWindowUpper = 0.5;
         Range<Double> isolationRange = Range.closed(isolationWindowTarget - isolationWindowLower,
             isolationWindowTarget + isolationWindowUpper);
-        IsolationInfo isolation = MSDKObjectBuilder.getIsolationInfo(isolationRange, null,
+        IsolationInfo isolation = new SimpleIsolationInfo(isolationRange, null,
             precursorMz, precursorCharge, null);
         isolations.add(isolation);
       }
@@ -377,20 +379,20 @@ class MzMLConverter {
 
       if (precursorActivationEnergy != null) {
         activationInfo =
-            MSDKObjectBuilder.getActivationInfo(precursorActivationEnergy, precursorActivation);
+            new SimpleActivationInfo(precursorActivationEnergy, precursorActivation);
       }
 
       List<IsolationInfo> isolations = new ArrayList<>();
       IsolationInfo isolationInfo = null;
 
       if (precursorIsolationMz != null) {
-        isolationInfo = MSDKObjectBuilder.getIsolationInfo(Range.singleton(precursorIsolationMz),
+        isolationInfo = new SimpleIsolationInfo(Range.singleton(precursorIsolationMz),
             null, precursorIsolationMz, null, activationInfo);
         isolations.add(isolationInfo);
       }
 
       if (productIsolationMz != null) {
-        isolationInfo = MSDKObjectBuilder.getIsolationInfo(Range.singleton(productIsolationMz),
+        isolationInfo = new SimpleIsolationInfo(Range.singleton(productIsolationMz),
             null, productIsolationMz, null, null);
         isolations.add(isolationInfo);
       }

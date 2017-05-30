@@ -52,6 +52,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
+import io.github.msdk.datamodel.impl.SimpleSample;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import uk.ac.ebi.pride.jmztab.model.Assay;
 import uk.ac.ebi.pride.jmztab.model.MZTabColumn;
@@ -199,7 +200,7 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
       // Sample
       File file = new File(entry.getValue().getLocation().getPath());
       String fileName = file.getName();
-      Sample sample = MSDKObjectBuilder.getSample(fileName);
+      Sample sample = new SimpleSample(fileName);
       int msRunKey = entry.getKey();
 
       // Abundance (= Area) column

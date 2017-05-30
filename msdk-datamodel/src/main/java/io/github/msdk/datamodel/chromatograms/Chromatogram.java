@@ -122,13 +122,6 @@ public interface Chromatogram {
   Double getMz();
 
   /**
-   * Sets the m/z value of the chromatogram
-   *
-   * @param newMz a {@link java.lang.Double} object.
-   */
-  void setMz(@Nullable Double newMz);
-
-  /**
    * Returns a list of isolations performed for this chromatogram. These isolations may also include
    * fragmentations (tandem MS).
    *
@@ -146,25 +139,11 @@ public interface Chromatogram {
   SeparationType getSeparationType();
 
   /**
-   * Sets the ion annotation for this chromatogram.
-   *
-   * @param ionAnnotation New ion annotation.
-   */
-  void setIonAnnotation(@Nonnull IonAnnotation ionAnnotation);
-
-  /**
    * Returns the ion annotation for this chromatogram.
    *
    * @return the ion annotation.
    */
   IonAnnotation getIonAnnotation();
-
-  /**
-   * Sets the separation type used for separation of molecules.
-   *
-   * @param separationType New seperation type.
-   */
-  void setSeparationType(@Nonnull SeparationType separationType);
 
   /**
    * Returns the range of retention times. This can return null if the chromatogram has no data
