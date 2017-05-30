@@ -36,7 +36,7 @@ import io.github.msdk.util.tolerances.MzTolerance;
 /**
  * Simple implementation of the Scan interface.
  */
-class SimpleMsScan extends AbstractSpectrum implements MsScan {
+public class SimpleMsScan extends AbstractSpectrum implements MsScan {
 
   private @Nullable RawDataFile dataFile;
   private @Nonnull Integer scanNumber;
@@ -224,8 +224,8 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     StringBuilder buf = new StringBuilder();
     buf.append("Scan ");
     final RawDataFile rawDataFile2 = dataFile;
-    if (rawDataFile2 != null) {
-      buf.append(rawDataFile2.getName());
+    if (rawDataFile2 != null && rawDataFile2.getOriginalFile() != null) {
+      buf.append(rawDataFile2.getOriginalFile().getName());
       buf.append(" ");
     }
     buf.append(msFunction.getName());

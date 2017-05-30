@@ -25,7 +25,7 @@ import io.github.msdk.datamodel.rawdata.IsolationInfo;
 /**
  * Implementation of IsolationInfo
  */
-class SimpleIsolationInfo implements IsolationInfo {
+public class SimpleIsolationInfo implements IsolationInfo {
 
   private @Nonnull Range<Double> isolationMzRange;
   private @Nullable Float ionInjectTime;

@@ -172,11 +172,11 @@ public class MSDKObjectBuilder {
    * @param spectrumType a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType} object.
    * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
    */
-  public static final @Nonnull MsSpectrum getMsSpectrum(@Nonnull double mzValues[],
+ /* public static final @Nonnull MsSpectrum getMsSpectrum(@Nonnull double mzValues[],
       @Nonnull float intensityValues[], @Nonnull Integer size,
       @Nonnull MsSpectrumType spectrumType) {
     return new SimpleMsSpectrum(mzValues, intensityValues, size, spectrumType);
-  }
+  }*/
 
   /**
    * <p>
@@ -188,10 +188,10 @@ public class MSDKObjectBuilder {
    * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
    * @return a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
    */
-  public static final @Nonnull MsScan getMsScan(@Nonnull DataPointStore dataPointStore,
+ /* public static final @Nonnull MsScan getMsScan(@Nonnull DataPointStore dataPointStore,
       @Nonnull Integer scanNumber, @Nonnull MsFunction msFunction) {
     return new SimpleMsScan(dataPointStore, scanNumber, msFunction);
-  }
+  }*/
 
   /**
    * <p>
@@ -205,12 +205,12 @@ public class MSDKObjectBuilder {
    * @param separationType a {@link io.github.msdk.datamodel.rawdata.SeparationType} object.
    * @return a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
    */
-  public static final @Nonnull Chromatogram getChromatogram(@Nonnull DataPointStore dataPointStore,
+  /* public static final @Nonnull Chromatogram getChromatogram(@Nonnull DataPointStore dataPointStore,
       @Nonnull Integer chromatogramNumber, @Nonnull ChromatogramType chromatogramType,
       @Nonnull SeparationType separationType) {
     return new SimpleChromatogram(dataPointStore, chromatogramNumber, chromatogramType,
         separationType);
-  }
+  }*/
 
 
 

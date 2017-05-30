@@ -29,13 +29,13 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 /**
  * Implementation of FeatureTableRow. Backed by a non-thread safe Map.
  */
-class SimpleFeatureTableRow implements FeatureTableRow {
+public class SimpleFeatureTableRow implements FeatureTableRow {
 
   private final int rowId;
   private final @Nonnull FeatureTable featureTable;
   private final @Nonnull Map<FeatureTableColumn<?>, Object> rowData;
 
-  SimpleFeatureTableRow(@Nonnull FeatureTable featureTable, int rowId) {
+  public SimpleFeatureTableRow(@Nonnull FeatureTable featureTable, int rowId) {
     Preconditions.checkNotNull(featureTable);
     this.featureTable = featureTable;
     this.rowId = rowId;

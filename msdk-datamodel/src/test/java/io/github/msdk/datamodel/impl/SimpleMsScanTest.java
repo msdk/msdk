@@ -46,7 +46,7 @@ public class SimpleMsScanTest {
       DataPointStoreFactory.getMemoryDataStore();
   private static @Nonnull MsFunction msFunction = MSDKObjectBuilder.getMsFunction("MS", 1);
   private static @Nonnull MsScan msScan1 =
-      MSDKObjectBuilder.getMsScan(dataPointStore, 123, msFunction);
+      new SimpleMsScan(dataPointStore, 123, msFunction);
 
   @Test
   public void testScanNumber() throws MSDKException {
@@ -183,7 +183,7 @@ public class SimpleMsScanTest {
 
     DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
     MsFunction msf = MSDKObjectBuilder.getMsFunction(1);
-    MsScan scan = MSDKObjectBuilder.getMsScan(store, 1, msf);
+    MsScan scan = new SimpleMsScan(store, 1, msf);
     scan.setDataPoints(mzBuffer, intBuffer, 9000);
 
     float sumInt = 0;
@@ -199,7 +199,7 @@ public class SimpleMsScanTest {
     DataPointStore store = DataPointStoreFactory.getTmpFileDataStore();
     RawDataFile rdf = MSDKObjectBuilder.getRawDataFile("test", null, FileType.UNKNOWN, store);
     MsFunction msf = MSDKObjectBuilder.getMsFunction(1);
-    MsScan scan = MSDKObjectBuilder.getMsScan(store, 1, msf);
+    MsScan scan = new SimpleMsScan(store, 1, msf);
     scan.setRawDataFile(rdf);
     Assert.assertEquals(rdf, scan.getRawDataFile());
   }
@@ -210,7 +210,7 @@ public class SimpleMsScanTest {
     RawDataFile rdf = MSDKObjectBuilder.getRawDataFile("test", null, FileType.UNKNOWN, store);
     RawDataFile rdf2 = MSDKObjectBuilder.getRawDataFile("test2", null, FileType.UNKNOWN, store);
     MsFunction msf = MSDKObjectBuilder.getMsFunction(1);
-    MsScan scan = MSDKObjectBuilder.getMsScan(store, 1, msf);
+    MsScan scan = new SimpleMsScan(store, 1, msf);
     scan.setRawDataFile(rdf);
     scan.setRawDataFile(rdf2);
   }

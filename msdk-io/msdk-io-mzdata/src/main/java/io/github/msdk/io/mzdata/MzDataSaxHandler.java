@@ -25,17 +25,18 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleMsScan;
+import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
 class MzDataSaxHandler extends DefaultHandler {
 
-  private RawDataFile newRawFile;
+  private SimpleRawDataFile newRawFile;
   private DataPointStore dataStore;
 
   private boolean canceled = false;
@@ -67,7 +68,7 @@ class MzDataSaxHandler extends DefaultHandler {
    * @param newRawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public MzDataSaxHandler(RawDataFile newRawFile, DataPointStore dataStore) {
+  public MzDataSaxHandler(SimpleRawDataFile newRawFile, DataPointStore dataStore) {
     this.newRawFile = newRawFile;
     this.dataStore = dataStore;
     charBuffer = new StringBuilder();
@@ -211,7 +212,7 @@ class MzDataSaxHandler extends DefaultHandler {
       // Create a new scan
       MsFunction msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
 
-      MsScan newScan = MSDKObjectBuilder.getMsScan(dataStore, scanNumber, msFunction);
+      MsScan newScan = new SimpleMsScan(dataStore, scanNumber, msFunction);
 
       newScan.setDataPoints(mzBuffer, intensityBuffer, peaksCount);
       newScan.setSpectrumType(spectrumType);

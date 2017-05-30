@@ -32,7 +32,7 @@ import io.github.msdk.datamodel.featuretables.Sample;
 /**
  * Implementation of the FeatureTable interface.
  */
-class SimpleFeatureTable implements FeatureTable {
+public class SimpleFeatureTable implements FeatureTable {
 
   private @Nonnull String name;
   private @Nonnull DataPointStore dataPointStore;

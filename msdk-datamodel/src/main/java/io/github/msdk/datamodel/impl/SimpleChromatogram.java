@@ -33,7 +33,7 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 /**
  * Simple implementation of the Chromatogram interface.
  */
-class SimpleChromatogram implements Chromatogram {
+public class SimpleChromatogram implements Chromatogram {
 
   private @Nonnull DataPointStore dataPointStore;
   private @Nullable RawDataFile dataFile;

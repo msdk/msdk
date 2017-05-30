@@ -70,11 +70,6 @@ class MzMLRawDataFile implements RawDataFile {
     return name;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setName(@Nonnull String name) {
-    this.name = name;
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -125,44 +120,6 @@ class MzMLRawDataFile implements RawDataFile {
     return parser;
   }
 
-  /*
-   * Unsupported set-operations
-   */
 
-  /** {@inheritDoc} */
-  @Override
-  public void setOriginalFile(@Nullable File newOriginalFile) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setRawDataFileType(@Nonnull FileType rawDataFileType) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void addScan(@Nonnull MsScan scan) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void removeScan(@Nonnull MsScan scan) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void addChromatogram(@Nonnull Chromatogram chromatogram) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void removeChromatogram(@Nonnull Chromatogram chromatogram) {
-    throw new UnsupportedOperationException();
-  }
 
 }

@@ -26,7 +26,7 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleChromatogram;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -175,7 +175,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
       }
 
       // Final chromatogram
-      chromatogram = MSDKObjectBuilder.getChromatogram(dataPointStore, chromatogramNumber,
+      chromatogram = new SimpleChromatogram(dataPointStore, chromatogramNumber,
           ChromatogramType.XIC, SeparationType.UNKNOWN);
 
       // Add the data points to the final chromatogram

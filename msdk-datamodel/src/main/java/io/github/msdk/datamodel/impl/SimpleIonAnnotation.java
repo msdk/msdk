@@ -27,7 +27,7 @@ import io.github.msdk.datamodel.ionannotations.IonType;
 /**
  * Simple IonAnnotation implementation;
  */
-class SimpleIonAnnotation implements IonAnnotation {
+public class SimpleIonAnnotation implements IonAnnotation {
 
   private @Nullable IAtomContainer chemicalStructure;
   private @Nullable IMolecularFormula formula;

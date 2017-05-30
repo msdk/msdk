@@ -28,7 +28,7 @@ import io.github.msdk.util.tolerances.MzTolerance;
 /**
  * Simple implementation of the MassSpectrum interface.
  */
-class SimpleMsSpectrum implements MsSpectrum {
+public class SimpleMsSpectrum implements MsSpectrum {
 
   private @Nonnull double mzValues[];
   private @Nonnull float intensityValues[];
@@ -39,7 +39,7 @@ class SimpleMsSpectrum implements MsSpectrum {
   private @Nonnull MsSpectrumType spectrumType;
   private @Nullable MzTolerance mzTolerance;
 
-  SimpleMsSpectrum(@Nonnull double mzValues[], @Nonnull float intensityValues[],
+  public SimpleMsSpectrum(@Nonnull double mzValues[], @Nonnull float intensityValues[],
       @Nonnull Integer size, @Nonnull MsSpectrumType spectrumType) {
     Preconditions.checkNotNull(mzValues);
     Preconditions.checkNotNull(intensityValues);

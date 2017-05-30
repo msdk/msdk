@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Preconditions;
 
 import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 
 /**
@@ -47,7 +47,7 @@ public class MsScanUtil {
     Preconditions.checkNotNull(copyDataPoints);
 
     MsScan newScan =
-        MSDKObjectBuilder.getMsScan(newStore, scan.getScanNumber(), scan.getMsFunction());
+        new SimpleMsScan(newStore, scan.getScanNumber(), scan.getMsFunction());
 
     newScan.setPolarity(scan.getPolarity());
     newScan.setMsScanType(scan.getMsScanType());

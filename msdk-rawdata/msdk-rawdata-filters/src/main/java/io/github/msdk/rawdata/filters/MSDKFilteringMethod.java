@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
@@ -41,7 +41,7 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
   private final @Nonnull DataPointStore store;
 
   private int processedScans = 0, totalScans = 0;
-  private RawDataFile result;
+  private SimpleRawDataFile result;
   private boolean canceled = false;
 
   /**
@@ -78,7 +78,7 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
         + rawDataFile.getName());
 
     // Create a new raw data file
-    result = MSDKObjectBuilder.getRawDataFile(rawDataFile.getName(), rawDataFile.getOriginalFile(),
+    result = new SimpleRawDataFile(rawDataFile.getName(), rawDataFile.getOriginalFile(),
         rawDataFile.getRawDataFileType(), store);
 
     List<MsScan> scans = rawDataFile.getScans();

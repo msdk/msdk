@@ -40,6 +40,8 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleMsScan;
+import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
@@ -59,7 +61,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
   private final @Nonnull File sourceFile;
   private final @Nonnull FileType fileType = FileType.MZXML;
 
-  private RawDataFile newRawDataFile;
+  private SimpleRawDataFile newRawDataFile;
   private final @Nonnull DataPointStore dataStore;
 
   private int totalScans = 0, parsedScans;
@@ -111,7 +113,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
       // Create the XMLBasedRawDataFile object
       newRawDataFile =
-          MSDKObjectBuilder.getRawDataFile(sourceFile.getName(), sourceFile, fileType, dataStore);
+          new SimpleRawDataFile(sourceFile.getName(), sourceFile, fileType, dataStore);
 
       // Use the default (non-validating) parser
       SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -187,7 +189,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
         if (Strings.isNullOrEmpty(msFuncName))
           msFuncName = MsFunction.DEFAULT_MS_FUNCTION_NAME;
         MsFunction msFunc = MSDKObjectBuilder.getMsFunction(msFuncName, msLevel);
-        buildingScan = MSDKObjectBuilder.getMsScan(dataStore, scanNumber, msFunc);
+        buildingScan = new SimpleMsScan(dataStore, scanNumber, msFunc);
         buildingScan.setRawDataFile(newRawDataFile);
 
         // Scan type & definition

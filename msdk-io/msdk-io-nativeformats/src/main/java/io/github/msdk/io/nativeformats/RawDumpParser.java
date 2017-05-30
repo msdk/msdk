@@ -27,12 +27,13 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleMsScan;
+import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
 class RawDumpParser {
@@ -52,7 +53,7 @@ class RawDumpParser {
   private Double precursorMz;
   private Integer precursorCharge;
 
-  private final RawDataFile newRawFile;
+  private final SimpleRawDataFile newRawFile;
   private final DataPointStore dataStore;
   private byte byteBuffer[] = new byte[100000];
 
@@ -60,7 +61,7 @@ class RawDumpParser {
   private float intensityValues[] = new float[10000];
   private int numOfDataPoints;
 
-  RawDumpParser(RawDataFile newRawFile, DataPointStore dataStore) {
+  RawDumpParser(SimpleRawDataFile newRawFile, DataPointStore dataStore) {
     this.newRawFile = newRawFile;
     this.dataStore = dataStore;
   }
@@ -266,7 +267,7 @@ class RawDumpParser {
         msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
 
       // Create a new scan
-      MsScan newScan = MSDKObjectBuilder.getMsScan(dataStore, scanNumber, msFunction);
+      MsScan newScan = new SimpleMsScan(dataStore, scanNumber, msFunction);
 
       newScan.setRetentionTime(retentionTime);
       newScan.setDataPoints(mzValues, intensityValues, numOfDataPoints);

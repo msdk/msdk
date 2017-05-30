@@ -27,6 +27,8 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleMsScan;
+import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -60,7 +62,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
   private final @Nonnull FileType fileType = FileType.NETCDF;
   private final @Nonnull DataPointStore dataStore;
 
-  private RawDataFile newRawFile;
+  private SimpleRawDataFile newRawFile;
   private boolean canceled = false;
 
   private Variable massValueVariable, intensityValueVariable;
@@ -100,7 +102,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     }
 
     String fileName = sourceFile.getName();
-    newRawFile = MSDKObjectBuilder.getRawDataFile(fileName, sourceFile, fileType, dataStore);
+    newRawFile = new SimpleRawDataFile(fileName, sourceFile, fileType, dataStore);
 
     try {
 
@@ -332,7 +334,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     // Scan number
     final Integer scanNumber = scanIndex + 1;
 
-    MsScan scan = MSDKObjectBuilder.getMsScan(dataStore, scanNumber, msFunction);
+    MsScan scan = new SimpleMsScan(dataStore, scanNumber, msFunction);
 
     // Extract and store the data points
     extractDataPoints(scanIndex);

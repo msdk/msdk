@@ -15,7 +15,6 @@ package io.github.msdk.datamodel.impl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
 
 import com.google.common.base.Preconditions;
 
@@ -29,19 +28,19 @@ class SimpleMsFunction implements MsFunction {
   private final @Nonnull String name;
   private final @Nullable Integer msLevel;
 
-  SimpleMsFunction(@Nonnull String name) {
+  public SimpleMsFunction(@Nonnull String name) {
     Preconditions.checkNotNull(name);
     this.name = name;
     msLevel = null;
   }
 
 
-  SimpleMsFunction(@Nullable Integer msLevel) {
+  public SimpleMsFunction(@Nullable Integer msLevel) {
     this.name = MsFunction.DEFAULT_MS_FUNCTION_NAME;
     this.msLevel = msLevel;
   }
 
-  SimpleMsFunction(@Nonnull String name, @Nullable Integer msLevel) {
+  public SimpleMsFunction(@Nonnull String name, @Nullable Integer msLevel) {
     Preconditions.checkNotNull(name);
     this.name = name;
     this.msLevel = msLevel;

@@ -41,7 +41,7 @@ public class SimpleChromatogramTest {
   private static @Nonnull DataPointStore dataPointStore =
       DataPointStoreFactory.getMemoryDataStore();
   private static @Nonnull Chromatogram chromatogram1 =
-      MSDKObjectBuilder.getChromatogram(dataPointStore, 6, ChromatogramType.TIC, SeparationType.LC);
+      new SimpleChromatogram(dataPointStore, 6, ChromatogramType.TIC, SeparationType.LC);
 
   @Test
   public void testChromatogramNumber() throws MSDKException {
