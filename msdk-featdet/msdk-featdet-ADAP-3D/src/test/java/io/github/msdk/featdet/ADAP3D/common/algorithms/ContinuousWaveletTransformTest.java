@@ -51,7 +51,7 @@ public class ContinuousWaveletTransformTest {
 
 	@SuppressWarnings("null")
 	@Test
-	public void testEICFile() throws MSDKException,IOException{
+	public void testCWT() throws MSDKException,IOException{
 		
 		List<MsScan> listOfScans = 	rawFile.getScans();
 		ArrayList<Double> rtBuffer = new ArrayList<Double>();
