@@ -43,6 +43,14 @@ public class FileTypeDetectionMethod {
   private static final String MZML_HEADER = "<mzML";
 
   /*
+   * mzDB is a format based on SQLite, see Bouyssié, D. et al. mzDB: a file format using multiple
+   * indexing strategies for the efficient analysis of large LC-MS/MS and SWATH-MS data sets. Mol.
+   * Cell Proteomics 14, 771–781 (2015).
+   */
+  private static final String MZDB_HEADER = "SQLite format";
+  private static final String MZDB_HEADER2 = "CREATE TABLE mzdb";
+
+  /*
    * mzXML files with index start with <mzXML><msRun> tags, but files with no index contain only the
    * <msRun> tag. See "http://sashimi.sourceforge.net/schema_revision/mzXML_3.2/mzXML_3.2.xsd"
    */
@@ -114,6 +122,9 @@ public class FileTypeDetectionMethod {
 
     if (fileHeader.contains(MZTAB_HEADER))
       return FileType.MZTAB;
+
+    if (fileHeader.startsWith(MZDB_HEADER) && fileHeader.contains(MZDB_HEADER2))
+      return FileType.MZDB;
 
     return null;
 

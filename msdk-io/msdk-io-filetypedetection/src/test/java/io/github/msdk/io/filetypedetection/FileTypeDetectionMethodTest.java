@@ -75,4 +75,11 @@ public class FileTypeDetectionMethodTest {
     Assert.assertEquals(FileType.MZTAB, fileType);
   }
 
+  @Test
+  public void testMzDB() throws MSDKException, IOException {
+    File fileName = new File(TEST_DATA_PATH + "OVEMB150205_12.raw.0.9.8_truncated.mzDB");
+    FileType fileType = FileTypeDetectionMethod.detectDataFileType(fileName);
+    Assert.assertEquals(FileType.MZDB, fileType);
+  }
+
 }
