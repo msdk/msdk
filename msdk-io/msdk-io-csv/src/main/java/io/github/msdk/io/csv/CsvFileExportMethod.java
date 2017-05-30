@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -37,7 +37,6 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * <p>
@@ -219,22 +218,6 @@ public class CsvFileExportMethod implements MSDKMethod<File> {
 
         if (object == null) {
           strValue = "";
-        }
-        // Chromatography Info
-        else if (object instanceof ChromatographyInfo) {
-          ChromatographyInfo chromatographyInfo = (ChromatographyInfo) object;
-          Float rt1 = chromatographyInfo.getRetentionTime();
-          Float rt2 = chromatographyInfo.getSecondaryRetentionTime();
-
-          if (rt1 != null) {
-            strValue = rt1.toString();
-          }
-          if (strValue != null && rt2 != null) {
-            strValue = strValue + itemSeparator;
-          }
-          if (rt2 != null) {
-            strValue = strValue + rt2.toString();
-          }
         }
         // List
         else if (object instanceof List<?>) {

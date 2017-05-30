@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -34,7 +34,7 @@ public class WatersRawImportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void test20150813() throws Exception {
 
@@ -43,8 +43,8 @@ public class WatersRawImportMethodTest {
 
     // Create the data structures
     DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
-    double mzBuffer[] = new double[10000];
-    float intensityBuffer[] = new float[10000];
+    double mzBuffer[];
+    float intensityBuffer[];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "20150813-63.raw");
@@ -64,10 +64,10 @@ public class WatersRawImportMethodTest {
     Assert.assertEquals(new Integer(1), scan1.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan1.getSpectrumType());
     Assert.assertEquals(new Integer(1), scan1.getMsFunction().getMsLevel());
-    Assert.assertEquals(0.226f, scan1.getChromatographyInfo().getRetentionTime(), 0.01f);
+    Assert.assertEquals(0.226f, scan1.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan1.getPolarity());
-    mzBuffer = scan1.getMzValues(mzBuffer);
-    intensityBuffer = scan1.getIntensityValues(intensityBuffer);
+    mzBuffer = scan1.getMzValues();
+    intensityBuffer = scan1.getIntensityValues();
     Assert.assertEquals(248, (int) scan1.getNumberOfDataPoints());
     Float scan1maxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan1.getNumberOfDataPoints());
@@ -78,10 +78,10 @@ public class WatersRawImportMethodTest {
     Assert.assertEquals(new Integer(3000), scan3000.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan3000.getSpectrumType());
     Assert.assertEquals(new Integer(1), scan3000.getMsFunction().getMsLevel());
-    Assert.assertEquals(636.228f, scan3000.getChromatographyInfo().getRetentionTime(), 0.01f);
+    Assert.assertEquals(636.228f, scan3000.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.NEGATIVE, scan3000.getPolarity());
-    mzBuffer = scan3000.getMzValues(mzBuffer);
-    intensityBuffer = scan3000.getIntensityValues(intensityBuffer);
+    mzBuffer = scan3000.getMzValues();
+    intensityBuffer = scan3000.getIntensityValues();
     Assert.assertEquals(224, (int) scan3000.getNumberOfDataPoints());
     Float scan3000maxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan3000.getNumberOfDataPoints());

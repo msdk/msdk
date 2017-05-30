@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -23,7 +23,7 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 /**
  * Implementation of IonType
  */
-class SimpleIonType implements IonType {
+public class SimpleIonType implements IonType {
 
   private @Nonnull String name;
   private @Nonnull PolarityType polarity;

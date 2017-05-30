@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -16,6 +16,7 @@ package io.github.msdk.rawdata.centroiding;
 import javax.annotation.Nonnull;
 
 import io.github.msdk.datamodel.datastore.DataPointStore;
+import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
 
@@ -38,12 +39,12 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
   private final @Nonnull Integer scaleLevel;
   private final @Nonnull Double waveletWindow;
 
-  private MsScan newScan;
+  private SimpleMsScan newScan;
 
   // Data structures
-  private @Nonnull double mzBuffer[] = new double[10000];
-  private @Nonnull float intensityBuffer[] = new float[10000];
-  private @Nonnull float cwtDataPoints[] = new float[10000];
+  private @Nonnull double mzBuffer[];
+  private @Nonnull float intensityBuffer[];
+  private @Nonnull float cwtDataPoints[];
   private int numOfDataPoints, newNumOfDataPoints;
 
   /**
@@ -70,8 +71,8 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
     this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
 
     // Load data points
-    mzBuffer = inputScan.getMzValues(mzBuffer);
-    intensityBuffer = inputScan.getIntensityValues(intensityBuffer);
+    mzBuffer = inputScan.getMzValues();
+    intensityBuffer = inputScan.getIntensityValues();
     numOfDataPoints = inputScan.getNumberOfDataPoints();
     newNumOfDataPoints = 0;
 

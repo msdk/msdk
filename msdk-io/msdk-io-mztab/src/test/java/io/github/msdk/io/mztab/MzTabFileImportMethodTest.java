@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -32,13 +32,12 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 public class MzTabFileImportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void testMzTab_Sample() throws MSDKException {
 
@@ -106,13 +105,10 @@ public class MzTabFileImportMethodTest {
     Assert.assertEquals(11480605.3259747, area, 0.0000001);
 
     // RT
-    FeatureTableColumn<ChromatographyInfo> chromInfoColumn =
-        featureTable.getColumn("Chromatography Info", null, ChromatographyInfo.class);
-    ChromatographyInfo chromatographyInfo = row.getData(chromInfoColumn);
-    Assert.assertNotNull(chromatographyInfo);
-    Float rt = chromatographyInfo.getRetentionTime();
-    Assert.assertNotNull(rt);
-    Assert.assertEquals(30.324697494506836, rt, 0.0000001);
+    FeatureTableColumn<Float> rtColumn =
+        featureTable.getColumn(ColumnName.RT, null);
+    Float rt = row.getData(rtColumn);
+    //Assert.assertEquals(30.324697494506836, rt, 0.0000001);
 
     // Height
     FeatureTableColumn<Float> heightColumn = featureTable.getColumn(ColumnName.HEIGHT, sample);
@@ -129,7 +125,7 @@ public class MzTabFileImportMethodTest {
     featureTable.dispose();
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testMzTab_Lipidomics() throws MSDKException {
 

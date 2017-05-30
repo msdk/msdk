@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -38,7 +38,7 @@ public class IsotopeGrouperMethodTest {
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
   @Ignore("Ignored because the module is unfinished")
-  @SuppressWarnings("null")
+
   @Test
   public void singleSampleTest() throws MSDKException {
 
@@ -61,7 +61,7 @@ public class IsotopeGrouperMethodTest {
 
     // Variables
     MzTolerance mzTolerance = new MaximumMzTolerance(0.003, 5.0);
-    RTTolerance rtTolerance = new RTTolerance(0.1, false);
+    RTTolerance rtTolerance = new RTTolerance(0.1f, false);
     int maximumCharge = 2;
     boolean requireMonotonicShape = false;
     String featureTableName = featureTable.getName() + " deisotoped";
@@ -96,7 +96,7 @@ public class IsotopeGrouperMethodTest {
   }
 
   @Ignore("Ignored because the module is unfinished")
-  @SuppressWarnings("null")
+
   @Test
   public void multiSampleTest() throws MSDKException {
 
@@ -119,7 +119,7 @@ public class IsotopeGrouperMethodTest {
 
     // Variables
     MzTolerance mzTolerance = new MaximumMzTolerance(0.003, 5.0);
-    RTTolerance rtTolerance = new RTTolerance(0.1, false);
+    RTTolerance rtTolerance = new RTTolerance(0.1f, false);
     int maximumCharge = 2;
     boolean requireMonotonicShape = false;
     String featureTableName = featureTable.getName() + " deisotoped";

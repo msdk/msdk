@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -32,9 +32,8 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
 import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
@@ -126,12 +125,12 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
       RawDataFile rawFile = sample.getRawDataFile();
 
       // Create an ion annotation
-      IonAnnotation ion = MSDKObjectBuilder.getIonAnnotation();
+      SimpleIonAnnotation ion = new SimpleIonAnnotation();
       ion.setAnnotationId(row.getId().toString());
-      FeatureTableColumn<ChromatographyInfo> column =
-          result.getColumn("Chromatography Info", null, ChromatographyInfo.class);
+      FeatureTableColumn<Float> column =
+          result.getColumn(ColumnName.RT.getName(), null, Float.class);
       ion.setExpectedMz(row.getMz());
-      ion.setChromatographyInfo(row.getData(column));
+      ion.setExpectedRetentionTime(row.getData(column));
       List<IonAnnotation> ionAnnotations = new ArrayList<IonAnnotation>();
       ionAnnotations.add(ion);
 

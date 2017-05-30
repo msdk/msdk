@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -24,7 +24,6 @@ import org.junit.Test;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
@@ -40,8 +39,8 @@ public class SimpleChromatogramTest {
 
   private static @Nonnull DataPointStore dataPointStore =
       DataPointStoreFactory.getMemoryDataStore();
-  private static @Nonnull Chromatogram chromatogram1 =
-      MSDKObjectBuilder.getChromatogram(dataPointStore, 6, ChromatogramType.TIC, SeparationType.LC);
+  private static @Nonnull SimpleChromatogram chromatogram1 =
+      new SimpleChromatogram(dataPointStore, 6, ChromatogramType.TIC, SeparationType.LC);
 
   @Test
   public void testChromatogramNumber() throws MSDKException {
@@ -49,7 +48,7 @@ public class SimpleChromatogramTest {
     Assert.assertEquals(new Integer(6), chromatogram1.getChromatogramNumber());
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testRawDataFile() throws MSDKException {
     // Verify raw data file
@@ -89,7 +88,7 @@ public class SimpleChromatogramTest {
     Assert.assertEquals(SeparationType.GCxGC, chromatogram1.getSeparationType());
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testIsolationInfo() throws MSDKException {
     // Verify isolation info

@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -18,18 +18,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.featdet.ADAP3D.common.algorithms.ContinuousWaveletTransform;
-import io.github.msdk.featdet.ADAP3D.datamodel.Result;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.mzml.MzMLFileImportMethod;
-
-
 import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.featdet.ADAP3D.datamodel.Result;
+import io.github.msdk.io.mzml.MzMLFileImportMethod;
+import io.github.msdk.datamodel.rawdata.MsScan;
+
 
 public class ContinuousWaveletTransformTest {
 	
@@ -107,8 +106,30 @@ public class ContinuousWaveletTransformTest {
 			}
 			writer.close();
 		}
+
 		catch(IOException e){
-			System.out.print("problem in writing output.txt");
+		System.out.print("problem in writing output.txt");
+		writer.close();
+	}
+	
+	@SuppressWarnings("null")
+	@Test
+	public void testMZMLFile() throws MSDKException,IOException{
+		
+		File inputFile = new File(TEST_DATA_PATH+"orbitrap_300-600mz.mzML");
+		Assert.assertTrue("Cannot read test data", inputFile.canRead());
+		MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+		rawFile = importer.execute();
+		List<MsScan> listOfScans = 	rawFile.getScans();
+		double rtBuffer[] = new double[10000];
+		double mzBuffer[] = new double[10000];
+		float intensityBuffer[] = new float[10000];
+		
+		for(int i=0;i<listOfScans.size();i++){
+			MsScan scan = listOfScans.get(i);
+			mzBuffer = scan.getMzValues();
+			intensityBuffer = scan.getIntensityValues();
+			rtBuffer[i] = scan.getRetentionTime();
 		}
 		Assert.assertEquals(true, peakAssertion);
 	}

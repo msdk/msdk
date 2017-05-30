@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -32,9 +32,9 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
 import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -47,7 +47,7 @@ public class FeatureFilterMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void testOrbitrap() throws MSDKException {
 
@@ -64,27 +64,24 @@ public class FeatureFilterMethodTest {
 
     // Ion 1
     List<IonAnnotation> ionAnnotations = new ArrayList<IonAnnotation>();
-    IonAnnotation ion1 = MSDKObjectBuilder.getIonAnnotation();
+    SimpleIonAnnotation ion1 = new SimpleIonAnnotation();
     ion1.setExpectedMz(332.56);
     ion1.setAnnotationId("Feature 332.56");
-    ion1.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 772.8));
+    ion1.setExpectedRetentionTime(772.8f);
     ionAnnotations.add(ion1);
 
     // Ion 2
-    IonAnnotation ion2 = MSDKObjectBuilder.getIonAnnotation();
+    SimpleIonAnnotation ion2 = new SimpleIonAnnotation();
     ion2.setExpectedMz(508.004);
     ion2.setAnnotationId("Feature 508.004");
-    ion2.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 868.8));
+    ion2.setExpectedRetentionTime(868.8f);
     ionAnnotations.add(ion2);
 
     // Ion 3
-    IonAnnotation ion3 = MSDKObjectBuilder.getIonAnnotation();
+    SimpleIonAnnotation ion3 = new SimpleIonAnnotation();
     ion3.setExpectedMz(362.102);
     ion3.setAnnotationId("Feature 362.102");
-    ion3.setChromatographyInfo(
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, (float) 643.2));
+    ion3.setExpectedRetentionTime(643.2f);
     ionAnnotations.add(ion3);
 
     // Variables
@@ -179,7 +176,7 @@ public class FeatureFilterMethodTest {
     featureTable.dispose();
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testMzTab_Sample() throws MSDKException {
 

@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * <p>
@@ -125,7 +123,7 @@ public class DataPointSorter {
    * @param intensityBuffer an array of float.
    * @param size a int.
    */
-  public static void sortDataPoints(final ChromatographyInfo rtBuffer[], final double mzBuffer[],
+  public static void sortDataPoints(final Float rtBuffer[], final double mzBuffer[],
       final float intensityBuffer[], final int size) {
 
     // Use Collections.sort to obtain index mapping from old arrays to the

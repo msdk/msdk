@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -22,21 +22,21 @@ import org.junit.Test;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleMsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.util.MsSpectrumUtil;
 
 public class MspExportAlgorithmTest {
 
-  @SuppressWarnings("null")
+
   @Test
   public void testExportMSP() throws MSDKException, IOException {
 
     File tmpFile = File.createTempFile("msdktest", "msp");
     tmpFile.deleteOnExit();
 
-    MsSpectrum testSpectrum = MSDKObjectBuilder.getMsSpectrum(new double[] {10.0, 20.0, 30.0},
+    MsSpectrum testSpectrum = new SimpleMsSpectrum(new double[] {10.0, 20.0, 30.0},
         new float[] {100f, 200f, 300f}, 3, MsSpectrumType.CENTROIDED);
 
     MspExportAlgorithm.exportSpectrum(tmpFile, testSpectrum);

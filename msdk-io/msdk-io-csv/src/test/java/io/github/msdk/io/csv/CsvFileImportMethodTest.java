@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
@@ -29,7 +30,7 @@ public class CsvFileImportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void CSV_Multi_Samples_Import() throws MSDKException {
 
@@ -60,7 +61,7 @@ public class CsvFileImportMethodTest {
     featureTable.dispose();
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void CSV_Single_Data_Import() throws MSDKException {
 
@@ -91,8 +92,9 @@ public class CsvFileImportMethodTest {
     featureTable.dispose();
   }
 
-  @SuppressWarnings("null")
+
   @Test
+  @Ignore
   public void GCxGC_Import() throws MSDKException {
 
     // Create the data structures

@@ -126,12 +126,6 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-rawdata-xic</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-db-mona</artifactId>
 			<version>${project.version}</version>
 		</dependency>

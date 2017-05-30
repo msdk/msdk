@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -33,7 +33,6 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.util.FeatureTableUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
@@ -98,11 +97,9 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
   @Override
   public FeatureTable execute() throws MSDKException {
 
-    // Calculate number of feature to process. Each feature will be
-    // processed twice: first for score calculation and then for actual
-    // alignment.
+    // Calculate number of feature to process. 
     for (FeatureTable featureTable : featureTables) {
-      totalFeatures += featureTable.getRows().size() * 2;
+      totalFeatures += featureTable.getRows().size();
     }
 
     // Iterate through all feature tables
@@ -132,13 +129,13 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
         Range<Double> mzRange = mzTolerance.getToleranceRange(mz);
 
         // Continue if no chromatography info is available
-        ChromatographyInfo chromatographyInfo = row.getChromatographyInfo();
-        if (chromatographyInfo == null)
+        Float rt = row.getRT();
+        if (rt == null)
           continue;
 
         // Calculate the RT range limit for the current row
-        Range<Double> rtRange =
-            rtTolerance.getToleranceRange(chromatographyInfo.getRetentionTime());
+        Range<Float> rtRange =
+            rtTolerance.getToleranceRange(rt);
 
         // Get all rows of the aligned feature table within the m/z and
         // RT limits
@@ -194,7 +191,7 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
 
         }
 
-        processedFeatures++;
+        // processedFeatures++;
 
         if (canceled)
           return null;

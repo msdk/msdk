@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -24,7 +24,7 @@ import io.github.msdk.datamodel.rawdata.ActivationType;
 /**
  * Implementation of FragmentationInfo
  */
-class SimpleActivationInfo implements ActivationInfo {
+public class SimpleActivationInfo implements ActivationInfo {
 
   private @Nonnull ActivationType fragmentationType = ActivationType.UNKNOWN;
   private @Nullable Double activationEnergy;

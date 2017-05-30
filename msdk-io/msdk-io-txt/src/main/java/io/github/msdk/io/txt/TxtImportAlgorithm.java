@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleMsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
@@ -83,7 +83,7 @@ public class TxtImportAlgorithm {
 
     MsSpectrumType specType =
         SpectrumTypeDetectionAlgorithm.detectSpectrumType(mzValues, intensityValues, size);
-    MsSpectrum result = MSDKObjectBuilder.getMsSpectrum(mzValues, intensityValues, size, specType);
+    MsSpectrum result = new SimpleMsSpectrum(mzValues, intensityValues, size, specType);
 
     return result;
   }

@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -52,9 +51,8 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import uk.ac.ebi.pride.jmztab.model.Assay;
 import uk.ac.ebi.pride.jmztab.model.MZTabColumn;
 import uk.ac.ebi.pride.jmztab.model.MZTabFile;
@@ -182,14 +180,14 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
     // Common columns
     FeatureTableColumn<Integer> idColumn = MSDKObjectBuilder.getIdFeatureTableColumn();
     FeatureTableColumn<Double> mzColumn = MSDKObjectBuilder.getMzFeatureTableColumn();
-    FeatureTableColumn<ChromatographyInfo> chromatographyInfoColumn =
-        MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn();
-    FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn =
+    FeatureTableColumn<Float> rtColumn =
+        MSDKObjectBuilder.getRetentionTimeFeatureTableColumn();
+    FeatureTableColumn<List<SimpleIonAnnotation>> ionAnnotationColumn =
         MSDKObjectBuilder.getIonAnnotationFeatureTableColumn();
     FeatureTableColumn<Integer> chargeColumn = MSDKObjectBuilder.getChargeFeatureTableColumn();
     newFeatureTable.addColumn(idColumn);
     newFeatureTable.addColumn(mzColumn);
-    newFeatureTable.addColumn(chromatographyInfoColumn);
+    newFeatureTable.addColumn(rtColumn);
     newFeatureTable.addColumn(ionAnnotationColumn);
     newFeatureTable.addColumn(chargeColumn);
 
@@ -275,12 +273,8 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
       if (rt != null && !rt.isEmpty())
         rtAverageValue = (float) DoubleMath.mean(rt);
 
-      // Chromatography Info
-      ChromatographyInfo chromatographyInfo =
-          MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, rtAverageValue);
-
       // Ion Annotation
-      IonAnnotation ionAnnotation = MSDKObjectBuilder.getIonAnnotation();
+      SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
       ionAnnotation.setAnnotationId(database);
       ionAnnotation.setDescription(description);
       ionAnnotation.setExpectedMz(mzCalc);
@@ -322,9 +316,10 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
       currentRow.setData(column, mzExp);
 
       // Common column: Chromatography Info
-      FeatureTableColumn<ChromatographyInfo> ciColumn =
-          featureTable.getColumn("Chromatography Info", null, ChromatographyInfo.class);
-      currentRow.setData(ciColumn, chromatographyInfo);
+      FeatureTableColumn<Float> ciColumn =
+          featureTable.getColumn(ColumnName.RT, null);
+      if (rtAverageValue != null) currentRow.setData(ciColumn, rtAverageValue);
+
 
       // Common column: Ion Annotation
       column = featureTable.getColumn(ColumnName.IONANNOTATION, null);
@@ -333,7 +328,8 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
         ionAnnotations = new ArrayList<IonAnnotation>();
       ionAnnotations.add(ionAnnotation);
       currentRow.setData(column, ionAnnotations);
-
+      
+      
       // Common column: Charge
       column = featureTable.getColumn(ColumnName.CHARGE, null);
       if (charge != null)
@@ -375,12 +371,6 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
               case "Integer":
                 Integer integerValue = Integer.parseInt(orgValue);
                 currentRow.setData(column, integerValue);
-                break;
-              case "ChromatographyInfo":
-                Float rtValue = Float.parseFloat(orgValue);
-                ChromatographyInfo ciValue =
-                    MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, rtValue);
-                currentRow.setData(column, ciValue);
                 break;
             }
 

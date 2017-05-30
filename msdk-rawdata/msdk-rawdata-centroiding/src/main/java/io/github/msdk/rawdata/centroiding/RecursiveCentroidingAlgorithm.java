@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.datastore.DataPointStore;
+import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
 
@@ -31,13 +32,13 @@ public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
   private final @Nonnull DataPointStore dataPointStore;
   private final @Nonnull Range<Double> mzPeakWidthRange;
 
-  private MsScan newScan;
+  private SimpleMsScan newScan;
 
   // Data structures
-  private @Nonnull double mzBuffer[] = new double[10000];
-  private @Nonnull float intensityBuffer[] = new float[10000];
-  private @Nonnull double newMzBuffer[] = new double[10000];
-  private @Nonnull float newIntensityBuffer[] = new float[10000];
+  private @Nonnull double mzBuffer[];
+  private @Nonnull float intensityBuffer[];
+  private @Nonnull double newMzBuffer[];
+  private @Nonnull float newIntensityBuffer[];
   private int numOfDataPoints, newNumOfDataPoints;
 
   /**
@@ -62,8 +63,8 @@ public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
     this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
 
     // Load data points
-    mzBuffer = inputScan.getMzValues(mzBuffer);
-    intensityBuffer = inputScan.getIntensityValues(intensityBuffer);
+    mzBuffer = inputScan.getMzValues();
+    intensityBuffer = inputScan.getIntensityValues();
     numOfDataPoints = inputScan.getNumberOfDataPoints();
     newNumOfDataPoints = 0;
 

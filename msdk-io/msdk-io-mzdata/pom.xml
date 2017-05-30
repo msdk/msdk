@@ -21,11 +21,5 @@
 			<version>${project.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>${commons-codec.version}</version>
-		</dependency>
-
 	</dependencies>
 </project>

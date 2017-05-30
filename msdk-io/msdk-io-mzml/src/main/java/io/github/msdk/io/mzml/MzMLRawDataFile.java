@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -52,7 +52,7 @@ class MzMLRawDataFile implements RawDataFile {
    * @param msScans a {@link java.util.List} object.
    * @param chromatograms a {@link java.util.List} object.
    */
-  @SuppressWarnings("null")
+
   public MzMLRawDataFile(@Nonnull File sourceFile, @Nonnull MzMLUnmarshaller parser,
       List<MsFunction> msFunctions, List<MsScan> msScans, List<Chromatogram> chromatograms) {
     this.sourceFile = sourceFile;
@@ -70,11 +70,6 @@ class MzMLRawDataFile implements RawDataFile {
     return name;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setName(@Nonnull String name) {
-    this.name = name;
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -91,7 +86,7 @@ class MzMLRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   @Nonnull
   public List<MsFunction> getMsFunctions() {
@@ -99,7 +94,7 @@ class MzMLRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   @Nonnull
   public List<MsScan> getScans() {
@@ -107,7 +102,7 @@ class MzMLRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   @Nonnull
   public List<Chromatogram> getChromatograms() {
@@ -125,44 +120,6 @@ class MzMLRawDataFile implements RawDataFile {
     return parser;
   }
 
-  /*
-   * Unsupported set-operations
-   */
 
-  /** {@inheritDoc} */
-  @Override
-  public void setOriginalFile(@Nullable File newOriginalFile) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setRawDataFileType(@Nonnull FileType rawDataFileType) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void addScan(@Nonnull MsScan scan) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void removeScan(@Nonnull MsScan scan) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void addChromatogram(@Nonnull Chromatogram chromatogram) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void removeChromatogram(@Nonnull Chromatogram chromatogram) {
-    throw new UnsupportedOperationException();
-  }
 
 }
