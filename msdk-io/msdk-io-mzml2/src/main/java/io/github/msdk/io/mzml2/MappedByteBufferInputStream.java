@@ -33,6 +33,10 @@ class MappedByteBufferInputStream extends InputStream {
 	}
 
 	public synchronized int read(byte[] bytes, int off, int len) throws IOException {
+		if (!buf.hasRemaining()) {
+			return -1;
+		}
+
 		len = Math.min(len, buf.remaining());
 		buf.get(bytes, off, len);
 		return len;
