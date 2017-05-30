@@ -33,41 +33,38 @@ public interface Feature {
   @Nonnull
   Double getMz();
 
-  void setMz(@Nonnull Double mz);
-
   @Nonnull
   Float getRetentionTime();
-
-  void setRetentionTime(@Nonnull Float rt);
 
   @Nullable
   Float getArea();
 
-  void setArea(@Nullable Float area);
-
   @Nullable
   Float getHeight();
 
-  void setHeight(@Nullable Float height);
-
+  /**
+   * Returns signal to noise ratio.
+   * 
+   * @return S/N ratio, null if the method does not estimate it, NaN if noise was estimated to 0
+   */
   @Nullable
   Float getSNRatio();
 
-  void setSNRatio(@Nullable Float snRatio);
+  /**
+   * Returns arbitrary, dimension-less quality score for the feature
+   * 
+   * @return Score
+   */
+  @Nullable
+  Float getScore();
 
   @Nullable
   Chromatogram getChromatogram();
 
-  void setChromatogram(@Nullable Chromatogram chromatogram);
-
   @Nullable
   List<MsScan> getMSMSSpectra();
 
-  void setMSMSSpectra(@Nullable List<MsScan> msmsSpectra);
-
   @Nullable
   IonAnnotation getIonAnnotation();
-
-  void setIonAnnotation(@Nullable IonAnnotation ionAnnotation);
 
 }
