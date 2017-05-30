@@ -261,7 +261,7 @@ public class ContinuousWaveletTransform {
             resultList.add(result);
             
         }
-        writeIntensityAndRT();
+        //writeIntensityAndRT();
         return resultList;
     }
     
@@ -325,7 +325,7 @@ public class ContinuousWaveletTransform {
                 }
             }   
         }
-        writeRidgelines();
+        //writeRidgelines();
     }
     // returns the indecies of the location of the maxima
     public Integer[] findMaximaForThisScale(double waveletScale){
@@ -382,7 +382,7 @@ public class ContinuousWaveletTransform {
             allCoefficients[count] = getCoefficientsForThisScale((double) curScale);
             count+= 1;
         }
-        writeAllCoeffs();
+        //writeAllCoeffs();
     }
     
     public double[] getCoefficientsForThisScale(double waveletScale){

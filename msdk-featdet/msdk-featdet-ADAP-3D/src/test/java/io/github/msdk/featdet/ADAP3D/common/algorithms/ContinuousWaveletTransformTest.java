@@ -29,8 +29,6 @@ import io.github.msdk.featdet.ADAP3D.datamodel.Result;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 
 
-import io.github.msdk.datamodel.rawdata.MsScan;
-
 public class ContinuousWaveletTransformTest {
 	
 	private static final String TEST_DATA_PATH = "src/test/resources/";
@@ -63,8 +61,8 @@ public class ContinuousWaveletTransformTest {
 			
 			float totalIntensity=0;
 			MsScan scan = listOfScans.get(l);
-			mzBuffer = scan.getMzValues(mzBuffer);
-			intensityBuffer = scan.getIntensityValues(intensityBuffer);
+			mzBuffer = scan.getMzValues();
+			intensityBuffer = scan.getIntensityValues();
 			for(int k=0;k<mzBuffer.length;k++){
 				if(mzBuffer[k]>=387.1273 && mzBuffer[k]<=387.1405){
 					totalIntensity += intensityBuffer[k];
@@ -72,7 +70,7 @@ public class ContinuousWaveletTransformTest {
 			}
 			
 			correctIntensityBuffer.add(new Double(totalIntensity));	
-			rtBuffer.add(new Double((scan.getChromatographyInfo().getRetentionTime())/60));
+			rtBuffer.add(new Double((scan.getRetentionTime())/60));
 			
 		}
 		
@@ -92,48 +90,21 @@ public class ContinuousWaveletTransformTest {
 		
 		List<Result> peakList = continuousWavelet.findPeaks();
 		boolean peakAssertion = false;
-		try{
-			File outputFile = new File(TEST_DATA_PATH + "output.txt");
-			StringBuffer buffer = new StringBuffer ();
-			FileWriter writer = new FileWriter(outputFile);
+//			File outputFile = new File(TEST_DATA_PATH + "output.txt");
+//			StringBuffer buffer = new StringBuffer ();
+//			FileWriter writer = new FileWriter(outputFile);
 			
 			for(int j=0;j<peakList.size();j++){
-				buffer.append(peakList.get(j).curLeftBound).append(",").append(peakList.get(j).curRightBound).append("\r\n");
-				writer.write(buffer.toString());
-				buffer = new StringBuffer();
+//				buffer.append(peakList.get(j).curLeftBound).append(",").append(peakList.get(j).curRightBound).append("\r\n");
+//				writer.write(buffer.toString());
+//				buffer = new StringBuffer();
 				if(peakList.get(j).curLeftBound==113 && peakList.get(j).curRightBound==130){
 					peakAssertion = true;
 				}
 			}
-			writer.close();
-		}
-
-		catch(IOException e){
-			System.out.print("problem in writing output.txt");
-
-		writer.close();
+//			writer.close();
+			Assert.assertEquals(true, peakAssertion);
 		
 	}
 	
-	@SuppressWarnings("null")
-	@Test
-	public void testMZMLFile() throws MSDKException,IOException{
-		
-		File inputFile = new File(TEST_DATA_PATH+"orbitrap_300-600mz.mzML");
-		Assert.assertTrue("Cannot read test data", inputFile.canRead());
-		MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
-		rawFile = importer.execute();
-		List<MsScan> listOfScans = 	rawFile.getScans();
-		double rtBuffer[] = new double[10000];
-		double mzBuffer[] = new double[10000];
-		float intensityBuffer[] = new float[10000];
-		
-		for(int i=0;i<listOfScans.size();i++){
-			MsScan scan = listOfScans.get(i);
-			mzBuffer = scan.getMzValues();
-			intensityBuffer = scan.getIntensityValues();
-			rtBuffer[i] = scan.getRetentionTime();
-		}
-		Assert.assertEquals(true, peakAssertion);
-	}
 }
