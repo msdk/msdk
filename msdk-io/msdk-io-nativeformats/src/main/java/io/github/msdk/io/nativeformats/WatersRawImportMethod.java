@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -29,7 +29,7 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
@@ -45,7 +45,7 @@ public class WatersRawImportMethod implements MSDKMethod<RawDataFile> {
   private final @Nonnull FileType fileType = FileType.WATERS_RAW;
   private final @Nonnull DataPointStore dataStore;
 
-  private RawDataFile newRawFile;
+  private SimpleRawDataFile newRawFile;
   private boolean canceled = false;
 
   private Process dumperProcess = null;
@@ -65,7 +65,7 @@ public class WatersRawImportMethod implements MSDKMethod<RawDataFile> {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   public RawDataFile execute() throws MSDKException {
 
@@ -102,7 +102,7 @@ public class WatersRawImportMethod implements MSDKMethod<RawDataFile> {
 
       // Create the new RawDataFile
       String fileName = sourceFile.getName();
-      newRawFile = MSDKObjectBuilder.getRawDataFile(fileName, sourceFile, fileType, dataStore);
+      newRawFile = new SimpleRawDataFile(fileName, sourceFile, fileType, dataStore);
 
       // Read the dump data
       parser = new RawDumpParser(newRawFile, dataStore);

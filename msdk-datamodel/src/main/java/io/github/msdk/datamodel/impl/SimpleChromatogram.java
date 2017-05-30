@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -26,7 +26,6 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -34,7 +33,7 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 /**
  * Simple implementation of the Chromatogram interface.
  */
-class SimpleChromatogram implements Chromatogram {
+public class SimpleChromatogram implements Chromatogram {
 
   private @Nonnull DataPointStore dataPointStore;
   private @Nullable RawDataFile dataFile;
@@ -44,7 +43,7 @@ class SimpleChromatogram implements Chromatogram {
   private @Nonnull SeparationType separationType;
   private Object dataStoreRtId = null, dataStoreIntensityId = null, dataStoreMzId = null;
   private @Nullable IonAnnotation ionAnnotation;
-  private Range<ChromatographyInfo> rtRange;
+  private Range<Float> rtRange;
 
   private final @Nonnull List<IsolationInfo> isolations = new LinkedList<>();
 
@@ -78,7 +77,6 @@ class SimpleChromatogram implements Chromatogram {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
     this.dataFile = newRawDataFile;
   }
@@ -91,7 +89,6 @@ class SimpleChromatogram implements Chromatogram {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setChromatogramNumber(@Nonnull Integer chromatogramNumber) {
     this.chromatogramNumber = chromatogramNumber;
   }
@@ -104,7 +101,6 @@ class SimpleChromatogram implements Chromatogram {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setChromatogramType(@Nonnull ChromatogramType newChromatogramType) {
     this.chromatogramType = newChromatogramType;
   }
@@ -117,15 +113,14 @@ class SimpleChromatogram implements Chromatogram {
 
   /** {@inheritDoc} */
   @Override
-  public @Nonnull ChromatographyInfo[] getRetentionTimes() {
+  public @Nonnull float[] getRetentionTimes() {
     return getRetentionTimes(null);
   }
 
   /** {@inheritDoc} */
-  @Override
-  public @Nonnull ChromatographyInfo[] getRetentionTimes(@Nullable ChromatographyInfo[] array) {
+  public @Nonnull float[] getRetentionTimes(@Nullable float[] array) {
     if ((array == null) || (array.length < numOfDataPoints))
-      array = new ChromatographyInfo[numOfDataPoints];
+      array = new float[numOfDataPoints];
     dataPointStore.loadData(dataStoreRtId, array);
     return array;
   }
@@ -133,14 +128,7 @@ class SimpleChromatogram implements Chromatogram {
   /** {@inheritDoc} */
   @Override
   public @Nonnull double[] getMzValues() {
-    return getMzValues(null);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public @Nonnull double[] getMzValues(@Nullable double array[]) {
-    if ((array == null) || (array.length < numOfDataPoints))
-      array = new double[numOfDataPoints];
+    double [] array = new double[numOfDataPoints];
     dataPointStore.loadData(dataStoreMzId, array);
     return array;
   }
@@ -161,8 +149,7 @@ class SimpleChromatogram implements Chromatogram {
   }
 
   /** {@inheritDoc} */
-  @Override
-  public synchronized void setDataPoints(@Nonnull ChromatographyInfo rtValues[],
+  public synchronized void setDataPoints(@Nonnull float rtValues[],
       @Nullable double mzValues[], @Nonnull float intensityValues[], @Nonnull Integer size) {
 
     if (dataStoreRtId != null)
@@ -234,7 +221,7 @@ class SimpleChromatogram implements Chromatogram {
   /** {@inheritDoc} */
   @Override
   @Nullable
-  public Range<ChromatographyInfo> getRtRange() {
+  public Range<Float> getRtRange() {
     return rtRange;
   }
 

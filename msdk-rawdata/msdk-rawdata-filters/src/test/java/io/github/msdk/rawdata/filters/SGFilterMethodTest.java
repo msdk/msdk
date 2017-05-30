@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -29,7 +29,7 @@ import io.github.msdk.io.mzml.MzMLFileImportMethod;
 public class SGFilterMethodTest {
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void testSGFilter() throws MSDKException {
 
@@ -62,7 +62,7 @@ public class SGFilterMethodTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testSGFilterWrongParameters() throws MSDKException {
 

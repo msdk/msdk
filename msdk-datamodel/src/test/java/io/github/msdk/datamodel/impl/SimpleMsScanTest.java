@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -30,14 +30,12 @@ import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
  * Tests for SimpleMsScan
@@ -47,8 +45,8 @@ public class SimpleMsScanTest {
   private static @Nonnull DataPointStore dataPointStore =
       DataPointStoreFactory.getMemoryDataStore();
   private static @Nonnull MsFunction msFunction = MSDKObjectBuilder.getMsFunction("MS", 1);
-  private static @Nonnull MsScan msScan1 =
-      MSDKObjectBuilder.getMsScan(dataPointStore, 123, msFunction);
+  private static @Nonnull SimpleMsScan msScan1 =
+      new SimpleMsScan(dataPointStore, 123, msFunction);
 
   @Test
   public void testScanNumber() throws MSDKException {
@@ -95,7 +93,7 @@ public class SimpleMsScanTest {
     Assert.assertEquals(MsScanType.MRM_SRM, msScan1.getMsScanType());
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testRawDataFile() throws MSDKException {
     // Verify raw data file
@@ -124,23 +122,21 @@ public class SimpleMsScanTest {
     Assert.assertEquals(newScanRange, msScan1.getScanningRange());
   }
 
-  @SuppressWarnings("null")
+
   @Test
-  public void testChromatographyInfo() throws MSDKException {
-    // Verify scanning range
-    Assert.assertEquals(null, msScan1.getChromatographyInfo());
+  public void testRetentionTime() throws MSDKException {
+    // Verify RT
+    Assert.assertEquals(null, msScan1.getRetentionTime());
 
-    // Change scanning range
-    final @Nonnull ChromatographyInfo newChromatographyInfo =
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.LC, 1.23f);
-    msScan1.setChromatographyInfo(newChromatographyInfo);
+    // Change RT
+    final @Nonnull Float newChromatographyInfo = 1.23f;
+    msScan1.setRetentionTime(newChromatographyInfo);
 
-    // Verify scanning range
-    Assert.assertEquals(SeparationType.LC, msScan1.getChromatographyInfo().getSeparationType());
-    Assert.assertEquals(new Float(1.23), msScan1.getChromatographyInfo().getRetentionTime());
+    // Verify RT
+    Assert.assertEquals(new Float(1.23), msScan1.getRetentionTime());
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testSourceInducedFragmentation() throws MSDKException {
     // Verify scanning range
@@ -158,7 +154,7 @@ public class SimpleMsScanTest {
         msScan1.getSourceInducedFragmentation().getActivationType());
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testIsolationInfo() throws MSDKException {
     // Verify isolation info
@@ -187,7 +183,7 @@ public class SimpleMsScanTest {
 
     DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
     MsFunction msf = MSDKObjectBuilder.getMsFunction(1);
-    MsScan scan = MSDKObjectBuilder.getMsScan(store, 1, msf);
+    SimpleMsScan scan = new SimpleMsScan(store, 1, msf);
     scan.setDataPoints(mzBuffer, intBuffer, 9000);
 
     float sumInt = 0;
@@ -203,7 +199,7 @@ public class SimpleMsScanTest {
     DataPointStore store = DataPointStoreFactory.getTmpFileDataStore();
     RawDataFile rdf = MSDKObjectBuilder.getRawDataFile("test", null, FileType.UNKNOWN, store);
     MsFunction msf = MSDKObjectBuilder.getMsFunction(1);
-    MsScan scan = MSDKObjectBuilder.getMsScan(store, 1, msf);
+    SimpleMsScan scan = new SimpleMsScan(store, 1, msf);
     scan.setRawDataFile(rdf);
     Assert.assertEquals(rdf, scan.getRawDataFile());
   }
@@ -214,7 +210,7 @@ public class SimpleMsScanTest {
     RawDataFile rdf = MSDKObjectBuilder.getRawDataFile("test", null, FileType.UNKNOWN, store);
     RawDataFile rdf2 = MSDKObjectBuilder.getRawDataFile("test2", null, FileType.UNKNOWN, store);
     MsFunction msf = MSDKObjectBuilder.getMsFunction(1);
-    MsScan scan = MSDKObjectBuilder.getMsScan(store, 1, msf);
+    SimpleMsScan scan = new SimpleMsScan(store, 1, msf);
     scan.setRawDataFile(rdf);
     scan.setRawDataFile(rdf2);
   }

@@ -1,8 +1,10 @@
 package io.github.msdk.io.mgf;
 
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.closeTo;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,16 +14,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsScan;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.mockito.ArgumentMatcher;
+
+import io.github.msdk.MSDKException;
+import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.datamodel.rawdata.IsolationInfo;
+import io.github.msdk.datamodel.rawdata.MsScan;
 
 public class MgfFileExportMethodTest {
 
@@ -91,8 +91,7 @@ public class MgfFileExportMethodTest {
   @Test
   public void testMsScanWithChromatograpy() throws IOException, MSDKException {
     IsolationInfo ii = mockIsolationInfo(500.0, 1);
-    ChromatographyInfo ci = mockChromatographyInfo(1.0f);
-    MsScan scan = mockMsScan(mzValues1, intensityValues1, ii, ci, 1);
+    MsScan scan = mockMsScan(mzValues1, intensityValues1, ii, 1.0f, 1);
     File file = folder.newFile();
 
     MgfFileExportMethod method = new MgfFileExportMethod(scan, file);
@@ -103,26 +102,6 @@ public class MgfFileExportMethodTest {
     assertThat(lines.toArray(new String[lines.size()]), arrayContaining(expectedChromatography));
   }
 
-  private double[] anyDoubleArray() {
-    return argThat(new ArgumentMatcher<double[]>() {
-      @Override
-      public boolean matches(double[] argument) {
-        return true;
-      }
-
-    });
-  }
-
-  private float[] anyFloatArray() {
-    return argThat(new ArgumentMatcher<float[]>() {
-      @Override
-      public boolean matches(float[] argument) {
-        return true;
-      }
-
-    });
-  }
-
   private MsSpectrum mockMsSpectrum(double[] mzValues, float[] intensityValues) {
     if (mzValues.length != intensityValues.length) {
       throw new IllegalArgumentException("Number of mzValues and intensityValues do not agree");
@@ -130,24 +109,24 @@ public class MgfFileExportMethodTest {
 
     MsSpectrum spectrum = mock(MsSpectrum.class);
     when(spectrum.getNumberOfDataPoints()).thenReturn(mzValues.length);
-    when(spectrum.getMzValues(anyDoubleArray())).thenReturn(mzValues);
-    when(spectrum.getIntensityValues(anyFloatArray())).thenReturn(intensityValues);
+    when(spectrum.getMzValues()).thenReturn(mzValues);
+    when(spectrum.getIntensityValues()).thenReturn(intensityValues);
 
     return spectrum;
   }
 
   private MsScan mockMsScan(double[] mzValues, float[] intensityValues, IsolationInfo ii,
-      ChromatographyInfo ci, Integer scanNumber) {
+      Float rt, Integer scanNumber) {
     if (mzValues.length != intensityValues.length) {
       throw new IllegalArgumentException("Number of mzValues and intensityValues do not agree");
     }
 
     MsScan scan = mock(MsScan.class);
     when(scan.getNumberOfDataPoints()).thenReturn(mzValues.length);
-    when(scan.getMzValues(null)).thenReturn(mzValues);
-    when(scan.getIntensityValues(null)).thenReturn(intensityValues);
+    when(scan.getMzValues()).thenReturn(mzValues);
+    when(scan.getIntensityValues()).thenReturn(intensityValues);
     when(scan.getIsolations()).thenReturn(Collections.singletonList(ii));
-    when(scan.getChromatographyInfo()).thenReturn(ci);
+    when(scan.getRetentionTime()).thenReturn(rt);
     when(scan.getScanNumber()).thenReturn(scanNumber);
 
     return scan;
@@ -161,10 +140,4 @@ public class MgfFileExportMethodTest {
     return ii;
   }
 
-  private ChromatographyInfo mockChromatographyInfo(Float retentionTime) {
-    ChromatographyInfo ci = mock(ChromatographyInfo.class);
-    when(ci.getRetentionTime()).thenReturn(retentionTime);
-
-    return ci;
-  }
 }

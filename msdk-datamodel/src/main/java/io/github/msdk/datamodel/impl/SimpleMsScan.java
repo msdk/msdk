@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -25,7 +25,6 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -37,7 +36,7 @@ import io.github.msdk.util.tolerances.MzTolerance;
 /**
  * Simple implementation of the Scan interface.
  */
-class SimpleMsScan extends AbstractSpectrum implements MsScan {
+public class SimpleMsScan extends AbstractSpectrum implements MsScan {
 
   private @Nullable RawDataFile dataFile;
   private @Nonnull Integer scanNumber;
@@ -47,7 +46,7 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
   private @Nonnull MsScanType msScanType = MsScanType.UNKNOWN;
   private @Nullable MzTolerance mzTolerance;
   private @Nullable Range<Double> scanningRange;
-  private @Nullable ChromatographyInfo chromInfo;
+  private @Nullable Float rt;
   private @Nullable ActivationInfo sourceInducedFragInfo;
 
   private final @Nonnull List<IsolationInfo> isolations = new LinkedList<>();
@@ -78,7 +77,6 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
     if ((this.dataFile != null) && (this.dataFile != newRawDataFile)) {
       throw new MSDKRuntimeException(
@@ -95,7 +93,6 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setScanNumber(@Nonnull Integer scanNumber) {
     Preconditions.checkNotNull(scanNumber);
     this.scanNumber = scanNumber;
@@ -109,7 +106,6 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setScanDefinition(@Nullable String scanDefinition) {
     this.scanDefinition = scanDefinition;
   }
@@ -122,7 +118,6 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setMsFunction(@Nonnull MsFunction newFunction) {
     Preconditions.checkNotNull(newFunction);
     this.msFunction = newFunction;
@@ -136,7 +131,6 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setScanningRange(@Nullable Range<Double> newScanRange) {
     this.scanningRange = newScanRange;
   }
@@ -149,7 +143,6 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setPolarity(@Nonnull PolarityType newPolarity) {
     Preconditions.checkNotNull(newPolarity);
     this.polarity = newPolarity;
@@ -163,7 +156,6 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setMsScanType(@Nonnull MsScanType newMsScanType) {
     Preconditions.checkNotNull(newMsScanType);
     this.msScanType = newMsScanType;
@@ -189,14 +181,13 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
   /** {@inheritDoc} */
   @Override
   @Nullable
-  public ChromatographyInfo getChromatographyInfo() {
-    return chromInfo;
+  public Float getRetentionTime() {
+    return rt;
   }
 
   /** {@inheritDoc} */
-  @Override
-  public void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo) {
-    this.chromInfo = chromatographyInfo;
+  public void setRetentionTime(@Nullable Float rt) {
+    this.rt = rt;
   }
 
   /** {@inheritDoc} */
@@ -207,7 +198,6 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setSourceInducedFragmentation(@Nullable ActivationInfo newFragmentationInfo) {
     this.sourceInducedFragInfo = newFragmentationInfo;
   }
@@ -225,8 +215,8 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     StringBuilder buf = new StringBuilder();
     buf.append("Scan ");
     final RawDataFile rawDataFile2 = dataFile;
-    if (rawDataFile2 != null) {
-      buf.append(rawDataFile2.getName());
+    if (rawDataFile2 != null && rawDataFile2.getOriginalFile() != null) {
+      buf.append(rawDataFile2.getOriginalFile().getName());
       buf.append(" ");
     }
     buf.append(msFunction.getName());

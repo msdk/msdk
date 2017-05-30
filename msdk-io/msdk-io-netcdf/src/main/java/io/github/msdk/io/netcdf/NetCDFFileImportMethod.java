@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -27,12 +27,12 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleMsScan;
+import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
@@ -62,7 +62,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
   private final @Nonnull FileType fileType = FileType.NETCDF;
   private final @Nonnull DataPointStore dataStore;
 
-  private RawDataFile newRawFile;
+  private SimpleRawDataFile newRawFile;
   private boolean canceled = false;
 
   private Variable massValueVariable, intensityValueVariable;
@@ -90,7 +90,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   public RawDataFile execute() throws MSDKException {
 
@@ -102,7 +102,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     }
 
     String fileName = sourceFile.getName();
-    newRawFile = MSDKObjectBuilder.getRawDataFile(fileName, sourceFile, fileType, dataStore);
+    newRawFile = new SimpleRawDataFile(fileName, sourceFile, fileType, dataStore);
 
     try {
 
@@ -324,7 +324,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
    * @throws MSDKException
    * @throws InvalidRangeException
    */
-  @SuppressWarnings("null")
+
   private @Nonnull MsScan readNextScan(int scanIndex)
       throws IOException, MSDKException, InvalidRangeException {
 
@@ -334,7 +334,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     // Scan number
     final Integer scanNumber = scanIndex + 1;
 
-    MsScan scan = MSDKObjectBuilder.getMsScan(dataStore, scanNumber, msFunction);
+    SimpleMsScan scan = new SimpleMsScan(dataStore, scanNumber, msFunction);
 
     // Extract and store the data points
     extractDataPoints(scanIndex);
@@ -345,11 +345,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
         intensityValues, numOfDataPoints);
     scan.setSpectrumType(spectrumType);
 
-    // TODO set correct separation type from global netCDF file attributes
-    ChromatographyInfo chromData = MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN,
-        scanRetentionTimes[scanIndex]);
-
-    scan.setChromatographyInfo(chromData);
+    scan.setRetentionTime(scanRetentionTimes[scanIndex]);
 
     return scan;
 

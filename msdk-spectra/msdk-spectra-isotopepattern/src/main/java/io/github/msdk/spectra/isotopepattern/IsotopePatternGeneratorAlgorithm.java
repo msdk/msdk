@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -28,7 +28,7 @@ import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import com.google.common.base.Strings;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleMsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.util.MsSpectrumUtil;
@@ -132,7 +132,7 @@ public class IsotopePatternGeneratorAlgorithm {
 
     MsSpectrumUtil.normalizeIntensity(intensityValues, newSize, intensityScale);
 
-    MsSpectrum result = MSDKObjectBuilder.getMsSpectrum(mzValues, intensityValues, newSize,
+    MsSpectrum result = new SimpleMsSpectrum(mzValues, intensityValues, newSize,
         MsSpectrumType.CENTROIDED);
 
     return result;

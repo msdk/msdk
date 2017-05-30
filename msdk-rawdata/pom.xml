@@ -15,7 +15,6 @@
 		<module>msdk-rawdata-centroiding</module>
 		<module>msdk-rawdata-baselinecorrection</module>
 		<module>msdk-rawdata-peakinvestigator</module>
-		<module>msdk-rawdata-xic</module>
 	</modules>
 
 </project>

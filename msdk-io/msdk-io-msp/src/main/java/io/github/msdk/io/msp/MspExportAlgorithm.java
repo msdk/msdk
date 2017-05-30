@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -44,7 +44,7 @@ public class MspExportAlgorithm {
    * @throws java.io.IOException if any.
    * @throws io.github.msdk.MSDKException if any.
    */
-  @SuppressWarnings("null")
+
   public static void exportSpectrum(@Nonnull File exportFile, @Nonnull MsSpectrum spectrum)
       throws IOException, MSDKException {
     exportSpectra(exportFile, Collections.singleton(spectrum));
@@ -74,8 +74,8 @@ public class MspExportAlgorithm {
     for (MsSpectrum spectrum : spectra) {
 
       // Load data
-      mzValues = spectrum.getMzValues(mzValues);
-      intensityValues = spectrum.getIntensityValues(intensityValues);
+      mzValues = spectrum.getMzValues();
+      intensityValues = spectrum.getIntensityValues();
       numOfDataPoints = spectrum.getNumberOfDataPoints();
 
       if (spectrum instanceof MspSpectrum) {

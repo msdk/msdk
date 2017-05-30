@@ -1,5 +1,5 @@
 /* 
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -33,6 +33,10 @@ class MappedByteBufferInputStream extends InputStream {
 	}
 
 	public synchronized int read(byte[] bytes, int off, int len) throws IOException {
+		if (!buf.hasRemaining()) {
+			return -1;
+		}
+
 		len = Math.min(len, buf.remaining());
 		buf.get(bytes, off, len);
 		return len;

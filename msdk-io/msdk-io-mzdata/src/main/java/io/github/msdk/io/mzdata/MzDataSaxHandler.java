@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -25,19 +25,17 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleMsScan;
+import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
-import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
 class MzDataSaxHandler extends DefaultHandler {
 
-  private RawDataFile newRawFile;
+  private SimpleRawDataFile newRawFile;
   private DataPointStore dataStore;
 
   private boolean canceled = false;
@@ -69,7 +67,7 @@ class MzDataSaxHandler extends DefaultHandler {
    * @param newRawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public MzDataSaxHandler(RawDataFile newRawFile, DataPointStore dataStore) {
+  public MzDataSaxHandler(SimpleRawDataFile newRawFile, DataPointStore dataStore) {
     this.newRawFile = newRawFile;
     this.dataStore = dataStore;
     charBuffer = new StringBuilder();
@@ -185,7 +183,7 @@ class MzDataSaxHandler extends DefaultHandler {
    *
    * endElement()
    */
-  @SuppressWarnings("null")
+
   public void endElement(String namespaceURI, String sName, String qName) throws SAXException {
 
     if (canceled)
@@ -213,16 +211,14 @@ class MzDataSaxHandler extends DefaultHandler {
       // Create a new scan
       MsFunction msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
 
-      MsScan newScan = MSDKObjectBuilder.getMsScan(dataStore, scanNumber, msFunction);
+      SimpleMsScan newScan = new SimpleMsScan(dataStore, scanNumber, msFunction);
 
       newScan.setDataPoints(mzBuffer, intensityBuffer, peaksCount);
       newScan.setSpectrumType(spectrumType);
       newScan.setPolarity(polarity);
 
       if (retentionTime != null) {
-        ChromatographyInfo chromInfo =
-            MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, retentionTime);
-        newScan.setChromatographyInfo(chromInfo);
+        newScan.setRetentionTime(retentionTime);
       }
 
       if (precursorMz != null) {

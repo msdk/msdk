@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -25,7 +25,7 @@ import io.github.msdk.datamodel.rawdata.IsolationInfo;
 /**
  * Implementation of IsolationInfo
  */
-class SimpleIsolationInfo implements IsolationInfo {
+public class SimpleIsolationInfo implements IsolationInfo {
 
   private @Nonnull Range<Double> isolationMzRange;
   private @Nullable Float ionInjectTime;

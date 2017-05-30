@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -28,8 +28,8 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
 
@@ -40,7 +40,7 @@ import io.github.msdk.util.tolerances.RTTolerance;
 public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
 
   private final @Nonnull FeatureTable featureTable;
-  private final @Nonnull List<IonAnnotation> ionAnnotations;
+  private final @Nonnull List<SimpleIonAnnotation> ionAnnotations;
   private final @Nonnull MzTolerance mzTolerance;
   private final @Nonnull RTTolerance rtTolerance;
 
@@ -59,7 +59,7 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
    * @param rtTolerance a {@link io.github.msdk.util.tolerances.RTTolerance} object.
    */
   public LocalDatabaseSearchMethod(@Nonnull FeatureTable featureTable,
-      @Nonnull List<IonAnnotation> ionAnnotations, @Nonnull MzTolerance mzTolerance,
+      @Nonnull List<SimpleIonAnnotation> ionAnnotations, @Nonnull MzTolerance mzTolerance,
       @Nonnull RTTolerance rtTolerance) {
     this.featureTable = featureTable;
     this.ionAnnotations = ionAnnotations;
@@ -72,7 +72,7 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
   public Void execute() throws MSDKException {
 
     totalFeatures = featureTable.getRows().size();
-    FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn =
+    FeatureTableColumn<List<SimpleIonAnnotation>> ionAnnotationColumn =
         featureTable.getColumn(ColumnName.IONANNOTATION, null);
 
     // Create ion annotation column if it is not present in the table
@@ -85,32 +85,32 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
     for (FeatureTableRow row : featureTable.getRows()) {
 
       final Double mz = row.getMz();
-      final ChromatographyInfo rt = row.getChromatographyInfo();
+      final Float rt = row.getRT();
       if ((mz == null) || (rt == null))
         continue;
 
       // Row values
       Range<Double> mzRange = mzTolerance.getToleranceRange(mz);
-      Range<Double> rtRange = rtTolerance.getToleranceRange(rt.getRetentionTime());
-      List<IonAnnotation> rowIonAnnotations = row.getData(ionAnnotationColumn);
+      Range<Float> rtRange = rtTolerance.getToleranceRange(rt);
+      List<SimpleIonAnnotation> rowIonAnnotations = row.getData(ionAnnotationColumn);
 
       // Empty rowIonAnnotations
       if (rowIonAnnotations == null)
-        rowIonAnnotations = new ArrayList<IonAnnotation>();
+        rowIonAnnotations = new ArrayList<SimpleIonAnnotation>();
 
       // Loop through all ion annotations from the local database
-      for (IonAnnotation ionAnnotation : ionAnnotations) {
+      for (SimpleIonAnnotation ionAnnotation : ionAnnotations) {
 
         // Ion values
         final Double ionMz = ionAnnotation.getExpectedMz();
-        final ChromatographyInfo ionChromInfo = ionAnnotation.getChromatographyInfo();
-        if ((ionMz == null) || (ionChromInfo == null))
+        final Float ionRT = ionAnnotation.getExpectedRetentionTime();
+        if ((ionMz == null) || (ionRT == null))
           continue;
 
         // Convert from seconds to minutes
-        double ionRt = ionChromInfo.getRetentionTime() / 60.0;
+        float ionRtSec = ionRT / 60.0f;
         final boolean mzMatch = mzRange.contains(ionMz);
-        final boolean rtMatch = rtRange.contains(ionRt);
+        final boolean rtMatch = rtRange.contains(ionRtSec);
 
         // If match, add the ion annotation to the list
         if (mzMatch && rtMatch) {
@@ -124,7 +124,7 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
 
           // Only add annotation if it is not already present
           boolean addIon = true;
-          for (IonAnnotation ionAnnotations : rowIonAnnotations) {
+          for (SimpleIonAnnotation ionAnnotations : rowIonAnnotations) {
             if (ionAnnotations.compareTo(ionAnnotation) == 0)
               addIon = false;
           }

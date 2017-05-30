@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -23,12 +23,11 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * Simple IonAnnotation implementation;
  */
-class SimpleIonAnnotation implements IonAnnotation {
+public class SimpleIonAnnotation implements IonAnnotation {
 
   private @Nullable IAtomContainer chemicalStructure;
   private @Nullable IMolecularFormula formula;
@@ -38,7 +37,7 @@ class SimpleIonAnnotation implements IonAnnotation {
   private @Nullable String identificationMethod;
   private @Nullable String annotationId;
   private @Nullable URL accessionURL;
-  private @Nullable ChromatographyInfo chromatographyInfo;
+  private @Nullable Float expectedRT;
   private @Nullable String inchiKey;
   private @Nullable Integer taxId;
   private @Nullable String species;
@@ -58,7 +57,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setChemicalStructure(@Nullable IAtomContainer chemicalStructure) {
     this.chemicalStructure = chemicalStructure;
   }
@@ -71,7 +69,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setFormula(@Nullable IMolecularFormula formula) {
     this.formula = formula;
   }
@@ -84,7 +81,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setIonType(@Nullable IonType ionType) {
     this.ionType = ionType;
   }
@@ -97,7 +93,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setExpectedMz(@Nullable Double expectedMz) {
     this.expectedMz = expectedMz;
   }
@@ -110,7 +105,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setDescription(@Nullable String description) {
     this.description = description;
   }
@@ -123,7 +117,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setIdentificationMethod(@Nullable String identificationMethod) {
     this.identificationMethod = identificationMethod;
   }
@@ -136,7 +129,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setAnnotationId(@Nullable String annotationId) {
     this.annotationId = annotationId;
   }
@@ -149,7 +141,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setAccessionURL(@Nullable URL accessionURL) {
     this.accessionURL = accessionURL;
   }
@@ -192,14 +183,13 @@ class SimpleIonAnnotation implements IonAnnotation {
   /** {@inheritDoc} */
   @Override
   @Nullable
-  public ChromatographyInfo getChromatographyInfo() {
-    return chromatographyInfo;
+  public Float getExpectedRetentionTime() {
+    return expectedRT;
   }
 
   /** {@inheritDoc} */
-  @Override
-  public void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo) {
-    this.chromatographyInfo = chromatographyInfo;
+  public void setExpectedRetentionTime(@Nullable Float expectedRT) {
+    this.expectedRT = expectedRT;
   }
 
   /** {@inheritDoc} */
@@ -209,7 +199,7 @@ class SimpleIonAnnotation implements IonAnnotation {
     if (this.chemicalStructure == null & this.formula == null & this.ionType == null
         & this.expectedMz == null & this.description == null
         & (this.annotationId == null || this.annotationId == "") & this.accessionURL == null
-        & this.chromatographyInfo == null)
+        & this.expectedRT == null)
       return true;
     else
       return false;
@@ -223,7 +213,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setInchiKey(@Nullable String inchiKey) {
     this.inchiKey = inchiKey;
   }
@@ -236,7 +225,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setTaxId(@Nullable Integer taxId) {
     this.taxId = taxId;
   }
@@ -249,7 +237,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setSpecies(@Nullable String species) {
     this.species = species;
   }
@@ -262,7 +249,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setDatabase(@Nullable String database) {
     this.database = database;
   }
@@ -275,7 +261,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setDatabaseVersion(@Nullable String databaseVersion) {
     this.databaseVersion = databaseVersion;
   }
@@ -288,7 +273,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setSpectraRef(@Nullable String spectraRef) {
     this.spectraRef = spectraRef;
   }
@@ -301,7 +285,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setSearchEngine(@Nullable String searchEngine) {
     this.searchEngine = searchEngine;
   }
@@ -314,7 +297,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setBestSearchEngineScore(@Nullable Double bestSearchEngineScore) {
     this.bestSearchEngineScore = bestSearchEngineScore;
   }
@@ -327,7 +309,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setModifications(@Nullable String modifications) {
     this.modifications = modifications;
   }
@@ -340,7 +321,6 @@ class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setReliability(@Nullable Integer reliability) {
     this.reliability = reliability;
   }

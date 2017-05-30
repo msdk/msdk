@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 
@@ -95,8 +94,8 @@ public class MgfFileExportMethod implements MSDKMethod<Void> {
           return null;
         }
 
-        mzValues = spectrum.getMzValues(mzValues);
-        intensityValues = spectrum.getIntensityValues(intensityValues);
+        mzValues = spectrum.getMzValues();
+        intensityValues = spectrum.getIntensityValues();
         numOfDataPoints = spectrum.getNumberOfDataPoints();
 
         writer.write("BEGIN IONS");
@@ -118,9 +117,9 @@ public class MgfFileExportMethod implements MSDKMethod<Void> {
             break;
           }
 
-          ChromatographyInfo rt = scan.getChromatographyInfo();
+          Float rt = scan.getRetentionTime();
           if (rt != null) {
-            writer.write("RTINSECONDS=" + rt.getRetentionTime());
+            writer.write("RTINSECONDS=" + rt);
             writer.newLine();
           }
           writer.write("Title=Scan #" + scan.getScanNumber());

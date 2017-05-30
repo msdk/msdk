@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -41,6 +41,14 @@ public class FileTypeDetectionMethod {
    * "http://psidev.cvs.sourceforge.net/viewvc/psidev/psi/psi-ms/mzML/schema/mzML1.1.0.xsd"
    */
   private static final String MZML_HEADER = "<mzML";
+
+  /*
+   * mzDB is a format based on SQLite, see Bouyssié, D. et al. mzDB: a file format using multiple
+   * indexing strategies for the efficient analysis of large LC-MS/MS and SWATH-MS data sets. Mol.
+   * Cell Proteomics 14, 771–781 (2015).
+   */
+  private static final String MZDB_HEADER = "SQLite format";
+  private static final String MZDB_HEADER2 = "CREATE TABLE mzdb";
 
   /*
    * mzXML files with index start with <mzXML><msRun> tags, but files with no index contain only the
@@ -114,6 +122,9 @@ public class FileTypeDetectionMethod {
 
     if (fileHeader.contains(MZTAB_HEADER))
       return FileType.MZTAB;
+
+    if (fileHeader.startsWith(MZDB_HEADER) && fileHeader.contains(MZDB_HEADER2))
+      return FileType.MZDB;
 
     return null;
 

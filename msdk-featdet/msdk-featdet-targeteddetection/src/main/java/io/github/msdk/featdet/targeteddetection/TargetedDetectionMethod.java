@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -26,18 +26,17 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleChromatogram;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.msdk.util.ChromatogramUtil.CalculationMethod;
-import io.github.msdk.util.tolerances.MzTolerance;
-import io.github.msdk.util.tolerances.RTTolerance;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.msdk.util.RawDataFileUtil;
+import io.github.msdk.util.tolerances.MzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 
 /**
  * This class creates a list of Chromatograms from a RawDataFile based on a list of IonAnnotations.
@@ -57,8 +56,8 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
   private int processedScans = 0, totalScans = 0;
 
   // Data structures
-  private @Nonnull double mzBuffer[] = new double[10000];
-  private @Nonnull float intensityBuffer[] = new float[10000];
+  private @Nonnull double mzBuffer[];
+  private @Nonnull float intensityBuffer[];
   private int numOfDataPoints;
 
   /**
@@ -96,7 +95,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
     int chromatogramNumber = RawDataFileUtil.getNextChromatogramNumber(rawDataFile);
 
     // Variables
-    Chromatogram chromatogram;
+    SimpleChromatogram chromatogram;
     BuildingChromatogram buildingChromatogram;
     int ionNr;
 
@@ -122,11 +121,11 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
     for (MsScan msScan : msScans) {
 
       // Load data points
-      mzBuffer = msScan.getMzValues(mzBuffer);
-      intensityBuffer = msScan.getIntensityValues(intensityBuffer);
+      mzBuffer = msScan.getMzValues();
+      intensityBuffer = msScan.getIntensityValues();
       numOfDataPoints = msScan.getNumberOfDataPoints();
 
-      ChromatographyInfo chromatographyInfo = msScan.getChromatographyInfo();
+      Float chromatographyInfo = msScan.getRetentionTime();
 
       // Loop through all the ions in the ion annotation list
       ionNr = 0;
@@ -169,19 +168,18 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 
       // Find the most intense data point and crop the chromatogram based
       // on the input parameters
-      ChromatographyInfo chromatographyInfo = ionAnnotation.getChromatographyInfo();
-      if (chromatographyInfo != null) {
-        double ionRt = (double) chromatographyInfo.getRetentionTime();
-        Range<Double> rtRange = rtTolerance.getToleranceRange(ionRt);
+      Float rt = ionAnnotation.getExpectedRetentionTime();
+      if (rt != null) {
+        Range<Float> rtRange = rtTolerance.getToleranceRange(rt);
         buildingChromatogram.cropChromatogram(rtRange, intensityTolerance, noiseLevel);
       }
 
       // Final chromatogram
-      chromatogram = MSDKObjectBuilder.getChromatogram(dataPointStore, chromatogramNumber,
+      chromatogram = new SimpleChromatogram(dataPointStore, chromatogramNumber,
           ChromatogramType.XIC, SeparationType.UNKNOWN);
 
       // Add the data points to the final chromatogram
-      ChromatographyInfo[] rtValues = buildingChromatogram.getRtValues();
+      float[] rtValues = buildingChromatogram.getRtValues();
       double[] mzValues = buildingChromatogram.getMzValues();
       float[] intensityValues = buildingChromatogram.getIntensityValues();
       int size = buildingChromatogram.getSize();

@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -27,7 +27,7 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
@@ -44,7 +44,7 @@ public class MzDataFileImportMethod implements MSDKMethod<RawDataFile> {
 
   private MzDataSaxHandler saxHandler;
 
-  private RawDataFile newRawFile;
+  private SimpleRawDataFile newRawFile;
   private boolean canceled = false;
 
   /**
@@ -61,14 +61,14 @@ public class MzDataFileImportMethod implements MSDKMethod<RawDataFile> {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   public RawDataFile execute() throws MSDKException {
 
     logger.info("Started parsing file " + sourceFile);
 
     String fileName = sourceFile.getName();
-    newRawFile = MSDKObjectBuilder.getRawDataFile(fileName, sourceFile, fileType, dataStore);
+    newRawFile = new SimpleRawDataFile(fileName, sourceFile, fileType, dataStore);
 
     saxHandler = new MzDataSaxHandler(newRawFile, dataStore);
     SAXParserFactory factory = SAXParserFactory.newInstance();

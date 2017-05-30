@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -33,7 +33,7 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 /**
  * Implementation of the RawDataFile interface.
  */
-class SimpleRawDataFile implements RawDataFile {
+public class SimpleRawDataFile implements RawDataFile {
 
   private @Nonnull String rawDataFileName;
   private @Nullable File originalRawDataFile;
@@ -42,7 +42,7 @@ class SimpleRawDataFile implements RawDataFile {
   private final @Nonnull ArrayList<Chromatogram> chromatograms;
   private final @Nonnull DataPointStore dataPointStore;
 
-  SimpleRawDataFile(@Nonnull String rawDataFileName, @Nullable File originalRawDataFile,
+  public SimpleRawDataFile(@Nonnull String rawDataFileName, @Nullable File originalRawDataFile,
       @Nonnull FileType rawDataFileType, @Nonnull DataPointStore dataPointStore) {
     Preconditions.checkNotNull(rawDataFileType);
     Preconditions.checkNotNull(dataPointStore);
@@ -55,13 +55,11 @@ class SimpleRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-  @Override
   public @Nonnull String getName() {
     return rawDataFileName;
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setName(@Nonnull String name) {
     Preconditions.checkNotNull(name);
     this.rawDataFileName = name;
@@ -75,7 +73,6 @@ class SimpleRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setOriginalFile(@Nullable File newOriginalFile) {
     this.originalRawDataFile = newOriginalFile;
   }
@@ -87,7 +84,6 @@ class SimpleRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setRawDataFileType(@Nonnull FileType rawDataFileType) {
     Preconditions.checkNotNull(rawDataFileType);
     this.rawDataFileType = rawDataFileType;
@@ -109,24 +105,21 @@ class SimpleRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   public @Nonnull List<MsScan> getScans() {
     return ImmutableList.copyOf(scans);
   }
 
   /** {@inheritDoc} */
-  @Override
   public void addScan(@Nonnull MsScan scan) {
     Preconditions.checkNotNull(scan);
     synchronized (scans) {
       scans.add(scan);
     }
-    scan.setRawDataFile(this);
   }
 
   /** {@inheritDoc} */
-  @Override
   public void removeScan(@Nonnull MsScan scan) {
     Preconditions.checkNotNull(scan);
     synchronized (scans) {
@@ -135,7 +128,7 @@ class SimpleRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   @Nonnull
   public List<Chromatogram> getChromatograms() {
@@ -143,7 +136,6 @@ class SimpleRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void addChromatogram(@Nonnull Chromatogram chromatogram) {
     Preconditions.checkNotNull(chromatogram);
     synchronized (chromatograms) {
@@ -152,7 +144,6 @@ class SimpleRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void removeChromatogram(@Nonnull Chromatogram chromatogram) {
     Preconditions.checkNotNull(chromatogram);
     synchronized (chromatograms) {

@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -53,7 +53,7 @@ public class MonaSpectrumTest {
   @Test
   public void testGetDataPoints() throws Exception {}
 
-  @SuppressWarnings("null")
+
   @Ignore("Ignored because MoNA API is throwing HTTP 500 error")
   @Test
   public void testGetMzRange() throws Exception {

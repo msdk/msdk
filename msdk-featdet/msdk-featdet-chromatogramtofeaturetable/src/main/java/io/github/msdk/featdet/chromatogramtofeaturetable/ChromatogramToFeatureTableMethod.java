@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -32,10 +32,9 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.msdk.util.FeatureTableUtil;
 
@@ -191,11 +190,11 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
     }
 
     // Data structures
-    ChromatographyInfo rtBuffer[] = new ChromatographyInfo[10000];
+    float rtBuffer[];
     float intensityBuffer[] = new float[10000];
 
     // Load data
-    rtBuffer = chromatogram.getRetentionTimes(rtBuffer);
+    rtBuffer = chromatogram.getRetentionTimes();
     intensityBuffer = chromatogram.getIntensityValues(intensityBuffer);
     int numOfDataPoints = chromatogram.getNumberOfDataPoints();
 
@@ -219,10 +218,8 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
       row.setData(column, mz);
 
     Float rt = ChromatogramUtil.getRt(rtBuffer, intensityBuffer, numOfDataPoints);
-    ChromatographyInfo chromatographyInfo =
-        MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
     column = tableColumns.get(ColumnName.RT);
-    row.setData(column, chromatographyInfo);
+    row.setData(column, rt);
 
     Float rtStart = ChromatogramUtil.getRtStart(rtBuffer, numOfDataPoints);
     column = tableColumns.get(ColumnName.RTSTART);
@@ -287,14 +284,14 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
       FeatureTableColumn<Integer> idColumn = MSDKObjectBuilder.getIdFeatureTableColumn();
       FeatureTableColumn<Double> mzColumn = MSDKObjectBuilder.getMzFeatureTableColumn();
       FeatureTableColumn<Double> ppmColumn = MSDKObjectBuilder.getPpmFeatureTableColumn();
-      FeatureTableColumn<ChromatographyInfo> chromatographyInfoColumn =
-          MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn();
-      FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn =
+      FeatureTableColumn<Float> rtColumn =
+          MSDKObjectBuilder.getRetentionTimeFeatureTableColumn();
+      FeatureTableColumn<List<SimpleIonAnnotation>> ionAnnotationColumn =
           MSDKObjectBuilder.getIonAnnotationFeatureTableColumn();
       featureTable.addColumn(idColumn);
       featureTable.addColumn(mzColumn);
       featureTable.addColumn(ppmColumn);
-      featureTable.addColumn(chromatographyInfoColumn);
+      featureTable.addColumn(rtColumn);
       featureTable.addColumn(ionAnnotationColumn);
     }
 
