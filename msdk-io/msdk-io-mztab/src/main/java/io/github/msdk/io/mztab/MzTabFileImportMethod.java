@@ -51,6 +51,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import uk.ac.ebi.pride.jmztab.model.Assay;
 import uk.ac.ebi.pride.jmztab.model.MZTabColumn;
@@ -181,7 +182,7 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
     FeatureTableColumn<Double> mzColumn = MSDKObjectBuilder.getMzFeatureTableColumn();
     FeatureTableColumn<Float> rtColumn =
         MSDKObjectBuilder.getRetentionTimeFeatureTableColumn();
-    FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn =
+    FeatureTableColumn<List<SimpleIonAnnotation>> ionAnnotationColumn =
         MSDKObjectBuilder.getIonAnnotationFeatureTableColumn();
     FeatureTableColumn<Integer> chargeColumn = MSDKObjectBuilder.getChargeFeatureTableColumn();
     newFeatureTable.addColumn(idColumn);
@@ -273,7 +274,7 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
         rtAverageValue = (float) DoubleMath.mean(rt);
 
       // Ion Annotation
-      IonAnnotation ionAnnotation = MSDKObjectBuilder.getIonAnnotation();
+      SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
       ionAnnotation.setAnnotationId(database);
       ionAnnotation.setDescription(description);
       ionAnnotation.setExpectedMz(mzCalc);

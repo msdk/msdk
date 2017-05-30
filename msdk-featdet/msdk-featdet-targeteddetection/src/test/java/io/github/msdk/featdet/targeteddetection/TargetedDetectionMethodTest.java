@@ -24,7 +24,7 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -58,27 +58,24 @@ public class TargetedDetectionMethodTest {
 
     // Ion 1
     List<IonAnnotation> ionAnnotations = new ArrayList<IonAnnotation>();
-    IonAnnotation ion1 = MSDKObjectBuilder.getIonAnnotation();
+    SimpleIonAnnotation ion1 = new SimpleIonAnnotation();
     ion1.setExpectedMz(332.56);
     ion1.setAnnotationId("Feature 332.56");
-    ion1.setExpectedRetentionTime(
-         (float) 772.8);
+    ion1.setExpectedRetentionTime((float) 772.8);
     ionAnnotations.add(ion1);
 
     // Ion 2
-    IonAnnotation ion2 = MSDKObjectBuilder.getIonAnnotation();
+    SimpleIonAnnotation ion2 = new SimpleIonAnnotation();
     ion2.setExpectedMz(508.004);
     ion2.setAnnotationId("Feature 508.004");
-    ion2.setExpectedRetentionTime(
-         (float) 868.8);
+    ion2.setExpectedRetentionTime((float) 868.8);
     ionAnnotations.add(ion2);
 
     // Ion 3
-    IonAnnotation ion3 = MSDKObjectBuilder.getIonAnnotation();
+    SimpleIonAnnotation ion3 = new SimpleIonAnnotation();
     ion3.setExpectedMz(362.102);
     ion3.setAnnotationId("Feature 362.102");
-    ion3.setExpectedRetentionTime(
-         (float) 643.2);
+    ion3.setExpectedRetentionTime((float) 643.2);
     ionAnnotations.add(ion3);
 
     // Variables

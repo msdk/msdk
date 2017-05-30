@@ -32,7 +32,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
@@ -125,7 +125,7 @@ public class GapFillingMethod implements MSDKMethod<FeatureTable> {
       RawDataFile rawFile = sample.getRawDataFile();
 
       // Create an ion annotation
-      IonAnnotation ion = MSDKObjectBuilder.getIonAnnotation();
+      SimpleIonAnnotation ion = new SimpleIonAnnotation();
       ion.setAnnotationId(row.getId().toString());
       FeatureTableColumn<Float> column =
           result.getColumn(ColumnName.RT.getName(), null, Float.class);

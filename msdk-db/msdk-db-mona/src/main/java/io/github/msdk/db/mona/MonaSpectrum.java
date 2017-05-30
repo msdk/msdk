@@ -154,11 +154,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return this.atomContainer;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setChemicalStructure(@Nullable IAtomContainer structure) {
-    // not supported
-  }
+
 
   /** {@inheritDoc} */
   @Nullable
@@ -167,11 +163,6 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setFormula(@Nullable IMolecularFormula formula) {
-    // not supported
-  }
 
   /** {@inheritDoc} */
   @Nullable
@@ -180,11 +171,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return "Massbank of Northern America record, " + id;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setDescription(@Nullable String description) {
-    // not supported
-  }
+
 
   /** {@inheritDoc} */
   @Nullable
@@ -193,11 +180,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setIdentificationMethod(@Nullable String idMethod) {
-    // not supported
-  }
+
 
   /** {@inheritDoc} */
   @Nullable
@@ -206,11 +189,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return this.id.toString();
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setAnnotationId(@Nullable String dbId) {
-    // not supported
-  }
+
 
   /** {@inheritDoc} */
   @Nullable
@@ -223,11 +202,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     }
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setAccessionURL(@Nullable URL dbURL) {
-    // not supported
-  }
+
 
   /** {@inheritDoc} */
   @Override
@@ -243,11 +218,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setIonType(@Nullable IonType ionType) {
-    // not supported
-  }
+
 
   /** {@inheritDoc} */
   @Override
@@ -256,11 +227,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setExpectedMz(@Nullable Double expectedMz) {
-    // not supported
-  }
+
 
 
 
@@ -327,12 +294,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setInchiKey(@Nullable String inchiKey) {
-    // TODO Auto-generated method stub
 
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -342,12 +304,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setTaxId(@Nullable Integer taxId) {
-    // TODO Auto-generated method stub
 
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -357,12 +314,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setSpecies(@Nullable String species) {
-    // TODO Auto-generated method stub
 
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -372,12 +324,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setDatabase(@Nullable String database) {
-    // TODO Auto-generated method stub
 
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -387,12 +334,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setDatabaseVersion(@Nullable String databaseVersion) {
-    // TODO Auto-generated method stub
 
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -402,12 +344,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setSpectraRef(@Nullable String spectraRef) {
-    // TODO Auto-generated method stub
 
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -417,12 +354,6 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setSearchEngine(@Nullable String searchEngine) {
-    // TODO Auto-generated method stub
-
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -432,12 +363,6 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setBestSearchEngineScore(@Nullable Double bestSearchEngineScore) {
-    // TODO Auto-generated method stub
-
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -447,12 +372,6 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setModifications(@Nullable String modifications) {
-    // TODO Auto-generated method stub
-
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -462,12 +381,6 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public void setReliability(@Nullable Integer reliability) {
-    // TODO Auto-generated method stub
-
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -481,12 +394,6 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
   public Float getExpectedRetentionTime() {
     // TODO Auto-generated method stub
     return null;
-  }
-
-  @Override
-  public void setExpectedRetentionTime(Float rt) {
-    // TODO Auto-generated method stub
-
   }
 
 

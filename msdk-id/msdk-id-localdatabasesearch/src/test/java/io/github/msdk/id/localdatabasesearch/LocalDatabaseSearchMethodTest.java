@@ -32,11 +32,10 @@ import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.msdk.util.IonTypeUtil;
 import io.github.msdk.util.tolerances.MaximumMzTolerance;
@@ -63,11 +62,11 @@ public class LocalDatabaseSearchMethodTest {
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
     // Verify that none of the features have an ion annotation
-    FeatureTableColumn<List<IonAnnotation>> column =
+    FeatureTableColumn<List<SimpleIonAnnotation>> column =
         featureTable.getColumn(ColumnName.IONANNOTATION, null);
     int annotatedFeatures = 0;
     for (FeatureTableRow row : featureTable.getRows()) {
-      List<IonAnnotation> ionAnnotations = row.getData(column);
+      List<SimpleIonAnnotation> ionAnnotations = row.getData(column);
       if (ionAnnotations != null)
         for (IonAnnotation annot : ionAnnotations)
           if (!Strings.isNullOrEmpty(annot.getDescription()))
@@ -78,11 +77,11 @@ public class LocalDatabaseSearchMethodTest {
     // Variables
     final MzTolerance mzTolerance = new MaximumMzTolerance(0.003, 5.0);
     final RTTolerance rtTolerance = new RTTolerance(0.1f, false);
-    List<IonAnnotation> ionAnnotations = new ArrayList<IonAnnotation>();
+    List<SimpleIonAnnotation> ionAnnotations = new ArrayList<SimpleIonAnnotation>();
     IMolecularFormula formula;
 
     // Ion 1
-    IonAnnotation ion1 = MSDKObjectBuilder.getIonAnnotation();
+    SimpleIonAnnotation ion1 = new SimpleIonAnnotation();
     ion1.setAnnotationId("1");
     ion1.setExpectedMz(508.0047259);
     ion1.setDescription("ATP");
@@ -94,7 +93,7 @@ public class LocalDatabaseSearchMethodTest {
     ionAnnotations.add(ion1);
 
     // Ion 2
-    IonAnnotation ion2 = MSDKObjectBuilder.getIonAnnotation();
+    SimpleIonAnnotation ion2 = new SimpleIonAnnotation();
     ion2.setAnnotationId("2");
     ion2.setExpectedMz(613.1625235);
     ion2.setDescription("Glutathione disulfide");
@@ -106,7 +105,7 @@ public class LocalDatabaseSearchMethodTest {
     ionAnnotations.add(ion2);
 
     // Ion 3
-    IonAnnotation ion3 = MSDKObjectBuilder.getIonAnnotation();
+    SimpleIonAnnotation ion3 = new SimpleIonAnnotation();
     ion3.setAnnotationId("3");
     ion3.setExpectedMz(239.1068954);
     ion3.setDescription("HEPES");
@@ -114,7 +113,7 @@ public class LocalDatabaseSearchMethodTest {
     ionAnnotations.add(ion3);
 
     // Ion 4
-    IonAnnotation ion4 = MSDKObjectBuilder.getIonAnnotation();
+    SimpleIonAnnotation ion4 = new SimpleIonAnnotation();
     ion4.setAnnotationId("4");
     ion4.setExpectedMz(175.1194502);
     ion4.setDescription("L-Arginine");
@@ -125,7 +124,7 @@ public class LocalDatabaseSearchMethodTest {
     ionAnnotations.add(ion4);
 
     // Ion 5
-    IonAnnotation ion5 = MSDKObjectBuilder.getIonAnnotation();
+    SimpleIonAnnotation ion5 = new SimpleIonAnnotation();
     ion5.setAnnotationId("5");
     ion5.setExpectedMz(664.118587);
     ion5.setDescription("NAD+");
@@ -136,7 +135,7 @@ public class LocalDatabaseSearchMethodTest {
     ionAnnotations.add(ion5);
 
     // Ion 6
-    IonAnnotation ion6 = MSDKObjectBuilder.getIonAnnotation();
+    SimpleIonAnnotation ion6 = new SimpleIonAnnotation();
     ion6.setAnnotationId("6");
     ion6.setExpectedMz(666.1328387);
     ion6.setDescription("NADH");
@@ -147,7 +146,7 @@ public class LocalDatabaseSearchMethodTest {
     ionAnnotations.add(ion6);
 
     // Ion 7
-    IonAnnotation ion7 = MSDKObjectBuilder.getIonAnnotation();
+    SimpleIonAnnotation ion7 = new SimpleIonAnnotation();
     ion7.setAnnotationId("7");
     ion7.setExpectedMz(303.0693468);
     ion7.setDescription("PIPES");
@@ -163,7 +162,7 @@ public class LocalDatabaseSearchMethodTest {
 
     // Verify that 7 of the features have an ion annotation
     for (FeatureTableRow row : featureTable.getRows()) {
-      ionAnnotations = (List<IonAnnotation>) row.getData(column);
+      ionAnnotations = (List<SimpleIonAnnotation>) row.getData(column);
       if (ionAnnotations != null)
         for (IonAnnotation annot : ionAnnotations)
           if (!Strings.isNullOrEmpty(annot.getDescription()))

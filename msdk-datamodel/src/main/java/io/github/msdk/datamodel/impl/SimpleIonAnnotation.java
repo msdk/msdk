@@ -57,7 +57,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setChemicalStructure(@Nullable IAtomContainer chemicalStructure) {
     this.chemicalStructure = chemicalStructure;
   }
@@ -70,7 +69,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setFormula(@Nullable IMolecularFormula formula) {
     this.formula = formula;
   }
@@ -83,7 +81,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setIonType(@Nullable IonType ionType) {
     this.ionType = ionType;
   }
@@ -96,7 +93,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setExpectedMz(@Nullable Double expectedMz) {
     this.expectedMz = expectedMz;
   }
@@ -109,7 +105,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setDescription(@Nullable String description) {
     this.description = description;
   }
@@ -122,7 +117,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setIdentificationMethod(@Nullable String identificationMethod) {
     this.identificationMethod = identificationMethod;
   }
@@ -135,7 +129,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setAnnotationId(@Nullable String annotationId) {
     this.annotationId = annotationId;
   }
@@ -148,7 +141,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setAccessionURL(@Nullable URL accessionURL) {
     this.accessionURL = accessionURL;
   }
@@ -196,7 +188,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setExpectedRetentionTime(@Nullable Float expectedRT) {
     this.expectedRT = expectedRT;
   }
@@ -222,7 +213,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setInchiKey(@Nullable String inchiKey) {
     this.inchiKey = inchiKey;
   }
@@ -235,7 +225,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setTaxId(@Nullable Integer taxId) {
     this.taxId = taxId;
   }
@@ -248,7 +237,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setSpecies(@Nullable String species) {
     this.species = species;
   }
@@ -261,7 +249,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setDatabase(@Nullable String database) {
     this.database = database;
   }
@@ -274,7 +261,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setDatabaseVersion(@Nullable String databaseVersion) {
     this.databaseVersion = databaseVersion;
   }
@@ -287,7 +273,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setSpectraRef(@Nullable String spectraRef) {
     this.spectraRef = spectraRef;
   }
@@ -300,7 +285,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setSearchEngine(@Nullable String searchEngine) {
     this.searchEngine = searchEngine;
   }
@@ -313,7 +297,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setBestSearchEngineScore(@Nullable Double bestSearchEngineScore) {
     this.bestSearchEngineScore = bestSearchEngineScore;
   }
@@ -326,7 +309,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setModifications(@Nullable String modifications) {
     this.modifications = modifications;
   }
@@ -339,7 +321,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setReliability(@Nullable Integer reliability) {
     this.reliability = reliability;
   }

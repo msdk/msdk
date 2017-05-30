@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -173,7 +173,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
         float rtValue = (float) scanData[i][1];
 
         // Create ion
-        IonAnnotation ionAnnotation = MSDKObjectBuilder.getIonAnnotation();
+        SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
         ionAnnotation.setExpectedMz(mzValue);
         ionAnnotation.setExpectedRetentionTime(rtValue);
 

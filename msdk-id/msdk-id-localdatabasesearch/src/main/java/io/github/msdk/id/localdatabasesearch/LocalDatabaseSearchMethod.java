@@ -28,6 +28,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
@@ -39,7 +40,7 @@ import io.github.msdk.util.tolerances.RTTolerance;
 public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
 
   private final @Nonnull FeatureTable featureTable;
-  private final @Nonnull List<IonAnnotation> ionAnnotations;
+  private final @Nonnull List<SimpleIonAnnotation> ionAnnotations;
   private final @Nonnull MzTolerance mzTolerance;
   private final @Nonnull RTTolerance rtTolerance;
 
@@ -58,7 +59,7 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
    * @param rtTolerance a {@link io.github.msdk.util.tolerances.RTTolerance} object.
    */
   public LocalDatabaseSearchMethod(@Nonnull FeatureTable featureTable,
-      @Nonnull List<IonAnnotation> ionAnnotations, @Nonnull MzTolerance mzTolerance,
+      @Nonnull List<SimpleIonAnnotation> ionAnnotations, @Nonnull MzTolerance mzTolerance,
       @Nonnull RTTolerance rtTolerance) {
     this.featureTable = featureTable;
     this.ionAnnotations = ionAnnotations;
@@ -71,7 +72,7 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
   public Void execute() throws MSDKException {
 
     totalFeatures = featureTable.getRows().size();
-    FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn =
+    FeatureTableColumn<List<SimpleIonAnnotation>> ionAnnotationColumn =
         featureTable.getColumn(ColumnName.IONANNOTATION, null);
 
     // Create ion annotation column if it is not present in the table
@@ -91,14 +92,14 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
       // Row values
       Range<Double> mzRange = mzTolerance.getToleranceRange(mz);
       Range<Float> rtRange = rtTolerance.getToleranceRange(rt);
-      List<IonAnnotation> rowIonAnnotations = row.getData(ionAnnotationColumn);
+      List<SimpleIonAnnotation> rowIonAnnotations = row.getData(ionAnnotationColumn);
 
       // Empty rowIonAnnotations
       if (rowIonAnnotations == null)
-        rowIonAnnotations = new ArrayList<IonAnnotation>();
+        rowIonAnnotations = new ArrayList<SimpleIonAnnotation>();
 
       // Loop through all ion annotations from the local database
-      for (IonAnnotation ionAnnotation : ionAnnotations) {
+      for (SimpleIonAnnotation ionAnnotation : ionAnnotations) {
 
         // Ion values
         final Double ionMz = ionAnnotation.getExpectedMz();
@@ -123,7 +124,7 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
 
           // Only add annotation if it is not already present
           boolean addIon = true;
-          for (IonAnnotation ionAnnotations : rowIonAnnotations) {
+          for (SimpleIonAnnotation ionAnnotations : rowIonAnnotations) {
             if (ionAnnotations.compareTo(ionAnnotation) == 0)
               addIon = false;
           }

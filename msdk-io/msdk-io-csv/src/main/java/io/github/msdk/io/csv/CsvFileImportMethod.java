@@ -41,6 +41,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.util.FeatureTableUtil;
 
@@ -180,16 +181,16 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
           Class<?> currentClass = currentColumn.getDataTypeClass();
 
           if (currentClass.getSimpleName().equals("List")) {
-            FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn =
+            FeatureTableColumn<List<SimpleIonAnnotation>> ionAnnotationColumn =
                 newFeatureTable.getColumn(ColumnName.IONANNOTATION, null);
-            List<IonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
-            IonAnnotation ionAnnotation;
+            List<SimpleIonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
+            SimpleIonAnnotation ionAnnotation;
 
             // Get ion annotation or create a new
             if (ionAnnotations != null) {
               ionAnnotation = ionAnnotations.get(0);
             } else {
-              ionAnnotation = MSDKObjectBuilder.getIonAnnotation();
+              ionAnnotation = new SimpleIonAnnotation();
             }
 
             switch (columnNames.get(i).toLowerCase()) {

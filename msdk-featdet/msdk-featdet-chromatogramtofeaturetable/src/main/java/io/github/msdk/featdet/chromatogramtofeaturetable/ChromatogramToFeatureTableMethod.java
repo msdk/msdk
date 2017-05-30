@@ -32,6 +32,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.util.ChromatogramUtil;
@@ -285,7 +286,7 @@ public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable
       FeatureTableColumn<Double> ppmColumn = MSDKObjectBuilder.getPpmFeatureTableColumn();
       FeatureTableColumn<Float> rtColumn =
           MSDKObjectBuilder.getRetentionTimeFeatureTableColumn();
-      FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn =
+      FeatureTableColumn<List<SimpleIonAnnotation>> ionAnnotationColumn =
           MSDKObjectBuilder.getIonAnnotationFeatureTableColumn();
       featureTable.addColumn(idColumn);
       featureTable.addColumn(mzColumn);

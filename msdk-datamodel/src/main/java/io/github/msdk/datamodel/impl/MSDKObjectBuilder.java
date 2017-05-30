@@ -24,8 +24,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
@@ -34,16 +32,12 @@ import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonType;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
-import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
  * Object builder
@@ -62,9 +56,9 @@ public class MSDKObjectBuilder {
   private static final @Nonnull SimpleFeatureTableColumn<Float> RetentionTimeFeatureTableColumn =
       new SimpleFeatureTableColumn<Float>(ColumnName.RT.getName(),
           Float.class, null);
-  private static final @Nonnull SimpleFeatureTableColumn<List<IonAnnotation>> IonAnnotationFeatureTableColumn =
-      new SimpleFeatureTableColumn<List<IonAnnotation>>("Ion Annotation",
-          (Class<List<IonAnnotation>>) (Class<?>) List.class, null);
+  private static final @Nonnull SimpleFeatureTableColumn<List<SimpleIonAnnotation>> IonAnnotationFeatureTableColumn =
+      new SimpleFeatureTableColumn<>("Ion Annotation",
+          (Class<List<SimpleIonAnnotation>>) (Class<?>) List.class, null);
   private static final @Nonnull SimpleFeatureTableColumn<Integer> ChargeFeatureTableColumn =
       new SimpleFeatureTableColumn<Integer>(ColumnName.CHARGE.getName(), Integer.class, null);
 
@@ -310,7 +304,7 @@ public class MSDKObjectBuilder {
    *
    * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
    */
-  public static @Nonnull FeatureTableColumn<List<IonAnnotation>> getIonAnnotationFeatureTableColumn() {
+  public static @Nonnull FeatureTableColumn<List<SimpleIonAnnotation>> getIonAnnotationFeatureTableColumn() {
     return IonAnnotationFeatureTableColumn;
   }
 
