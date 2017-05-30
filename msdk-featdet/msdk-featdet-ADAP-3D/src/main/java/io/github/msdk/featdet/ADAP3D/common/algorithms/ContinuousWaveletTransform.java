@@ -199,8 +199,8 @@ public class ContinuousWaveletTransform {
     	filterRidgelines();
     	
     	//create list of the type Result
-    	List<Result> resultList = new ArrayList<Result>();
-    	Result result = new Result();
+    	ArrayList<Result> resultList = new ArrayList<Result>();
+    	
     	
         double [][] boundsAndBestCoef = new double[3][];
         for (int i=0; i<3;i++){
@@ -209,6 +209,7 @@ public class ContinuousWaveletTransform {
         }
        
         for (Ridgeline curRL : ridgeLineArr){
+        	Result result = new Result();
         	curRL.findBestValues();
             int bestIndex = curRL.curBestInd;
             // this is the actuale scale, not the index of the best scale.
@@ -260,6 +261,7 @@ public class ContinuousWaveletTransform {
             resultList.add(result);
             
         }
+        //writeIntensityAndRT();
         return resultList;
     }
     
@@ -323,7 +325,7 @@ public class ContinuousWaveletTransform {
                 }
             }   
         }
-        writeRidgelines();
+        //writeRidgelines();
     }
     // returns the indecies of the location of the maxima
     public Integer[] findMaximaForThisScale(double waveletScale){
@@ -380,7 +382,7 @@ public class ContinuousWaveletTransform {
             allCoefficients[count] = getCoefficientsForThisScale((double) curScale);
             count+= 1;
         }
-        writeAllCoeffs();
+        //writeAllCoeffs();
     }
     
     public double[] getCoefficientsForThisScale(double waveletScale){
@@ -585,4 +587,20 @@ public class ContinuousWaveletTransform {
             System.out.print("problem writing look_at_ridgelines.txt");
         }
     }
+    
+    private void writeIntensityAndRT(){
+    	try{
+    		PrintWriter writer = new PrintWriter("IntensityAndRT.txt", "UTF-8");
+    		writer.print("Intensity"+" "+"RT"+"\r\n");
+    		for(int i=0; i<x.length;i++){
+    			writer.print(signal[i]+","+x[i]+"\r\n");
+    		}
+    		writer.close();
+    	}
+    	catch(IOException e){
+    		System.out.print("problem writing IntensityAndRT.txt");
+    		System.out.println(e);
+    	}
+    }
+    
 }
