@@ -12,15 +12,14 @@
  */
 
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
@@ -29,57 +28,89 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.datamodel.Result;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 
+
+import io.github.msdk.datamodel.rawdata.MsScan;
+
 public class ContinuousWaveletTransformTest {
 	
 	private static final String TEST_DATA_PATH = "src/test/resources/";
 	private static RawDataFile rawFile;
+	
+	@SuppressWarnings("null")
+	@BeforeClass
+	public static void loadData() throws MSDKException {
+		
+	    // Import the file
+	    File inputFile = new File(TEST_DATA_PATH + "orbitrap_300-600mz.mzML");
+	    Assert.assertTrue("Cannot read test data", inputFile.canRead());
+	    MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+	    rawFile = importer.execute();
+	    Assert.assertNotNull(rawFile);
+	    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+	  }
 
 	@SuppressWarnings("null")
 	@Test
-	public void testEICFile() throws MSDKException,IOException{
+	public void testCWT() throws MSDKException,IOException{
 		
-		File inputFile = new File(TEST_DATA_PATH+"eic.txt");
-		Assert.assertTrue("Cannot read test data", inputFile.canRead());
+		List<MsScan> listOfScans = 	rawFile.getScans();
+		ArrayList<Double> rtBuffer = new ArrayList<Double>();
+		double mzBuffer[] = new double[10000];
+		float intensityBuffer[] = new float[10000];
+		ArrayList<Double> correctIntensityBuffer = new ArrayList<Double>();
 		
-		ArrayList<Double> signalList = new ArrayList<Double>();
-		ArrayList<Double> xList = new ArrayList<Double>();
-		FileReader readFile = new FileReader(inputFile);
-		BufferedReader reader = new BufferedReader(readFile);
-		String fileData = reader.readLine();
+		for(int l=0;l<listOfScans.size();l++){
+			
+			float totalIntensity=0;
+			MsScan scan = listOfScans.get(l);
+			mzBuffer = scan.getMzValues(mzBuffer);
+			intensityBuffer = scan.getIntensityValues(intensityBuffer);
+			for(int k=0;k<mzBuffer.length;k++){
+				if(mzBuffer[k]>=387.1273 && mzBuffer[k]<=387.1405){
+					totalIntensity += intensityBuffer[k];
+				}
+			}
+			
+			correctIntensityBuffer.add(new Double(totalIntensity));	
+			rtBuffer.add(new Double((scan.getChromatographyInfo().getRetentionTime())/60));
+			
+		}
 		
-
-		while ((fileData = reader.readLine()) != null) {
-			String[] seprateFileData=fileData.split(",");
-			signalList.add(Double.parseDouble(seprateFileData[0]));   
-			xList.add(Double.parseDouble(seprateFileData[1]));
-        }
-		reader.close();
+		double[] x = new double[rtBuffer.size()];
+		double[] signal = new double[correctIntensityBuffer.size()];
 		
-		double[] x = new double[xList.size()];
-		double[] signal = new double[signalList.size()];
-		
-		for (int i = 0; i < xList.size(); i++) {
-		    x[i] = xList.get(i).doubleValue();
-		    signal[i] = signalList.get(i).doubleValue();
+		for (int i = 0; i < correctIntensityBuffer.size(); i++) {
+		    x[i] = rtBuffer.get(i).doubleValue();
+		    signal[i] = correctIntensityBuffer.get(i).doubleValue();		   
 		  }
 		
 		ContinuousWaveletTransform continuousWavelet = new ContinuousWaveletTransform(1, 10, 1);
 		continuousWavelet.setX(x);
 		continuousWavelet.setSignal(signal);
-		continuousWavelet.setPeakWidth(0.001, 2.000);
-		continuousWavelet.setcoefAreaRatioTolerance(50);
+		continuousWavelet.setPeakWidth(0.00, 10.00);
+		continuousWavelet.setcoefAreaRatioTolerance(5);
 		
 		List<Result> peakList = continuousWavelet.findPeaks();
-		File outputFile = new File(TEST_DATA_PATH + "output.txt");
-		StringBuffer buffer = new StringBuffer ();
-		FileWriter writer = new FileWriter(outputFile);
-		
-		for(int j=0;j<peakList.size();j++){
-			buffer.append(peakList.get(j).curLeftBound).append(",").append(peakList.get(j).curRightBound).append("\r\n");
-			writer.write(buffer.toString());
-			Assert.assertEquals(157,peakList.get(j).curLeftBound);
-			Assert.assertEquals(178,peakList.get(j).curRightBound);			
+		boolean peakAssertion = false;
+		try{
+			File outputFile = new File(TEST_DATA_PATH + "output.txt");
+			StringBuffer buffer = new StringBuffer ();
+			FileWriter writer = new FileWriter(outputFile);
+			
+			for(int j=0;j<peakList.size();j++){
+				buffer.append(peakList.get(j).curLeftBound).append(",").append(peakList.get(j).curRightBound).append("\r\n");
+				writer.write(buffer.toString());
+				buffer = new StringBuffer();
+				if(peakList.get(j).curLeftBound==113 && peakList.get(j).curRightBound==130){
+					peakAssertion = true;
+				}
+			}
+			writer.close();
 		}
+
+		catch(IOException e){
+			System.out.print("problem in writing output.txt");
+
 		writer.close();
 		
 	}
@@ -103,8 +134,6 @@ public class ContinuousWaveletTransformTest {
 			intensityBuffer = scan.getIntensityValues();
 			rtBuffer[i] = scan.getRetentionTime();
 		}
-		Assert.assertNotNull(mzBuffer);
-		Assert.assertNotNull(intensityBuffer);
-		Assert.assertNotNull(rtBuffer);		
+		Assert.assertEquals(true, peakAssertion);
 	}
 }
