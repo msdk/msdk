@@ -16,7 +16,6 @@ package io.github.msdk.io.mzml2;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -52,7 +51,7 @@ public class MzMLFileMemoryMapper {
 		this.spectrumList = new ArrayList<>();
 	}
 
-	public InputStream execute() throws IOException, XMLStreamException, MSDKException {
+	public MzMLRawDataFile execute() throws IOException, XMLStreamException, MSDKException {
 
 		RandomAccessFile aFile = new RandomAccessFile(mzMLFile, "r");
 		FileChannel inChannel = aFile.getChannel();
@@ -63,10 +62,10 @@ public class MzMLFileMemoryMapper {
 		XMLEventReader xmlEventReader = xmlInputFactory.createXMLEventReader(is);
 
 		boolean insideSpectrumListFlag = false;
+		MzMLSpectrum spectrum = null;
 		while (xmlEventReader.hasNext()) {
 			XMLEvent xmlEvent = xmlEventReader.nextEvent();
 			if (xmlEvent.isStartElement()) {
-				MzMLSpectrum spectrum = new MzMLSpectrum();
 				StartElement startElement = xmlEvent.asStartElement();
 				if (startElement.getName().getLocalPart().equals("spectrumList") && xmlEventReader.hasNext()) {
 					xmlEvent = xmlEventReader.nextEvent();
@@ -78,11 +77,16 @@ public class MzMLFileMemoryMapper {
 					spectrum = new MzMLSpectrum();
 				}
 				if (insideSpectrumListFlag && startElement.getName().getLocalPart().equals("cvParam")
-						&& xmlEventReader.hasNext()) {
+						&& spectrum != null && xmlEventReader.hasNext()) {
 					xmlEvent = xmlEventReader.nextEvent();
 					Attribute accessionAttr = startElement.getAttributeByName(new QName("accession"));
 					Attribute valueAttr = startElement.getAttributeByName(new QName("value"));
 					spectrum.add(accessionAttr.getValue(), valueAttr.getValue());
+				}
+				if (insideSpectrumListFlag && startElement.getName().getLocalPart().equals("binary") && spectrum != null
+						&& xmlEventReader.hasNext()) {
+					xmlEvent = xmlEventReader.nextEvent();
+					spectrum.addBinaryDataPosition(is.getCurrentPosition());
 				}
 			}
 			if (xmlEvent.isEndElement()) {
@@ -96,6 +100,6 @@ public class MzMLFileMemoryMapper {
 
 		aFile.close();
 		is.close();
-		return is;
+		return null;
 	}
 }
