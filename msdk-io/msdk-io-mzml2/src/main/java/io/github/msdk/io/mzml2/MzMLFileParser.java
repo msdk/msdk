@@ -46,7 +46,9 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 			XMLEventReader xmlEventReader = xmlInputFactory.createXMLEventReader(is);
 
 			boolean insideSpectrumListFlag = false;
+			boolean insideBinaryDataArrayFlag = false;
 			MzMLSpectrum spectrum = null;
+			MzMLBinaryDataInfo binaryDataInfo = null;
 			while (xmlEventReader.hasNext()) {
 				XMLEvent xmlEvent = xmlEventReader.nextEvent();
 				if (xmlEvent.isStartElement()) {
@@ -55,9 +57,16 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 						xmlEvent = xmlEventReader.nextEvent();
 						insideSpectrumListFlag = true;
 					}
+					if (startElement.getName().getLocalPart().equals("binaryDataArray") && xmlEventReader.hasNext()) {
+						xmlEvent = xmlEventReader.nextEvent();
+						insideBinaryDataArrayFlag = true;
+						binaryDataInfo = new MzMLBinaryDataInfo();
+					}
 					if (insideSpectrumListFlag && startElement.getName().getLocalPart().equals("spectrum")
 							&& xmlEventReader.hasNext()) {
 						xmlEvent = xmlEventReader.nextEvent();
+						if (spectrum != null)
+							spectrumList.add(spectrum);
 						spectrum = new MzMLSpectrum();
 					}
 					if (insideSpectrumListFlag && startElement.getName().getLocalPart().equals("cvParam")
@@ -67,10 +76,19 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 						Attribute valueAttr = startElement.getAttributeByName(new QName("value"));
 						spectrum.add(accessionAttr.getValue(), valueAttr.getValue());
 					}
+					if (insideBinaryDataArrayFlag && startElement.getName().getLocalPart().equals("cvParam")
+							&& binaryDataInfo != null && xmlEventReader.hasNext()) {
+						xmlEvent = xmlEventReader.nextEvent();
+						Attribute accessionAttr = startElement.getAttributeByName(new QName("accession"));
+						if (binaryDataInfo.isBitLengthAccession(accessionAttr.getValue()))
+							binaryDataInfo.setBitLength(accessionAttr.getValue());
+						if (binaryDataInfo.isCompressionTypeAccession(accessionAttr.getValue()))
+							binaryDataInfo.setCompressionType(accessionAttr.getValue());
+					}
 					if (insideSpectrumListFlag && startElement.getName().getLocalPart().equals("binary")
 							&& spectrum != null && xmlEventReader.hasNext()) {
 						xmlEvent = xmlEventReader.nextEvent();
-						spectrum.addBinaryDataPosition(is.getCurrentPosition());
+						binaryDataInfo.setPosition(is.getCurrentPosition());
 					}
 				}
 				if (xmlEvent.isEndElement()) {
@@ -78,6 +96,14 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 					if (endElement.getName().getLocalPart().equals("spectrumList") && xmlEventReader.hasNext()) {
 						xmlEvent = xmlEventReader.nextEvent();
 						insideSpectrumListFlag = false;
+					}
+				}
+				if (xmlEvent.isEndElement()) {
+					EndElement endElement = xmlEvent.asEndElement();
+					if (endElement.getName().getLocalPart().equals("binaryDataArray") && xmlEventReader.hasNext()) {
+						xmlEvent = xmlEventReader.nextEvent();
+						spectrum.addBinaryDataInfo(binaryDataInfo);
+						insideBinaryDataArrayFlag = false;
 					}
 				}
 			}

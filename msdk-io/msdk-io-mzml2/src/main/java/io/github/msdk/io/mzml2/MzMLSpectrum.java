@@ -32,11 +32,11 @@ import io.github.msdk.util.tolerances.MzTolerance;
 
 public class MzMLSpectrum implements MsScan {
 	private HashMap<String, String> cvParamValues;
-	private ArrayList<Long> binaryDataPositions;
+	private ArrayList<MzMLBinaryDataInfo> binaryDataInfoArray;
 
 	public MzMLSpectrum() {
 		cvParamValues = new HashMap<>();
-		binaryDataPositions = new ArrayList<>();
+		binaryDataInfoArray = new ArrayList<>();
 	}
 
 	public void add(String accession, String value) {
@@ -51,12 +51,16 @@ public class MzMLSpectrum implements MsScan {
 		return cvParamValues.size();
 	}
 
-	public ArrayList<Long> getBinaryDataPositions() {
-		return binaryDataPositions;
+	public ArrayList<MzMLBinaryDataInfo> getBinaryDataInfoArray() {
+		return binaryDataInfoArray;
 	}
 
-	public void addBinaryDataPosition(long pos) {
-		binaryDataPositions.add(pos);
+	public void addBinaryDataInfo(MzMLBinaryDataInfo binaryDataInfo) {
+		binaryDataInfoArray.add(binaryDataInfo);
+	}
+
+	public int getBinaryDataInfoArraySize() {
+		return binaryDataInfoArray.size();
 	}
 
 	// TODO Configure implemented methods
