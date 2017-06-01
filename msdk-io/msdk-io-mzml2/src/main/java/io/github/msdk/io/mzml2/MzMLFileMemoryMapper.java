@@ -24,7 +24,7 @@ import javax.xml.stream.XMLStreamException;
 
 import io.github.msdk.MSDKException;
 
-public class MzMLFileMemoryMapper {
+class MzMLFileMemoryMapper {
 
 	public MappedByteBufferInputStream mapToMemory(File mzMLFile)
 			throws IOException, XMLStreamException, MSDKException {

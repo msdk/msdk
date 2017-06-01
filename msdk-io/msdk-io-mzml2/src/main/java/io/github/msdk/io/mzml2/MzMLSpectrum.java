@@ -31,24 +31,24 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.util.tolerances.MzTolerance;
 
 public class MzMLSpectrum implements MsScan {
-	private HashMap<String, String> spectrumData;
+	private HashMap<String, String> cvParamValues;
 	private ArrayList<Long> binaryDataPositions;
 
 	public MzMLSpectrum() {
-		spectrumData = new HashMap<>();
+		cvParamValues = new HashMap<>();
 		binaryDataPositions = new ArrayList<>();
 	}
 
 	public void add(String accession, String value) {
-		spectrumData.put(accession, value);
+		cvParamValues.put(accession, value);
 	}
 
 	public HashMap<String, String> getSpectrumData() {
-		return spectrumData;
+		return cvParamValues;
 	}
 
 	public int getSpectrumDataSize() {
-		return spectrumData.size();
+		return cvParamValues.size();
 	}
 
 	public ArrayList<Long> getBinaryDataPositions() {
