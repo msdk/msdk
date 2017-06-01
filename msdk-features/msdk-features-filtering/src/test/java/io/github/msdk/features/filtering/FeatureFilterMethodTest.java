@@ -33,6 +33,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
+import io.github.msdk.datamodel.impl.SimpleSample;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
@@ -99,7 +100,7 @@ public class FeatureFilterMethodTest {
 
     // Create a new feature table
     FeatureTable featureTable = MSDKObjectBuilder.getFeatureTable("orbitrap_300-600mz", dataStore);
-    Sample sample = MSDKObjectBuilder.getSample("orbitrap_300-600mz");
+    Sample sample = new SimpleSample("orbitrap_300-600mz");
 
     ChromatogramToFeatureTableMethod tableBuilder =
         new ChromatogramToFeatureTableMethod(chromatograms, featureTable, sample);

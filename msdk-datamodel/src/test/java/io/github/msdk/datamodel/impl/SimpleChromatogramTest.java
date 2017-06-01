@@ -56,7 +56,7 @@ public class SimpleChromatogramTest {
 
     // Change raw data file
     final @Nonnull RawDataFile newRawDataFile =
-        MSDKObjectBuilder.getRawDataFile("Sample A1", null, FileType.NETCDF, dataPointStore);
+        new SimpleRawDataFile("Sample A1", null, FileType.NETCDF, dataPointStore);
     chromatogram1.setRawDataFile(newRawDataFile);
 
     // Verify raw data file

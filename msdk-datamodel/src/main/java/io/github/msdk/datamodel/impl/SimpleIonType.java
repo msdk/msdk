@@ -31,7 +31,7 @@ public class SimpleIonType implements IonType {
   private @Nonnull String adductFormula;
   private Integer charge;
 
-  SimpleIonType(@Nonnull String name, @Nonnull PolarityType polarity, int numberOfMolecules,
+  public SimpleIonType(@Nonnull String name, @Nonnull PolarityType polarity, int numberOfMolecules,
       @Nonnull String adductFormula, Integer charge) {
     Preconditions.checkNotNull(name);
     Preconditions.checkNotNull(polarity);

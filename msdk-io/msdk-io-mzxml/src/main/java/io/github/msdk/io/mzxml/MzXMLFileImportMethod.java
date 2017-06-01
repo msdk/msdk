@@ -40,6 +40,7 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
@@ -268,7 +269,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
         double precursorMz = 0d;
         if (!textContent.isEmpty())
           precursorMz = Double.parseDouble(textContent);
-        IsolationInfo newIsolation = MSDKObjectBuilder.getIsolationInfo(
+        IsolationInfo newIsolation = new SimpleIsolationInfo(
             Range.singleton(precursorMz), null, precursorMz, precursorCharge, null);
         buildingScan.getIsolations().add(newIsolation);
 

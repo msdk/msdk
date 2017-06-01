@@ -108,24 +108,6 @@ class MzMLChromatogram implements Chromatogram {
 
   /** {@inheritDoc} */
   @Override
-  public void setMz(@Nullable Double newMz) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setSeparationType(@Nonnull SeparationType separationType) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setIonAnnotation(@Nonnull IonAnnotation ionAnnotation) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
   @Nonnull
   public Integer getNumberOfDataPoints() {
     return numOfDataPoints;

@@ -32,7 +32,6 @@ import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
-import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -101,7 +100,7 @@ public class SimpleMsScanTest {
 
     // Change raw data file
     final @Nonnull RawDataFile newRawDataFile =
-        MSDKObjectBuilder.getRawDataFile("Sample B1", null, FileType.MZML, dataPointStore);
+        new SimpleRawDataFile("Sample B1", null, FileType.MZML, dataPointStore);
     msScan1.setRawDataFile(newRawDataFile);
 
     // Verify raw data file
@@ -197,7 +196,7 @@ public class SimpleMsScanTest {
   @Test
   public void testSetRawDataFile() throws MSDKException {
     DataPointStore store = DataPointStoreFactory.getTmpFileDataStore();
-    RawDataFile rdf = MSDKObjectBuilder.getRawDataFile("test", null, FileType.UNKNOWN, store);
+    RawDataFile rdf = new SimpleRawDataFile("test", null, FileType.UNKNOWN, store);
     MsFunction msf = MSDKObjectBuilder.getMsFunction(1);
     SimpleMsScan scan = new SimpleMsScan(store, 1, msf);
     scan.setRawDataFile(rdf);
@@ -207,8 +206,8 @@ public class SimpleMsScanTest {
   @Test(expected = MSDKRuntimeException.class)
   public void testSetRawDataFileFail() throws MSDKException {
     DataPointStore store = DataPointStoreFactory.getTmpFileDataStore();
-    RawDataFile rdf = MSDKObjectBuilder.getRawDataFile("test", null, FileType.UNKNOWN, store);
-    RawDataFile rdf2 = MSDKObjectBuilder.getRawDataFile("test2", null, FileType.UNKNOWN, store);
+    RawDataFile rdf = new SimpleRawDataFile("test", null, FileType.UNKNOWN, store);
+    RawDataFile rdf2 = new SimpleRawDataFile("test2", null, FileType.UNKNOWN, store);
     MsFunction msf = MSDKObjectBuilder.getMsFunction(1);
     SimpleMsScan scan = new SimpleMsScan(store, 1, msf);
     scan.setRawDataFile(rdf);

@@ -13,7 +13,6 @@
 
 package io.github.msdk.datamodel.impl;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,22 +21,12 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Range;
-
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.ionannotations.IonType;
-import io.github.msdk.datamodel.rawdata.ActivationInfo;
-import io.github.msdk.datamodel.rawdata.ActivationType;
-import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
-import io.github.msdk.datamodel.rawdata.PolarityType;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
  * Object builder
@@ -123,23 +112,6 @@ public class MSDKObjectBuilder {
     return getMsFunction(MsFunction.DEFAULT_MS_FUNCTION_NAME, msLevel);
   }
 
-  /**
-   * <p>
-   * getRawDataFile.
-   * </p>
-   *
-   * @param rawDataFileName a {@link java.lang.String} object.
-   * @param originalRawDataFile a {@link java.io.File} object.
-   * @param rawDataFileType a {@link io.github.msdk.datamodel.files.FileType} object.
-   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
-   * @return a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-   */
-  public static final @Nonnull RawDataFile getRawDataFile(@Nonnull String rawDataFileName,
-      @Nullable File originalRawDataFile, @Nonnull FileType rawDataFileType,
-      @Nonnull DataPointStore dataPointStore) {
-    return new SimpleRawDataFile(rawDataFileName, originalRawDataFile, rawDataFileType,
-        dataPointStore);
-  }
 
   /**
    * <p>
@@ -319,75 +291,8 @@ public class MSDKObjectBuilder {
     return ChargeFeatureTableColumn;
   }
 
-  /**
-   * Creates a new ActivationInfo reference.
-   *
-   * @param activationEnergy a {@link java.lang.Double} object.
-   * @param fragmentationType a {@link io.github.msdk.datamodel.rawdata.ActivationType} object.
-   * @return new SimpleActivationInfo
-   */
-  public static final @Nonnull ActivationInfo getActivationInfo(@Nullable Double activationEnergy,
-      @Nonnull ActivationType fragmentationType) {
-    ActivationInfo newFunc = new SimpleActivationInfo(activationEnergy, fragmentationType);
-    return newFunc;
-  }
 
-  /**
-   * Creates a new IsolationInfo reference.
-   *
-   * @param isolationMzRange a {@link com.google.common.collect.Range} object.
-   * @param ionInjectTime a {@link java.lang.Float} object.
-   * @param precursorMz a {@link java.lang.Double} object.
-   * @param precursorCharge a {@link java.lang.Integer} object.
-   * @param activationInfo a {@link io.github.msdk.datamodel.rawdata.ActivationInfo} object.
-   * @return new SimpleIsolationInfo
-   */
-  public static final @Nonnull IsolationInfo getIsolationInfo(
-      @Nonnull Range<Double> isolationMzRange, @Nullable Float ionInjectTime,
-      @Nullable Double precursorMz, @Nullable Integer precursorCharge,
-      @Nullable ActivationInfo activationInfo) {
-    IsolationInfo newFunc = new SimpleIsolationInfo(isolationMzRange, ionInjectTime, precursorMz,
-        precursorCharge, activationInfo);
-    return newFunc;
-  }
 
-  /**
-   * Creates a new Sample instance.
-   *
-   * @param sampleName a {@link java.lang.String} object.
-   * @return new Sample
-   */
-  public static final @Nonnull Sample getSample(@Nonnull String sampleName) {
-    SimpleSample newSample = new SimpleSample(sampleName);
-    return newSample;
-  }
 
-  /**
-   * Creates a new IonAnnotation instance.
-   *
-   * @return new IonAnnotation
-   */
-  public static final @Nonnull IonAnnotation getIonAnnotation() {
-    SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
-    return ionAnnotation;
-  }
-
-  /**
-   * <p>
-   * Creates a new SimpleIonType reference.
-   * </p>
-   *
-   * @param name a {@link java.lang.String} object.
-   * @param polarity a {@link io.github.msdk.datamodel.rawdata.PolarityType} object.
-   * @param numberOfMolecules a {@link java.lang.Integer} object.
-   * @param adductFormula a {@link java.lang.String} object.
-   * @param charge a {@link java.lang.Integer} object.
-   * @return a {@link io.github.msdk.datamodel.ionannotations.IonType} object.
-   */
-  public static final @Nonnull IonType getIonType(@Nonnull String name,
-      @Nonnull PolarityType polarity, @Nullable Integer numberOfMolecules,
-      @Nonnull String adductFormula, @Nullable Integer charge) {
-    return new SimpleIonType(name, polarity, numberOfMolecules, adductFormula, charge);
-  }
 
 }

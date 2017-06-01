@@ -33,7 +33,7 @@ public class SimpleIsolationInfo implements IsolationInfo {
   private @Nullable Integer precursorCharge;
   private @Nullable ActivationInfo activationInfo;
 
-  SimpleIsolationInfo(@Nonnull Range<Double> isolationMzRange) {
+  public SimpleIsolationInfo(@Nonnull Range<Double> isolationMzRange) {
     Preconditions.checkNotNull(isolationMzRange);
     this.isolationMzRange = isolationMzRange;
     ionInjectTime = null;
@@ -42,7 +42,7 @@ public class SimpleIsolationInfo implements IsolationInfo {
     activationInfo = null;
   }
 
-  SimpleIsolationInfo(@Nonnull Range<Double> isolationMzRange, @Nullable Float ionInjectTime,
+  public SimpleIsolationInfo(@Nonnull Range<Double> isolationMzRange, @Nullable Float ionInjectTime,
       @Nullable Double precursorMz, @Nullable Integer precursorCharge,
       @Nullable ActivationInfo activationInfo) {
     Preconditions.checkNotNull(isolationMzRange);
