@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -24,7 +24,6 @@ import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -41,13 +40,13 @@ class MzMLChromatogram implements Chromatogram {
   private final @Nonnull SeparationType separationType;
   private final @Nonnull List<IsolationInfo> isolations;
   private final @Nonnull Integer numOfDataPoints;
-  private final Range<ChromatographyInfo> rtRange;
+  private final Range<Float> rtRange;
 
   MzMLChromatogram(@Nonnull MzMLRawDataFile dataFile, @Nonnull String chromatogramId,
       @Nonnull Integer chromatogramNumber, @Nonnull SeparationType separationType,
       @Nullable Double mz, @Nonnull ChromatogramType chromatogramType,
       @Nonnull List<IsolationInfo> isolations, @Nonnull Integer numOfDataPoints,
-      @Nonnull Range<ChromatographyInfo> rtRange) {
+      @Nonnull Range<Float> rtRange) {
     this.dataFile = dataFile;
     this.chromatogramId = chromatogramId;
     this.chromatogramNumber = chromatogramNumber;
@@ -107,53 +106,6 @@ class MzMLChromatogram implements Chromatogram {
     return null;
   }
 
-  /*
-   * Unsupported set-operations
-   */
-
-  /** {@inheritDoc} */
-  @Override
-  public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setChromatogramNumber(@Nonnull Integer chromatogramNumber) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setChromatogramType(@Nonnull ChromatogramType newChromatogramType) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setDataPoints(@Nonnull ChromatographyInfo rtValues[], @Nullable double mzValues[],
-      @Nonnull float intensityValues[], @Nonnull Integer size) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setMz(@Nullable Double newMz) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setSeparationType(@Nonnull SeparationType separationType) {
-    throw new UnsupportedOperationException();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setIonAnnotation(@Nonnull IonAnnotation ionAnnotation) {
-    throw new UnsupportedOperationException();
-  }
-
   /** {@inheritDoc} */
   @Override
   @Nonnull
@@ -164,14 +116,7 @@ class MzMLChromatogram implements Chromatogram {
   /** {@inheritDoc} */
   @Override
   @Nonnull
-  public ChromatographyInfo[] getRetentionTimes() {
-    return getRetentionTimes(null);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  @Nonnull
-  public ChromatographyInfo[] getRetentionTimes(@Nullable ChromatographyInfo[] array) {
+  public float[] getRetentionTimes() {
     try {
       MzMLUnmarshaller parser = dataFile.getParser();
       if (parser == null) {
@@ -179,7 +124,7 @@ class MzMLChromatogram implements Chromatogram {
       }
       uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram =
           parser.getChromatogramById(chromatogramId);
-      return MzMLConverter.extractRtValues(jmzChromatogram, array);
+      return MzMLConverter.extractRtValues(jmzChromatogram, null);
     } catch (MzMLUnmarshallerException e) {
       throw (new MSDKRuntimeException(e));
     }
@@ -219,14 +164,7 @@ class MzMLChromatogram implements Chromatogram {
   /** {@inheritDoc} */
   @Override
   @Nullable
-  public double[] getMzValues(@Nullable double[] array) {
-    return null;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  @Nullable
-  public Range<ChromatographyInfo> getRtRange() {
+  public Range<Float> getRtRange() {
     return rtRange;
   }
 

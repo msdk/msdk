@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -251,7 +251,7 @@ public class MsSpectrumUtil {
    * @param size a {@link java.lang.Integer} object.
    * @return a {@link java.lang.String} object.
    */
-  @SuppressWarnings("null")
+
   public static @Nonnull String msSpectrumToString(@Nonnull double mzValues[],
       @Nonnull float intensityValues[], @Nonnull Integer size) {
 

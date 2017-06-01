@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -31,13 +31,13 @@ public class MzMLFileExportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void test5peptideFT() throws MSDKException, IOException {
 
     // Create the data structures
-    double mzBuffer[] = new double[10000];
-    float intensityBuffer[] = new float[10000];
+    double mzBuffer[];
+    float intensityBuffer[];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "5peptideFT.mzML");
@@ -69,10 +69,10 @@ public class MzMLFileExportMethodTest {
     Assert.assertEquals(new Integer(2), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.PROFILE, scan2.getSpectrumType());
     Assert.assertEquals(new Integer(1), scan2.getMsFunction().getMsLevel());
-    Assert.assertEquals(0.474f, scan2.getChromatographyInfo().getRetentionTime(), 0.01f);
+    Assert.assertEquals(0.474f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
-    mzBuffer = scan2.getMzValues(mzBuffer);
-    intensityBuffer = scan2.getIntensityValues(intensityBuffer);
+    mzBuffer = scan2.getMzValues();
+    intensityBuffer = scan2.getIntensityValues();
     Assert.assertEquals(19800, (int) scan2.getNumberOfDataPoints());
     Float scan2maxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan2.getNumberOfDataPoints());
@@ -83,10 +83,10 @@ public class MzMLFileExportMethodTest {
     Assert.assertEquals(new Integer(5), scan5.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan5.getSpectrumType());
     Assert.assertEquals(new Integer(2), scan5.getMsFunction().getMsLevel());
-    Assert.assertEquals(2.094f, scan5.getChromatographyInfo().getRetentionTime(), 0.01f);
+    Assert.assertEquals(2.094f, scan5.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan5.getPolarity());
-    mzBuffer = scan5.getMzValues(mzBuffer);
-    intensityBuffer = scan5.getIntensityValues(intensityBuffer);
+    mzBuffer = scan5.getMzValues();
+    intensityBuffer = scan5.getIntensityValues();
     Assert.assertEquals(837, (int) scan5.getNumberOfDataPoints());
     Float scan5maxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan5.getNumberOfDataPoints());

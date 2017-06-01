@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -23,7 +23,7 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 /**
  * Implementation of IonType
  */
-class SimpleIonType implements IonType {
+public class SimpleIonType implements IonType {
 
   private @Nonnull String name;
   private @Nonnull PolarityType polarity;
@@ -31,7 +31,7 @@ class SimpleIonType implements IonType {
   private @Nonnull String adductFormula;
   private Integer charge;
 
-  SimpleIonType(@Nonnull String name, @Nonnull PolarityType polarity, int numberOfMolecules,
+  public SimpleIonType(@Nonnull String name, @Nonnull PolarityType polarity, int numberOfMolecules,
       @Nonnull String adductFormula, Integer charge) {
     Preconditions.checkNotNull(name);
     Preconditions.checkNotNull(polarity);

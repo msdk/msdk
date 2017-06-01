@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -32,14 +32,14 @@ public class NetCDFFileImportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void testWT15() throws MSDKException {
 
     // Create the data structures
     DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
-    double mzBuffer[] = new double[10000];
-    float intensityBuffer[] = new float[10000];
+    double mzBuffer[];
+    float intensityBuffer[];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "wt15.CDF");
@@ -59,9 +59,9 @@ public class NetCDFFileImportMethodTest {
     Assert.assertEquals(new Integer(3), scan3.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan3.getSpectrumType());
     Assert.assertEquals(new Integer(1), scan3.getMsFunction().getMsLevel());
-    Assert.assertEquals(2504.508f, scan3.getChromatographyInfo().getRetentionTime(), 0.01f);
-    mzBuffer = scan3.getMzValues(mzBuffer);
-    intensityBuffer = scan3.getIntensityValues(intensityBuffer);
+    Assert.assertEquals(2504.508f, scan3.getRetentionTime(), 0.01f);
+    mzBuffer = scan3.getMzValues();
+    intensityBuffer = scan3.getIntensityValues();
     Assert.assertEquals(420, (int) scan3.getNumberOfDataPoints());
     Float scan3maxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan3.getNumberOfDataPoints());
@@ -72,9 +72,9 @@ public class NetCDFFileImportMethodTest {
     Assert.assertEquals(new Integer(1278), scan1278.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan1278.getSpectrumType());
     Assert.assertEquals(new Integer(1), scan1278.getMsFunction().getMsLevel());
-    Assert.assertEquals(4499.826f, scan1278.getChromatographyInfo().getRetentionTime(), 0.01f);
-    mzBuffer = scan1278.getMzValues(mzBuffer);
-    intensityBuffer = scan1278.getIntensityValues(intensityBuffer);
+    Assert.assertEquals(4499.826f, scan1278.getRetentionTime(), 0.01f);
+    mzBuffer = scan1278.getMzValues();
+    intensityBuffer = scan1278.getIntensityValues();
     Assert.assertEquals(61, (int) scan1278.getNumberOfDataPoints());
     Float scan1278maxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan1278.getNumberOfDataPoints());

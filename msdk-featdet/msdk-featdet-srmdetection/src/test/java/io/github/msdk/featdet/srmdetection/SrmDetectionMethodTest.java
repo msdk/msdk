@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -30,6 +30,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleSample;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -39,7 +40,7 @@ public class SrmDetectionMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void test_mzML() throws MSDKException {
 
@@ -64,7 +65,7 @@ public class SrmDetectionMethodTest {
 
     // Build feature table from chromatograms
     FeatureTable featureTable = MSDKObjectBuilder.getFeatureTable("SRM srmDetection", dataStore);
-    Sample sample = MSDKObjectBuilder.getSample("SRM");
+    Sample sample = new SimpleSample("SRM");
     ChromatogramToFeatureTableMethod chromMethod =
         new ChromatogramToFeatureTableMethod(chromatograms, featureTable, sample);
     featureTable = chromMethod.execute();
@@ -88,7 +89,7 @@ public class SrmDetectionMethodTest {
     Assert.assertEquals(722.35, rows.get(18).getData(columnMz), 0.0001);
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void test_Thermo() throws MSDKException {
 
@@ -133,7 +134,7 @@ public class SrmDetectionMethodTest {
     // Build feature table from chromatograms
     FeatureTable featureTable =
         MSDKObjectBuilder.getFeatureTable("Thermo-SRM srmDetection", dataStore);
-    Sample sample = MSDKObjectBuilder.getSample("Thermo-SRM");
+    Sample sample = new SimpleSample("Thermo-SRM");
     ChromatogramToFeatureTableMethod chromMethod =
         new ChromatogramToFeatureTableMethod(chromatograms, featureTable, sample);
     featureTable = chromMethod.execute();

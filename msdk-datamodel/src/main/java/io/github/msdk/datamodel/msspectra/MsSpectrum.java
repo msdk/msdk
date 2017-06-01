@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -38,13 +38,6 @@ public interface MsSpectrum {
   MsSpectrumType getSpectrumType();
 
   /**
-   * Updates the type of this mass spectrum.
-   *
-   * @param spectrumType new spectrum type
-   */
-  void setSpectrumType(@Nonnull MsSpectrumType spectrumType);
-
-  /**
    * <p>
    * getNumberOfDataPoints.
    * </p>
@@ -56,8 +49,7 @@ public interface MsSpectrum {
 
   /**
    * <p>
-   * Returns the m/z values of this spectrum. Generally, this method should pass null to the method
-   * that takes an array of double as a parameter.
+   * Returns the m/z values of this spectrum.
    *
    * Note: this method may need to read data from disk, therefore it may be quite slow.
    * </p>
@@ -69,22 +61,7 @@ public interface MsSpectrum {
 
   /**
    * <p>
-   * Copies the m/z values of this spectrum into the given array of double. If the array is null or
-   * is not large enough to contain all values, a new array should be created.
-   *
-   * Note: this method may need to read data from disk, therefore it may be quite slow.
-   * </p>
-   *
-   * @param array an array of double.
-   * @return an array of double.
-   */
-  @Nonnull
-  double[] getMzValues(@Nullable double array[]);
-
-  /**
-   * <p>
-   * Returns the intensity values of this spectrum. Generally, this method should pass null to the
-   * method that takes an array of float as a parameter.
+   * Returns the intensity values of this spectrum.
    *
    * Note: this method may need to read data from disk, therefore it may be quite slow.
    * </p>
@@ -93,32 +70,6 @@ public interface MsSpectrum {
    */
   @Nonnull
   float[] getIntensityValues();
-
-  /**
-   * <p>
-   * Copies the intensity values of this spectrum into the given array of double. If the array is
-   * null or is not large enough to contain all values, a new array should be created.
-   *
-   * Note: this method may need to read data from disk, therefore it may be quite slow.
-   * </p>
-   *
-   * @param array an array of float.
-   * @return an array of float.
-   */
-  @Nonnull
-  float[] getIntensityValues(@Nullable float array[]);
-
-  /**
-   * <p>
-   * setDataPoints.
-   * </p>
-   *
-   * @param mzValues an array of double.
-   * @param intensityValues an array of float.
-   * @param size a {@link java.lang.Integer} object.
-   */
-  void setDataPoints(@Nonnull double mzValues[], @Nonnull float intensityValues[],
-      @Nonnull Integer size);
 
   /**
    * Returns the sum of intensities of all data points (total ion current or TIC).

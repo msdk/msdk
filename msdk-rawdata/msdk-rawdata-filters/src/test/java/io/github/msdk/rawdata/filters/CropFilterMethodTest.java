@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -32,7 +32,7 @@ public class CropFilterMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  @SuppressWarnings("null")
+
   @Test
   public void testCropFilter() throws MSDKException {
 
@@ -46,8 +46,8 @@ public class CropFilterMethodTest {
 
     // Create the data needed by the Crop Filter Method
     List<MsScan> scans = rawFile.getScans();
-    Range<Float> rtRange = Range.closed(scans.get(50).getChromatographyInfo().getRetentionTime(),
-        scans.get(scans.size() - 30).getChromatographyInfo().getRetentionTime());
+    Range<Float> rtRange = Range.closed(scans.get(50).getRetentionTime(),
+        scans.get(scans.size() - 30).getRetentionTime());
     Range<Double> scanRange = scans.get(0).getMzRange();
     Range<Double> mzRange =
         Range.closed(scanRange.lowerEndpoint() + 10, scanRange.upperEndpoint() - 10);
@@ -66,13 +66,13 @@ public class CropFilterMethodTest {
     // Check the new scans are between the new range limits
     for (MsScan newScan : newScans) {
       Assert.assertNotNull(newScan);
-      Assert.assertTrue(rtRange.contains(newScan.getChromatographyInfo().getRetentionTime()));
+      Assert.assertTrue(rtRange.contains(newScan.getRetentionTime()));
       Assert.assertTrue(mzRange.encloses(newScan.getMzRange()));
     }
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testNoMatch() throws MSDKException {
 

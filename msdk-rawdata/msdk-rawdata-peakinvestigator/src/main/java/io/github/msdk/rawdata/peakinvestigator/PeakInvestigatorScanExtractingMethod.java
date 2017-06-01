@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleMsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.util.ArrayUtil;
@@ -181,7 +181,7 @@ public class PeakInvestigatorScanExtractingMethod implements MSDKMethod<List<MsS
     }
 
     MsSpectrum result =
-        MSDKObjectBuilder.getMsSpectrum(masses, intensities, size, MsSpectrumType.CENTROIDED);
+        new SimpleMsSpectrum(masses, intensities, size, MsSpectrumType.CENTROIDED);
     if (errors.size() == size) {
       result = new PeakInvestigatorMsSpectrum(result, errors);
     }

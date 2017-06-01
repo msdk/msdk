@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -41,9 +41,9 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
+import io.github.msdk.datamodel.impl.SimpleSample;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.FeatureTableUtil;
 
 /**
@@ -83,7 +83,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
   public CsvFileImportMethod(@Nonnull File sourceFile, @Nonnull DataPointStore dataStore) {
     this.sourceFile = sourceFile;
     this.dataStore = dataStore;
-    this.fileSample = MSDKObjectBuilder.getSample(sourceFile.getName());
+    this.fileSample = new SimpleSample(sourceFile.getName());
   }
 
   /** {@inheritDoc} */
@@ -181,38 +181,17 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
           FeatureTableColumn currentColumn = columns.get(i);
           Class<?> currentClass = currentColumn.getDataTypeClass();
 
-          // Handle ChromatographyInfo and List (= Ion Annotation)
-          // class separately
-          if (currentClass.getSimpleName().equals("ChromatographyInfo")) {
-            ChromatographyInfo chromatographyInfo = null;
-
-            // Two dimensional data (e.g. 360 , 1.630)
-            if (stringData.contains(",")) {
-              String[] rtValues = stringData.split(",");
-              Float rt1 = Float.parseFloat(rtValues[0].replace(" ", ""));
-              Float rt2 = Float.parseFloat(rtValues[1].replace(" ", ""));
-              chromatographyInfo =
-                  MSDKObjectBuilder.getChromatographyInfo2D(SeparationType.UNKNOWN_2D, rt1, rt2);
-            } else {
-              Float rt = Float.parseFloat(stringData);
-              chromatographyInfo =
-                  MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
-            }
-
-            // Add the data
-            row.setData(currentColumn, chromatographyInfo);
-
-          } else if (currentClass.getSimpleName().equals("List")) {
-            FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn =
+          if (currentClass.getSimpleName().equals("List")) {
+            FeatureTableColumn<List<SimpleIonAnnotation>> ionAnnotationColumn =
                 newFeatureTable.getColumn(ColumnName.IONANNOTATION, null);
-            List<IonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
-            IonAnnotation ionAnnotation;
+            List<SimpleIonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
+            SimpleIonAnnotation ionAnnotation;
 
             // Get ion annotation or create a new
             if (ionAnnotations != null) {
               ionAnnotation = ionAnnotations.get(0);
             } else {
-              ionAnnotation = MSDKObjectBuilder.getIonAnnotation();
+              ionAnnotation = new SimpleIonAnnotation();
             }
 
             switch (columnNames.get(i).toLowerCase()) {
@@ -324,7 +303,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
         if (newColumnName.equals(ColumnName.MZ))
           column = MSDKObjectBuilder.getMzFeatureTableColumn();
         if (newColumnName.equals(ColumnName.RT))
-          column = MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn();
+          column = MSDKObjectBuilder.getRetentionTimeFeatureTableColumn();
         if (newColumnName.equals(ColumnName.IONANNOTATION))
           column = MSDKObjectBuilder.getIonAnnotationFeatureTableColumn();
       } else {
@@ -520,7 +499,7 @@ public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
     if (samples.size() > 0) {
       for (String sampleName : samples) {
         // Create a new sample
-        Sample sample = MSDKObjectBuilder.getSample(sampleName);
+        Sample sample = new SimpleSample(sampleName);
 
         // Find all columns which have the sample in their name
         for (int i = 0; i < columns.length; i++) {

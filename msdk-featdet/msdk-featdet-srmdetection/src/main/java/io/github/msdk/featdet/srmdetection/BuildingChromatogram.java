@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -15,17 +15,15 @@ package io.github.msdk.featdet.srmdetection;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-
 class BuildingChromatogram {
 
   // Initial variables
   private int size = 0;
-  private ChromatographyInfo[] rtValues = new ChromatographyInfo[100];
+  private float[] rtValues = new float[100];
   private double[] mzValues = new double[100];
   private float[] intensityValues = new float[100];
 
-  void addDataPoint(@Nonnull ChromatographyInfo rt, @Nonnull Double mz, @Nonnull Float intensity) {
+  void addDataPoint(@Nonnull Float rt, @Nonnull Double mz, @Nonnull Float intensity) {
 
     // Make sure we have enough space to add a new data point
     if (size == mzValues.length) {
@@ -39,7 +37,7 @@ class BuildingChromatogram {
     size++;
   }
 
-  ChromatographyInfo[] getRtValues() {
+  float[] getRtValues() {
     return rtValues;
   }
 
@@ -63,7 +61,7 @@ class BuildingChromatogram {
     if (mzValues.length >= newSize)
       return;
 
-    ChromatographyInfo[] rtValuesNew = new ChromatographyInfo[newSize];
+    float[] rtValuesNew = new float[newSize];
     double[] mzValuesNew = new double[newSize];
     float[] intensityValuesNew = new float[newSize];
 

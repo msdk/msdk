@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -29,9 +29,10 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleActivationInfo;
+import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScanType;
@@ -111,7 +112,7 @@ class MzMLConverter {
   }
 
   @Nullable
-  ChromatographyInfo extractChromatographyData(Spectrum spectrum) {
+  Float extractChromatographyData(Spectrum spectrum) {
 
     ScanList scanListElement = spectrum.getScanList();
     if (scanListElement == null)
@@ -144,9 +145,7 @@ class MzMLConverter {
               // Seconds
               retentionTime = Float.parseFloat(value);
             }
-            ChromatographyInfo chromInfo =
-                MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, retentionTime);
-            return chromInfo;
+            return retentionTime;
           } catch (Exception e) {
             // Ignore incorrectly formatted numbers, just dump the
             // exception
@@ -160,7 +159,7 @@ class MzMLConverter {
     return null;
   }
 
-  @SuppressWarnings("null")
+
   @Nonnull
   String extractScanDefinition(Spectrum spectrum) {
 
@@ -220,7 +219,7 @@ class MzMLConverter {
     return null;
   }
 
-  @SuppressWarnings("null")
+
   @Nonnull
   List<IsolationInfo> extractIsolations(Spectrum spectrum) {
     PrecursorList precursorListElement = spectrum.getPrecursorList();
@@ -283,7 +282,7 @@ class MzMLConverter {
           isolationWindowUpper = 0.5;
         Range<Double> isolationRange = Range.closed(isolationWindowTarget - isolationWindowLower,
             isolationWindowTarget + isolationWindowUpper);
-        IsolationInfo isolation = MSDKObjectBuilder.getIsolationInfo(isolationRange, null,
+        IsolationInfo isolation = new SimpleIsolationInfo(isolationRange, null,
             precursorMz, precursorCharge, null);
         isolations.add(isolation);
       }
@@ -346,7 +345,7 @@ class MzMLConverter {
    * @param chromatogram a {@link uk.ac.ebi.jmzml.model.mzml.Chromatogram} object.
    * @return a {@link java.util.List} object.
    */
-  @SuppressWarnings("null")
+
   @Nonnull
   public List<IsolationInfo> extractIsolations(
       uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {
@@ -380,20 +379,20 @@ class MzMLConverter {
 
       if (precursorActivationEnergy != null) {
         activationInfo =
-            MSDKObjectBuilder.getActivationInfo(precursorActivationEnergy, precursorActivation);
+            new SimpleActivationInfo(precursorActivationEnergy, precursorActivation);
       }
 
       List<IsolationInfo> isolations = new ArrayList<>();
       IsolationInfo isolationInfo = null;
 
       if (precursorIsolationMz != null) {
-        isolationInfo = MSDKObjectBuilder.getIsolationInfo(Range.singleton(precursorIsolationMz),
+        isolationInfo = new SimpleIsolationInfo(Range.singleton(precursorIsolationMz),
             null, precursorIsolationMz, null, activationInfo);
         isolations.add(isolationInfo);
       }
 
       if (productIsolationMz != null) {
-        isolationInfo = MSDKObjectBuilder.getIsolationInfo(Range.singleton(productIsolationMz),
+        isolationInfo = new SimpleIsolationInfo(Range.singleton(productIsolationMz),
             null, productIsolationMz, null, null);
         isolations.add(isolationInfo);
       }
@@ -452,14 +451,14 @@ class MzMLConverter {
 
   }
 
-  static @Nonnull ChromatographyInfo[] extractRtValues(
+  static @Nonnull float[] extractRtValues(
       uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram,
-      @Nullable ChromatographyInfo[] array) {
+      @Nullable float[] array) {
 
     BinaryDataArrayList dataList = jmzChromatogram.getBinaryDataArrayList();
 
     if ((dataList == null) || (dataList.getCount().equals(0)))
-      return new ChromatographyInfo[0];
+      return new float[0];
 
     // Obtain the data arrays from chromatogram
     final BinaryDataArray rtArray = dataList.getBinaryDataArray().get(0);
@@ -467,14 +466,12 @@ class MzMLConverter {
 
     // Allocate space for the data points
     if ((array == null) || (array.length < rtValues.length))
-      array = new ChromatographyInfo[rtValues.length];
+      array = new float[rtValues.length];
 
     // Copy the actual data point values
     for (int i = 0; i < rtValues.length; i++) {
       final float rt = rtValues[i].floatValue();
-      final ChromatographyInfo chromatographyInfo =
-          MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
-      array[i] = chromatographyInfo;
+      array[i] = rt;
     }
 
     return array;

@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -27,14 +27,13 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
+import io.github.msdk.datamodel.impl.SimpleMsScan;
+import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
-import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
 class RawDumpParser {
@@ -54,7 +53,7 @@ class RawDumpParser {
   private Double precursorMz;
   private Integer precursorCharge;
 
-  private final RawDataFile newRawFile;
+  private final SimpleRawDataFile newRawFile;
   private final DataPointStore dataStore;
   private byte byteBuffer[] = new byte[100000];
 
@@ -62,7 +61,7 @@ class RawDumpParser {
   private float intensityValues[] = new float[10000];
   private int numOfDataPoints;
 
-  RawDumpParser(RawDataFile newRawFile, DataPointStore dataStore) {
+  RawDumpParser(SimpleRawDataFile newRawFile, DataPointStore dataStore) {
     this.newRawFile = newRawFile;
     this.dataStore = dataStore;
   }
@@ -99,7 +98,7 @@ class RawDumpParser {
 
   }
 
-  @SuppressWarnings("null")
+
   private void parseLine(String line, InputStream dumpStream) throws MSDKException, IOException {
 
     if (line.startsWith("ERROR: ")) {
@@ -268,12 +267,9 @@ class RawDumpParser {
         msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
 
       // Create a new scan
-      MsScan newScan = MSDKObjectBuilder.getMsScan(dataStore, scanNumber, msFunction);
+      SimpleMsScan newScan = new SimpleMsScan(dataStore, scanNumber, msFunction);
 
-      ChromatographyInfo chromInfo =
-          MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, retentionTime);
-      newScan.setChromatographyInfo(chromInfo);
-
+      newScan.setRetentionTime(retentionTime);
       newScan.setDataPoints(mzValues, intensityValues, numOfDataPoints);
       newScan.setSpectrumType(spectrumType);
       newScan.setPolarity(polarity);
@@ -281,7 +277,7 @@ class RawDumpParser {
       newScan.setScanDefinition(scanId);
 
       if (precursorMz != null) {
-        IsolationInfo isolation = MSDKObjectBuilder.getIsolationInfo(Range.singleton(precursorMz),
+        IsolationInfo isolation = new SimpleIsolationInfo(Range.singleton(precursorMz),
             null, precursorMz, precursorCharge, null);
         newScan.getIsolations().add(isolation);
       }

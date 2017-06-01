@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -26,17 +26,17 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 /**
  * Implementation of Sample
  */
-class SimpleSample implements Sample {
+public class SimpleSample implements Sample {
 
   private @Nonnull String name;
   private RawDataFile rawDataFile;
   private File originalFile;
 
-  SimpleSample(@Nonnull String name) {
+  public SimpleSample(@Nonnull String name) {
     this(name, null);
   }
 
-  SimpleSample(@Nonnull String name, @Nullable RawDataFile rawDataFile) {
+  public SimpleSample(@Nonnull String name, @Nullable RawDataFile rawDataFile) {
     Preconditions.checkNotNull(name);
     this.name = name;
     this.rawDataFile = rawDataFile;

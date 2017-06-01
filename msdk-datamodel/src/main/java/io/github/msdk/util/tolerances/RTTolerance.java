@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -26,7 +26,7 @@ import com.google.common.collect.Range;
 public class RTTolerance {
 
   // Tolerance can be either absolute (sec) or relative (%).
-  private final @Nonnull Double rtTolerance;
+  private final @Nonnull Float rtTolerance;
   private final boolean isAbsolute;
 
   /**
@@ -34,10 +34,10 @@ public class RTTolerance {
    * Constructor for RTTolerance.
    * </p>
    *
-   * @param rtTolerance a {@link java.lang.Double} object.
+   * @param rtTolerance a {@link java.lang.Float} object.
    * @param isAbsolute a {@link java.lang.Boolean} object.
    */
-  public RTTolerance(final double rtTolerance, final boolean isAbsolute) {
+  public RTTolerance(final float rtTolerance, final boolean isAbsolute) {
     this.rtTolerance = rtTolerance;
     this.isAbsolute = isAbsolute;
   }
@@ -58,9 +58,9 @@ public class RTTolerance {
    * getTolerance.
    * </p>
    *
-   * @return a double.
+   * @return a float.
    */
-  public double getTolerance() {
+  public float getTolerance() {
     return rtTolerance;
   }
 
@@ -69,11 +69,11 @@ public class RTTolerance {
    * getToleranceRange.
    * </p>
    *
-   * @param rtValue a double.
+   * @param rtValue a float.
    * @return a {@link com.google.common.collect.Range} object.
    */
-  public Range<Double> getToleranceRange(final double rtValue) {
-    final double absoluteTolerance = isAbsolute ? rtTolerance : rtValue * rtTolerance;
+  public Range<Float> getToleranceRange(final float rtValue) {
+    final float absoluteTolerance = isAbsolute ? rtTolerance : rtValue * rtTolerance;
     return Range.closed(rtValue - absoluteTolerance, rtValue + absoluteTolerance);
   }
 
@@ -82,11 +82,11 @@ public class RTTolerance {
    * checkWithinTolerance.
    * </p>
    *
-   * @param rt1 a double.
-   * @param rt2 a double.
+   * @param rt1 a float.
+   * @param rt2 a float.
    * @return a boolean.
    */
-  public boolean checkWithinTolerance(final double rt1, final double rt2) {
+  public boolean checkWithinTolerance(final float rt1, final float rt2) {
     return getToleranceRange(rt1).contains(rt2);
   }
 

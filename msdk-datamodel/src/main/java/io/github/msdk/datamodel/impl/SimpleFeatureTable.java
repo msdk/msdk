@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -28,12 +28,11 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * Implementation of the FeatureTable interface.
  */
-class SimpleFeatureTable implements FeatureTable {
+public class SimpleFeatureTable implements FeatureTable {
 
   private @Nonnull String name;
   private @Nonnull DataPointStore dataPointStore;
@@ -63,7 +62,7 @@ class SimpleFeatureTable implements FeatureTable {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   public @Nonnull List<FeatureTableRow> getRows() {
     List<FeatureTableRow> featureTableRowCopy = ImmutableList.copyOf(featureTableRows);
@@ -89,7 +88,7 @@ class SimpleFeatureTable implements FeatureTable {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   public @Nonnull List<FeatureTableColumn<?>> getColumns() {
     List<FeatureTableColumn<?>> featureTableColumnsCopy = ImmutableList.copyOf(featureTableColumns);
@@ -147,7 +146,7 @@ class SimpleFeatureTable implements FeatureTable {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
+
   @Override
   public @Nonnull List<Sample> getSamples() {
     ArrayList<Sample> sampleList = new ArrayList<Sample>();
@@ -169,11 +168,11 @@ class SimpleFeatureTable implements FeatureTable {
 
   /** {@inheritDoc} */
   @Override
-  public List<FeatureTableRow> getRowsInsideRange(Range<Double> rtRange, Range<Double> mzRange) {
+  public List<FeatureTableRow> getRowsInsideRange(Range<Float> rtRange, Range<Double> mzRange) {
     List<FeatureTableRow> result = new ArrayList<FeatureTableRow>();
     for (FeatureTableRow row : featureTableRows) {
-      ChromatographyInfo rowChromatographyInfo = row.getChromatographyInfo();
-      if (rtRange.contains((double) rowChromatographyInfo.getRetentionTime())
+      Float rowRT = row.getRT();
+      if ((rowRT != null) && rtRange.contains(rowRT)
           && mzRange.contains(row.getMz()))
         result.add(row);
     }

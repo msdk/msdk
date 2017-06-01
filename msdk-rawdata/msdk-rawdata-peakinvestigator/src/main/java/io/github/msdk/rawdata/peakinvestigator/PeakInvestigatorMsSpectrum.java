@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -74,12 +74,6 @@ public class PeakInvestigatorMsSpectrum implements MsSpectrum {
 
   /** {@inheritDoc} */
   @Override
-  public void setSpectrumType(MsSpectrumType spectrumType) {
-    throw new RuntimeException("This class should not have a MsSpectrumType set.");
-  }
-
-  /** {@inheritDoc} */
-  @Override
   public Integer getNumberOfDataPoints() {
     return spectrum.getNumberOfDataPoints();
   }
@@ -92,26 +86,8 @@ public class PeakInvestigatorMsSpectrum implements MsSpectrum {
 
   /** {@inheritDoc} */
   @Override
-  public double[] getMzValues(double[] array) {
-    return spectrum.getMzValues(array);
-  }
-
-  /** {@inheritDoc} */
-  @Override
   public float[] getIntensityValues() {
     return spectrum.getIntensityValues();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public float[] getIntensityValues(float[] array) {
-    return spectrum.getIntensityValues(array);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setDataPoints(double[] mzValues, float[] intensityValues, Integer size) {
-    throw new RuntimeException("This class should never set its data points dynamically.");
   }
 
   /** {@inheritDoc} */

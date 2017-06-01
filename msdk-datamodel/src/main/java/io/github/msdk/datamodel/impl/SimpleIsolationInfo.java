@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -25,7 +25,7 @@ import io.github.msdk.datamodel.rawdata.IsolationInfo;
 /**
  * Implementation of IsolationInfo
  */
-class SimpleIsolationInfo implements IsolationInfo {
+public class SimpleIsolationInfo implements IsolationInfo {
 
   private @Nonnull Range<Double> isolationMzRange;
   private @Nullable Float ionInjectTime;
@@ -33,7 +33,7 @@ class SimpleIsolationInfo implements IsolationInfo {
   private @Nullable Integer precursorCharge;
   private @Nullable ActivationInfo activationInfo;
 
-  SimpleIsolationInfo(@Nonnull Range<Double> isolationMzRange) {
+  public SimpleIsolationInfo(@Nonnull Range<Double> isolationMzRange) {
     Preconditions.checkNotNull(isolationMzRange);
     this.isolationMzRange = isolationMzRange;
     ionInjectTime = null;
@@ -42,7 +42,7 @@ class SimpleIsolationInfo implements IsolationInfo {
     activationInfo = null;
   }
 
-  SimpleIsolationInfo(@Nonnull Range<Double> isolationMzRange, @Nullable Float ionInjectTime,
+  public SimpleIsolationInfo(@Nonnull Range<Double> isolationMzRange, @Nullable Float ionInjectTime,
       @Nullable Double precursorMz, @Nullable Integer precursorCharge,
       @Nullable ActivationInfo activationInfo) {
     Preconditions.checkNotNull(isolationMzRange);

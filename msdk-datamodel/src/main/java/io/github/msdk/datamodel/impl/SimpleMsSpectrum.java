@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -28,7 +28,7 @@ import io.github.msdk.util.tolerances.MzTolerance;
 /**
  * Simple implementation of the MassSpectrum interface.
  */
-class SimpleMsSpectrum implements MsSpectrum {
+public class SimpleMsSpectrum implements MsSpectrum {
 
   private @Nonnull double mzValues[];
   private @Nonnull float intensityValues[];
@@ -39,7 +39,7 @@ class SimpleMsSpectrum implements MsSpectrum {
   private @Nonnull MsSpectrumType spectrumType;
   private @Nullable MzTolerance mzTolerance;
 
-  SimpleMsSpectrum(@Nonnull double mzValues[], @Nonnull float intensityValues[],
+  public SimpleMsSpectrum(@Nonnull double mzValues[], @Nonnull float intensityValues[],
       @Nonnull Integer size, @Nonnull MsSpectrumType spectrumType) {
     Preconditions.checkNotNull(mzValues);
     Preconditions.checkNotNull(intensityValues);
@@ -69,14 +69,7 @@ class SimpleMsSpectrum implements MsSpectrum {
   /** {@inheritDoc} */
   @Override
   public @Nonnull double[] getMzValues() {
-    return getMzValues(null);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public @Nonnull double[] getMzValues(@Nullable double array[]) {
-    if ((array == null) || (array.length < numOfDataPoints))
-      array = new double[numOfDataPoints];
+    double[] array = new double[numOfDataPoints];
     System.arraycopy(mzValues, 0, array, 0, numOfDataPoints);
     return array;
   }
@@ -84,20 +77,12 @@ class SimpleMsSpectrum implements MsSpectrum {
   /** {@inheritDoc} */
   @Override
   public @Nonnull float[] getIntensityValues() {
-    return getIntensityValues(null);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public @Nonnull float[] getIntensityValues(@Nullable float array[]) {
-    if ((array == null) || (array.length < numOfDataPoints))
-      array = new float[numOfDataPoints];
+    float array[] = new float[numOfDataPoints];
     System.arraycopy(intensityValues, 0, array, 0, numOfDataPoints);
     return array;
   }
 
   /** {@inheritDoc} */
-  @Override
   public synchronized void setDataPoints(@Nonnull double mzValues[],
       @Nonnull float intensityValues[], @Nonnull Integer size) {
 
@@ -126,7 +111,6 @@ class SimpleMsSpectrum implements MsSpectrum {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setSpectrumType(@Nonnull MsSpectrumType spectrumType) {
     this.spectrumType = spectrumType;
   }

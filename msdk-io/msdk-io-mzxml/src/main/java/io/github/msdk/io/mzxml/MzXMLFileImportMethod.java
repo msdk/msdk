@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -40,15 +40,15 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
+import io.github.msdk.datamodel.impl.SimpleMsScan;
+import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
-import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
 /**
@@ -61,7 +61,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
   private final @Nonnull File sourceFile;
   private final @Nonnull FileType fileType = FileType.MZXML;
 
-  private RawDataFile newRawDataFile;
+  private SimpleRawDataFile newRawDataFile;
   private final @Nonnull DataPointStore dataStore;
 
   private int totalScans = 0, parsedScans;
@@ -88,7 +88,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
    * This variable hold the present scan or fragment, it is send to the stack when another
    * scan/fragment appears as a parser.startElement
    */
-  private MsScan buildingScan;
+  private SimpleMsScan buildingScan;
 
   /**
    * <p>
@@ -113,7 +113,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
       // Create the XMLBasedRawDataFile object
       newRawDataFile =
-          MSDKObjectBuilder.getRawDataFile(sourceFile.getName(), sourceFile, fileType, dataStore);
+          new SimpleRawDataFile(sourceFile.getName(), sourceFile, fileType, dataStore);
 
       // Use the default (non-validating) parser
       SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -189,7 +189,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
         if (Strings.isNullOrEmpty(msFuncName))
           msFuncName = MsFunction.DEFAULT_MS_FUNCTION_NAME;
         MsFunction msFunc = MSDKObjectBuilder.getMsFunction(msFuncName, msLevel);
-        buildingScan = MSDKObjectBuilder.getMsScan(dataStore, scanNumber, msFunc);
+        buildingScan = new SimpleMsScan(dataStore, scanNumber, msFunc);
         buildingScan.setRawDataFile(newRawDataFile);
 
         // Scan type & definition
@@ -219,9 +219,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
           Date currentDate = new Date();
           Duration dur = dataTypeFactory.newDuration(retentionTimeStr);
           final float rt = (float) (dur.getTimeInMillis(currentDate) / 1000.0);
-          ChromatographyInfo rtInfo =
-              MSDKObjectBuilder.getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
-          buildingScan.setChromatographyInfo(rtInfo);
+          buildingScan.setRetentionTime(rt);
         }
 
       }
@@ -271,7 +269,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
         double precursorMz = 0d;
         if (!textContent.isEmpty())
           precursorMz = Double.parseDouble(textContent);
-        IsolationInfo newIsolation = MSDKObjectBuilder.getIsolationInfo(
+        IsolationInfo newIsolation = new SimpleIsolationInfo(
             Range.singleton(precursorMz), null, precursorMz, precursorCharge, null);
         buildingScan.getIsolations().add(newIsolation);
 

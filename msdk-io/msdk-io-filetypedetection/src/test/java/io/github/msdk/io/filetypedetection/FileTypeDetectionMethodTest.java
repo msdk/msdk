@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -73,6 +73,13 @@ public class FileTypeDetectionMethodTest {
     File fileName = new File(TEST_DATA_PATH + "lipidomics-HFD-LD-study-PL-DG-SM.mzTab");
     FileType fileType = FileTypeDetectionMethod.detectDataFileType(fileName);
     Assert.assertEquals(FileType.MZTAB, fileType);
+  }
+
+  @Test
+  public void testMzDB() throws MSDKException, IOException {
+    File fileName = new File(TEST_DATA_PATH + "OVEMB150205_12.raw.0.9.8_truncated.mzDB");
+    FileType fileType = FileTypeDetectionMethod.detectDataFileType(fileName);
+    Assert.assertEquals(FileType.MZDB, fileType);
   }
 
 }

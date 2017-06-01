@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2016 by MSDK Development Team
+ * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -37,7 +37,7 @@ public class ChromatogramBuilderMethodTest {
   private static DataPointStore dataStore;
   private static RawDataFile rawFile;
 
-  @SuppressWarnings("null")
+
   @BeforeClass
   public static void loadData() throws MSDKException {
 
@@ -53,7 +53,7 @@ public class ChromatogramBuilderMethodTest {
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testOrbitrap() throws MSDKException {
 
@@ -70,7 +70,7 @@ public class ChromatogramBuilderMethodTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testBigTimeSpan() throws MSDKException {
 
@@ -89,7 +89,7 @@ public class ChromatogramBuilderMethodTest {
 
   }
 
-  @SuppressWarnings("null")
+
   @Test
   public void testBigMinHeight() throws MSDKException {
 
