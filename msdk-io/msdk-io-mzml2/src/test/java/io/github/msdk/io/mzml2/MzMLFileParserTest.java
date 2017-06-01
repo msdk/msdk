@@ -23,9 +23,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.io.mzml2.MzMLFileMemoryMapper;
 
-public class MzMLFileMemoryMapperTest {
+public class MzMLFileParserTest {
 
 	private static final String TEST_DATA_PATH = "src/test/resources/";
 
@@ -36,11 +35,11 @@ public class MzMLFileMemoryMapperTest {
 		final File inputFile = new File(inputFileName);
 
 		Assert.assertNotNull(inputFile);
-		MzMLFileMemoryMapper mzParser = new MzMLFileMemoryMapper(inputFile);
+		MzMLFileParser mzParser = new MzMLFileParser(inputFile);
 		mzParser.execute();
 
 		Assert.assertNotNull(new File(inputFileName));
-		MzMLFileMemoryMapper mzParser2 = new MzMLFileMemoryMapper(inputFileName);
+		MzMLFileParser mzParser2 = new MzMLFileParser(inputFileName);
 		mzParser2.execute();
 	}
 }
