@@ -22,7 +22,6 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -68,12 +67,6 @@ public class MzMLSpectrum implements MsScan {
 	}
 
 	@Override
-	public void setSpectrumType(MsSpectrumType spectrumType) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public Integer getNumberOfDataPoints() {
 		// TODO Auto-generated method stub
 		return null;
@@ -86,27 +79,9 @@ public class MzMLSpectrum implements MsScan {
 	}
 
 	@Override
-	public double[] getMzValues(double[] array) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public float[] getIntensityValues() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public float[] getIntensityValues(float[] array) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setDataPoints(double[] mzValues, float[] intensityValues, Integer size) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -134,21 +109,9 @@ public class MzMLSpectrum implements MsScan {
 	}
 
 	@Override
-	public void setRawDataFile(RawDataFile newRawDataFile) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public Integer getScanNumber() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void setScanNumber(Integer scanNumber) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -158,21 +121,9 @@ public class MzMLSpectrum implements MsScan {
 	}
 
 	@Override
-	public void setScanDefinition(String scanDefinition) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public MsFunction getMsFunction() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void setMsFunction(MsFunction newFunction) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -182,33 +133,9 @@ public class MzMLSpectrum implements MsScan {
 	}
 
 	@Override
-	public void setMsScanType(MsScanType newMsScanType) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public ChromatographyInfo getChromatographyInfo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setChromatographyInfo(ChromatographyInfo chromatographyInfo) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public Range<Double> getScanningRange() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void setScanningRange(Range<Double> newScanRange) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -218,25 +145,19 @@ public class MzMLSpectrum implements MsScan {
 	}
 
 	@Override
-	public void setPolarity(PolarityType newPolarity) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public ActivationInfo getSourceInducedFragmentation() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void setSourceInducedFragmentation(ActivationInfo newFragmentationInfo) {
+	public List<IsolationInfo> getIsolations() {
 		// TODO Auto-generated method stub
-
+		return null;
 	}
 
 	@Override
-	public List<IsolationInfo> getIsolations() {
+	public Float getRetentionTime() {
 		// TODO Auto-generated method stub
 		return null;
 	}
