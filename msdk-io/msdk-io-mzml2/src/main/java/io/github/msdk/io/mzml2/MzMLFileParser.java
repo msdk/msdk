@@ -1,3 +1,17 @@
+/* 
+ * (C) Copyright 2015-2016 by MSDK Development Team
+ *
+ * This software is dual-licensed under either
+ *
+ * (a) the terms of the GNU Lesser General Public License version 2.1
+ * as published by the Free Software Foundation
+ *
+ * or (per the licensee's choosing)
+ *
+ * (b) the terms of the Eclipse Public License v1.0 as published by
+ * the Eclipse Foundation.
+ */
+
 package io.github.msdk.io.mzml2;
 
 import java.io.File;
@@ -46,7 +60,9 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 			XMLEventReader xmlEventReader = xmlInputFactory.createXMLEventReader(is);
 
 			boolean insideSpectrumListFlag = false;
+			boolean insideBinaryDataArrayFlag = false;
 			MzMLSpectrum spectrum = null;
+			MzMLBinaryDataInfo binaryDataInfo = null;
 			while (xmlEventReader.hasNext()) {
 				XMLEvent xmlEvent = xmlEventReader.nextEvent();
 				if (xmlEvent.isStartElement()) {
@@ -55,22 +71,49 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 						xmlEvent = xmlEventReader.nextEvent();
 						insideSpectrumListFlag = true;
 					}
+					if (insideSpectrumListFlag && startElement.getName().getLocalPart().equals("binaryDataArray")
+							&& xmlEventReader.hasNext()) {
+						xmlEvent = xmlEventReader.nextEvent();
+						insideBinaryDataArrayFlag = true;
+						binaryDataInfo = new MzMLBinaryDataInfo();
+					}
 					if (insideSpectrumListFlag && startElement.getName().getLocalPart().equals("spectrum")
 							&& xmlEventReader.hasNext()) {
 						xmlEvent = xmlEventReader.nextEvent();
+						if (spectrum != null)
+							spectrumList.add(spectrum);
 						spectrum = new MzMLSpectrum();
 					}
-					if (insideSpectrumListFlag && startElement.getName().getLocalPart().equals("cvParam")
-							&& spectrum != null && xmlEventReader.hasNext()) {
+					if (insideBinaryDataArrayFlag && !insideSpectrumListFlag
+							&& startElement.getName().getLocalPart().equals("cvParam") && spectrum != null
+							&& xmlEventReader.hasNext()) {
 						xmlEvent = xmlEventReader.nextEvent();
 						Attribute accessionAttr = startElement.getAttributeByName(new QName("accession"));
 						Attribute valueAttr = startElement.getAttributeByName(new QName("value"));
 						spectrum.add(accessionAttr.getValue(), valueAttr.getValue());
 					}
+					if (insideBinaryDataArrayFlag && startElement.getName().getLocalPart().equals("cvParam")
+							&& binaryDataInfo != null && xmlEventReader.hasNext()) {
+						xmlEvent = xmlEventReader.nextEvent();
+						Attribute accessionAttr = startElement.getAttributeByName(new QName("accession"));
+						if (binaryDataInfo.isBitLengthAccession(accessionAttr.getValue())) {
+							binaryDataInfo.setBitLength(accessionAttr.getValue());
+						} else if (binaryDataInfo.isCompressionTypeAccession(accessionAttr.getValue())) {
+							binaryDataInfo.setCompressionType(accessionAttr.getValue());
+						} else if (binaryDataInfo.isArrayTypeAccession(accessionAttr.getValue())) {
+							binaryDataInfo.setArrayType(accessionAttr.getValue());
+						} else {
+							break; // A better approach to skip UV Scans would
+									// be to only break accession defines the
+									// array type and isn't either m/z or
+									// intensity values. We would have to list
+									// out all array types in that case.
+						}
+					}
 					if (insideSpectrumListFlag && startElement.getName().getLocalPart().equals("binary")
 							&& spectrum != null && xmlEventReader.hasNext()) {
 						xmlEvent = xmlEventReader.nextEvent();
-						spectrum.addBinaryDataPosition(is.getCurrentPosition());
+						binaryDataInfo.setPosition(is.getCurrentPosition());
 					}
 				}
 				if (xmlEvent.isEndElement()) {
@@ -78,6 +121,17 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 					if (endElement.getName().getLocalPart().equals("spectrumList") && xmlEventReader.hasNext()) {
 						xmlEvent = xmlEventReader.nextEvent();
 						insideSpectrumListFlag = false;
+					}
+				}
+				if (insideSpectrumListFlag && xmlEvent.isEndElement()) {
+					EndElement endElement = xmlEvent.asEndElement();
+					if (endElement.getName().getLocalPart().equals("binaryDataArray") && xmlEventReader.hasNext()) {
+						xmlEvent = xmlEventReader.nextEvent();
+						if (binaryDataInfo.getArrayType().getValue().equals("MS:1000514"))
+							spectrum.setMzBinaryDataInfo(binaryDataInfo);
+						if (binaryDataInfo.getArrayType().getValue().equals("MS:1000515"))
+							spectrum.setIntensityBinaryDataInfo(binaryDataInfo);
+						insideBinaryDataArrayFlag = false;
 					}
 				}
 			}
