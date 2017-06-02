@@ -14,7 +14,6 @@
 
 package io.github.msdk.io.mzml2;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,11 +31,11 @@ import io.github.msdk.util.tolerances.MzTolerance;
 
 public class MzMLSpectrum implements MsScan {
 	private HashMap<String, String> cvParamValues;
-	private ArrayList<MzMLBinaryDataInfo> binaryDataInfoArray;
+	private MzMLBinaryDataInfo mzBinaryDataInfo;
+	private MzMLBinaryDataInfo intensityBinaryDataInfo;
 
 	public MzMLSpectrum() {
 		cvParamValues = new HashMap<>();
-		binaryDataInfoArray = new ArrayList<>();
 	}
 
 	public void add(String accession, String value) {
@@ -51,16 +50,20 @@ public class MzMLSpectrum implements MsScan {
 		return cvParamValues.size();
 	}
 
-	public ArrayList<MzMLBinaryDataInfo> getBinaryDataInfoArray() {
-		return binaryDataInfoArray;
+	public MzMLBinaryDataInfo getMzBinaryDataInfo() {
+		return mzBinaryDataInfo;
 	}
 
-	public void addBinaryDataInfo(MzMLBinaryDataInfo binaryDataInfo) {
-		binaryDataInfoArray.add(binaryDataInfo);
+	public void setMzBinaryDataInfo(MzMLBinaryDataInfo mzBinaryDataInfo) {
+		this.mzBinaryDataInfo = mzBinaryDataInfo;
 	}
 
-	public int getBinaryDataInfoArraySize() {
-		return binaryDataInfoArray.size();
+	public MzMLBinaryDataInfo getIntensityBinaryDataInfo() {
+		return intensityBinaryDataInfo;
+	}
+
+	public void setIntensityBinaryDataInfo(MzMLBinaryDataInfo intensityBinaryDataInfo) {
+		this.intensityBinaryDataInfo = intensityBinaryDataInfo;
 	}
 
 	// TODO Configure implemented methods
