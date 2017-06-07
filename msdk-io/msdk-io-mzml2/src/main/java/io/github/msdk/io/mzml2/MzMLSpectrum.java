@@ -33,6 +33,7 @@ public class MzMLSpectrum implements MsScan {
 	private HashMap<String, String> cvParamValues;
 	private MzMLBinaryDataInfo mzBinaryDataInfo;
 	private MzMLBinaryDataInfo intensityBinaryDataInfo;
+	private MappedByteBufferInputStream mappedByteBufferInputStream;
 
 	public MzMLSpectrum() {
 		cvParamValues = new HashMap<>();
@@ -64,6 +65,14 @@ public class MzMLSpectrum implements MsScan {
 
 	public void setIntensityBinaryDataInfo(MzMLBinaryDataInfo intensityBinaryDataInfo) {
 		this.intensityBinaryDataInfo = intensityBinaryDataInfo;
+	}
+
+	public MappedByteBufferInputStream getMappedByteBufferInputStream() {
+		return mappedByteBufferInputStream;
+	}
+
+	public void setMappedByteBufferInputStream(MappedByteBufferInputStream mappedByteBufferInputStream) {
+		this.mappedByteBufferInputStream = mappedByteBufferInputStream;
 	}
 
 	// TODO Configure implemented methods

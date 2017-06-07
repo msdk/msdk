@@ -17,8 +17,8 @@ package io.github.msdk.io.mzml2;
 class MzMLBinaryDataInfo {
 
 	static enum MzMLCompressionType {
-		BINARY_DATA_COMPRESSION("MS:1000572"), MEDIAN_OF_SPECTRA("MS:1000573"), ZLIB("MS:1000574"), MEAN_OF_SPECTRA(
-				"MS:1000575"), NO_COMPRESSION("MS:1000576");
+		NUMPRESS_LINPRED("MS:1002312"), NUMPRESS_POSINT("MS:1002313"), ZLIB("MS:1000574"), NUMPRESS_SHLOGF(
+				"MS:1002314"), NO_COMPRESSION("MS:1000576");
 		private String accession;
 
 		private MzMLCompressionType(String accession) {
