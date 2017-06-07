@@ -83,6 +83,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 						if (spectrum != null)
 							spectrumList.add(spectrum);
 						spectrum = new MzMLSpectrum();
+						spectrum.setMappedByteBufferInputStream(is);
 					}
 					if (insideBinaryDataArrayFlag && !insideSpectrumListFlag
 							&& startElement.getName().getLocalPart().equals("cvParam") && spectrum != null
@@ -104,8 +105,8 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 							binaryDataInfo.setArrayType(accessionAttr.getValue());
 						} else {
 							break; // A better approach to skip UV Scans would
-									// be to only break accession defines the
-									// array type and isn't either m/z or
+									// be to only break accession which define
+									// the array type and isn't either m/z or
 									// intensity values. We would have to list
 									// out all array types in that case.
 						}
