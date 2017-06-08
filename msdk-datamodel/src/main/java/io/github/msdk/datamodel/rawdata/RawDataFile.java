@@ -15,9 +15,9 @@ package io.github.msdk.datamodel.rawdata;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.files.FileType;
@@ -40,13 +40,21 @@ public interface RawDataFile {
   String getName();
   
   /**
-   * Returns the original file name and path where the file was loaded from, or null if this file
-   * was created by MSDK.
+   * Returns the original file (i.e. filename and path), or Optional.empty() if this file was 
+   * created by MSDK.
    *
-   * @return Original filename and path.
+   * @return Original file.
    */
-  @Nullable
-  File getOriginalFile();
+  @Nonnull
+  Optional<File> getOriginalFile();
+
+  /**
+   * Returns the filename of the original filename. Default implementations return "Unknown."
+   * 
+   * @return Filename of original file.
+   */
+  @Nonnull
+  default String getOriginalFilename() { return "Unknown"; }
 
   /**
    * Returns the file type of this raw data file.

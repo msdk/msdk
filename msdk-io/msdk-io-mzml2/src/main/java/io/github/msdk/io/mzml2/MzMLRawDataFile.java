@@ -15,6 +15,7 @@ package io.github.msdk.io.mzml2;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -77,9 +78,9 @@ class MzMLRawDataFile implements RawDataFile {
 
 	/** {@inheritDoc} */
 	@Override
-	@Nullable
-	public File getOriginalFile() {
-		return sourceFile;
+	@Nonnull
+	public Optional<File> getOriginalFile() {
+		return Optional.ofNullable(sourceFile);
 	}
 
 	/** {@inheritDoc} */

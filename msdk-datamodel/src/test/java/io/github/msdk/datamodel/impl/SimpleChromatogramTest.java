@@ -15,6 +15,7 @@ package io.github.msdk.datamodel.impl;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
@@ -56,7 +57,7 @@ public class SimpleChromatogramTest {
 
     // Change raw data file
     final @Nonnull RawDataFile newRawDataFile =
-        new SimpleRawDataFile("Sample A1", null, FileType.NETCDF, dataPointStore);
+        new SimpleRawDataFile("Sample A1", Optional.empty(), FileType.NETCDF, dataPointStore);
     chromatogram1.setRawDataFile(newRawDataFile);
 
     // Verify raw data file

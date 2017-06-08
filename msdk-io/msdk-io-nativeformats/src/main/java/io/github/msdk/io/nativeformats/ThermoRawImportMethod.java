@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -102,7 +103,7 @@ public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
 
       // Create the new RawDataFile
       String fileName = sourceFile.getName();
-      newRawFile = new SimpleRawDataFile(fileName, sourceFile, fileType, dataStore);
+      newRawFile = new SimpleRawDataFile(fileName, Optional.of(sourceFile), fileType, dataStore);
 
       // Read the dump data
       parser = new RawDumpParser(newRawFile, dataStore);
