@@ -4,4 +4,6 @@ public class SparseMatrixTriplet {
 	public int mz;
 	public int scanNumber;
 	public float intensity;
+	public float rt;
+	public boolean removed;
 }
