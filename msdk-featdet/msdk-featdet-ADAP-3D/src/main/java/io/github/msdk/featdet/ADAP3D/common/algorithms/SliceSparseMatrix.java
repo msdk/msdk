@@ -22,9 +22,14 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.datamodel.SparseMatrixTriplet;
-import org.apache.commons.collections.map.MultiKeyMap;
+import org.apache.commons.collections4.map.MultiKeyMap;
 
-
+/**
+ * <p>
+ * SliceSparseMatrix class is used for slicing the sparse matrix of raw data as per given mz value.
+ * slice contains intensities for one mz value for different scans.
+ * </p>
+ */
 public class SliceSparseMatrix {
 	
 	/**

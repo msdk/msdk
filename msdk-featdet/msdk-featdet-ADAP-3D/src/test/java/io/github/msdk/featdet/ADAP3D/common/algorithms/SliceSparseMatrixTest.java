@@ -22,11 +22,11 @@ import org.junit.Test;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
-import org.apache.commons.collections.map.MultiKeyMap;
+import org.apache.commons.collections4.map.MultiKeyMap;
 
 
 
-public class SparseMatrixTest {
+public class SliceSparseMatrixTest {
 	
 	private static final String TEST_DATA_PATH = "src/test/resources/";
 	private static RawDataFile rawFile;

@@ -11,7 +11,11 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 package io.github.msdk.featdet.ADAP3D.datamodel;
-
+/**
+ * <p>
+ * This is the data model for creating triplet representation of sparse matrix. 
+ * </p>
+ */
 public class SparseMatrixTriplet {
 	public int mz;
 	public int scanNumber;
