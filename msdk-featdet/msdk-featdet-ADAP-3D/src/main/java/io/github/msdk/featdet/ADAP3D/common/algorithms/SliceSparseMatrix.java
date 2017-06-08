@@ -18,7 +18,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import io.github.msdk.MSDKException;
+import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.datamodel.SparseMatrixTriplet;
@@ -32,14 +35,15 @@ import org.apache.commons.collections4.map.MultiKeyMap;
  */
 public class SliceSparseMatrix {
 	
-	/**
+	private final MultiKeyMap  tripletMap;
+	
+	 /**
 	   * <p>
-	   * This method returns the MultiKeyMap slice of data for given raw file, mz,lower ScanBound,upper ScanBound
-	   * This method uses getTripletMap and getSlice methods to create MultiKeyMap slice from raw file. 
+	   * This constructor takes raw data file and creat the triplet map which contains information
+	   * such as mz,intensity,rt,scan number
 	   * </p>
 	   */
-	public MultiKeyMap sliceSparseMatrix(RawDataFile rawFile,int mz,int lowerScanBound,int upperScanBound) throws MSDKException,IOException{
-		
+	public SliceSparseMatrix(RawDataFile rawFile){
 		List<MsScan> listOfScans = 	rawFile.getScans();
 		List<SparseMatrixTriplet> listOfTriplet = new ArrayList<SparseMatrixTriplet>();
 	    
@@ -105,17 +109,15 @@ public class SliceSparseMatrix {
 			}
 		}
 		
-		MultiKeyMap tripletMap = getTripletMap(filterListOfTriplet);
-		MultiKeyMap sliceMap = getSlice(mz, lowerScanBound, upperScanBound, tripletMap);
-	    return sliceMap;
+		tripletMap = getTripletMap(filterListOfTriplet);
 	}
-	
-	/**
+		
+	 /**
 	   * <p>
-	   * This method returns the MultiKeyMap slice of data for given mz,lowerScanBound,upperScanBound and tripletMap
+	   * This method returns the MultiKeyMap slice of data for given mz,lowerScanBound,upperScanBound
 	   * </p>
 	   */
-	private MultiKeyMap getSlice(int mz,int lowerScanBound,int upperScanBound,MultiKeyMap tripletMap){
+	public MultiKeyMap getSlice(int mz,int lowerScanBound,int upperScanBound){
 		
 		MultiKeyMap  sliceMap = new MultiKeyMap ();
 				

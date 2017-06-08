@@ -47,8 +47,8 @@ public class SliceSparseMatrixTest {
 	
 	@Test
 	public void testSliceSparseMatrix() throws MSDKException,IOException{
-		SliceSparseMatrix objSliceSparseMatrix = new SliceSparseMatrix();
-		MultiKeyMap slice = objSliceSparseMatrix.sliceSparseMatrix(rawFile, 30200000, 0, 208);
+		SliceSparseMatrix objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
+		MultiKeyMap slice = objSliceSparseMatrix.getSlice(30200000, 0, 208);
 		int size = slice.size();
 		for(int i=0;i<size;i++){
 			Assert.assertTrue(slice.containsKey(new Integer(new Integer(i)),new Integer(30200000)));
