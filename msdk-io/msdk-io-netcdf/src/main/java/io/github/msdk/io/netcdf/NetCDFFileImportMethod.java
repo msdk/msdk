@@ -15,6 +15,7 @@ package io.github.msdk.io.netcdf;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -102,7 +103,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     }
 
     String fileName = sourceFile.getName();
-    newRawFile = new SimpleRawDataFile(fileName, sourceFile, fileType, dataStore);
+    newRawFile = new SimpleRawDataFile(fileName, Optional.of(sourceFile), fileType, dataStore);
 
     try {
 

@@ -82,7 +82,7 @@ public interface MsScan extends MsSpectrum {
    * @return MS scan type
    */
   @Nonnull
-  MsScanType getMsScanType();
+  default MsScanType getMsScanType() { return MsScanType.UNKNOWN; }
 
   /**
    * Returns the retention time in seconds
@@ -112,8 +112,7 @@ public interface MsScan extends MsSpectrum {
    * @return Polarity of this scan.
    */
   @Nonnull
-  PolarityType getPolarity();
-
+  default PolarityType getPolarity() { return PolarityType.UNKNOWN; }
 
   /**
    * Returns the fragmentation parameters of ion source-induced fragmentation, or null if no such

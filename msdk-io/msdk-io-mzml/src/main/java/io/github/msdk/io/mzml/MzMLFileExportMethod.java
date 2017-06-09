@@ -172,13 +172,13 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
         spectrum.setIndex((int) parsedScans);
         spectrum.setBinaryDataArrayList(bdal);
         spectrum.setDefaultArrayLength(bdaMz.getArrayLength());
-        if (rawDataFile.getOriginalFile() != null) {
-          File originalFile = rawDataFile.getOriginalFile();
+
+        rawDataFile.getOriginalFile().ifPresent(originalFile -> {
           SourceFile sourceFile = new SourceFile();
           sourceFile.setLocation(originalFile.getPath());
           sourceFile.setName(originalFile.getName());
           spectrum.setSourceFile(sourceFile);
-        }
+        });
 
         // spectrum type CV param
         if (scan.getSpectrumType() == MsSpectrumType.CENTROIDED)

@@ -216,7 +216,7 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     buf.append("Scan ");
     final RawDataFile rawDataFile2 = dataFile;
     if (rawDataFile2 != null && rawDataFile2.getOriginalFile() != null) {
-      buf.append(rawDataFile2.getOriginalFile().getName());
+      buf.append(rawDataFile2.getOriginalFilename());
       buf.append(" ");
     }
     buf.append(msFunction.getName());

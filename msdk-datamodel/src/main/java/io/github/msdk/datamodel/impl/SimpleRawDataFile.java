@@ -16,6 +16,7 @@ package io.github.msdk.datamodel.impl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,13 +37,13 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 public class SimpleRawDataFile implements RawDataFile {
 
   private @Nonnull String rawDataFileName;
-  private @Nullable File originalRawDataFile;
+  private @Nonnull Optional<File> originalRawDataFile;
   private @Nonnull FileType rawDataFileType;
   private final @Nonnull ArrayList<MsScan> scans;
   private final @Nonnull ArrayList<Chromatogram> chromatograms;
   private final @Nonnull DataPointStore dataPointStore;
 
-  public SimpleRawDataFile(@Nonnull String rawDataFileName, @Nullable File originalRawDataFile,
+  public SimpleRawDataFile(@Nonnull String rawDataFileName, @Nonnull Optional<File> originalRawDataFile,
       @Nonnull FileType rawDataFileType, @Nonnull DataPointStore dataPointStore) {
     Preconditions.checkNotNull(rawDataFileType);
     Preconditions.checkNotNull(dataPointStore);
@@ -68,13 +69,23 @@ public class SimpleRawDataFile implements RawDataFile {
   /** {@inheritDoc} */
   @Override
   @Nullable
-  public File getOriginalFile() {
+  public Optional<File> getOriginalFile() {
     return originalRawDataFile;
+  }
+
+  @Override
+  @Nonnull
+  public String getOriginalFilename() {
+	  if (originalRawDataFile.isPresent()) {
+		  return originalRawDataFile.get().getName();
+	  }
+
+	  return "Unknown";
   }
 
   /** {@inheritDoc} */
   public void setOriginalFile(@Nullable File newOriginalFile) {
-    this.originalRawDataFile = newOriginalFile;
+    this.originalRawDataFile = Optional.ofNullable(newOriginalFile);
   }
 
   /** {@inheritDoc} */

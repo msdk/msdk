@@ -18,6 +18,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.zip.DataFormatException;
 
@@ -113,7 +114,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
       // Create the XMLBasedRawDataFile object
       newRawDataFile =
-          new SimpleRawDataFile(sourceFile.getName(), sourceFile, fileType, dataStore);
+          new SimpleRawDataFile(sourceFile.getName(), Optional.of(sourceFile), fileType, dataStore);
 
       // Use the default (non-validating) parser
       SAXParserFactory factory = SAXParserFactory.newInstance();
