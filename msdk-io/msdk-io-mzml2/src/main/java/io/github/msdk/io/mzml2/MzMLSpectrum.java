@@ -14,11 +14,22 @@
 
 package io.github.msdk.io.mzml2;
 
+import java.io.IOException;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
+import java.util.zip.DataFormatException;
+
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.StartElement;
+import javax.xml.stream.events.XMLEvent;
 
 import com.google.common.collect.Range;
 
+import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
@@ -90,8 +101,50 @@ public class MzMLSpectrum implements MsScan {
 
 	@Override
 	public double[] getMzValues() {
-		// TODO Auto-generated method stub
-		return null;
+		double[] result = null;
+		byte[] bytesIn = new byte[getMzBinaryDataInfo().getEncodedLength()];
+		int precision = 0;
+		EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions = EnumSet
+				.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
+		try {
+			mappedByteBufferInputStream.setPosition(getMzBinaryDataInfo().getPosition());
+			XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+			XMLEventReader xmlEventReader = xmlInputFactory.createXMLEventReader(mappedByteBufferInputStream);
+
+			if (getMzBinaryDataInfo().getBitLength().toString().startsWith("THIRTY_TWO")) {
+				precision = 32;
+			} else if (getMzBinaryDataInfo().getBitLength().toString().startsWith("SIXTY_FOUR")) {
+				precision = 64;
+			}
+			// System.out.println(new
+			// Scanner(mappedByteBufferInputStream).useDelimiter("//A").next());
+			while (xmlEventReader.hasNext()) {
+				XMLEvent xmlEvent = xmlEventReader.nextEvent();
+				if (xmlEvent.isStartElement()) {
+					StartElement startElement = xmlEvent.asStartElement();
+					if (startElement.getName().getLocalPart().equals("binary") && xmlEventReader.hasNext()) {
+						xmlEvent = xmlEventReader.nextEvent();
+						bytesIn = xmlEvent.asCharacters().getData().getBytes();
+						compressions.add(getMzBinaryDataInfo().getCompressionType());
+						result = MzMLPeaksDecoder.decode(bytesIn, getMzBinaryDataInfo().getArrayLength(),
+								new Integer(precision), getMzBinaryDataInfo().getEncodedLength(), compressions).arr;
+						break;
+					}
+				}
+			}
+		} catch (XMLStreamException e) {
+			e.printStackTrace();
+		} catch (DataFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MSDKException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	@Override
