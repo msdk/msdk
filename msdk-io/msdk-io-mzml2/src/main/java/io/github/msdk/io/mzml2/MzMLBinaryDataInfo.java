@@ -59,13 +59,15 @@ class MzMLBinaryDataInfo {
 		}
 	}
 
-	private long position;
+	private int position;
+	private int encodedLength;
+	private int arrayLength;
 	private MzMLCompressionType compressionType;
 	private MzMLBitLength bitLength;
 	private MzMLArrayType arrayType;
 
-	public MzMLBinaryDataInfo(long position, MzMLCompressionType compressionType, MzMLBitLength bitLength,
-			MzMLArrayType arrayType) {
+	public MzMLBinaryDataInfo(int position, int encodedLength, int arrayLength, MzMLCompressionType compressionType,
+			MzMLBitLength bitLength, MzMLArrayType arrayType) {
 		this.position = position;
 		this.compressionType = compressionType;
 		this.bitLength = bitLength;
@@ -133,11 +135,27 @@ class MzMLBinaryDataInfo {
 		return false;
 	}
 
-	public long getPosition() {
+	public int getPosition() {
 		return position;
 	}
 
-	public void setPosition(long position) {
+	public void setPosition(int position) {
 		this.position = position;
+	}
+
+	public int getEncodedLength() {
+		return encodedLength;
+	}
+
+	public void setEncodedLength(int encodedLength) {
+		this.encodedLength = encodedLength;
+	}
+
+	public int getArrayLength() {
+		return arrayLength;
+	}
+
+	public void setArrayLength(int arrayLength) {
+		this.arrayLength = arrayLength;
 	}
 }
