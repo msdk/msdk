@@ -157,11 +157,6 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 			throw (new MSDKException(e));
 		}
 
-		for (MzMLSpectrum s : spectrumList) {
-			// s.getMzValues();
-		}
-		spectrumList.get(0).getMzValues();
-
 		return null;
 	}
 

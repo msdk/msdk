@@ -28,6 +28,10 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.io.mzml2.util.Base64;
+import io.github.msdk.io.mzml2.util.Base64Context;
+import io.github.msdk.io.mzml2.util.Base64ContextPooled;
+import io.github.msdk.io.mzml2.util.ByteArrayHolder;
 import io.github.msdk.util.tolerances.MzTolerance;
 
 public class MzMLSpectrum implements MsScan {
@@ -111,9 +115,16 @@ public class MzMLSpectrum implements MsScan {
 			default:
 				precision = null;
 			}
-			mappedByteBufferInputStream.read(bytesIn, 0, getMzBinaryDataInfo().getEncodedLength());
+
 			compressions.add(getMzBinaryDataInfo().getCompressionType());
-			result = MzMLPeaksDecoder.decode(bytesIn, getMzBinaryDataInfo().getEncodedLength(), precision,
+
+			mappedByteBufferInputStream.read(bytesIn, 0, getMzBinaryDataInfo().getEncodedLength());
+			Base64 base64 = new Base64();
+			Base64Context ctx = new Base64ContextPooled();
+			Base64Context decodedB64 = base64.decode(bytesIn, 0, getMzBinaryDataInfo().getEncodedLength(), ctx);
+			ByteArrayHolder bah = decodedB64.readResults();
+
+			result = MzMLPeaksDecoder.decode(bah.getUnderlyingBytes(), bah.getPosition(), precision,
 					getMzBinaryDataInfo().getArrayLength(), compressions).arr;
 		} catch (Exception e) {
 			e.printStackTrace();
