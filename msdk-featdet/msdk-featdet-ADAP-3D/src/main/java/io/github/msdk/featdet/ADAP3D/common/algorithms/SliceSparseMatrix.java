@@ -12,16 +12,12 @@
  */
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.annotation.Nonnull;
 
-import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.datamodel.SparseMatrixTriplet;
@@ -36,6 +32,9 @@ import org.apache.commons.collections4.map.MultiKeyMap;
 public class SliceSparseMatrix {
 	
 	private final MultiKeyMap  tripletMap;
+	private final List<SparseMatrixTriplet> filterListOfTriplet;
+	private int maxIntensityIndex=0;
+	private final int roundMz = 100000;
 	
 	 /**
 	   * <p>
@@ -59,7 +58,7 @@ public class SliceSparseMatrix {
 	    	for(int j=0;j<mzBuffer.length;j++){
 	    		SparseMatrixTriplet triplet = new SparseMatrixTriplet();
 	    		triplet.intensity = intensityBuffer[j];
-	    		triplet.mz = (int)(mzBuffer[j]*100000);
+	    		triplet.mz = mzBuffer[j];
 	    		triplet.scanNumber  = i;
 	    		triplet.rt = rt;
 	    		triplet.removed = false;
@@ -82,8 +81,8 @@ public class SliceSparseMatrix {
 					return scanCompare;
 				}
 				else {
-					Integer  mz1 = o1.mz;
-					Integer  mz2 = o2.mz;
+					Double  mz1 = o1.mz;
+					Double  mz2 = o2.mz;
 					return mz1.compareTo(mz2);
 				}
 			}
@@ -92,9 +91,10 @@ public class SliceSparseMatrix {
 		
 		Collections.sort(listOfTriplet, compare);	
 		
-		List<SparseMatrixTriplet> filterListOfTriplet = new ArrayList<SparseMatrixTriplet>();
+		filterListOfTriplet = new ArrayList<SparseMatrixTriplet>();
 		SparseMatrixTriplet currTriplet = new SparseMatrixTriplet();
 		SparseMatrixTriplet lastFilterTriplet = new SparseMatrixTriplet();
+		tripletMap = new MultiKeyMap ();
 		int index = 0;
 		filterListOfTriplet.add(listOfTriplet.get(0));
 		for(int i=1;i<listOfTriplet.size();i++){
@@ -105,11 +105,12 @@ public class SliceSparseMatrix {
 			}
 			else{
 				filterListOfTriplet.add(currTriplet);
+				tripletMap.put(currTriplet.scanNumber, currTriplet.mz,currTriplet);
 				index++;
 			}
+			
 		}
-		
-		tripletMap = getTripletMap(filterListOfTriplet);
+		filterListOfTriplet.size();
 	}
 		
 	 /**
@@ -117,35 +118,48 @@ public class SliceSparseMatrix {
 	   * This method returns the MultiKeyMap slice of data for given mz,lowerScanBound,upperScanBound
 	   * </p>
 	   */
-	public MultiKeyMap getSlice(int mz,int lowerScanBound,int upperScanBound){
+	public MultiKeyMap getSlice(double mz,int lowerScanBound,int upperScanBound){
 		
 		MultiKeyMap  sliceMap = new MultiKeyMap ();
 				
 		for(int i = lowerScanBound;i<=upperScanBound;i++){
-			SparseMatrixTriplet triplet = (SparseMatrixTriplet)tripletMap.get(new Integer(i),new Integer(mz));
-			if(tripletMap.containsKey(new Integer(i),new Integer(mz))){
-				sliceMap.put(i, mz,triplet);
+			SparseMatrixTriplet triplet = (SparseMatrixTriplet)tripletMap.get(new Integer(i),new Double(mz));
+			if(tripletMap.containsKey(new Integer(i),new Double(mz))){
+				sliceMap.put(i, mz*roundMz,triplet);
 			}
 			else{
-				sliceMap.put(i, mz, null);
+				sliceMap.put(i, mz*roundMz, null);
 			}
 		}
 			
 		return sliceMap;
 	}
 	
-	 /**
-	   * <p>
-	   * This method returns the MultiKeyMap of SparseMatrixTriplet objects.
-	   * ScanNumber and Mz are keys and SparseMatrixTriplet object is value.
-	   * </p>
-	   */
-	private  MultiKeyMap getTripletMap(List<SparseMatrixTriplet> filterListOfTriplet){
-		MultiKeyMap  tripletMap = new MultiKeyMap ();
-		for(int i=0;i<filterListOfTriplet.size();i++){
-			tripletMap.put(filterListOfTriplet.get(i).scanNumber, filterListOfTriplet.get(i).mz,filterListOfTriplet.get(i));
-		}
-		return tripletMap;
+	public SparseMatrixTriplet findNextMaxIntensity(){
+		
+		SparseMatrixTriplet tripletObject = null;
+		 Comparator<SparseMatrixTriplet> compare = new Comparator<SparseMatrixTriplet>() {
+				
+				@Override
+				public int compare(SparseMatrixTriplet o1, SparseMatrixTriplet o2) {
+					
+					Float  intensity1 = o1.intensity;
+					Float  intensity2 = o2.intensity;
+					int intensityCompare = intensity2.compareTo(intensity1);
+					return intensityCompare;
+				}
+			};
+			Collections.sort(filterListOfTriplet,compare);
+			
+			for(int i=maxIntensityIndex;i<filterListOfTriplet.size();i++){
+				if(filterListOfTriplet.get(i).removed == false){
+					tripletObject = filterListOfTriplet.get(i);
+					maxIntensityIndex++;
+					break;
+				}
+				
+			}
+			return tripletObject;
 	}
 
 }
