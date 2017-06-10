@@ -123,8 +123,13 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 					}
 					if (insideSpectrumListFlag && startElement.getName().getLocalPart().equals("binary")
 							&& spectrum != null && xmlEventReader.hasNext()) {
-						binaryDataInfo.setPosition(xmlEvent.getLocation().getCharacterOffset());
-						xmlEvent = xmlEventReader.nextEvent();
+						while (xmlEventReader.hasNext()) {
+							xmlEvent = xmlEventReader.nextEvent();
+							if (xmlEvent.isCharacters()) {
+								binaryDataInfo.setPosition(xmlEvent.getLocation().getCharacterOffset());
+								break;
+							}
+						}
 					}
 				}
 				if (xmlEvent.isEndElement()) {
