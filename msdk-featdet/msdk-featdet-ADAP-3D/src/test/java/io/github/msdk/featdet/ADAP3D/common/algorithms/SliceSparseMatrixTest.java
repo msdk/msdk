@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.featdet.ADAP3D.datamodel.SparseMatrixTriplet;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import org.apache.commons.collections4.map.MultiKeyMap;
 
@@ -30,7 +31,7 @@ public class SliceSparseMatrixTest {
 	
 	private static final String TEST_DATA_PATH = "src/test/resources/";
 	private static RawDataFile rawFile;
-	
+	private static SliceSparseMatrix objSliceSparseMatrix;
 	
 	@BeforeClass
 	public static void loadData() throws MSDKException {
@@ -40,19 +41,25 @@ public class SliceSparseMatrixTest {
 	    Assert.assertTrue("Cannot read test data", inputFile.canRead());
 	    MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
 	    rawFile = importer.execute();
+	    objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
 	    Assert.assertNotNull(rawFile);
 	    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 	  }
 	
 	
 	@Test
-	public void testSliceSparseMatrix() throws MSDKException,IOException{
-		SliceSparseMatrix objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
-		MultiKeyMap slice = objSliceSparseMatrix.getSlice(30200000, 0, 208);
+	public void testGetSlice() throws MSDKException,IOException{
+		MultiKeyMap slice = objSliceSparseMatrix.getSlice(301.15106201171875, 0, 208);
 		int size = slice.size();
 		for(int i=0;i<size;i++){
-			Assert.assertTrue(slice.containsKey(new Integer(new Integer(i)),new Integer(30200000)));
+			Assert.assertTrue(slice.containsKey(new Integer(new Integer(i)),new Double(30115106.201171875)));
 		}
 		Assert.assertEquals(209, size);
+	}
+	
+	@Test
+	public void testFindNextMaxIntensity() throws MSDKException,IOException{
+		SparseMatrixTriplet maxIntenistyObj = objSliceSparseMatrix.findNextMaxIntensity();
+		Assert.assertNotNull(maxIntenistyObj);
 	}
 }
