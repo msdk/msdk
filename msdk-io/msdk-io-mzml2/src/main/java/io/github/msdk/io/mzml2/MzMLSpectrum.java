@@ -14,6 +14,7 @@
 
 package io.github.msdk.io.mzml2;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
@@ -90,8 +91,34 @@ public class MzMLSpectrum implements MsScan {
 
 	@Override
 	public double[] getMzValues() {
-		// TODO Auto-generated method stub
-		return null;
+		double[] result = null;
+		byte[] bytesIn = new byte[getMzBinaryDataInfo().getEncodedLength()];
+		Integer precision;
+		EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions = EnumSet
+				.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
+		try {
+			mappedByteBufferInputStream.setPosition(getMzBinaryDataInfo().getPosition());
+
+			switch (getMzBinaryDataInfo().getBitLength()) {
+			case THIRTY_TWO_BIT_FLOAT:
+			case THIRTY_TWO_BIT_INTEGER:
+				precision = 32;
+				break;
+			case SIXTY_FOUR_BIT_FLOAT:
+			case SIXTY_FOUR_BIT_INTEGER:
+				precision = 64;
+				break;
+			default:
+				precision = null;
+			}
+			mappedByteBufferInputStream.read(bytesIn, 0, getMzBinaryDataInfo().getEncodedLength());
+			compressions.add(getMzBinaryDataInfo().getCompressionType());
+			result = MzMLPeaksDecoder.decode(bytesIn, getMzBinaryDataInfo().getEncodedLength(), precision,
+					getMzBinaryDataInfo().getArrayLength(), compressions).arr;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	@Override

@@ -20,8 +20,6 @@ import java.nio.MappedByteBuffer;
 
 class MappedByteBufferInputStream extends InputStream {
 	private MappedByteBuffer buf;
-	private long pos = 0;
-	private long mark = 0;
 
 	MappedByteBufferInputStream(MappedByteBuffer buf) {
 		this.buf = buf;
@@ -32,8 +30,6 @@ class MappedByteBufferInputStream extends InputStream {
 			return -1;
 		}
 		int readBuffer = buf.get();
-		if (readBuffer > 0)
-			pos += 1;
 		return readBuffer;
 	}
 
@@ -44,15 +40,14 @@ class MappedByteBufferInputStream extends InputStream {
 
 		len = Math.min(len, buf.remaining());
 		buf.get(bytes, off, len);
-		pos += len;
 		return len;
 	}
 
-	public synchronized long getCurrentPosition() {
-		return pos;
+	public synchronized int getCurrentPosition() {
+		return buf.position();
 	}
 
-	public synchronized void setMark() {
-		mark = pos;
+	public synchronized void setPosition(int pos) {
+		buf = (MappedByteBuffer) buf.position(pos);
 	}
 }

@@ -61,6 +61,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
 			boolean insideSpectrumListFlag = false;
 			boolean insideBinaryDataArrayFlag = false;
+			int defaultArrayLength = 0;
 			MzMLSpectrum spectrum = null;
 			MzMLBinaryDataInfo binaryDataInfo = null;
 			while (xmlEventReader.hasNext()) {
@@ -76,6 +77,13 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 						xmlEvent = xmlEventReader.nextEvent();
 						insideBinaryDataArrayFlag = true;
 						binaryDataInfo = new MzMLBinaryDataInfo();
+						Attribute encodedLengthAttr = startElement.getAttributeByName(new QName("encodedLength"));
+						binaryDataInfo.setEncodedLength(Integer.valueOf(encodedLengthAttr.getValue()));
+						Attribute arrayLengthAttr = startElement.getAttributeByName(new QName("arrayLength"));
+						if (arrayLengthAttr != null) {
+							defaultArrayLength = Integer.valueOf(arrayLengthAttr.getValue());
+						}
+						binaryDataInfo.setArrayLength(defaultArrayLength);
 					}
 					if (insideSpectrumListFlag && startElement.getName().getLocalPart().equals("spectrum")
 							&& xmlEventReader.hasNext()) {
@@ -83,6 +91,8 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 						if (spectrum != null)
 							spectrumList.add(spectrum);
 						spectrum = new MzMLSpectrum();
+						Attribute arrayLengthAttr = startElement.getAttributeByName(new QName("defaultArrayLength"));
+						defaultArrayLength = Integer.valueOf(arrayLengthAttr.getValue());
 						spectrum.setMappedByteBufferInputStream(is);
 					}
 					if (insideBinaryDataArrayFlag && !insideSpectrumListFlag
@@ -113,8 +123,13 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 					}
 					if (insideSpectrumListFlag && startElement.getName().getLocalPart().equals("binary")
 							&& spectrum != null && xmlEventReader.hasNext()) {
-						xmlEvent = xmlEventReader.nextEvent();
-						binaryDataInfo.setPosition(is.getCurrentPosition());
+						while (xmlEventReader.hasNext()) {
+							xmlEvent = xmlEventReader.nextEvent();
+							if (xmlEvent.isCharacters()) {
+								binaryDataInfo.setPosition(xmlEvent.getLocation().getCharacterOffset());
+								break;
+							}
+						}
 					}
 				}
 				if (xmlEvent.isEndElement()) {
@@ -141,6 +156,11 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 		} catch (XMLStreamException e) {
 			throw (new MSDKException(e));
 		}
+
+		for (MzMLSpectrum s : spectrumList) {
+			// s.getMzValues();
+		}
+		spectrumList.get(0).getMzValues();
 
 		return null;
 	}
