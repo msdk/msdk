@@ -17,7 +17,7 @@ package io.github.msdk.featdet.ADAP3D.datamodel;
  * </p>
  */
 public class SparseMatrixTriplet {
-	public int mz;
+	public double mz;
 	public int scanNumber;
 	public float intensity;
 	public float rt;
