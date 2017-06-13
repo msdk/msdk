@@ -1,15 +1,14 @@
-/* 
+/*
  * (C) Copyright 2015-2016 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
- * (a) the terms of the GNU Lesser General Public License version 2.1
- * as published by the Free Software Foundation
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
  *
  * or (per the licensee's choosing)
  *
- * (b) the terms of the Eclipse Public License v1.0 as published by
- * the Eclipse Foundation.
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
 package io.github.msdk.io.mzml2;
@@ -20,6 +19,7 @@ import java.util.List;
 
 import com.google.common.collect.Range;
 
+import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
@@ -35,184 +35,222 @@ import io.github.msdk.io.mzml2.util.ByteArrayHolder;
 import io.github.msdk.util.tolerances.MzTolerance;
 
 public class MzMLSpectrum implements MsScan {
-	private HashMap<String, String> cvParamValues;
-	private MzMLBinaryDataInfo mzBinaryDataInfo;
-	private MzMLBinaryDataInfo intensityBinaryDataInfo;
-	private MappedByteBufferInputStream mappedByteBufferInputStream;
+  private HashMap<String, String> cvParamValues;
+  private MzMLBinaryDataInfo mzBinaryDataInfo;
+  private MzMLBinaryDataInfo intensityBinaryDataInfo;
+  private MappedByteBufferInputStream mappedByteBufferInputStream;
 
-	public MzMLSpectrum() {
-		cvParamValues = new HashMap<>();
-	}
+  public MzMLSpectrum() {
+    cvParamValues = new HashMap<>();
+  }
 
-	public void add(String accession, String value) {
-		cvParamValues.put(accession, value);
-	}
+  public void add(String accession, String value) {
+    cvParamValues.put(accession, value);
+  }
 
-	public HashMap<String, String> getSpectrumData() {
-		return cvParamValues;
-	}
+  public HashMap<String, String> getSpectrumData() {
+    return cvParamValues;
+  }
 
-	public int getSpectrumDataSize() {
-		return cvParamValues.size();
-	}
+  public int getSpectrumDataSize() {
+    return cvParamValues.size();
+  }
 
-	public MzMLBinaryDataInfo getMzBinaryDataInfo() {
-		return mzBinaryDataInfo;
-	}
+  public MzMLBinaryDataInfo getMzBinaryDataInfo() {
+    return mzBinaryDataInfo;
+  }
 
-	public void setMzBinaryDataInfo(MzMLBinaryDataInfo mzBinaryDataInfo) {
-		this.mzBinaryDataInfo = mzBinaryDataInfo;
-	}
+  public void setMzBinaryDataInfo(MzMLBinaryDataInfo mzBinaryDataInfo) {
+    this.mzBinaryDataInfo = mzBinaryDataInfo;
+  }
 
-	public MzMLBinaryDataInfo getIntensityBinaryDataInfo() {
-		return intensityBinaryDataInfo;
-	}
+  public MzMLBinaryDataInfo getIntensityBinaryDataInfo() {
+    return intensityBinaryDataInfo;
+  }
 
-	public void setIntensityBinaryDataInfo(MzMLBinaryDataInfo intensityBinaryDataInfo) {
-		this.intensityBinaryDataInfo = intensityBinaryDataInfo;
-	}
+  public void setIntensityBinaryDataInfo(MzMLBinaryDataInfo intensityBinaryDataInfo) {
+    this.intensityBinaryDataInfo = intensityBinaryDataInfo;
+  }
 
-	public MappedByteBufferInputStream getMappedByteBufferInputStream() {
-		return mappedByteBufferInputStream;
-	}
+  public MappedByteBufferInputStream getMappedByteBufferInputStream() {
+    return mappedByteBufferInputStream;
+  }
 
-	public void setMappedByteBufferInputStream(MappedByteBufferInputStream mappedByteBufferInputStream) {
-		this.mappedByteBufferInputStream = mappedByteBufferInputStream;
-	}
+  public void setMappedByteBufferInputStream(
+      MappedByteBufferInputStream mappedByteBufferInputStream) {
+    this.mappedByteBufferInputStream = mappedByteBufferInputStream;
+  }
 
-	// TODO Configure implemented methods
-	@Override
-	public MsSpectrumType getSpectrumType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  // TODO Configure implemented methods
+  @Override
+  public MsSpectrumType getSpectrumType() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public Integer getNumberOfDataPoints() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Integer getNumberOfDataPoints() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public double[] getMzValues() {
-		double[] result = null;
-		byte[] bytesIn = new byte[getMzBinaryDataInfo().getEncodedLength()];
-		Integer precision;
-		EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions = EnumSet
-				.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
-		try {
-			mappedByteBufferInputStream.setPosition(getMzBinaryDataInfo().getPosition());
+  @Override
+  public double[] getMzValues() {
+    double[] result = null;
+    byte[] bytesIn = new byte[getMzBinaryDataInfo().getEncodedLength()];
+    Integer precision;
+    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
+        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
+    try {
+      mappedByteBufferInputStream.setPosition(getMzBinaryDataInfo().getPosition());
 
-			switch (getMzBinaryDataInfo().getBitLength()) {
-			case THIRTY_TWO_BIT_FLOAT:
-			case THIRTY_TWO_BIT_INTEGER:
-				precision = 32;
-				break;
-			case SIXTY_FOUR_BIT_FLOAT:
-			case SIXTY_FOUR_BIT_INTEGER:
-				precision = 64;
-				break;
-			default:
-				precision = null;
-			}
+      switch (getMzBinaryDataInfo().getBitLength()) {
+        case THIRTY_TWO_BIT_FLOAT:
+        case THIRTY_TWO_BIT_INTEGER:
+          precision = 32;
+          break;
+        case SIXTY_FOUR_BIT_FLOAT:
+        case SIXTY_FOUR_BIT_INTEGER:
+          precision = 64;
+          break;
+        default:
+          precision = null;
+      }
 
-			compressions.add(getMzBinaryDataInfo().getCompressionType());
+      compressions.add(getMzBinaryDataInfo().getCompressionType());
 
-			mappedByteBufferInputStream.read(bytesIn, 0, getMzBinaryDataInfo().getEncodedLength());
-			Base64 base64 = new Base64();
-			Base64Context ctx = new Base64ContextPooled();
-			Base64Context decodedB64 = base64.decode(bytesIn, 0, getMzBinaryDataInfo().getEncodedLength(), ctx);
-			ByteArrayHolder bah = decodedB64.readResults();
+      mappedByteBufferInputStream.read(bytesIn, 0, getMzBinaryDataInfo().getEncodedLength());
+      Base64 base64 = new Base64();
+      Base64Context ctx = new Base64ContextPooled();
+      Base64Context decodedB64 =
+          base64.decode(bytesIn, 0, getMzBinaryDataInfo().getEncodedLength(), ctx);
+      ByteArrayHolder bah = decodedB64.readResults();
 
-			result = MzMLPeaksDecoder.decode(bah.getUnderlyingBytes(), bah.getPosition(), precision,
-					getMzBinaryDataInfo().getArrayLength(), compressions).arr;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
+      result = MzMLMZPeaksDecoder.decode(bah.getUnderlyingBytes(), bah.getPosition(), precision,
+          getMzBinaryDataInfo().getArrayLength(), compressions).arr;
+    } catch (Exception e) {
+      throw (new MSDKRuntimeException(e));
+    }
 
-	@Override
-	public float[] getIntensityValues() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    return result;
+  }
 
-	@Override
-	public Float getTIC() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public float[] getIntensityValues() {
+    float[] result = null;
+    byte[] bytesIn = new byte[getIntensityBinaryDataInfo().getEncodedLength()];
+    Integer precision;
+    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
+        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
+    try {
+      mappedByteBufferInputStream.setPosition(getIntensityBinaryDataInfo().getPosition());
 
-	@Override
-	public Range<Double> getMzRange() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+      switch (getIntensityBinaryDataInfo().getBitLength()) {
+        case THIRTY_TWO_BIT_FLOAT:
+        case THIRTY_TWO_BIT_INTEGER:
+          precision = 32;
+          break;
+        case SIXTY_FOUR_BIT_FLOAT:
+        case SIXTY_FOUR_BIT_INTEGER:
+          precision = 64;
+          break;
+        default:
+          precision = null;
+      }
 
-	@Override
-	public MzTolerance getMzTolerance() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+      compressions.add(getIntensityBinaryDataInfo().getCompressionType());
 
-	@Override
-	public RawDataFile getRawDataFile() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+      mappedByteBufferInputStream.read(bytesIn, 0, getIntensityBinaryDataInfo().getEncodedLength());
+      Base64 base64 = new Base64();
+      Base64Context ctx = new Base64ContextPooled();
+      Base64Context decodedB64 =
+          base64.decode(bytesIn, 0, getIntensityBinaryDataInfo().getEncodedLength(), ctx);
+      ByteArrayHolder bah = decodedB64.readResults();
 
-	@Override
-	public Integer getScanNumber() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+      result = MzMLIntensityPeaksDecoder.decode(bah.getUnderlyingBytes(), bah.getPosition(),
+          precision, getIntensityBinaryDataInfo().getArrayLength(), compressions).arr;
+    } catch (Exception e) {
+      throw (new MSDKRuntimeException(e));
+    }
 
-	@Override
-	public String getScanDefinition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    return result;
+  }
 
-	@Override
-	public MsFunction getMsFunction() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Float getTIC() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public MsScanType getMsScanType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Range<Double> getMzRange() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public Range<Double> getScanningRange() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public MzTolerance getMzTolerance() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public PolarityType getPolarity() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public RawDataFile getRawDataFile() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public ActivationInfo getSourceInducedFragmentation() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Integer getScanNumber() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public List<IsolationInfo> getIsolations() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public String getScanDefinition() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public Float getRetentionTime() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public MsFunction getMsFunction() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public MsScanType getMsScanType() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Range<Double> getScanningRange() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public PolarityType getPolarity() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public ActivationInfo getSourceInducedFragmentation() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public List<IsolationInfo> getIsolations() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Float getRetentionTime() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }
