@@ -42,6 +42,12 @@ class MappedByteBufferInputStream extends InputStream {
     return len;
   }
 
+  public synchronized InputStream getInputStream(int position, int length) {
+    MappedByteBuffer newBuf = (MappedByteBuffer) buf.position(position);
+    newBuf.limit(position + length);
+    return (new MappedByteBufferInputStream(newBuf));
+  }
+
   public synchronized int getCurrentPosition() {
     return buf.position();
   }

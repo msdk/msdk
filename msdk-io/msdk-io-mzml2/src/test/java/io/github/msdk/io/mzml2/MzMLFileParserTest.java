@@ -33,7 +33,6 @@ public class MzMLFileParserTest {
     final String inputFileName = TEST_DATA_PATH + "mzML_with_UV.mzML";
     final File inputFile = new File(inputFileName);
 
-    Assert.assertNotNull(inputFile);
     MzMLFileParser mzParser = new MzMLFileParser(inputFile);
     mzParser.execute();
 
