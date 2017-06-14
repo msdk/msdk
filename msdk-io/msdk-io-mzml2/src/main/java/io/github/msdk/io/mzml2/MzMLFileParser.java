@@ -31,6 +31,7 @@ import javax.xml.stream.events.XMLEvent;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import it.unimi.dsi.io.ByteBufferInputStream;
 
 public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private final @Nonnull File mzMLFile;
@@ -53,7 +54,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
     try {
       MzMLFileMemoryMapper mapper = new MzMLFileMemoryMapper();
-      MappedByteBufferInputStream is = mapper.mapToMemory(mzMLFile);
+      ByteBufferInputStream is = mapper.mapToMemory(mzMLFile);
 
       XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
       XMLEventReader xmlEventReader = xmlInputFactory.createXMLEventReader(is);
@@ -84,7 +85,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                 Attribute arrayLengthAttr =
                     startElement.getAttributeByName(new QName("defaultArrayLength"));
                 defaultArrayLength = Integer.valueOf(arrayLengthAttr.getValue());
-                spectrum.setMappedByteBufferInputStream(is);
+                spectrum.setByteBufferInputStream(is);
                 break;
               case "binaryDataArray":
                 xmlEvent = xmlEventReader.nextEvent();
@@ -173,8 +174,6 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
     } catch (XMLStreamException e) {
       throw (new MSDKException(e));
     }
-
-    spectrumList.get(0).getIntensityValues();
 
     return null;
   }

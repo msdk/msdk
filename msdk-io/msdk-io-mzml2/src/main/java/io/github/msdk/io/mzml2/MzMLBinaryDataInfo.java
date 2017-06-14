@@ -58,7 +58,7 @@ class MzMLBinaryDataInfo {
     }
   }
 
-  private int position;
+  private long position;
   private int encodedLength;
   private int arrayLength;
   private MzMLCompressionType compressionType;
@@ -134,11 +134,11 @@ class MzMLBinaryDataInfo {
     return false;
   }
 
-  public int getPosition() {
+  public long getPosition() {
     return position;
   }
 
-  public void setPosition(int position) {
+  public void setPosition(long position) {
     this.position = position;
   }
 

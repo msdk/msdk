@@ -33,12 +33,13 @@ import io.github.msdk.io.mzml2.util.Base64Context;
 import io.github.msdk.io.mzml2.util.Base64ContextPooled;
 import io.github.msdk.io.mzml2.util.ByteArrayHolder;
 import io.github.msdk.util.tolerances.MzTolerance;
+import it.unimi.dsi.io.ByteBufferInputStream;
 
 public class MzMLSpectrum implements MsScan {
   private HashMap<String, String> cvParamValues;
   private MzMLBinaryDataInfo mzBinaryDataInfo;
   private MzMLBinaryDataInfo intensityBinaryDataInfo;
-  private MappedByteBufferInputStream mappedByteBufferInputStream;
+  private ByteBufferInputStream mappedByteBufferInputStream;
 
   public MzMLSpectrum() {
     cvParamValues = new HashMap<>();
@@ -72,12 +73,11 @@ public class MzMLSpectrum implements MsScan {
     this.intensityBinaryDataInfo = intensityBinaryDataInfo;
   }
 
-  public MappedByteBufferInputStream getMappedByteBufferInputStream() {
+  public ByteBufferInputStream getByteBufferInputStream() {
     return mappedByteBufferInputStream;
   }
 
-  public void setMappedByteBufferInputStream(
-      MappedByteBufferInputStream mappedByteBufferInputStream) {
+  public void setByteBufferInputStream(ByteBufferInputStream mappedByteBufferInputStream) {
     this.mappedByteBufferInputStream = mappedByteBufferInputStream;
   }
 
@@ -102,7 +102,7 @@ public class MzMLSpectrum implements MsScan {
     EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
         EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
     try {
-      mappedByteBufferInputStream.setPosition(getMzBinaryDataInfo().getPosition());
+      mappedByteBufferInputStream.position(getMzBinaryDataInfo().getPosition());
 
       switch (getMzBinaryDataInfo().getBitLength()) {
         case THIRTY_TWO_BIT_FLOAT:
@@ -143,7 +143,7 @@ public class MzMLSpectrum implements MsScan {
     EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
         EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
     try {
-      mappedByteBufferInputStream.setPosition(getIntensityBinaryDataInfo().getPosition());
+      mappedByteBufferInputStream.position(getIntensityBinaryDataInfo().getPosition());
 
       switch (getIntensityBinaryDataInfo().getBitLength()) {
         case THIRTY_TWO_BIT_FLOAT:

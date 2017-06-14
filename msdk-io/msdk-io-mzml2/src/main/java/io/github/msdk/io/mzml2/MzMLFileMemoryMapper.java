@@ -22,16 +22,16 @@ import java.nio.channels.FileChannel;
 import javax.xml.stream.XMLStreamException;
 
 import io.github.msdk.MSDKException;
+import it.unimi.dsi.io.ByteBufferInputStream;
 
 class MzMLFileMemoryMapper {
 
-  public MappedByteBufferInputStream mapToMemory(File mzMLFile)
+  public ByteBufferInputStream mapToMemory(File mzMLFile)
       throws IOException, XMLStreamException, MSDKException {
 
     RandomAccessFile aFile = new RandomAccessFile(mzMLFile, "r");
     FileChannel inChannel = aFile.getChannel();
-    MappedByteBuffer buffer = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
-    MappedByteBufferInputStream is = new MappedByteBufferInputStream(buffer);
+    ByteBufferInputStream is = ByteBufferInputStream.map(inChannel);
     aFile.close();
     is.close();
 
