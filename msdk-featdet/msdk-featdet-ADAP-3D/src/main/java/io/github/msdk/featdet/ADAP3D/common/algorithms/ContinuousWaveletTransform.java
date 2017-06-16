@@ -25,7 +25,6 @@ import com.google.common.collect.Range;
 
 import java.util.HashMap;
 
-import io.github.msdk.featdet.ADAP3D.datamodel.CWTInputDataPoint;
 import io.github.msdk.featdet.ADAP3D.datamodel.Result;
 
 import io.github.msdk.featdet.ADAP3D.datamodel.Ridgeline;
@@ -55,7 +54,15 @@ public class ContinuousWaveletTransform {
     private Range<Double> peakWidth;
     private double coefAreaRatioTolerance;
     
- 
+    /**
+	 * <p>
+	 * This is the data model for creating data points for CWT 
+	 * </p>
+	 */
+    public static class DataPoint {
+    	public double rt;
+    	public double intensity;
+    }
     
     // how far in each direction from the current point do we need to grab data for a succesful wavelet transform?
     // This number is the factor we multiply by the scale. 5 should be good because this is the estimated compact support
@@ -475,13 +482,13 @@ public class ContinuousWaveletTransform {
     }
 
     
-    public void setSignal(List<CWTInputDataPoint> listOfDataPoint){
+    public void setSignal(List<DataPoint> listOfDataPoint){
     	signal = new double[listOfDataPoint.size()];
     	for(int i=0;i<listOfDataPoint.size();i++){
     		signal[i] = listOfDataPoint.get(i).intensity;
     	}
     }
-    public void setX(List<CWTInputDataPoint> listOfDataPoint){
+    public void setX(List<DataPoint> listOfDataPoint){
     	x = new double[listOfDataPoint.size()];
     	for(int i=0;i<listOfDataPoint.size();i++){
     		x[i] = listOfDataPoint.get(i).rt;

@@ -13,19 +13,13 @@
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.lang.Math;
-
 
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.featdet.ADAP3D.datamodel.CWTInputDataPoint;
-import io.github.msdk.featdet.ADAP3D.datamodel.SparseMatrixTriplet;
 
 import org.apache.commons.collections4.MapIterator;
 import org.apache.commons.collections4.keyvalue.MultiKey;
@@ -46,11 +40,26 @@ public class SliceSparseMatrix {
 	private final int roundMz = 100;
 	private final List<MsScan> listOfScans;
 	
-	 /**
+	/**
+	 * <p>
+	 * This is the data model for creating triplet representation of sparse matrix. 
+	 * </p>
+	 */
+	public static class SparseMatrixTriplet {
+		public int mz;
+		public int scanNumber;
+		public float intensity;
+		public float rt;
+		public boolean removed;
+	}
+	
+	/**
 	   * <p>
-	   * This constructor takes raw data file and creat the triplet map which contains information
+	   * This constructor takes raw data file and create the triplet map which contains information
 	   * such as mz,intensity,rt,scan number
 	   * </p>
+	   * 
+	   *  @param rawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object
 	   */
 	public SliceSparseMatrix(RawDataFile rawFile){
 		listOfScans = rawFile.getScans();
@@ -58,17 +67,24 @@ public class SliceSparseMatrix {
 	    
 	    for(int i=0;i<listOfScans.size();i++){
 	    	MsScan scan = listOfScans.get(i);
+	    	
+	    	if(scan==null)
+	    		continue;
+	    	
 	    	double mzBuffer[];
 	    	float intensityBuffer[];
-	    	float rt;
+	    	Float rt;
 	    	mzBuffer = scan.getMzValues();
 	    	intensityBuffer = scan.getIntensityValues();
 	    	rt = scan.getRetentionTime();
 	    	
+	    	if(rt==null)
+	    		continue;
+	    	
 	    	for(int j=0;j<mzBuffer.length;j++){
 	    		SparseMatrixTriplet triplet = new SparseMatrixTriplet();
 	    		triplet.intensity = intensityBuffer[j];
-	    		triplet.mz = (int)Math.round(mzBuffer[j]*roundMz);
+	    		triplet.mz = roundMZ(mzBuffer[j]);
 	    		triplet.scanNumber  = i;
 	    		triplet.rt = rt;
 	    		triplet.removed = false;
@@ -127,19 +143,24 @@ public class SliceSparseMatrix {
 	   * <p>
 	   * This method returns the MultiKeyMap slice of data for given mz,lowerScanBound,upperScanBound
 	   * </p>
+	   * 
+	   * @param mz a {@link java.lang.Double} object
+	   * @param lowerScanBound a {@link java.lang.Integer} object
+	   * @param upperScanBound a {@link java.lang.Integer} object
+	   * @return sliceMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object
 	   */
 	public MultiKeyMap getSlice(double mz,int lowerScanBound,int upperScanBound){
 		
-		int roundmz = (int)Math.round(mz*roundMz);
+		int roundedmz = roundMZ(mz);
 		MultiKeyMap  sliceMap = new MultiKeyMap ();
 				
 		for(int i = lowerScanBound;i<=upperScanBound;i++){
-			SparseMatrixTriplet triplet = (SparseMatrixTriplet)tripletMap.get(new Integer(i),new Integer(roundmz));
-			if(tripletMap.containsKey(new Integer(i),new Integer(roundmz))){
-				sliceMap.put(i, roundmz,triplet);
+			if(tripletMap.containsKey(new Integer(i),new Integer(roundedmz))){
+				SparseMatrixTriplet triplet = (SparseMatrixTriplet)tripletMap.get(new Integer(i),new Integer(roundedmz));
+				sliceMap.put(i, roundedmz,triplet);
 			}
 			else{
-				sliceMap.put(i, roundmz, null);
+				sliceMap.put(i, roundedmz, null);
 			}
 		}
 			
@@ -150,6 +171,8 @@ public class SliceSparseMatrix {
 	   * <p>
 	   * This method finds next maximum intensity from filterListOfTriplet
 	   * </p>
+	   * 
+	   * @return tripletObject a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.SparseMatrixTriplet} object 
 	   */
 	public SparseMatrixTriplet findNextMaxIntensity(){
 		
@@ -180,16 +203,19 @@ public class SliceSparseMatrix {
 	
 	/**
 	   * <p>
-	   * This method returns sorted list of CWTInputDataPoint object.Object contain retention time and intensity values 
+	   * This method returns sorted list of ContinuousWaveletTransform.DataPoint object.Object contain retention time and intensity values 
 	   * </p>
+	   * 
+	   * @param slice a {@link org.apache.commons.collections4.map.MultiKeyMap} object
+	   * @return listOfDataPoint a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.SparseMatrixTriplet} list
 	   */
-	public List<CWTInputDataPoint> getCWTDataPoint(MultiKeyMap slice){
+	public List<ContinuousWaveletTransform.DataPoint> getCWTDataPoint(MultiKeyMap slice){
 		
 		MapIterator iterator = slice.mapIterator();
-		List<CWTInputDataPoint> listOfDataPoint = new ArrayList<CWTInputDataPoint>();
+		List<ContinuousWaveletTransform.DataPoint> listOfDataPoint = new ArrayList<ContinuousWaveletTransform.DataPoint>();
 		
 		while (iterator.hasNext())  {
-			CWTInputDataPoint dataPoint = new CWTInputDataPoint();
+			ContinuousWaveletTransform.DataPoint dataPoint = new ContinuousWaveletTransform.DataPoint();
 			iterator.next();
 			MultiKey sliceKey = (MultiKey) iterator.getKey();
 			 SparseMatrixTriplet triplet = (SparseMatrixTriplet)slice.get(sliceKey);
@@ -205,10 +231,10 @@ public class SliceSparseMatrix {
 				 listOfDataPoint.add(dataPoint);
 			 }
 		  }
-		Comparator<CWTInputDataPoint> compare = new Comparator<CWTInputDataPoint>() {
+		Comparator<ContinuousWaveletTransform.DataPoint> compare = new Comparator<ContinuousWaveletTransform.DataPoint>() {
 			
 			@Override
-			public int compare(CWTInputDataPoint o1, CWTInputDataPoint o2) {
+			public int compare(ContinuousWaveletTransform.DataPoint o1, ContinuousWaveletTransform.DataPoint o2) {
 				Double rt1 = o1.rt;
 				Double rt2 = o2.rt;
 				return rt1.compareTo(rt2);
@@ -219,4 +245,48 @@ public class SliceSparseMatrix {
 		
 		return listOfDataPoint;
 	}
+
+	/**
+	   * <p>
+	   * This method removes data points from whole data set for given mz,lowerscanbound and upperscanbound 
+	   * </p>
+	   * 
+	   * @param mz a {@link java.lang.Double} object
+	   * @param lowerScanBound a {@link java.lang.Integer} object
+	   * @param upperScanBound a {@link java.lang.Integer} object
+	   * @return tripletMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object
+	   */
+	public MultiKeyMap removeDataPoints(double mz,int lowerScanBound,int upperScanBound){
+		int roundedmz = roundMZ(mz);
+		for(int i = lowerScanBound;i<=upperScanBound;i++){
+			if(tripletMap.containsKey(new Integer(i),new Integer(roundedmz))){
+				SparseMatrixTriplet triplet = (SparseMatrixTriplet)tripletMap.get(new Integer(i),new Integer(roundedmz));
+				triplet.removed = true;
+			}
+		}
+		return tripletMap;
+	}
+	
+	/**
+	   * <p>
+	   * This method rounds mz value based on roundMz variable  
+	   * </p>
+	   * 
+	   * @param mz a {@link java.lang.Double} object
+	   * @return roundedmz a {@link java.lang.Integer} object
+	   */
+	private int roundMZ(double mz){
+		int roundedmz = (int)Math.round(mz*roundMz);
+		return roundedmz;
+	}
+
+	/**
+	   * <p>
+	   * This method sets maxIntensityIndex to 0
+	   * </p>
+	   */
+	public void setMaxIntensityIndexZero(){
+		maxIntensityIndex = 0;
+	}
+
 }
