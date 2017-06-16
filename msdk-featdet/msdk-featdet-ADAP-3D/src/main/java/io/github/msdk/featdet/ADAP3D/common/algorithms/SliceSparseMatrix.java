@@ -34,10 +34,39 @@ import org.apache.commons.collections4.map.MultiKeyMap;
  */
 public class SliceSparseMatrix {
 	
+	/**
+	 * <p>
+	 *  tripletMap is used for creating MultiKeyMap type of hashmap from raw data file. 
+	 * </p>
+	 */
 	private final MultiKeyMap tripletMap;
+	
+	/**
+	 * <p>
+	 *  filterListOfTriplet is used for adding intensities for same mz values under same scan numbers. 
+	 * </p>
+	 */
 	private final List<SparseMatrixTriplet> filterListOfTriplet;
+	
+	/**
+	 * <p>
+	 *  maxIntensityIndex is used for keeping track of next maximum intensity in the loop. 
+	 * </p>
+	 */
 	private int maxIntensityIndex=0;
+	
+	/**
+	 * <p>
+	 *  roundMz is used for rounding mz value. 
+	 * </p>
+	 */
 	private final int roundMz = 100;
+	
+	/**
+	 * <p>
+	 *  listOfScans is used for getting scan objects from raw data file. 
+	 * </p>
+	 */
 	private final List<MsScan> listOfScans;
 	
 	/**
@@ -193,7 +222,7 @@ public class SliceSparseMatrix {
 			for(int i=maxIntensityIndex;i<filterListOfTriplet.size();i++){
 				if(filterListOfTriplet.get(i).removed == false){
 					tripletObject = filterListOfTriplet.get(i);
-					maxIntensityIndex=i;
+					maxIntensityIndex=i+1;
 					break;
 				}
 				

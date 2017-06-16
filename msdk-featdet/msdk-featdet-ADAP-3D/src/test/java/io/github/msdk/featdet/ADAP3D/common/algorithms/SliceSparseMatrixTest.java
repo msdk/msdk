@@ -62,8 +62,10 @@ public class SliceSparseMatrixTest {
 	
 	@Test
 	public void testFindNextMaxIntensity() throws MSDKException,IOException{
-		SliceSparseMatrix.SparseMatrixTriplet maxIntenistyObj = objSliceSparseMatrix.findNextMaxIntensity();
-		Assert.assertEquals(8653863.0, maxIntenistyObj.intensity,0);
+		double intensityValues[] = {8653863.0,8628693.0,8439210.0};
+		for(int i=0;i<3;i++){
+			Assert.assertEquals(intensityValues[i], objSliceSparseMatrix.findNextMaxIntensity().intensity,0);
+		}
 	}
 	
 	@Test
