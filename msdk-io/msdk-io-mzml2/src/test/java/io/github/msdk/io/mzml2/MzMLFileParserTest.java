@@ -1,3 +1,4 @@
+
 /*
  * (C) Copyright 2015-2016 by MSDK Development Team
  *
@@ -35,9 +36,19 @@ public class MzMLFileParserTest {
 
     MzMLFileParser mzParser = new MzMLFileParser(inputFile);
     mzParser.execute();
+    MzMLSpectrum spectrum = mzParser.getSpectrumList().get(14);
+    Assert.assertNotNull(spectrum);
+    Assert.assertNotNull(spectrum.getMzValues());
+    Assert.assertEquals(spectrum.getMzBinaryDataInfo().getArrayLength(),
+        spectrum.getMzValues().length);
 
     Assert.assertNotNull(new File(inputFileName));
     MzMLFileParser mzParser2 = new MzMLFileParser(inputFileName);
     mzParser2.execute();
+    MzMLSpectrum spectrum2 = mzParser2.getSpectrumList().get(17);
+    Assert.assertNotNull(spectrum2);
+    Assert.assertNotNull(spectrum2.getMzValues());
+    Assert.assertEquals(spectrum2.getMzBinaryDataInfo().getArrayLength(),
+        spectrum2.getMzValues().length);
   }
 }
