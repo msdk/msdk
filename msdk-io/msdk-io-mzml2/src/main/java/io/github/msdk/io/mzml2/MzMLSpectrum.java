@@ -13,9 +13,13 @@
 
 package io.github.msdk.io.mzml2;
 
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+
+import org.apache.commons.io.IOUtils;
 
 import com.google.common.collect.Range;
 
@@ -28,9 +32,6 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.mzml2.util.Base64;
-import io.github.msdk.io.mzml2.util.Base64Context;
-import io.github.msdk.io.mzml2.util.Base64ContextPooled;
 import io.github.msdk.io.mzml2.util.ByteArrayHolder;
 import io.github.msdk.util.tolerances.MzTolerance;
 import it.unimi.dsi.io.ByteBufferInputStream;
@@ -97,13 +98,10 @@ public class MzMLSpectrum implements MsScan {
   @Override
   public double[] getMzValues() {
     double[] result = null;
-    byte[] bytesIn = new byte[getMzBinaryDataInfo().getEncodedLength()];
     Integer precision;
     EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
         EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
     try {
-      mappedByteBufferInputStream.position(getMzBinaryDataInfo().getPosition());
-
       switch (getMzBinaryDataInfo().getBitLength()) {
         case THIRTY_TWO_BIT_FLOAT:
         case THIRTY_TWO_BIT_INTEGER:
@@ -119,14 +117,12 @@ public class MzMLSpectrum implements MsScan {
 
       compressions.add(getMzBinaryDataInfo().getCompressionType());
 
-      mappedByteBufferInputStream.read(bytesIn, 0, getMzBinaryDataInfo().getEncodedLength());
-      Base64 base64 = new Base64();
-      Base64Context ctx = new Base64ContextPooled();
-      Base64Context decodedB64 =
-          base64.decode(bytesIn, 0, getMzBinaryDataInfo().getEncodedLength(), ctx);
-      ByteArrayHolder bah = decodedB64.readResults();
+      InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream,
+          getMzBinaryDataInfo().getPosition(), getMzBinaryDataInfo().getEncodedLength());
+      InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
+      byte[] decodedData = IOUtils.toByteArray(decodedIs);
 
-      result = MzMLMZPeaksDecoder.decode(bah.getUnderlyingBytes(), bah.getPosition(), precision,
+      result = MzMLMZPeaksDecoder.decode(decodedData, decodedData.length, precision,
           getMzBinaryDataInfo().getArrayLength(), compressions).arr;
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
@@ -138,7 +134,6 @@ public class MzMLSpectrum implements MsScan {
   @Override
   public float[] getIntensityValues() {
     float[] result = null;
-    byte[] bytesIn = new byte[getIntensityBinaryDataInfo().getEncodedLength()];
     Integer precision;
     EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
         EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
@@ -160,15 +155,13 @@ public class MzMLSpectrum implements MsScan {
 
       compressions.add(getIntensityBinaryDataInfo().getCompressionType());
 
-      mappedByteBufferInputStream.read(bytesIn, 0, getIntensityBinaryDataInfo().getEncodedLength());
-      Base64 base64 = new Base64();
-      Base64Context ctx = new Base64ContextPooled();
-      Base64Context decodedB64 =
-          base64.decode(bytesIn, 0, getIntensityBinaryDataInfo().getEncodedLength(), ctx);
-      ByteArrayHolder bah = decodedB64.readResults();
+      InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream, 0,
+          getIntensityBinaryDataInfo().getEncodedLength());
+      InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
+      byte[] decodedData = IOUtils.toByteArray(decodedIs);
 
-      result = MzMLIntensityPeaksDecoder.decode(bah.getUnderlyingBytes(), bah.getPosition(),
-          precision, getIntensityBinaryDataInfo().getArrayLength(), compressions).arr;
+      result = MzMLIntensityPeaksDecoder.decode(decodedData, 0, precision,
+          getIntensityBinaryDataInfo().getArrayLength(), compressions).arr;
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }

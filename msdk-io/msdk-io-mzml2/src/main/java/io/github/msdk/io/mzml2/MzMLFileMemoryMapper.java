@@ -16,7 +16,6 @@ package io.github.msdk.io.mzml2;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
 import javax.xml.stream.XMLStreamException;

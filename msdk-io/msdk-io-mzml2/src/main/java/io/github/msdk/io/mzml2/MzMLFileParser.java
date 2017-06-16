@@ -123,8 +123,6 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
             }
           }
 
-
-
           if (insideBinaryDataArrayFlag && startElement.getName().getLocalPart().equals("cvParam")
               && binaryDataInfo != null && xmlEventReader.hasNext()) {
             xmlEvent = xmlEventReader.nextEvent();
