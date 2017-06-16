@@ -176,6 +176,10 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
     return null;
   }
 
+  public ArrayList<MzMLSpectrum> getSpectrumList() {
+    return spectrumList;
+  }
+
   @Override
   public Float getFinishedPercentage() {
     // TODO Auto-generated method stub
