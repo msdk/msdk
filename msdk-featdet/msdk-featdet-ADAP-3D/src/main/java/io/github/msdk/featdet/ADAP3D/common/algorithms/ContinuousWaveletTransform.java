@@ -24,6 +24,8 @@ import java.util.List;
 import com.google.common.collect.Range;
 
 import java.util.HashMap;
+
+import io.github.msdk.featdet.ADAP3D.datamodel.CWTInputDataPoint;
 import io.github.msdk.featdet.ADAP3D.datamodel.Result;
 
 import io.github.msdk.featdet.ADAP3D.datamodel.Ridgeline;
@@ -473,17 +475,23 @@ public class ContinuousWaveletTransform {
     }
 
     
-    public void setSignal(double[] signalIn){
-        signal = signalIn;
+    public void setSignal(List<CWTInputDataPoint> listOfDataPoint){
+    	signal = new double[listOfDataPoint.size()];
+    	for(int i=0;i<listOfDataPoint.size();i++){
+    		signal[i] = listOfDataPoint.get(i).intensity;
+    	}
     }
-    public void setX(double[] xIn){
-        x = xIn;
+    public void setX(List<CWTInputDataPoint> listOfDataPoint){
+    	x = new double[listOfDataPoint.size()];
+    	for(int i=0;i<listOfDataPoint.size();i++){
+    		x[i] = listOfDataPoint.get(i).rt;
+    	}
         double curSumSpacing=0.0;
-        for (int i=0; i <xIn.length-1; i++){
-            curSumSpacing += xIn[i+1]-xIn[i];
+        for (int i=0; i <listOfDataPoint.size()-1; i++){
+            curSumSpacing += listOfDataPoint.get(i+1).rt-listOfDataPoint.get(i).rt;
         }
    
-        avgXSpace = curSumSpacing/((double) (xIn.length-1));
+        avgXSpace = curSumSpacing/((double) (listOfDataPoint.size()-1));
     }
     
     public double[] doubleTheNumberOfPtsX(double[] xIn)

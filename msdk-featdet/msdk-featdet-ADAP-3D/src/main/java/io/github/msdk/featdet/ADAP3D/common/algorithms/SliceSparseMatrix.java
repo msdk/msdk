@@ -13,15 +13,24 @@
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.lang.Math;
 
 
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.featdet.ADAP3D.datamodel.CWTInputDataPoint;
 import io.github.msdk.featdet.ADAP3D.datamodel.SparseMatrixTriplet;
+
+import org.apache.commons.collections4.MapIterator;
+import org.apache.commons.collections4.keyvalue.MultiKey;
 import org.apache.commons.collections4.map.MultiKeyMap;
+
 
 /**
  * <p>
@@ -31,10 +40,11 @@ import org.apache.commons.collections4.map.MultiKeyMap;
  */
 public class SliceSparseMatrix {
 	
-	private final MultiKeyMap  tripletMap;
+	private final MultiKeyMap tripletMap;
 	private final List<SparseMatrixTriplet> filterListOfTriplet;
 	private int maxIntensityIndex=0;
-	private final int roundMz = 100000;
+	private final int roundMz = 100;
+	private final List<MsScan> listOfScans;
 	
 	 /**
 	   * <p>
@@ -43,7 +53,7 @@ public class SliceSparseMatrix {
 	   * </p>
 	   */
 	public SliceSparseMatrix(RawDataFile rawFile){
-		List<MsScan> listOfScans = 	rawFile.getScans();
+		listOfScans = rawFile.getScans();
 		List<SparseMatrixTriplet> listOfTriplet = new ArrayList<SparseMatrixTriplet>();
 	    
 	    for(int i=0;i<listOfScans.size();i++){
@@ -58,7 +68,7 @@ public class SliceSparseMatrix {
 	    	for(int j=0;j<mzBuffer.length;j++){
 	    		SparseMatrixTriplet triplet = new SparseMatrixTriplet();
 	    		triplet.intensity = intensityBuffer[j];
-	    		triplet.mz = mzBuffer[j];
+	    		triplet.mz = (int)Math.round(mzBuffer[j]*roundMz);
 	    		triplet.scanNumber  = i;
 	    		triplet.rt = rt;
 	    		triplet.removed = false;
@@ -81,8 +91,8 @@ public class SliceSparseMatrix {
 					return scanCompare;
 				}
 				else {
-					Double  mz1 = o1.mz;
-					Double  mz2 = o2.mz;
+					Integer  mz1 = o1.mz;
+					Integer  mz2 = o2.mz;
 					return mz1.compareTo(mz2);
 				}
 			}
@@ -120,21 +130,27 @@ public class SliceSparseMatrix {
 	   */
 	public MultiKeyMap getSlice(double mz,int lowerScanBound,int upperScanBound){
 		
+		int roundmz = (int)Math.round(mz*roundMz);
 		MultiKeyMap  sliceMap = new MultiKeyMap ();
 				
 		for(int i = lowerScanBound;i<=upperScanBound;i++){
-			SparseMatrixTriplet triplet = (SparseMatrixTriplet)tripletMap.get(new Integer(i),new Double(mz));
-			if(tripletMap.containsKey(new Integer(i),new Double(mz))){
-				sliceMap.put(i, mz*roundMz,triplet);
+			SparseMatrixTriplet triplet = (SparseMatrixTriplet)tripletMap.get(new Integer(i),new Integer(roundmz));
+			if(tripletMap.containsKey(new Integer(i),new Integer(roundmz))){
+				sliceMap.put(i, roundmz,triplet);
 			}
 			else{
-				sliceMap.put(i, mz*roundMz, null);
+				sliceMap.put(i, roundmz, null);
 			}
 		}
 			
 		return sliceMap;
 	}
 	
+	/**
+	   * <p>
+	   * This method finds next maximum intensity from filterListOfTriplet
+	   * </p>
+	   */
 	public SparseMatrixTriplet findNextMaxIntensity(){
 		
 		SparseMatrixTriplet tripletObject = null;
@@ -154,12 +170,53 @@ public class SliceSparseMatrix {
 			for(int i=maxIntensityIndex;i<filterListOfTriplet.size();i++){
 				if(filterListOfTriplet.get(i).removed == false){
 					tripletObject = filterListOfTriplet.get(i);
-					maxIntensityIndex++;
+					maxIntensityIndex=i;
 					break;
 				}
 				
 			}
 			return tripletObject;
 	}
-
+	
+	/**
+	   * <p>
+	   * This method returns sorted list of CWTInputDataPoint object.Object contain retention time and intensity values 
+	   * </p>
+	   */
+	public List<CWTInputDataPoint> getCWTDataPoint(MultiKeyMap slice){
+		
+		MapIterator iterator = slice.mapIterator();
+		List<CWTInputDataPoint> listOfDataPoint = new ArrayList<CWTInputDataPoint>();
+		
+		while (iterator.hasNext())  {
+			CWTInputDataPoint dataPoint = new CWTInputDataPoint();
+			iterator.next();
+			MultiKey sliceKey = (MultiKey) iterator.getKey();
+			 SparseMatrixTriplet triplet = (SparseMatrixTriplet)slice.get(sliceKey);
+			 if(triplet != null){
+				 dataPoint.rt = triplet.rt/60;
+				 dataPoint.intensity = triplet.intensity;
+				 listOfDataPoint.add(dataPoint);
+				}
+			 else{
+				 MsScan scan = listOfScans.get((int) sliceKey.getKey(0));
+				 dataPoint.rt = scan.getRetentionTime()/60;
+				 dataPoint.intensity = 0.0;
+				 listOfDataPoint.add(dataPoint);
+			 }
+		  }
+		Comparator<CWTInputDataPoint> compare = new Comparator<CWTInputDataPoint>() {
+			
+			@Override
+			public int compare(CWTInputDataPoint o1, CWTInputDataPoint o2) {
+				Double rt1 = o1.rt;
+				Double rt2 = o2.rt;
+				return rt1.compareTo(rt2);
+			}
+		};
+		
+		Collections.sort(listOfDataPoint,compare);
+		
+		return listOfDataPoint;
+	}
 }

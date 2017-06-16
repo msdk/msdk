@@ -14,13 +14,18 @@
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.featdet.ADAP3D.datamodel.CWTInputDataPoint;
 import io.github.msdk.featdet.ADAP3D.datamodel.SparseMatrixTriplet;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import org.apache.commons.collections4.map.MultiKeyMap;
@@ -52,7 +57,7 @@ public class SliceSparseMatrixTest {
 		MultiKeyMap slice = objSliceSparseMatrix.getSlice(301.15106201171875, 0, 208);
 		int size = slice.size();
 		for(int i=0;i<size;i++){
-			Assert.assertTrue(slice.containsKey(new Integer(new Integer(i)),new Double(30115106.201171875)));
+			Assert.assertTrue(slice.containsKey(new Integer(i),new Integer(30115106)));
 		}
 		Assert.assertEquals(209, size);
 	}
@@ -61,5 +66,13 @@ public class SliceSparseMatrixTest {
 	public void testFindNextMaxIntensity() throws MSDKException,IOException{
 		SparseMatrixTriplet maxIntenistyObj = objSliceSparseMatrix.findNextMaxIntensity();
 		Assert.assertNotNull(maxIntenistyObj);
+	}
+	
+	@Test
+	public void testGetRetentionTimeGetIntensity() throws MSDKException,IOException{
+		MultiKeyMap slice = objSliceSparseMatrix.getSlice(301.15106201171875, 0, 208);
+		int size = slice.size();
+		List<CWTInputDataPoint> listOfDataPoint = objSliceSparseMatrix.getCWTDataPoint(slice);
+		Assert.assertNotNull(listOfDataPoint);
 	}
 }

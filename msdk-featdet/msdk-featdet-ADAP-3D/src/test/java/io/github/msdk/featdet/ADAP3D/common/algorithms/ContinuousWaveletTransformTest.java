@@ -25,6 +25,7 @@ import org.junit.Test;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.featdet.ADAP3D.datamodel.CWTInputDataPoint;
 import io.github.msdk.featdet.ADAP3D.datamodel.Result;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 
@@ -76,15 +77,18 @@ public class ContinuousWaveletTransformTest {
 		
 		double[] x = new double[rtBuffer.size()];
 		double[] signal = new double[correctIntensityBuffer.size()];
+		List<CWTInputDataPoint> listOfDataPoint = new ArrayList<CWTInputDataPoint>();
 		
 		for (int i = 0; i < correctIntensityBuffer.size(); i++) {
-		    x[i] = rtBuffer.get(i).doubleValue();
-		    signal[i] = correctIntensityBuffer.get(i).doubleValue();		   
+			CWTInputDataPoint datapoint = new CWTInputDataPoint();
+			datapoint.rt = rtBuffer.get(i).doubleValue();
+			datapoint.intensity = correctIntensityBuffer.get(i).doubleValue();	
+			listOfDataPoint.add(datapoint);
 		  }
 		
 		ContinuousWaveletTransform continuousWavelet = new ContinuousWaveletTransform(1, 10, 1);
-		continuousWavelet.setX(x);
-		continuousWavelet.setSignal(signal);
+		continuousWavelet.setX(listOfDataPoint);
+		continuousWavelet.setSignal(listOfDataPoint);
 		continuousWavelet.setPeakWidth(0.00, 10.00);
 		continuousWavelet.setcoefAreaRatioTolerance(5);
 		
