@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.xml.namespace.QName;
@@ -30,12 +31,16 @@ import javax.xml.stream.events.XMLEvent;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.rawdata.MsFunction;
+import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import it.unimi.dsi.io.ByteBufferInputStream;
 
 public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private final @Nonnull File mzMLFile;
-  private final @Nonnull ArrayList<MzMLSpectrum> spectrumList;
+  private final @Nonnull ArrayList<MsScan> spectrumList;
+  private RawDataFile newRawFile;
 
   public MzMLFileParser(String mzMLFilePath) {
     this(new File(mzMLFilePath));
@@ -50,11 +55,20 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
     this.spectrumList = new ArrayList<>();
   }
 
-  public MzMLRawDataFile execute() throws MSDKException {
+  public RawDataFile execute() throws MSDKException {
 
     try {
       MzMLFileMemoryMapper mapper = new MzMLFileMemoryMapper();
       ByteBufferInputStream is = mapper.mapToMemory(mzMLFile);
+
+      List<Chromatogram> chromatogramsList = new ArrayList<>();
+      List<MsFunction> msFunctionsList = new ArrayList<>();
+
+      // Create the MzMLRawDataFile object
+      final MzMLRawDataFile newRawFile =
+          new MzMLRawDataFile(mzMLFile, null, msFunctionsList, spectrumList, chromatogramsList);
+      this.newRawFile = newRawFile;
+
 
       XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
       XMLEventReader xmlEventReader = xmlInputFactory.createXMLEventReader(is);
@@ -173,10 +187,10 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
       throw (new MSDKException(e));
     }
 
-    return null;
+    return newRawFile;
   }
 
-  public ArrayList<MzMLSpectrum> getSpectrumList() {
+  public ArrayList<MsScan> getSpectrumList() {
     return spectrumList;
   }
 

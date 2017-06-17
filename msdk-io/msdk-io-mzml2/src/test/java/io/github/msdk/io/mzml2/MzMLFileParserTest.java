@@ -23,6 +23,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 public class MzMLFileParserTest {
 
@@ -35,8 +36,9 @@ public class MzMLFileParserTest {
     final File inputFile = new File(inputFileName);
 
     MzMLFileParser mzParser = new MzMLFileParser(inputFile);
-    mzParser.execute();
-    MzMLSpectrum spectrum = mzParser.getSpectrumList().get(14);
+    RawDataFile rawFile = mzParser.execute();
+    Assert.assertNotNull(rawFile);
+    MzMLSpectrum spectrum = (MzMLSpectrum) rawFile.getScans().get(14);
     Assert.assertNotNull(spectrum);
     Assert.assertNotNull(spectrum.getMzValues());
     Assert.assertEquals(spectrum.getMzBinaryDataInfo().getArrayLength(),
@@ -44,8 +46,9 @@ public class MzMLFileParserTest {
 
     Assert.assertNotNull(new File(inputFileName));
     MzMLFileParser mzParser2 = new MzMLFileParser(inputFileName);
-    mzParser2.execute();
-    MzMLSpectrum spectrum2 = mzParser2.getSpectrumList().get(17);
+    RawDataFile rawFile2 = mzParser2.execute();
+    Assert.assertNotNull(rawFile2);
+    MzMLSpectrum spectrum2 = (MzMLSpectrum) rawFile2.getScans().get(17);
     Assert.assertNotNull(spectrum2);
     Assert.assertNotNull(spectrum2.getMzValues());
     Assert.assertEquals(spectrum2.getMzBinaryDataInfo().getArrayLength(),
