@@ -25,17 +25,19 @@ import com.google.common.collect.Range;
  * <p>
  * ChromatogramUtil class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class ChromatogramUtil {
 
   /**
    * Returns the range of Float of all data points in this feature.
    *
-   * @return a {@link com.google.common.collect.Range} object.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
-   * @param size a {@link java.lang.Integer} object.
+   * @return a
+   * @param rtValues an array of
+   * @param size a
    */
-
   @Nonnull
   public static Range<Float> getDataPointsChromatographyRange(@Nonnull float rtValues[],
       @Nonnull Integer size) {
@@ -52,9 +54,9 @@ public class ChromatogramUtil {
   /**
    * Returns the range of intensity values of all data points in this chromatogram.
    *
-   * @return a {@link com.google.common.collect.Range} object.
-   * @param intensityValues an array of {@link java.lang.Float} objects.
-   * @param size a {@link java.lang.Integer} object.
+   * @return a
+   * @param intensityValues an array of
+   * @param size a
    */
   public static @Nullable Range<Float> getDataPointsIntensityRange(@Nonnull Float intensityValues[],
       @Nonnull Integer size) {
@@ -93,9 +95,9 @@ public class ChromatogramUtil {
    *
    * @param intensityValues an array of float.
    * @param mzValues an array of double.
-   * @param method a {@link io.github.msdk.util.ChromatogramUtil.CalculationMethod} object.
-   * @return a {@link java.lang.Double} object.
-   * @param size a {@link java.lang.Integer} object.
+   * @param method a
+   * @return a
+   * @param size a
    */
   public static @Nullable Double calculateMz(@Nonnull double[] mzValues,
       @Nonnull float[] intensityValues, @Nonnull Integer size, @Nonnull CalculationMethod method) {
@@ -162,9 +164,9 @@ public class ChromatogramUtil {
    * Returns the retention time of this feature.
    *
    * @return a float.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
+   * @param rtValues an array of
    * @param intensityValues an array of float.
-   * @param size a {@link java.lang.Integer} object.
+   * @param size a
    */
   public static @Nullable Float getRt(@Nonnull float rtValues[], @Nonnull float[] intensityValues,
       @Nonnull Integer size) {
@@ -194,8 +196,8 @@ public class ChromatogramUtil {
    * Returns the start retention time of this feature.
    *
    * @return a Float.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
-   * @param size a {@link java.lang.Integer} object.
+   * @param rtValues an array of
+   * @param size a
    */
   public static @Nullable Float getRtStart(@Nonnull float rtValues[], @Nonnull Integer size) {
 
@@ -214,8 +216,8 @@ public class ChromatogramUtil {
    * Returns the end retention time of this feature.
    *
    * @return a Float.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
-   * @param size a {@link java.lang.Integer} object.
+   * @param rtValues an array of
+   * @param size a
    */
   public static Float getRtEnd(@Nonnull float rtValues[], @Nonnull Integer size) {
 
@@ -235,8 +237,8 @@ public class ChromatogramUtil {
    * Returns the duration of this feature.
    *
    * @return a float.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
-   * @param size a {@link java.lang.Integer} object.
+   * @param rtValues an array of
+   * @param size a
    */
   public static @Nullable Float getDuration(@Nonnull float rtValues[], @Nonnull Integer size) {
 
@@ -262,7 +264,7 @@ public class ChromatogramUtil {
    *
    * @return a double.
    * @param intensityValues an array of float.
-   * @param size a {@link java.lang.Integer} object.
+   * @param size a
    */
   public static @Nullable Float getMaxHeight(@Nonnull float[] intensityValues,
       @Nonnull Integer size) {
@@ -291,9 +293,9 @@ public class ChromatogramUtil {
    * Returns the area of this feature.
    *
    * @return a double.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
+   * @param rtValues an array of
    * @param intensityValues an array of float.
-   * @param size a {@link java.lang.Integer} object.
+   * @param size a
    */
   public static @Nullable Double getArea(@Nonnull float rtValues[],
       @Nonnull float[] intensityValues, @Nonnull Integer size) {
@@ -321,10 +323,10 @@ public class ChromatogramUtil {
   /**
    * Returns the full width at half maximum (FWHM) of this feature.
    *
-   * @return a {@link java.lang.Double} object.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
+   * @return a
+   * @param rtValues rt values
    * @param intensityValues an array of float.
-   * @param size a {@link java.lang.Integer} object.
+   * @param size a
    */
   public static @Nullable Double getFwhm(@Nonnull float rtValues[],
       @Nonnull float[] intensityValues, @Nonnull Integer size) {
@@ -356,10 +358,10 @@ public class ChromatogramUtil {
   /**
    * Returns the tailing factor of this feature.
    *
-   * @return a {@link java.lang.Double} object.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
+   * @return a
+   * @param rtValues an array of
    * @param intensityValues an array of float.
-   * @param size a {@link java.lang.Integer} object.
+   * @param size a
    */
   public static @Nullable Double getTailingFactor(@Nonnull float rtValues[],
       @Nonnull float[] intensityValues, @Nonnull Integer size) {
@@ -395,10 +397,10 @@ public class ChromatogramUtil {
   /**
    * Returns the asymmetry factor of this feature.
    *
-   * @return a {@link java.lang.Double} object.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
+   * @return a
+   * @param rtValues an array
    * @param intensityValues an array of float.
-   * @param size a {@link java.lang.Integer} object.
+   * @param size a
    */
   public static @Nullable Double getAsymmetryFactor(@Nonnull float rtValues[],
       @Nonnull float[] intensityValues, @Nonnull Integer size) {

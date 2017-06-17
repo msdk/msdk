@@ -38,6 +38,12 @@ import io.github.msdk.util.MsSpectrumUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
 import it.unimi.dsi.io.ByteBufferInputStream;
 
+/**
+ * <p>MzMLSpectrum class.</p>
+ *
+ * @author plusik
+ * @version $Id: $Id
+ */
 public class MzMLSpectrum implements MsScan {
   private ArrayList<MzMLCVParam> cvParams;
   private MzMLBinaryDataInfo mzBinaryDataInfo;
@@ -47,44 +53,86 @@ public class MzMLSpectrum implements MsScan {
   private Integer scanNumber;
   private MzMLRawDataFile dataFile;
 
+  /**
+   * <p>Constructor for MzMLSpectrum.</p>
+   *
+   * @param dataFile a {@link io.github.msdk.io.mzml2.MzMLRawDataFile} object.
+   */
   public MzMLSpectrum(MzMLRawDataFile dataFile) {
     cvParams = new ArrayList<>();
     this.dataFile = dataFile;
   }
 
+  /**
+   * <p>getCVParams.</p>
+   *
+   * @return a {@link java.util.ArrayList} object.
+   */
   public ArrayList<MzMLCVParam> getCVParams() {
     return cvParams;
   }
 
+  /**
+   * <p>Getter for the field <code>mzBinaryDataInfo</code>.</p>
+   *
+   * @return a {@link io.github.msdk.io.mzml2.MzMLBinaryDataInfo} object.
+   */
   public MzMLBinaryDataInfo getMzBinaryDataInfo() {
     return mzBinaryDataInfo;
   }
 
+  /**
+   * <p>Setter for the field <code>mzBinaryDataInfo</code>.</p>
+   *
+   * @param mzBinaryDataInfo a {@link io.github.msdk.io.mzml2.MzMLBinaryDataInfo} object.
+   */
   public void setMzBinaryDataInfo(MzMLBinaryDataInfo mzBinaryDataInfo) {
     this.mzBinaryDataInfo = mzBinaryDataInfo;
   }
 
+  /**
+   * <p>Getter for the field <code>intensityBinaryDataInfo</code>.</p>
+   *
+   * @return a {@link io.github.msdk.io.mzml2.MzMLBinaryDataInfo} object.
+   */
   public MzMLBinaryDataInfo getIntensityBinaryDataInfo() {
     return intensityBinaryDataInfo;
   }
 
+  /**
+   * <p>Setter for the field <code>intensityBinaryDataInfo</code>.</p>
+   *
+   * @param intensityBinaryDataInfo a {@link io.github.msdk.io.mzml2.MzMLBinaryDataInfo} object.
+   */
   public void setIntensityBinaryDataInfo(MzMLBinaryDataInfo intensityBinaryDataInfo) {
     this.intensityBinaryDataInfo = intensityBinaryDataInfo;
   }
 
+  /**
+   * <p>getByteBufferInputStream.</p>
+   *
+   * @return a {@link it.unimi.dsi.io.ByteBufferInputStream} object.
+   */
   public ByteBufferInputStream getByteBufferInputStream() {
     return mappedByteBufferInputStream;
   }
 
+  /**
+   * <p>setByteBufferInputStream.</p>
+   *
+   * @param mappedByteBufferInputStream a {@link it.unimi.dsi.io.ByteBufferInputStream} object.
+   */
   public void setByteBufferInputStream(ByteBufferInputStream mappedByteBufferInputStream) {
     this.mappedByteBufferInputStream = mappedByteBufferInputStream;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer getNumberOfDataPoints() {
     return getMzBinaryDataInfo().getArrayLength();
   }
 
+  /** {@inheritDoc} */
   @Override
   public double[] getMzValues() {
     double[] mzValues = null;
@@ -121,6 +169,7 @@ public class MzMLSpectrum implements MsScan {
     return mzValues;
   }
 
+  /** {@inheritDoc} */
   @Override
   public float[] getIntensityValues() {
     float[] intensityValues = null;
@@ -161,6 +210,7 @@ public class MzMLSpectrum implements MsScan {
     return intensityValues;
   }
 
+  /** {@inheritDoc} */
   @Override
   public MsSpectrumType getSpectrumType() {
     if (getCVValue(MzMLCV.cvCentroidSpectrum) != null)
@@ -172,6 +222,7 @@ public class MzMLSpectrum implements MsScan {
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Float getTIC() {
     Float tic = null;
@@ -185,6 +236,7 @@ public class MzMLSpectrum implements MsScan {
     return tic;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Range<Double> getMzRange() {
     Range<Double> mzRange = null;
@@ -199,21 +251,25 @@ public class MzMLSpectrum implements MsScan {
     return mzRange;
   }
 
+  /** {@inheritDoc} */
   @Override
   public RawDataFile getRawDataFile() {
     return dataFile;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer getScanNumber() {
     return scanNumber;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getScanDefinition() {
     return getCVValue(MzMLCV.cvScanFilterString);
   }
 
+  /** {@inheritDoc} */
   @Override
   public MsFunction getMsFunction() {
     Integer msLevel = 1;
@@ -223,11 +279,13 @@ public class MzMLSpectrum implements MsScan {
     return MSDKObjectBuilder.getMsFunction(msLevel);
   }
 
+  /** {@inheritDoc} */
   @Override
   public MsScanType getMsScanType() {
     return MsScanType.UNKNOWN;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Range<Double> getScanningRange() {
     Range<Double> scanRange = null;
@@ -242,6 +300,7 @@ public class MzMLSpectrum implements MsScan {
     return scanRange;
   }
 
+  /** {@inheritDoc} */
   @Override
   public PolarityType getPolarity() {
     if (getCVValue(MzMLCV.cvPolarityPositive) != null)
@@ -253,17 +312,20 @@ public class MzMLSpectrum implements MsScan {
     return PolarityType.UNKNOWN;
   }
 
+  /** {@inheritDoc} */
   @Override
   public ActivationInfo getSourceInducedFragmentation() {
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<IsolationInfo> getIsolations() {
     // TODO Have to parse precursor lists
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Float getRetentionTime() {
     float retentionTime = 0;
@@ -297,11 +359,17 @@ public class MzMLSpectrum implements MsScan {
     return retentionTime;
   }
 
+  /** {@inheritDoc} */
   @Override
   public MzTolerance getMzTolerance() {
     return null;
   }
 
+  /**
+   * <p>Getter for the field <code>id</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getId() {
     return id;
   }
@@ -314,6 +382,12 @@ public class MzMLSpectrum implements MsScan {
     this.scanNumber = scanNumber;
   }
 
+  /**
+   * <p>getCVValue.</p>
+   *
+   * @param accession a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
   public String getCVValue(String accession) {
     for (MzMLCVParam cvParam : cvParams) {
       if (cvParam.getAccession().equals(accession))

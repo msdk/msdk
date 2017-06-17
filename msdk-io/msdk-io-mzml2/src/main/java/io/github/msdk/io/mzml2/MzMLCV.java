@@ -17,11 +17,12 @@ import uk.ac.ebi.jmzml.model.mzml.CVParam;
 
 /**
  * Controlled vocabulary (CV) values for mzML files.
- * 
+ *
  * @see <a href=
  *      "http://psidev.cvs.sourceforge.net/viewvc/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo">
  *      Official CV specification</a>
- * 
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MzMLCV {
 

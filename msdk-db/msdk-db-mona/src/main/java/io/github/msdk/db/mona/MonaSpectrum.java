@@ -51,6 +51,9 @@ import io.github.msdk.util.tolerances.MzTolerance;
 /**
  * A basic MoNA record, which describes a MassBank of Northern America Spectra. This is a readonly
  * entity and should not be modified by the software in any possible way
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotation {
 
@@ -134,7 +137,6 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
   }
 
   /** {@inheritDoc} */
-
   @Nonnull
   @Override
   public MsSpectrumType getSpectrumType() {
@@ -378,6 +380,7 @@ public class MonaSpectrum implements MsSpectrum, MonaConfiguration, IonAnnotatio
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Float getExpectedRetentionTime() {
     // TODO Auto-generated method stub

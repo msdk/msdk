@@ -32,17 +32,22 @@ import org.apache.commons.collections4.map.MultiKeyMap;
  * SliceSparseMatrix class is used for slicing the sparse matrix of raw data as per given mz value.
  * slice contains intensities for one mz value for different scans.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SliceSparseMatrix {
 	
 	private final MultiKeyMap  tripletMap;
 	
-	 /**
-	   * <p>
-	   * This constructor takes raw data file and creat the triplet map which contains information
-	   * such as mz,intensity,rt,scan number
-	   * </p>
-	   */
+	/**
+	 * <p>
+	 * This constructor takes raw data file and creat the triplet map which contains information
+	 * such as mz,intensity,rt,scan number
+	 * </p>
+	 *
+	 * @param rawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+	 */
 	public SliceSparseMatrix(RawDataFile rawFile){
 		List<MsScan> listOfScans = 	rawFile.getScans();
 		List<SparseMatrixTriplet> listOfTriplet = new ArrayList<SparseMatrixTriplet>();
@@ -112,11 +117,16 @@ public class SliceSparseMatrix {
 		tripletMap = getTripletMap(filterListOfTriplet);
 	}
 		
-	 /**
-	   * <p>
-	   * This method returns the MultiKeyMap slice of data for given mz,lowerScanBound,upperScanBound
-	   * </p>
-	   */
+	/**
+	 * <p>
+	 * This method returns the MultiKeyMap slice of data for given mz,lowerScanBound,upperScanBound
+	 * </p>
+	 *
+	 * @param mz a int.
+	 * @param lowerScanBound a int.
+	 * @param upperScanBound a int.
+	 * @return a {@link org.apache.commons.collections4.map.MultiKeyMap} object.
+	 */
 	public MultiKeyMap getSlice(int mz,int lowerScanBound,int upperScanBound){
 		
 		MultiKeyMap  sliceMap = new MultiKeyMap ();

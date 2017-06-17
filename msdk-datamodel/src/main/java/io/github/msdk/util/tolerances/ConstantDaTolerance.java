@@ -22,6 +22,8 @@ import com.google.common.collect.Range;
  * ConstantDaTolerance class.
  * </p>
  *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class ConstantDaTolerance implements MzTolerance {
 

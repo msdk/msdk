@@ -20,6 +20,9 @@ import javax.annotation.concurrent.Immutable;
 /**
  * Represents the fragmentation information of MS/MS experiments. For convenience, this interface is
  * immutable, so it can be passed by reference and safely used by multiple threads.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 @Immutable
 public interface ActivationInfo {

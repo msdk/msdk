@@ -22,7 +22,10 @@ import io.github.msdk.io.mzml2.util.ByteArrayHolder;
 import io.github.msdk.io.mzml2.util.MSNumpressDouble;
 
 /**
+ * <p>MzMLMZPeaksDecoder class.</p>
+ *
  * @author Dmitry Avtonomov
+ * @version $Id: $Id
  */
 public class MzMLMZPeaksDecoder {
 
@@ -58,19 +61,20 @@ public class MzMLMZPeaksDecoder {
    * the original precision was 32 bit, you still get doubles as output, would be too complicated to
    * provide another method to parseIndexEntries them as floats. Hopefully some day everything will
    * be in 64 bits anyway.
-   * 
-   * @param bytesIn Byte array, decoded from a base64 encoded string<br/>
+   *
+   * @param bytesIn Byte array, decoded from a base64 encoded string<br>
    *        E.g. like: eNoNxltIkwEYBuAOREZFhrCudGFbbraTU+Zmue...
    * @param lengthIn length of data to be treated as values, i.e. the input array can be longer, the
    *        values to be interpreted must start at offset 0, and this will indicate the length
    * @param precision allowed values: 32 and 64, can be null only if MS-NUMPRESS compression was
    *        applied and is specified in the @{code compressions} enum set.
-   * @param numPoints
-   * @param compressions null or {@link MzMLBinaryDataInfo.MzMLCompressionType#NONE} have the same
+   * @param numPoints a int.
+   * @param compressions null or MzMLCompressionType#NONE have the same
    *        effect. Otherwise the binary data will be inflated according to the compression rules.
-   * @return
-   * @throws java.util.zip.DataFormatException
-   * @throws java.io.IOException
+   * @throws java.util.zip.DataFormatException if any.
+   * @throws java.io.IOException if any.
+   * @return a 
+   * @throws io.github.msdk.MSDKException if any.
    */
   public static DecodedData decode(byte[] bytesIn, int lengthIn, Integer precision, int numPoints,
       EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions)
@@ -251,6 +255,12 @@ public class MzMLMZPeaksDecoder {
     }
   }
 
+  /**
+   * <p>toDecodedData.</p>
+   *
+   * @param arr an array of double.
+   * @return a {@link io.github.msdk.io.mzml2.MzMLMZPeaksDecoder.DecodedData} object.
+   */
   protected static DecodedData toDecodedData(double[] arr) {
     if (arr.length == 0) {
       throw new IllegalArgumentException("Array length of zero is not allowed here");

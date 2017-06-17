@@ -47,6 +47,9 @@ import ucar.nc2.Variable;
  * <p>
  * NetCDFFileImportMethod class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
@@ -91,7 +94,6 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
   }
 
   /** {@inheritDoc} */
-
   @Override
   public RawDataFile execute() throws MSDKException {
 

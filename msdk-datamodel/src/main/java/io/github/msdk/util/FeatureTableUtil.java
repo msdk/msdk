@@ -34,6 +34,9 @@ import io.github.msdk.datamodel.ionannotations.IonAnnotation;
  * <p>
  * FeatureTableUtil class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class FeatureTableUtil {
 
@@ -143,7 +146,6 @@ public class FeatureTableUtil {
    * @param combineData a {@link java.lang.Boolean} object which specifies if data will be added or
    *        replaced.
    */
-
   public static void copyCommonValues(@Nonnull FeatureTableRow sourceFeatureTableRow,
       @Nonnull FeatureTableRow targetFeatureTableRow, @Nonnull Boolean combineData) {
 
@@ -202,7 +204,7 @@ public class FeatureTableUtil {
    * @param sourceFeatureTableRow the source
    *        {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} to copy the common values
    *        from.
-   * @param sample the target {@link Sample}.
+   * @param sample the target {@link io.github.msdk.datamodel.featuretables.Sample}.
    * @param targetFeatureTableRow a {@link io.github.msdk.datamodel.featuretables.FeatureTableRow}
    *        object.
    */

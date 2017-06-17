@@ -53,7 +53,6 @@ class MzMLRawDataFile implements RawDataFile {
    * @param msScans a {@link java.util.List} object.
    * @param chromatograms a {@link java.util.List} object.
    */
-
   public MzMLRawDataFile(@Nonnull File sourceFile, @Nonnull MzMLUnmarshaller parser,
       List<MsFunction> msFunctions, List<MsScan> msScans, List<Chromatogram> chromatograms) {
     this.sourceFile = sourceFile;
@@ -87,7 +86,6 @@ class MzMLRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-
   @Override
   @Nonnull
   public List<MsFunction> getMsFunctions() {
@@ -95,7 +93,6 @@ class MzMLRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-
   @Override
   @Nonnull
   public List<MsScan> getScans() {
@@ -103,7 +100,6 @@ class MzMLRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-
   @Override
   @Nonnull
   public List<Chromatogram> getChromatograms() {

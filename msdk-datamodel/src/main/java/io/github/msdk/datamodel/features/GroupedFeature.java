@@ -22,13 +22,26 @@ import javax.annotation.Nullable;
  * A grouped MS feature that consists of several individual features (m/z and RT pairs). A typical
  * example is several isotopes grouped together, or several adducts of the same ion (M+H, M+Na,
  * etc).
- * 
+ *
+ * @author plusik
+ * @version $Id: $Id
+ * @since 0.0.8
  */
 public interface GroupedFeature extends Feature {
 
+  /**
+   * <p>getIndividualFeatures.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   @Nonnull
   List<Feature> getIndividualFeatures();
 
+  /**
+   * <p>getCharge.</p>
+   *
+   * @return a {@link java.lang.Integer} object.
+   */
   @Nullable
   Integer getCharge();
 

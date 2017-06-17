@@ -23,16 +23,30 @@ import io.github.msdk.datamodel.rawdata.ActivationType;
 
 /**
  * Implementation of FragmentationInfo
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SimpleActivationInfo implements ActivationInfo {
 
   private @Nonnull ActivationType fragmentationType = ActivationType.UNKNOWN;
   private @Nullable Double activationEnergy;
 
+  /**
+   * <p>Constructor for SimpleActivationInfo.</p>
+   *
+   * @param activationEnergy a {@link java.lang.Double} object.
+   */
   public SimpleActivationInfo(@Nullable Double activationEnergy) {
     this.activationEnergy = activationEnergy;
   }
 
+  /**
+   * <p>Constructor for SimpleActivationInfo.</p>
+   *
+   * @param activationEnergy a {@link java.lang.Double} object.
+   * @param fragmentationType a {@link io.github.msdk.datamodel.rawdata.ActivationType} object.
+   */
   public SimpleActivationInfo(@Nullable Double activationEnergy,
       @Nonnull ActivationType fragmentationType) {
     Preconditions.checkNotNull(fragmentationType);

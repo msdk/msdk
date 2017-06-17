@@ -15,17 +15,29 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 import java.util.Comparator;
 
 /**
+ * <p>SortAndKeepOriginalIndecies class.</p>
  *
  * @author owenmyers
  * Modified by Dharak Shah to include in MSDK
+ * @version $Id: $Id
  */
 public class SortAndKeepOriginalIndecies implements Comparator<Integer>{
     private final double[] dataArr;
+    /**
+     * <p>Constructor for SortAndKeepOriginalIndecies.</p>
+     *
+     * @param dataInArr an array of double.
+     */
     public SortAndKeepOriginalIndecies(double[] dataInArr)
     {
         this.dataArr =dataInArr;
     }
     
+    /**
+     * <p>makeArrOfIndecies.</p>
+     *
+     * @return an array of {@link java.lang.Integer} objects.
+     */
     public Integer[] makeArrOfIndecies(){
         Integer[] indecies = new Integer[dataArr.length];
         for (int i = 0; i < dataArr.length;i++){
@@ -34,6 +46,7 @@ public class SortAndKeepOriginalIndecies implements Comparator<Integer>{
         return indecies;
     }
     
+    /** {@inheritDoc} */
     @Override
     public int compare(Integer index1, Integer index2)
     {

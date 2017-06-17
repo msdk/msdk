@@ -25,11 +25,22 @@ class IntDecoder {
   boolean half = false;
   byte[] bytes;
 
+  /**
+   * <p>Constructor for IntDecoder.</p>
+   *
+   * @param _bytes an array of byte.
+   * @param _pos a int.
+   */
   public IntDecoder(byte[] _bytes, int _pos) {
     bytes = _bytes;
     pos = _pos;
   }
 
+  /**
+   * <p>next.</p>
+   *
+   * @return a long.
+   */
   public long next() {
     int head;
     int i, n;

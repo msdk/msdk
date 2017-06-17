@@ -28,6 +28,9 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * GridMassMethod class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class GridMassMethod implements MSDKMethod<List<Chromatogram>> {
 

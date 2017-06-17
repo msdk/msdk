@@ -21,6 +21,9 @@ import io.github.msdk.MSDKConstraintViolationException;
  * <p>
  * FeatureTableRow interface.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public interface FeatureTableRow {
 
@@ -53,6 +56,7 @@ public interface FeatureTableRow {
    * Shortcut to return the m/z column value of this row
    *
    * @return the m/z column value of this row.
+   * @since 0.0.8
    */
   @Nullable
   Float getRT();
@@ -79,7 +83,7 @@ public interface FeatureTableRow {
   /**
    * Copy data from a source column value to a target column in the given target row. The copy
    * operation is performed by the passed in {@code featureTableDataConverter}. See
-   * {@link FeatureTableDataConverter} for the default implementation.
+   * {@link io.github.msdk.datamodel.featuretables.FeatureTableDataConverter} for the default implementation.
    *
    * @param <DATATYPE> the generic element data type.
    * @param sourceColumn the source column from where to copy.

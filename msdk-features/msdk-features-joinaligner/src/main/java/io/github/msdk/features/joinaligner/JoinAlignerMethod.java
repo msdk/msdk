@@ -40,6 +40,9 @@ import io.github.msdk.util.tolerances.RTTolerance;
 /**
  * This class aligns feature tables based on a match score. The score is calculated based on the
  * mass and retention time of each peak using a set of tolerances.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
 

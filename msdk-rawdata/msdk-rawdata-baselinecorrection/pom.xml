@@ -3,7 +3,7 @@
   <parent>
     <groupId>io.github.msdk</groupId>
     <artifactId>msdk-rawdata</artifactId>
-    <version>0.0.8-SNAPSHOT</version>
+    <version>0.0.8</version>
   </parent>
   <artifactId>msdk-rawdata-baselinecorrection</artifactId>
   <description>MSDK baseline correction algorithms</description>

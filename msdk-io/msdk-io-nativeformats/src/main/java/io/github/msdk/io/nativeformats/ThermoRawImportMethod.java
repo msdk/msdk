@@ -37,6 +37,9 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * ThermoRawImportMethod class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
 
@@ -66,7 +69,6 @@ public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
   }
 
   /** {@inheritDoc} */
-
   @Override
   public RawDataFile execute() throws MSDKException {
 

@@ -20,6 +20,9 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 
 /**
  * Annotation of ionization type
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 @Immutable
 public interface IonType {

@@ -23,6 +23,9 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 
 /**
  * Annotation of a detected feature with a chemical structure, formula, or textual description.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public interface IonAnnotation extends Comparable<IonAnnotation> {
 
@@ -42,7 +45,6 @@ public interface IonAnnotation extends Comparable<IonAnnotation> {
    * </p>
    *
    * @return Chemical formula of this annotation.
-   * @see #setFormula(IMolecularFormula)
    */
   @Nullable
   IMolecularFormula getFormula();
@@ -113,6 +115,7 @@ public interface IonAnnotation extends Comparable<IonAnnotation> {
    * </p>
    *
    * @return RT
+   * @since 0.0.8
    */
   @Nullable
   Float getExpectedRetentionTime();

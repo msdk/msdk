@@ -24,8 +24,9 @@ import io.github.msdk.io.mzml2.util.PooledByteArrayHolders;
 
 /**
  * Utility methods to inflate zlib compressed spectra (byte arrays).
- * 
+ *
  * @author Dmitry Avtonomov
+ * @version $Id: $Id
  */
 public class ZlibInflater {
   private static final transient ObjectPool<ByteArrayHolder> pool =
@@ -37,24 +38,24 @@ public class ZlibInflater {
    * The ByteArrayHolder pool, that this decoder is using. If you use uncompression methods from
    * this class, e.g. {@link #zlibUncompressBuffer(byte[], int, Integer)}, you will need to return
    * the ByteArrayHolder, that was returned to you, into that pool.
-   * 
-   * @return
+   *
+   * @return a {@link org.apache.commons.pool2.ObjectPool} object.
    */
   public static ObjectPool<ByteArrayHolder> getPool() {
     return pool;
   }
 
   /**
-   * Convenience method for {@link #zlibUncompressBuffer(byte[], int, Integer)}.<br/>
+   * Convenience method for {@link #zlibUncompressBuffer(byte[], int, Integer)}.<br>
    * Inflates zLib compressed byte[].
-   * 
+   *
    * @param compressed zLib compressed bytes
    * @param uncompressedLen length of data in bytes when uncompressed. Optional.
-   * @return inflated byte array, which is borrowed from pool ({@link #getPool() }). You MUST return
+   * @return inflated byte array, which is borrowed from pool ({@link #getPool()}). You MUST return
    *         the byte holder back to the pool after usage.
-   * @throws IOException should never happen, ByteArrayOutputStream is in-memory
-   * @throws DataFormatException in case of malformed input byte array
-   * @throws MSDKException
+   * @throws java.io.IOException should never happen, ByteArrayOutputStream is in-memory
+   * @throws java.util.zip.DataFormatException in case of malformed input byte array
+   * @throws io.github.msdk.MSDKException if any.
    */
   public static ByteArrayHolder zlibUncompressBuffer(byte[] compressed, Integer uncompressedLen)
       throws IOException, DataFormatException, MSDKException {
@@ -63,15 +64,15 @@ public class ZlibInflater {
 
   /**
    * Inflates zLib compressed byte[].
-   * 
+   *
    * @param bytes zLib compressed bytes in a holder, with properly set position
    * @param length length of data in the input array to be used
    * @param uncompressedLen length of data in bytes when uncompressed. Optional.
-   * @return inflated byte array, which is borrowed from pool ({@link #getPool() }). You MUST return
+   * @return inflated byte array, which is borrowed from pool ({@link #getPool()}). You MUST return
    *         the byte holder back to the pool after usage.
-   * @throws IOException should never happen, ByteArrayOutputStream is in-memory
-   * @throws DataFormatException in case of malformed input byte array
-   * @throws MSDKException
+   * @throws java.io.IOException should never happen, ByteArrayOutputStream is in-memory
+   * @throws java.util.zip.DataFormatException in case of malformed input byte array
+   * @throws io.github.msdk.MSDKException if any.
    */
   public static ByteArrayHolder zlibUncompressBuffer(byte[] bytes, int length,
       Integer uncompressedLen) throws IOException, DataFormatException, MSDKException {

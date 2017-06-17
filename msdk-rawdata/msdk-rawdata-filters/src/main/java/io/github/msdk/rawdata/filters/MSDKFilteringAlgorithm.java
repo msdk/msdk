@@ -21,6 +21,9 @@ import javax.annotation.Nullable;
  * <p>
  * MSDKFilteringAlgorithm interface.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public interface MSDKFilteringAlgorithm {
 

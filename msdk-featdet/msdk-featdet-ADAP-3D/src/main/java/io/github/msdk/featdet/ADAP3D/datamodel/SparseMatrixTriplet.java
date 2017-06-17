@@ -13,8 +13,11 @@
 package io.github.msdk.featdet.ADAP3D.datamodel;
 /**
  * <p>
- * This is the data model for creating triplet representation of sparse matrix. 
+ * This is the data model for creating triplet representation of sparse matrix.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SparseMatrixTriplet {
 	public int mz;

@@ -28,6 +28,11 @@ class SimpleMsFunction implements MsFunction {
   private final @Nonnull String name;
   private final @Nullable Integer msLevel;
 
+  /**
+   * <p>Constructor for SimpleMsFunction.</p>
+   *
+   * @param name a {@link java.lang.String} object.
+   */
   public SimpleMsFunction(@Nonnull String name) {
     Preconditions.checkNotNull(name);
     this.name = name;
@@ -35,11 +40,22 @@ class SimpleMsFunction implements MsFunction {
   }
 
 
+  /**
+   * <p>Constructor for SimpleMsFunction.</p>
+   *
+   * @param msLevel a {@link java.lang.Integer} object.
+   */
   public SimpleMsFunction(@Nullable Integer msLevel) {
     this.name = MsFunction.DEFAULT_MS_FUNCTION_NAME;
     this.msLevel = msLevel;
   }
 
+  /**
+   * <p>Constructor for SimpleMsFunction.</p>
+   *
+   * @param name a {@link java.lang.String} object.
+   * @param msLevel a {@link java.lang.Integer} object.
+   */
   public SimpleMsFunction(@Nonnull String name, @Nullable Integer msLevel) {
     Preconditions.checkNotNull(name);
     this.name = name;

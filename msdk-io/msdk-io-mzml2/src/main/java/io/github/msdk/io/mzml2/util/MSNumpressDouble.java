@@ -15,25 +15,39 @@
  */
 package io.github.msdk.io.mzml2.util;
 
+/**
+ * <p>MSNumpressDouble class.</p>
+ *
+ * @author plusik
+ * @version $Id: $Id
+ */
 public class MSNumpressDouble {
 
   /// PSI-MS obo accession numbers.
+  /** Constant <code>ACC_NUMPRESS_LINEAR="MS:1002312"</code> */
   public static final String ACC_NUMPRESS_LINEAR = "MS:1002312";
+  /** Constant <code>ACC_NUMPRESS_PIC="MS:1002313"</code> */
   public static final String ACC_NUMPRESS_PIC = "MS:1002313";
+  /** Constant <code>ACC_NUMPRESS_SLOF="MS:1002314"</code> */
   public static final String ACC_NUMPRESS_SLOF = "MS:1002314";
 
 
   /**
    * Convenience function for decoding binary data encoded by MSNumpress. If the passed cvAccession
    * is one of
-   * <p/>
+   * <p>
    * ACC_NUMPRESS_LINEAR = "MS:1002312" ACC_NUMPRESS_PIC = "MS:1002313" ACC_NUMPRESS_SLOF =
    * "MS:1002314"
-   * <p/>
+   * <p>
    * the corresponding decode function will be called.
    *
    * @param cvAccession The PSI-MS obo CV accession of the encoded data.
    * @param data array of double to be encoded
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
    * @param dataSize number of doubles from data to encode
    * @return The decoded doubles
    */
@@ -73,14 +87,19 @@ public class MSNumpressDouble {
    * (most significant) half byte is 0x0 or 0xf, the number of such halfbytes starting from the most
    * significant is stored in a halfbyte. This initial count is then followed by the rest of the
    * ints halfbytes, in little-endian order. A count halfbyte c of
-   * <p/>
-   * 0 <= c <= 8 is interpreted as an initial c 0x0 halfbytes 9 <= c <= 15 is interpreted as an
+   * <p>
+   * 0 &lt;= c &lt;= 8 is interpreted as an initial c 0x0 halfbytes 9 &lt;= c &lt;= 15 is interpreted as an
    * initial (c-8) 0xf halfbytes
-   * <p/>
-   * Ex: int c rest 0 => 0x8 -1 => 0xf 0xf 23 => 0x6 0x7 0x1
+   * <p>
+   * Ex: int c rest 0 =&gt; 0x8 -1 =&gt; 0xf 0xf 23 =&gt; 0x6 0x7 0x1
    *
    * @param x the int to be encoded
    * @param res the byte array were halfbytes are stored
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
    * @param resOffset position in res were halfbytes are written
    * @return the number of resulting halfbytes
    */
@@ -131,6 +150,12 @@ public class MSNumpressDouble {
   }
 
 
+  /**
+   * <p>encodeFixedPoint.</p>
+   *
+   * @param fixedPoint a double.
+   * @param result an array of byte.
+   */
   public static void encodeFixedPoint(double fixedPoint, byte[] result) {
     long fp = Double.doubleToLongBits(fixedPoint);
     for (int i = 0; i < 8; i++) {
@@ -139,6 +164,12 @@ public class MSNumpressDouble {
   }
 
 
+  /**
+   * <p>decodeFixedPoint.</p>
+   *
+   * @param data an array of byte.
+   * @return a double.
+   */
   public static double decodeFixedPoint(byte[] data) {
     long fp = 0;
     for (int i = 0; i < 8; i++) {
@@ -151,6 +182,14 @@ public class MSNumpressDouble {
   /////////////////////////////////////////////////////////////////////////////////
 
 
+  /**
+   * <p>optimalLinearFixedPoint.</p>
+   *
+   * @param data an array of double.
+   * @param dataSize a int.
+   * @param dataSize a int.
+   * @return a double.
+   */
   public static double optimalLinearFixedPoint(double[] data, int dataSize) {
     if (dataSize == 0)
       return 0;
@@ -172,14 +211,19 @@ public class MSNumpressDouble {
    * Encodes the doubles in data by first using a - lossy conversion to a 4 byte 5 decimal fixed
    * point repressentation - storing the residuals from a linear prediction after first to values -
    * encoding by encodeInt (see above)
-   * <p/>
+   * <p>
    * The resulting binary is maximally 8 + dataSize * 5 bytes, but much less if the data is
    * reasonably smooth on the first order.
-   * <p/>
+   * <p>
    * This encoding is suitable for typical m/z or retention time binary arrays. On a test set, the
    * encoding was empirically show to be accurate to at least 0.002 ppm.
    *
    * @param data array of doubles to be encoded
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
    * @param dataSize number of doubles from data to encode
    * @param result array were resulting bytes should be stored
    * @param fixedPoint the scaling factor used for getting the fixed point repr. This is stored in
@@ -240,9 +284,9 @@ public class MSNumpressDouble {
 
   /**
    * Decodes data encoded by encodeLinear.
-   * <p/>
+   * <p>
    * result vector guaranteed to be shorter or equal to (|data| - 8) * 2
-   * <p/>
+   * <p>
    * Note that this method may throw a ArrayIndexOutOfBoundsException if it deems the input data to
    * be corrupt, i.e. that the last encoded int does not use the last byte in the data. In addition
    * the last encoded int need to use either the last halfbyte, or the second last followed by a 0x0
@@ -250,8 +294,13 @@ public class MSNumpressDouble {
    *
    * @param data array of bytes to be decoded
    * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
    * @param result array were resulting doubles should be stored
-   * @return the number of decoded doubles, or -1 if dataSize < 4 or 4 < dataSize < 8
+   * @return the number of decoded doubles, or -1 if dataSize &lt; 4 or 4 &lt; dataSize &lt; 8
    */
   public static int decodeLinear(byte[] data, int dataSize, double[] result) {
     int ri = 2;
@@ -307,11 +356,16 @@ public class MSNumpressDouble {
   /**
    * Encodes ion counts by simply rounding to the nearest 4 byte integer, and compressing each
    * integer with encodeInt.
-   * <p/>
-   * The handleable range is therefore 0 -> 4294967294. The resulting binary is maximally dataSize *
+   * <p>
+   * The handleable range is therefore 0 -&gt; 4294967294. The resulting binary is maximally dataSize *
    * 5 bytes, but much less if the data is close to 0 on average.
    *
    * @param data array of doubles to be encoded
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
    * @param dataSize number of doubles from data to encode
    * @param result array were resulting bytes should be stored
    * @return the number of encoded bytes
@@ -348,15 +402,20 @@ public class MSNumpressDouble {
 
   /**
    * Decodes data encoded by encodePic
-   * <p/>
+   * <p>
    * result vector guaranteed to be shorter of equal to |data| * 2
-   * <p/>
+   * <p>
    * Note that this method may throw a ArrayIndexOutOfBoundsException if it deems the input data to
    * be corrupt, i.e. that the last encoded int does not use the last byte in the data. In addition
    * the last encoded int need to use either the last halfbyte, or the second last followed by a 0x0
    * halfbyte.
    *
    * @param data array of bytes to be decoded (need memorycont. repr.)
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
    * @param result array were resulting doubles should be stored
    * @return the number of decoded doubles
@@ -380,6 +439,14 @@ public class MSNumpressDouble {
 
   /////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * <p>optimalSlofFixedPoint.</p>
+   *
+   * @param data an array of double.
+   * @param dataSize a int.
+   * @param dataSize a int.
+   * @return a double.
+   */
   public static double optimalSlofFixedPoint(double[] data, int dataSize) {
     if (dataSize == 0)
       return 0;
@@ -401,12 +468,17 @@ public class MSNumpressDouble {
   /**
    * Encodes ion counts by taking the natural logarithm, and storing a fixed point representation of
    * this. This is calculated as
-   * <p/>
+   * <p>
    * unsigned short fp = log(d+1) * fixedPoint + 0.5
-   * <p/>
+   * <p>
    * the result vector is exactly |data| * 2 + 8 bytes long
    *
    * @param data array of doubles to be encoded
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
    * @param dataSize number of doubles from data to encode
    * @param result array were resulting bytes should be stored
    * @param fixedPoint the scaling factor used for getting the fixed point repr. This is stored in
@@ -431,11 +503,16 @@ public class MSNumpressDouble {
 
   /**
    * Decodes data encoded by encodeSlof
-   * <p/>
+   * <p>
    * The result vector will be exactly (|data| - 8) / 2 doubles. returns the number of doubles read,
    * or -1 is there is a problem decoding.
    *
    * @param data array of bytes to be decoded (need memorycont. repr.)
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
    * @param result array were resulting doubles should be stored
    * @return the number of decoded doubles

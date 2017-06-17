@@ -24,6 +24,9 @@ import io.github.msdk.util.MsScanUtil;
  * This class implements the Continuous Wavelet Transform (CWT), Mexican Hat, over raw data points
  * of a certain spectrum. After get the spectrum in the wavelet's time domain, we use the local
  * maxima to detect possible peaks in the original raw data points.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 

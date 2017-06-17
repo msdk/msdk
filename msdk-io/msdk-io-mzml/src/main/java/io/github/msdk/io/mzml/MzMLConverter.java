@@ -345,7 +345,6 @@ class MzMLConverter {
    * @param chromatogram a {@link uk.ac.ebi.jmzml.model.mzml.Chromatogram} object.
    * @return a {@link java.util.List} object.
    */
-
   @Nonnull
   public List<IsolationInfo> extractIsolations(
       uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {

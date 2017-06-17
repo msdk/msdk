@@ -22,6 +22,9 @@ import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 
 /**
  * Represents the name of the feature table columns.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public enum ColumnName {
 

@@ -46,6 +46,9 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 /**
  * This class reads mzML data format using the jmzml library. It generates a RawDataFile object.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 

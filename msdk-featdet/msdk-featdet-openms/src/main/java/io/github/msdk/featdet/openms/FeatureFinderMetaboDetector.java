@@ -40,12 +40,13 @@ import com.google.common.base.Strings;
 import io.github.msdk.MSDKException;
 
 /**
- * 
+ * <p>FeatureFinderMetaboDetector class.</p>
+ *
  * @author Adhithya
- * 
+ *
  *         This class creates a list m/z values (double) for a mzML input file
  *         using OpenMS TOPP Tools
- *
+ * @version $Id: $Id
  */
 public class FeatureFinderMetaboDetector {
 	private final String OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME;
@@ -56,26 +57,28 @@ public class FeatureFinderMetaboDetector {
 	private final @Nonnull String mzMLFILE_PATH;
 
 	/**
-	 * 
+	 *
 	 * <p>
 	 * Constructor for FeatureFinderMetaboDetector.
 	 * </p>
-	 * 
+	 *
 	 * @param mzMLFilePath
 	 *            Path to mzML File to be processed
+	 * @throws io.github.msdk.MSDKException if any.
 	 */
 	public FeatureFinderMetaboDetector(String mzMLFilePath) throws MSDKException {
 		this(new File(mzMLFilePath));
 	}
 
 	/**
-	 * 
+	 *
 	 * <p>
 	 * Constructor for FeatureFinderMetaboDetector.
 	 * </p>
-	 * 
+	 *
 	 * @param mzMLFile
 	 *            {@link java.io.File} reference to mzML File to be processed
+	 * @throws io.github.msdk.MSDKException if any.
 	 */
 	public FeatureFinderMetaboDetector(File mzMLFile) throws MSDKException {
 		this.mzMLFile = mzMLFile;
@@ -88,11 +91,11 @@ public class FeatureFinderMetaboDetector {
 	/**
 	 * Runs FeatureFinderMetabo on the output file, processes the output file
 	 * for mz values data.
-	 * 
+	 *
 	 * @return List of m/z Values
-	 * @throws XMLStreamException
-	 * @throws IOException
-	 * @throws MSDKException
+	 * @throws javax.xml.stream.XMLStreamException if any.
+	 * @throws java.io.IOException if any.
+	 * @throws io.github.msdk.MSDKException if any.
 	 */
 	public List<Double> execute() throws XMLStreamException, IOException, MSDKException {
 		List<Double> mzValuesResult = new ArrayList<Double>();
