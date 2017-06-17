@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 import javax.xml.namespace.QName;
@@ -41,6 +43,8 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private final @Nonnull File mzMLFile;
   private final @Nonnull ArrayList<MsScan> spectrumList;
   private RawDataFile newRawFile;
+  private Integer lastScanNumber = 0;
+  private boolean canceled = false;
 
   public MzMLFileParser(String mzMLFilePath) {
     this(new File(mzMLFilePath));
@@ -69,7 +73,6 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
           new MzMLRawDataFile(mzMLFile, null, msFunctionsList, spectrumList, chromatogramsList);
       this.newRawFile = newRawFile;
 
-
       XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
       XMLEventReader xmlEventReader = xmlInputFactory.createXMLEventReader(is);
 
@@ -79,6 +82,9 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
       MzMLSpectrum spectrum = null;
       MzMLBinaryDataInfo binaryDataInfo = null;
       while (xmlEventReader.hasNext()) {
+        if (canceled)
+          return null;
+
         XMLEvent xmlEvent = xmlEventReader.nextEvent();
         if (xmlEvent.isStartElement()) {
           StartElement startElement = xmlEvent.asStartElement();
@@ -93,12 +99,16 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
             switch (startElement.getName().getLocalPart()) {
               case "spectrum":
                 xmlEvent = xmlEventReader.nextEvent();
+                System.out.println("---");
                 if (spectrum != null)
                   spectrumList.add(spectrum);
-                spectrum = new MzMLSpectrum();
+                spectrum = new MzMLSpectrum(newRawFile);
                 Attribute arrayLengthAttr =
                     startElement.getAttributeByName(new QName("defaultArrayLength"));
+                Attribute idAttr = startElement.getAttributeByName(new QName("id"));
                 defaultArrayLength = Integer.valueOf(arrayLengthAttr.getValue());
+                spectrum.setId(idAttr.getValue());
+                spectrum.setScanNumber(getScanNumber(idAttr.getValue()));
                 spectrum.setByteBufferInputStream(is);
                 break;
               case "binaryDataArray":
@@ -120,7 +130,13 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                   xmlEvent = xmlEventReader.nextEvent();
                   Attribute accessionAttr = startElement.getAttributeByName(new QName("accession"));
                   Attribute valueAttr = startElement.getAttributeByName(new QName("value"));
-                  spectrum.add(accessionAttr.getValue(), valueAttr.getValue());
+                  Attribute unitAccessionAttr =
+                      startElement.getAttributeByName(new QName("unitAccession"));
+                  MzMLCVParam cvParam =
+                      new MzMLCVParam(accessionAttr.getValue(), valueAttr.getValue(), null);
+                  if (unitAccessionAttr != null)
+                    cvParam.setUnitAccession(unitAccessionAttr.getValue());
+                  spectrum.getCVParams().add(cvParam);
                 }
                 break;
               case "binary":
@@ -176,6 +192,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
               spectrum.setMzBinaryDataInfo(binaryDataInfo);
             if (binaryDataInfo.getArrayType().getValue().equals("MS:1000515"))
               spectrum.setIntensityBinaryDataInfo(binaryDataInfo);
+
             insideBinaryDataArrayFlag = false;
           }
         }
@@ -194,6 +211,25 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
     return spectrumList;
   }
 
+  public Integer getScanNumber(String spectrumId) {
+    final Pattern pattern = Pattern.compile("scan=([0-9]+)");
+    final Matcher matcher = pattern.matcher(spectrumId);
+    boolean scanNumberFound = matcher.find();
+
+    // Some vendors include scan=XX in the ID, some don't, such as
+    // mzML converted from WIFF files. See the definition of nativeID in
+    // http://psidev.cvs.sourceforge.net/viewvc/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo
+    if (scanNumberFound) {
+      Integer scanNumber = Integer.parseInt(matcher.group(1));
+      lastScanNumber = scanNumber;
+      return scanNumber;
+    }
+
+    Integer scanNumber = lastScanNumber + 1;
+    lastScanNumber++;
+    return scanNumber;
+  }
+
   @Override
   public Float getFinishedPercentage() {
     // TODO Auto-generated method stub
@@ -202,13 +238,11 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
   @Override
   public RawDataFile getResult() {
-    // TODO Auto-generated method stub
-    return null;
+    return newRawFile;
   }
 
   @Override
   public void cancel() {
-    // TODO Auto-generated method stub
-
+    this.canceled = true;
   }
 }
