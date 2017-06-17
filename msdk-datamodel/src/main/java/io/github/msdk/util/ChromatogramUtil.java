@@ -13,6 +13,8 @@
 
 package io.github.msdk.util;
 
+import java.util.Arrays;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -30,22 +32,20 @@ public class ChromatogramUtil {
    * Returns the range of Float of all data points in this feature.
    *
    * @return a {@link com.google.common.collect.Range} object.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
-   *        objects.
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
    * @param size a {@link java.lang.Integer} object.
    */
 
   @Nonnull
-  public static Range<Float> getDataPointsChromatographyRange(
-      @Nonnull float rtValues[], @Nonnull Integer size) {
+  public static Range<Float> getDataPointsChromatographyRange(@Nonnull float rtValues[],
+      @Nonnull Integer size) {
 
     // Parameter check
     Preconditions.checkNotNull(rtValues);
     Preconditions.checkNotNull(size);
     Preconditions.checkPositionIndex(size, rtValues.length);
 
-    final Range<Float> chromatographyRange =
-        Range.closed(rtValues[0], rtValues[size - 1]);
+    final Range<Float> chromatographyRange = Range.closed(rtValues[0], rtValues[size - 1]);
     return chromatographyRange;
   }
 
@@ -162,13 +162,12 @@ public class ChromatogramUtil {
    * Returns the retention time of this feature.
    *
    * @return a float.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
-   *        objects.
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
    * @param intensityValues an array of float.
    * @param size a {@link java.lang.Integer} object.
    */
-  public static @Nullable Float getRt(@Nonnull float rtValues[],
-      @Nonnull float[] intensityValues, @Nonnull Integer size) {
+  public static @Nullable Float getRt(@Nonnull float rtValues[], @Nonnull float[] intensityValues,
+      @Nonnull Integer size) {
 
     // Parameter check
     Preconditions.checkNotNull(rtValues);
@@ -195,12 +194,10 @@ public class ChromatogramUtil {
    * Returns the start retention time of this feature.
    *
    * @return a Float.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
-   *        objects.
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
    * @param size a {@link java.lang.Integer} object.
    */
-  public static @Nullable Float getRtStart(@Nonnull float rtValues[],
-      @Nonnull Integer size) {
+  public static @Nullable Float getRtStart(@Nonnull float rtValues[], @Nonnull Integer size) {
 
     // Parameter check
     Preconditions.checkNotNull(rtValues);
@@ -217,8 +214,7 @@ public class ChromatogramUtil {
    * Returns the end retention time of this feature.
    *
    * @return a Float.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
-   *        objects.
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
    * @param size a {@link java.lang.Integer} object.
    */
   public static Float getRtEnd(@Nonnull float rtValues[], @Nonnull Integer size) {
@@ -239,12 +235,10 @@ public class ChromatogramUtil {
    * Returns the duration of this feature.
    *
    * @return a float.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
-   *        objects.
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
    * @param size a {@link java.lang.Integer} object.
    */
-  public static @Nullable Float getDuration(@Nonnull float rtValues[],
-      @Nonnull Integer size) {
+  public static @Nullable Float getDuration(@Nonnull float rtValues[], @Nonnull Integer size) {
 
     // Parameter check
     Preconditions.checkNotNull(rtValues);
@@ -297,8 +291,7 @@ public class ChromatogramUtil {
    * Returns the area of this feature.
    *
    * @return a double.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
-   *        objects.
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
    * @param intensityValues an array of float.
    * @param size a {@link java.lang.Integer} object.
    */
@@ -329,8 +322,7 @@ public class ChromatogramUtil {
    * Returns the full width at half maximum (FWHM) of this feature.
    *
    * @return a {@link java.lang.Double} object.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
-   *        objects.
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
    * @param intensityValues an array of float.
    * @param size a {@link java.lang.Integer} object.
    */
@@ -365,8 +357,7 @@ public class ChromatogramUtil {
    * Returns the tailing factor of this feature.
    *
    * @return a {@link java.lang.Double} object.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
-   *        objects.
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
    * @param intensityValues an array of float.
    * @param size a {@link java.lang.Integer} object.
    */
@@ -405,8 +396,7 @@ public class ChromatogramUtil {
    * Returns the asymmetry factor of this feature.
    *
    * @return a {@link java.lang.Double} object.
-   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float}
-   *        objects.
+   * @param rtValues an array of {@link io.github.msdk.datamodel.rawdata.Float} objects.
    * @param intensityValues an array of float.
    * @param size a {@link java.lang.Integer} object.
    */
@@ -426,10 +416,13 @@ public class ChromatogramUtil {
     Float height = getMaxHeight(intensityValues, size);
     Float rt = getRt(rtValues, intensityValues, size);
 
+
     if (height == null || rt == null)
       return null;
 
     double rtValues3[] = findRTs(height * 0.1, rt, rtValues, intensityValues, size);
+    System.out.println("rtval3 " + Arrays.toString(rtValues3));
+
     Double af = (rtValues3[1] - rt) / (rt - rtValues3[0]);
     if (af < 0) {
       af = null;
@@ -437,9 +430,8 @@ public class ChromatogramUtil {
     return af;
   }
 
-  private static double[] findRTs(double intensity, float rt,
-      @Nonnull float rtValues[], @Nonnull float[] intensityValues,
-      @Nonnull Integer size) {
+  private static double[] findRTs(double intensity, float rt, @Nonnull float rtValues[],
+      @Nonnull float[] intensityValues, @Nonnull Integer size) {
 
     // Parameter check
     Preconditions.checkNotNull(rtValues);
@@ -480,15 +472,19 @@ public class ChromatogramUtil {
       slope = (y2 - y1) / (x2 - x1);
       intercept = y1 - (slope * x1);
       rt1 = (intensity - intercept) / slope;
-    } else { // Straight drop of peak to 0 intensity
+    } else if (x2 > 0) { // Straight drop of peak to 0 intensity
       rt1 = x2;
+    } else {
+      rt1 = rtValues[0];
     }
     if (y4 > 0) {
       slope = (y4 - y3) / (x4 - x3);
       intercept = y3 - (slope * x3);
       rt2 = (intensity - intercept) / slope;
-    } else { // Straight drop of peak to 0 intensity
+    } else if (x3 > 0) { // Straight drop of peak to 0 intensity
       rt2 = x3;
+    } else {
+      rt2 = rtValues[size - 1];
     }
 
     return new double[] {rt1, rt2};
