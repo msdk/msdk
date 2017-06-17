@@ -44,6 +44,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private final @Nonnull ArrayList<MsScan> spectrumList;
   private RawDataFile newRawFile;
   private Integer lastScanNumber = 0;
+  private boolean canceled = false;
 
   public MzMLFileParser(String mzMLFilePath) {
     this(new File(mzMLFilePath));
@@ -81,6 +82,9 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
       MzMLSpectrum spectrum = null;
       MzMLBinaryDataInfo binaryDataInfo = null;
       while (xmlEventReader.hasNext()) {
+        if (canceled)
+          return null;
+
         XMLEvent xmlEvent = xmlEventReader.nextEvent();
         if (xmlEvent.isStartElement()) {
           StartElement startElement = xmlEvent.asStartElement();
@@ -95,6 +99,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
             switch (startElement.getName().getLocalPart()) {
               case "spectrum":
                 xmlEvent = xmlEventReader.nextEvent();
+                System.out.println("---");
                 if (spectrum != null)
                   spectrumList.add(spectrum);
                 spectrum = new MzMLSpectrum(newRawFile);
@@ -233,13 +238,11 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
   @Override
   public RawDataFile getResult() {
-    // TODO Auto-generated method stub
-    return null;
+    return newRawFile;
   }
 
   @Override
   public void cancel() {
-    // TODO Auto-generated method stub
-
+    this.canceled = true;
   }
 }

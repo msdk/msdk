@@ -34,7 +34,6 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
 import it.unimi.dsi.io.ByteBufferInputStream;
@@ -46,8 +45,6 @@ public class MzMLSpectrum implements MsScan {
   private ByteBufferInputStream mappedByteBufferInputStream;
   private String id;
   private Integer scanNumber;
-  private double[] mzValues;
-  private float[] intensityValues;
   private MzMLRawDataFile dataFile;
 
   public MzMLSpectrum(MzMLRawDataFile dataFile) {
@@ -90,7 +87,7 @@ public class MzMLSpectrum implements MsScan {
 
   @Override
   public double[] getMzValues() {
-    mzValues = null;
+    double[] mzValues = null;
     Integer precision;
     EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
         EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
@@ -126,7 +123,7 @@ public class MzMLSpectrum implements MsScan {
 
   @Override
   public float[] getIntensityValues() {
-    intensityValues = null;
+    float[] intensityValues = null;
     Integer precision;
     EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
         EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
@@ -166,21 +163,39 @@ public class MzMLSpectrum implements MsScan {
 
   @Override
   public MsSpectrumType getSpectrumType() {
-    MsSpectrumType spectrumType = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mzValues,
-        intensityValues, getMzBinaryDataInfo().getArrayLength());
-    return spectrumType;
+    if (getCVValue(MzMLCV.cvCentroidSpectrum) != null)
+      return MsSpectrumType.CENTROIDED;
+
+    if (getCVValue(MzMLCV.cvProfileSpectrum) != null)
+      return MsSpectrumType.PROFILE;
+
+    return null;
   }
 
   @Override
   public Float getTIC() {
-    Float tic = MsSpectrumUtil.getTIC(intensityValues, getMzBinaryDataInfo().getArrayLength());
+    Float tic = null;
+    try {
+      tic = Float.valueOf(getCVValue(MzMLCV.cvTIC));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    if (tic == null)
+      tic = MsSpectrumUtil.getTIC(getIntensityValues(), getMzBinaryDataInfo().getArrayLength());
     return tic;
   }
 
   @Override
   public Range<Double> getMzRange() {
-    Range<Double> mzRange =
-        MsSpectrumUtil.getMzRange(mzValues, getMzBinaryDataInfo().getArrayLength());
+    Range<Double> mzRange = null;
+    try {
+      mzRange = Range.closed(Double.valueOf(getCVValue(MzMLCV.cvLowestMz)),
+          Double.valueOf(getCVValue(MzMLCV.cvHighestMz)));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    if (mzRange == null)
+      mzRange = MsSpectrumUtil.getMzRange(getMzValues(), getMzBinaryDataInfo().getArrayLength());
     return mzRange;
   }
 
@@ -215,7 +230,16 @@ public class MzMLSpectrum implements MsScan {
 
   @Override
   public Range<Double> getScanningRange() {
-    return null;
+    Range<Double> scanRange = null;
+    try {
+      scanRange = Range.closed(Double.valueOf(getCVValue(MzMLCV.cvScanWindowLowerLimit)),
+          Double.valueOf(getCVValue(MzMLCV.cvScanWindowUpperLimit)));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    if (scanRange == null)
+      getMzRange();
+    return scanRange;
   }
 
   @Override
@@ -242,35 +266,35 @@ public class MzMLSpectrum implements MsScan {
 
   @Override
   public Float getRetentionTime() {
-    for (MzMLCVParam param : cvParams) {
-      String accession = param.getAccession();
-      String unitAccession = param.getUnitAccession();
-      String value = param.getValue();
-      if ((accession == null) || (value == null))
-        continue;
+    float retentionTime = 0;
+    if (retentionTime == 0) {
+      for (MzMLCVParam param : cvParams) {
+        String accession = param.getAccession();
+        String unitAccession = param.getUnitAccession();
+        String value = param.getValue();
+        if ((accession == null) || (value == null))
+          continue;
 
-      // Retention time (actually "Scan start time") MS:1000016
-      if (accession.equals(MzMLCV.cvScanStartTime)) {
-        try {
-          float retentionTime;
-          if ((unitAccession == null) || (unitAccession.equals(MzMLCV.cvUnitsMin1))
-              || unitAccession.equals(MzMLCV.cvUnitsMin2)) {
-            // Minutes
-            retentionTime = Float.parseFloat(value) * 60f;
-          } else {
-            // Seconds
-            retentionTime = Float.parseFloat(value);
+        // Retention time (actually "Scan start time") MS:1000016
+        if (accession.equals(MzMLCV.cvScanStartTime)) {
+          try {
+            if ((unitAccession == null) || (unitAccession.equals(MzMLCV.cvUnitsMin1))
+                || unitAccession.equals(MzMLCV.cvUnitsMin2)) {
+              // Minutes
+              retentionTime = Float.parseFloat(value) * 60f;
+            } else {
+              // Seconds
+              retentionTime = Float.parseFloat(value);
+            }
+            return retentionTime;
+          } catch (Exception e) {
+            e.printStackTrace();
           }
-          return retentionTime;
-        } catch (Exception e) {
-          // Ignore incorrectly formatted numbers, just dump the
-          // exception
-          e.printStackTrace();
         }
-
       }
+      return null;
     }
-    return null;
+    return retentionTime;
   }
 
   @Override
@@ -282,11 +306,11 @@ public class MzMLSpectrum implements MsScan {
     return id;
   }
 
-  public void setId(String id) {
+  void setId(String id) {
     this.id = id;
   }
 
-  public void setScanNumber(Integer scanNumber) {
+  void setScanNumber(Integer scanNumber) {
     this.scanNumber = scanNumber;
   }
 

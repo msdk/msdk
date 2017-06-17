@@ -71,6 +71,19 @@ public class MzMLCV {
     profileCvParam.setAccession(cvProfileSpectrum);
     profileCvParam.setName("profile spectrum");
   }
+  
+  // Total Ion Current
+  static final String cvTIC = "MS:1000285";
+  
+  // m/z range
+  static final String cvLowestMz = "MS:1000528";
+  static final String cvHighestMz = "MS:1000527";
+  
+  // Scan window range
+
+  static final String cvScanWindowUpperLimit = "MS:1000500";
+  static final String cvScanWindowLowerLimit = "MS:1000501";
+
 
   // Chromatograms
   static final String cvChromatogramTIC = "MS:1000235";
