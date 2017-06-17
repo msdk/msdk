@@ -14,16 +14,18 @@
 package io.github.msdk.io.mzml2;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
@@ -32,29 +34,29 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
+import io.github.msdk.util.MsSpectrumUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
 import it.unimi.dsi.io.ByteBufferInputStream;
 
 public class MzMLSpectrum implements MsScan {
-  private HashMap<String, String> cvParamValues;
+  private ArrayList<MzMLCVParam> cvParams;
   private MzMLBinaryDataInfo mzBinaryDataInfo;
   private MzMLBinaryDataInfo intensityBinaryDataInfo;
   private ByteBufferInputStream mappedByteBufferInputStream;
+  private String id;
+  private Integer scanNumber;
+  private double[] mzValues;
+  private float[] intensityValues;
+  private MzMLRawDataFile dataFile;
 
-  public MzMLSpectrum() {
-    cvParamValues = new HashMap<>();
+  public MzMLSpectrum(MzMLRawDataFile dataFile) {
+    cvParams = new ArrayList<>();
+    this.dataFile = dataFile;
   }
 
-  public void add(String accession, String value) {
-    cvParamValues.put(accession, value);
-  }
-
-  public HashMap<String, String> getSpectrumData() {
-    return cvParamValues;
-  }
-
-  public int getSpectrumDataSize() {
-    return cvParamValues.size();
+  public ArrayList<MzMLCVParam> getCVParams() {
+    return cvParams;
   }
 
   public MzMLBinaryDataInfo getMzBinaryDataInfo() {
@@ -81,22 +83,14 @@ public class MzMLSpectrum implements MsScan {
     this.mappedByteBufferInputStream = mappedByteBufferInputStream;
   }
 
-  // TODO Configure implemented methods
-  @Override
-  public MsSpectrumType getSpectrumType() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
   @Override
   public Integer getNumberOfDataPoints() {
-    // TODO Auto-generated method stub
-    return null;
+    return getMzBinaryDataInfo().getArrayLength();
   }
 
   @Override
   public double[] getMzValues() {
-    double[] result = null;
+    mzValues = null;
     Integer precision;
     EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
         EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
@@ -121,18 +115,18 @@ public class MzMLSpectrum implements MsScan {
       InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
       byte[] decodedData = IOUtils.toByteArray(decodedIs);
 
-      result = MzMLMZPeaksDecoder.decode(decodedData, decodedData.length, precision,
+      mzValues = MzMLMZPeaksDecoder.decode(decodedData, decodedData.length, precision,
           getMzBinaryDataInfo().getArrayLength(), compressions).arr;
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }
 
-    return result;
+    return mzValues;
   }
 
   @Override
   public float[] getIntensityValues() {
-    float[] result = null;
+    intensityValues = null;
     Integer precision;
     EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
         EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
@@ -154,95 +148,153 @@ public class MzMLSpectrum implements MsScan {
 
       compressions.add(getIntensityBinaryDataInfo().getCompressionType());
 
-      InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream, 0,
+      InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream,
+          getIntensityBinaryDataInfo().getPosition(),
           getIntensityBinaryDataInfo().getEncodedLength());
       InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
       byte[] decodedData = IOUtils.toByteArray(decodedIs);
+      System.out.println(new String(IOUtils.toByteArray(encodedIs)));
 
-      result = MzMLIntensityPeaksDecoder.decode(decodedData, 0, precision,
+      intensityValues = MzMLIntensityPeaksDecoder.decode(decodedData, decodedData.length, precision,
           getIntensityBinaryDataInfo().getArrayLength(), compressions).arr;
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }
 
-    return result;
+    return intensityValues;
+  }
+
+  @Override
+  public MsSpectrumType getSpectrumType() {
+    MsSpectrumType spectrumType = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mzValues,
+        intensityValues, getMzBinaryDataInfo().getArrayLength());
+    return spectrumType;
   }
 
   @Override
   public Float getTIC() {
-    // TODO Auto-generated method stub
-    return null;
+    Float tic = MsSpectrumUtil.getTIC(intensityValues, getMzBinaryDataInfo().getArrayLength());
+    return tic;
   }
 
   @Override
   public Range<Double> getMzRange() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public MzTolerance getMzTolerance() {
-    // TODO Auto-generated method stub
-    return null;
+    Range<Double> mzRange =
+        MsSpectrumUtil.getMzRange(mzValues, getMzBinaryDataInfo().getArrayLength());
+    return mzRange;
   }
 
   @Override
   public RawDataFile getRawDataFile() {
-    // TODO Auto-generated method stub
-    return null;
+    return dataFile;
   }
 
   @Override
   public Integer getScanNumber() {
-    // TODO Auto-generated method stub
-    return null;
+    return scanNumber;
   }
 
   @Override
   public String getScanDefinition() {
-    // TODO Auto-generated method stub
-    return null;
+    return getCVValue(MzMLCV.cvScanFilterString);
   }
 
   @Override
   public MsFunction getMsFunction() {
-    // TODO Auto-generated method stub
-    return null;
+    Integer msLevel = 1;
+    String value = getCVValue(MzMLCV.cvMSLevel);
+    if (!Strings.isNullOrEmpty(value))
+      msLevel = Integer.parseInt(value);
+    return MSDKObjectBuilder.getMsFunction(msLevel);
   }
 
   @Override
   public MsScanType getMsScanType() {
-    // TODO Auto-generated method stub
-    return null;
+    return MsScanType.UNKNOWN;
   }
 
   @Override
   public Range<Double> getScanningRange() {
-    // TODO Auto-generated method stub
     return null;
   }
 
   @Override
   public PolarityType getPolarity() {
-    // TODO Auto-generated method stub
-    return null;
+    if (getCVValue(MzMLCV.cvPolarityPositive) != null)
+      return PolarityType.POSITIVE;
+
+    if (getCVValue(MzMLCV.cvPolarityNegative) != null)
+      return PolarityType.NEGATIVE;
+
+    return PolarityType.UNKNOWN;
   }
 
   @Override
   public ActivationInfo getSourceInducedFragmentation() {
-    // TODO Auto-generated method stub
     return null;
   }
 
   @Override
   public List<IsolationInfo> getIsolations() {
-    // TODO Auto-generated method stub
+    // TODO Have to parse precursor lists
     return null;
   }
 
   @Override
   public Float getRetentionTime() {
-    // TODO Auto-generated method stub
+    for (MzMLCVParam param : cvParams) {
+      String accession = param.getAccession();
+      String unitAccession = param.getUnitAccession();
+      String value = param.getValue();
+      if ((accession == null) || (value == null))
+        continue;
+
+      // Retention time (actually "Scan start time") MS:1000016
+      if (accession.equals(MzMLCV.cvScanStartTime)) {
+        try {
+          float retentionTime;
+          if ((unitAccession == null) || (unitAccession.equals(MzMLCV.cvUnitsMin1))
+              || unitAccession.equals(MzMLCV.cvUnitsMin2)) {
+            // Minutes
+            retentionTime = Float.parseFloat(value) * 60f;
+          } else {
+            // Seconds
+            retentionTime = Float.parseFloat(value);
+          }
+          return retentionTime;
+        } catch (Exception e) {
+          // Ignore incorrectly formatted numbers, just dump the
+          // exception
+          e.printStackTrace();
+        }
+
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public MzTolerance getMzTolerance() {
+    return null;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public void setScanNumber(Integer scanNumber) {
+    this.scanNumber = scanNumber;
+  }
+
+  public String getCVValue(String accession) {
+    for (MzMLCVParam cvParam : cvParams) {
+      if (cvParam.getAccession().equals(accession))
+        return cvParam.getValue();
+    }
     return null;
   }
 }
