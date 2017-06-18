@@ -46,8 +46,6 @@ public class ChromaTofFileImportMethodTest {
     Assert.assertNotNull(featureTable);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
-    // The table has columns
-    Assert.assertFalse(featureTable.getColumns().isEmpty());
 
     // The table has 1 sample
     List<Sample> samples = featureTable.getSamples();
