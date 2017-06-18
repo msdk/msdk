@@ -24,8 +24,6 @@ import com.google.common.collect.Range;
  * A feature table consists of a list of named columns, each with a specific type for the values
  * contained in it.
  *
- * @author plusik
- * @version $Id: $Id
  */
 @NotThreadSafe
 public interface FeatureTable {
