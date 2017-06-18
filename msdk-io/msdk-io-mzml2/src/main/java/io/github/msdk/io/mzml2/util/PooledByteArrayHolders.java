@@ -18,10 +18,11 @@ import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.SoftReferenceObjectPool;
 
 /**
- * A singleton pool of {@link ByteArrayHolder}s. Use it only when you need a relatively large byte
+ * A singleton pool of {@link io.github.msdk.io.mzml2.util.ByteArrayHolder}s. Use it only when you need a relatively large byte
  * array, <b>AND DON'T FORGET TO RETURN OBJECTS TO THE POOL</b>
- * 
+ *
  * @author Dmitry Avtonomov
+ * @version $Id: $Id
  */
 public class PooledByteArrayHolders {
   protected ByteArrayHolderFactory factory;
@@ -33,6 +34,11 @@ public class PooledByteArrayHolders {
     pool = new ByteArrayHolderPool(factory);
   }
 
+  /**
+   * <p>getInstance.</p>
+   *
+   * @return a {@link io.github.msdk.io.mzml2.util.PooledByteArrayHolders} object.
+   */
   public static PooledByteArrayHolders getInstance() {
     return Holder.INSTANCE;
   }
@@ -43,13 +49,18 @@ public class PooledByteArrayHolders {
 
   /**
    * You should be very careful about this one.
-   * 
-   * @param factory
+   *
+   * @param factory a {@link io.github.msdk.io.mzml2.util.ByteArrayHolderFactory} object.
    */
   public synchronized void setFactory(ByteArrayHolderFactory factory) {
     this.factory = factory;
   }
 
+  /**
+   * <p>Getter for the field <code>pool</code>.</p>
+   *
+   * @return a {@link org.apache.commons.pool2.ObjectPool} object.
+   */
   public ObjectPool<ByteArrayHolder> getPool() {
     return pool;
   }

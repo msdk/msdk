@@ -18,6 +18,8 @@ package io.github.msdk.io.chromatof;
  *
  * @param <F> the type of the first element in the pair.
  * @param <S> the type of the second element in the pair.
+ * @author plusik
+ * @version $Id: $Id
  */
 public class Pair<F, S> extends java.util.AbstractMap.SimpleImmutableEntry<F, S> {
 

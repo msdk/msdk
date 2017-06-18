@@ -66,6 +66,9 @@ import uk.ac.ebi.pride.jmztab.utils.MZTabFileParser;
  * <p>
  * MzTabFileImportMethod class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
 

@@ -33,6 +33,9 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * Abstract AbstractReadOnlyMsScan class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public abstract class AbstractReadOnlyMsScan implements MsScan {
 
@@ -59,7 +62,6 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
    * @param dataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    * @param spectrumType a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType} object.
    * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
-   * @param chromatographyInfo a {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} object.
    * @param scanType a {@link io.github.msdk.datamodel.rawdata.MsScanType} object.
    * @param mzRange a {@link com.google.common.collect.Range} object.
    * @param scanningRange a {@link com.google.common.collect.Range} object.
@@ -70,6 +72,7 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
    * @param sourceFragmentation a {@link io.github.msdk.datamodel.rawdata.ActivationInfo} object.
    * @param isolations a {@link java.util.List} object.
    * @param numOfDataPoints a {@link java.lang.Integer} object.
+   * @param rt a {@link java.lang.Float} object.
    */
   public AbstractReadOnlyMsScan(@Nonnull RawDataFile dataFile, @Nonnull MsSpectrumType spectrumType,
       @Nonnull MsFunction msFunction, @Nullable Float rt,

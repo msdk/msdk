@@ -24,6 +24,9 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * Sample interface.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public interface Sample {
 

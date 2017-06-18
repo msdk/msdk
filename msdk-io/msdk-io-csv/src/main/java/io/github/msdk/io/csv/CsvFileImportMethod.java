@@ -50,6 +50,9 @@ import io.github.msdk.util.FeatureTableUtil;
  * <p>
  * CsvFileImportMethod class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class CsvFileImportMethod implements MSDKMethod<FeatureTable> {
 

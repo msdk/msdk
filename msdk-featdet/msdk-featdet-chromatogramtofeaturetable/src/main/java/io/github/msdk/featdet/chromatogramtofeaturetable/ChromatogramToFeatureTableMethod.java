@@ -40,6 +40,9 @@ import io.github.msdk.util.FeatureTableUtil;
 
 /**
  * This class adds a list of chromatograms to a feature table.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class ChromatogramToFeatureTableMethod implements MSDKMethod<FeatureTable> {
 

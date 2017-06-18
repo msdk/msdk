@@ -31,6 +31,9 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * MSDKCentroidingMethod class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MSDKCentroidingMethod implements MSDKMethod<RawDataFile> {
 

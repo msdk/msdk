@@ -42,6 +42,9 @@ import io.github.msdk.datamodel.ionannotations.IonType;
  * <p>
  * CsvFileExportMethod class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class CsvFileExportMethod implements MSDKMethod<File> {
 

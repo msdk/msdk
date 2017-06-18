@@ -20,6 +20,12 @@ import java.io.InputStreamReader;
 
 import io.github.msdk.MSDKException;
 
+/**
+ * <p>FeatureFinderMetaboLocator class.</p>
+ *
+ * @author plusik
+ * @version $Id: $Id
+ */
 public class FeatureFinderMetaboLocator {
 
   private final static String OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME = "FeatureFinderMetabo";
@@ -29,13 +35,14 @@ public class FeatureFinderMetaboLocator {
   private final static String FEATURE_FINDER_METABO_EVAL = "No options given. Aborting!";
 
   /**
-   * Check for FeatureFinderMetabo in PATH & default Installation directory on various platforms.
-   * 
+   * Check for FeatureFinderMetabo in PATH &amp; default Installation directory on various platforms.
+   *
    * @return <i>FeatureFinderMetabo</i> if found in path.
    *         <p>
    *         The full location to FeatureFinderMetabo if not found in path.
    *         <p>
    *         <i>null</i> if not found anywhere.
+   * @throws io.github.msdk.MSDKException if any.
    */
   public static String findFeatureFinderMetabo() throws MSDKException {
     if (isFeatureFinderMetaboHere(OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME)) {

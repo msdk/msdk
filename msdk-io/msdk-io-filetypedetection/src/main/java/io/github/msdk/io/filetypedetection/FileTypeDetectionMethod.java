@@ -27,6 +27,9 @@ import io.github.msdk.datamodel.files.FileType;
 
 /**
  * Detector of raw data file format
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class FileTypeDetectionMethod {
 

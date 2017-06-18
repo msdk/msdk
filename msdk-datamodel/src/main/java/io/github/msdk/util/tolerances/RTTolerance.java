@@ -21,6 +21,9 @@ import com.google.common.collect.Range;
 /**
  * This class represents rt tolerance. Tolerance is set using either a absolute (sec) or relative
  * (%) value.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 @Immutable
 public class RTTolerance {

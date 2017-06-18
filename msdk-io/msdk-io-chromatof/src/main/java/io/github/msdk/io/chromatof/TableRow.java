@@ -19,6 +19,9 @@ import java.util.LinkedHashMap;
  * <p>
  * TableRow class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class TableRow extends LinkedHashMap<ChromaTofParser.TableColumn, String> {
 

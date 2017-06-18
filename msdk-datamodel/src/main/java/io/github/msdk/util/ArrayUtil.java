@@ -17,6 +17,9 @@ import javax.annotation.Nonnull;
 
 /**
  * Array utilities
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class ArrayUtil {
 

@@ -18,24 +18,40 @@ import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
+ * <p>ByteArrayHolderFactory class.</p>
+ *
  * @author Dmitry Avtonomov
+ * @version $Id: $Id
  */
 public class ByteArrayHolderFactory extends BasePooledObjectFactory<ByteArrayHolder> {
   protected volatile int defaultSize = 8192; // default to 8192
 
+  /**
+   * <p>Constructor for ByteArrayHolderFactory.</p>
+   */
   public ByteArrayHolderFactory() {}
 
+  /**
+   * <p>Constructor for ByteArrayHolderFactory.</p>
+   *
+   * @param defaultSize a int.
+   */
   public ByteArrayHolderFactory(int defaultSize) {
     this.defaultSize = defaultSize;
   }
 
+  /**
+   * <p>Getter for the field <code>defaultSize</code>.</p>
+   *
+   * @return a int.
+   */
   public int getDefaultSize() {
     return defaultSize;
   }
 
   /**
    * Sets the default size of byte buffers, produced by this factory.
-   * 
+   *
    * @param defaultSize new default size
    */
   public synchronized void setDefaultSize(int defaultSize) {
@@ -44,7 +60,7 @@ public class ByteArrayHolderFactory extends BasePooledObjectFactory<ByteArrayHol
 
   /**
    * Updates the default byte buffer size, if the new value is larger, than the current default.
-   * 
+   *
    * @param defaultSize new default size
    */
   public synchronized void setDefaultSizeMax(int defaultSize) {
@@ -53,16 +69,19 @@ public class ByteArrayHolderFactory extends BasePooledObjectFactory<ByteArrayHol
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public ByteArrayHolder create() throws Exception {
     return new ByteArrayHolder(getDefaultSize());
   }
 
+  /** {@inheritDoc} */
   @Override
   public PooledObject<ByteArrayHolder> wrap(ByteArrayHolder obj) {
     return new DefaultPooledObject<>(obj);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void passivateObject(PooledObject<ByteArrayHolder> p) throws Exception {
     ByteArrayHolder bah = p.getObject();
@@ -71,6 +90,7 @@ public class ByteArrayHolderFactory extends BasePooledObjectFactory<ByteArrayHol
     bah.reset();
   }
 
+  /** {@inheritDoc} */
   @Override
   public void activateObject(PooledObject<ByteArrayHolder> p) throws Exception {
     ByteArrayHolder bah = p.getObject();

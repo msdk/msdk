@@ -15,6 +15,9 @@ package io.github.msdk;
 
 /**
  * MSDK runtime exception class.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MSDKRuntimeException extends RuntimeException {
 

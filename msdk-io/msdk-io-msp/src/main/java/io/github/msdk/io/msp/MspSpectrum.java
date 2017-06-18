@@ -25,6 +25,9 @@ import io.github.msdk.datamodel.impl.AbstractSpectrum;
  * <p>
  * MspSpectrum class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MspSpectrum extends AbstractSpectrum {
 

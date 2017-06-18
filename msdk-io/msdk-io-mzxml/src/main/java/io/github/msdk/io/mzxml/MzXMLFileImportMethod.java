@@ -54,6 +54,9 @@ import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorit
 
 /**
  * This class reads mzXML file format.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
 

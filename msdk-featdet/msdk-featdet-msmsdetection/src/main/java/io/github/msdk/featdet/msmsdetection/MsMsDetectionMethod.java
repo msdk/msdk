@@ -34,6 +34,9 @@ import io.github.msdk.util.tolerances.RTTolerance;
 
 /**
  * This class creates a list of IonAnnotations for a RawDataFile based the MS2 scans.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
 
@@ -59,7 +62,7 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
    * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    * @param msScans a list of {@link io.github.msdk.datamodel.rawdata.MsScan} objects.
    * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
-   * @param mzTolerance
+   * @param mzTolerance a {@link io.github.msdk.util.tolerances.MzTolerance} object.
    * @param rtTolerance a {@link io.github.msdk.util.tolerances.RTTolerance} object.
    * @param intensityTolerance a {@link java.lang.Double} object.
    */

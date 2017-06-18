@@ -17,6 +17,9 @@ import javax.annotation.Nonnull;
 
 /**
  * Data store provider
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class DataPointStoreFactory {
 

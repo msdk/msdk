@@ -16,6 +16,9 @@ package io.github.msdk.rawdata.peakinvestigator.providers;
 /**
  * An interface to (optionally) show estimated costs and ask the user for the desired response time
  * objective (RTO) of a PeakInvestigator job.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public interface PeakInvestigatorInitProvider extends PeakInvestigatorProvider {
   /**

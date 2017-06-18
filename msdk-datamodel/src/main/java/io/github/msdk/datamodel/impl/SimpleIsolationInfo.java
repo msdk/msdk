@@ -24,6 +24,9 @@ import io.github.msdk.datamodel.rawdata.IsolationInfo;
 
 /**
  * Implementation of IsolationInfo
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SimpleIsolationInfo implements IsolationInfo {
 
@@ -33,6 +36,11 @@ public class SimpleIsolationInfo implements IsolationInfo {
   private @Nullable Integer precursorCharge;
   private @Nullable ActivationInfo activationInfo;
 
+  /**
+   * <p>Constructor for SimpleIsolationInfo.</p>
+   *
+   * @param isolationMzRange a {@link com.google.common.collect.Range} object.
+   */
   public SimpleIsolationInfo(@Nonnull Range<Double> isolationMzRange) {
     Preconditions.checkNotNull(isolationMzRange);
     this.isolationMzRange = isolationMzRange;
@@ -42,6 +50,15 @@ public class SimpleIsolationInfo implements IsolationInfo {
     activationInfo = null;
   }
 
+  /**
+   * <p>Constructor for SimpleIsolationInfo.</p>
+   *
+   * @param isolationMzRange a {@link com.google.common.collect.Range} object.
+   * @param ionInjectTime a {@link java.lang.Float} object.
+   * @param precursorMz a {@link java.lang.Double} object.
+   * @param precursorCharge a {@link java.lang.Integer} object.
+   * @param activationInfo a {@link io.github.msdk.datamodel.rawdata.ActivationInfo} object.
+   */
   public SimpleIsolationInfo(@Nonnull Range<Double> isolationMzRange, @Nullable Float ionInjectTime,
       @Nullable Double precursorMz, @Nullable Integer precursorCharge,
       @Nullable ActivationInfo activationInfo) {

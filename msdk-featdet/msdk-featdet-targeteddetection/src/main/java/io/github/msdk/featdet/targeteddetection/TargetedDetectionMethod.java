@@ -40,6 +40,9 @@ import io.github.msdk.util.tolerances.RTTolerance;
 
 /**
  * This class creates a list of Chromatograms from a RawDataFile based on a list of IonAnnotations.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 

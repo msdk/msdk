@@ -51,6 +51,9 @@ import uk.ac.ebi.jmzml.xml.io.MzMLInstantMarshaller;
 
 /**
  * This class exports RawDataFile objects into mzML data format using the jmzml library.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MzMLFileExportMethod implements MSDKMethod<Void> {
 

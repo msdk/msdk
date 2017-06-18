@@ -35,6 +35,9 @@ import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
  * Simple implementation of the Scan interface.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SimpleMsScan extends AbstractSpectrum implements MsScan {
 
@@ -76,7 +79,11 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     return dataFile;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param newRawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   */
   public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
     if ((this.dataFile != null) && (this.dataFile != newRawDataFile)) {
       throw new MSDKRuntimeException(
@@ -92,7 +99,11 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     return scanNumber;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param scanNumber a {@link java.lang.Integer} object.
+   */
   public void setScanNumber(@Nonnull Integer scanNumber) {
     Preconditions.checkNotNull(scanNumber);
     this.scanNumber = scanNumber;
@@ -105,7 +116,11 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     return scanDefinition;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param scanDefinition a {@link java.lang.String} object.
+   */
   public void setScanDefinition(@Nullable String scanDefinition) {
     this.scanDefinition = scanDefinition;
   }
@@ -117,7 +132,11 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     return msFunction;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param newFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
+   */
   public void setMsFunction(@Nonnull MsFunction newFunction) {
     Preconditions.checkNotNull(newFunction);
     this.msFunction = newFunction;
@@ -130,7 +149,11 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     return scanningRange;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param newScanRange a {@link com.google.common.collect.Range} object.
+   */
   public void setScanningRange(@Nullable Range<Double> newScanRange) {
     this.scanningRange = newScanRange;
   }
@@ -142,7 +165,11 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     return polarity;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param newPolarity a {@link io.github.msdk.datamodel.rawdata.PolarityType} object.
+   */
   public void setPolarity(@Nonnull PolarityType newPolarity) {
     Preconditions.checkNotNull(newPolarity);
     this.polarity = newPolarity;
@@ -155,7 +182,11 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     return msScanType;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param newMsScanType a {@link io.github.msdk.datamodel.rawdata.MsScanType} object.
+   */
   public void setMsScanType(@Nonnull MsScanType newMsScanType) {
     Preconditions.checkNotNull(newMsScanType);
     this.msScanType = newMsScanType;
@@ -185,7 +216,11 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     return rt;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param rt a {@link java.lang.Float} object.
+   */
   public void setRetentionTime(@Nullable Float rt) {
     this.rt = rt;
   }
@@ -197,7 +232,11 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     return sourceInducedFragInfo;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param newFragmentationInfo a {@link io.github.msdk.datamodel.rawdata.ActivationInfo} object.
+   */
   public void setSourceInducedFragmentation(@Nullable ActivationInfo newFragmentationInfo) {
     this.sourceInducedFragInfo = newFragmentationInfo;
   }

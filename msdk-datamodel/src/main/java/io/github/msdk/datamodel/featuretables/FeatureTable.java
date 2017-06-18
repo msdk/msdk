@@ -23,6 +23,9 @@ import com.google.common.collect.Range;
 /**
  * A feature table consists of a list of named columns, each with a specific type for the values
  * contained in it.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 @NotThreadSafe
 public interface FeatureTable {
@@ -58,7 +61,7 @@ public interface FeatureTable {
    *
    * @param <DATATYPE> the generic datatype of the column's entries.
    * @param columnName the name of the column.
-   * @param sample the {@link Sample}.
+   * @param sample the {@link io.github.msdk.datamodel.featuretables.Sample}.
    * @param dtType the class of the column' datatype.
    * @return the feature table column for the given name, or null.
    */
@@ -70,9 +73,9 @@ public interface FeatureTable {
    * Returns a specific column for the given name.
    *
    * @param <DATATYPE> the generic datatype of the column's entries.
-   * @param columnName the {@link ColumnName} of the column.
-   * @param sample the {@link Sample}.
-   * @return the {@link FeatureTableColumn} for the given name and sample.
+   * @param columnName the {@link io.github.msdk.datamodel.featuretables.ColumnName} of the column.
+   * @param sample the {@link io.github.msdk.datamodel.featuretables.Sample}.
+   * @return the {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} for the given name and sample.
    */
   @Nullable
   <DATATYPE> FeatureTableColumn<DATATYPE> getColumn(@Nonnull ColumnName columnName, Sample sample);
@@ -80,21 +83,21 @@ public interface FeatureTable {
   /**
    * Add a new column to the feature table.
    *
-   * @param col the {@link FeatureTableColumn} to add.
+   * @param col the {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} to add.
    */
   void addColumn(@Nonnull FeatureTableColumn<?> col);
 
   /**
    * Removes a column from this feature table.
    *
-   * @param col the {@link FeatureTableColumn} to remove.
+   * @param col the {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} to remove.
    */
   void removeColumn(@Nonnull FeatureTableColumn<?> col);
 
   /**
    * Returns an immutable list of rows
    *
-   * @return a list of {@link FeatureTableRow}s.
+   * @return a list of {@link io.github.msdk.datamodel.featuretables.FeatureTableRow}s.
    */
   @Nonnull
   List<FeatureTableRow> getRows();
@@ -102,19 +105,19 @@ public interface FeatureTable {
   /**
    * Add a new row to the feature table.
    *
-   * @param row the {@link FeatureTableRow} to add.
+   * @param row the {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} to add.
    */
   void addRow(@Nonnull FeatureTableRow row);
 
   /**
    * Removes a row from this feature table.
    *
-   * @param row the {@link FeatureTableRow} to remove.
+   * @param row the {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} to remove.
    */
   void removeRow(@Nonnull FeatureTableRow row);
 
   /**
-   * Shortcut to return an immutable list of {@link Sample}s found in this feature table.
+   * Shortcut to return an immutable list of {@link io.github.msdk.datamodel.featuretables.Sample}s found in this feature table.
    *
    * @return the list of samples.
    */
@@ -127,7 +130,7 @@ public interface FeatureTable {
   void dispose();
 
   /**
-   * Shortcut to return an immutable list of {@link FeatureTableRow}s found in this feature table
+   * Shortcut to return an immutable list of {@link io.github.msdk.datamodel.featuretables.FeatureTableRow}s found in this feature table
    * with average m/z and RT values within the given ranges.
    *
    * @return the list of feature table rows.

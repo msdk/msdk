@@ -22,8 +22,9 @@ import java.util.Arrays;
 /**
  * Auto-growing array of bytes, with access to the underlying data. Almost exactly follows Java's
  * ByteArrayOutputStream, but gives access to underlying data and allows basic navigation.
- * 
+ *
  * @author Dmitry Avtonomov
+ * @version $Id: $Id
  */
 public class ByteArrayHolder extends OutputStream {
 
@@ -60,6 +61,11 @@ public class ByteArrayHolder extends OutputStream {
     this(32);
   }
 
+  /**
+   * <p>Constructor for ByteArrayHolder.</p>
+   *
+   * @param underlyingBuf an array of byte.
+   */
   public ByteArrayHolder(byte[] underlyingBuf) {
     this.buf = underlyingBuf;
     this.count = underlyingBuf.length - 1;
@@ -108,9 +114,9 @@ public class ByteArrayHolder extends OutputStream {
   }
 
   /**
-   * Writes the specified byte to this byte array output stream.
+   * {@inheritDoc}
    *
-   * @param b the byte to be written.
+   * Writes the specified byte to this byte array output stream.
    */
   @Override
   public synchronized void write(int b) {
@@ -120,12 +126,10 @@ public class ByteArrayHolder extends OutputStream {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Writes <code>len</code> bytes from the specified byte array starting at offset <code>off</code>
    * to this byte array output stream.
-   *
-   * @param b the data.
-   * @param off the start offset in the data.
-   * @param len the number of bytes to write.
    */
   @Override
   public synchronized void write(byte b[], int off, int len) {
@@ -144,6 +148,7 @@ public class ByteArrayHolder extends OutputStream {
    *
    * @param out the output stream to which to write the data.
    * @exception IOException if an I/O error occurs.
+   * @throws java.io.IOException if any.
    */
   public synchronized void writeTo(OutputStream out) throws IOException {
     out.write(buf, 0, count);
@@ -183,6 +188,8 @@ public class ByteArrayHolder extends OutputStream {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Converts the buffer's contents into a string decoding bytes using the platform's default
    * character set. The length of the new <tt>String</tt> is a function of the character set, and
    * hence may not be equal to the size of the buffer.
@@ -192,8 +199,6 @@ public class ByteArrayHolder extends OutputStream {
    * replacement string for the platform's default character set. The
    * {@linkplain java.nio.charset.CharsetDecoder} class should be used when more control over the
    * decoding process is required.
-   *
-   * @return String decoded from the buffer's contents.
    * @since JDK1.1
    */
   @Override
@@ -212,10 +217,11 @@ public class ByteArrayHolder extends OutputStream {
    * be used when more control over the decoding process is required.
    *
    * @param charsetName the name of a supported {@linkplain java.nio.charset.Charset
-   *        </code>charset<code>}
+   *        <code>charset</code>}
    * @return String decoded from the buffer's contents.
    * @exception UnsupportedEncodingException If the named charset is not supported
    * @since JDK1.1
+   * @throws java.io.UnsupportedEncodingException if any.
    */
   public synchronized String toString(String charsetName) throws UnsupportedEncodingException {
     return new String(buf, 0, count, charsetName);
@@ -226,20 +232,97 @@ public class ByteArrayHolder extends OutputStream {
    * valid contents of the buffer have been copied into it. Each character <i>c</i> in the resulting
    * string is constructed from the corresponding element <i>b</i> in the byte array such that:
    * <blockquote>
-   * 
+   *
    * <pre>
    * c == (char) (((hibyte &amp; 0xff) &lt;&lt; 8) | (b &amp; 0xff))
    * </pre>
-   * 
+   *
    * </blockquote>
    *
    * @deprecated This method does not properly convert bytes into characters. As of JDK&nbsp;1.1,
    *             the preferred way to do this is via the <code>toString(String enc)</code> method,
    *             which takes an encoding-name argument, or the <code>toString()</code> method, which
    *             uses the platform's default character encoding.
-   *
    * @param hibyte the high byte of each resulting Unicode character.
    * @return the current contents of the output stream, as a string.
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
+   * @see java.io.ByteArrayOutputStream#size()
+   * @see java.io.ByteArrayOutputStream#toString(String)
+   * @see java.io.ByteArrayOutputStream#toString()
    * @see java.io.ByteArrayOutputStream#size()
    * @see java.io.ByteArrayOutputStream#toString(String)
    * @see java.io.ByteArrayOutputStream#toString()
@@ -250,27 +333,47 @@ public class ByteArrayHolder extends OutputStream {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Closing a <tt>ByteArrayOutputStream</tt> has no effect. The methods in this class can be called
    * after the stream has been closed without generating an <tt>IOException</tt>.
    * <p>
-   *
-   * @throws java.io.IOException
    */
   @Override
   public void close() throws IOException {}
 
+  /**
+   * <p>toByteBuffer.</p>
+   *
+   * @return a {@link java.nio.ByteBuffer} object.
+   */
   public ByteBuffer toByteBuffer() {
     return ByteBuffer.wrap(this.buf, 0, size());
   }
 
+  /**
+   * <p>getUnderlyingBytes.</p>
+   *
+   * @return an array of byte.
+   */
   public byte[] getUnderlyingBytes() {
     return buf;
   }
 
+  /**
+   * <p>getCapacity.</p>
+   *
+   * @return a int.
+   */
   public final int getCapacity() {
     return buf.length;
   }
 
+  /**
+   * <p>getCapacityLeft.</p>
+   *
+   * @return a int.
+   */
   public final int getCapacityLeft() {
     return buf.length - count;
   }
@@ -291,6 +394,7 @@ public class ByteArrayHolder extends OutputStream {
   }
 
   /**
+   * <p>ensureCapacity.</p>
    *
    * @param minCapacity the min capacity to grow the underlying buffer to. The actual increased
    *        capacity might be more than that.
@@ -309,9 +413,9 @@ public class ByteArrayHolder extends OutputStream {
 
   /**
    * Checks if there is enough space in the buffer to write N additional bytes. Will grow the buffer
-   * if necessary.<br/>
+   * if necessary.<br>
    * It takes current position in the buffer into account.
-   * 
+   *
    * @param numBytesToAdd the number of bytes you want to add to the buffer
    */
   public void ensureHasSpace(int numBytesToAdd) {
@@ -326,7 +430,7 @@ public class ByteArrayHolder extends OutputStream {
 
   /**
    * This is the position of the next write to the underlying buffer.
-   * 
+   *
    * @return the number of valid bytes in the underlying buffer
    */
   public final int getPosition() {
@@ -335,8 +439,8 @@ public class ByteArrayHolder extends OutputStream {
 
   /**
    * This is a dangerous method, be sure you know what you're doing.
-   * 
-   * @param newPos
+   *
+   * @param newPos a int.
    */
   public final void setPosition(int newPos) {
     if (newPos > getCapacity()) {
@@ -348,6 +452,9 @@ public class ByteArrayHolder extends OutputStream {
     count = newPos;
   }
 
+  /**
+   * <p>clear.</p>
+   */
   public final void clear() {
     Arrays.fill(buf, (byte) 0);
     setPosition(0);

@@ -20,6 +20,8 @@ import javax.annotation.Nullable;
  *
  * @param <ResultType> Type of object that represents the result of this method. If the method has
  *        no result, Void can be used as a special case.
+ * @author plusik
+ * @version $Id: $Id
  */
 public interface MSDKMethod<ResultType> {
 

@@ -34,6 +34,9 @@ import org.slf4j.LoggerFactory;
  * <p>
  * ChromaTofParser class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class ChromaTofParser {
 
@@ -751,7 +754,7 @@ public class ChromaTofParser {
    * @param normalizeColumnNames if true, column names are capitalized and spaces are replaced by
    *        '_'.
    * @return the set of unique column names in order of appearance.
-   * @deprecated use {@link #parseHeader(java.io.File, boolean) }
+   * @deprecated use {@link #parseHeader(java.io.File, boolean)}
    */
   public LinkedHashSet<ChromaTofParser.TableColumn> getHeader(File f,
       boolean normalizeColumnNames) {

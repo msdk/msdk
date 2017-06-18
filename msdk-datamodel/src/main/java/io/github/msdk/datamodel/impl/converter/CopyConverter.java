@@ -21,9 +21,12 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 /**
  * *
  * <p>
- * Implementation of {@link FeatureTableDataConverter} for any kind of object that should be copied
+ * Implementation of {@link io.github.msdk.datamodel.featuretables.FeatureTableDataConverter} for any kind of object that should be copied
  * as is to the new feature table.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class CopyConverter implements FeatureTableDataConverter<Object> {
 
