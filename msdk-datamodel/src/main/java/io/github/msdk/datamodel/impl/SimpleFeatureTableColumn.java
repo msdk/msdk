@@ -23,6 +23,9 @@ import io.github.msdk.datamodel.featuretables.Sample;
 
 /**
  * Implementation of FeatureTableColumn
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SimpleFeatureTableColumn<DataType> implements FeatureTableColumn<DataType> {
 
@@ -30,6 +33,13 @@ public class SimpleFeatureTableColumn<DataType> implements FeatureTableColumn<Da
   private @Nonnull Class<DataType> dataTypeClass;
   private @Nullable Sample simpleSample;
 
+  /**
+   * <p>Constructor for SimpleFeatureTableColumn.</p>
+   *
+   * @param name a {@link java.lang.String} object.
+   * @param dataTypeClass a {@link java.lang.Class} object.
+   * @param sample a {@link io.github.msdk.datamodel.featuretables.Sample} object.
+   */
   public SimpleFeatureTableColumn(@Nonnull String name, @Nonnull Class<DataType> dataTypeClass,
       @Nullable Sample sample) {
     Preconditions.checkNotNull(name);

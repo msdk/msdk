@@ -31,6 +31,9 @@ import io.github.msdk.datamodel.msspectra.MsSpectrum;
  * <p>
  * MspExportAlgorithm class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MspExportAlgorithm {
 
@@ -44,7 +47,6 @@ public class MspExportAlgorithm {
    * @throws java.io.IOException if any.
    * @throws io.github.msdk.MSDKException if any.
    */
-
   public static void exportSpectrum(@Nonnull File exportFile, @Nonnull MsSpectrum spectrum)
       throws IOException, MSDKException {
     exportSpectra(exportFile, Collections.singleton(spectrum));

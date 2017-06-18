@@ -26,11 +26,20 @@ import io.github.msdk.featdet.ADAP3D.datamodel.PeakInfo;
 
 
 /**
+ * <p>FeatureTools class.</p>
  *
  * @author owen myers
  * Modified by Dharak Shah to include in MSDK
+ * @version $Id: $Id
  */
 public class FeatureTools {
+    /**
+     * <p>fixRightBoundry.</p>
+     *
+     * @param intensities an array of double.
+     * @param peakRight a int.
+     * @return a int.
+     */
     public static int fixRightBoundry(double [] intensities, int peakRight)  {
         boolean foundLocalMin = false;
         int curRight = peakRight;
@@ -73,6 +82,13 @@ public class FeatureTools {
         }
         return bestRight;
     }
+    /**
+     * <p>fixLeftBoundry.</p>
+     *
+     * @param intensities an array of double.
+     * @param peakLeft a int.
+     * @return a int.
+     */
     public static int fixLeftBoundry(double [] intensities, int peakLeft) {
         boolean foundLocalMin = false;
         int curLeft = peakLeft;
@@ -115,6 +131,17 @@ public class FeatureTools {
         return bestLeft;
 
     }
+    /**
+     * <p>isShared.</p>
+     *
+     * @param rt an array of double.
+     * @param intensities an array of double.
+     * @param peakLeft a int.
+     * @param peakRight a int.
+     * @param edgeToHeightRatio a double.
+     * @param deltaToHeightRatio a double.
+     * @return a boolean.
+     */
     public static boolean isShared(double[] rt, double[] intensities,int peakLeft,int peakRight,double edgeToHeightRatio,double deltaToHeightRatio){
         //double BHR = edgeToHeightRatio; // Boundry Height Ratio.
         //double edgeHightDiffRatio=deltaToHeightRatio;
@@ -176,15 +203,14 @@ public class FeatureTools {
     /**
      * Return true if
      *     1) there are more then one local maximum
-     *     2) at least one of left-to-apex, right-to-apex, or delta-to-apex 
+     *     2) at least one of left-to-apex, right-to-apex, or delta-to-apex
      *        ratios is higher then the corresponding threshold
-     * 
+     *
      * @param intensities list of peak intensities
      * @param edgeToHeightThreshold threshold for left-to-apex and right-to-apex ratios
      * @param deltaToHeightThreshold threshold for delta-to-apex ratio
      * @return true one of the conditions 1) or 2) is satisfied, false otherwise
      */
-    
     public static boolean isShared(List <Double> intensities, 
             double edgeToHeightThreshold, double deltaToHeightThreshold)
     {
@@ -230,6 +256,15 @@ public class FeatureTools {
     
     
     //This returns the angle calculated between the two "means" of the slopes on each side of the peak
+    /**
+     * <p>sharpnessAngleAvgSlopes.</p>
+     *
+     * @param rt an array of double.
+     * @param intensities an array of double.
+     * @param peakLeft a int.
+     * @param peakRight a int.
+     * @return a double.
+     */
     public static double sharpnessAngleAvgSlopes(double[] rt, double[] intensities,int peakLeft,int peakRight){
 
         int peakWidth = peakRight-peakLeft;
@@ -311,6 +346,12 @@ public class FeatureTools {
     }
     
     
+    /**
+     * <p>sharpnessYang.</p>
+     *
+     * @param chromatogram a {@link java.util.NavigableMap} object.
+     * @return a double.
+     */
     public static double sharpnessYang(
             NavigableMap <Double, Double> chromatogram)
     {
@@ -325,6 +366,15 @@ public class FeatureTools {
         return sharpnessYang(retTimes, intensities, 0, size - 1);
     }
     
+    /**
+     * <p>sharpnessYang.</p>
+     *
+     * @param rt an array of double.
+     * @param intensities an array of double.
+     * @param peakLeft a int.
+     * @param peakRight a int.
+     * @return a double.
+     */
     public static double sharpnessYang(double[] rt, double[] intensities,int peakLeft,int peakRight){
        
        
@@ -439,6 +489,15 @@ public class FeatureTools {
         }
     }
     //This returns the angle calculated between the two "means" of the slopes on each side of the peak
+    /**
+     * <p>sharpnessAngleAvgAngles.</p>
+     *
+     * @param rt an array of double.
+     * @param intensities an array of double.
+     * @param peakLeft a int.
+     * @param peakRight a int.
+     * @return a double.
+     */
     public static double sharpnessAngleAvgAngles(double[] rt, double[] intensities,int peakLeft,int peakRight){
 
         int peakWidth = peakRight-peakLeft;
@@ -530,6 +589,14 @@ public class FeatureTools {
         return angle_between;
         
     }
+    /**
+     * <p>findMeanOfSignal.</p>
+     *
+     * @param intensities an array of double.
+     * @param peakLeft a int.
+     * @param peakRight a int.
+     * @return a double.
+     */
     public static double findMeanOfSignal(double[] intensities,int peakLeft, int peakRight){
         double meanSignal = 0.0;
         int count = 0;
@@ -540,6 +607,14 @@ public class FeatureTools {
         return meanSignal/((double)count);
             
     }
+    /**
+     * <p>findMinIntensityOfSignal.</p>
+     *
+     * @param intensities an array of double.
+     * @param peakLeft a int.
+     * @param peakRight a int.
+     * @return a double.
+     */
     public static double findMinIntensityOfSignal(double[] intensities,int peakLeft, int peakRight){
         
         double peakHeight = 0.0;
@@ -563,6 +638,15 @@ public class FeatureTools {
         return minSig;
             
     }
+    /**
+     * <p>trapazoidAreaUnderCurve.</p>
+     *
+     * @param intensities an array of double.
+     * @param retentionTimes an array of double.
+     * @param peakLeft a int.
+     * @param peakRight a int.
+     * @return a double.
+     */
     public static double trapazoidAreaUnderCurve(double[] intensities,double[] retentionTimes, int peakLeft, int peakRight){
         double area = 0.0;
        

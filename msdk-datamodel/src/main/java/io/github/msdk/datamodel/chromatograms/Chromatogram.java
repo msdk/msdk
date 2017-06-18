@@ -27,6 +27,9 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
  * Represents a single chromatogram.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public interface Chromatogram {
 
@@ -76,7 +79,7 @@ public interface Chromatogram {
    *
    * Note: this method may need to read data from disk, therefore it may be quite slow.
    *
-   * @return an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo} objects.
+   * @return an array of
    */
   @Nonnull
   float[] getRetentionTimes();
@@ -133,7 +136,7 @@ public interface Chromatogram {
   /**
    * Returns the separation type used for separation of molecules.
    *
-   * @return the seperation type. Returns {@link SeparationType#UNKNOWN} for unknown separations.
+   * @return the seperation type. Returns {@link io.github.msdk.datamodel.rawdata.SeparationType#UNKNOWN} for unknown separations.
    */
   @Nonnull
   SeparationType getSeparationType();

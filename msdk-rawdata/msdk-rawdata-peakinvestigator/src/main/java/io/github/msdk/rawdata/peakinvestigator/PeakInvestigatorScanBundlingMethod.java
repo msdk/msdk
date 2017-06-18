@@ -45,6 +45,9 @@ import io.github.msdk.io.txt.TxtExportAlgorithm;
  * This class represents a method for bundling scans for upload to PeakInvestigator software
  * services.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class PeakInvestigatorScanBundlingMethod implements MSDKMethod<File> {
 

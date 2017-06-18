@@ -24,6 +24,9 @@ import io.github.msdk.util.tolerances.MzTolerance;
  * A mass spectrum. This is a base interface typically extended by other, more specialized
  * interfaces. It may represent a single scan in raw MS data, a calculated isotope pattern, a
  * predicted fragmentation spectrum of a molecule, etc.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public interface MsSpectrum {
 

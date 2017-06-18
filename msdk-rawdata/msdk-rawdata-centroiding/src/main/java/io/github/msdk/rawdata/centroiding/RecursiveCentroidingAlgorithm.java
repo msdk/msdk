@@ -26,6 +26,9 @@ import io.github.msdk.util.MsScanUtil;
  * <p>
  * RecursiveCentroidingAlgorithm class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 

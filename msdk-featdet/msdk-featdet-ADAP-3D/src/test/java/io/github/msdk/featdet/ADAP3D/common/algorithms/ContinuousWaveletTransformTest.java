@@ -76,15 +76,18 @@ public class ContinuousWaveletTransformTest {
 		
 		double[] x = new double[rtBuffer.size()];
 		double[] signal = new double[correctIntensityBuffer.size()];
+		List<ContinuousWaveletTransform.DataPoint> listOfDataPoint = new ArrayList<ContinuousWaveletTransform.DataPoint>();
 		
 		for (int i = 0; i < correctIntensityBuffer.size(); i++) {
-		    x[i] = rtBuffer.get(i).doubleValue();
-		    signal[i] = correctIntensityBuffer.get(i).doubleValue();		   
+			ContinuousWaveletTransform.DataPoint datapoint = new ContinuousWaveletTransform.DataPoint();
+			datapoint.rt = rtBuffer.get(i).doubleValue();
+			datapoint.intensity = correctIntensityBuffer.get(i).doubleValue();	
+			listOfDataPoint.add(datapoint);
 		  }
 		
 		ContinuousWaveletTransform continuousWavelet = new ContinuousWaveletTransform(1, 10, 1);
-		continuousWavelet.setX(x);
-		continuousWavelet.setSignal(signal);
+		continuousWavelet.setX(listOfDataPoint);
+		continuousWavelet.setSignal(listOfDataPoint);
 		continuousWavelet.setPeakWidth(0.00, 10.00);
 		continuousWavelet.setcoefAreaRatioTolerance(5);
 		

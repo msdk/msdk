@@ -31,6 +31,9 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * MSDKFilteringMethod class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
 

@@ -27,6 +27,9 @@ import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
  * Simple implementation of the MassSpectrum interface.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SimpleMsSpectrum implements MsSpectrum {
 
@@ -39,6 +42,14 @@ public class SimpleMsSpectrum implements MsSpectrum {
   private @Nonnull MsSpectrumType spectrumType;
   private @Nullable MzTolerance mzTolerance;
 
+  /**
+   * <p>Constructor for SimpleMsSpectrum.</p>
+   *
+   * @param mzValues an array of double.
+   * @param intensityValues an array of float.
+   * @param size a {@link java.lang.Integer} object.
+   * @param spectrumType a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType} object.
+   */
   public SimpleMsSpectrum(@Nonnull double mzValues[], @Nonnull float intensityValues[],
       @Nonnull Integer size, @Nonnull MsSpectrumType spectrumType) {
     Preconditions.checkNotNull(mzValues);
@@ -82,7 +93,13 @@ public class SimpleMsSpectrum implements MsSpectrum {
     return array;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param mzValues an array of double.
+   * @param intensityValues an array of float.
+   * @param size a {@link java.lang.Integer} object.
+   */
   public synchronized void setDataPoints(@Nonnull double mzValues[],
       @Nonnull float intensityValues[], @Nonnull Integer size) {
 
@@ -110,7 +127,11 @@ public class SimpleMsSpectrum implements MsSpectrum {
     return spectrumType;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param spectrumType a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType} object.
+   */
   public void setSpectrumType(@Nonnull MsSpectrumType spectrumType) {
     this.spectrumType = spectrumType;
   }

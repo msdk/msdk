@@ -24,6 +24,9 @@ import io.github.msdk.datamodel.msspectra.MsSpectrumType;
  * easy to detect, because they contain zero-intensity data points. However, distinguishing
  * centroided from thresholded spectra is not trivial. We use multiple checks for that purpose, as
  * described in the code comments.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SpectrumTypeDetectionAlgorithm {
 

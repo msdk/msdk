@@ -26,6 +26,9 @@ import io.github.msdk.util.MsScanUtil;
  * <p>
  * ResampleFilterAlgorithm class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
 

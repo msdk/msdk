@@ -37,6 +37,9 @@ import io.github.msdk.util.tolerances.RTTolerance;
 
 /**
  * This class creates a filtered feature table based on a feature table and a set of row filters.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class RowFilterMethod implements MSDKMethod<FeatureTable> {
 

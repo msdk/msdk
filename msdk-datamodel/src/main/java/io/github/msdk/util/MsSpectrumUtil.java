@@ -25,6 +25,9 @@ import io.github.msdk.datamodel.msspectra.MsSpectrum;
  * <p>
  * MsSpectrumUtil class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MsSpectrumUtil {
 
@@ -251,7 +254,6 @@ public class MsSpectrumUtil {
    * @param size a {@link java.lang.Integer} object.
    * @return a {@link java.lang.String} object.
    */
-
   public static @Nonnull String msSpectrumToString(@Nonnull double mzValues[],
       @Nonnull float intensityValues[], @Nonnull Integer size) {
 

@@ -22,6 +22,9 @@ import javax.annotation.concurrent.Immutable;
  * single raw data file may contain scans of different functions. The name of the function is
  * instrument-dependent. For convenience, this interface is immutable, so it can be passed by
  * reference and safely used by multiple threads.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 @Immutable
 public interface MsFunction {

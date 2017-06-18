@@ -27,6 +27,9 @@ import io.github.msdk.util.MsScanUtil;
  * <p>
  * MeanFilterAlgorithm class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
 

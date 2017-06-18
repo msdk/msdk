@@ -50,6 +50,9 @@ import io.github.msdk.util.FeatureTableUtil;
  * <p>
  * ChromaTofFileImportMethod class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
 
@@ -94,7 +97,7 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
 
   /**
    * <p>
-   * Constructor for ChromaTofFileImportMethod. Uses {@link Locale#US} for number parsing.
+   * Constructor for ChromaTofFileImportMethod. Uses {@link java.util.Locale#US} for number parsing.
    * </p>
    *
    * @param sourceFile a {@link java.io.File} object.

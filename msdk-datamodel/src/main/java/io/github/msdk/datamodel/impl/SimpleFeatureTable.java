@@ -31,6 +31,9 @@ import io.github.msdk.datamodel.featuretables.Sample;
 
 /**
  * Implementation of the FeatureTable interface.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SimpleFeatureTable implements FeatureTable {
 
@@ -62,7 +65,6 @@ public class SimpleFeatureTable implements FeatureTable {
   }
 
   /** {@inheritDoc} */
-
   @Override
   public @Nonnull List<FeatureTableRow> getRows() {
     List<FeatureTableRow> featureTableRowCopy = ImmutableList.copyOf(featureTableRows);
@@ -88,7 +90,6 @@ public class SimpleFeatureTable implements FeatureTable {
   }
 
   /** {@inheritDoc} */
-
   @Override
   public @Nonnull List<FeatureTableColumn<?>> getColumns() {
     List<FeatureTableColumn<?>> featureTableColumnsCopy = ImmutableList.copyOf(featureTableColumns);
@@ -146,7 +147,6 @@ public class SimpleFeatureTable implements FeatureTable {
   }
 
   /** {@inheritDoc} */
-
   @Override
   public @Nonnull List<Sample> getSamples() {
     ArrayList<Sample> sampleList = new ArrayList<Sample>();

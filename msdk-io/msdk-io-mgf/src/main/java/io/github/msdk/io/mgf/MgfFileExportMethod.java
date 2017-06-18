@@ -36,6 +36,9 @@ import io.github.msdk.datamodel.rawdata.MsScan;
  * <p>
  * MgfExportAlgorithm class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MgfFileExportMethod implements MSDKMethod<Void> {
 

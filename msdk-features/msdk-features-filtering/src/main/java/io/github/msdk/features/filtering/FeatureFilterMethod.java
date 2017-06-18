@@ -32,6 +32,9 @@ import io.github.msdk.util.FeatureTableUtil;
 /**
  * This class creates a filtered feature table based on a feature table and a set of feature
  * filters.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class FeatureFilterMethod implements MSDKMethod<FeatureTable> {
 

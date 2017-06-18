@@ -39,6 +39,12 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import it.unimi.dsi.io.ByteBufferInputStream;
 
+/**
+ * <p>MzMLFileParser class.</p>
+ *
+ * @author plusik
+ * @version $Id: $Id
+ */
 public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private final @Nonnull File mzMLFile;
   private final @Nonnull ArrayList<MsScan> spectrumList;
@@ -47,14 +53,29 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private boolean canceled;
   private Float progress;
 
+  /**
+   * <p>Constructor for MzMLFileParser.</p>
+   *
+   * @param mzMLFilePath a {@link java.lang.String} object.
+   */
   public MzMLFileParser(String mzMLFilePath) {
     this(new File(mzMLFilePath));
   }
 
+  /**
+   * <p>Constructor for MzMLFileParser.</p>
+   *
+   * @param mzMLFilePath a {@link java.nio.file.Path} object.
+   */
   public MzMLFileParser(Path mzMLFilePath) {
     this(mzMLFilePath.toFile());
   }
 
+  /**
+   * <p>Constructor for MzMLFileParser.</p>
+   *
+   * @param mzMLFile a {@link java.io.File} object.
+   */
   public MzMLFileParser(File mzMLFile) {
     this.mzMLFile = mzMLFile;
     this.spectrumList = new ArrayList<>();
@@ -62,6 +83,12 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
     this.progress = 0f;
   }
 
+  /**
+   * <p>execute.</p>
+   *
+   * @return a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @throws io.github.msdk.MSDKException if any.
+   */
   public RawDataFile execute() throws MSDKException {
 
     try {
@@ -209,10 +236,21 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
     return newRawFile;
   }
 
+  /**
+   * <p>Getter for the field <code>spectrumList</code>.</p>
+   *
+   * @return a {@link java.util.ArrayList} object.
+   */
   public ArrayList<MsScan> getSpectrumList() {
     return spectrumList;
   }
 
+  /**
+   * <p>getScanNumber.</p>
+   *
+   * @param spectrumId a {@link java.lang.String} object.
+   * @return a {@link java.lang.Integer} object.
+   */
   public Integer getScanNumber(String spectrumId) {
     final Pattern pattern = Pattern.compile("scan=([0-9]+)");
     final Matcher matcher = pattern.matcher(spectrumId);
@@ -232,16 +270,19 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
     return scanNumber;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Float getFinishedPercentage() {
     return progress;
   }
 
+  /** {@inheritDoc} */
   @Override
   public RawDataFile getResult() {
     return newRawFile;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void cancel() {
     this.canceled = true;

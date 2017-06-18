@@ -36,6 +36,9 @@ import io.github.msdk.util.tolerances.RTTolerance;
 /**
  * This class searches through a feature table to find hits in a local database using m/z and
  * retention time values.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
 

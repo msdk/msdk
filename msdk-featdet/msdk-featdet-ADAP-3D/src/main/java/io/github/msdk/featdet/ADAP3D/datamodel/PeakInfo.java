@@ -18,9 +18,10 @@ import java.util.Comparator;
 
 /**
  * Structure PeakInfo contains all information about a peak
- * 
+ *
  * @author aleksandrsmirnov
  * Modified by Dharak Shah to include in MSDK
+ * @version $Id: $Id
  */
 public class PeakInfo 
         implements Comparator<PeakInfo>, Comparable<PeakInfo>, Serializable 
@@ -48,12 +49,25 @@ public class PeakInfo
     // ----- Construtors ------------------------------------------------------
     // ------------------------------------------------------------------------
     
+    /**
+     * <p>Constructor for PeakInfo.</p>
+     */
     public PeakInfo() {}
     
+    /**
+     * <p>Constructor for PeakInfo.</p>
+     *
+     * @param peakIndex a int.
+     */
     public PeakInfo(final int peakIndex) {
         this.peakIndex = peakIndex;
     }
     
+    /**
+     * <p>Constructor for PeakInfo.</p>
+     *
+     * @param info a {@link io.github.msdk.featdet.ADAP3D.datamodel.PeakInfo} object.
+     */
     public PeakInfo(final PeakInfo info) {
         retTime = info.retTime;
         mzValue = info.mzValue;
@@ -78,11 +92,23 @@ public class PeakInfo
     // ----- Properties -------------------------------------------------------
     // ------------------------------------------------------------------------
     
+    /**
+     * <p>mzValue.</p>
+     *
+     * @param mz a double.
+     * @return a {@link io.github.msdk.featdet.ADAP3D.datamodel.PeakInfo} object.
+     */
     public PeakInfo mzValue(final double mz) {
         this.mzValue = mz;
         return this;
     }
     
+    /**
+     * <p>peakID.</p>
+     *
+     * @param id a int.
+     * @return a {@link io.github.msdk.featdet.ADAP3D.datamodel.PeakInfo} object.
+     */
     public PeakInfo peakID(final int id) {
         this.peakID = id;
         return this;
@@ -92,6 +118,7 @@ public class PeakInfo
     // ----- Methods ----------------------------------------------------------
     // ------------------------------------------------------------------------
     
+    /** {@inheritDoc} */
     @Override
     public int compare(final PeakInfo info1, final PeakInfo info2) {
         if (info1.peakIndex < info2.peakIndex)
@@ -101,6 +128,7 @@ public class PeakInfo
         return 1;
     }
     
+    /** {@inheritDoc} */
     @Override
     public int compareTo(final PeakInfo info) {
         if (this.peakIndex < info.peakIndex)
@@ -110,6 +138,13 @@ public class PeakInfo
         return 1;
     }
     
+    /**
+     * <p>merge.</p>
+     *
+     * @param info1 a {@link io.github.msdk.featdet.ADAP3D.datamodel.PeakInfo} object.
+     * @param info2 a {@link io.github.msdk.featdet.ADAP3D.datamodel.PeakInfo} object.
+     * @return a {@link io.github.msdk.featdet.ADAP3D.datamodel.PeakInfo} object.
+     */
     public static PeakInfo merge(final PeakInfo info1, final PeakInfo info2)
     {
         if (info1.mzValue != info2.mzValue)
@@ -141,6 +176,7 @@ public class PeakInfo
         return result;
     }
     
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "m/z " + DECIMAL.format(mzValue) 

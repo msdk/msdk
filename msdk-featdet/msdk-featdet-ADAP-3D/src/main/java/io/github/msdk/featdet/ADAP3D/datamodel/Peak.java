@@ -23,9 +23,10 @@ import io.github.msdk.featdet.ADAP3D.common.algorithms.Math;
 /**
  * Class Peak contains all information about a peak as well as
  * its chromatogram, and some methods to get the information
- * 
+ *
  * @author aleksandrsmirnov
  * Modified by Dharak Shah to include in MSDK
+ * @version $Id: $Id
  */
 public class Peak implements Cloneable, Serializable {
     private NavigableMap <Double, Double> chromatogram; // (retTime, intensity) - pairs
@@ -48,6 +49,11 @@ public class Peak implements Cloneable, Serializable {
     // ----- Contsructors -----------------------------------------------------
     // ------------------------------------------------------------------------
     
+    /**
+     * <p>Constructor for Peak.</p>
+     *
+     * @param peak a {@link io.github.msdk.featdet.ADAP3D.datamodel.Peak} object.
+     */
     public Peak(final Peak peak) {
         info = new PeakInfo(peak.info);
         shift = peak.shift;
@@ -66,6 +72,12 @@ public class Peak implements Cloneable, Serializable {
         norm = peak.norm;
     }
     
+    /**
+     * <p>Constructor for Peak.</p>
+     *
+     * @param chromatogram a {@link java.util.NavigableMap} object.
+     * @param info a {@link io.github.msdk.featdet.ADAP3D.datamodel.PeakInfo} object.
+     */
     public Peak(final NavigableMap <Double, Double> chromatogram, 
             final PeakInfo info) 
     {
@@ -75,6 +87,12 @@ public class Peak implements Cloneable, Serializable {
         this.info = info;
     }
     
+    /**
+     * <p>Constructor for Peak.</p>
+     *
+     * @param chromatogram a {@link java.util.NavigableMap} object.
+     * @param mz a double.
+     */
     public Peak(final NavigableMap <Double, Double> chromatogram, 
             final double mz) 
     {   
@@ -108,8 +126,14 @@ public class Peak implements Cloneable, Serializable {
     // ----- Methods ----------------------------------------------------------
     // ------------------------------------------------------------------------
     
+    /**
+     * <p>Setter for the field <code>shift</code>.</p>
+     *
+     * @param shift a double.
+     */
     public void setShift(double shift) {this.shift = shift;};
     
+    /** {@inheritDoc} */
     @Override
     public Peak clone() {return new Peak(chromatogram, info);}
     
@@ -117,15 +141,46 @@ public class Peak implements Cloneable, Serializable {
     // ----- Properties -------------------------------------------------------
     // ------------------------------------------------------------------------
     
+    /**
+     * <p>Getter for the field <code>chromatogram</code>.</p>
+     *
+     * @return a {@link java.util.NavigableMap} object.
+     */
     public NavigableMap <Double, Double> getChromatogram() {return chromatogram;};
+    /**
+     * <p>Getter for the field <code>info</code>.</p>
+     *
+     * @return a {@link io.github.msdk.featdet.ADAP3D.datamodel.PeakInfo} object.
+     */
     public PeakInfo getInfo() {return info;};
     
+    /**
+     * <p>getRetTime.</p>
+     *
+     * @return a double.
+     */
     public double getRetTime() {return apexRetTime;};
+    /**
+     * <p>getMZ.</p>
+     *
+     * @return a double.
+     */
     public double getMZ() {return apexMZ;};
+    /**
+     * <p>getIntensity.</p>
+     *
+     * @return a double.
+     */
     public double getIntensity() {return apexIntensity;};
     
+    /**
+     * <p>Getter for the field <code>norm</code>.</p>
+     *
+     * @return a double.
+     */
     public double getNorm() {return norm;}
     
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "#" + this.info.peakID + ": mz=" + this.apexMZ + " rt=" + this.apexRetTime;

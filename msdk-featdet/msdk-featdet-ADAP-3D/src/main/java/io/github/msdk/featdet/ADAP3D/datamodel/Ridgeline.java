@@ -18,9 +18,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * <p>Ridgeline class.</p>
  *
  * @author owen myers
  * Modified by Dharak Shah to include in MSDK
+ * @version $Id: $Id
  */
 public class Ridgeline {
     public int totalNumberOfScales;
@@ -39,6 +41,14 @@ public class Ridgeline {
     private ArrayList<Double> corValues_ = new ArrayList<Double>();
     private int curRunningGap_;
     
+    /**
+     * <p>Constructor for Ridgeline.</p>
+     *
+     * @param firstScale a double.
+     * @param firstIndex a int.
+     * @param corValue a double.
+     * @param NScales a int.
+     */
     public Ridgeline(double firstScale,
                      int firstIndex,
                      double corValue,
@@ -49,20 +59,43 @@ public class Ridgeline {
         curRunningGap_ = 0;
         totalNumberOfScales = NScales;
     }
+    /**
+     * <p>getRunningGapNum.</p>
+     *
+     * @return a int.
+     */
     public int getRunningGapNum(){
         return curRunningGap_;
     }
+    /**
+     * <p>getRidgeLength.</p>
+     *
+     * @return a int.
+     */
     public int getRidgeLength(){
         return scales_.size();
     }
+    /**
+     * <p>getRidgeStartScale.</p>
+     *
+     * @return a double.
+     */
     public double getRidgeStartScale(){
         return scales_.get(0);
     }
+    /**
+     * <p>getRidgeEndScale.</p>
+     *
+     * @return a double.
+     */
     public double getRidgeEndScale(){
         int l = scales_.size();
         return scales_.get(l-1);
     }
     
+    /**
+     * <p>findBestValues.</p>
+     */
     public void findBestValues(){
     	
     	int index = 0;
@@ -105,6 +138,14 @@ public class Ridgeline {
     }
     
  
+    /**
+     * <p>tryAddPoint.</p>
+     *
+     * @param scale a double.
+     * @param index a int.
+     * @param corValue a double.
+     * @return a boolean.
+     */
     public boolean tryAddPoint(double scale, int index, double corValue)
     {
         // see if where this index is in relation to the last added
@@ -182,6 +223,12 @@ public class Ridgeline {
         return false;
     }
     
+    /**
+     * <p>findIndexTolFromScale.</p>
+     *
+     * @param scale a double.
+     * @return a double.
+     */
     public double findIndexTolFromScale(double scale)
     {
         // This is probably too simple but it apears to work well enough. Use for now ans then look into

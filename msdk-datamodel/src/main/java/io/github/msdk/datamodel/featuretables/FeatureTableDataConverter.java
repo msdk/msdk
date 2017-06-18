@@ -19,6 +19,8 @@ package io.github.msdk.datamodel.featuretables;
  * </p>
  *
  * @param <DATATYPE> the generic type of the element values.
+ * @author plusik
+ * @version $Id: $Id
  */
 public interface FeatureTableDataConverter<DATATYPE> {
 

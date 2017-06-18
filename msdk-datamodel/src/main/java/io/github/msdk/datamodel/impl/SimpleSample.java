@@ -25,6 +25,9 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
  * Implementation of Sample
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SimpleSample implements Sample {
 
@@ -32,10 +35,21 @@ public class SimpleSample implements Sample {
   private RawDataFile rawDataFile;
   private File originalFile;
 
+  /**
+   * <p>Constructor for SimpleSample.</p>
+   *
+   * @param name a {@link java.lang.String} object.
+   */
   public SimpleSample(@Nonnull String name) {
     this(name, null);
   }
 
+  /**
+   * <p>Constructor for SimpleSample.</p>
+   *
+   * @param name a {@link java.lang.String} object.
+   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   */
   public SimpleSample(@Nonnull String name, @Nullable RawDataFile rawDataFile) {
     Preconditions.checkNotNull(name);
     this.name = name;
