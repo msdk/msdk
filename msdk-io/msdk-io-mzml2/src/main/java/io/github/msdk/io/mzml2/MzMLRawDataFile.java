@@ -54,7 +54,7 @@ class MzMLRawDataFile implements RawDataFile {
    * @param chromatograms a {@link java.util.List} object.
    */
   @SuppressWarnings("null")
-  public MzMLRawDataFile(@Nonnull File sourceFile, @Nonnull MzMLUnmarshaller parser,
+  public MzMLRawDataFile(@Nonnull File sourceFile, MzMLUnmarshaller parser,
       List<MsFunction> msFunctions, List<MsScan> msScans, List<Chromatogram> chromatograms) {
     this.sourceFile = sourceFile;
     this.parser = parser;

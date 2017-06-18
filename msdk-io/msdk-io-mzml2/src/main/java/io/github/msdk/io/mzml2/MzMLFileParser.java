@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
+import javolution.text.CharArray;
 import org.apache.commons.io.IOUtils;
 
 import io.github.msdk.MSDKException;
@@ -53,6 +54,10 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private Integer lastScanNumber = 0;
   private boolean canceled;
   private Float progress;
+
+  final String ATTR_ACCESSION = "accession";
+  final String ATTR_VALUE = "value";
+  final String ATTR_UNIT_ACCESSION = "unitAccession";
 
   /**
    * <p>
@@ -142,22 +147,14 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
             if (insideReferenceableParamGroupList) {
               switch (xmlStreamReader.getLocalName().toString()) {
+
                 case "referenceableParamGroup":
-                  String id = xmlStreamReader.getAttributeValue("http://psi.hupo.org/ms/mzml", "id")
-                      .toString();
+                  String id = xmlStreamReader.getAttributeValue(null , "id").toString();
                   referenceableParamGroup = new MzMLReferenceableParamGroup(id);
                   break;
+
                 case "cvParam":
-                  String accession =
-                      xmlStreamReader.getAttributeValue(null, "accession").toString();
-                  String value = xmlStreamReader.getAttributeValue(null, "value").toString();
-                  String unitAccession =
-                      xmlStreamReader.getAttributeValue(null, "unitAccession").toString();
-                  MzMLCVParam cvParam = new MzMLCVParam(accession, null, null);
-                  if (value != null)
-                    cvParam.setValue(value);
-                  if (unitAccession != null)
-                    cvParam.setUnitAccession(unitAccession);
+                  MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
                   referenceableParamGroup.addReferenceableCvParam(cvParam);
                   break;
               }
@@ -189,16 +186,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                   break;
                 case "cvParam":
                   if (!insideBinaryDataArrayFlag && spectrum != null) {
-                    String accession =
-                        xmlStreamReader.getAttributeValue(null, "accession").toString();
-                    String value = xmlStreamReader.getAttributeValue(null, "value").toString();
-                    String unitAccession =
-                        xmlStreamReader.getAttributeValue(null, "unitAccession").toString();
-                    MzMLCVParam cvParam = new MzMLCVParam(accession, null, null);
-                    if (value != null)
-                      cvParam.setValue(value);
-                    if (unitAccession != null)
-                      cvParam.setUnitAccession(unitAccession);
+                    MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
                     spectrum.getCVParams().add(cvParam);
                   }
                   break;
@@ -293,6 +281,23 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
     }
 
     return newRawFile;
+  }
+
+  private MzMLCVParam createMzMLCVParam(XMLStreamReader xmlStreamReader) {
+    CharArray accession = xmlStreamReader.getAttributeValue(null, ATTR_ACCESSION);
+    CharArray value = xmlStreamReader.getAttributeValue(null, ATTR_VALUE);
+    CharArray unitAccession = xmlStreamReader.getAttributeValue(null, ATTR_UNIT_ACCESSION);
+
+    // accession is a required attribute
+    if (accession == null) {
+      throw new IllegalStateException("Any cvParam must have an accession.");
+    }
+
+    // these attributes are optional
+    String valueStr = value == null ? null : value.toString();
+    String unitAccessionStr = unitAccession == null ? null : unitAccession.toString();
+
+    return new MzMLCVParam(accession.toString(), valueStr, unitAccessionStr);
   }
 
   /**
