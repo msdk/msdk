@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package io.github.msdk.io.mzml2;
+package io.github.msdk.io.mzml2.util;
 
 import java.io.IOException;
 import java.util.zip.DataFormatException;
@@ -19,8 +19,6 @@ import java.util.zip.Inflater;
 import org.apache.commons.pool2.ObjectPool;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.io.mzml2.util.ByteArrayHolder;
-import io.github.msdk.io.mzml2.util.PooledByteArrayHolders;
 
 /**
  * Utility methods to inflate zlib compressed spectra (byte arrays).

@@ -20,6 +20,7 @@ import java.util.zip.DataFormatException;
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.util.ByteArrayHolder;
 import io.github.msdk.io.mzml2.util.MSNumpressFloat;
+import io.github.msdk.io.mzml2.util.ZlibInflater;
 
 /**
  * <p>MzMLIntensityPeaksDecoder class.</p>
