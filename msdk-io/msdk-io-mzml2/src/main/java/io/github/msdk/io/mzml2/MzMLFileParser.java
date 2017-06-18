@@ -50,7 +50,8 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private final @Nonnull ArrayList<MsScan> spectrumList;
   private RawDataFile newRawFile;
   private Integer lastScanNumber = 0;
-  private boolean canceled = false;
+  private boolean canceled;
+  private Float progress;
 
   /**
    * <p>Constructor for MzMLFileParser.</p>
@@ -78,6 +79,8 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   public MzMLFileParser(File mzMLFile) {
     this.mzMLFile = mzMLFile;
     this.spectrumList = new ArrayList<>();
+    this.canceled = false;
+    this.progress = 0f;
   }
 
   /**
@@ -126,9 +129,6 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
             switch (startElement.getName().getLocalPart()) {
               case "spectrum":
                 xmlEvent = xmlEventReader.nextEvent();
-                System.out.println("---");
-                if (spectrum != null)
-                  spectrumList.add(spectrum);
                 spectrum = new MzMLSpectrum(newRawFile);
                 Attribute arrayLengthAttr =
                     startElement.getAttributeByName(new QName("defaultArrayLength"));
@@ -172,6 +172,9 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                     xmlEvent = xmlEventReader.nextEvent();
                     if (xmlEvent.isCharacters()) {
                       binaryDataInfo.setPosition(xmlEvent.getLocation().getCharacterOffset());
+                      // InputStream encodedIs = new ByteBufferInputStreamAdapter(is.copy(),
+                      // binaryDataInfo.getPosition(), binaryDataInfo.getEncodedLength());
+                      // System.out.println(new String(IOUtils.toByteArray(encodedIs)));
                       break;
                     }
                   }
@@ -203,28 +206,27 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
         if (xmlEvent.isEndElement()) {
           EndElement endElement = xmlEvent.asEndElement();
-          if (endElement.getName().getLocalPart().equals("spectrumList")
-              && xmlEventReader.hasNext()) {
-            xmlEvent = xmlEventReader.nextEvent();
+          if (endElement.getName().getLocalPart().equals("spectrumList")) {
             insideSpectrumListFlag = false;
           }
-        }
-
-        if (insideSpectrumListFlag && xmlEvent.isEndElement()) {
-          EndElement endElement = xmlEvent.asEndElement();
-          if (endElement.getName().getLocalPart().equals("binaryDataArray")
-              && xmlEventReader.hasNext()) {
-            xmlEvent = xmlEventReader.nextEvent();
-            if (binaryDataInfo.getArrayType().getValue().equals("MS:1000514"))
-              spectrum.setMzBinaryDataInfo(binaryDataInfo);
-            if (binaryDataInfo.getArrayType().getValue().equals("MS:1000515"))
-              spectrum.setIntensityBinaryDataInfo(binaryDataInfo);
-
-            insideBinaryDataArrayFlag = false;
+          if (insideSpectrumListFlag) {
+            switch (endElement.getName().getLocalPart()) {
+              case "binaryDataArray":
+                if (binaryDataInfo.getArrayType().getValue().equals("MS:1000514"))
+                  spectrum.setMzBinaryDataInfo(binaryDataInfo);
+                if (binaryDataInfo.getArrayType().getValue().equals("MS:1000515"))
+                  spectrum.setIntensityBinaryDataInfo(binaryDataInfo);
+                insideBinaryDataArrayFlag = false;
+                break;
+              case "spectrum":
+                spectrumList.add(spectrum);
+            }
           }
+          if (xmlEventReader.hasNext())
+            xmlEvent = xmlEventReader.nextEvent();
         }
-
       }
+      progress = 1f;
     } catch (IOException e) {
       throw (new MSDKException(e));
     } catch (XMLStreamException e) {
@@ -271,8 +273,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   /** {@inheritDoc} */
   @Override
   public Float getFinishedPercentage() {
-    // TODO Auto-generated method stub
-    return null;
+    return progress;
   }
 
   /** {@inheritDoc} */

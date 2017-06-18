@@ -45,11 +45,11 @@ public class MzMLFileParserTest {
     MzMLFileParser mzParser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = mzParser.execute();
     Assert.assertNotNull(rawFile);
+    Assert.assertEquals(1.0, mzParser.getFinishedPercentage(), 0.0001);
     MzMLSpectrum spectrum = (MzMLSpectrum) rawFile.getScans().get(14);
     Assert.assertNotNull(spectrum);
     Assert.assertNotNull(spectrum.getMzValues());
     Assert.assertNotNull(spectrum.getIntensityValues());
-    Assert.assertEquals(128, rawFile.getScans().size());
     Assert.assertEquals(new Integer(spectrum.getMzValues().length),
         spectrum.getNumberOfDataPoints());
     Assert.assertEquals(new Integer(spectrum.getIntensityValues().length),
@@ -70,6 +70,7 @@ public class MzMLFileParserTest {
     MzMLFileParser mzParser2 = new MzMLFileParser(inputFileName);
     RawDataFile rawFile2 = mzParser2.execute();
     Assert.assertNotNull(rawFile2);
+    Assert.assertEquals(1.0, mzParser2.getFinishedPercentage(), 0.0001);
     MzMLSpectrum spectrum2 = (MzMLSpectrum) rawFile2.getScans().get(17);
     Assert.assertNotNull(spectrum2);
     Assert.assertNotNull(spectrum2.getMzValues());
@@ -104,7 +105,7 @@ public class MzMLFileParserTest {
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
-    // Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+    Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
     // The file has 7 scans
     List<MsScan> scans = rawFile.getScans();
@@ -157,7 +158,7 @@ public class MzMLFileParserTest {
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
-    // Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+    Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
     // The file has 4 scans
     List<MsScan> scans = rawFile.getScans();
@@ -204,7 +205,7 @@ public class MzMLFileParserTest {
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
-    // Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+    Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
     // The file has 102 scans
     List<MsScan> scans = rawFile.getScans();
@@ -252,7 +253,7 @@ public class MzMLFileParserTest {
     MzMLFileParser parser = new MzMLFileParser(compressedFile);
     RawDataFile compressedRaw = parser.execute();
     Assert.assertNotNull(compressedRaw);
-    // Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+    Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
     // Import the uncompressed file
     File unCompressedFile = new File(TEST_DATA_PATH + "MzMLFile_7_uncompressed.mzML");
@@ -260,7 +261,7 @@ public class MzMLFileParserTest {
     parser = new MzMLFileParser(unCompressedFile);
     RawDataFile uncompressedRaw = parser.execute();
     Assert.assertNotNull(uncompressedRaw);
-    // Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+    Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
     // These files have 3 scans
     List<MsScan> compressedScans = compressedRaw.getScans();
@@ -297,7 +298,7 @@ public class MzMLFileParserTest {
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
-    // Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+    Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
     // The file has 37 chromatograms
     List<Chromatogram> chromatograms = rawFile.getChromatograms();
@@ -337,7 +338,7 @@ public class MzMLFileParserTest {
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
-    // Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+    Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
     // The file has 1 scan, with no data points
     List<MsScan> scans = rawFile.getScans();
