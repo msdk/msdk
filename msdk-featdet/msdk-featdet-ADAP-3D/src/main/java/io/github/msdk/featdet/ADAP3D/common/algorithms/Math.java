@@ -24,12 +24,20 @@ import java.util.TreeSet;
 
 /**
  * This class contains mathematical functions
- * 
+ *
  * @author aleksandrsmirnov
  * Modified by Dharak Shah to include in MSDK
+ * @version $Id: $Id
  */
 public class Math {
     
+    /**
+     * <p>interpolate.</p>
+     *
+     * @param x_values a {@link java.util.SortedSet} object.
+     * @param y_values a {@link java.util.NavigableMap} object.
+     * @return an array of double.
+     */
     static public double[] interpolate(
             final SortedSet <Double> x_values, 
             final NavigableMap <Double, Double> y_values) 
@@ -65,6 +73,13 @@ public class Math {
         return result;
     }
 
+    /**
+     * <p>interpolate.</p>
+     *
+     * @param x_value a double.
+     * @param y_values a {@link java.util.NavigableMap} object.
+     * @return a double.
+     */
     static public double interpolate(final double x_value,
             final NavigableMap <Double, Double> y_values)
     {
@@ -80,6 +95,13 @@ public class Math {
         return interpolatedValues[0];
     }
     
+    /**
+     * <p>continuous_dot_product.</p>
+     *
+     * @param f1 a {@link java.util.NavigableMap} object.
+     * @param f2 a {@link java.util.NavigableMap} object.
+     * @return a double.
+     */
     static public double continuous_dot_product(
             final NavigableMap <Double, Double> f1,
             final NavigableMap <Double, Double> f2)
@@ -102,6 +124,13 @@ public class Math {
         return integrate(product);
     }
     
+    /**
+     * <p>continuous_dot_product.</p>
+     *
+     * @param f1 a {@link java.util.Map} object.
+     * @param f2 a {@link java.util.Map} object.
+     * @return a double.
+     */
     static public double continuous_dot_product(
             final Map <Double, Double> f1,
             final Map <Double, Double> f2)
@@ -109,6 +138,13 @@ public class Math {
         return continuous_dot_product(new TreeMap(f1), new TreeMap(f2));
     }
     
+    /**
+     * <p>pearson_correlation.</p>
+     *
+     * @param f1 a {@link java.util.NavigableMap} object.
+     * @param f2 a {@link java.util.NavigableMap} object.
+     * @return a double.
+     */
     static public double pearson_correlation(
             final NavigableMap <Double, Double> f1,
             final NavigableMap <Double, Double> f2)
@@ -152,6 +188,12 @@ public class Math {
                 / java.lang.Math.sqrt(ave_y2 - ave_y * ave_y);
     }
     
+    /**
+     * <p>integrate.</p>
+     *
+     * @param func a {@link java.util.NavigableMap} object.
+     * @return a double.
+     */
     static public double integrate(final NavigableMap <Double, Double> func) {
         Iterator <Map.Entry <Double, Double>> it = func.entrySet().iterator();
         Map.Entry <Double, Double> prevEntry = it.next();
@@ -170,6 +212,14 @@ public class Math {
         return result;
     }
     
+    /**
+     * <p>discrete_dot_product.</p>
+     *
+     * @param f1 a {@link java.util.NavigableMap} object.
+     * @param f2 a {@link java.util.NavigableMap} object.
+     * @param tolerance a double.
+     * @return a double.
+     */
     static public double discrete_dot_product(
             final NavigableMap <Double, Double> f1,
             final NavigableMap <Double, Double> f2, double tolerance)
@@ -201,6 +251,14 @@ public class Math {
         return result;
     }
     
+    /**
+     * <p>discrete_dot_product.</p>
+     *
+     * @param f1 a {@link java.util.Map} object.
+     * @param f2 a {@link java.util.Map} object.
+     * @param tolerance a double.
+     * @return a double.
+     */
     static public double discrete_dot_product(
             final Map <Double, Double> f1,
             final Map <Double, Double> f2, double tolerance)
@@ -211,11 +269,10 @@ public class Math {
     /**
      * Find derivative of func using two-sided rule for the central points
      * and one-sided rule for the end-points
-     * 
-     * @param func
-     * @return 
+     *
+     * @param func a {@link java.util.NavigableMap} object.
+     * @return a {@link java.util.NavigableMap} object.
      */
-    
     static public NavigableMap <Double, Double>
             differentiate(final NavigableMap <Double, Double> func)
     {
@@ -253,13 +310,12 @@ public class Math {
     
     /**
      * Convolution of two functions
-     * 
-     * @param f1
-     * @param f2
-     * @param shift
-     * @return 
+     *
+     * @param f1 a {@link java.util.NavigableMap} object.
+     * @param f2 a {@link java.util.NavigableMap} object.
+     * @param shift a double.
+     * @return a double.
      */
-            
     static public double convolution(final NavigableMap <Double, Double> f1,
             final NavigableMap <Double, Double> f2,
             final double shift)
@@ -274,12 +330,11 @@ public class Math {
     
     /**
      * Multiplies function by scale
-     * 
-     * @param func
-     * @param scale
-     * @return 
+     *
+     * @param func a {@link java.util.NavigableMap} object.
+     * @param scale a double.
+     * @return a {@link java.util.NavigableMap} object.
      */
-    
     static public NavigableMap <Double, Double> 
             scale(final NavigableMap <Double, Double> func, final double scale)
     {
@@ -291,6 +346,13 @@ public class Math {
         return result;
     }
             
+    /**
+     * <p>linearCombination.</p>
+     *
+     * @param functions a {@link java.util.List} object.
+     * @param coefficients an array of double.
+     * @return a {@link java.util.NavigableMap} object.
+     */
     static public NavigableMap <Double, Double> linearCombination(
             final List <NavigableMap <Double, Double>> functions,
             final double[] coefficients)

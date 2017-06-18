@@ -28,6 +28,9 @@ import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
  * Simple implementation of the MassSpectrum interface, which stores its data in a data point store.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public abstract class AbstractSpectrum implements MsSpectrum {
 
@@ -79,7 +82,13 @@ public abstract class AbstractSpectrum implements MsSpectrum {
     return array;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param mzValues an array of double.
+   * @param intensityValues an array of float.
+   * @param size a {@link java.lang.Integer} object.
+   */
   public synchronized void setDataPoints(@Nonnull double mzValues[],
       @Nonnull float intensityValues[], @Nonnull Integer size) {
 
@@ -108,7 +117,11 @@ public abstract class AbstractSpectrum implements MsSpectrum {
     return spectrumType;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param spectrumType a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType} object.
+   */
   public void setSpectrumType(@Nonnull MsSpectrumType spectrumType) {
     this.spectrumType = spectrumType;
   }

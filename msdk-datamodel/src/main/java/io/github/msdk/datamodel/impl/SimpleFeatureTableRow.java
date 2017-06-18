@@ -28,6 +28,9 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 
 /**
  * Implementation of FeatureTableRow. Backed by a non-thread safe Map.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SimpleFeatureTableRow implements FeatureTableRow {
 
@@ -35,6 +38,12 @@ public class SimpleFeatureTableRow implements FeatureTableRow {
   private final @Nonnull FeatureTable featureTable;
   private final @Nonnull Map<FeatureTableColumn<?>, Object> rowData;
 
+  /**
+   * <p>Constructor for SimpleFeatureTableRow.</p>
+   *
+   * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+   * @param rowId a int.
+   */
   public SimpleFeatureTableRow(@Nonnull FeatureTable featureTable, int rowId) {
     Preconditions.checkNotNull(featureTable);
     this.featureTable = featureTable;

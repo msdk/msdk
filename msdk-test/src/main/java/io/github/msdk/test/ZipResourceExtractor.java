@@ -31,6 +31,9 @@ import org.slf4j.LoggerFactory;
  * <p>
  * ZipResourceExtractor class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class ZipResourceExtractor {
 

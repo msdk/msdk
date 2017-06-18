@@ -26,6 +26,9 @@ import io.github.msdk.datamodel.ionannotations.IonType;
 
 /**
  * Simple IonAnnotation implementation;
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SimpleIonAnnotation implements IonAnnotation {
 
@@ -56,7 +59,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return chemicalStructure;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param chemicalStructure a {@link org.openscience.cdk.interfaces.IAtomContainer} object.
+   */
   public void setChemicalStructure(@Nullable IAtomContainer chemicalStructure) {
     this.chemicalStructure = chemicalStructure;
   }
@@ -68,7 +75,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return formula;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param formula a {@link org.openscience.cdk.interfaces.IMolecularFormula} object.
+   */
   public void setFormula(@Nullable IMolecularFormula formula) {
     this.formula = formula;
   }
@@ -80,7 +91,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return ionType;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param ionType a {@link io.github.msdk.datamodel.ionannotations.IonType} object.
+   */
   public void setIonType(@Nullable IonType ionType) {
     this.ionType = ionType;
   }
@@ -92,7 +107,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return expectedMz;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param expectedMz a {@link java.lang.Double} object.
+   */
   public void setExpectedMz(@Nullable Double expectedMz) {
     this.expectedMz = expectedMz;
   }
@@ -104,7 +123,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return description;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param description a {@link java.lang.String} object.
+   */
   public void setDescription(@Nullable String description) {
     this.description = description;
   }
@@ -116,7 +139,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return identificationMethod;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param identificationMethod a {@link java.lang.String} object.
+   */
   public void setIdentificationMethod(@Nullable String identificationMethod) {
     this.identificationMethod = identificationMethod;
   }
@@ -128,7 +155,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return annotationId;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param annotationId a {@link java.lang.String} object.
+   */
   public void setAnnotationId(@Nullable String annotationId) {
     this.annotationId = annotationId;
   }
@@ -140,7 +171,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return accessionURL;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param accessionURL a {@link java.net.URL} object.
+   */
   public void setAccessionURL(@Nullable URL accessionURL) {
     this.accessionURL = accessionURL;
   }
@@ -187,7 +222,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return expectedRT;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param expectedRT a {@link java.lang.Float} object.
+   */
   public void setExpectedRetentionTime(@Nullable Float expectedRT) {
     this.expectedRT = expectedRT;
   }
@@ -212,7 +251,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return inchiKey;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param inchiKey a {@link java.lang.String} object.
+   */
   public void setInchiKey(@Nullable String inchiKey) {
     this.inchiKey = inchiKey;
   }
@@ -224,7 +267,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return taxId;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param taxId a {@link java.lang.Integer} object.
+   */
   public void setTaxId(@Nullable Integer taxId) {
     this.taxId = taxId;
   }
@@ -236,7 +283,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return species;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param species a {@link java.lang.String} object.
+   */
   public void setSpecies(@Nullable String species) {
     this.species = species;
   }
@@ -248,7 +299,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return database;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param database a {@link java.lang.String} object.
+   */
   public void setDatabase(@Nullable String database) {
     this.database = database;
   }
@@ -260,7 +315,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return databaseVersion;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param databaseVersion a {@link java.lang.String} object.
+   */
   public void setDatabaseVersion(@Nullable String databaseVersion) {
     this.databaseVersion = databaseVersion;
   }
@@ -272,7 +331,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return spectraRef;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param spectraRef a {@link java.lang.String} object.
+   */
   public void setSpectraRef(@Nullable String spectraRef) {
     this.spectraRef = spectraRef;
   }
@@ -284,7 +347,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return searchEngine;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param searchEngine a {@link java.lang.String} object.
+   */
   public void setSearchEngine(@Nullable String searchEngine) {
     this.searchEngine = searchEngine;
   }
@@ -296,7 +363,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return bestSearchEngineScore;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param bestSearchEngineScore a {@link java.lang.Double} object.
+   */
   public void setBestSearchEngineScore(@Nullable Double bestSearchEngineScore) {
     this.bestSearchEngineScore = bestSearchEngineScore;
   }
@@ -308,7 +379,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return modifications;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param modifications a {@link java.lang.String} object.
+   */
   public void setModifications(@Nullable String modifications) {
     this.modifications = modifications;
   }
@@ -320,7 +395,11 @@ public class SimpleIonAnnotation implements IonAnnotation {
     return reliability;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param reliability a {@link java.lang.Integer} object.
+   */
   public void setReliability(@Nullable Integer reliability) {
     this.reliability = reliability;
   }

@@ -37,6 +37,9 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * WatersRawImportMethod class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class WatersRawImportMethod implements MSDKMethod<RawDataFile> {
 
@@ -66,7 +69,6 @@ public class WatersRawImportMethod implements MSDKMethod<RawDataFile> {
   }
 
   /** {@inheritDoc} */
-
   @Override
   public RawDataFile execute() throws MSDKException {
 

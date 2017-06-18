@@ -48,6 +48,9 @@ import io.github.msdk.util.ArrayUtil;
  * a SimpleMsSpectrum object if no error bars are present. Otherwise, it returns a
  * {@link io.github.msdk.rawdata.peakinvestigator.PeakInvestigatorMsSpectrum}, which decorates a
  * SimpleMsSpectrum.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class PeakInvestigatorScanExtractingMethod implements MSDKMethod<List<MsSpectrum>> {
 
@@ -138,7 +141,7 @@ public class PeakInvestigatorScanExtractingMethod implements MSDKMethod<List<MsS
    * This function assumes that the data is either formatted as two columns or five columns,
    * separated by whitespace. If two columns, a MsSpectrum is returned via
    * {@code MSDKObjectBuilder.getMsSpectrum()}. If five columns, the simple MsSpectrum is decorated
-   * using the {@link PeakInvestigatorMsSpectrum}.
+   * using the {@link io.github.msdk.rawdata.peakinvestigator.PeakInvestigatorMsSpectrum}.
    *
    * @param reader a {@link java.io.BufferedReader} object.
    * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.

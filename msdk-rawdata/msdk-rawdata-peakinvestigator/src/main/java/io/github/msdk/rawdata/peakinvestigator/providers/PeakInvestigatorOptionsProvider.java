@@ -20,6 +20,9 @@ package io.github.msdk.rawdata.peakinvestigator.providers;
  * <li>The desired start mass</li>
  * <li>The desired end mass</li>
  * </ul>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public interface PeakInvestigatorOptionsProvider extends PeakInvestigatorProvider {
   /**

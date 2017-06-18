@@ -16,11 +16,24 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 /**
+ * <p>SignalToNoise class.</p>
  *
  * @author owenmyers
  * Modified by Dharak Shah to include in MSDK
+ * @version $Id: $Id
  */
 public class SignalToNoise {
+    /**
+     * <p>findSNUsingWaveletCoefficents.</p>
+     *
+     * @param allCoefficients an array of double.
+     * @param bestCoeff a double.
+     * @param peakLeft a int.
+     * @param peakRight a int.
+     * @param windowSizeMult a double.
+     * @param absWaveCoeffs a boolean.
+     * @return a double.
+     */
     public static double findSNUsingWaveletCoefficents(double[][] allCoefficients,
                                                         double bestCoeff, 
                                                         int peakLeft,
@@ -98,7 +111,6 @@ public class SignalToNoise {
      * @param probability value between 0.0 and 1.0
      * @return quantile
      */
-
     public static double getQuantile(List <Double> values, double probability)
     {
         int size = values.size();
@@ -116,6 +128,14 @@ public class SignalToNoise {
         return (1 - gamma) * values.get(index1 - 1) + gamma * values.get(index2 - 1);
     }
 
+    /**
+     * <p>filterBySNRandWindowSelect.</p>
+     *
+     * @param intensities an array of double.
+     * @param peakLeft a int.
+     * @param peakRight a int.
+     * @return a double.
+     */
     public static double filterBySNRandWindowSelect(double[] intensities,int peakLeft,int peakRight)
     {
         
@@ -259,6 +279,14 @@ public class SignalToNoise {
         return SNRatio;
         
     }
+    /**
+     * <p>filterBySNWindowSweep.</p>
+     *
+     * @param intensities an array of double.
+     * @param peakLeft a int.
+     * @param peakRight a int.
+     * @return a double.
+     */
     public static double filterBySNWindowSweep(double[] intensities,int peakLeft,int peakRight)
     {
         DescriptiveStatistics stdDevStats = new DescriptiveStatistics();
@@ -376,6 +404,14 @@ public class SignalToNoise {
     }
     // This sweeps the window size ffrom the points furthest from the peak out and then from the points closest to the peak
     // out twords the furthest.
+    /**
+     * <p>filterBySNWindowInOutSweep.</p>
+     *
+     * @param intensities an array of double.
+     * @param peakLeft a int.
+     * @param peakRight a int.
+     * @return a double.
+     */
     public static double filterBySNWindowInOutSweep(double[] intensities,int peakLeft,int peakRight)
     {
         DescriptiveStatistics stdDevStats = new DescriptiveStatistics();
@@ -552,6 +588,14 @@ public class SignalToNoise {
     // Uses two windows on eaiter side of the peak that are a constand width. These windows then both
     // slide out to a set distance ithout changing side. The smallest standard deviation is taken to be 
     // the noise.
+    /**
+     * <p>filterBySNStaticWindowSweep.</p>
+     *
+     * @param intensities an array of double.
+     * @param peakLeft a int.
+     * @param peakRight a int.
+     * @return a double.
+     */
     public static double filterBySNStaticWindowSweep(double[] intensities,int peakLeft,int peakRight)
     {
         DescriptiveStatistics stdDevStats = new DescriptiveStatistics();

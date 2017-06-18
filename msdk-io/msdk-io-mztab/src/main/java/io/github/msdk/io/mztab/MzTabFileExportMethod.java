@@ -55,6 +55,9 @@ import uk.ac.ebi.pride.jmztab.model.SmallMoleculeColumn;
  * <p>
  * CsvFileExportMethod class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MzTabFileExportMethod implements MSDKMethod<File> {
 

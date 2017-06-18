@@ -23,6 +23,9 @@ import java.util.List;
  * <p>
  * DataPointSorter class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class DataPointSorter {
 
@@ -117,8 +120,7 @@ public class DataPointSorter {
   /**
    * Sort the given data points by RT order
    *
-   * @param rtBuffer an array of {@link io.github.msdk.datamodel.rawdata.ChromatographyInfo}
-   *        objects.
+   * @param rtBuffer an array
    * @param mzBuffer an array of double.
    * @param intensityBuffer an array of float.
    * @param size a int.

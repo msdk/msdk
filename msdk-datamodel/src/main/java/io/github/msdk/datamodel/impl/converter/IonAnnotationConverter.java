@@ -22,8 +22,11 @@ import java.util.List;
 
 /**
  * <p>
- * Implementation of {@link FeatureTableDataConverter} for lists of {@link IonAnnotation}
+ * Implementation of {@link io.github.msdk.datamodel.featuretables.FeatureTableDataConverter} for lists of {@link io.github.msdk.datamodel.ionannotations.IonAnnotation}
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class IonAnnotationConverter implements FeatureTableDataConverter<List<IonAnnotation>> {
 

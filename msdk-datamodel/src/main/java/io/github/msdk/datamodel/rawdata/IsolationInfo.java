@@ -24,6 +24,9 @@ import com.google.common.collect.Range;
  * fragmentation, represented by FragmentationInfo. If no fragmentation occurred or if fragmentation
  * details are unknown, getFragmentationInfo() will return null. For convenience, this interface is
  * immutable, so it can be passed by reference and safely used by multiple threads.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 @Immutable
 public interface IsolationInfo {

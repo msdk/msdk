@@ -22,6 +22,9 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 
 /**
  * Implementation of IonType
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SimpleIonType implements IonType {
 
@@ -31,6 +34,15 @@ public class SimpleIonType implements IonType {
   private @Nonnull String adductFormula;
   private Integer charge;
 
+  /**
+   * <p>Constructor for SimpleIonType.</p>
+   *
+   * @param name a {@link java.lang.String} object.
+   * @param polarity a {@link io.github.msdk.datamodel.rawdata.PolarityType} object.
+   * @param numberOfMolecules a int.
+   * @param adductFormula a {@link java.lang.String} object.
+   * @param charge a {@link java.lang.Integer} object.
+   */
   public SimpleIonType(@Nonnull String name, @Nonnull PolarityType polarity, int numberOfMolecules,
       @Nonnull String adductFormula, Integer charge) {
     Preconditions.checkNotNull(name);

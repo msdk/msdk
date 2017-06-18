@@ -29,6 +29,9 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * RawDataFileUtil class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class RawDataFileUtil {
 

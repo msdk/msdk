@@ -33,6 +33,9 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
  * Implementation of the RawDataFile interface.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SimpleRawDataFile implements RawDataFile {
 
@@ -43,6 +46,14 @@ public class SimpleRawDataFile implements RawDataFile {
   private final @Nonnull ArrayList<Chromatogram> chromatograms;
   private final @Nonnull DataPointStore dataPointStore;
 
+  /**
+   * <p>Constructor for SimpleRawDataFile.</p>
+   *
+   * @param rawDataFileName a {@link java.lang.String} object.
+   * @param originalRawDataFile a {@link java.util.Optional} object.
+   * @param rawDataFileType a {@link io.github.msdk.datamodel.files.FileType} object.
+   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
+   */
   public SimpleRawDataFile(@Nonnull String rawDataFileName, @Nonnull Optional<File> originalRawDataFile,
       @Nonnull FileType rawDataFileType, @Nonnull DataPointStore dataPointStore) {
     Preconditions.checkNotNull(rawDataFileType);
@@ -55,12 +66,20 @@ public class SimpleRawDataFile implements RawDataFile {
     this.chromatograms = new ArrayList<>();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public @Nonnull String getName() {
     return rawDataFileName;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param name a {@link java.lang.String} object.
+   */
   public void setName(@Nonnull String name) {
     Preconditions.checkNotNull(name);
     this.rawDataFileName = name;
@@ -73,6 +92,7 @@ public class SimpleRawDataFile implements RawDataFile {
     return originalRawDataFile;
   }
 
+  /** {@inheritDoc} */
   @Override
   @Nonnull
   public String getOriginalFilename() {
@@ -83,7 +103,11 @@ public class SimpleRawDataFile implements RawDataFile {
 	  return "Unknown";
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param newOriginalFile a {@link java.io.File} object.
+   */
   public void setOriginalFile(@Nullable File newOriginalFile) {
     this.originalRawDataFile = Optional.ofNullable(newOriginalFile);
   }
@@ -94,7 +118,11 @@ public class SimpleRawDataFile implements RawDataFile {
     return rawDataFileType;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param rawDataFileType a {@link io.github.msdk.datamodel.files.FileType} object.
+   */
   public void setRawDataFileType(@Nonnull FileType rawDataFileType) {
     Preconditions.checkNotNull(rawDataFileType);
     this.rawDataFileType = rawDataFileType;
@@ -116,13 +144,16 @@ public class SimpleRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-
   @Override
   public @Nonnull List<MsScan> getScans() {
     return ImmutableList.copyOf(scans);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param scan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+   */
   public void addScan(@Nonnull MsScan scan) {
     Preconditions.checkNotNull(scan);
     synchronized (scans) {
@@ -130,7 +161,11 @@ public class SimpleRawDataFile implements RawDataFile {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param scan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+   */
   public void removeScan(@Nonnull MsScan scan) {
     Preconditions.checkNotNull(scan);
     synchronized (scans) {
@@ -139,14 +174,17 @@ public class SimpleRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-
   @Override
   @Nonnull
   public List<Chromatogram> getChromatograms() {
     return ImmutableList.copyOf(chromatograms);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+   */
   public void addChromatogram(@Nonnull Chromatogram chromatogram) {
     Preconditions.checkNotNull(chromatogram);
     synchronized (chromatograms) {
@@ -154,7 +192,11 @@ public class SimpleRawDataFile implements RawDataFile {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param chromatogram a {@link io.github.msdk.datamodel.chromatograms.Chromatogram} object.
+   */
   public void removeChromatogram(@Nonnull Chromatogram chromatogram) {
     Preconditions.checkNotNull(chromatogram);
     synchronized (chromatograms) {

@@ -37,6 +37,9 @@ import io.github.msdk.util.DataPointSorter.SortingProperty;
  * <p>
  * TxtImportAlgorithm class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class TxtImportAlgorithm {
 

@@ -28,6 +28,9 @@ import io.github.msdk.util.FeatureTableUtil;
 
 /**
  * This class normalized a list of feature table columns based on a set of features.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class FeatureNormalizationByCompoundMethod implements MSDKMethod<FeatureTable> {
 

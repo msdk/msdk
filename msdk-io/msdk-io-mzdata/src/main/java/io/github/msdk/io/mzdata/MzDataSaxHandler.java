@@ -184,7 +184,6 @@ class MzDataSaxHandler extends DefaultHandler {
    *
    * endElement()
    */
-
   public void endElement(String namespaceURI, String sName, String qName) throws SAXException {
 
     if (canceled)
@@ -294,7 +293,6 @@ class MzDataSaxHandler extends DefaultHandler {
    * {@inheritDoc}
    *
    * characters()
-   * 
    * @see org.xml.sax.ContentHandler#characters(char[], int, int)
    */
   public void characters(char buf[], int offset, int len) throws SAXException {

@@ -25,6 +25,15 @@ import it.unimi.dsi.io.ByteBufferInputStream;
 
 class MzMLFileMemoryMapper {
 
+  /**
+   * <p>mapToMemory.</p>
+   *
+   * @param mzMLFile a {@link java.io.File} object.
+   * @return a {@link it.unimi.dsi.io.ByteBufferInputStream} object.
+   * @throws java.io.IOException if any.
+   * @throws javax.xml.stream.XMLStreamException if any.
+   * @throws io.github.msdk.MSDKException if any.
+   */
   public ByteBufferInputStream mapToMemory(File mzMLFile)
       throws IOException, XMLStreamException, MSDKException {
 

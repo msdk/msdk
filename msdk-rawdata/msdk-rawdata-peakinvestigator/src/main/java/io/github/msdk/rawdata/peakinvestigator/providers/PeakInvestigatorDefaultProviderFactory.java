@@ -35,6 +35,9 @@ import io.github.msdk.rawdata.peakinvestigator.providers.PeakInvestigatorProvide
  * <li>The version is the last used, if available; otherwise, the current version.</li>
  * <li>The most cost-effective response time objective (i.e. RTO-24) is used.</li>
  * </ul>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class PeakInvestigatorDefaultProviderFactory implements PeakInvestigatorProviderFactory {
 

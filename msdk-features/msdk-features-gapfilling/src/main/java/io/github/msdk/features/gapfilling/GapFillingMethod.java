@@ -43,6 +43,9 @@ import io.github.msdk.util.tolerances.RTTolerance;
 
 /**
  * This class fills in the missing gaps in a FeatureTable.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class GapFillingMethod implements MSDKMethod<FeatureTable> {
 

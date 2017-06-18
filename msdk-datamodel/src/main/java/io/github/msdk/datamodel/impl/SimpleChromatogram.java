@@ -32,6 +32,9 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
  * Simple implementation of the Chromatogram interface.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SimpleChromatogram implements Chromatogram {
 
@@ -76,7 +79,11 @@ public class SimpleChromatogram implements Chromatogram {
     return dataFile;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param newRawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   */
   public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
     this.dataFile = newRawDataFile;
   }
@@ -88,7 +95,11 @@ public class SimpleChromatogram implements Chromatogram {
     return chromatogramNumber;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param chromatogramNumber a {@link java.lang.Integer} object.
+   */
   public void setChromatogramNumber(@Nonnull Integer chromatogramNumber) {
     this.chromatogramNumber = chromatogramNumber;
   }
@@ -100,7 +111,11 @@ public class SimpleChromatogram implements Chromatogram {
     return chromatogramType;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param newChromatogramType a {@link io.github.msdk.datamodel.chromatograms.ChromatogramType} object.
+   */
   public void setChromatogramType(@Nonnull ChromatogramType newChromatogramType) {
     this.chromatogramType = newChromatogramType;
   }
@@ -117,7 +132,12 @@ public class SimpleChromatogram implements Chromatogram {
     return getRetentionTimes(null);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param array an array of float.
+   * @return an array of float.
+   */
   public @Nonnull float[] getRetentionTimes(@Nullable float[] array) {
     if ((array == null) || (array.length < numOfDataPoints))
       array = new float[numOfDataPoints];
@@ -148,7 +168,14 @@ public class SimpleChromatogram implements Chromatogram {
     return array;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param rtValues an array of float.
+   * @param mzValues an array of double.
+   * @param intensityValues an array of float.
+   * @param size a {@link java.lang.Integer} object.
+   */
   public synchronized void setDataPoints(@Nonnull float rtValues[],
       @Nullable double mzValues[], @Nonnull float intensityValues[], @Nonnull Integer size) {
 
@@ -187,7 +214,11 @@ public class SimpleChromatogram implements Chromatogram {
     return separationType;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param separationType a {@link io.github.msdk.datamodel.rawdata.SeparationType} object.
+   */
   public void setSeparationType(@Nonnull SeparationType separationType) {
     this.separationType = separationType;
   }
@@ -199,12 +230,20 @@ public class SimpleChromatogram implements Chromatogram {
     return mz;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param newMz a {@link java.lang.Double} object.
+   */
   public void setMz(@Nullable Double newMz) {
     this.mz = newMz;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param ionAnnotation a {@link io.github.msdk.datamodel.ionannotations.IonAnnotation} object.
+   */
   public void setIonAnnotation(@Nonnull IonAnnotation ionAnnotation) {
     this.ionAnnotation = ionAnnotation;
   }

@@ -22,6 +22,9 @@ package io.github.msdk.features.normalization.compound;
  * <p>
  * NormalizationType class.
  * </p>
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public enum NormalizationType {
 

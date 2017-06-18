@@ -17,10 +17,13 @@ package io.github.msdk.datamodel.rawdata;
  * Enum for different separation technologies used as a preprocessing step before the actual data
  * point acquisition.
  * <p>
- * A separation type will usually provide additional information for acquired {@link MsScan}
+ * A separation type will usually provide additional information for acquired {@link io.github.msdk.datamodel.rawdata.MsScan}
  * objects. The most common case being a chromatographic separation coupled to a mass spectrometer.
  * Here, the chromatograph would provide the retention time of each acquired data point as
  * additional information.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public enum SeparationType {
 
@@ -61,8 +64,7 @@ public enum SeparationType {
   }
 
   /**
-   * Return the number of additional features linked to an {@link MsScan} and to
-   * {@link ChromatographyInfo}.
+   * Return the number of additional features linked to an {@link io.github.msdk.datamodel.rawdata.MsScan} and to
    * <p>
    * For chromatography, the number will be 1 for one-dimensional chromatography, where each data
    * point has a retention time assigned to it.

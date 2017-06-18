@@ -17,9 +17,11 @@ import javax.annotation.Nullable;
 
 /**
  * A feature table column has a name, a fixed type for its element values, and an optional
- * {@link Sample} associated to it.
+ * {@link io.github.msdk.datamodel.featuretables.Sample} associated to it.
  *
  * @param <DATATYPE> the generic type of the element values.
+ * @author plusik
+ * @version $Id: $Id
  */
 public interface FeatureTableColumn<DATATYPE> {
 

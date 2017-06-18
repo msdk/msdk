@@ -20,6 +20,9 @@ import javax.annotation.Nonnull;
  * this mechanism to store their data somewhere, to avoid consuming too much memory. Multiple
  * implementations of this interface may be provided, depending on the method of serialization and
  * storage.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public interface DataPointStore {
 

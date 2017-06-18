@@ -30,6 +30,9 @@ import io.github.msdk.datamodel.rawdata.MsFunction;
 
 /**
  * Object builder
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class MSDKObjectBuilder {
 
@@ -253,6 +256,7 @@ public class MSDKObjectBuilder {
    * </p>
    *
    * @return a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
+   * @since 0.0.8
    */
   public static @Nonnull FeatureTableColumn<Float> getRetentionTimeFeatureTableColumn() {
     return RetentionTimeFeatureTableColumn;

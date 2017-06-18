@@ -45,6 +45,9 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
  * This class creates a feature table based on the SRM chromatograms from a raw data file.
+ *
+ * @author plusik
+ * @version $Id: $Id
  */
 public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 
