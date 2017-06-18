@@ -22,27 +22,22 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.util.FeatureTableUtil;
+import io.github.msdk.datamodel.impl.SimpleFeatureTable;
 
 /**
  * This class normalized a list of feature table columns based on a set of features.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class FeatureNormalizationByCompoundMethod implements MSDKMethod<FeatureTable> {
 
   // Variables
   private final @Nonnull Integer mzRtWeight;
   private final @Nonnull NormalizationType normalizationType;
-  private final @Nonnull List<FeatureTableColumn<?>> columnsToNormalize;
   private final @Nonnull List<FeatureTableRow> internalStandardRows;
 
   // Other variables
   private final @Nonnull FeatureTable featureTable;
-  private final @Nonnull String nameSuffix;
   private final @Nonnull DataPointStore dataPointStore;
   private final @Nonnull FeatureTable result;
   private boolean canceled = false;
@@ -66,27 +61,22 @@ public class FeatureNormalizationByCompoundMethod implements MSDKMethod<FeatureT
    */
   public FeatureNormalizationByCompoundMethod(@Nonnull FeatureTable featureTable,
       @Nonnull DataPointStore dataPointStore, @Nonnull NormalizationType normalizationType,
-      @Nonnull List<FeatureTableColumn<?>> columnsToNormalize,
-      @Nonnull List<FeatureTableRow> internalStandardRows, @Nonnull Integer mzRtWeight,
-      @Nonnull String nameSuffix) {
+      @Nonnull List<FeatureTableRow> internalStandardRows, @Nonnull Integer mzRtWeight) {
     this.featureTable = featureTable;
     this.dataPointStore = dataPointStore;
     this.normalizationType = normalizationType;
-    this.columnsToNormalize = columnsToNormalize;
     this.mzRtWeight = mzRtWeight;
     this.internalStandardRows = internalStandardRows;
-    this.nameSuffix = nameSuffix;
 
     // Make a copy of the feature table
-    result =
-        FeatureTableUtil.clone(dataPointStore, featureTable, featureTable.getName() + nameSuffix);
+    result = new SimpleFeatureTable();
   }
 
   /** {@inheritDoc} */
   @Override
   public FeatureTable execute() throws MSDKException {
     // Total features
-    totalFeatures = featureTable.getRows().size() * columnsToNormalize.size();
+    totalFeatures = featureTable.getRows().size();
 
     /*
      * TODO: Write method
