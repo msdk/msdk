@@ -234,12 +234,6 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-featdet-chromatogramtofeaturetable</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-featdet-targeteddetection</artifactId>
 			<version>${project.version}</version>
 		</dependency>

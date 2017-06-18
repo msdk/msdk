@@ -56,6 +56,11 @@ public interface FeatureTableRow {
   @Nullable
   Feature getFeature(@Nonnull Sample sample);
 
- 
+  /**
+   * Return feature assigned to this row
+   *
+   */
+  @Nullable
+  Feature getFeature(@Nonnull Integer index);
 
 }

@@ -32,6 +32,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleFeatureTable;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.util.FeatureTableUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
@@ -40,9 +41,6 @@ import io.github.msdk.util.tolerances.RTTolerance;
 /**
  * This class aligns feature tables based on a match score. The score is calculated based on the
  * mass and retention time of each peak using a set of tolerances.
- *
- * @author plusik
- * @version $Id: $Id
  */
 public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
 
@@ -93,7 +91,7 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
     this.featureTableName = featureTableName;
 
     // Make a new feature table
-    result = MSDKObjectBuilder.getFeatureTable(featureTableName, dataStore);
+    result = new SimpleFeatureTable();
   }
 
   /** {@inheritDoc} */
@@ -106,17 +104,9 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
     }
 
     // Iterate through all feature tables
-    Boolean firstFeatureTable = true;
     for (FeatureTable featureTable : featureTables) {
 
-      // Add columns from the original feature table to the result table
-      for (FeatureTableColumn<?> column : featureTable.getColumns()) {
-        if (firstFeatureTable)
-          result.addColumn(column);
-        else if (column.getSample() != null)
-          result.addColumn(column);
-      }
-      firstFeatureTable = false;
+    
 
       // Create a sorted array of matching scores between two rows
       List<RowVsRowScore> scoreSet = new ArrayList<RowVsRowScore>();
@@ -142,7 +132,7 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
 
         // Get all rows of the aligned feature table within the m/z and
         // RT limits
-        List<FeatureTableRow> candidateRows = result.getRowsInsideRange(rtRange, mzRange);
+        List<FeatureTableRow> candidateRows = FeatureTableUtil.getRowsInsideRange(featureTable, rtRange, mzRange);
 
         // Calculate scores and store them
         for (FeatureTableRow candidateRow : candidateRows) {
@@ -152,35 +142,10 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
             FeatureTableColumn<Integer> chargeColumn1 =
                 featureTable.getColumn(ColumnName.CHARGE, null);
             FeatureTableColumn<Integer> chargeColumn2 = result.getColumn(ColumnName.CHARGE, null);
-            Integer charge1 = row.getData(chargeColumn1);
+            Integer charge1 = row.getFeature();
             Integer charge2 = candidateRow.getData(chargeColumn2);
             if (!charge1.equals(charge2))
               continue;
-          }
-
-          // Check ion annotation
-          if (requireSameAnnotation) {
-            FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn1 =
-                featureTable.getColumn(ColumnName.IONANNOTATION, null);
-            FeatureTableColumn<List<IonAnnotation>> ionAnnotationColumn2 =
-                result.getColumn(ColumnName.IONANNOTATION, null);
-            List<IonAnnotation> ionAnnotations1 = row.getData(ionAnnotationColumn1);
-            List<IonAnnotation> ionAnnotations2 = candidateRow.getData(ionAnnotationColumn2);
-
-            // Check that all ion annotations in first row are in
-            // the candidate row
-            boolean equalIons = false;
-            if (ionAnnotations1 != null && ionAnnotations2 != null) {
-              for (IonAnnotation ionAnnotation : ionAnnotations1) {
-                for (IonAnnotation targetIonAnnotation : ionAnnotations2) {
-                  if (targetIonAnnotation.compareTo(ionAnnotation) == 0)
-                    equalIons = true;
-                }
-              }
-            }
-            if (!equalIons)
-              continue;
-
           }
 
           // Calculate score
@@ -244,9 +209,6 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
 
         processedFeatures++;
       }
-
-      // Re-calculate average row averages
-      FeatureTableUtil.recalculateAverages(result);
 
       if (canceled)
         return null;
