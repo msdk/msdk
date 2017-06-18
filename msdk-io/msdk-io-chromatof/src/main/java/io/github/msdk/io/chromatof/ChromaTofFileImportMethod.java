@@ -39,6 +39,8 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleFeatureTable;
+import io.github.msdk.datamodel.impl.SimpleFeatureTableRow;
 import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.impl.SimpleSample;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
@@ -65,9 +67,6 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
   private final @Nonnull Locale locale;
   private String fieldSeparator = ChromaTofParser.FIELD_SEPARATOR_TAB;
   private String quotationCharacter = ChromaTofParser.QUOTATION_CHARACTER_NONE;
-
-  private Map<Integer, FeatureTableColumn<?>> columns =
-      new HashMap<Integer, FeatureTableColumn<?>>();
 
   private FeatureTable newFeatureTable;
   private final Sample fileSample;
@@ -130,7 +129,7 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
     logger.info("Using quotation character: '" + quotationCharacter + "'");
 
     String fileName = sourceFile.getName();
-    newFeatureTable = MSDKObjectBuilder.getFeatureTable(fileName, dataStore);
+    newFeatureTable = new SimpleFeatureTable();
     boolean normalizeColumnNames = false;
 
     ChromaTofParser parser = new ChromaTofParser(fieldSeparator, quotationCharacter, Locale.US);
@@ -172,7 +171,7 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
 
       // Feature table row
       rowId++;
-      FeatureTableRow row = MSDKObjectBuilder.getFeatureTableRow(newFeatureTable, rowId);
+      SimpleFeatureTableRow row = new SimpleFeatureTableRow(newFeatureTable);
       newFeatureTable.addRow(row);
 
       // Loop through all the data and add it to the row
