@@ -25,15 +25,11 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleFeatureTable;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.impl.SimpleFeatureTableRow;
 import io.github.msdk.util.FeatureTableUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
@@ -47,14 +43,10 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
   // Variables
   private final @Nonnull MzTolerance mzTolerance;
   private final @Nonnull RTTolerance rtTolerance;
-  private final int mzWeight;
-  private final int rtWeight;
-  private final boolean requireSameCharge;
-  private final boolean requireSameAnnotation;
-  private final @Nonnull String featureTableName;
-  private final @Nonnull DataPointStore dataStore;
+  private final int mzWeight = 10;
+  private final int rtWeight = 10;
   private final @Nonnull List<FeatureTable> featureTables;
-  private final @Nonnull FeatureTable result;
+  private final @Nonnull SimpleFeatureTable result;
   private boolean canceled = false;
   private int processedFeatures = 0, totalFeatures = 0;
 
@@ -77,36 +69,34 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
    * @param rtTolerance a {@link io.github.msdk.util.tolerances.RTTolerance} object.
    */
   public JoinAlignerMethod(@Nonnull List<FeatureTable> featureTables,
-      @Nonnull DataPointStore dataStore, @Nonnull MzTolerance mzTolerance,
-      @Nonnull RTTolerance rtTolerance, int mzWeight, int rtWeight, boolean requireSameCharge,
-      boolean requireSameAnnotation, @Nonnull String featureTableName) {
+      @Nonnull MzTolerance mzTolerance, @Nonnull RTTolerance rtTolerance) {
     this.featureTables = featureTables;
-    this.dataStore = dataStore;
     this.mzTolerance = mzTolerance;
     this.rtTolerance = rtTolerance;
-    this.mzWeight = mzWeight;
-    this.rtWeight = rtWeight;
-    this.requireSameCharge = requireSameCharge;
-    this.requireSameAnnotation = requireSameAnnotation;
-    this.featureTableName = featureTableName;
 
     // Make a new feature table
-    result = new SimpleFeatureTable();
+    this.result = new SimpleFeatureTable();
+
   }
 
   /** {@inheritDoc} */
   @Override
   public FeatureTable execute() throws MSDKException {
 
-    // Calculate number of feature to process. 
+    // Calculate number of feature to process.
     for (FeatureTable featureTable : featureTables) {
       totalFeatures += featureTable.getRows().size();
     }
 
+    // Add all samples
+    ArrayList<Sample> allSamples = new ArrayList<>();
+    for (FeatureTable featureTable : featureTables) {
+      allSamples.addAll(featureTable.getSamples());
+    }
+    result.setSamples(allSamples);
+
     // Iterate through all feature tables
     for (FeatureTable featureTable : featureTables) {
-
-    
 
       // Create a sorted array of matching scores between two rows
       List<RowVsRowScore> scoreSet = new ArrayList<RowVsRowScore>();
@@ -127,31 +117,26 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
           continue;
 
         // Calculate the RT range limit for the current row
-        Range<Float> rtRange =
-            rtTolerance.getToleranceRange(rt);
+        Range<Float> rtRange = rtTolerance.getToleranceRange(rt);
 
         // Get all rows of the aligned feature table within the m/z and
         // RT limits
-        List<FeatureTableRow> candidateRows = FeatureTableUtil.getRowsInsideRange(featureTable, rtRange, mzRange);
+        List<FeatureTableRow> candidateRows =
+            FeatureTableUtil.getRowsInsideRange(result, rtRange, mzRange);
 
         // Calculate scores and store them
         for (FeatureTableRow candidateRow : candidateRows) {
 
           // Check charge
-          if (requireSameCharge) {
-            FeatureTableColumn<Integer> chargeColumn1 =
-                featureTable.getColumn(ColumnName.CHARGE, null);
-            FeatureTableColumn<Integer> chargeColumn2 = result.getColumn(ColumnName.CHARGE, null);
-            Integer charge1 = row.getFeature();
-            Integer charge2 = candidateRow.getData(chargeColumn2);
-            if (!charge1.equals(charge2))
-              continue;
-          }
+          Integer charge1 = row.getCharge();
+          Integer charge2 = candidateRow.getCharge();
+          if ((charge1 != null) && (charge2 != null) && (!charge1.equals(charge2)))
+            continue;
 
           // Calculate score
           double mzLength = mzRange.upperEndpoint() - mzRange.lowerEndpoint();
           double rtLength = rtRange.upperEndpoint() - rtRange.lowerEndpoint();
-          RowVsRowScore score = new RowVsRowScore(row, candidateRow, mzLength / 2.0, mzWeight,
+          RowVsRowScore score = new RowVsRowScore(row, (SimpleFeatureTableRow) candidateRow, mzLength / 2.0, mzWeight,
               rtLength / 2.0, rtWeight);
 
           // Add the score to the array
@@ -166,8 +151,7 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
       }
 
       // Create a table of mappings for best scores
-      Hashtable<FeatureTableRow, FeatureTableRow> alignmentMapping =
-          new Hashtable<FeatureTableRow, FeatureTableRow>();
+      Hashtable<FeatureTableRow, SimpleFeatureTableRow> alignmentMapping = new Hashtable<>();
 
       // Iterate scores by descending order
       Iterator<RowVsRowScore> scoreIterator = scoreSet.iterator();
@@ -187,25 +171,25 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
 
       // Align all rows using the mapping
       for (FeatureTableRow sourceRow : featureTable.getRows()) {
-        FeatureTableRow targetRow = alignmentMapping.get(sourceRow);
+        SimpleFeatureTableRow targetRow = alignmentMapping.get(sourceRow);
 
         // If we have no mapping for this row, add a new one
         if (targetRow == null) {
-          targetRow = MSDKObjectBuilder.getFeatureTableRow(result, newRowID);
+          targetRow = new SimpleFeatureTableRow(result);
           result.addRow(targetRow);
-          FeatureTableColumn<Integer> column = result.getColumn(ColumnName.ID, null);
-          targetRow.setData(column, newRowID);
+
+          Integer sourceCharge = sourceRow.getCharge();
+
+          if (sourceCharge != null)
+            targetRow.setCharge(sourceCharge);
+
+          List<Sample> samples = featureTable.getSamples();
+          for (Sample s : samples) {
+            targetRow.setFeature(s, sourceRow.getFeature(s));
+          }
+
           newRowID++;
         }
-
-        // Add all features from the original row to the aligned row
-        for (Sample sample : sourceRow.getFeatureTable().getSamples()) {
-          FeatureTableUtil.copyFeatureValues(sourceRow, targetRow, sample);
-        }
-
-        // Combine common values from the original row with the aligned
-        // row
-        FeatureTableUtil.copyCommonValues(sourceRow, targetRow, true);
 
         processedFeatures++;
       }

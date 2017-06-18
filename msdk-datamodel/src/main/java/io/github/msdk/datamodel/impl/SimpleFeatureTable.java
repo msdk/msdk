@@ -60,6 +60,13 @@ public class SimpleFeatureTable implements FeatureTable {
   public @Nonnull List<Sample> getSamples() {
     return ImmutableList.copyOf(featureTableSamples);
   }
+  
+  /** {@inheritDoc} */
+  public @Nonnull void setSamples(List<Sample> samples) {
+    this.featureTableSamples.clear();
+    this.featureTableSamples.addAll(samples);
+  }
+
 
   /** {@inheritDoc} */
   @Override

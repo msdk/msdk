@@ -48,6 +48,14 @@ public interface FeatureTableRow {
    */
   @Nullable
   Float getRT();
+  
+  /**
+   * Return the charge of this row
+   *
+   * @return charge
+   */
+  @Nullable
+  Integer getCharge();
 
   /**
    * Return feature assigned to this row

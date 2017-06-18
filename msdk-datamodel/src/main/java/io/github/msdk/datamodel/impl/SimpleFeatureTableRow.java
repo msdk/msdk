@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
@@ -34,6 +35,7 @@ public class SimpleFeatureTableRow implements FeatureTableRow {
 
   private final @Nonnull FeatureTable featureTable;
   private final @Nonnull Map<Sample, Feature> features = new HashMap<>();
+  private @Nullable Integer charge;
 
   public SimpleFeatureTableRow(@Nonnull FeatureTable featureTable) {
     Preconditions.checkNotNull(featureTable);
@@ -55,22 +57,43 @@ public class SimpleFeatureTableRow implements FeatureTableRow {
 
   @Override
   public Float getRT() {
-    Collection<Feature> allFeatures = features.values();
-    float averageRt =
-        (float) allFeatures.stream().mapToDouble(Feature::getRetentionTime).average().getAsDouble();
-    return averageRt;
+    synchronized (features) {
+      Collection<Feature> allFeatures = features.values();
+      float averageRt = (float) allFeatures.stream().mapToDouble(Feature::getRetentionTime)
+          .average().getAsDouble();
+      return averageRt;
+    }
+  }
+
+  @Override
+  public Integer getCharge() {
+    return charge;
+  }
+
+  public void setCharge(@Nullable Integer charge) {
+    this.charge = charge;
   }
 
   @Override
   public Feature getFeature(Sample sample) {
-    return features.get(sample);
+    synchronized (features) {
+      return features.get(sample);
+    }
   }
 
   @Override
   public Feature getFeature(Integer index) {
     assert featureTable != null;
-    List<Sample> samples = featureTable.getSamples();
-    return getFeature(samples.get(index));
+    synchronized (features) {
+      List<Sample> samples = featureTable.getSamples();
+      return getFeature(samples.get(index));
+    }
+  }
+
+  public void setFeature(@Nonnull Sample sample, @Nonnull Feature feature) {
+    synchronized (features) {
+      features.put(sample, feature);
+    }
   }
 
 
