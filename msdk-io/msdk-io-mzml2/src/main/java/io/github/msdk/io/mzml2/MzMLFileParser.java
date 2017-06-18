@@ -14,7 +14,6 @@
 package io.github.msdk.io.mzml2;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +21,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.EndElement;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
+
+import org.apache.commons.io.IOUtils;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
@@ -37,10 +30,17 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.io.mzml2.util.ByteBufferInputStreamAdapter;
+import io.github.msdk.io.mzml2.util.MzMLFileMemoryMapper;
 import it.unimi.dsi.io.ByteBufferInputStream;
+import javolution.osgi.internal.OSGiServices;
+import javolution.xml.stream.XMLInputFactory;
+import javolution.xml.stream.XMLStreamReader;
 
 /**
- * <p>MzMLFileParser class.</p>
+ * <p>
+ * MzMLFileParser class.
+ * </p>
  *
  * @author plusik
  * @version $Id: $Id
@@ -48,12 +48,16 @@ import it.unimi.dsi.io.ByteBufferInputStream;
 public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private final @Nonnull File mzMLFile;
   private final @Nonnull ArrayList<MsScan> spectrumList;
+  private final ArrayList<MzMLReferenceableParamGroup> referenceableParamGroupList;
   private RawDataFile newRawFile;
   private Integer lastScanNumber = 0;
-  private boolean canceled = false;
+  private boolean canceled;
+  private Float progress;
 
   /**
-   * <p>Constructor for MzMLFileParser.</p>
+   * <p>
+   * Constructor for MzMLFileParser.
+   * </p>
    *
    * @param mzMLFilePath a {@link java.lang.String} object.
    */
@@ -62,7 +66,9 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   }
 
   /**
-   * <p>Constructor for MzMLFileParser.</p>
+   * <p>
+   * Constructor for MzMLFileParser.
+   * </p>
    *
    * @param mzMLFilePath a {@link java.nio.file.Path} object.
    */
@@ -71,20 +77,27 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   }
 
   /**
-   * <p>Constructor for MzMLFileParser.</p>
+   * <p>
+   * Constructor for MzMLFileParser.
+   * </p>
    *
    * @param mzMLFile a {@link java.io.File} object.
    */
   public MzMLFileParser(File mzMLFile) {
     this.mzMLFile = mzMLFile;
     this.spectrumList = new ArrayList<>();
+    this.referenceableParamGroupList = new ArrayList<>();
+    this.canceled = false;
+    this.progress = 0f;
   }
 
   /**
-   * <p>execute.</p>
+   * <p>
+   * execute.
+   * </p>
    *
-   * @return a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-   * @throws io.github.msdk.MSDKException if any.
+   * @return a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object. @throws
+   *         io.github.msdk.MSDKException if any. @throws
    */
   public RawDataFile execute() throws MSDKException {
 
@@ -97,145 +110,165 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
       // Create the MzMLRawDataFile object
       final MzMLRawDataFile newRawFile =
-          new MzMLRawDataFile(mzMLFile, null, msFunctionsList, spectrumList, chromatogramsList);
+          new MzMLRawDataFile(mzMLFile, msFunctionsList, spectrumList, chromatogramsList);
       this.newRawFile = newRawFile;
 
-      XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-      XMLEventReader xmlEventReader = xmlInputFactory.createXMLEventReader(is);
+      XMLInputFactory xmlInputFactory = OSGiServices.getXMLInputFactory();
+      XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(is);
 
       boolean insideSpectrumListFlag = false;
       boolean insideBinaryDataArrayFlag = false;
+      boolean insideReferenceableParamGroupList = false;
       int defaultArrayLength = 0;
       MzMLSpectrum spectrum = null;
       MzMLBinaryDataInfo binaryDataInfo = null;
-      while (xmlEventReader.hasNext()) {
-        if (canceled)
+      MzMLReferenceableParamGroup referenceableParamGroup = null;
+      while (xmlStreamReader.hasNext()) {
+        if (canceled) {
+          xmlStreamReader.close();
           return null;
+        }
+        xmlStreamReader.next();
+        if (xmlStreamReader.isStartElement()) {
+          if (xmlStreamReader.hasNext()) {
+            if (xmlStreamReader.getLocalName().contentEquals("spectrumList"))
+              insideSpectrumListFlag = true;
+            if (xmlStreamReader.getLocalName().contentEquals("referenceableParamGroupList"))
+              insideReferenceableParamGroupList = true;
 
-        XMLEvent xmlEvent = xmlEventReader.nextEvent();
-        if (xmlEvent.isStartElement()) {
-          StartElement startElement = xmlEvent.asStartElement();
+            if (insideReferenceableParamGroupList) {
+              if (xmlStreamReader.getLocalName().contentEquals("referenceableParamGroup")) {
+                String id = xmlStreamReader.getAttributeValue(null, "id").toString();
+                referenceableParamGroup = new MzMLReferenceableParamGroup(id);
+              }
+              if (xmlStreamReader.getLocalName().contentEquals("cvParam")) {
+                String accession = xmlStreamReader.getAttributeValue(null, "accession").toString();
+                CharSequence value = xmlStreamReader.getAttributeValue(null, "value");
+                CharSequence unitAccession =
+                    xmlStreamReader.getAttributeValue(null, "unitAccession");
+                MzMLCVParam cvParam = new MzMLCVParam(accession, null, null);
+                if (value != null)
+                  cvParam.setValue(value.toString());
+                if (unitAccession != null)
+                  cvParam.setUnitAccession(unitAccession.toString());
+                referenceableParamGroup.addReferenceableCvParam(cvParam);
+              }
+            }
 
-          if (startElement.getName().getLocalPart().equals("spectrumList")
-              && xmlEventReader.hasNext()) {
-            xmlEvent = xmlEventReader.nextEvent();
-            insideSpectrumListFlag = true;
-          }
+            if (insideBinaryDataArrayFlag && xmlStreamReader.getLocalName().equals("cvParam")
+                && binaryDataInfo != null) {
+              String accession = xmlStreamReader.getAttributeValue(null, "accession").toString();
+              if (binaryDataInfo.isBitLengthAccession(accession)) {
+                binaryDataInfo.setBitLength(accession);
+              } else if (binaryDataInfo.isCompressionTypeAccession(accession)) {
+                binaryDataInfo.setCompressionType(accession);
+              } else if (binaryDataInfo.isArrayTypeAccession(accession)) {
+                binaryDataInfo.setArrayType(accession);
+              } else {
+                break; // A better approach to skip UV Scans would
+                       // be to only break accession which define
+                       // the array type and isn't either m/z or
+                       // intensity values. We would have to list
+                       // out all array types in that case.
+              }
+            }
 
-          if (insideSpectrumListFlag && xmlEventReader.hasNext()) {
-            switch (startElement.getName().getLocalPart()) {
-              case "spectrum":
-                xmlEvent = xmlEventReader.nextEvent();
-                System.out.println("---");
-                if (spectrum != null)
-                  spectrumList.add(spectrum);
+            if (insideSpectrumListFlag) {
+              if (xmlStreamReader.getLocalName().contentEquals("spectrum")) {
                 spectrum = new MzMLSpectrum(newRawFile);
-                Attribute arrayLengthAttr =
-                    startElement.getAttributeByName(new QName("defaultArrayLength"));
-                Attribute idAttr = startElement.getAttributeByName(new QName("id"));
-                defaultArrayLength = Integer.valueOf(arrayLengthAttr.getValue());
-                spectrum.setId(idAttr.getValue());
-                spectrum.setScanNumber(getScanNumber(idAttr.getValue()));
+                String id = xmlStreamReader.getAttributeValue(null, "id").toString();
+                defaultArrayLength =
+                    xmlStreamReader.getAttributeValue(null, "defaultArrayLength").toInt();
+                spectrum.setId(id);
+                spectrum.setScanNumber(getScanNumber(id));
                 spectrum.setByteBufferInputStream(is);
-                break;
-              case "binaryDataArray":
-                xmlEvent = xmlEventReader.nextEvent();
+              }
+              if (xmlStreamReader.getLocalName().contentEquals("binaryDataArray")) {
                 insideBinaryDataArrayFlag = true;
                 binaryDataInfo = new MzMLBinaryDataInfo();
-                Attribute encodedLengthAttr =
-                    startElement.getAttributeByName(new QName("encodedLength"));
-                binaryDataInfo.setEncodedLength(Integer.valueOf(encodedLengthAttr.getValue()));
-                Attribute arrayLengthAttr2 =
-                    startElement.getAttributeByName(new QName("arrayLength"));
-                if (arrayLengthAttr2 != null) {
-                  defaultArrayLength = Integer.valueOf(arrayLengthAttr2.getValue());
+                int encodedLength =
+                    xmlStreamReader.getAttributeValue(null, "encodedLength").toInt();
+                CharSequence arrayLength = xmlStreamReader.getAttributeValue(null, "arrayLength");
+                binaryDataInfo.setEncodedLength(encodedLength);
+                if (arrayLength != null) {
+                  defaultArrayLength = Integer.valueOf(arrayLength.toString());
                 }
                 binaryDataInfo.setArrayLength(defaultArrayLength);
-                break;
-              case "cvParam":
+
+              }
+              if (xmlStreamReader.getLocalName().contentEquals("cvParam")) {
                 if (!insideBinaryDataArrayFlag && spectrum != null) {
-                  xmlEvent = xmlEventReader.nextEvent();
-                  Attribute accessionAttr = startElement.getAttributeByName(new QName("accession"));
-                  Attribute valueAttr = startElement.getAttributeByName(new QName("value"));
-                  Attribute unitAccessionAttr =
-                      startElement.getAttributeByName(new QName("unitAccession"));
-                  MzMLCVParam cvParam =
-                      new MzMLCVParam(accessionAttr.getValue(), valueAttr.getValue(), null);
-                  if (unitAccessionAttr != null)
-                    cvParam.setUnitAccession(unitAccessionAttr.getValue());
+                  String accession =
+                      xmlStreamReader.getAttributeValue(null, "accession").toString();
+                  CharSequence value = xmlStreamReader.getAttributeValue(null, "value");
+                  CharSequence unitAccession =
+                      xmlStreamReader.getAttributeValue(null, "unitAccession");
+                  MzMLCVParam cvParam = new MzMLCVParam(accession, null, null);
+                  if (value != null)
+                    cvParam.setValue(value.toString());
+                  if (unitAccession != null)
+                    cvParam.setUnitAccession(unitAccession.toString());
                   spectrum.getCVParams().add(cvParam);
                 }
-                break;
-              case "binary":
+              }
+              if (xmlStreamReader.getLocalName().contentEquals("binary")) {
                 if (spectrum != null) {
-                  while (xmlEventReader.hasNext()) {
-                    xmlEvent = xmlEventReader.nextEvent();
-                    if (xmlEvent.isCharacters()) {
-                      binaryDataInfo.setPosition(xmlEvent.getLocation().getCharacterOffset());
-                      break;
-                    }
+                  binaryDataInfo.setPosition(xmlStreamReader.getLocation().getCharacterOffset());
+                  // ByteBufferInputStreamAdapter decodedIs = new ByteBufferInputStreamAdapter(
+                  // is.copy(), binaryDataInfo.getPosition(), binaryDataInfo.getEncodedLength());
+                  // System.out.println(new String(IOUtils.toByteArray(decodedIs)));
+                }
+              }
+              if (xmlStreamReader.getLocalName().contentEquals("referenceableParamGroupRef")) {
+                String refValue = xmlStreamReader.getAttributeValue(null, "ref").toString();
+                for (MzMLReferenceableParamGroup ref : referenceableParamGroupList) {
+                  if (ref.getParamGroupName().equals(refValue)) {
+                    spectrum.getCVParams().addAll(ref.getReferenceableCvParams());
+                    break;
                   }
                 }
-                break;
+              }
             }
           }
-
-          if (insideBinaryDataArrayFlag && startElement.getName().getLocalPart().equals("cvParam")
-              && binaryDataInfo != null && xmlEventReader.hasNext()) {
-            xmlEvent = xmlEventReader.nextEvent();
-            Attribute accessionAttr = startElement.getAttributeByName(new QName("accession"));
-            if (binaryDataInfo.isBitLengthAccession(accessionAttr.getValue())) {
-              binaryDataInfo.setBitLength(accessionAttr.getValue());
-            } else if (binaryDataInfo.isCompressionTypeAccession(accessionAttr.getValue())) {
-              binaryDataInfo.setCompressionType(accessionAttr.getValue());
-            } else if (binaryDataInfo.isArrayTypeAccession(accessionAttr.getValue())) {
-              binaryDataInfo.setArrayType(accessionAttr.getValue());
-            } else {
-              break; // A better approach to skip UV Scans would
-                     // be to only break accession which define
-                     // the array type and isn't either m/z or
-                     // intensity values. We would have to list
-                     // out all array types in that case.
-            }
-          }
-
         }
 
-        if (xmlEvent.isEndElement()) {
-          EndElement endElement = xmlEvent.asEndElement();
-          if (endElement.getName().getLocalPart().equals("spectrumList")
-              && xmlEventReader.hasNext()) {
-            xmlEvent = xmlEventReader.nextEvent();
+        if (xmlStreamReader.isEndElement()) {
+          if (xmlStreamReader.getLocalName().contentEquals("spectrumList"))
             insideSpectrumListFlag = false;
+
+          if (xmlStreamReader.getLocalName().contentEquals("referenceableParamGroup"))
+            referenceableParamGroupList.add(referenceableParamGroup);
+
+          if (xmlStreamReader.getLocalName().contentEquals("referenceableParamGroupList"))
+            insideReferenceableParamGroupList = false;
+
+          if (insideSpectrumListFlag) {
+            if (xmlStreamReader.getLocalName().contentEquals("binaryDataArray")) {
+              if (binaryDataInfo.getArrayType().getValue().equals("MS:1000514"))
+                spectrum.setMzBinaryDataInfo(binaryDataInfo);
+              if (binaryDataInfo.getArrayType().getValue().equals("MS:1000515"))
+                spectrum.setIntensityBinaryDataInfo(binaryDataInfo);
+              insideBinaryDataArrayFlag = false;
+            }
+            if (xmlStreamReader.getLocalName().contentEquals("spectrum"))
+              spectrumList.add(spectrum);
           }
         }
-
-        if (insideSpectrumListFlag && xmlEvent.isEndElement()) {
-          EndElement endElement = xmlEvent.asEndElement();
-          if (endElement.getName().getLocalPart().equals("binaryDataArray")
-              && xmlEventReader.hasNext()) {
-            xmlEvent = xmlEventReader.nextEvent();
-            if (binaryDataInfo.getArrayType().getValue().equals("MS:1000514"))
-              spectrum.setMzBinaryDataInfo(binaryDataInfo);
-            if (binaryDataInfo.getArrayType().getValue().equals("MS:1000515"))
-              spectrum.setIntensityBinaryDataInfo(binaryDataInfo);
-
-            insideBinaryDataArrayFlag = false;
-          }
-        }
-
       }
-    } catch (IOException e) {
-      throw (new MSDKException(e));
-    } catch (XMLStreamException e) {
+
+      xmlStreamReader.close();
+    } catch (Exception e) {
       throw (new MSDKException(e));
     }
 
+    progress = 1f;
     return newRawFile;
   }
 
   /**
-   * <p>Getter for the field <code>spectrumList</code>.</p>
+   * <p>
+   * Getter for the field <code>spectrumList</code>.
+   * </p>
    *
    * @return a {@link java.util.ArrayList} object.
    */
@@ -244,7 +277,9 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   }
 
   /**
-   * <p>getScanNumber.</p>
+   * <p>
+   * getScanNumber.
+   * </p>
    *
    * @param spectrumId a {@link java.lang.String} object.
    * @return a {@link java.lang.Integer} object.
@@ -271,8 +306,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   /** {@inheritDoc} */
   @Override
   public Float getFinishedPercentage() {
-    // TODO Auto-generated method stub
-    return null;
+    return progress;
   }
 
   /** {@inheritDoc} */

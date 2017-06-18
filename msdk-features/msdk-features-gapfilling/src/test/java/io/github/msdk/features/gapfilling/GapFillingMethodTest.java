@@ -107,7 +107,7 @@ public class GapFillingMethodTest {
 
     FeatureTable featureTable1 =
         MSDKObjectBuilder.getFeatureTable("orbitrap_300-600mz-1", dataStore);
-    Sample sample = new SimpleSample("orbitrap_300-600mz-1");
+    SimpleSample sample = new SimpleSample("orbitrap_300-600mz-1");
     sample.setRawDataFile(rawFile);
 
     ChromatogramToFeatureTableMethod tableBuilder =
@@ -123,7 +123,7 @@ public class GapFillingMethodTest {
     chromatograms.remove(2);
     FeatureTable featureTable2 =
         MSDKObjectBuilder.getFeatureTable("orbitrap_300-600mz-2", dataStore);
-    Sample sample2 = new SimpleSample("orbitrap_300-600mz-2");
+    SimpleSample sample2 = new SimpleSample("orbitrap_300-600mz-2");
     sample2.setRawDataFile(rawFile);
     tableBuilder = new ChromatogramToFeatureTableMethod(chromatograms, featureTable2, sample2);
     tableBuilder.execute();
@@ -177,11 +177,11 @@ public class GapFillingMethodTest {
     //
 
     FeatureTableRow row = featureTable.getRows().get(2);
-    sample = featureTable.getSamples().get(1);
+    Sample sample1 = featureTable.getSamples().get(1);
     Sample sample0 = featureTable.getSamples().get(0);
 
     // Area
-    FeatureTableColumn<Double> columnArea = featureTable.getColumn(ColumnName.AREA, sample);
+    FeatureTableColumn<Double> columnArea = featureTable.getColumn(ColumnName.AREA, sample1);
     Assert.assertNotNull(columnArea);
     Double area = row.getData(columnArea);
     Assert.assertNotNull(area);
@@ -195,20 +195,20 @@ public class GapFillingMethodTest {
     Assert.assertEquals(area0, area, 0.0001);
 
     // Height
-    FeatureTableColumn<Float> columnHeight = featureTable.getColumn(ColumnName.HEIGHT, sample);
+    FeatureTableColumn<Float> columnHeight = featureTable.getColumn(ColumnName.HEIGHT, sample1);
     Assert.assertNotNull(columnHeight);
     Float height = row.getData(columnHeight);
     Assert.assertNotNull(height);
     Assert.assertEquals(2609394.5, height, 0.0001);
 
     // RT
-    FeatureTableColumn<Float> columnRt = featureTable.getColumn(ColumnName.RT, sample);
+    FeatureTableColumn<Float> columnRt = featureTable.getColumn(ColumnName.RT, sample1);
     Assert.assertNotNull(columnRt);
     Float rt = row.getData(columnRt);
     Assert.assertEquals(643.3532, rt, 0.0001);
 
     // m/z
-    FeatureTableColumn<Double> columnMz = featureTable.getColumn(ColumnName.MZ, sample);
+    FeatureTableColumn<Double> columnMz = featureTable.getColumn(ColumnName.MZ, sample1);
     Assert.assertNotNull(columnMz);
     Double mz = row.getData(columnMz);
     Assert.assertNotNull(mz);

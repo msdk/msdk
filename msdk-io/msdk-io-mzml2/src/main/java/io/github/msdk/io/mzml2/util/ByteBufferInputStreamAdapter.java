@@ -1,4 +1,4 @@
-package io.github.msdk.io.mzml2;
+package io.github.msdk.io.mzml2.util;
 
 import java.io.InputStream;
 

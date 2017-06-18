@@ -63,7 +63,6 @@ public class SimpleSample implements Sample {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setName(@Nonnull String name) {
     Preconditions.checkNotNull(name);
     this.name = name;
@@ -76,7 +75,6 @@ public class SimpleSample implements Sample {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setRawDataFile(@Nullable RawDataFile rawDataFile) {
     this.rawDataFile = rawDataFile;
   }
@@ -88,7 +86,6 @@ public class SimpleSample implements Sample {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setOriginalFile(@Nullable File originalFile) {
     this.originalFile = originalFile;
   }

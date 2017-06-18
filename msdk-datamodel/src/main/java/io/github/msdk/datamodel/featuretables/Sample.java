@@ -25,8 +25,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * Sample interface.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public interface Sample {
 
@@ -41,26 +39,12 @@ public interface Sample {
   String getName();
 
   /**
-   * Change the name
-   *
-   * @param name a {@link java.lang.String} object.
-   */
-  void setName(@Nonnull String name);
-
-  /**
    * Returns a raw data file or null if this sample has no associated raw data.
    *
    * @return a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    */
   @Nullable
   RawDataFile getRawDataFile();
-
-  /**
-   * Sets the raw data file reference.
-   *
-   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-   */
-  void setRawDataFile(@Nullable RawDataFile rawDataFile);
 
   /**
    * Returns the original file name and path where the file was loaded from, or null if this file
@@ -70,12 +54,5 @@ public interface Sample {
    */
   @Nullable
   File getOriginalFile();
-
-  /**
-   * Sets the original file
-   *
-   * @param originalFile a {@link java.io.File} object.
-   */
-  void setOriginalFile(@Nullable File originalFile);
 
 }
