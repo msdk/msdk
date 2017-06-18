@@ -37,7 +37,7 @@ public class MzMLFileParserTest {
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
   @Test
-  public void testFuleWithUV() throws MSDKException {
+  public void testFileWithUV() throws MSDKException {
 
     final String inputFileName = TEST_DATA_PATH + "mzML_with_UV.mzML";
     final File inputFile = new File(inputFileName);

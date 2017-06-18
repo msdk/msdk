@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml2;
+package io.github.msdk.io.mzml2.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import javax.xml.stream.XMLStreamException;
 import io.github.msdk.MSDKException;
 import it.unimi.dsi.io.ByteBufferInputStream;
 
-class MzMLFileMemoryMapper {
+public class MzMLFileMemoryMapper {
 
   /**
    * <p>mapToMemory.</p>
