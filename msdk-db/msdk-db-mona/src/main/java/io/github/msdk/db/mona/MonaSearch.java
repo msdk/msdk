@@ -44,7 +44,7 @@ public class MonaSearch implements Search, MonaConfiguration {
   /** {@inheritDoc} */
   @Override
   public MsSpectrum findSpectrumById(long id) throws IOException {
-    return new MonaSpectrum(id);
+    return  null; // new MonaSpectrum(id);
   }
 
   /**

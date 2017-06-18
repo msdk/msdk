@@ -81,6 +81,12 @@ public interface IonAnnotation {
   Float getExpectedRetentionTime();
 
   /**
+   * 
+   * @return
+   */
+  String getAnnotationId();
+
+  /**
    * <p>
    * getDescription.
    * </p>

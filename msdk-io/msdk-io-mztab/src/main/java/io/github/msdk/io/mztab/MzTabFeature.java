@@ -167,4 +167,9 @@ class MzTabFeature implements Feature, IonAnnotation {
       return smallMolecule.getReliability().getLevel();
   }
 
+  @Override
+  public String getAnnotationId() {
+    return smallMolecule.getIdentifier().toString();
+  }
+
 }
