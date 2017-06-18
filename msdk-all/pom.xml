@@ -168,18 +168,6 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-features-filtering</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-features-row-filtering</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-features-joinaligner</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -253,12 +241,6 @@
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-featdet-srmdetection</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-features-gapfilling</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
