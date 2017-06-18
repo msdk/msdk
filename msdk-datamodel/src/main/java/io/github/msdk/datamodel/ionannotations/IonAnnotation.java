@@ -27,7 +27,7 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
  * @author plusik
  * @version $Id: $Id
  */
-public interface IonAnnotation extends Comparable<IonAnnotation> {
+public interface IonAnnotation {
 
   /**
    * <p>
@@ -71,6 +71,17 @@ public interface IonAnnotation extends Comparable<IonAnnotation> {
 
   /**
    * <p>
+   * getRetentionTime.
+   * </p>
+   *
+   * @return RT
+   * @since 0.0.8
+   */
+  @Nullable
+  Float getExpectedRetentionTime();
+
+  /**
+   * <p>
    * getDescription.
    * </p>
    *
@@ -91,16 +102,6 @@ public interface IonAnnotation extends Comparable<IonAnnotation> {
 
   /**
    * <p>
-   * getAnnotationId.
-   * </p>
-   *
-   * @return The id of this annotation..
-   */
-  @Nullable
-  String getAnnotationId();
-
-  /**
-   * <p>
    * getAccessionURL.
    * </p>
    *
@@ -108,27 +109,6 @@ public interface IonAnnotation extends Comparable<IonAnnotation> {
    */
   @Nullable
   URL getAccessionURL();
-
-  /**
-   * <p>
-   * getRetentionTime.
-   * </p>
-   *
-   * @return RT
-   * @since 0.0.8
-   */
-  @Nullable
-  Float getExpectedRetentionTime();
-
-  /**
-   * <p>
-   * isNA.
-   * </p>
-   *
-   * @return True if no data is associated to this annotation.
-   */
-  @Nonnull
-  Boolean isNA();
 
   /**
    * <p>
@@ -142,26 +122,6 @@ public interface IonAnnotation extends Comparable<IonAnnotation> {
 
   /**
    * <p>
-   * getTaxId
-   * </p>
-   *
-   * @return Taxonomy id for the species associated to this annotation.
-   */
-  @Nullable
-  Integer getTaxId();
-
-  /**
-   * <p>
-   * getSpecies
-   * </p>
-   *
-   * @return Textual species description of this annotation.
-   */
-  @Nullable
-  String getSpecies();
-
-  /**
-   * <p>
    * getDatabase
    * </p>
    *
@@ -172,19 +132,6 @@ public interface IonAnnotation extends Comparable<IonAnnotation> {
 
   /**
    * <p>
-   * database version description to this annotation. Either the version of the used
-   * database if available or otherwise the date of creation. Additionally, the number of entries in
-   * the database MAY be reported in round brackets after the version in the format: {version}
-   * ({#entries} entries), for example "2011-11 (1234 entries)".
-   * </p>
-   *
-   * @return The version or date of creation of the used database.
-   */
-  @Nullable
-  String getDatabaseVersion();
-
-  /**
-   * <p>
    * getSpectraRef
    * </p>
    *
@@ -192,36 +139,6 @@ public interface IonAnnotation extends Comparable<IonAnnotation> {
    */
   @Nullable
   String getSpectraRef();
-
-  /**
-   * <p>
-   * getSearchEngine
-   * </p>
-   *
-   * @return Textual search engine description of this annotation.
-   */
-  @Nullable
-  String getSearchEngine();
-
-  /**
-   * <p>
-   * getBestSearchEngineScore
-   * </p>
-   *
-   * @return The best search engine score for this annotation.
-   */
-  @Nullable
-  Double getBestSearchEngineScore();
-
-  /**
-   * <p>
-   * getModifications
-   * </p>
-   *
-   * @return Textual description of the annotation's modifications.
-   */
-  @Nullable
-  String getModifications();
 
   /**
    * Returns the reliability of the identification. This must be reported as an integer between 1-4:

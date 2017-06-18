@@ -36,9 +36,6 @@ import io.github.msdk.util.tolerances.RTTolerance;
 /**
  * This class searches through a feature table to find hits in a local database using m/z and
  * retention time values.
- *
- * @author plusik
- * @version $Id: $Id
  */
 public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
 
@@ -75,14 +72,6 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
   public Void execute() throws MSDKException {
 
     totalFeatures = featureTable.getRows().size();
-    FeatureTableColumn<List<SimpleIonAnnotation>> ionAnnotationColumn =
-        featureTable.getColumn(ColumnName.IONANNOTATION, null);
-
-    // Create ion annotation column if it is not present in the table
-    if (ionAnnotationColumn == null) {
-      ionAnnotationColumn = MSDKObjectBuilder.getIonAnnotationFeatureTableColumn();
-      featureTable.addColumn(ionAnnotationColumn);
-    }
 
     // Loop through all features in the feature table
     for (FeatureTableRow row : featureTable.getRows()) {
