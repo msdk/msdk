@@ -14,10 +14,12 @@
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -30,6 +32,8 @@ public class SliceSparseMatrixTest {
 	
 	private static final String TEST_DATA_PATH = "src/test/resources/";
 	private static RawDataFile rawFile;
+	private static SliceSparseMatrix objSliceSparseMatrix;
+	
 	
 	
 	@BeforeClass
@@ -40,19 +44,44 @@ public class SliceSparseMatrixTest {
 	    Assert.assertTrue("Cannot read test data", inputFile.canRead());
 	    MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
 	    rawFile = importer.execute();
+	    objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
 	    Assert.assertNotNull(rawFile);
 	    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 	  }
 	
 	
 	@Test
-	public void testSliceSparseMatrix() throws MSDKException,IOException{
-		SliceSparseMatrix objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
-		MultiKeyMap slice = objSliceSparseMatrix.getSlice(30200000, 0, 208);
+	public void testGetSlice() throws MSDKException,IOException{
+		MultiKeyMap slice = objSliceSparseMatrix.getSlice(301.15106201171875, 0, 208);
 		int size = slice.size();
 		for(int i=0;i<size;i++){
-			Assert.assertTrue(slice.containsKey(new Integer(new Integer(i)),new Integer(30200000)));
+			Assert.assertTrue(slice.containsKey(new Integer(i),new Integer(30115)));
 		}
 		Assert.assertEquals(209, size);
+	}
+	
+	@Test
+	public void testFindNextMaxIntensity() throws MSDKException,IOException{
+		double intensityValues[] = {8653863.0,8628693.0,8439210.0};
+		for(int i=0;i<3;i++){
+			Assert.assertEquals(intensityValues[i], objSliceSparseMatrix.findNextMaxIntensity().intensity,0);
+		}
+	}
+	
+	@Test
+	public void testGetRetentionTimeGetIntensity() throws MSDKException,IOException{
+		MultiKeyMap slice = objSliceSparseMatrix.getSlice(301.15106201171875, 0, 208);
+		int size = slice.size();
+		List<ContinuousWaveletTransform.DataPoint> listOfDataPoint = objSliceSparseMatrix.getCWTDataPoint(slice);
+		Assert.assertNotNull(listOfDataPoint);
+	}
+	
+	@Test
+	public void testRemoveDataPoints() throws MSDKException,IOException{
+		MultiKeyMap updatedTripletMap = objSliceSparseMatrix.removeDataPoints(301.15106201171875, 0, 10);
+		for(int i=0;i<11;i++){
+			SliceSparseMatrix.SparseMatrixTriplet triplet = (SliceSparseMatrix.SparseMatrixTriplet)updatedTripletMap.get(new Integer(i),new Integer(30115));
+			Assert.assertTrue(triplet.removed);
+		}
 	}
 }
