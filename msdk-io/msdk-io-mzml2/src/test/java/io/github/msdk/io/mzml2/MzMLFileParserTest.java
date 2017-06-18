@@ -46,6 +46,7 @@ public class MzMLFileParserTest {
     RawDataFile rawFile = mzParser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, mzParser.getFinishedPercentage(), 0.0001);
+    Assert.assertEquals(27, rawFile.getScans().size());
     MzMLSpectrum spectrum = (MzMLSpectrum) rawFile.getScans().get(14);
     Assert.assertNotNull(spectrum);
     Assert.assertNotNull(spectrum.getMzValues());
