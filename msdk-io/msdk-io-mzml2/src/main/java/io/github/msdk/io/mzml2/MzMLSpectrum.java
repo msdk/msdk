@@ -14,10 +14,7 @@
 package io.github.msdk.io.mzml2;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.io.IOUtils;
 
@@ -364,32 +361,46 @@ public class MzMLSpectrum implements MsScan {
   /** {@inheritDoc} */
   @Override
   public Float getRetentionTime() {
-    if (retentionTime == null) {
-      for (MzMLCVParam param : cvParams) {
-        String accession = param.getAccession();
-        String unitAccession = param.getUnitAccession();
-        String value = param.getValue();
-        if ((accession == null) || (value == null))
-          continue;
+    if (retentionTime != null)
+      return retentionTime;
 
-        // Retention time (actually "Scan start time") MS:1000016
-        if (accession.equals(MzMLCV.cvScanStartTime)) {
-          try {
-            if ((unitAccession == null) || (unitAccession.equals(MzMLCV.cvUnitsMin1))
-                || unitAccession.equals(MzMLCV.cvUnitsMin2)) {
-              // Minutes
-              retentionTime = Float.parseFloat(value) * 60f;
-            } else {
-              // Seconds
-              retentionTime = Float.parseFloat(value);
-            }
-            return retentionTime;
-          } catch (Exception e) {
-            e.printStackTrace();
+    for (MzMLCVParam param : cvParams) {
+      String accession = param.getAccession();
+      Optional<String> unitAccession = param.getUnitAccession();
+      Optional<String> value = param.getValue();
+
+      // check accession
+      switch (accession) {
+        case MzMLCV.MS_RT_SCAN_START:
+        case MzMLCV.MS_RT_RETENTION_TIME:
+        case MzMLCV.MS_RT_RETENTION_TIME_LOCAL:
+        case MzMLCV.MS_RT_RETENTION_TIME_NORMALIZED:
+          if (!value.isPresent()) {
+            throw new IllegalStateException("For retention time cvParam the `value` must have been specified");
           }
-        }
+          if (param.getUnitAccession().isPresent()) {
+            // there was a time unit defined
+            switch (param.getUnitAccession().get()) {
+              case MzMLCV.cvUnitsMin1:
+              case MzMLCV.cvUnitsMin2:
+                retentionTime = Float.parseFloat(value.get()) * 60f;
+                break;
+              case MzMLCV.cvUnitsSec:
+                retentionTime = Float.parseFloat(value.get());
+                break;
+
+                default:
+                  throw new IllegalStateException("Unknown time unit encountered: [" + param.getUnitAccession().get() + "]");
+            }
+          } else {
+            // no time units defined, return the value as is
+            retentionTime = Float.parseFloat(value.get());
+          }
+          break;
+
+        default:
+          continue; // not a retention time parameter
       }
-      return null;
     }
     return retentionTime;
   }
@@ -425,9 +436,11 @@ public class MzMLSpectrum implements MsScan {
    */
   public String getCVValue(String accession) {
     for (MzMLCVParam cvParam : cvParams) {
-      if (cvParam.getAccession().equals(accession))
-        return cvParam.getValue();
+      if (cvParam.getAccession().equals(accession)) {
+        return cvParam.getValue().orElse(null);
+      }
     }
+    // TODO: return Optional instead? Value is not a required attribute for a CvParam
     return null;
   }
 }
