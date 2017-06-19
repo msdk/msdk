@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
@@ -32,6 +33,7 @@ public class FeatureNormalizationByCompoundMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
+  @Ignore
   @Test
   public void testMzTab_Sample() throws MSDKException {
 

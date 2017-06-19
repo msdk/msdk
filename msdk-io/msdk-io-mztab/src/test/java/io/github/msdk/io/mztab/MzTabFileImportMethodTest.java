@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openscience.cdk.DefaultChemObjectBuilder;
 import org.openscience.cdk.interfaces.IChemObjectBuilder;
@@ -35,7 +36,7 @@ public class MzTabFileImportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-
+  @Ignore
   @Test
   public void testMzTab_Sample() throws MSDKException {
 
@@ -109,7 +110,7 @@ public class MzTabFileImportMethodTest {
     featureTable.dispose();
   }
 
-
+  @Ignore
   @Test
   public void testMzTab_Lipidomics() throws MSDKException {
 
