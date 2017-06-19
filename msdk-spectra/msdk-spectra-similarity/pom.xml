@@ -6,8 +6,8 @@
 		<artifactId>msdk-spectra</artifactId>
 		<version>0.0.9-SNAPSHOT</version>
 	</parent>
-	<artifactId>msdk-spectra-comparison</artifactId>
-	<description>MSDK module for spectral comparison algorithms</description>
+	<artifactId>msdk-spectra-similarity</artifactId>
+	<description>MSDK module for calculating spectra similarity scores</description>
 
 	<dependencies>
 

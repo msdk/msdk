@@ -204,7 +204,7 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-spectra-comparison</artifactId>
+			<artifactId>msdk-spectra-similarity</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
