@@ -23,11 +23,8 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.util.tolerances.MzTolerance;
@@ -36,9 +33,6 @@ import io.github.msdk.util.tolerances.RTTolerance;
 /**
  * This class searches through a feature table to find hits in a local database using m/z and
  * retention time values.
- *
- * @author plusik
- * @version $Id: $Id
  */
 public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
 
@@ -75,14 +69,6 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
   public Void execute() throws MSDKException {
 
     totalFeatures = featureTable.getRows().size();
-    FeatureTableColumn<List<SimpleIonAnnotation>> ionAnnotationColumn =
-        featureTable.getColumn(ColumnName.IONANNOTATION, null);
-
-    // Create ion annotation column if it is not present in the table
-    if (ionAnnotationColumn == null) {
-      ionAnnotationColumn = MSDKObjectBuilder.getIonAnnotationFeatureTableColumn();
-      featureTable.addColumn(ionAnnotationColumn);
-    }
 
     // Loop through all features in the feature table
     for (FeatureTableRow row : featureTable.getRows()) {
@@ -95,7 +81,7 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
       // Row values
       Range<Double> mzRange = mzTolerance.getToleranceRange(mz);
       Range<Float> rtRange = rtTolerance.getToleranceRange(rt);
-      List<SimpleIonAnnotation> rowIonAnnotations = row.getData(ionAnnotationColumn);
+      List<SimpleIonAnnotation> rowIonAnnotations = null;
 
       // Empty rowIonAnnotations
       if (rowIonAnnotations == null)
@@ -121,24 +107,15 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
           // If first ion annotation is empty then remove it
           if (rowIonAnnotations.size() > 0) {
             IonAnnotation firstionAnnotation = rowIonAnnotations.get(0);
-            if (firstionAnnotation.isNA())
-              rowIonAnnotations.remove(0);
           }
 
-          // Only add annotation if it is not already present
-          boolean addIon = true;
-          for (SimpleIonAnnotation ionAnnotations : rowIonAnnotations) {
-            if (ionAnnotations.compareTo(ionAnnotation) == 0)
-              addIon = false;
-          }
-          if (addIon)
-            rowIonAnnotations.add(ionAnnotation);
+          rowIonAnnotations.add(ionAnnotation);
         }
 
       }
 
       // Update the ion annotations of the feature
-      row.setData(ionAnnotationColumn, rowIonAnnotations);
+      //row.setData(ionAnnotationColumn, rowIonAnnotations);
 
       if (canceled)
         return null;

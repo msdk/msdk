@@ -30,12 +30,6 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-io-csv</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-io-mzdata</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -168,18 +162,6 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-features-filtering</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-features-row-filtering</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-features-joinaligner</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -234,12 +216,6 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-featdet-chromatogramtofeaturetable</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-featdet-targeteddetection</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -259,12 +235,6 @@
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-featdet-srmdetection</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-features-gapfilling</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

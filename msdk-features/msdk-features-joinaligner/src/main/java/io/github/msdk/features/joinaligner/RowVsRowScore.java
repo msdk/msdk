@@ -14,16 +14,18 @@
 package io.github.msdk.features.joinaligner;
 
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
+import io.github.msdk.datamodel.impl.SimpleFeatureTableRow;
 
 /**
  * This class represents a score between a feature table row and an aligned feature table row
  */
 class RowVsRowScore implements Comparable<RowVsRowScore> {
 
-  private FeatureTableRow featureTableRow, alignedRow;
+  private FeatureTableRow featureTableRow;
+  private SimpleFeatureTableRow alignedRow;
   double score;
 
-  RowVsRowScore(FeatureTableRow featureTableRow, FeatureTableRow alignedRow, double mzMaxDiff,
+  RowVsRowScore(FeatureTableRow featureTableRow, SimpleFeatureTableRow alignedRow, double mzMaxDiff,
       double mzWeight, double rtMaxDiff, double rtWeight) {
 
     this.featureTableRow = featureTableRow;
@@ -59,7 +61,7 @@ class RowVsRowScore implements Comparable<RowVsRowScore> {
   /**
    * This method returns the row of aligned feature table
    */
-  FeatureTableRow getAlignedRow() {
+  SimpleFeatureTableRow getAlignedRow() {
     return alignedRow;
   }
 

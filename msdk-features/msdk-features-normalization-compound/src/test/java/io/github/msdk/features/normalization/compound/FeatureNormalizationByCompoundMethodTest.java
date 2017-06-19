@@ -23,9 +23,7 @@ import org.junit.Test;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
-import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
@@ -54,10 +52,7 @@ public class FeatureNormalizationByCompoundMethodTest {
     NormalizationType normalizationType = NormalizationType.NEAREST_STANDARD;
 
     // Normalize the Area and Height columns
-    List<FeatureTableColumn<?>> columnsToNormalize = new ArrayList<FeatureTableColumn<?>>();
     List<Sample> Samples = featureTable.getSamples();
-    columnsToNormalize.add(featureTable.getColumn(ColumnName.AREA, Samples.get(0)));
-    columnsToNormalize.add(featureTable.getColumn(ColumnName.HEIGHT, Samples.get(0)));
 
     // Set the internal standards to the first 9 rows
     List<FeatureTableRow> internalStandardRows = new ArrayList<FeatureTableRow>();
@@ -69,7 +64,7 @@ public class FeatureNormalizationByCompoundMethodTest {
     // 1. Test the normalization based on nearest standard
     FeatureNormalizationByCompoundMethod method =
         new FeatureNormalizationByCompoundMethod(featureTable, dataStore, normalizationType,
-            columnsToNormalize, internalStandardRows, mzRtWeight, " normalized");
+            internalStandardRows, mzRtWeight);
     FeatureTable normalizedFeatureTable = method.execute();
     Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
 

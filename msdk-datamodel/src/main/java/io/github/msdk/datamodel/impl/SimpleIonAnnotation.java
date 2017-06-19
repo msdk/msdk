@@ -15,7 +15,6 @@ package io.github.msdk.datamodel.impl;
 
 import java.net.URL;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.openscience.cdk.interfaces.IAtomContainer;
@@ -42,14 +41,8 @@ public class SimpleIonAnnotation implements IonAnnotation {
   private @Nullable URL accessionURL;
   private @Nullable Float expectedRT;
   private @Nullable String inchiKey;
-  private @Nullable Integer taxId;
-  private @Nullable String species;
   private @Nullable String database;
-  private @Nullable String databaseVersion;
   private @Nullable String spectraRef;
-  private @Nullable String searchEngine;
-  private @Nullable Double bestSearchEngineScore;
-  private @Nullable String modifications;
   private @Nullable Integer reliability;
 
   /** {@inheritDoc} */
@@ -182,41 +175,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
 
   /** {@inheritDoc} */
   @Override
-  public int compareTo(IonAnnotation i) {
-    int returnValue;
-
-    final String thisDescription = this.description;
-    final String thisAnnotationId = this.annotationId;
-
-    // 1. Compare description
-    if (thisDescription != null && i.getDescription() != null) {
-      returnValue = thisDescription.compareTo(i.getDescription());
-    } else if (thisDescription == null && i.getDescription() == null) {
-      returnValue = 0;
-    } else if (thisDescription == null) {
-      returnValue = 1;
-    } else {
-      returnValue = -1;
-    }
-
-    // 2. Compare annotation id
-    if (returnValue == 0) {
-      if (thisAnnotationId != null && i.getAnnotationId() != null) {
-        returnValue = thisAnnotationId.compareTo(i.getAnnotationId());
-      } else if (thisAnnotationId == null && i.getAnnotationId() == null) {
-        returnValue = 0;
-      } else if (thisAnnotationId == null) {
-        returnValue = 1;
-      } else {
-        returnValue = -1;
-      }
-    }
-
-    return returnValue;
-  }
-
-  /** {@inheritDoc} */
-  @Override
   @Nullable
   public Float getExpectedRetentionTime() {
     return expectedRT;
@@ -231,18 +189,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
     this.expectedRT = expectedRT;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  @Nonnull
-  public Boolean isNA() {
-    if (this.chemicalStructure == null & this.formula == null & this.ionType == null
-        & this.expectedMz == null & this.description == null
-        & (this.annotationId == null || this.annotationId == "") & this.accessionURL == null
-        & this.expectedRT == null)
-      return true;
-    else
-      return false;
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -260,37 +206,8 @@ public class SimpleIonAnnotation implements IonAnnotation {
     this.inchiKey = inchiKey;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  @Nullable
-  public Integer getTaxId() {
-    return taxId;
-  }
 
-  /**
-   * {@inheritDoc}
-   *
-   * @param taxId a {@link java.lang.Integer} object.
-   */
-  public void setTaxId(@Nullable Integer taxId) {
-    this.taxId = taxId;
-  }
 
-  /** {@inheritDoc} */
-  @Override
-  @Nullable
-  public String getSpecies() {
-    return species;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @param species a {@link java.lang.String} object.
-   */
-  public void setSpecies(@Nullable String species) {
-    this.species = species;
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -311,22 +228,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
   /** {@inheritDoc} */
   @Override
   @Nullable
-  public String getDatabaseVersion() {
-    return databaseVersion;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @param databaseVersion a {@link java.lang.String} object.
-   */
-  public void setDatabaseVersion(@Nullable String databaseVersion) {
-    this.databaseVersion = databaseVersion;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  @Nullable
   public String getSpectraRef() {
     return spectraRef;
   }
@@ -338,54 +239,6 @@ public class SimpleIonAnnotation implements IonAnnotation {
    */
   public void setSpectraRef(@Nullable String spectraRef) {
     this.spectraRef = spectraRef;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  @Nullable
-  public String getSearchEngine() {
-    return searchEngine;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @param searchEngine a {@link java.lang.String} object.
-   */
-  public void setSearchEngine(@Nullable String searchEngine) {
-    this.searchEngine = searchEngine;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  @Nullable
-  public Double getBestSearchEngineScore() {
-    return bestSearchEngineScore;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @param bestSearchEngineScore a {@link java.lang.Double} object.
-   */
-  public void setBestSearchEngineScore(@Nullable Double bestSearchEngineScore) {
-    this.bestSearchEngineScore = bestSearchEngineScore;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  @Nullable
-  public String getModifications() {
-    return modifications;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @param modifications a {@link java.lang.String} object.
-   */
-  public void setModifications(@Nullable String modifications) {
-    this.modifications = modifications;
   }
 
   /** {@inheritDoc} */
