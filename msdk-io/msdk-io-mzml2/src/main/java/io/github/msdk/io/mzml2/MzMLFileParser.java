@@ -66,6 +66,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   final static String TAG_SPECTRUM = "spectrum";
   final static String TAG_SPECTRUM_LIST = "spectrumList";
   final static String TAG_REF_PARAM_GROUP = "referenceableParamGroup";
+  final static String TAG_REF_PARAM_GROUP_REF = "referenceableParamGroupRef";
   final static String TAG_REF_PARAM_GROUP_LIST = "referenceableParamGroupList";
   final static String TAG_CV_PARAM = "cvParam";
   final static String TAG_BINARY = "binary";
@@ -225,9 +226,9 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                   }
 
 
-                } else if (openingTagName.contentEquals(TAG_REF_PARAM_GROUP)) {
+                } else if (openingTagName.contentEquals(TAG_REF_PARAM_GROUP_REF)) {
                   String refValue = xmlStreamReader.getAttributeValue(null, "ref").toString();
-
+                  logger.debug(refValue);
                   for (MzMLReferenceableParamGroup ref : referenceableParamGroupList) {
                     if (ref.getParamGroupName().equals(refValue)) {
                       vars.spectrum.getCVParams().addAll(ref.getReferenceableCvParams());
