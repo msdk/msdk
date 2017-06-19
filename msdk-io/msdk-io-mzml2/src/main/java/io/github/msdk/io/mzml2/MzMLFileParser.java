@@ -13,6 +13,20 @@
 
 package io.github.msdk.io.mzml2;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
@@ -22,21 +36,11 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml2.util.ByteBufferInputStreamAdapter;
 import io.github.msdk.io.mzml2.util.MzMLFileMemoryMapper;
 import it.unimi.dsi.io.ByteBufferInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.annotation.Nonnull;
-
 import javolution.text.CharArray;
 import javolution.xml.internal.stream.XMLStreamReaderImpl;
 import javolution.xml.stream.XMLStreamConstants;
 import javolution.xml.stream.XMLStreamException;
 import javolution.xml.stream.XMLStreamReader;
-import org.apache.commons.io.IOUtils;
 
 /**
  * <p>
@@ -135,10 +139,11 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
       xmlStreamReader.setInput(is, "UTF-8");
 
       Vars vars = new Vars();
+      Logger logger = LoggerFactory.getLogger(this.getClass());
 
       int eventType;
       try {
-        do {
+        loop: do {
           // check if parsing has been cancelled?
           if (canceled)
             return null;
@@ -211,18 +216,12 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
                 } else if (openingTagName.contentEquals(TAG_BINARY)) {
                   if (vars.spectrum != null) {
-                    while (xmlStreamReader.hasNext()) {
-                      xmlStreamReader.next();
-                      if (xmlStreamReader.isCharacters()) {
-                        vars.binaryDataInfo
-                            .setPosition(xmlStreamReader.getLocation().getCharacterOffset());
-                        ByteBufferInputStreamAdapter decodedIs = new ByteBufferInputStreamAdapter(
-                            is.copy(), vars.binaryDataInfo.getPosition(),
-                            vars.binaryDataInfo.getEncodedLength());
-                        System.out.println(new String(IOUtils.toByteArray(decodedIs)));
-                        break;
-                      }
-                    }
+                    vars.binaryDataInfo
+                        .setPosition(xmlStreamReader.getLocation().getCharacterOffset());
+                    ByteBufferInputStreamAdapter decodedIs = new ByteBufferInputStreamAdapter(
+                        is.copy(), vars.binaryDataInfo.getPosition(),
+                        vars.binaryDataInfo.getEncodedLength());
+                    logger.debug(new String(IOUtils.toByteArray(decodedIs)));
                   }
 
 
@@ -249,7 +248,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                 } else if (vars.binaryDataInfo.isArrayTypeAccession(accession)) {
                   vars.binaryDataInfo.setArrayType(accession);
                 } else {
-                  break; // A better approach to skip UV Scans would
+                  break loop; // A better approach to skip UV Scans would
                   // be to only break accession which define
                   // the array type and isn't either m/z or
                   // intensity values. We would have to list
@@ -298,7 +297,6 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
         } while (eventType != XMLStreamConstants.END_DOCUMENT);
       } finally {
-        // cleanup
         if (xmlStreamReader != null) {
           xmlStreamReader.close();
         }
