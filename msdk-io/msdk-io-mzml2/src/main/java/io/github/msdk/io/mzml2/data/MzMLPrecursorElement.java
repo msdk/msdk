@@ -12,6 +12,8 @@ public class MzMLPrecursorElement {
 
   public MzMLPrecursorElement(String spectrumRef) {
     this.spectrumRef = Optional.ofNullable(spectrumRef);
+    this.isolationWindow = Optional.ofNullable(null);
+    this.selectedIonList = Optional.ofNullable(null);
   }
 
   public Optional<String> getSpectrumRef() {
