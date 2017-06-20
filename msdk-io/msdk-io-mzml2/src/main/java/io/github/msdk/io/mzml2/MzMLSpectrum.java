@@ -525,17 +525,25 @@ public class MzMLSpectrum implements MsScan {
    */
   public Optional<String> getCVValue(String accession) {
     for (MzMLCVParam cvParam : cvParams) {
+      Optional<String> value;
       if (cvParam.getAccession().equals(accession)) {
-        return cvParam.getValue();
+        value = cvParam.getValue();
+        if (!value.isPresent())
+          value = Optional.ofNullable("");
+        return value;
       }
     }
     return Optional.ofNullable(null);
   }
 
   public Optional<String> getCVValue(MzMLCVGroup group, String accession) {
+    Optional<String> value;
     for (MzMLCVParam cvParam : group.getCVParams()) {
       if (cvParam.getAccession().equals(accession)) {
-        return cvParam.getValue();
+        value = cvParam.getValue();
+        if (!value.isPresent())
+          value = Optional.ofNullable("");
+        return value;
       }
     }
     return Optional.ofNullable(null);
