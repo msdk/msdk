@@ -1,17 +1,4 @@
-/*
- * (C) Copyright 2015-2016 by MSDK Development Team
- *
- * This software is dual-licensed under either
- *
- * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
- * Software Foundation
- *
- * or (per the licensee's choosing)
- *
- * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
- */
-
-package io.github.msdk.io.mzml2.data;
+package io.github.msdk.io.mzxml;
 
 import java.io.File;
 import java.util.List;
@@ -27,9 +14,9 @@ import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
-public class MzMLRawDataFile implements RawDataFile {
+public class MzXMLRawDataFile implements RawDataFile {
 
-  private static final @Nonnull FileType fileType = FileType.MZML;
+  private static final @Nonnull FileType fileType = FileType.MZXML;
 
   private final @Nonnull File sourceFile;
 
@@ -41,7 +28,7 @@ public class MzMLRawDataFile implements RawDataFile {
 
   /**
    * <p>
-   * Constructor for MzMLRawDataFile.
+   * Constructor for MzXMLRawDataFile.
    * </p>
    *
    * @param sourceFile a {@link java.io.File} object.
@@ -50,7 +37,7 @@ public class MzMLRawDataFile implements RawDataFile {
    * @param chromatograms a {@link java.util.List} object.
    */
   @SuppressWarnings("null")
-  public MzMLRawDataFile(@Nonnull File sourceFile, List<MsFunction> msFunctions,
+  public MzXMLRawDataFile(@Nonnull File sourceFile, List<MsFunction> msFunctions,
       List<MsScan> msScans, List<Chromatogram> chromatograms) {
     this.sourceFile = sourceFile;
     this.name = sourceFile.getName();
@@ -107,6 +94,5 @@ public class MzMLRawDataFile implements RawDataFile {
   /** {@inheritDoc} */
   @Override
   public void dispose() {}
-
 
 }
