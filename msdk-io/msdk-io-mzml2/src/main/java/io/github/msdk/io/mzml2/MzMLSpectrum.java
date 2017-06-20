@@ -405,8 +405,8 @@ public class MzMLSpectrum implements MsScan {
 
       for (MzMLCVGroup cvGroup : precursor.getSelectedIonList().get().getSelectedIonList()) {
         precursorMz = getCVValue(cvGroup, MzMLCV.cvPrecursorMz);
-        precursorMz =
-            Optional.ofNullable(precursorMz.orElse(getCVValue(cvGroup, MzMLCV.cvMz).get()));
+        if (!precursorMz.isPresent())
+          precursorMz = getCVValue(cvGroup, MzMLCV.cvMz);
         precursorCharge = getCVValue(cvGroup, MzMLCV.cvChargeState);
       }
 
