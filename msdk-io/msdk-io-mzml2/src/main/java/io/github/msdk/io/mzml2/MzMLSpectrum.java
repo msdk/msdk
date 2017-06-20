@@ -408,7 +408,7 @@ public class MzMLSpectrum implements MsScan {
             throw new IllegalStateException(
                 "For retention time cvParam the `value` must have been specified");
           }
-          if (param.getUnitAccession().isPresent()) {
+          if (unitAccession.isPresent()) {
             // there was a time unit defined
             switch (param.getUnitAccession().get()) {
               case MzMLCV.cvUnitsMin1:
@@ -421,7 +421,7 @@ public class MzMLSpectrum implements MsScan {
 
               default:
                 throw new IllegalStateException(
-                    "Unknown time unit encountered: [" + param.getUnitAccession().get() + "]");
+                    "Unknown time unit encountered: [" + unitAccession + "]");
             }
           } else {
             // no time units defined, return the value as is
