@@ -22,6 +22,7 @@ import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleFeatureTable;
 import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
 
@@ -48,7 +49,6 @@ public class IsotopeGrouperMethod implements MSDKMethod<FeatureTable> {
   private final @Nonnull RTTolerance rtTolerance;
   private final @Nonnull Integer maximumCharge;
   private final @Nonnull Boolean requireMonotonicShape;
-  private final @Nonnull String featureTableName;
   private final @Nonnull FeatureTable result;
 
   private boolean canceled = false;
@@ -66,22 +66,19 @@ public class IsotopeGrouperMethod implements MSDKMethod<FeatureTable> {
    * @param rtTolerance a {@link io.github.msdk.util.tolerances.RTTolerance} object.
    * @param maximumCharge a {@link java.lang.Integer} object.
    * @param requireMonotonicShape a {@link java.lang.Boolean} object.
-   * @param featureTableName a {@link java.lang.String} object.
    */
   public IsotopeGrouperMethod(@Nonnull FeatureTable featureTable, @Nonnull DataPointStore dataStore,
       @Nonnull MzTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
-      @Nonnull Integer maximumCharge, @Nonnull Boolean requireMonotonicShape,
-      @Nonnull String featureTableName) {
+      @Nonnull Integer maximumCharge, @Nonnull Boolean requireMonotonicShape) {
     this.featureTable = featureTable;
     this.dataStore = dataStore;
     this.mzTolerance = mzTolerance;
     this.rtTolerance = rtTolerance;
     this.maximumCharge = maximumCharge;
     this.requireMonotonicShape = requireMonotonicShape;
-    this.featureTableName = featureTableName;
 
     // Make a new feature table
-    result = MSDKObjectBuilder.getFeatureTable(featureTableName, dataStore);
+    result = new SimpleFeatureTable();
   }
 
   /** {@inheritDoc} */

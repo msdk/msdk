@@ -23,7 +23,6 @@ import org.junit.Test;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.db.mona.MonaSpectrum;
 
 public class MonaSpectrumTest {
 
@@ -31,7 +30,7 @@ public class MonaSpectrumTest {
 
   @Before
   public void setUp() throws Exception {
-    spectrum = new MonaSpectrum(3841762);
+    // spectrum = new MonaSpectrum(3841762);
   }
 
   @After

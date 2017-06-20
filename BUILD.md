@@ -3,7 +3,7 @@
 
 ## Prerequisities
 
-* Install GPG and generate your key pair
+* Install GPG and generate your key pair (gpg --gen-key)
 * Deploy your public GPG key to a public keyserver (e.g., pgp.mit.edu)
 * Get an account on Sonatype JIRA (https://issues.sonatype.org)
 * Setup your ~/.m2/settings.xml file using this template:
@@ -34,7 +34,7 @@
 
 # Build
 
-Use the following sequence of commands to build and release a new MSDK version.
+Use the following sequence of commands to build and deploy a new MSDK release.
 
 ```
 # Cleanup 

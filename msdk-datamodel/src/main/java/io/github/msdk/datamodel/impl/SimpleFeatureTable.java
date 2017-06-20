@@ -20,59 +20,26 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 
 /**
  * Implementation of the FeatureTable interface.
- *
- * @author plusik
- * @version $Id: $Id
  */
 public class SimpleFeatureTable implements FeatureTable {
 
-  private @Nonnull String name;
   private @Nonnull DataPointStore dataPointStore;
-  private final @Nonnull ArrayList<FeatureTableRow> featureTableRows;
-  private final @Nonnull ArrayList<FeatureTableColumn<?>> featureTableColumns;
+  private final @Nonnull ArrayList<FeatureTableRow> featureTableRows = new ArrayList<>();
+  private final @Nonnull ArrayList<Sample> featureTableSamples = new ArrayList<>();
 
-  SimpleFeatureTable(@Nonnull String name, @Nonnull DataPointStore dataPointStore) {
-    Preconditions.checkNotNull(name);
-    Preconditions.checkNotNull(dataPointStore);
-    this.name = name;
-    this.dataPointStore = dataPointStore;
-    featureTableRows = new ArrayList<FeatureTableRow>();
-    featureTableColumns = new ArrayList<FeatureTableColumn<?>>();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public @Nonnull String getName() {
-    return name;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setName(@Nonnull String name) {
-    Preconditions.checkNotNull(name);
-    this.name = name;
-  }
-
-  /** {@inheritDoc} */
   @Override
   public @Nonnull List<FeatureTableRow> getRows() {
-    List<FeatureTableRow> featureTableRowCopy = ImmutableList.copyOf(featureTableRows);
-    return featureTableRowCopy;
+    return ImmutableList.copyOf(featureTableRows);
   }
 
-  /** {@inheritDoc} */
-  @Override
   public void addRow(@Nonnull FeatureTableRow row) {
     Preconditions.checkNotNull(row);
     synchronized (featureTableRows) {
@@ -80,8 +47,6 @@ public class SimpleFeatureTable implements FeatureTable {
     }
   }
 
-  /** {@inheritDoc} */
-  @Override
   public void removeRow(@Nonnull FeatureTableRow row) {
     Preconditions.checkNotNull(row);
     synchronized (featureTableRows) {
@@ -89,76 +54,19 @@ public class SimpleFeatureTable implements FeatureTable {
     }
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public @Nonnull List<FeatureTableColumn<?>> getColumns() {
-    List<FeatureTableColumn<?>> featureTableColumnsCopy = ImmutableList.copyOf(featureTableColumns);
-    return featureTableColumnsCopy;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public <DATATYPE> FeatureTableColumn<DATATYPE> getColumn(@Nonnull String columnName,
-      Sample sample, Class<? extends DATATYPE> dtClass) {
-    for (FeatureTableColumn<?> column : featureTableColumns) {
-      if (column.getName().equals(columnName)) {
-
-        if (column.getSample() == null) {
-          if (sample == null)
-            return (FeatureTableColumn<DATATYPE>) column;
-        } else if (column.getSample().equals(sample)) {
-          return (FeatureTableColumn<DATATYPE>) column;
-        }
-
-      }
-
-    }
-    return null;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public <DATATYPE> FeatureTableColumn<DATATYPE> getColumn(@Nonnull ColumnName columnName,
-      Sample sample) {
-    FeatureTableColumn<?> column =
-        getColumn(columnName.getName(), sample, columnName.getDataTypeClass());
-    if (column != null) {
-      return (FeatureTableColumn<DATATYPE>) column;
-    }
-    return null;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void addColumn(@Nonnull FeatureTableColumn<?> col) {
-    Preconditions.checkNotNull(col);
-    synchronized (featureTableColumns) {
-      featureTableColumns.add(col);
-    }
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void removeColumn(@Nonnull FeatureTableColumn<?> col) {
-    Preconditions.checkNotNull(col);
-    synchronized (featureTableColumns) {
-      featureTableColumns.remove(col);
-    }
-  }
 
   /** {@inheritDoc} */
   @Override
   public @Nonnull List<Sample> getSamples() {
-    ArrayList<Sample> sampleList = new ArrayList<Sample>();
-    synchronized (featureTableColumns) {
-      for (FeatureTableColumn<?> col : featureTableColumns) {
-        Sample s = col.getSample();
-        if (s != null && !sampleList.contains(s))
-          sampleList.add(s);
-      }
-    }
-    return ImmutableList.copyOf(sampleList);
+    return ImmutableList.copyOf(featureTableSamples);
   }
+  
+  /** {@inheritDoc} */
+  public @Nonnull void setSamples(List<Sample> samples) {
+    this.featureTableSamples.clear();
+    this.featureTableSamples.addAll(samples);
+  }
+
 
   /** {@inheritDoc} */
   @Override
@@ -166,17 +74,5 @@ public class SimpleFeatureTable implements FeatureTable {
     dataPointStore.dispose();
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public List<FeatureTableRow> getRowsInsideRange(Range<Float> rtRange, Range<Double> mzRange) {
-    List<FeatureTableRow> result = new ArrayList<FeatureTableRow>();
-    for (FeatureTableRow row : featureTableRows) {
-      Float rowRT = row.getRT();
-      if ((rowRT != null) && rtRange.contains(rowRT)
-          && mzRange.contains(row.getMz()))
-        result.add(row);
-    }
-    return result;
-  }
 
 }

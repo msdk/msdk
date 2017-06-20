@@ -22,8 +22,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.db.mona.MonaSearch;
-import io.github.msdk.db.mona.MonaSpectrum;
 import io.github.msdk.id.Search;
 
 /**
@@ -59,16 +57,6 @@ public class MonaSearchTest {
 
     Search search = new MonaSearch();
 
-    Iterator<MsSpectrum> result = search.findSimilarSpectra(new MonaSpectrum(TEST_ID), 900);
-
-    int count = 0;
-
-    while (result.hasNext()) {
-      result.next();
-      count++;
-    }
-
-    assertTrue(count != 0);
   }
 
   @Ignore("Ignored because MoNA API is throwing HTTP 500 error")

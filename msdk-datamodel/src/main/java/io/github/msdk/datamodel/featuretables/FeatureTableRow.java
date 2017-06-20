@@ -15,15 +15,12 @@ package io.github.msdk.datamodel.featuretables;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import io.github.msdk.MSDKConstraintViolationException;
+import io.github.msdk.datamodel.features.Feature;
 
 /**
  * <p>
  * FeatureTableRow interface.
  * </p>
- *
- * @author plusik
- * @version $Id: $Id
  */
 public interface FeatureTableRow {
 
@@ -37,14 +34,6 @@ public interface FeatureTableRow {
   FeatureTable getFeatureTable();
 
   /**
-   * Shortcut to return the ID column value of this row
-   *
-   * @return the ID column value of this row.
-   */
-  @Nonnull
-  Integer getId();
-
-  /**
    * Shortcut to return the m/z column value of this row
    *
    * @return the m/z column value of this row.
@@ -56,47 +45,30 @@ public interface FeatureTableRow {
    * Shortcut to return the m/z column value of this row
    *
    * @return the m/z column value of this row.
-   * @since 0.0.8
    */
   @Nullable
   Float getRT();
-
+  
   /**
-   * Return data assigned to this row
+   * Return the charge of this row
    *
-   * @param <DATATYPE> Generic data type of the column.
-   * @param column the column to retrieve data from this row.
-   * @return a DATATYPE object.
+   * @return charge
    */
   @Nullable
-  <DATATYPE> DATATYPE getData(@Nonnull FeatureTableColumn<? extends DATATYPE> column);
+  Integer getCharge();
 
   /**
-   * Return data assigned to this row
+   * Return feature assigned to this row
    *
-   * @param <DATATYPE> Generic data type of the column.
-   * @param column a {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} object.
-   * @param data a DATATYPE object.
    */
-  <DATATYPE> void setData(FeatureTableColumn<? extends DATATYPE> column, @Nonnull DATATYPE data);
+  @Nullable
+  Feature getFeature(@Nonnull Sample sample);
 
   /**
-   * Copy data from a source column value to a target column in the given target row. The copy
-   * operation is performed by the passed in {@code featureTableDataConverter}. See
-   * {@link io.github.msdk.datamodel.featuretables.FeatureTableDataConverter} for the default implementation.
+   * Return feature assigned to this row
    *
-   * @param <DATATYPE> the generic element data type.
-   * @param sourceColumn the source column from where to copy.
-   * @param targetRow the target row to received the data.
-   * @param targetColumn the target column to which to copy.
-   * @param featureTableDataConverter the data converter, may perform additional operations on the
-   *        data.
-   * @throws io.github.msdk.MSDKConstraintViolationException if the provided target column data type
-   *         is not the same class or a compatible subclass as the source column data type.
    */
-  <DATATYPE> void copyData(FeatureTableColumn<? extends DATATYPE> sourceColumn,
-      FeatureTableRow targetRow, FeatureTableColumn<? extends DATATYPE> targetColumn,
-      FeatureTableDataConverter<DATATYPE> featureTableDataConverter)
-      throws MSDKConstraintViolationException;
+  @Nullable
+  Feature getFeature(@Nonnull Integer index);
 
 }
