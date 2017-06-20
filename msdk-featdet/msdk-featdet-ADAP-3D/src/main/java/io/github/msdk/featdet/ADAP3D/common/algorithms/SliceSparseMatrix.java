@@ -165,7 +165,6 @@ public class SliceSparseMatrix {
 			}
 			
 		}
-		filterListOfTriplet.size();
 	}
 		
 	 /**
@@ -316,6 +315,15 @@ public class SliceSparseMatrix {
 	   */
 	public void setMaxIntensityIndexZero(){
 		maxIntensityIndex = 0;
+	}
+	
+	/**
+	   * <p>
+	   * This method returns filterListOfTriplet
+	   * </p>
+	   */
+	public List<SparseMatrixTriplet> getScanMatrix(){
+		return filterListOfTriplet;
 	}
 
 }
