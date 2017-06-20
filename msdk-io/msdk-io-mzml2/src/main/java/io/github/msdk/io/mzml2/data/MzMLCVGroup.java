@@ -9,7 +9,7 @@ public class MzMLCVGroup {
     this.cvParams = new ArrayList<>();
   }
 
-  public ArrayList<MzMLCVParam> getReferenceableCvParams() {
+  public ArrayList<MzMLCVParam> getCVParams() {
     return cvParams;
   }
 

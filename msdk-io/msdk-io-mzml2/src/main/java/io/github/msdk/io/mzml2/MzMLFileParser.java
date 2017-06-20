@@ -308,7 +308,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                   logger.debug(refValue);
                   for (MzMLReferenceableParamGroup ref : referenceableParamGroupList) {
                     if (ref.getParamGroupName().equals(refValue)) {
-                      vars.spectrum.getCVParams().addAll(ref.getReferenceableCvParams());
+                      vars.spectrum.getCVParams().addAll(ref.getCVParams());
                       break;
                     }
                   }

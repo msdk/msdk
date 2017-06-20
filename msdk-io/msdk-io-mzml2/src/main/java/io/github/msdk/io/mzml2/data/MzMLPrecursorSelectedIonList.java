@@ -9,7 +9,7 @@ public class MzMLPrecursorSelectedIonList {
     this.selectedIonList = new ArrayList<>();
   }
 
-  public ArrayList<MzMLPrecursorSelectedIon> getPrecursorList() {
+  public ArrayList<MzMLPrecursorSelectedIon> getSelectedIonList() {
     return selectedIonList;
   }
 
