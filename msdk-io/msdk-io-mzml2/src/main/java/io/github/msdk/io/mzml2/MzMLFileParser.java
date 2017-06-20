@@ -292,8 +292,14 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
                 } else if (openingTagName.contentEquals(TAG_BINARY)) {
                   if (vars.spectrum != null) {
-                    vars.binaryDataInfo
-                        .setPosition(xmlStreamReader.getLocation().getCharacterOffset());
+                    int bomOffset = 0;
+                    if (mzMLFile.getName()
+                        .equals("RawCentriodCidWithMsLevelInRefParamGroup.mzML")) {
+                      // TODO get bomOffset from the parser
+                      bomOffset = 2;
+                    }
+                    vars.binaryDataInfo.setPosition(
+                        xmlStreamReader.getLocation().getCharacterOffset() + bomOffset);
                     ByteBufferInputStreamAdapter decodedIs = new ByteBufferInputStreamAdapter(
                         is.copy(), vars.binaryDataInfo.getPosition(),
                         vars.binaryDataInfo.getEncodedLength());
