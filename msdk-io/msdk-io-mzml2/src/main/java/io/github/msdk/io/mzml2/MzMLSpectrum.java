@@ -394,7 +394,6 @@ public class MzMLSpectrum implements MsScan {
     List<IsolationInfo> isolations = new ArrayList<>();
 
     for (MzMLPrecursorElement precursor : precursorList.getPrecursorElements()) {
-
       Optional<String> precursorMz = Optional.ofNullable(null);
       Optional<String> precursorCharge = Optional.ofNullable(null);
       Optional<String> isolationWindowTarget = Optional.ofNullable(null);
@@ -406,6 +405,8 @@ public class MzMLSpectrum implements MsScan {
 
       for (MzMLCVGroup cvGroup : precursor.getSelectedIonList().get().getSelectedIonList()) {
         precursorMz = getCVValue(cvGroup, MzMLCV.cvPrecursorMz);
+        precursorMz =
+            Optional.ofNullable(precursorMz.orElse(getCVValue(cvGroup, MzMLCV.cvMz).get()));
         precursorCharge = getCVValue(cvGroup, MzMLCV.cvChargeState);
       }
 
@@ -415,6 +416,7 @@ public class MzMLSpectrum implements MsScan {
         isolationWindowLower = getCVValue(isolationWindow, MzMLCV.cvIsolationWindowLowerOffset);
         isolationWindowUpper = getCVValue(isolationWindow, MzMLCV.cvIsolationWindowUpperOffset);
       }
+
 
       if (precursorMz.isPresent()) {
         if (!isolationWindowTarget.isPresent())

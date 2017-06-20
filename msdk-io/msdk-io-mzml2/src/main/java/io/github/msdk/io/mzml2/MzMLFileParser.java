@@ -238,7 +238,6 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
               }
 
               if (vars.insideSelectedIonList) {
-                logger.debug("Inside Selected Ion List");
                 if (openingTagName.contentEquals(TAG_SELECTED_ION)) {
                   vars.selectedIon = new MzMLPrecursorSelectedIon();
 
@@ -251,7 +250,6 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
               }
 
               if (vars.insideActivation) {
-                logger.debug("Inside Activation");
                 if (openingTagName.contentEquals(TAG_CV_PARAM)) {
                   MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
                   vars.activation.addCVParam(cvParam);
@@ -269,7 +267,6 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                   vars.spectrum.setId(id);
                   vars.spectrum.setScanNumber(getScanNumber(id));
                   vars.spectrum.setByteBufferInputStream(is);
-                  vars.precursorList = new MzMLPrecursorList();
 
 
                 } else if (openingTagName.contentEquals(TAG_BINARY_DATA_ARRAY)) {
@@ -354,8 +351,10 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                   vars.insidePrecursorList = false;
                   break;
                 case TAG_ISOLATION_WINDOW:
-                  vars.precursor.setIsolationWindow(vars.isolationWindow);
-                  vars.insideIsolationWindow = false;
+                  if (vars.insidePrecursorList) {
+                    vars.precursor.setIsolationWindow(vars.isolationWindow);
+                    vars.insideIsolationWindow = false;
+                  }
                   break;
                 case TAG_SELECTED_ION_LIST:
                   vars.precursor.setSelectedIonList(vars.selectedIonList);
@@ -368,34 +367,26 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                   vars.selectedIonList.addSelectedIon(vars.selectedIon);
                   break;
                 case TAG_PRECURSOR:
-                  if (!vars.precursor.getSpectrumRef().isPresent()) {
+                  if (vars.insidePrecursorList) {
                     vars.spectrum.getPrecursorList().addPrecursor(vars.precursor);
                     break;
-                  } else {
-                    for (MsScan s : spectrumList) {
-                      if (((MzMLSpectrum) s).getId().equals(vars.precursor.getSpectrumRef())) {
-                        ((MzMLSpectrum) s).getPrecursorList().addPrecursor(vars.precursor);
-                        break;
-                      }
-                    }
-
                   }
-                  if (vars.insideSpectrumList) {
-                    switch (closingTagName.toString()) {
-                      case TAG_BINARY_DATA_ARRAY:
-                        if ("MS:1000514".equals(vars.binaryDataInfo.getArrayType().getValue())) {
-                          vars.spectrum.setMzBinaryDataInfo(vars.binaryDataInfo);
-                        }
-                        if ("MS:1000515".equals(vars.binaryDataInfo.getArrayType().getValue())) {
-                          vars.spectrum.setIntensityBinaryDataInfo(vars.binaryDataInfo);
-                        }
-                        vars.insideBinaryDataArrayFlag = false;
-                        break;
-                      case TAG_SPECTRUM:
-                        spectrumList.add(vars.spectrum);
+              }
+              if (vars.insideSpectrumList) {
+                switch (closingTagName.toString()) {
+                  case TAG_BINARY_DATA_ARRAY:
+                    if ("MS:1000514".equals(vars.binaryDataInfo.getArrayType().getValue())) {
+                      vars.spectrum.setMzBinaryDataInfo(vars.binaryDataInfo);
                     }
+                    if ("MS:1000515".equals(vars.binaryDataInfo.getArrayType().getValue())) {
+                      vars.spectrum.setIntensityBinaryDataInfo(vars.binaryDataInfo);
+                    }
+                    vars.insideBinaryDataArrayFlag = false;
+                    break;
+                  case TAG_SPECTRUM:
+                    spectrumList.add(vars.spectrum);
+                }
 
-                  }
               }
 
               break;
@@ -507,7 +498,6 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
     MzMLBinaryDataInfo binaryDataInfo;
     MzMLReferenceableParamGroup referenceableParamGroup;
     MzMLPrecursorElement precursor;
-    MzMLPrecursorList precursorList;
     MzMLPrecursorIsolationWindow isolationWindow;
     MzMLPrecursorSelectedIonList selectedIonList;
     MzMLPrecursorSelectedIon selectedIon;
@@ -526,7 +516,6 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
       binaryDataInfo = null;
       referenceableParamGroup = null;
       precursor = null;
-      precursorList = null;
       isolationWindow = null;
       selectedIonList = null;
       selectedIon = null;
