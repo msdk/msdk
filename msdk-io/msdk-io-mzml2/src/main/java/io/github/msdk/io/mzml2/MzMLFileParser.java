@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +41,6 @@ import io.github.msdk.io.mzml2.data.MzMLPrecursorSelectedIon;
 import io.github.msdk.io.mzml2.data.MzMLPrecursorSelectedIonList;
 import io.github.msdk.io.mzml2.data.MzMLRawDataFile;
 import io.github.msdk.io.mzml2.data.MzMLReferenceableParamGroup;
-import io.github.msdk.io.mzml2.util.ByteBufferInputStreamAdapter;
 import io.github.msdk.io.mzml2.util.MzMLFileMemoryMapper;
 import io.github.msdk.io.mzml2.util.XMLTagsTracker;
 import it.unimi.dsi.io.ByteBufferInputStream;
@@ -68,6 +66,8 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private Integer lastScanNumber = 0;
   private volatile boolean canceled;
   private Float progress;
+  private int approxProgress;
+  Logger logger;
 
   final static String ATTR_ACCESSION = "accession";
   final static String ATTR_VALUE = "value";
@@ -124,6 +124,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
     this.referenceableParamGroupList = new ArrayList<>();
     this.canceled = false;
     this.progress = 0f;
+    this.logger = LoggerFactory.getLogger(this.getClass());
   }
 
   /**
@@ -137,8 +138,11 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   public MzMLRawDataFile execute() throws MSDKException {
 
     try {
+      logger.info("Began parsing file: " + mzMLFile.getAbsolutePath());
+
       MzMLFileMemoryMapper mapper = new MzMLFileMemoryMapper();
       ByteBufferInputStream is = mapper.mapToMemory(mzMLFile);
+      logger.info("File mapped to memory.");
 
       List<Chromatogram> chromatogramsList = new ArrayList<>();
       List<MsFunction> msFunctionsList = new ArrayList<>();
@@ -148,17 +152,14 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
           new MzMLRawDataFile(mzMLFile, msFunctionsList, spectrumList, chromatogramsList);
       this.newRawFile = newRawFile;
 
-      // XMLInputFactory xmlInputFactory = OSGiServices.getXMLInputFactory();
-      // XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(is);
-
       // It's ok to directly create this particular reader, this class is `public final`
       // and we precisely want that fast UFT-8 reader implementation
       final XMLStreamReaderImpl xmlStreamReader = new XMLStreamReaderImpl();
       xmlStreamReader.setInput(is, "UTF-8");
 
       Vars vars = new Vars();
-      Logger logger = LoggerFactory.getLogger(this.getClass());
       XMLTagsTracker tagsTracker = new XMLTagsTracker();
+      approxProgress = 0;
 
       int eventType;
       try {
@@ -168,6 +169,14 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
             return null;
 
           eventType = xmlStreamReader.next();
+
+          progress = ((float) xmlStreamReader.getLocation().getCharacterOffset() / is.length());
+
+          // Log progress after every 10% completion
+          if ((int) (progress * 100) > approxProgress + 10) {
+            approxProgress = (int) (progress * 10) * 10;
+            logger.info("Parsing in progress... " + approxProgress + "% completed");
+          }
 
           switch (eventType) {
             case XMLStreamConstants.START_ELEMENT:
@@ -381,6 +390,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
         }
       }
       progress = 1f;
+      logger.info("Parsing Complete");
     } catch (IOException | XMLStreamException | javax.xml.stream.XMLStreamException e) {
       throw (new MSDKException(e));
     }
