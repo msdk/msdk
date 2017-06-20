@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openscience.cdk.DefaultChemObjectBuilder;
 import org.openscience.cdk.interfaces.IChemObjectBuilder;
@@ -36,6 +37,7 @@ public class MzTabFileExportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
+  @Ignore
   @Test
   public void testMzTab_Sample() throws MSDKException, IOException {
 
