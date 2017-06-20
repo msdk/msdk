@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml2;
+package io.github.msdk.io.mzml2.data;
 
 import java.io.File;
 import java.util.List;
@@ -27,7 +27,7 @@ import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
-class MzMLRawDataFile implements RawDataFile {
+public class MzMLRawDataFile implements RawDataFile {
 
   private static final @Nonnull FileType fileType = FileType.MZML;
 

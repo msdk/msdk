@@ -24,10 +24,13 @@ import uk.ac.ebi.jmzml.model.mzml.CVParam;
  * @author plusik
  * @version $Id: $Id
  */
-public class MzMLCV {
+class MzMLCV {
 
   // Scan start time
-  static final String cvScanStartTime = "MS:1000016";
+  static final String MS_RT_SCAN_START = "MS:1000016"; // "scan start time"
+  static final String MS_RT_RETENTION_TIME = "MS:1000894"; // "retention time"
+  static final String MS_RT_RETENTION_TIME_LOCAL = "MS:1000895"; // "local retention time"
+  static final String MS_RT_RETENTION_TIME_NORMALIZED = "MS:1000896"; // "normalized retention time"
 
   // MS level
   static final String cvMSLevel = "MS:1000511";
@@ -72,14 +75,14 @@ public class MzMLCV {
     profileCvParam.setAccession(cvProfileSpectrum);
     profileCvParam.setName("profile spectrum");
   }
-  
+
   // Total Ion Current
   static final String cvTIC = "MS:1000285";
-  
+
   // m/z range
   static final String cvLowestMz = "MS:1000528";
   static final String cvHighestMz = "MS:1000527";
-  
+
   // Scan window range
 
   static final String cvScanWindowUpperLimit = "MS:1000500";
