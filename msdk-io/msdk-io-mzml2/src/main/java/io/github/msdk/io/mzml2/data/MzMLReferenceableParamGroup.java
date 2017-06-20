@@ -11,18 +11,14 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml2;
+package io.github.msdk.io.mzml2.data;
 
-import java.util.ArrayList;
-
-class MzMLReferenceableParamGroup {
+public class MzMLReferenceableParamGroup extends MzMLCVGroup {
 
   private String paramGroupName;
-  private ArrayList<MzMLCVParam> cvParams;
 
   public MzMLReferenceableParamGroup(String paramGroupName) {
     this.paramGroupName = paramGroupName;
-    this.cvParams = new ArrayList<>();
   }
 
   public String getParamGroupName() {
@@ -31,14 +27,6 @@ class MzMLReferenceableParamGroup {
 
   public void setParamGroupName(String paramGroupName) {
     this.paramGroupName = paramGroupName;
-  }
-
-  public ArrayList<MzMLCVParam> getReferenceableCvParams() {
-    return cvParams;
-  }
-
-  public void addReferenceableCvParam(MzMLCVParam cvParam) {
-    cvParams.add(cvParam);
   }
 
 }

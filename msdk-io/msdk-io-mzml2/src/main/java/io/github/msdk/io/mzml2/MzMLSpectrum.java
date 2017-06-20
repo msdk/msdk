@@ -14,7 +14,11 @@
 package io.github.msdk.io.mzml2;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 
@@ -31,6 +35,10 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
+import io.github.msdk.io.mzml2.data.MzMLCVParam;
+import io.github.msdk.io.mzml2.data.MzMLPrecursorList;
+import io.github.msdk.io.mzml2.data.MzMLRawDataFile;
 import io.github.msdk.io.mzml2.util.ByteBufferInputStreamAdapter;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.MsSpectrumUtil;
@@ -38,13 +46,16 @@ import io.github.msdk.util.tolerances.MzTolerance;
 import it.unimi.dsi.io.ByteBufferInputStream;
 
 /**
- * <p>MzMLSpectrum class.</p>
+ * <p>
+ * MzMLSpectrum class.
+ * </p>
  *
  * @author plusik
  * @version $Id: $Id
  */
 public class MzMLSpectrum implements MsScan {
   private ArrayList<MzMLCVParam> cvParams;
+  private MzMLPrecursorList precursorList;
   private MzMLBinaryDataInfo mzBinaryDataInfo;
   private MzMLBinaryDataInfo intensityBinaryDataInfo;
   private ByteBufferInputStream mappedByteBufferInputStream;
@@ -59,12 +70,15 @@ public class MzMLSpectrum implements MsScan {
   private Range<Double> mzScanWindowRange;
 
   /**
-   * <p>Constructor for MzMLSpectrum.</p>
+   * <p>
+   * Constructor for MzMLSpectrum.
+   * </p>
    *
-   * @param dataFile a {@link io.github.msdk.io.mzml2.MzMLRawDataFile} object.
+   * @param dataFile a {@link io.github.msdk.io.mzml2.data.MzMLRawDataFile} object.
    */
   public MzMLSpectrum(MzMLRawDataFile dataFile) {
     this.cvParams = new ArrayList<>();
+    this.precursorList = new MzMLPrecursorList();
     this.dataFile = dataFile;
     this.spectrumType = null;
     this.tic = null;
@@ -75,7 +89,9 @@ public class MzMLSpectrum implements MsScan {
   }
 
   /**
-   * <p>getCVParams.</p>
+   * <p>
+   * getCVParams.
+   * </p>
    *
    * @return a {@link java.util.ArrayList} object.
    */
@@ -84,43 +100,54 @@ public class MzMLSpectrum implements MsScan {
   }
 
   /**
-   * <p>Getter for the field <code>mzBinaryDataInfo</code>.</p>
+   * <p>
+   * Getter for the field <code>mzBinaryDataInfo</code>.
+   * </p>
    *
-   * @return a {@link io.github.msdk.io.mzml2.MzMLBinaryDataInfo} object.
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo} object.
    */
   public MzMLBinaryDataInfo getMzBinaryDataInfo() {
     return mzBinaryDataInfo;
   }
 
   /**
-   * <p>Setter for the field <code>mzBinaryDataInfo</code>.</p>
+   * <p>
+   * Setter for the field <code>mzBinaryDataInfo</code>.
+   * </p>
    *
-   * @param mzBinaryDataInfo a {@link io.github.msdk.io.mzml2.MzMLBinaryDataInfo} object.
+   * @param mzBinaryDataInfo a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo} object.
    */
   public void setMzBinaryDataInfo(MzMLBinaryDataInfo mzBinaryDataInfo) {
     this.mzBinaryDataInfo = mzBinaryDataInfo;
   }
 
   /**
-   * <p>Getter for the field <code>intensityBinaryDataInfo</code>.</p>
+   * <p>
+   * Getter for the field <code>intensityBinaryDataInfo</code>.
+   * </p>
    *
-   * @return a {@link io.github.msdk.io.mzml2.MzMLBinaryDataInfo} object.
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo} object.
    */
   public MzMLBinaryDataInfo getIntensityBinaryDataInfo() {
     return intensityBinaryDataInfo;
   }
 
   /**
-   * <p>Setter for the field <code>intensityBinaryDataInfo</code>.</p>
+   * <p>
+   * Setter for the field <code>intensityBinaryDataInfo</code>.
+   * </p>
    *
-   * @param intensityBinaryDataInfo a {@link io.github.msdk.io.mzml2.MzMLBinaryDataInfo} object.
+   * @param intensityBinaryDataInfo a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo}
+   *        object.
    */
   public void setIntensityBinaryDataInfo(MzMLBinaryDataInfo intensityBinaryDataInfo) {
     this.intensityBinaryDataInfo = intensityBinaryDataInfo;
   }
 
   /**
-   * <p>getByteBufferInputStream.</p>
+   * <p>
+   * getByteBufferInputStream.
+   * </p>
    *
    * @return a {@link it.unimi.dsi.io.ByteBufferInputStream} object.
    */
@@ -129,7 +156,9 @@ public class MzMLSpectrum implements MsScan {
   }
 
   /**
-   * <p>setByteBufferInputStream.</p>
+   * <p>
+   * setByteBufferInputStream.
+   * </p>
    *
    * @param mappedByteBufferInputStream a {@link it.unimi.dsi.io.ByteBufferInputStream} object.
    */
@@ -376,7 +405,8 @@ public class MzMLSpectrum implements MsScan {
         case MzMLCV.MS_RT_RETENTION_TIME_LOCAL:
         case MzMLCV.MS_RT_RETENTION_TIME_NORMALIZED:
           if (!value.isPresent()) {
-            throw new IllegalStateException("For retention time cvParam the `value` must have been specified");
+            throw new IllegalStateException(
+                "For retention time cvParam the `value` must have been specified");
           }
           if (param.getUnitAccession().isPresent()) {
             // there was a time unit defined
@@ -389,8 +419,9 @@ public class MzMLSpectrum implements MsScan {
                 retentionTime = Float.parseFloat(value.get());
                 break;
 
-                default:
-                  throw new IllegalStateException("Unknown time unit encountered: [" + param.getUnitAccession().get() + "]");
+              default:
+                throw new IllegalStateException(
+                    "Unknown time unit encountered: [" + param.getUnitAccession().get() + "]");
             }
           } else {
             // no time units defined, return the value as is
@@ -412,7 +443,9 @@ public class MzMLSpectrum implements MsScan {
   }
 
   /**
-   * <p>Getter for the field <code>id</code>.</p>
+   * <p>
+   * Getter for the field <code>id</code>.
+   * </p>
    *
    * @return a {@link java.lang.String} object.
    */
@@ -429,7 +462,9 @@ public class MzMLSpectrum implements MsScan {
   }
 
   /**
-   * <p>getCVValue.</p>
+   * <p>
+   * getCVValue.
+   * </p>
    *
    * @param accession a {@link java.lang.String} object.
    * @return a {@link java.lang.String} object.
@@ -443,4 +478,9 @@ public class MzMLSpectrum implements MsScan {
     // TODO: return Optional instead? Value is not a required attribute for a CvParam
     return null;
   }
+
+  public MzMLPrecursorList getPrecursorList() {
+    return precursorList;
+  }
+
 }

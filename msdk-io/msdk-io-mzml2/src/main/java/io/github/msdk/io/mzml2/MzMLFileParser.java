@@ -33,6 +33,16 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
+import io.github.msdk.io.mzml2.data.MzMLCVParam;
+import io.github.msdk.io.mzml2.data.MzMLPrecursorActivation;
+import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
+import io.github.msdk.io.mzml2.data.MzMLPrecursorIsolationWindow;
+import io.github.msdk.io.mzml2.data.MzMLPrecursorList;
+import io.github.msdk.io.mzml2.data.MzMLPrecursorSelectedIon;
+import io.github.msdk.io.mzml2.data.MzMLPrecursorSelectedIonList;
+import io.github.msdk.io.mzml2.data.MzMLRawDataFile;
+import io.github.msdk.io.mzml2.data.MzMLReferenceableParamGroup;
 import io.github.msdk.io.mzml2.util.ByteBufferInputStreamAdapter;
 import io.github.msdk.io.mzml2.util.MzMLFileMemoryMapper;
 import it.unimi.dsi.io.ByteBufferInputStream;
@@ -71,6 +81,13 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   final static String TAG_CV_PARAM = "cvParam";
   final static String TAG_BINARY = "binary";
   final static String TAG_BINARY_DATA_ARRAY = "binaryDataArray";
+  final static String TAG_PRECURSOR = "precursor";
+  final static String TAG_PRECURSOR_LIST = "precursorList";
+  final static String TAG_ISOLATION_WINDOW = "isolationWindow";
+  final static String TAG_SELECTED_ION_LIST = "selectedIonList";
+  final static String TAG_SELECTED_ION = "selectedIon";
+  final static String TAG_ACTIVATION = "activation";
+
 
   /**
    * <p>
@@ -163,6 +180,11 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
               } else if (openingTagName.contentEquals(TAG_REF_PARAM_GROUP_LIST)) {
                 vars.insideReferenceableParamGroupList = true;
                 continue;
+
+              } else if (openingTagName.contentEquals(TAG_PRECURSOR_LIST)) {
+                vars.insidePrecursorList = true;
+                continue;
+
               }
 
               if (vars.insideReferenceableParamGroupList) {
@@ -177,7 +199,61 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
                 } else if (openingTagName.contentEquals(TAG_CV_PARAM)) {
                   MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
-                  vars.referenceableParamGroup.addReferenceableCvParam(cvParam);
+                  vars.referenceableParamGroup.addCVParam(cvParam);
+
+                }
+                continue;
+              }
+
+              if (vars.insidePrecursorList) {
+
+                if (openingTagName.contentEquals(TAG_PRECURSOR)) {
+                  final CharArray spectrumRef =
+                      xmlStreamReader.getAttributeValue(null, "spectrumRef");
+                  String spectrumRefString = spectrumRef == null ? null : spectrumRef.toString();
+                  vars.precursor = new MzMLPrecursorElement(spectrumRefString);
+
+                } else if (openingTagName.contentEquals(TAG_ISOLATION_WINDOW)) {
+                  vars.insideIsolationWindow = true;
+                  vars.isolationWindow = new MzMLPrecursorIsolationWindow();
+
+                } else if (openingTagName.contentEquals(TAG_SELECTED_ION_LIST)) {
+                  vars.insidePrecursorList = true;
+                  vars.selectedIonList = new MzMLPrecursorSelectedIonList();
+
+                } else if (openingTagName.contentEquals(TAG_ACTIVATION)) {
+                  vars.insideActivation = true;
+                  vars.activation = new MzMLPrecursorActivation();
+
+                }
+                continue;
+              }
+
+              if (vars.insideIsolationWindow) {
+                if (openingTagName.contentEquals(TAG_CV_PARAM)) {
+                  MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
+                  vars.isolationWindow.addCVParam(cvParam);
+
+                }
+                continue;
+              }
+
+              if (vars.insideSelectedIonList) {
+                if (openingTagName.contentEquals(TAG_SELECTED_ION)) {
+                  vars.selectedIon = new MzMLPrecursorSelectedIon();
+
+                } else if (openingTagName.contentEquals(TAG_CV_PARAM)) {
+                  MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
+                  vars.selectedIon.addCVParam(cvParam);
+
+                }
+                continue;
+              }
+
+              if (vars.insideActivation) {
+                if (openingTagName.contentEquals(TAG_CV_PARAM)) {
+                  MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
+                  vars.activation.addCVParam(cvParam);
 
                 }
                 continue;
@@ -192,6 +268,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                   vars.spectrum.setId(id);
                   vars.spectrum.setScanNumber(getScanNumber(id));
                   vars.spectrum.setByteBufferInputStream(is);
+                  vars.precursorList = new MzMLPrecursorList();
 
 
                 } else if (openingTagName.contentEquals(TAG_BINARY_DATA_ARRAY)) {
@@ -273,6 +350,24 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                 case TAG_REF_PARAM_GROUP_LIST:
                   vars.insideReferenceableParamGroupList = false;
                   break;
+                case TAG_PRECURSOR_LIST:
+                  vars.insidePrecursorList = false;
+                  break;
+                case TAG_ISOLATION_WINDOW:
+                  vars.insideIsolationWindow = false;
+                  break;
+                case TAG_SELECTED_ION_LIST:
+                  vars.insideSelectedIonList = false;
+                  break;
+                case TAG_ACTIVATION:
+                  vars.insideActivation = false;
+                  break;
+                case TAG_SELECTED_ION:
+                  vars.selectedIonList.addSelectedIon(vars.selectedIon);
+                case TAG_PRECURSOR:
+                  if (vars.precursorList != null)
+                    vars.precursorList.addPrecursor(vars.precursor);
+
               }
               if (vars.insideSpectrumList) {
                 switch (closingTagName.toString()) {
@@ -287,6 +382,20 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                     break;
                   case TAG_SPECTRUM:
                     spectrumList.add(vars.spectrum);
+                    for (MzMLPrecursorElement p : vars.precursorList.getPrecursorElements()) {
+                      if (!p.getSpectrumRef().isPresent()
+                          || p.getSpectrumRef().equals(vars.spectrum.getId()))
+                        vars.spectrum.getPrecursorList().addPrecursor(p);
+                      else {
+                        for (MsScan s : spectrumList) {
+                          if (((MzMLSpectrum) s).getId().equals(p.getSpectrumRef())) {
+                            ((MzMLSpectrum) s).getPrecursorList().addPrecursor(p);
+                            break;
+                          }
+                        }
+                      }
+                    }
+
                 }
               }
 
@@ -389,19 +498,39 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
     boolean insideSpectrumList;
     boolean insideBinaryDataArrayFlag;
     boolean insideReferenceableParamGroupList;
+    boolean insidePrecursorList;
+    boolean insideIsolationWindow;
+    boolean insideSelectedIonList;
+    boolean insideActivation;
     int defaultArrayLength;
     MzMLSpectrum spectrum;
     MzMLBinaryDataInfo binaryDataInfo;
     MzMLReferenceableParamGroup referenceableParamGroup;
+    MzMLPrecursorElement precursor;
+    MzMLPrecursorList precursorList;
+    MzMLPrecursorIsolationWindow isolationWindow;
+    MzMLPrecursorSelectedIonList selectedIonList;
+    MzMLPrecursorSelectedIon selectedIon;
+    MzMLPrecursorActivation activation;
 
     Vars() {
       insideSpectrumList = false;
       insideBinaryDataArrayFlag = false;
       insideReferenceableParamGroupList = false;
+      insidePrecursorList = false;
+      insideIsolationWindow = false;
+      insideSelectedIonList = false;
+      insideActivation = false;
       defaultArrayLength = 0;
       spectrum = null;
       binaryDataInfo = null;
       referenceableParamGroup = null;
+      precursor = null;
+      precursorList = null;
+      isolationWindow = null;
+      selectedIonList = null;
+      selectedIon = null;
+      activation = null;
     }
   }
 }

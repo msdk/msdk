@@ -11,11 +11,11 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml2;
+package io.github.msdk.io.mzml2.data;
 
-class MzMLBinaryDataInfo {
+public class MzMLBinaryDataInfo {
 
-  static enum MzMLCompressionType {
+  public static enum MzMLCompressionType {
     NUMPRESS_LINPRED("MS:1002312"), NUMPRESS_POSINT("MS:1002313"), ZLIB(
         "MS:1000574"), NUMPRESS_SHLOGF("MS:1002314"), NO_COMPRESSION("MS:1000576");
     private String accession;
@@ -29,7 +29,7 @@ class MzMLBinaryDataInfo {
     }
   }
 
-  static enum MzMLBitLength {
+  public static enum MzMLBitLength {
     THIRTY_TWO_BIT_INTEGER("MS:1000519"), SIXTEEN_BIT_FLOAT("MS:1000520"), THIRTY_TWO_BIT_FLOAT(
         "MS:1000521"), SIXTY_FOUR_BIT_INTEGER("MS:1000522"), SIXTY_FOUR_BIT_FLOAT("MS:1000523");
 
@@ -44,7 +44,7 @@ class MzMLBinaryDataInfo {
     }
   }
 
-  static enum MzMLArrayType {
+  public static enum MzMLArrayType {
     MZ("MS:1000514"), INTENSITY("MS:1000515");
 
     private String accession;
@@ -71,9 +71,9 @@ class MzMLBinaryDataInfo {
    * @param position a int.
    * @param encodedLength a int.
    * @param arrayLength a int.
-   * @param compressionType a {@link io.github.msdk.io.mzml2.MzMLBinaryDataInfo.MzMLCompressionType} object.
-   * @param bitLength a {@link io.github.msdk.io.mzml2.MzMLBinaryDataInfo.MzMLBitLength} object.
-   * @param arrayType a {@link io.github.msdk.io.mzml2.MzMLBinaryDataInfo.MzMLArrayType} object.
+   * @param compressionType a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLCompressionType} object.
+   * @param bitLength a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLBitLength} object.
+   * @param arrayType a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLArrayType} object.
    */
   public MzMLBinaryDataInfo(int position, int encodedLength, int arrayLength,
       MzMLCompressionType compressionType, MzMLBitLength bitLength, MzMLArrayType arrayType) {
@@ -93,7 +93,7 @@ class MzMLBinaryDataInfo {
   /**
    * <p>Getter for the field <code>bitLength</code>.</p>
    *
-   * @return a {@link io.github.msdk.io.mzml2.MzMLBinaryDataInfo.MzMLBitLength} object.
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLBitLength} object.
    */
   public MzMLBitLength getBitLength() {
     return bitLength;
@@ -128,7 +128,7 @@ class MzMLBinaryDataInfo {
   /**
    * <p>Getter for the field <code>compressionType</code>.</p>
    *
-   * @return a {@link io.github.msdk.io.mzml2.MzMLBinaryDataInfo.MzMLCompressionType} object.
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLCompressionType} object.
    */
   public MzMLCompressionType getCompressionType() {
     return compressionType;
@@ -163,7 +163,7 @@ class MzMLBinaryDataInfo {
   /**
    * <p>Getter for the field <code>arrayType</code>.</p>
    *
-   * @return a {@link io.github.msdk.io.mzml2.MzMLBinaryDataInfo.MzMLArrayType} object.
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLArrayType} object.
    */
   public MzMLArrayType getArrayType() {
     return arrayType;

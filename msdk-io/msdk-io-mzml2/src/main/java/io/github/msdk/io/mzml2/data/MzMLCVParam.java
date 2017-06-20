@@ -11,11 +11,11 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml2;
+package io.github.msdk.io.mzml2.data;
 
 import java.util.Optional;
 
-class MzMLCVParam {
+public class MzMLCVParam {
 
   private final String accession;
   private final Optional<String> value;

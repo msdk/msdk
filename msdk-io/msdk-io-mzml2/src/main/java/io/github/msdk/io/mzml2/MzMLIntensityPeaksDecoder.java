@@ -18,6 +18,7 @@ import java.util.EnumSet;
 import java.util.zip.DataFormatException;
 
 import io.github.msdk.MSDKException;
+import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
 import io.github.msdk.io.mzml2.util.ByteArrayHolder;
 import io.github.msdk.io.mzml2.util.MSNumpressFloat;
 import io.github.msdk.io.mzml2.util.ZlibInflater;
