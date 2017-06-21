@@ -137,8 +137,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   public MzMLRawDataFile execute() throws MSDKException {
 
     try {
-      MzMLFileMemoryMapper mapper = new MzMLFileMemoryMapper();
-      ByteBufferInputStream is = mapper.mapToMemory(mzMLFile);
+      ByteBufferInputStream is = MzMLFileMemoryMapper.mapToMemory(mzMLFile);
 
       List<Chromatogram> chromatogramsList = new ArrayList<>();
       List<MsFunction> msFunctionsList = new ArrayList<>();
@@ -381,7 +380,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
         }
       }
       progress = 1f;
-    } catch (IOException | XMLStreamException | javax.xml.stream.XMLStreamException e) {
+    } catch (IOException | XMLStreamException e) {
       throw (new MSDKException(e));
     }
 
