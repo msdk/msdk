@@ -11,7 +11,7 @@
 	<modules>
 		<module>msdk-spectra-spectrumtypedetection</module>
 		<module>msdk-spectra-splash</module>
-		<module>msdk-spectra-comparison</module>
+		<module>msdk-spectra-similarity</module>
 		<module>msdk-spectra-shoulderpeaks</module>
 		<module>msdk-spectra-isotopepattern</module>
 	</modules>

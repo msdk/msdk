@@ -32,24 +32,12 @@ import io.github.msdk.datamodel.rawdata.MsScan;
  */
 public class SimpleFeature implements Feature {
 
-  private @Nonnull final Double mz;
-  private @Nonnull final Float retentionTime;
+  private @Nonnull Double mz;
+  private @Nonnull Float retentionTime;
   private @Nullable Float area, height, snRatio, score;
   private @Nullable Chromatogram chromatogram;
   private @Nullable List<MsScan> msmsSpectra;
   private @Nullable IonAnnotation ionAnnotation;
-
-  /**
-   * <p>Constructor for SimpleFeature.</p>
-   *
-   * @param mz a {@link java.lang.Double} object.
-   * @param retentionTime a {@link java.lang.Float} object.
-   */
-  public SimpleFeature(@Nonnull Double mz, @Nonnull Float retentionTime) {
-    this.mz = mz;
-    this.retentionTime = retentionTime;
-  }
-
 
   /** {@inheritDoc} */
   @Override
@@ -105,6 +93,14 @@ public class SimpleFeature implements Feature {
     return ionAnnotation;
   }
 
+
+  public void setMz(Double mz) {
+    this.mz = mz;
+  }
+
+  public void setRetentionTime(Float retentionTime) {
+    this.retentionTime = retentionTime;
+  }
 
   /**
    * <p>Setter for the field <code>area</code>.</p>

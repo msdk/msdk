@@ -39,14 +39,18 @@ public class MzMLFileParserTest {
   @Test
   public void testFileWithUV() throws MSDKException {
 
+    // Import the file
     final String inputFileName = TEST_DATA_PATH + "mzML_with_UV.mzML";
     final File inputFile = new File(inputFileName);
-
     MzMLFileParser mzParser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = mzParser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, mzParser.getFinishedPercentage(), 0.0001);
+
+    // The file has 27 scans
     Assert.assertEquals(27, rawFile.getScans().size());
+
+    // 14th Scan, #2114
     MzMLSpectrum spectrum = (MzMLSpectrum) rawFile.getScans().get(14);
     Assert.assertNotNull(spectrum);
     Assert.assertNotNull(spectrum.getMzValues());
@@ -67,11 +71,19 @@ public class MzMLFileParserTest {
     Assert.assertEquals(PolarityType.POSITIVE, spectrum.getPolarity());
     Assert.assertEquals(new Float(18.89235 * 60), spectrum.getRetentionTime());
 
+    rawFile.dispose();
+
+    // Import the file using the alternate constructor
     Assert.assertNotNull(new File(inputFileName));
     MzMLFileParser mzParser2 = new MzMLFileParser(inputFileName);
     RawDataFile rawFile2 = mzParser2.execute();
     Assert.assertNotNull(rawFile2);
     Assert.assertEquals(1.0, mzParser2.getFinishedPercentage(), 0.0001);
+
+    // The file has 27 scans
+    Assert.assertEquals(27, rawFile2.getScans().size());
+
+    // Scan 17, #2117
     MzMLSpectrum spectrum2 = (MzMLSpectrum) rawFile2.getScans().get(17);
     Assert.assertNotNull(spectrum2);
     Assert.assertNotNull(spectrum2.getMzValues());
@@ -91,6 +103,8 @@ public class MzMLFileParserTest {
     Assert.assertEquals(new Integer(1), spectrum2.getMsFunction().getMsLevel());
     Assert.assertEquals(PolarityType.NEGATIVE, spectrum2.getPolarity());
     Assert.assertEquals(new Float(18.919083333333 * 60), spectrum2.getRetentionTime());
+
+    rawFile2.dispose();
   }
 
   @Test

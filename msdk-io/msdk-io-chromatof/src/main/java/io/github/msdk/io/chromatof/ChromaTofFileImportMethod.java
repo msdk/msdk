@@ -14,12 +14,9 @@
 package io.github.msdk.io.chromatof;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,18 +30,15 @@ import org.slf4j.LoggerFactory;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.impl.SimpleFeature;
+import io.github.msdk.datamodel.impl.SimpleFeatureTable;
+import io.github.msdk.datamodel.impl.SimpleFeatureTableRow;
 import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.impl.SimpleSample;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.io.chromatof.ChromaTofParser.Mode;
 import io.github.msdk.io.chromatof.ChromaTofParser.TableColumn;
-import io.github.msdk.util.FeatureTableUtil;
 
 /**
  * <p>
@@ -66,10 +60,7 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
   private String fieldSeparator = ChromaTofParser.FIELD_SEPARATOR_TAB;
   private String quotationCharacter = ChromaTofParser.QUOTATION_CHARACTER_NONE;
 
-  private Map<Integer, FeatureTableColumn<?>> columns =
-      new HashMap<Integer, FeatureTableColumn<?>>();
-
-  private FeatureTable newFeatureTable;
+  private SimpleFeatureTable newFeatureTable;
   private final Sample fileSample;
   private boolean canceled = false;
 
@@ -130,34 +121,12 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
     logger.info("Using quotation character: '" + quotationCharacter + "'");
 
     String fileName = sourceFile.getName();
-    newFeatureTable = MSDKObjectBuilder.getFeatureTable(fileName, dataStore);
+    newFeatureTable = new SimpleFeatureTable();
     boolean normalizeColumnNames = false;
 
     ChromaTofParser parser = new ChromaTofParser(fieldSeparator, quotationCharacter, Locale.US);
     LinkedHashSet<TableColumn> header = parser.parseHeader(sourceFile, normalizeColumnNames);
     int tcIndex = 0;
-    for (TableColumn tc : header) {
-      // Map the column name to the MSDK ColumnName
-      FeatureTableColumn<?> column = createNewColumn(tc.getColumnName(), fileSample);
-
-      // Make sure that there is only one ion annotation column
-      FeatureTableColumn<?> ionAnnotationColumn =
-          newFeatureTable.getColumn(ColumnName.IONANNOTATION, null);
-      if (column.getName().equals(ColumnName.IONANNOTATION.getName())) {
-        if (ionAnnotationColumn != null) {
-          column = ionAnnotationColumn;
-        } else // Add the column to the feature table
-        {
-          newFeatureTable.addColumn(column);
-        }
-      } else {
-        // Add the column to the feature table
-        newFeatureTable.addColumn(column);
-      }
-
-      // Add the column to the map
-      columns.put(tcIndex++, column);
-    }
     // Read all lines from the CSV file into an array
     final List<TableRow> lines = parser.parseBody(header, sourceFile, normalizeColumnNames);
 
@@ -172,8 +141,12 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
 
       // Feature table row
       rowId++;
-      FeatureTableRow row = MSDKObjectBuilder.getFeatureTableRow(newFeatureTable, rowId);
+      SimpleFeatureTableRow row = new SimpleFeatureTableRow(newFeatureTable);
       newFeatureTable.addRow(row);
+      SimpleFeature feature = new SimpleFeature();
+      row.setFeature(fileSample, feature);
+      SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();;
+      feature.setIonAnnotation(ionAnnotation);
 
       // Loop through all the data and add it to the row
       int i = 0;
@@ -184,59 +157,19 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
           continue;
         }
 
-        Object objectData = null;
-        FeatureTableColumn currentColumn = columns.get(i);
-        Class<?> currentClass = currentColumn.getDataTypeClass();
-
-        if (currentClass.getSimpleName().equals("List")) {
-          FeatureTableColumn<List<SimpleIonAnnotation>> ionAnnotationColumn =
-              newFeatureTable.getColumn(ColumnName.IONANNOTATION, null);
-          if (ionAnnotationColumn == null) {
-            newFeatureTable.addColumn(MSDKObjectBuilder.getIonAnnotationFeatureTableColumn());
-            ionAnnotationColumn = newFeatureTable.getColumn(ColumnName.IONANNOTATION, null);
-          }
-          List<SimpleIonAnnotation> ionAnnotations = row.getData(ionAnnotationColumn);
-          SimpleIonAnnotation ionAnnotation;
-
-          // Get ion annotation or create a new
-          if (ionAnnotations != null) {
-            ionAnnotation = ionAnnotations.get(0);
-          } else {
-            ionAnnotation = new SimpleIonAnnotation();
-          }
-
-          switch (tableColumn.getColumnName()) {
-            case NAME:
-              ionAnnotation.setDescription(value);
-              break;
-            case FORMULA:
-              // Create chemical structure
-              IMolecularFormula formula = MolecularFormulaManipulator.getMolecularFormula(value,
-                  DefaultChemObjectBuilder.getInstance());
-              ionAnnotation.setFormula(formula);
-              break;
-          }
-
-          // Add the data
-          List<IonAnnotation> newIonAnnotations = new ArrayList<IonAnnotation>();
-          newIonAnnotations.add(ionAnnotation);
-          row.setData(currentColumn, newIonAnnotations);
-
-        } else {
-          switch (currentClass.getSimpleName()) {
-            case "Integer":
-              objectData = Integer.parseInt(value);
-              break;
-            case "Double":
-              objectData = Double.parseDouble(value);
-              break;
-            default:
-              objectData = value;
-              break;
-          }
-          // Add the data
-          row.setData(currentColumn, objectData);
-
+        switch (tableColumn.getColumnName()) {
+          case AREA:
+            feature.setArea(Float.parseFloat(value));
+            break;
+          case NAME:
+            ionAnnotation.setDescription(value);
+            break;
+          case FORMULA:
+            // Create chemical structure
+            IMolecularFormula formula = MolecularFormulaManipulator.getMolecularFormula(value,
+                DefaultChemObjectBuilder.getInstance());
+            ionAnnotation.setFormula(formula);
+            break;
         }
 
       }
@@ -249,10 +182,6 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
       }
 
     }
-
-    // Update average row m/z and RT values. This will also create the
-    // columns if they are missing.
-    FeatureTableUtil.recalculateAverages(newFeatureTable);
 
     return newFeatureTable;
 
@@ -268,60 +197,6 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
     }
 
     return result;
-  }
-
-  private FeatureTableColumn<?> createNewColumn(
-      io.github.msdk.io.chromatof.ChromaTofParser.ColumnName columnName, Sample sample) {
-
-    ColumnName newColumnName = null;
-
-    // If no match, then check common matches
-    if (newColumnName == null) {
-      switch (columnName) {
-        case RETENTION_TIME_SECONDS:
-        case FIRST_DIMENSION_TIME_SECONDS:
-        case SECOND_DIMENSION_TIME_SECONDS:
-          newColumnName = ColumnName.RT;
-          break;
-        case NAME:
-        case FORMULA:
-          newColumnName = ColumnName.IONANNOTATION;
-          break;
-      }
-    }
-
-    // If no samples were found, then assume that all data in the file is
-    // from one sample
-    // if (newColumnName != ColumnName.IONANNOTATION) {
-    sample = fileSample;
-    // }
-
-    // If still no match, then create a new column with String.class
-    FeatureTableColumn<?> column = null;
-
-    if (newColumnName == null) {
-      column = MSDKObjectBuilder.getFeatureTableColumn(columnName.name(), String.class, sample);
-    } else // Use special columns for Id, m/z, rt and ion annotation
-    {
-      if (sample == null) {
-        if (newColumnName.equals(ColumnName.ID)) {
-          column = MSDKObjectBuilder.getIdFeatureTableColumn();
-        }
-        if (newColumnName.equals(ColumnName.MZ)) {
-          column = MSDKObjectBuilder.getMzFeatureTableColumn();
-        }
-        if (newColumnName.equals(ColumnName.RT)) {
-          column = MSDKObjectBuilder.getRetentionTimeFeatureTableColumn();
-        }
-        if (newColumnName.equals(ColumnName.IONANNOTATION)) {
-          column = MSDKObjectBuilder.getIonAnnotationFeatureTableColumn();
-        }
-      } else {
-        column = MSDKObjectBuilder.getFeatureTableColumn(newColumnName, sample);
-      }
-    }
-
-    return column;
   }
 
   /** {@inheritDoc} */

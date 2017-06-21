@@ -35,9 +35,8 @@ import com.google.common.base.Strings;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKVersion;
-import io.github.msdk.datamodel.featuretables.ColumnName;
+import io.github.msdk.datamodel.features.Feature;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
@@ -94,7 +93,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
   @Override
   public File execute() throws MSDKException {
 
-    logger.info("Started exporting " + featureTable.getName() + " to " + mzTabFile);
+    logger.info("Started exporting feature table to " + mzTabFile);
 
     // Get number of rows
     totalRows = featureTable.getRows().size();
@@ -135,7 +134,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
     // Meta data
     mtd.setMZTabMode(MZTabDescription.Mode.Summary);
     mtd.setMZTabType(MZTabDescription.Type.Quantification);
-    mtd.setDescription(featureTable.getName());
+    // mtd.setDescription(featureTable.getName());
     mtd.addSoftwareParam(1, new CVParam("MS", "MS:1002342", "MSDK", MSDKVersion.getMSDKVersion()));
     mtd.setSmallMoleculeQuantificationUnit(
         new CVParam("PRIDE", "PRIDE:0000330", "Arbitrary quantification unit", null));
@@ -207,8 +206,6 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
     for (FeatureTableRow row : featureTable.getRows()) {
 
       // Get ion annotation column
-      FeatureTableColumn<List<IonAnnotation>> column =
-          featureTable.getColumn(ColumnName.IONANNOTATION, null);
 
       SmallMolecule sm = new SmallMolecule(factory, mtd);
       Boolean writeFeature = false;
@@ -223,8 +220,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
       // String database = "";
 
       // Get ion annotation
-      if (column != null) {
-        List<IonAnnotation> ionAnnotations = row.getData(column);
+      /*
         for (IonAnnotation ionAnnotation : ionAnnotations) {
           // Annotation ID
           String ionAnnotationId = ionAnnotation.getAnnotationId();
@@ -272,8 +268,8 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
             url = url + itemSeparator + escapeString(ionUrl.toString());
             writeFeature = true;
           }
-        }
-      }
+        
+      }*/
 
       // Write feature to file?
       if (exportAllFeatures || writeFeature) {
@@ -297,44 +293,23 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
         for (Sample sample : samples) {
           sampleCounter++;
 
+          Feature feature = row.getFeature(sample);
+
           // m/z
-          FeatureTableColumn<Double> columnMZ = featureTable.getColumn(ColumnName.MZ, sample);
-          if (columnMZ != null) {
-            Double peakMZval = row.getData(columnMZ);
-            if (peakMZval != null) {
-              String peakMZ = peakMZval.toString();
-              sm.setOptionColumnValue(new Assay(sampleCounter), "mz", peakMZ);
-            }
-          }
+          String peakMZ = feature.getMz().toString();
+          sm.setOptionColumnValue(new Assay(sampleCounter), "mz", peakMZ);
 
           // RT
-          FeatureTableColumn<Float> columnRT =
-              featureTable.getColumn(ColumnName.RT, sample);
-          if (columnRT != null) {
-            rt = row.getData(columnRT);
-            if (rt != null) {
-              sm.setRetentionTime(rt.toString());
-              sm.setOptionColumnValue(new Assay(sampleCounter), "rt", rt.toString());
-            }
-          }
+          sm.setRetentionTime(feature.getRetentionTime().toString());
+          sm.setOptionColumnValue(new Assay(sampleCounter), "rt", row.getRT().toString());
 
           // Height
-          FeatureTableColumn<Float> columnHeight =
-              featureTable.getColumn(ColumnName.HEIGHT, sample);
-          if (columnHeight != null) {
-            Float peakHeightVal = row.getData(columnHeight);
-            if (peakHeightVal != null) {
-              String peakHeight = peakHeightVal.toString();
-              sm.setOptionColumnValue(new Assay(sampleCounter), "height", peakHeight);
-            }
-          }
+          String peakHeight = feature.getHeight().toString();
+          sm.setOptionColumnValue(new Assay(sampleCounter), "height", peakHeight);
 
           // Area
-          FeatureTableColumn<Double> columnArea = featureTable.getColumn(ColumnName.AREA, sample);
-          if (columnArea != null) {
-            Double peakArea = row.getData(columnArea);
-            sm.setAbundanceColumnValue(new Assay(sampleCounter), peakArea);
-          }
+          Float peakArea = feature.getArea();
+          sm.setAbundanceColumnValue(new Assay(sampleCounter), peakArea.doubleValue());
 
         }
 
