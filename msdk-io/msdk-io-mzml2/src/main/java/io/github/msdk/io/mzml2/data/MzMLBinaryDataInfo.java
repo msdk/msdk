@@ -45,7 +45,7 @@ public class MzMLBinaryDataInfo {
   }
 
   public static enum MzMLArrayType {
-    MZ("MS:1000514"), INTENSITY("MS:1000515");
+    MZ("MS:1000514"), INTENSITY("MS:1000515"), TIME("MS:1000595");
 
     private String accession;
 
@@ -58,40 +58,30 @@ public class MzMLBinaryDataInfo {
     }
   }
 
+  private final int encodedLength;
+  private final int arrayLength;
   private long position;
-  private int encodedLength;
-  private int arrayLength;
   private MzMLCompressionType compressionType;
   private MzMLBitLength bitLength;
   private MzMLArrayType arrayType;
 
   /**
-   * <p>Constructor for MzMLBinaryDataInfo.</p>
+   * <p>
+   * Constructor for MzMLBinaryDataInfo.
+   * </p>
    *
-   * @param position a int.
    * @param encodedLength a int.
    * @param arrayLength a int.
-   * @param compressionType a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLCompressionType} object.
-   * @param bitLength a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLBitLength} object.
-   * @param arrayType a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLArrayType} object.
    */
-  public MzMLBinaryDataInfo(int position, int encodedLength, int arrayLength,
-      MzMLCompressionType compressionType, MzMLBitLength bitLength, MzMLArrayType arrayType) {
-    this.position = position;
-    this.compressionType = compressionType;
-    this.bitLength = bitLength;
-    this.arrayType = arrayType;
+  public MzMLBinaryDataInfo(int encodedLength, int arrayLength) {
+    this.encodedLength = encodedLength;
+    this.arrayLength = arrayLength;
   }
 
   /**
-   * <p>Constructor for MzMLBinaryDataInfo.</p>
-   */
-  public MzMLBinaryDataInfo() {
-
-  }
-
-  /**
-   * <p>Getter for the field <code>bitLength</code>.</p>
+   * <p>
+   * Getter for the field <code>bitLength</code>.
+   * </p>
    *
    * @return a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLBitLength} object.
    */
@@ -100,7 +90,9 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>Setter for the field <code>bitLength</code>.</p>
+   * <p>
+   * Setter for the field <code>bitLength</code>.
+   * </p>
    *
    * @param bitLengthAccession a {@link java.lang.String} object.
    */
@@ -112,7 +104,9 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>isBitLengthAccession.</p>
+   * <p>
+   * isBitLengthAccession.
+   * </p>
    *
    * @param bitLengthAccession a {@link java.lang.String} object.
    * @return a boolean.
@@ -126,7 +120,9 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>Getter for the field <code>compressionType</code>.</p>
+   * <p>
+   * Getter for the field <code>compressionType</code>.
+   * </p>
    *
    * @return a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLCompressionType} object.
    */
@@ -135,7 +131,9 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>Setter for the field <code>compressionType</code>.</p>
+   * <p>
+   * Setter for the field <code>compressionType</code>.
+   * </p>
    *
    * @param compressionTypeAccession a {@link java.lang.String} object.
    */
@@ -147,7 +145,9 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>isCompressionTypeAccession.</p>
+   * <p>
+   * isCompressionTypeAccession.
+   * </p>
    *
    * @param compressionTypeAccession a {@link java.lang.String} object.
    * @return a boolean.
@@ -161,7 +161,9 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>Getter for the field <code>arrayType</code>.</p>
+   * <p>
+   * Getter for the field <code>arrayType</code>.
+   * </p>
    *
    * @return a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLArrayType} object.
    */
@@ -170,7 +172,9 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>Setter for the field <code>arrayType</code>.</p>
+   * <p>
+   * Setter for the field <code>arrayType</code>.
+   * </p>
    *
    * @param arrayTypeAccession a {@link java.lang.String} object.
    */
@@ -182,7 +186,9 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>isArrayTypeAccession.</p>
+   * <p>
+   * isArrayTypeAccession.
+   * </p>
    *
    * @param arrayTypeAccession a {@link java.lang.String} object.
    * @return a boolean.
@@ -196,7 +202,9 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>Getter for the field <code>position</code>.</p>
+   * <p>
+   * Getter for the field <code>position</code>.
+   * </p>
    *
    * @return a long.
    */
@@ -205,7 +213,9 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>Setter for the field <code>position</code>.</p>
+   * <p>
+   * Setter for the field <code>position</code>.
+   * </p>
    *
    * @param position a long.
    */
@@ -214,7 +224,9 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>Getter for the field <code>encodedLength</code>.</p>
+   * <p>
+   * Getter for the field <code>encodedLength</code>.
+   * </p>
    *
    * @return a int.
    */
@@ -223,29 +235,13 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>Setter for the field <code>encodedLength</code>.</p>
-   *
-   * @param encodedLength a int.
-   */
-  public void setEncodedLength(int encodedLength) {
-    this.encodedLength = encodedLength;
-  }
-
-  /**
-   * <p>Getter for the field <code>arrayLength</code>.</p>
+   * <p>
+   * Getter for the field <code>arrayLength</code>.
+   * </p>
    *
    * @return a int.
    */
   public int getArrayLength() {
     return arrayLength;
-  }
-
-  /**
-   * <p>Setter for the field <code>arrayLength</code>.</p>
-   *
-   * @param arrayLength a int.
-   */
-  public void setArrayLength(int arrayLength) {
-    this.arrayLength = arrayLength;
   }
 }
