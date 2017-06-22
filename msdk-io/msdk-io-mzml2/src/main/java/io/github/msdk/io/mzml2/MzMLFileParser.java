@@ -140,6 +140,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   public MzMLRawDataFile execute() throws MSDKException {
 
     try {
+      logger.info("Began parsing file: " + mzMLFile.getAbsolutePath());
       ByteBufferInputStream is = MzMLFileMemoryMapper.mapToMemory(mzMLFile);
 
       List<MsScan> spectrumList = new ArrayList<>();
@@ -551,6 +552,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
         }
       }
       progress = 1f;
+      logger.info("Parsing Complete");
     } catch (IOException | XMLStreamException e) {
       throw (new MSDKException(e));
     }

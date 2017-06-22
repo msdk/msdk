@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
+import io.github.msdk.io.mzml2.util.MzMLMZPeaksDecoder;
 
 /**
  * 
@@ -138,8 +139,8 @@ public class BinaryDataArrayTest {
     Assert.assertNotNull(decodedArray);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result =
-        MzMLMZPeaksDecoder.decode(decodedArray, decodedArray.length, 64, 99, compressions).arr;
+    double[] result = MzMLMZPeaksDecoder
+        .decode(decodedArray, decodedArray.length, 64, 99, compressions).getDecodedArray();
     Assert.assertArrayEquals(testData64bitFloat, result, 0.0);
 
   }
@@ -156,8 +157,8 @@ public class BinaryDataArrayTest {
     Assert.assertNotNull(decodedArray);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result =
-        MzMLMZPeaksDecoder.decode(decodedArray, decodedArray.length, 64, 99, compressions).arr;
+    double[] result = MzMLMZPeaksDecoder
+        .decode(decodedArray, decodedArray.length, 64, 99, compressions).getDecodedArray();
     Assert.assertArrayEquals(testData64bitFloat, result, 0.0);
   }
 
@@ -173,8 +174,8 @@ public class BinaryDataArrayTest {
     Assert.assertNotNull(decodedArray);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result =
-        MzMLMZPeaksDecoder.decode(decodedArray, decodedArray.length, 32, 99, compressions).arr;
+    double[] result = MzMLMZPeaksDecoder
+        .decode(decodedArray, decodedArray.length, 32, 99, compressions).getDecodedArray();
     int[] resultToInt = new int[99];
     for (int i = 0; i < resultToInt.length; i++)
       resultToInt[i] = (int) result[i];
@@ -193,8 +194,8 @@ public class BinaryDataArrayTest {
     Assert.assertNotNull(decodedArray);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result =
-        MzMLMZPeaksDecoder.decode(decodedArray, decodedArray.length, 32, 99, compressions).arr;
+    double[] result = MzMLMZPeaksDecoder
+        .decode(decodedArray, decodedArray.length, 32, 99, compressions).getDecodedArray();
     int[] resultToInt = new int[99];
     for (int i = 0; i < resultToInt.length; i++)
       resultToInt[i] = (int) result[i];
