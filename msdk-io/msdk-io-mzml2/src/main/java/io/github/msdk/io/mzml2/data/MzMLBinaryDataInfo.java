@@ -17,7 +17,9 @@ public class MzMLBinaryDataInfo {
 
   public static enum MzMLCompressionType {
     NUMPRESS_LINPRED("MS:1002312"), NUMPRESS_POSINT("MS:1002313"), ZLIB(
-        "MS:1000574"), NUMPRESS_SHLOGF("MS:1002314"), NO_COMPRESSION("MS:1000576");
+        "MS:1000574"), NUMPRESS_SHLOGF("MS:1002314"), NO_COMPRESSION(
+            "MS:1000576"), NUMPRESS_LINPRED_ZLIB("MS:1002746"), NUMPRESS_POSINT_ZLIB(
+                "MS:1002747"), NUMPRESS_SHLOGF_ZLIB("MS:1002748");
     private String accession;
 
     private MzMLCompressionType(String accession) {

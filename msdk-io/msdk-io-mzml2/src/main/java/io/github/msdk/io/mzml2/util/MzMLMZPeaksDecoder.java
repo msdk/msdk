@@ -19,12 +19,15 @@ import java.util.zip.DataFormatException;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
+import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLCompressionType;
 import io.github.msdk.io.mzml2.util.ByteArrayHolder;
 import io.github.msdk.io.mzml2.util.MSNumpressDouble;
 import io.github.msdk.io.mzml2.util.ZlibInflater;
 
 /**
- * <p>MzMLMZPeaksDecoder class.</p>
+ * <p>
+ * MzMLMZPeaksDecoder class.
+ * </p>
  *
  * @author Dmitry Avtonomov
  * @version $Id: $Id
@@ -52,7 +55,7 @@ public class MzMLMZPeaksDecoder {
       this.valMinNonZeroPos = valMinNonZeroPos;
       this.sum = sum;
     }
-    
+
     public double[] getDecodedArray() {
       return arr;
     }
@@ -75,15 +78,15 @@ public class MzMLMZPeaksDecoder {
    * @param precision allowed values: 32 and 64, can be null only if MS-NUMPRESS compression was
    *        applied and is specified in the @{code compressions} enum set.
    * @param numPoints a int.
-   * @param compressions null or MzMLCompressionType#NONE have the same
-   *        effect. Otherwise the binary data will be inflated according to the compression rules.
+   * @param compression null or MzMLCompressionType#NO_COMPRESSION have the same effect. Otherwise
+   *        the binary data will be inflated according to the compression rules.
    * @throws java.util.zip.DataFormatException if any.
    * @throws java.io.IOException if any.
-   * @return a 
+   * @return a
    * @throws io.github.msdk.MSDKException if any.
    */
   public static DecodedData decode(byte[] bytesIn, int lengthIn, Integer precision, int numPoints,
-      EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions)
+      MzMLBinaryDataInfo.MzMLCompressionType compression)
       throws DataFormatException, IOException, MSDKException {
 
     // for some reason there sometimes might be zero length <peaks> tags
@@ -92,8 +95,23 @@ public class MzMLMZPeaksDecoder {
     if (bytesIn.length == 0 || lengthIn == 0) {
       return DecodedData.createEmpty();
     }
-    if (compressions == null) {
-      compressions = EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
+
+    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
+        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
+
+    if (compression == MzMLCompressionType.NUMPRESS_LINPRED_ZLIB) {
+      compressions.add(MzMLCompressionType.NUMPRESS_LINPRED);
+      compressions.add(MzMLCompressionType.ZLIB);
+    } else if (compression == MzMLCompressionType.NUMPRESS_POSINT_ZLIB) {
+      compressions.add(MzMLCompressionType.NUMPRESS_POSINT);
+      compressions.add(MzMLCompressionType.ZLIB);
+    } else if (compression == MzMLCompressionType.NUMPRESS_SHLOGF_ZLIB) {
+      compressions.add(MzMLCompressionType.NUMPRESS_SHLOGF);
+      compressions.add(MzMLCompressionType.ZLIB);
+    } else if (compression == null) {
+      compressions.add(MzMLCompressionType.NO_COMPRESSION);
+    } else {
+      compressions.add(compression);
     }
 
     /////////////////////////////////////////////////////////
@@ -262,7 +280,9 @@ public class MzMLMZPeaksDecoder {
   }
 
   /**
-   * <p>toDecodedData.</p>
+   * <p>
+   * toDecodedData.
+   * </p>
    *
    * @param arr an array of double.
    * @return a {@link io.github.msdk.io.mzml2.MzMLMZPeaksDecoder.DecodedData} object.

@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,8 +43,8 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
 import io.github.msdk.io.mzml2.data.MzMLCVGroup;
 import io.github.msdk.io.mzml2.data.MzMLCVParam;
-import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
 import io.github.msdk.io.mzml2.data.MzMLIsolationWindow;
+import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
 import io.github.msdk.io.mzml2.data.MzMLPrecursorList;
 import io.github.msdk.io.mzml2.data.MzMLRawDataFile;
 import io.github.msdk.io.mzml2.util.ByteBufferInputStreamAdapter;
@@ -69,7 +68,7 @@ public class MzMLSpectrum implements MsScan {
   private final @Nonnull ByteBufferInputStream mappedByteBufferInputStream;
   private final @Nonnull String id;
   private final @Nonnull Integer scanNumber;
-  private final @Nonnull Integer numOfDataPoints;
+  private final @Nonnull int numOfDataPoints;
 
   private ArrayList<MzMLCVParam> cvParams;
   private MzMLPrecursorList precursorList;
@@ -214,8 +213,7 @@ public class MzMLSpectrum implements MsScan {
               + getScanNumber() + ")");
     }
     Integer precision;
-    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
-        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
+
     try {
       switch (getMzBinaryDataInfo().getBitLength()) {
         case THIRTY_TWO_BIT_FLOAT:
@@ -230,16 +228,13 @@ public class MzMLSpectrum implements MsScan {
           precision = null;
       }
 
-      compressions.add(getMzBinaryDataInfo().getCompressionType());
-
       InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream,
           getMzBinaryDataInfo().getPosition(), getMzBinaryDataInfo().getEncodedLength());
       InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
       byte[] decodedData = IOUtils.toByteArray(decodedIs);
 
-      mzValues = MzMLMZPeaksDecoder
-          .decode(decodedData, decodedData.length, precision, numOfDataPoints, compressions)
-          .getDecodedArray();
+      mzValues = MzMLMZPeaksDecoder.decode(decodedData, decodedData.length, precision,
+          numOfDataPoints, getMzBinaryDataInfo().getCompressionType()).getDecodedArray();
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }
@@ -257,8 +252,7 @@ public class MzMLSpectrum implements MsScan {
               + getScanNumber() + ")");
     }
     Integer precision;
-    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
-        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
+
     try {
       switch (getIntensityBinaryDataInfo().getBitLength()) {
         case THIRTY_TWO_BIT_FLOAT:
@@ -273,8 +267,6 @@ public class MzMLSpectrum implements MsScan {
           precision = null;
       }
 
-      compressions.add(getIntensityBinaryDataInfo().getCompressionType());
-
       InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream,
           getIntensityBinaryDataInfo().getPosition(),
           getIntensityBinaryDataInfo().getEncodedLength());
@@ -282,7 +274,7 @@ public class MzMLSpectrum implements MsScan {
       byte[] decodedData = IOUtils.toByteArray(decodedIs);
 
       intensityValues = MzMLIntensityPeaksDecoder.decode(decodedData, decodedData.length, precision,
-          numOfDataPoints, compressions).getArr();
+          numOfDataPoints, getIntensityBinaryDataInfo().getCompressionType()).getArr();
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }

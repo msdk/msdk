@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,9 +43,9 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
 import io.github.msdk.io.mzml2.data.MzMLCVGroup;
 import io.github.msdk.io.mzml2.data.MzMLCVParam;
+import io.github.msdk.io.mzml2.data.MzMLIsolationWindow;
 import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
 import io.github.msdk.io.mzml2.data.MzMLProduct;
-import io.github.msdk.io.mzml2.data.MzMLIsolationWindow;
 import io.github.msdk.io.mzml2.data.MzMLRawDataFile;
 import io.github.msdk.io.mzml2.util.ByteBufferInputStreamAdapter;
 import io.github.msdk.io.mzml2.util.MzMLIntensityPeaksDecoder;
@@ -348,8 +347,7 @@ class MzMLChromatogram implements Chromatogram {
               + getChromatogramNumber() + ")");
     }
     Integer precision;
-    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
-        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
+
     try {
       switch (getRtBinaryDataInfo().getBitLength()) {
         case THIRTY_TWO_BIT_FLOAT:
@@ -364,16 +362,13 @@ class MzMLChromatogram implements Chromatogram {
           precision = null;
       }
 
-      compressions.add(getRtBinaryDataInfo().getCompressionType());
-
       InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream,
           getRtBinaryDataInfo().getPosition(), getRtBinaryDataInfo().getEncodedLength());
       InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
       byte[] decodedData = IOUtils.toByteArray(decodedIs);
 
-      rtValues = MzMLRtPeaksDecoder
-          .decode(decodedData, decodedData.length, precision, numOfDataPoints, compressions)
-          .getArr();
+      rtValues = MzMLRtPeaksDecoder.decode(decodedData, decodedData.length, precision,
+          numOfDataPoints, getRtBinaryDataInfo().getCompressionType()).getArr();
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }
@@ -397,8 +392,7 @@ class MzMLChromatogram implements Chromatogram {
               + getChromatogramNumber() + ")");
     }
     Integer precision;
-    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
-        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
+
     try {
       switch (getIntensityBinaryDataInfo().getBitLength()) {
         case THIRTY_TWO_BIT_FLOAT:
@@ -413,17 +407,14 @@ class MzMLChromatogram implements Chromatogram {
           precision = null;
       }
 
-      compressions.add(getIntensityBinaryDataInfo().getCompressionType());
-
       InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream,
           getIntensityBinaryDataInfo().getPosition(),
           getIntensityBinaryDataInfo().getEncodedLength());
       InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
       byte[] decodedData = IOUtils.toByteArray(decodedIs);
 
-      array = MzMLIntensityPeaksDecoder
-          .decode(decodedData, decodedData.length, precision, numOfDataPoints, compressions)
-          .getArr();
+      array = MzMLIntensityPeaksDecoder.decode(decodedData, decodedData.length, precision,
+          numOfDataPoints, getIntensityBinaryDataInfo().getCompressionType()).getArr();
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }

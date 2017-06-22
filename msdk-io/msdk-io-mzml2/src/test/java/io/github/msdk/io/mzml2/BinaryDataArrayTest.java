@@ -129,53 +129,38 @@ public class BinaryDataArrayTest {
 
   @Test
   public void testCompressed64bit() throws MSDKException, DataFormatException, IOException {
-    // Get an empty EnumSet to store the compression type
-    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
-        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
-    compressions.add(MzMLBinaryDataInfo.MzMLCompressionType.ZLIB);
-
     // Base 64 decode the given String and store the result in a byte array
     byte[] decodedArray = Base64.getDecoder().decode(compressed64bit);
     Assert.assertNotNull(decodedArray);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result = MzMLMZPeaksDecoder
-        .decode(decodedArray, decodedArray.length, 64, 99, compressions).getDecodedArray();
+    double[] result = MzMLMZPeaksDecoder.decode(decodedArray, decodedArray.length, 64, 99,
+        MzMLBinaryDataInfo.MzMLCompressionType.ZLIB).getDecodedArray();
     Assert.assertArrayEquals(testData64bitFloat, result, 0.0);
 
   }
 
   @Test
   public void testUncompressed64bit() throws MSDKException, DataFormatException, IOException {
-    // Get an empty EnumSet to store the compression type
-    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
-        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
-    compressions.add(MzMLBinaryDataInfo.MzMLCompressionType.NO_COMPRESSION);
-
     // Base 64 decode the given String and store the result in a byte array
     byte[] decodedArray = Base64.getDecoder().decode(uncompressed64bit);
     Assert.assertNotNull(decodedArray);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result = MzMLMZPeaksDecoder
-        .decode(decodedArray, decodedArray.length, 64, 99, compressions).getDecodedArray();
+    double[] result = MzMLMZPeaksDecoder.decode(decodedArray, decodedArray.length, 64, 99,
+        MzMLBinaryDataInfo.MzMLCompressionType.NO_COMPRESSION).getDecodedArray();
     Assert.assertArrayEquals(testData64bitFloat, result, 0.0);
   }
 
   @Test
   public void testCompressed32bit() throws MSDKException, DataFormatException, IOException {
-    // Get an empty EnumSet to store the compression type
-    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
-        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
-    compressions.add(MzMLBinaryDataInfo.MzMLCompressionType.ZLIB);
-
     // Base 64 decode the given String and store the result in a byte array
     byte[] decodedArray = Base64.getDecoder().decode(compressed32bit);
     Assert.assertNotNull(decodedArray);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result = MzMLMZPeaksDecoder
-        .decode(decodedArray, decodedArray.length, 32, 99, compressions).getDecodedArray();
+    double[] result = MzMLMZPeaksDecoder.decode(decodedArray, decodedArray.length, 32, 99,
+        MzMLBinaryDataInfo.MzMLCompressionType.ZLIB).getDecodedArray();
     int[] resultToInt = new int[99];
     for (int i = 0; i < resultToInt.length; i++)
       resultToInt[i] = (int) result[i];
@@ -184,18 +169,13 @@ public class BinaryDataArrayTest {
 
   @Test
   public void testUncompressed32bit() throws MSDKException, DataFormatException, IOException {
-    // Get an empty EnumSet to store the compression type
-    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
-        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
-    compressions.add(MzMLBinaryDataInfo.MzMLCompressionType.NO_COMPRESSION);
-
     // Base 64 decode the given String and store the result in a byte array
     byte[] decodedArray = Base64.getDecoder().decode(uncompressed32bit);
     Assert.assertNotNull(decodedArray);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result = MzMLMZPeaksDecoder
-        .decode(decodedArray, decodedArray.length, 32, 99, compressions).getDecodedArray();
+    double[] result = MzMLMZPeaksDecoder.decode(decodedArray, decodedArray.length, 32, 99,
+        MzMLBinaryDataInfo.MzMLCompressionType.NO_COMPRESSION).getDecodedArray();
     int[] resultToInt = new int[99];
     for (int i = 0; i < resultToInt.length; i++)
       resultToInt[i] = (int) result[i];
