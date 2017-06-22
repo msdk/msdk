@@ -24,9 +24,7 @@ import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
-import io.github.msdk.io.mzml2.util.MzMLIntensityPeaksDecoder;
-import io.github.msdk.io.mzml2.util.MzMLMZPeaksDecoder;
-import io.github.msdk.io.mzml2.util.MzMLRtPeaksDecoder;
+import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
 
 /**
  * 
@@ -127,9 +125,8 @@ public class BinaryDataArrayTest {
     Assert.assertNotNull(decodedIs);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result = MzMLMZPeaksDecoder
-        .decode(decodedIs, 664, 64, 99, MzMLBinaryDataInfo.MzMLCompressionType.ZLIB)
-        .getDecodedArray();
+    double[] result = MzMLPeaksDecoder.decodeToDouble(decodedIs, 664, 64, 99,
+        MzMLBinaryDataInfo.MzMLCompressionType.ZLIB);
     Assert.assertArrayEquals(testData64bitFloat, result, 0.0);
 
   }
@@ -144,9 +141,8 @@ public class BinaryDataArrayTest {
     Assert.assertNotNull(decodedIs);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result = MzMLMZPeaksDecoder
-        .decode(decodedIs, 1056, 64, 99, MzMLBinaryDataInfo.MzMLCompressionType.NO_COMPRESSION)
-        .getDecodedArray();
+    double[] result = MzMLPeaksDecoder.decodeToDouble(decodedIs, 1056, 64, 99,
+        MzMLBinaryDataInfo.MzMLCompressionType.NO_COMPRESSION);
     Assert.assertArrayEquals(testData64bitFloat, result, 0.0);
   }
 
@@ -160,9 +156,8 @@ public class BinaryDataArrayTest {
     Assert.assertNotNull(decodedIs);
 
     // Decode the decoded byte array and compare with the expected values
-    float[] result = MzMLIntensityPeaksDecoder
-        .decode(decodedIs, 268, 32, 99, MzMLBinaryDataInfo.MzMLCompressionType.ZLIB)
-        .getDecodedArray();
+    float[] result = MzMLPeaksDecoder.decodeToFloat(decodedIs, 268, 32, 99,
+        MzMLBinaryDataInfo.MzMLCompressionType.ZLIB);
     Assert.assertArrayEquals(testData32bitFloat, result, 0.0f);
   }
 
@@ -176,9 +171,8 @@ public class BinaryDataArrayTest {
     Assert.assertNotNull(decodedIs);
 
     // Decode the decoded byte array and compare with the expected values
-    float[] result = MzMLRtPeaksDecoder
-        .decode(decodedIs, 528, 32, 99, MzMLBinaryDataInfo.MzMLCompressionType.NO_COMPRESSION)
-        .getDecodedArray();
+    float[] result = MzMLPeaksDecoder.decodeToFloat(decodedIs, 528, 32, 99,
+        MzMLBinaryDataInfo.MzMLCompressionType.NO_COMPRESSION);
     Assert.assertArrayEquals(testData32bitFloat, result, 0.0f);
   }
 

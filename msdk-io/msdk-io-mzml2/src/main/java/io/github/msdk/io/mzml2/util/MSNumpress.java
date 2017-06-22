@@ -16,12 +16,14 @@
 package io.github.msdk.io.mzml2.util;
 
 /**
- * <p>MSNumpressDouble class.</p>
+ * <p>
+ * MSNumpressDouble class.
+ * </p>
  *
  * @author plusik
  * @version $Id: $Id
  */
-public class MSNumpressDouble {
+public class MSNumpress {
 
   /// PSI-MS obo accession numbers.
   /** Constant <code>ACC_NUMPRESS_LINEAR="MS:1002312"</code> */
@@ -56,7 +58,7 @@ public class MSNumpressDouble {
     switch (cvAccession) {
       case ACC_NUMPRESS_LINEAR: {
         double[] buffer = new double[dataSize * 2];
-        int nbrOfDoubles = MSNumpressDouble.decodeLinear(data, dataSize, buffer);
+        int nbrOfDoubles = MSNumpress.decodeLinear(data, dataSize, buffer);
         double[] result = new double[nbrOfDoubles];
         System.arraycopy(buffer, 0, result, 0, nbrOfDoubles);
         return result;
@@ -64,13 +66,13 @@ public class MSNumpressDouble {
       }
       case ACC_NUMPRESS_SLOF: {
         double[] result = new double[dataSize / 2];
-        MSNumpressDouble.decodeSlof(data, dataSize, result);
+        MSNumpress.decodeSlof(data, dataSize, result);
         return result;
 
       }
       case ACC_NUMPRESS_PIC: {
         double[] buffer = new double[dataSize * 2];
-        int nbrOfDoubles = MSNumpressDouble.decodePic(data, dataSize, buffer);
+        int nbrOfDoubles = MSNumpress.decodePic(data, dataSize, buffer);
         double[] result = new double[nbrOfDoubles];
         System.arraycopy(buffer, 0, result, 0, nbrOfDoubles);
         return result;
@@ -88,8 +90,8 @@ public class MSNumpressDouble {
    * significant is stored in a halfbyte. This initial count is then followed by the rest of the
    * ints halfbytes, in little-endian order. A count halfbyte c of
    * <p>
-   * 0 &lt;= c &lt;= 8 is interpreted as an initial c 0x0 halfbytes 9 &lt;= c &lt;= 15 is interpreted as an
-   * initial (c-8) 0xf halfbytes
+   * 0 &lt;= c &lt;= 8 is interpreted as an initial c 0x0 halfbytes 9 &lt;= c &lt;= 15 is
+   * interpreted as an initial (c-8) 0xf halfbytes
    * <p>
    * Ex: int c rest 0 =&gt; 0x8 -1 =&gt; 0xf 0xf 23 =&gt; 0x6 0x7 0x1
    *
@@ -151,7 +153,9 @@ public class MSNumpressDouble {
 
 
   /**
-   * <p>encodeFixedPoint.</p>
+   * <p>
+   * encodeFixedPoint.
+   * </p>
    *
    * @param fixedPoint a double.
    * @param result an array of byte.
@@ -165,7 +169,9 @@ public class MSNumpressDouble {
 
 
   /**
-   * <p>decodeFixedPoint.</p>
+   * <p>
+   * decodeFixedPoint.
+   * </p>
    *
    * @param data an array of byte.
    * @return a double.
@@ -183,7 +189,9 @@ public class MSNumpressDouble {
 
 
   /**
-   * <p>optimalLinearFixedPoint.</p>
+   * <p>
+   * optimalLinearFixedPoint.
+   * </p>
    *
    * @param data an array of double.
    * @param dataSize a int.
@@ -350,6 +358,74 @@ public class MSNumpressDouble {
     return ri;
   }
 
+  /**
+   * Decodes data encoded by encodeLinear.
+   * <p>
+   * result vector guaranteed to be shorter or equal to (|data| - 8) * 2
+   * <p>
+   * Note that this method may throw a ArrayIndexOutOfBoundsException if it deems the input data to
+   * be corrupt, i.e. that the last encoded int does not use the last byte in the data. In addition
+   * the last encoded int need to use either the last halfbyte, or the second last followed by a 0x0
+   * halfbyte.
+   *
+   * @param data array of bytes to be decoded
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param result array were resulting floats should be stored
+   * @return the number of decoded floats, or -1 if dataSize &lt; 4 or 4 &lt; dataSize &lt; 8
+   */
+  public static int decodeLinear(byte[] data, int dataSize, float[] result) {
+    int ri = 2;
+    long[] ints = new long[3];
+    long extrapol;
+    long y;
+    IntDecoder dec = new IntDecoder(data, 16);
+
+    if (dataSize < 8)
+      return -1;
+    float fixedPoint = (float) decodeFixedPoint(data);
+    if (dataSize < 12)
+      return -1;
+
+    ints[1] = 0;
+    for (int i = 0; i < 4; i++) {
+      ints[1] = ints[1] | ((0xFFl & data[8 + i]) << (i * 8));
+    }
+    result[0] = ints[1] / fixedPoint;
+
+    if (dataSize == 12)
+      return 1;
+    if (dataSize < 16)
+      return -1;
+
+    ints[2] = 0;
+    for (int i = 0; i < 4; i++) {
+      ints[2] = ints[2] | ((0xFFl & data[12 + i]) << (i * 8));
+    }
+    result[1] = ints[2] / fixedPoint;
+
+    while (dec.pos < dataSize) {
+      if (dec.pos == (dataSize - 1) && dec.half)
+        if ((data[dec.pos] & 0xf) != 0x8)
+          break;
+
+      ints[0] = ints[1];
+      ints[1] = ints[2];
+      ints[2] = dec.next();
+
+      extrapol = ints[1] + (ints[1] - ints[0]);
+      y = extrapol + ints[2];
+      result[ri++] = y / fixedPoint;
+      ints[2] = y;
+    }
+
+    return ri;
+  }
+
 
   /////////////////////////////////////////////////////////////////////////////////
 
@@ -357,8 +433,8 @@ public class MSNumpressDouble {
    * Encodes ion counts by simply rounding to the nearest 4 byte integer, and compressing each
    * integer with encodeInt.
    * <p>
-   * The handleable range is therefore 0 -&gt; 4294967294. The resulting binary is maximally dataSize *
-   * 5 bytes, but much less if the data is close to 0 on average.
+   * The handleable range is therefore 0 -&gt; 4294967294. The resulting binary is maximally
+   * dataSize * 5 bytes, but much less if the data is close to 0 on average.
    *
    * @param data array of doubles to be encoded
    * @param dataSize number of doubles from data to encode
@@ -436,11 +512,83 @@ public class MSNumpressDouble {
     return ri;
   }
 
+  /**
+   * Decodes data encoded by encodePic
+   * <p>
+   * result vector guaranteed to be shorter of equal to |data| * 2
+   * <p>
+   * Note that this method may throw a ArrayIndexOutOfBoundsException if it deems the input data to
+   * be corrupt, i.e. that the last encoded int does not use the last byte in the data. In addition
+   * the last encoded int need to use either the last halfbyte, or the second last followed by a 0x0
+   * halfbyte.
+   *
+   * @param data array of bytes to be decoded (need memorycont. repr.)
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param result array were resulting floats should be stored
+   * @return the number of decoded floats
+   */
+  public static int decodePic(byte[] data, int dataSize, float[] result) {
+    int ri = 0;
+    long count;
+    IntDecoder dec = new IntDecoder(data, 0);
+
+    while (dec.pos < dataSize) {
+      if (dec.pos == (dataSize - 1) && dec.half)
+        if ((data[dec.pos] & 0xf) != 0x8)
+          break;
+
+      count = dec.next();
+      result[ri++] = count;
+    }
+    return ri;
+  }
+
+  /**
+   * Decodes data encoded by encodeSlof
+   * <p>
+   * The result vector will be exactly (|data| - 8) / 2 floats. returns the number of floats read,
+   * or -1 is there is a problem decoding.
+   *
+   * @param data array of bytes to be decoded (need memorycont. repr.)
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param result array were resulting floats should be stored
+   * @return the number of decoded floats
+   */
+  public static int decodeSlof(byte[] data, int dataSize, float[] result) {
+    int x;
+    int ri = 0;
+
+    if (dataSize < 8)
+      return -1;
+    float fixedPoint = (float) decodeFixedPoint(data);
+
+    if (dataSize % 2 != 0)
+      return -1;
+
+    for (int i = 8; i < dataSize; i += 2) {
+      x = (0xff & data[i]) | ((0xff & data[i + 1]) << 8);
+      result[ri++] = (float) (Math.exp(((float) (0xffff & x)) / fixedPoint) - 1);
+    }
+    return ri;
+  }
+
 
   /////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * <p>optimalSlofFixedPoint.</p>
+   * <p>
+   * optimalSlofFixedPoint.
+   * </p>
    *
    * @param data an array of double.
    * @param dataSize a int.
