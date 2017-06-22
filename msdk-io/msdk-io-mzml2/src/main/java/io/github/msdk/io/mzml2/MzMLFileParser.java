@@ -66,7 +66,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private MzMLRawDataFile newRawFile;
   private volatile boolean canceled;
   private Float progress;
-  private int approxProgress;
+  private int lastLoggedProgress;
   Logger logger;
 
   final static String ATTR_ACCESSION = "accession";
@@ -158,7 +158,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
       Vars vars = new Vars();
       XMLTagsTracker tagsTracker = new XMLTagsTracker();
-      approxProgress = 0;
+      lastLoggedProgress = 0;
 
       int eventType;
       try {
@@ -172,9 +172,9 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
           progress = ((float) xmlStreamReader.getLocation().getCharacterOffset() / is.length());
 
           // Log progress after every 10% completion
-          if ((int) (progress * 100) >= approxProgress + 10) {
-            approxProgress = (int) (progress * 10) * 10;
-            logger.info("Parsing in progress... " + approxProgress + "% completed");
+          if ((int) (progress * 100) >= lastLoggedProgress + 10) {
+            lastLoggedProgress = (int) (progress * 10) * 10;
+            logger.debug("Parsing in progress... " + lastLoggedProgress + "% completed");
           }
 
           switch (eventType) {

@@ -342,7 +342,6 @@ class MzMLChromatogram implements Chromatogram {
   @Nonnull
   public float[] getRetentionTimes() {
     float[] rtValues = null;
-    Integer numOfDataPoints = this.numOfDataPoints;
     if (getRtBinaryDataInfo().getArrayLength() != numOfDataPoints) {
       logger.warn(
           "Retention time binary data array contains a different array length from the default array length of the scan (#"
@@ -392,7 +391,6 @@ class MzMLChromatogram implements Chromatogram {
   /** {@inheritDoc} */
   @Nonnull
   public float[] getIntensityValues(@Nullable float[] array) {
-    Integer numOfDataPoints = this.numOfDataPoints;
     if (getIntensityBinaryDataInfo().getArrayLength() != numOfDataPoints) {
       logger.warn(
           "Intensity binary data array contains a different array length from the default array length of the chromatogram (#"

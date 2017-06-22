@@ -208,7 +208,6 @@ public class MzMLSpectrum implements MsScan {
   @Override
   public double[] getMzValues() {
     double[] mzValues = null;
-    Integer numOfDataPoints = this.numOfDataPoints;
     if (getMzBinaryDataInfo().getArrayLength() != numOfDataPoints) {
       logger.warn(
           "m/z binary data array contains a different array length from the default array length of the scan (#"
@@ -252,7 +251,6 @@ public class MzMLSpectrum implements MsScan {
   @Override
   public float[] getIntensityValues() {
     float[] intensityValues = null;
-    Integer numOfDataPoints = this.numOfDataPoints;
     if (getIntensityBinaryDataInfo().getArrayLength() != numOfDataPoints) {
       logger.warn(
           "Intensity binary data array contains a different array length from the default array length of the scan (#"
