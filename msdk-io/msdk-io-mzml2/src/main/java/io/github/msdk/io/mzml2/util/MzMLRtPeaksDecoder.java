@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml2;
+package io.github.msdk.io.mzml2.util;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -24,15 +24,17 @@ import io.github.msdk.io.mzml2.util.MSNumpressFloat;
 import io.github.msdk.io.mzml2.util.ZlibInflater;
 
 /**
- * <p>MzMLIntensityPeaksDecoder class.</p>
+ * <p>
+ * MzMLIntensityPeaksDecoder class.
+ * </p>
  *
  * @author plusik
  * @version $Id: $Id
  */
-public class MzMLIntensityPeaksDecoder {
+public class MzMLRtPeaksDecoder {
 
   public static class DecodedData {
-    float[] arr;
+    private float[] arr;
     float valMax;
     float valMaxPos;
     float valMin;
@@ -56,6 +58,11 @@ public class MzMLIntensityPeaksDecoder {
     public static DecodedData createEmpty() {
       return new DecodedData(new float[0], 0, -1, 0, -1, 0, -1, 0);
     }
+
+    public float[] getArr() {
+      return arr;
+    }
+
   }
 
   /**
@@ -71,8 +78,8 @@ public class MzMLIntensityPeaksDecoder {
    * @param precision allowed values: 32 and 64, can be null only if MS-NUMPRESS compression was
    *        applied and is specified in the @{code compressions} enum set.
    * @param numPoints a int.
-   * @param compressions null or MzMLCompressionType#NONE have the same
-   *        effect. Otherwise the binary data will be inflated according to the compression rules.
+   * @param compressions null or MzMLCompressionType#NONE have the same effect. Otherwise the binary
+   *        data will be inflated according to the compression rules.
    * @throws java.util.zip.DataFormatException if any.
    * @throws java.io.IOException if any.
    * @return a {@link io.github.msdk.io.mzml2.MzMLIntensityPeaksDecoder.DecodedData} object.
@@ -258,7 +265,9 @@ public class MzMLIntensityPeaksDecoder {
   }
 
   /**
-   * <p>toDecodedData.</p>
+   * <p>
+   * toDecodedData.
+   * </p>
    *
    * @param arr an array of float.
    * @return a {@link io.github.msdk.io.mzml2.MzMLIntensityPeaksDecoder.DecodedData} object.
