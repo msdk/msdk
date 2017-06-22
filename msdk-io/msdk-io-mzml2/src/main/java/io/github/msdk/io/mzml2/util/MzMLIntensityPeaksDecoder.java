@@ -1,17 +1,17 @@
 /*
- * Copyright 2016 Dmitry Avtonomov.
+ * (C) Copyright 2015-2016 by MSDK Development Team
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ * This software is dual-licensed under either
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * or (per the licensee's choosing)
+ *
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
-package io.github.msdk.io.mzml2;
+
+package io.github.msdk.io.mzml2.util;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -20,29 +20,31 @@ import java.util.zip.DataFormatException;
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
 import io.github.msdk.io.mzml2.util.ByteArrayHolder;
-import io.github.msdk.io.mzml2.util.MSNumpressDouble;
+import io.github.msdk.io.mzml2.util.MSNumpressFloat;
 import io.github.msdk.io.mzml2.util.ZlibInflater;
 
 /**
- * <p>MzMLMZPeaksDecoder class.</p>
+ * <p>
+ * MzMLIntensityPeaksDecoder class.
+ * </p>
  *
- * @author Dmitry Avtonomov
+ * @author plusik
  * @version $Id: $Id
  */
-public class MzMLMZPeaksDecoder {
+public class MzMLIntensityPeaksDecoder {
 
   public static class DecodedData {
-    double[] arr;
-    double valMax;
-    int valMaxPos;
-    double valMin;
+    private float[] arr;
+    float valMax;
+    float valMaxPos;
+    float valMin;
     int valMinPos;
-    double valMinNonZero;
+    float valMinNonZero;
     int valMinNonZeroPos;
-    double sum;
+    float sum;
 
-    public DecodedData(double[] arr, double valMax, int valMaxPos, double valMin, int valMinPos,
-        double valMinNonZero, int valMinNonZeroPos, double sum) {
+    public DecodedData(float[] arr, float valMax, int valMaxPos, float valMin, int valMinPos,
+        float valMinNonZero, int valMinNonZeroPos, float sum) {
       this.arr = arr;
       this.valMax = valMax;
       this.valMaxPos = valMaxPos;
@@ -54,8 +56,13 @@ public class MzMLMZPeaksDecoder {
     }
 
     public static DecodedData createEmpty() {
-      return new DecodedData(new double[0], 0, -1, 0, -1, 0, -1, 0);
+      return new DecodedData(new float[0], 0, -1, 0, -1, 0, -1, 0);
     }
+
+    public float[] getArr() {
+      return arr;
+    }
+
   }
 
   /**
@@ -71,11 +78,11 @@ public class MzMLMZPeaksDecoder {
    * @param precision allowed values: 32 and 64, can be null only if MS-NUMPRESS compression was
    *        applied and is specified in the @{code compressions} enum set.
    * @param numPoints a int.
-   * @param compressions null or MzMLCompressionType#NONE have the same
-   *        effect. Otherwise the binary data will be inflated according to the compression rules.
+   * @param compressions null or MzMLCompressionType#NONE have the same effect. Otherwise the binary
+   *        data will be inflated according to the compression rules.
    * @throws java.util.zip.DataFormatException if any.
    * @throws java.io.IOException if any.
-   * @return a 
+   * @return a {@link io.github.msdk.io.mzml2.MzMLIntensityPeaksDecoder.DecodedData} object.
    * @throws io.github.msdk.MSDKException if any.
    */
   public static DecodedData decode(byte[] bytesIn, int lengthIn, Integer precision, int numPoints,
@@ -109,7 +116,7 @@ public class MzMLMZPeaksDecoder {
     try { // try/catch to return the byte array, possibly borrowed from a
           // pool
 
-      double[] data = new double[numPoints];
+      float[] data = new float[numPoints];
 
       // first check for zlib compression, inflation must be done before
       // NumPress
@@ -124,21 +131,21 @@ public class MzMLMZPeaksDecoder {
       // now can check for NumPress
       if (compressions.contains(MzMLBinaryDataInfo.MzMLCompressionType.NUMPRESS_LINPRED)) {
         int numDecodedDoubles =
-            MSNumpressDouble.decodeLinear(bytes.getUnderlyingBytes(), bytes.getPosition(), data);
+            MSNumpressFloat.decodeLinear(bytes.getUnderlyingBytes(), bytes.getPosition(), data);
         if (numDecodedDoubles < 0) {
           throw new MSDKException("MSNumpress linear decoder failed");
         }
         return toDecodedData(data);
       } else if (compressions.contains(MzMLBinaryDataInfo.MzMLCompressionType.NUMPRESS_POSINT)) {
         int numDecodedDoubles =
-            MSNumpressDouble.decodePic(bytes.getUnderlyingBytes(), bytes.getPosition(), data);
+            MSNumpressFloat.decodePic(bytes.getUnderlyingBytes(), bytes.getPosition(), data);
         if (numDecodedDoubles < 0) {
           throw new MSDKException("MSNumpress positive integer decoder failed");
         }
         return toDecodedData(data);
       } else if (compressions.contains(MzMLBinaryDataInfo.MzMLCompressionType.NUMPRESS_SHLOGF)) {
         int numDecodedDoubles =
-            MSNumpressDouble.decodeSlof(bytes.getUnderlyingBytes(), bytes.getPosition(), data);
+            MSNumpressFloat.decodeSlof(bytes.getUnderlyingBytes(), bytes.getPosition(), data);
         if (numDecodedDoubles < 0) {
           throw new MSDKException("MSNumpress short logged float decoder failed");
         }
@@ -154,13 +161,13 @@ public class MzMLMZPeaksDecoder {
       int chunkSize = precision / 8; // in bytes
 
       int offset;
-      double valMax = Double.NEGATIVE_INFINITY;
+      float valMax = Float.NEGATIVE_INFINITY;
       int valMaxPos = 0;
-      double valMin = Double.POSITIVE_INFINITY;
+      float valMin = Float.POSITIVE_INFINITY;
       int valMinPos = 0;
-      double valMinNonZero = Double.POSITIVE_INFINITY;
+      float valMinNonZero = Float.POSITIVE_INFINITY;
       int valMinNonZeroPos = 0;
-      double sum = 0d;
+      float sum = 0f;
 
       switch (precision) {
         case (32): {
@@ -198,7 +205,7 @@ public class MzMLMZPeaksDecoder {
         }
         case (64): {
           long asLong;
-          double asDouble;
+          float asDouble;
 
           for (int i = 0; i < numPoints; i++) {
             offset = i * chunkSize;
@@ -211,7 +218,7 @@ public class MzMLMZPeaksDecoder {
                 | ((long) (decoded[offset + 5] & 0xFF) << 40)
                 | ((long) (decoded[offset + 6] & 0xFF) << 48)
                 | ((long) (decoded[offset + 7] & 0xFF) << 56);
-            asDouble = Double.longBitsToDouble(asLong);
+            asDouble = (float) Double.longBitsToDouble(asLong);
 
             if (asDouble > valMax) {
               valMax = asDouble;
@@ -258,24 +265,26 @@ public class MzMLMZPeaksDecoder {
   }
 
   /**
-   * <p>toDecodedData.</p>
+   * <p>
+   * toDecodedData.
+   * </p>
    *
-   * @param arr an array of double.
-   * @return a {@link io.github.msdk.io.mzml2.MzMLMZPeaksDecoder.DecodedData} object.
+   * @param arr an array of float.
+   * @return a {@link io.github.msdk.io.mzml2.MzMLIntensityPeaksDecoder.DecodedData} object.
    */
-  protected static DecodedData toDecodedData(double[] arr) {
+  protected static DecodedData toDecodedData(float[] arr) {
     if (arr.length == 0) {
       throw new IllegalArgumentException("Array length of zero is not allowed here");
     }
-    double valMax = Double.NEGATIVE_INFINITY;
+    float valMax = Float.NEGATIVE_INFINITY;
     int valMaxPos = 0;
-    double valMin = Double.POSITIVE_INFINITY;
+    float valMin = Float.POSITIVE_INFINITY;
     int valMinPos = 0;
-    double valMinNonZero = Double.POSITIVE_INFINITY;
+    float valMinNonZero = Float.POSITIVE_INFINITY;
     int valMinNonZeroPos = 0;
-    double sum = 0d;
+    float sum = 0f;
 
-    double val;
+    float val;
     for (int i = 0; i < arr.length; i++) {
       val = arr[i];
       if (val > valMax) {

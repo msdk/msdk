@@ -18,7 +18,7 @@ import java.util.Optional;
 public class MzMLPrecursorElement {
 
   private final Optional<String> spectrumRef;
-  private Optional<MzMLPrecursorIsolationWindow> isolationWindow;
+  private Optional<MzMLIsolationWindow> isolationWindow;
   private Optional<MzMLPrecursorSelectedIonList> selectedIonList;
   private MzMLPrecursorActivation activation;
 
@@ -33,7 +33,7 @@ public class MzMLPrecursorElement {
     return spectrumRef;
   }
 
-  public Optional<MzMLPrecursorIsolationWindow> getIsolationWindow() {
+  public Optional<MzMLIsolationWindow> getIsolationWindow() {
     return isolationWindow;
   }
 
@@ -45,7 +45,7 @@ public class MzMLPrecursorElement {
     return activation;
   }
 
-  public void setIsolationWindow(MzMLPrecursorIsolationWindow isolationWindow) {
+  public void setIsolationWindow(MzMLIsolationWindow isolationWindow) {
     this.isolationWindow = Optional.ofNullable(isolationWindow);
   }
 

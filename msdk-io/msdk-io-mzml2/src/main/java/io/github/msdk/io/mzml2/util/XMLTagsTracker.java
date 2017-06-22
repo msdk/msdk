@@ -29,10 +29,9 @@ public class XMLTagsTracker {
   }
 
   public boolean isInside(String tag) {
-    String[] tags = path.split("/");
-    for (String t : tags) {
-      if (t.equals(tag))
-        return true;
+    String exitTag = path.substring(path.lastIndexOf('/') + 1, path.length());
+    if (tag.equals(exitTag) || path.contains("/" + tag + "/")) {
+      return true;
     }
     return false;
   }
