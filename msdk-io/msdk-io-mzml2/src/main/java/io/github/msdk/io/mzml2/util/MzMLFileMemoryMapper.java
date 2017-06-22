@@ -36,7 +36,6 @@ public abstract class MzMLFileMemoryMapper {
     FileChannel inChannel = aFile.getChannel();
     ByteBufferInputStream is = ByteBufferInputStream.map(inChannel);
     aFile.close();
-    is.close();
 
     return is;
   }
