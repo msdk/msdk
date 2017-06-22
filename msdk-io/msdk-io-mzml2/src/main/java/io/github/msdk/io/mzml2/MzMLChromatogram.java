@@ -23,7 +23,6 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -365,10 +364,9 @@ class MzMLChromatogram implements Chromatogram {
       InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream,
           getRtBinaryDataInfo().getPosition(), getRtBinaryDataInfo().getEncodedLength());
       InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
-      byte[] decodedData = IOUtils.toByteArray(decodedIs);
 
-      rtValues = MzMLRtPeaksDecoder.decode(decodedData, decodedData.length, precision,
-          numOfDataPoints, getRtBinaryDataInfo().getCompressionType()).getArr();
+      rtValues = MzMLRtPeaksDecoder.decode(decodedIs, getRtBinaryDataInfo().getEncodedLength(),
+          precision, numOfDataPoints, getRtBinaryDataInfo().getCompressionType()).getDecodedArray();
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }
@@ -411,10 +409,12 @@ class MzMLChromatogram implements Chromatogram {
           getIntensityBinaryDataInfo().getPosition(),
           getIntensityBinaryDataInfo().getEncodedLength());
       InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
-      byte[] decodedData = IOUtils.toByteArray(decodedIs);
 
-      array = MzMLIntensityPeaksDecoder.decode(decodedData, decodedData.length, precision,
-          numOfDataPoints, getIntensityBinaryDataInfo().getCompressionType()).getArr();
+      array =
+          MzMLIntensityPeaksDecoder
+              .decode(decodedIs, getIntensityBinaryDataInfo().getEncodedLength(), precision,
+                  numOfDataPoints, getIntensityBinaryDataInfo().getCompressionType())
+              .getDecodedArray();
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }

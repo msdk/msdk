@@ -14,8 +14,14 @@
 package io.github.msdk.io.mzml2.util;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.EnumSet;
 import java.util.zip.DataFormatException;
+import java.util.zip.InflaterInputStream;
+
+import org.apache.commons.io.IOUtils;
+
+import com.google.common.io.LittleEndianDataInputStream;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
@@ -71,7 +77,7 @@ public class MzMLMZPeaksDecoder {
    * provide another method to parseIndexEntries them as floats. Hopefully some day everything will
    * be in 64 bits anyway.
    *
-   * @param bytesIn Byte array, decoded from a base64 encoded string<br>
+   * @param InputStream, decoded from a base64 encoded string<br>
    *        E.g. like: eNoNxltIkwEYBuAOREZFhrCudGFbbraTU+Zmue...
    * @param lengthIn length of data to be treated as values, i.e. the input array can be longer, the
    *        values to be interpreted must start at offset 0, and this will indicate the length
@@ -85,14 +91,14 @@ public class MzMLMZPeaksDecoder {
    * @return a
    * @throws io.github.msdk.MSDKException if any.
    */
-  public static DecodedData decode(byte[] bytesIn, int lengthIn, Integer precision, int numPoints,
+  public static DecodedData decode(InputStream is, int lengthIn, Integer precision, int numPoints,
       MzMLBinaryDataInfo.MzMLCompressionType compression)
       throws DataFormatException, IOException, MSDKException {
 
     // for some reason there sometimes might be zero length <peaks> tags
     // (ms2 usually)
     // in this case we just return an empty result
-    if (bytesIn.length == 0 || lengthIn == 0) {
+    if (lengthIn == 0) {
       return DecodedData.createEmpty();
     }
 
@@ -125,6 +131,8 @@ public class MzMLMZPeaksDecoder {
     ////// //////
     /////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////
+    InflaterInputStream iis = null;
+    LittleEndianDataInputStream dis = null;
     ByteArrayHolder bytes = null;
     boolean isBytesFromPool = false;
 
@@ -136,10 +144,14 @@ public class MzMLMZPeaksDecoder {
       // first check for zlib compression, inflation must be done before
       // NumPress
       if (compressions.contains(MzMLBinaryDataInfo.MzMLCompressionType.ZLIB)) {
-        bytes = ZlibInflater.zlibUncompressBuffer(bytesIn, lengthIn, null);
+        iis = new InflaterInputStream(is);
+        dis = new LittleEndianDataInputStream(iis);
+        // bytes = ZlibInflater.zlibUncompressBuffer(bytesIn, lengthIn, null);
         isBytesFromPool = true;
+      } else if (compressions.contains(MzMLCompressionType.NO_COMPRESSION)) {
+        dis = new LittleEndianDataInputStream(is);
       } else {
-        bytes = new ByteArrayHolder(bytesIn);
+        bytes = new ByteArrayHolder(IOUtils.toByteArray(is));
         bytes.setPosition(lengthIn);
       }
 
@@ -171,11 +183,11 @@ public class MzMLMZPeaksDecoder {
         throw new IllegalArgumentException(
             "Precision MUST be specified, if MS-NUMPRESS compression was not used");
       }
-      int decodedLen = bytes.getPosition(); // in bytes
-      byte[] decoded = bytes.getUnderlyingBytes();
-      int chunkSize = precision / 8; // in bytes
 
-      int offset;
+      // byte[] decoded = bytes.getUnderlyingBytes();
+      // int chunkSize = precision / 8; // in bytes
+
+      // int offset;
       double valMax = Double.NEGATIVE_INFINITY;
       int valMaxPos = 0;
       double valMin = Double.POSITIVE_INFINITY;
@@ -190,12 +202,15 @@ public class MzMLMZPeaksDecoder {
           float asFloat;
 
           for (int i = 0; i < numPoints; i++) {
-            offset = i * chunkSize;
+            // offset = i * chunkSize;
 
             // hopefully this way is faster
-            asInt = ((decoded[offset] & 0xFF)) // zero shift
-                | ((decoded[offset + 1] & 0xFF) << 8) | ((decoded[offset + 2] & 0xFF) << 16)
-                | ((decoded[offset + 3] & 0xFF) << 24);
+            // asInt = ((decoded[offset] & 0xFF)) // zero shift
+            // | ((decoded[offset + 1] & 0xFF) << 8) | ((decoded[offset + 2] & 0xFF) << 16)
+            // | ((decoded[offset + 3] & 0xFF) << 24);
+            asInt = ((dis.readByte() & 0xFF)) // zero shift
+                | ((dis.readByte() & 0xFF) << 8) | ((dis.readByte() & 0xFF) << 16)
+                | ((dis.readByte() & 0xFF) << 24);
             asFloat = Float.intBitsToFloat(asInt);
             if (asFloat > valMax) {
               valMax = asFloat;
@@ -223,16 +238,21 @@ public class MzMLMZPeaksDecoder {
           double asDouble;
 
           for (int i = 0; i < numPoints; i++) {
-            offset = i * chunkSize;
+            // offset = i * chunkSize;
 
-            asLong = ((long) (decoded[offset] & 0xFF)) // zero shift
-                | ((long) (decoded[offset + 1] & 0xFF) << 8)
-                | ((long) (decoded[offset + 2] & 0xFF) << 16)
-                | ((long) (decoded[offset + 3] & 0xFF) << 24)
-                | ((long) (decoded[offset + 4] & 0xFF) << 32)
-                | ((long) (decoded[offset + 5] & 0xFF) << 40)
-                | ((long) (decoded[offset + 6] & 0xFF) << 48)
-                | ((long) (decoded[offset + 7] & 0xFF) << 56);
+            // asLong = ((long) (decoded[offset] & 0xFF)) // zero shift
+            // | ((long) (decoded[offset + 1] & 0xFF) << 8)
+            // | ((long) (decoded[offset + 2] & 0xFF) << 16)
+            // | ((long) (decoded[offset + 3] & 0xFF) << 24)
+            // | ((long) (decoded[offset + 4] & 0xFF) << 32)
+            // | ((long) (decoded[offset + 5] & 0xFF) << 40)
+            // | ((long) (decoded[offset + 6] & 0xFF) << 48)
+            // | ((long) (decoded[offset + 7] & 0xFF) << 56);
+            asLong = ((long) (dis.readByte() & 0xFF)) // zero shift
+                | ((long) (dis.readByte() & 0xFF) << 8) | ((long) (dis.readByte() & 0xFF) << 16)
+                | ((long) (dis.readByte() & 0xFF) << 24) | ((long) (dis.readByte() & 0xFF) << 32)
+                | ((long) (dis.readByte() & 0xFF) << 40) | ((long) (dis.readByte() & 0xFF) << 48)
+                | ((long) (dis.readByte() & 0xFF) << 56);
             asDouble = Double.longBitsToDouble(asLong);
 
             if (asDouble > valMax) {

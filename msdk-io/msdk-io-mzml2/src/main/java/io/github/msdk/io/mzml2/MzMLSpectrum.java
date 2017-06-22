@@ -22,7 +22,6 @@ import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -231,10 +230,9 @@ public class MzMLSpectrum implements MsScan {
       InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream,
           getMzBinaryDataInfo().getPosition(), getMzBinaryDataInfo().getEncodedLength());
       InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
-      byte[] decodedData = IOUtils.toByteArray(decodedIs);
 
-      mzValues = MzMLMZPeaksDecoder.decode(decodedData, decodedData.length, precision,
-          numOfDataPoints, getMzBinaryDataInfo().getCompressionType()).getDecodedArray();
+      mzValues = MzMLMZPeaksDecoder.decode(decodedIs, getMzBinaryDataInfo().getEncodedLength(),
+          precision, numOfDataPoints, getMzBinaryDataInfo().getCompressionType()).getDecodedArray();
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }
@@ -271,10 +269,12 @@ public class MzMLSpectrum implements MsScan {
           getIntensityBinaryDataInfo().getPosition(),
           getIntensityBinaryDataInfo().getEncodedLength());
       InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
-      byte[] decodedData = IOUtils.toByteArray(decodedIs);
 
-      intensityValues = MzMLIntensityPeaksDecoder.decode(decodedData, decodedData.length, precision,
-          numOfDataPoints, getIntensityBinaryDataInfo().getCompressionType()).getArr();
+      intensityValues =
+          MzMLIntensityPeaksDecoder
+              .decode(decodedIs, getIntensityBinaryDataInfo().getEncodedLength(), precision,
+                  numOfDataPoints, getIntensityBinaryDataInfo().getCompressionType())
+              .getDecodedArray();
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }
