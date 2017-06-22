@@ -24,6 +24,9 @@ import org.junit.Test;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
+
+import org.apache.commons.collections4.MapIterator;
+import org.apache.commons.collections4.keyvalue.MultiKey;
 import org.apache.commons.collections4.map.MultiKeyMap;
 
 
@@ -51,13 +54,25 @@ public class SliceSparseMatrixTest {
 	
 	
 	@Test
-	public void testGetSlice() throws MSDKException,IOException{
-		MultiKeyMap slice = objSliceSparseMatrix.getSlice(301.15106201171875, 0, 208);
+	public void getHorizontalSlice() throws MSDKException,IOException{
+		MultiKeyMap slice = objSliceSparseMatrix.getHorizontalSlice(301.15106201171875, 0, 208);
 		int size = slice.size();
 		for(int i=0;i<size;i++){
 			Assert.assertTrue(slice.containsKey(new Integer(i),new Integer(30115)));
 		}
 		Assert.assertEquals(209, size);
+	}
+	
+	@Test
+	public void getVerticalSlice() throws MSDKException,IOException{
+		MultiKeyMap slice = objSliceSparseMatrix.getVerticalSlice(5);
+		Assert.assertNotNull(slice);
+		MapIterator iterator = slice.mapIterator();
+		while (iterator.hasNext()){
+			iterator.next();
+			MultiKey sliceKey = (MultiKey) iterator.getKey();
+			Assert.assertEquals(5, sliceKey.getKey(0));
+		}
 	}
 	
 	@Test
@@ -70,7 +85,7 @@ public class SliceSparseMatrixTest {
 	
 	@Test
 	public void testGetRetentionTimeGetIntensity() throws MSDKException,IOException{
-		MultiKeyMap slice = objSliceSparseMatrix.getSlice(301.15106201171875, 0, 208);
+		MultiKeyMap slice = objSliceSparseMatrix.getHorizontalSlice(301.15106201171875, 0, 208);
 		int size = slice.size();
 		List<ContinuousWaveletTransform.DataPoint> listOfDataPoint = objSliceSparseMatrix.getCWTDataPoint(slice);
 		Assert.assertNotNull(listOfDataPoint);

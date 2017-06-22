@@ -2,8 +2,6 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
 import java.io.File;
 
-import javax.annotation.Nonnull;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,7 +12,7 @@ import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 
-public class EstimetFwhmMsTest {
+public class EstimateFwhmMsTest {
 	
 	private static final String TEST_DATA_PATH = "src/test/resources/";
 	private static RawDataFile rawFile;
@@ -29,13 +27,15 @@ public class EstimetFwhmMsTest {
 	    DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
 	    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile,dataStore);
 	    rawFile = importer.execute();
-	    objCurveTool = new CurveTool(rawFile);
+	    SliceSparseMatrix objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
+	    objCurveTool = new CurveTool(objSliceSparseMatrix);
 	    Assert.assertNotNull(rawFile);
 	    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 	  }
 
 	@Test
 	public void testestimateFwhmMs() throws MSDKException{
-		objCurveTool.estimateFwhmMs(10);
+		int fwhm = objCurveTool.estimateFwhmMs(10);
+		Assert.assertEquals(4, fwhm,1);
 	}
 }

@@ -178,7 +178,7 @@ public class SliceSparseMatrix {
 	   * @param upperScanBound a {@link java.lang.Integer} object
 	   * @return sliceMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object
 	   */
-	public MultiKeyMap getSlice(double mz,int lowerScanBound,int upperScanBound){
+	public MultiKeyMap getHorizontalSlice(double mz,int lowerScanBound,int upperScanBound){
 		
 		int roundedmz = roundMZ(mz);
 		MultiKeyMap  sliceMap = new MultiKeyMap ();
@@ -195,6 +195,33 @@ public class SliceSparseMatrix {
 			
 		return sliceMap;
 	}
+	
+	/**
+	   * <p>
+	   * This method returns the MultiKeyMap slice of data for given Scan Number.
+	   * </p>
+	   * 
+	   * @param scanNumber a {@link java.lang.Integer} object
+	   * @return sliceMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object
+	   */
+	public MultiKeyMap getVerticalSlice(int scanNumber){
+		
+		MultiKeyMap  sliceMap = new MultiKeyMap ();
+	
+		for(int i = 0;i<filterListOfTriplet.size();i++){
+			int roundedmz = roundMZ(filterListOfTriplet.get(i).mz);
+			if(tripletMap.containsKey(new Integer(scanNumber),new Integer(roundedmz))){
+				float intensity = ((SparseMatrixTriplet)tripletMap.get(new Integer(scanNumber),new Integer(roundedmz))).intensity;
+				sliceMap.put(scanNumber, roundedmz,intensity);
+			}
+			else{
+				sliceMap.put(scanNumber, roundedmz, 0.0);
+			}
+		}
+		return sliceMap;
+	}
+	
+	
 	
 	/**
 	   * <p>
@@ -316,6 +343,16 @@ public class SliceSparseMatrix {
 	   */
 	public void setMaxIntensityIndexZero(){
 		maxIntensityIndex = 0;
+	}
+	
+	/**
+	   * <p>
+	   * This method returns size of raw data file in terms of total scans.
+	   * </p>
+	   */
+	public int getSizeOfRawDataFile(){
+		int size = listOfScans.size();
+		return size;
 	}
 
 }
