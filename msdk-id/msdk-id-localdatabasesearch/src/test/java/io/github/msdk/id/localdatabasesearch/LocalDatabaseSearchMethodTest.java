@@ -16,6 +16,7 @@ package io.github.msdk.id.localdatabasesearch;
 import java.io.File;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
@@ -28,7 +29,7 @@ public class LocalDatabaseSearchMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-
+  @Ignore
   @Test
   public void identificationTest() throws MSDKException {
 

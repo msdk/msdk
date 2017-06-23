@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
@@ -32,7 +33,7 @@ public class SrmDetectionMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-
+  @Ignore
   @Test
   public void test_mzML() throws MSDKException {
 
@@ -60,7 +61,7 @@ public class SrmDetectionMethodTest {
     Assert.assertEquals(722.35, chromatograms.get(18).getMz(), 0.0001);
   }
 
-
+  @Ignore
   @Test
   public void test_Thermo() throws MSDKException {
 
