@@ -16,8 +16,18 @@ package io.github.msdk.io.mzml2.data;
 public class MzMLBinaryDataInfo {
 
   public static enum MzMLCompressionType {
-    NUMPRESS_LINPRED("MS:1002312"), NUMPRESS_POSINT("MS:1002313"), ZLIB(
-        "MS:1000574"), NUMPRESS_SHLOGF("MS:1002314"), NO_COMPRESSION("MS:1000576");
+    NUMPRESS_LINPRED("MS:1002312"), // MS-Numpress linear prediction compression
+    NUMPRESS_POSINT("MS:1002313"), // MS-Numpress positive integer compression
+    NUMPRESS_SHLOGF("MS:1002314"), // MS-Numpress short logged float compression
+    ZLIB("MS:1000574"), // zlib compression
+    NO_COMPRESSION("MS:1000576"), // no compression
+    NUMPRESS_LINPRED_ZLIB("MS:1002746"), // MS-Numpress linear prediction compression followed by
+                                         // zlib compression
+    NUMPRESS_POSINT_ZLIB("MS:1002747"), // MS-Numpress positive integer compression followed by zlib
+                                        // compression
+    NUMPRESS_SHLOGF_ZLIB("MS:1002748"); // MS-Numpress short logged float compression followed by
+                                        // zlib compression
+
     private String accession;
 
     private MzMLCompressionType(String accession) {
@@ -30,8 +40,11 @@ public class MzMLBinaryDataInfo {
   }
 
   public static enum MzMLBitLength {
-    THIRTY_TWO_BIT_INTEGER("MS:1000519"), SIXTEEN_BIT_FLOAT("MS:1000520"), THIRTY_TWO_BIT_FLOAT(
-        "MS:1000521"), SIXTY_FOUR_BIT_INTEGER("MS:1000522"), SIXTY_FOUR_BIT_FLOAT("MS:1000523");
+    THIRTY_TWO_BIT_INTEGER("MS:1000519"), // 32-bit integer
+    SIXTEEN_BIT_FLOAT("MS:1000520"), // 16-bit float
+    THIRTY_TWO_BIT_FLOAT("MS:1000521"), // 32-bit float
+    SIXTY_FOUR_BIT_INTEGER("MS:1000522"), // 64-bit integer
+    SIXTY_FOUR_BIT_FLOAT("MS:1000523"); // 64-bit float
 
     private String accession;
 

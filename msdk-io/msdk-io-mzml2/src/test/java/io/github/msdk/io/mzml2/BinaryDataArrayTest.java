@@ -13,9 +13,10 @@
 
 package io.github.msdk.io.mzml2;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Base64;
-import java.util.EnumSet;
 import java.util.zip.DataFormatException;
 
 import org.junit.Assert;
@@ -23,7 +24,9 @@ import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
+import io.github.msdk.io.mzml2.util.MzMLIntensityPeaksDecoder;
 import io.github.msdk.io.mzml2.util.MzMLMZPeaksDecoder;
+import io.github.msdk.io.mzml2.util.MzMLRtPeaksDecoder;
 
 /**
  * 
@@ -53,19 +56,6 @@ public class BinaryDataArrayTest {
           65.0F, 66.0F, 67.0F, 68.0F, 69.0F, 70.0F, 71.0F, 72.0F, 73.0F, 74.0F, 75.0F, 76.0F, 77.0F,
           78.0F, 79.0F, 80.0F, 81.0F, 82.0F, 83.0F, 84.0F, 85.0F, 86.0F, 87.0F, 88.0F, 89.0F, 90.0F,
           91.0F, 92.0F, 93.0F, 94.0F, 95.0F, 96.0F, 97.0F, 98.0F};
-
-  private final long[] testData64bitInt = {0L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L,
-      13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L, 25L, 26L, 27L, 28L, 29L, 30L, 31L,
-      32L, 33L, 34L, 35L, 36L, 37L, 38L, 39L, 40L, 41L, 42L, 43L, 44L, 45L, 46L, 47L, 48L, 49L, 50L,
-      51L, 52L, 53L, 54L, 55L, 56L, 57L, 58L, 59L, 60L, 61L, 62L, 63L, 64L, 65L, 66L, 67L, 68L, 69L,
-      70L, 71L, 72L, 73L, 74L, 75L, 76L, 77L, 78L, 79L, 80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L, 88L,
-      89L, 90L, 91L, 92L, 93L, 94L, 95L, 96L, 97L, 98L};
-
-  private final int[] testData32bitInt = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-      17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
-      40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62,
-      63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85,
-      86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98};
 
 
   ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
@@ -129,77 +119,67 @@ public class BinaryDataArrayTest {
 
   @Test
   public void testCompressed64bit() throws MSDKException, DataFormatException, IOException {
-    // Get an empty EnumSet to store the compression type
-    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
-        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
-    compressions.add(MzMLBinaryDataInfo.MzMLCompressionType.ZLIB);
+    // Put the String onto an InputStream
+    InputStream is = new ByteArrayInputStream(compressed64bit.getBytes());
 
-    // Base 64 decode the given String and store the result in a byte array
-    byte[] decodedArray = Base64.getDecoder().decode(compressed64bit);
-    Assert.assertNotNull(decodedArray);
+    // Base 64 decode the given String and store the result in an InputStream
+    InputStream decodedIs = Base64.getDecoder().wrap(is);
+    Assert.assertNotNull(decodedIs);
 
     // Decode the decoded byte array and compare with the expected values
     double[] result = MzMLMZPeaksDecoder
-        .decode(decodedArray, decodedArray.length, 64, 99, compressions).getDecodedArray();
+        .decode(decodedIs, 664, 64, 99, MzMLBinaryDataInfo.MzMLCompressionType.ZLIB)
+        .getDecodedArray();
     Assert.assertArrayEquals(testData64bitFloat, result, 0.0);
 
   }
 
   @Test
   public void testUncompressed64bit() throws MSDKException, DataFormatException, IOException {
-    // Get an empty EnumSet to store the compression type
-    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
-        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
-    compressions.add(MzMLBinaryDataInfo.MzMLCompressionType.NO_COMPRESSION);
+    // Put the String onto an InputStream
+    InputStream is = new ByteArrayInputStream(uncompressed64bit.getBytes());
 
-    // Base 64 decode the given String and store the result in a byte array
-    byte[] decodedArray = Base64.getDecoder().decode(uncompressed64bit);
-    Assert.assertNotNull(decodedArray);
+    // Base 64 decode the given String and store the result in an InputStream
+    InputStream decodedIs = Base64.getDecoder().wrap(is);
+    Assert.assertNotNull(decodedIs);
 
     // Decode the decoded byte array and compare with the expected values
     double[] result = MzMLMZPeaksDecoder
-        .decode(decodedArray, decodedArray.length, 64, 99, compressions).getDecodedArray();
+        .decode(decodedIs, 1056, 64, 99, MzMLBinaryDataInfo.MzMLCompressionType.NO_COMPRESSION)
+        .getDecodedArray();
     Assert.assertArrayEquals(testData64bitFloat, result, 0.0);
   }
 
   @Test
   public void testCompressed32bit() throws MSDKException, DataFormatException, IOException {
-    // Get an empty EnumSet to store the compression type
-    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
-        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
-    compressions.add(MzMLBinaryDataInfo.MzMLCompressionType.ZLIB);
+    // Put the String onto an InputStream
+    InputStream is = new ByteArrayInputStream(compressed32bit.getBytes());
 
-    // Base 64 decode the given String and store the result in a byte array
-    byte[] decodedArray = Base64.getDecoder().decode(compressed32bit);
-    Assert.assertNotNull(decodedArray);
+    // Base 64 decode the given String and store the result in an InputStream
+    InputStream decodedIs = Base64.getDecoder().wrap(is);
+    Assert.assertNotNull(decodedIs);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result = MzMLMZPeaksDecoder
-        .decode(decodedArray, decodedArray.length, 32, 99, compressions).getDecodedArray();
-    int[] resultToInt = new int[99];
-    for (int i = 0; i < resultToInt.length; i++)
-      resultToInt[i] = (int) result[i];
-    Assert.assertArrayEquals(testData32bitInt, resultToInt);
+    float[] result = MzMLIntensityPeaksDecoder
+        .decode(decodedIs, 268, 32, 99, MzMLBinaryDataInfo.MzMLCompressionType.ZLIB)
+        .getDecodedArray();
+    Assert.assertArrayEquals(testData32bitFloat, result, 0.0f);
   }
 
   @Test
   public void testUncompressed32bit() throws MSDKException, DataFormatException, IOException {
-    // Get an empty EnumSet to store the compression type
-    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
-        EnumSet.noneOf(MzMLBinaryDataInfo.MzMLCompressionType.class);
-    compressions.add(MzMLBinaryDataInfo.MzMLCompressionType.NO_COMPRESSION);
+    // Put the String onto an InputStream
+    InputStream is = new ByteArrayInputStream(uncompressed32bit.getBytes());
 
-    // Base 64 decode the given String and store the result in a byte array
-    byte[] decodedArray = Base64.getDecoder().decode(uncompressed32bit);
-    Assert.assertNotNull(decodedArray);
+    // Base 64 decode the given String and store the result in an InputStream
+    InputStream decodedIs = Base64.getDecoder().wrap(is);
+    Assert.assertNotNull(decodedIs);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result = MzMLMZPeaksDecoder
-        .decode(decodedArray, decodedArray.length, 32, 99, compressions).getDecodedArray();
-    int[] resultToInt = new int[99];
-    for (int i = 0; i < resultToInt.length; i++)
-      resultToInt[i] = (int) result[i];
-    Assert.assertArrayEquals(testData32bitInt, resultToInt);
+    float[] result = MzMLRtPeaksDecoder
+        .decode(decodedIs, 528, 32, 99, MzMLBinaryDataInfo.MzMLCompressionType.NO_COMPRESSION)
+        .getDecodedArray();
+    Assert.assertArrayEquals(testData32bitFloat, result, 0.0f);
   }
 
 }
