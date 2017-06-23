@@ -47,8 +47,7 @@ import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
 import io.github.msdk.io.mzml2.data.MzMLPrecursorList;
 import io.github.msdk.io.mzml2.data.MzMLRawDataFile;
 import io.github.msdk.io.mzml2.util.ByteBufferInputStreamAdapter;
-import io.github.msdk.io.mzml2.util.MzMLIntensityPeaksDecoder;
-import io.github.msdk.io.mzml2.util.MzMLMZPeaksDecoder;
+import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
@@ -231,8 +230,9 @@ public class MzMLSpectrum implements MsScan {
           getMzBinaryDataInfo().getPosition(), getMzBinaryDataInfo().getEncodedLength());
       InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
 
-      mzValues = MzMLMZPeaksDecoder.decode(decodedIs, getMzBinaryDataInfo().getEncodedLength(),
-          precision, numOfDataPoints, getMzBinaryDataInfo().getCompressionType()).getDecodedArray();
+      mzValues =
+          MzMLPeaksDecoder.decodeToDouble(decodedIs, getMzBinaryDataInfo().getEncodedLength(),
+              precision, numOfDataPoints, getMzBinaryDataInfo().getCompressionType());
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }
@@ -271,10 +271,8 @@ public class MzMLSpectrum implements MsScan {
       InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
 
       intensityValues =
-          MzMLIntensityPeaksDecoder
-              .decode(decodedIs, getIntensityBinaryDataInfo().getEncodedLength(), precision,
-                  numOfDataPoints, getIntensityBinaryDataInfo().getCompressionType())
-              .getDecodedArray();
+          MzMLPeaksDecoder.decodeToFloat(decodedIs, getIntensityBinaryDataInfo().getEncodedLength(),
+              precision, numOfDataPoints, getIntensityBinaryDataInfo().getCompressionType());
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }

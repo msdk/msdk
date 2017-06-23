@@ -47,8 +47,7 @@ import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
 import io.github.msdk.io.mzml2.data.MzMLProduct;
 import io.github.msdk.io.mzml2.data.MzMLRawDataFile;
 import io.github.msdk.io.mzml2.util.ByteBufferInputStreamAdapter;
-import io.github.msdk.io.mzml2.util.MzMLIntensityPeaksDecoder;
-import io.github.msdk.io.mzml2.util.MzMLRtPeaksDecoder;
+import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
 import it.unimi.dsi.io.ByteBufferInputStream;
 
 class MzMLChromatogram implements Chromatogram {
@@ -365,8 +364,8 @@ class MzMLChromatogram implements Chromatogram {
           getRtBinaryDataInfo().getPosition(), getRtBinaryDataInfo().getEncodedLength());
       InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
 
-      rtValues = MzMLRtPeaksDecoder.decode(decodedIs, getRtBinaryDataInfo().getEncodedLength(),
-          precision, numOfDataPoints, getRtBinaryDataInfo().getCompressionType()).getDecodedArray();
+      rtValues = MzMLPeaksDecoder.decodeToFloat(decodedIs, getRtBinaryDataInfo().getEncodedLength(),
+          precision, numOfDataPoints, getRtBinaryDataInfo().getCompressionType());
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }
@@ -411,10 +410,8 @@ class MzMLChromatogram implements Chromatogram {
       InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
 
       array =
-          MzMLIntensityPeaksDecoder
-              .decode(decodedIs, getIntensityBinaryDataInfo().getEncodedLength(), precision,
-                  numOfDataPoints, getIntensityBinaryDataInfo().getCompressionType())
-              .getDecodedArray();
+          MzMLPeaksDecoder.decodeToFloat(decodedIs, getIntensityBinaryDataInfo().getEncodedLength(),
+              precision, numOfDataPoints, getIntensityBinaryDataInfo().getCompressionType());
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }
