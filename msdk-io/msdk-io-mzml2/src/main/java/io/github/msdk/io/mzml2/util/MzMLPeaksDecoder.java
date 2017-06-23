@@ -38,10 +38,8 @@ import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLCompressionType;
 public class MzMLPeaksDecoder {
 
   /**
-   * Converts a base64 encoded mz or intensity string used in mzML files to an array of doubles. If
-   * the original precision was 32 bit, you still get doubles as output, would be too complicated to
-   * provide another method to parseIndexEntries them as floats. Hopefully some day everything will
-   * be in 64 bits anyway.
+   * Converts a base64 encoded mz or intensity string used in mzML files to an array of floats. If
+   * the original precision was 64 bit, you still get floats as output.
    *
    * @param InputStream, decoded from a base64 encoded string<br>
    *        E.g. like: eNoNxltIkwEYBuAOREZFhrCudGFbbraTU+Zmue...
@@ -54,7 +52,7 @@ public class MzMLPeaksDecoder {
    *        the binary data will be inflated according to the compression rules.
    * @throws java.util.zip.DataFormatException if any.
    * @throws java.io.IOException if any.
-   * @return a {@link io.github.msdk.io.mzml2.MzMLPeaksDecoder.DecodedData} object.
+   * @return a float array containing the decoded values
    * @throws io.github.msdk.MSDKException if any.
    */
   public static float[] decodeToFloat(InputStream is, int lengthIn, Integer precision,
@@ -142,6 +140,24 @@ public class MzMLPeaksDecoder {
     return data;
   }
 
+  /**
+   * Converts a base64 encoded mz or intensity string used in mzML files to an array of doubles. If
+   * the original precision was 32 bit, you still get doubles as output.
+   *
+   * @param InputStream, decoded from a base64 encoded string<br>
+   *        E.g. like: eNoNxltIkwEYBuAOREZFhrCudGFbbraTU+Zmue...
+   * @param lengthIn length of data to be treated as values, i.e. the input array can be longer, the
+   *        values to be interpreted must start at offset 0, and this will indicate the length
+   * @param precision allowed values: 32 and 64, can be null only if MS-NUMPRESS compression was
+   *        applied and is specified in the @{code compressions} enum set.
+   * @param numPoints a int.
+   * @param compression null or MzMLCompressionType#NO_COMPRESSION have the same effect. Otherwise
+   *        the binary data will be inflated according to the compression rules.
+   * @throws java.util.zip.DataFormatException if any.
+   * @throws java.io.IOException if any.
+   * @return a double array containing the decoded values
+   * @throws io.github.msdk.MSDKException if any.
+   */
   public static double[] decodeToDouble(InputStream is, int lengthIn, Integer precision,
       int numPoints, MzMLBinaryDataInfo.MzMLCompressionType compression)
       throws DataFormatException, IOException, MSDKException {
