@@ -22,7 +22,7 @@ public class EstimateFwhmMsTest {
 	public static void loadData() throws MSDKException {
 		
 	    // Import the file
-	    File inputFile = new File(TEST_DATA_PATH + "test_out.cdf");
+	    File inputFile = new File(TEST_DATA_PATH + "test_output.cdf");
 	    Assert.assertTrue("Cannot read test data", inputFile.canRead());
 	    DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
 	    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile,dataStore);
