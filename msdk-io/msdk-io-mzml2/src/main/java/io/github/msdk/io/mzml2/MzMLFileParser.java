@@ -610,8 +610,8 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
    * found
    * </p>
    *
-   * @param XMLStreamReader instance used to parse
-   * @param Attribute's value to be found
+   * @param xmlStreamReader XMLStreamReader instance used to parse
+   * @param attr Attribute's value to be found
    * @return a CharArray containing the value of the attribute.
    */
   public CharArray getRequiredAttribute(XMLStreamReader xmlStreamReader, String attr) {
