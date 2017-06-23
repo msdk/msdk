@@ -15,7 +15,9 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.lang.Math;
 
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -33,7 +35,7 @@ import org.apache.commons.collections4.map.MultiKeyMap;
  * </p>
  */
 public class SliceSparseMatrix {
-	
+		
 	/**
 	 * <p>
 	 *  tripletMap is used for creating MultiKeyMap type of hashmap from raw data file. 
@@ -60,7 +62,7 @@ public class SliceSparseMatrix {
 	 *  roundMz is used for rounding mz value. 
 	 * </p>
 	 */
-	private final int roundMz = 100;
+	private final int roundMzFactor = 10000;
 	
 	/**
 	 * <p>
@@ -68,6 +70,13 @@ public class SliceSparseMatrix {
 	 * </p>
 	 */
 	private final List<MsScan> listOfScans;
+	
+	/**
+	 * <p>
+	 *  mzValues is used to store all the mz values from raw file. 
+	 * </p>
+	 */
+	private final List<Integer> mzValues;
 	
 	/**
 	 * <p>
@@ -80,6 +89,16 @@ public class SliceSparseMatrix {
 		public float intensity;
 		public float rt;
 		public boolean removed;
+	}
+	
+	/**
+	 * <p>
+	 * This is the data model for getting vertical slice from sparse matrix. 
+	 * </p>
+	 */
+	public static class VerticalSliceDataPoint{
+		float mz;
+		float intensity;
 	}
 	
 	/**
@@ -151,9 +170,12 @@ public class SliceSparseMatrix {
 		SparseMatrixTriplet lastFilterTriplet = new SparseMatrixTriplet();
 		tripletMap = new MultiKeyMap ();
 		int index = 0;
+		Set<Integer> mzSet = new HashSet<Integer>(); 
+		
 		filterListOfTriplet.add(listOfTriplet.get(0));
 		for(int i=1;i<listOfTriplet.size();i++){
 			currTriplet = listOfTriplet.get(i);
+			mzSet.add(listOfTriplet.get(i).mz);
 			lastFilterTriplet = filterListOfTriplet.get(index);
 			if(currTriplet.mz == lastFilterTriplet.mz && currTriplet.scanNumber == lastFilterTriplet.scanNumber){
 				lastFilterTriplet.intensity += currTriplet.intensity;
@@ -165,7 +187,19 @@ public class SliceSparseMatrix {
 			}
 			
 		}
+		mzValues = new ArrayList<Integer>(mzSet);
+				
+		Comparator<Integer> compareMZ = new Comparator<Integer>() {
+			
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				Integer mz1 = o1;
+				Integer mz2 = o2;
+				return mz1.compareTo(mz2);
+			}
+		};
 		
+		Collections.sort(mzValues, compareMZ);
 	}
 		
 	 /**
@@ -198,27 +232,33 @@ public class SliceSparseMatrix {
 	
 	/**
 	   * <p>
-	   * This method returns the MultiKeyMap slice of data for given Scan Number.
+	   * This method returns the List of type VerticalSliceDataPoint for given Scan Number.
 	   * </p>
 	   * 
 	   * @param scanNumber a {@link java.lang.Integer} object
-	   * @return sliceMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object
+	   * @return datapointList a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.VerticalSliceDataPoint} list
 	   */
-	public MultiKeyMap getVerticalSlice(int scanNumber){
+	public List<VerticalSliceDataPoint> getVerticalSlice(int scanNumber){
 		
-		MultiKeyMap  sliceMap = new MultiKeyMap ();
-	
-		for(int i = 0;i<filterListOfTriplet.size();i++){
-			int roundedmz = roundMZ(filterListOfTriplet.get(i).mz);
-			if(tripletMap.containsKey(new Integer(scanNumber),new Integer(roundedmz))){
-				float intensity = ((SparseMatrixTriplet)tripletMap.get(new Integer(scanNumber),new Integer(roundedmz))).intensity;
-				sliceMap.put(scanNumber, roundedmz,intensity);
+		
+		List<VerticalSliceDataPoint>  datapointList = new ArrayList<VerticalSliceDataPoint>();
+
+		for (int roundedMZ : mzValues)	{
+			VerticalSliceDataPoint datapoint = new VerticalSliceDataPoint();
+			
+			if(tripletMap.containsKey(new Integer(scanNumber),new Integer(roundedMZ))){
+				
+				datapoint.intensity = ((SparseMatrixTriplet)tripletMap.get(new Integer(scanNumber),new Integer(roundedMZ))).intensity;
+				datapoint.mz = (float)roundedMZ/roundMzFactor;
+				datapointList.add(datapoint);
 			}
 			else{
-				sliceMap.put(scanNumber, roundedmz, 0.0);
+				datapoint.intensity = (float) 0.0;
+				datapoint.mz = (float)roundedMZ/roundMzFactor;
+				datapointList.add(datapoint);
 			}
 		}
-		return sliceMap;
+		return datapointList;
 	}
 	
 	
@@ -332,7 +372,7 @@ public class SliceSparseMatrix {
 	   * @return roundedmz a {@link java.lang.Integer} object
 	   */
 	private int roundMZ(double mz){
-		int roundedmz = (int)Math.round(mz*roundMz);
+		int roundedmz = (int)Math.round(mz*roundMzFactor);
 		return roundedmz;
 	}
 

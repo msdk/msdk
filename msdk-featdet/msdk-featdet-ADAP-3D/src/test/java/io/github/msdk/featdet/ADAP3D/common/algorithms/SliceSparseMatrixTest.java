@@ -58,26 +58,20 @@ public class SliceSparseMatrixTest {
 		MultiKeyMap slice = objSliceSparseMatrix.getHorizontalSlice(301.15106201171875, 0, 208);
 		int size = slice.size();
 		for(int i=0;i<size;i++){
-			Assert.assertTrue(slice.containsKey(new Integer(i),new Integer(30115)));
+			Assert.assertTrue(slice.containsKey(new Integer(i),new Integer(3011511)));
 		}
 		Assert.assertEquals(209, size);
 	}
 	
 	@Test
 	public void getVerticalSlice() throws MSDKException,IOException{
-		MultiKeyMap slice = objSliceSparseMatrix.getVerticalSlice(5);
-		Assert.assertNotNull(slice);
-		MapIterator iterator = slice.mapIterator();
-		while (iterator.hasNext()){
-			iterator.next();
-			MultiKey sliceKey = (MultiKey) iterator.getKey();
-			Assert.assertEquals(5, sliceKey.getKey(0));
-		}
+		List<SliceSparseMatrix.VerticalSliceDataPoint> slice = objSliceSparseMatrix.getVerticalSlice(5);
+		Assert.assertEquals(46004, slice.size());
 	}
 	
 	@Test
 	public void testFindNextMaxIntensity() throws MSDKException,IOException{
-		double intensityValues[] = {8653863.0,8628693.0,8439210.0};
+		double intensityValues[] = {8538462.0,8521695.0,8365356.0};
 		for(int i=0;i<3;i++){
 			Assert.assertEquals(intensityValues[i], objSliceSparseMatrix.findNextMaxIntensity().intensity,0);
 		}
@@ -95,8 +89,9 @@ public class SliceSparseMatrixTest {
 	public void testRemoveDataPoints() throws MSDKException,IOException{
 		MultiKeyMap updatedTripletMap = objSliceSparseMatrix.removeDataPoints(301.15106201171875, 0, 10);
 		for(int i=0;i<11;i++){
-			SliceSparseMatrix.SparseMatrixTriplet triplet = (SliceSparseMatrix.SparseMatrixTriplet)updatedTripletMap.get(new Integer(i),new Integer(30115));
-			Assert.assertTrue(triplet.removed);
+			SliceSparseMatrix.SparseMatrixTriplet triplet = (SliceSparseMatrix.SparseMatrixTriplet)updatedTripletMap.get(new Integer(i),new Integer(3011511));
+			if(triplet!=null)
+				Assert.assertTrue(triplet.removed);
 		}
 	}
 }
