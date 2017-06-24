@@ -38,9 +38,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * GridMassMethod class.
  * </p>
- *
- * @author plusik
- * @version $Id: $Id
  */
 public class GridMassMethod implements MSDKMethod<FeatureTable> {
 
@@ -455,7 +452,6 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
             || sx.getContigousToMaxDatumScansRatio() > 0.5)) {
           SimpleChromatogram peak = new SimpleChromatogram(dataFile, scanNumbers);
           if (addMaxDatumFromScans(sx, peak) > 0) {
-            peak.finishChromatogram();
             if (peak.getArea() > 1e-6) {
               newPeakID++;
               SimpleFeatureTableRow newRow = new SimpleFeatureTableRow(newPeakList);
