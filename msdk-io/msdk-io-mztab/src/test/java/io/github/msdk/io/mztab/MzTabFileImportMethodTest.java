@@ -25,8 +25,6 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
@@ -39,9 +37,6 @@ public class MzTabFileImportMethodTest {
   @Ignore
   @Test
   public void testMzTab_Sample() throws MSDKException {
-
-    // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "Sample-2.3.mzTab");
@@ -113,9 +108,6 @@ public class MzTabFileImportMethodTest {
   @Ignore
   @Test
   public void testMzTab_Lipidomics() throws MSDKException {
-
-    // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "lipidomics-HFD-LD-study-TG.mzTab");

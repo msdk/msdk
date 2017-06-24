@@ -22,8 +22,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
@@ -36,9 +34,6 @@ public class FeatureNormalizationByCompoundMethodTest {
   @Ignore
   @Test
   public void testMzTab_Sample() throws MSDKException {
-
-    // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "singleSample.mzTab");
@@ -64,9 +59,8 @@ public class FeatureNormalizationByCompoundMethodTest {
     }
 
     // 1. Test the normalization based on nearest standard
-    FeatureNormalizationByCompoundMethod method =
-        new FeatureNormalizationByCompoundMethod(featureTable, dataStore, normalizationType,
-            internalStandardRows, mzRtWeight);
+    FeatureNormalizationByCompoundMethod method = new FeatureNormalizationByCompoundMethod(
+        featureTable, normalizationType, internalStandardRows, mzRtWeight);
     FeatureTable normalizedFeatureTable = method.execute();
     Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
 

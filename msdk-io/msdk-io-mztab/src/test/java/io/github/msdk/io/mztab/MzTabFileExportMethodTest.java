@@ -26,8 +26,6 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
@@ -40,9 +38,6 @@ public class MzTabFileExportMethodTest {
   @Ignore
   @Test
   public void testMzTab_Sample() throws MSDKException, IOException {
-
-    // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "Sample-2.3.mzTab");
@@ -127,7 +122,7 @@ public class MzTabFileExportMethodTest {
     Assert.assertNotNull(mz);
     Assert.assertEquals(144.927825927734, mz, 0.0000001);
 
-    
+
     // Clean up
     tempFile.delete();
     featureTable2.dispose();

@@ -23,7 +23,6 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
@@ -42,7 +41,6 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
 
   private final @Nonnull RawDataFile rawDataFile;
   private final @Nonnull List<MsScan> msScans;
-  private final @Nonnull DataPointStore dataPointStore;
   private final @Nonnull MzTolerance mzTolerance;
   private final @Nonnull RTTolerance rtTolerance;
   private final @Nonnull Double intensityTolerance;
@@ -67,11 +65,10 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
    * @param intensityTolerance a {@link java.lang.Double} object.
    */
   public MsMsDetectionMethod(@Nonnull RawDataFile rawDataFile, @Nonnull List<MsScan> msScans,
-      @Nonnull DataPointStore dataPointStore, @Nonnull MzTolerance mzTolerance,
-      @Nonnull RTTolerance rtTolerance, @Nonnull Double intensityTolerance) {
+      @Nonnull MzTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
+      @Nonnull Double intensityTolerance) {
     this.rawDataFile = rawDataFile;
     this.msScans = msScans;
-    this.dataPointStore = dataPointStore;
     this.mzTolerance = mzTolerance;
     this.rtTolerance = rtTolerance;
     this.intensityTolerance = intensityTolerance;

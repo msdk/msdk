@@ -24,7 +24,6 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.SimpleChromatogram;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -46,7 +45,6 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 
   private final @Nonnull List<IonAnnotation> ionAnnotations;
   private final @Nonnull RawDataFile rawDataFile;
-  private final @Nonnull DataPointStore dataPointStore;
   private final @Nonnull MzTolerance mzTolerance;
   private final @Nonnull RTTolerance rtTolerance;
   private final @Nonnull Double intensityTolerance;
@@ -75,12 +73,11 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
    * @param noiseLevel a {@link java.lang.Double} object.
    */
   public TargetedDetectionMethod(@Nonnull List<IonAnnotation> ionAnnotations,
-      @Nonnull RawDataFile rawDataFile, @Nonnull DataPointStore dataPointStore,
-      @Nonnull MzTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
-      @Nonnull Double intensityTolerance, @Nonnull Double noiseLevel) {
+      @Nonnull RawDataFile rawDataFile, @Nonnull MzTolerance mzTolerance,
+      @Nonnull RTTolerance rtTolerance, @Nonnull Double intensityTolerance,
+      @Nonnull Double noiseLevel) {
     this.ionAnnotations = ionAnnotations;
     this.rawDataFile = rawDataFile;
-    this.dataPointStore = dataPointStore;
     this.mzTolerance = mzTolerance;
     this.rtTolerance = rtTolerance;
     this.intensityTolerance = intensityTolerance;

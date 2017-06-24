@@ -21,8 +21,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -38,9 +36,6 @@ public class MsMsDetectionMethodTest {
 
   @Test
   public void testOrbitrap() throws MSDKException {
-
-    // Create the data structures
-    final DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "msms.mzML");
@@ -66,8 +61,8 @@ public class MsMsDetectionMethodTest {
     final Double intensityTolerance = 0.10d;
 
     // MS/MS detection method
-    MsMsDetectionMethod msMethod = new MsMsDetectionMethod(rawFile, msScans, dataStore, mzTolerance,
-        rtTolerance, intensityTolerance);
+    MsMsDetectionMethod msMethod =
+        new MsMsDetectionMethod(rawFile, msScans, mzTolerance, rtTolerance, intensityTolerance);
     final List<IonAnnotation> ionAnnotations = msMethod.execute();
     Assert.assertEquals(1.0, msMethod.getFinishedPercentage(), 0.0001);
 

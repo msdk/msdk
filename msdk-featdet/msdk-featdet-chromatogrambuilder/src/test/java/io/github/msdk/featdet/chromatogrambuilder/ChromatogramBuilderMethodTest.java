@@ -22,10 +22,7 @@ import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.featdet.chromatogrambuilder.ChromatogramBuilderMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.util.tolerances.ConstantPpmTolerance;
 import io.github.msdk.util.tolerances.MzTolerance;
@@ -34,15 +31,11 @@ public class ChromatogramBuilderMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-  private static DataPointStore dataStore;
   private static RawDataFile rawFile;
 
 
   @BeforeClass
   public static void loadData() throws MSDKException {
-
-    // Create the data structures
-    dataStore = DataPointStoreFactory.getMemoryDataStore();
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "orbitrap_300-600mz.mzML");
@@ -61,8 +54,8 @@ public class ChromatogramBuilderMethodTest {
     double minimumTimeSpan = 6; // 6s
     double minimumHeight = 1E4;
     MzTolerance mzTolerance = new ConstantPpmTolerance(5.0);
-    ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(dataStore, rawFile,
-        noiseLevel, minimumTimeSpan, minimumHeight, mzTolerance);
+    ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(rawFile, noiseLevel,
+        minimumTimeSpan, minimumHeight, mzTolerance);
     List<Chromatogram> detectedFeatures = chromBuilder.execute();
     Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
 
@@ -79,8 +72,8 @@ public class ChromatogramBuilderMethodTest {
     double minimumTimeSpan = 1000000;
     double minimumHeight = 1E4;
     MzTolerance mzTolerance = new ConstantPpmTolerance(5.0);
-    ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(dataStore, rawFile,
-        noiseLevel, minimumTimeSpan, minimumHeight, mzTolerance);
+    ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(rawFile, noiseLevel,
+        minimumTimeSpan, minimumHeight, mzTolerance);
     List<Chromatogram> detectedFeatures = chromBuilder.execute();
     Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
 
@@ -98,8 +91,8 @@ public class ChromatogramBuilderMethodTest {
     double minimumTimeSpan = 6; // 6s
     double minimumHeight = 10000000;
     MzTolerance mzTolerance = new ConstantPpmTolerance(5.0);
-    ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(dataStore, rawFile,
-        noiseLevel, minimumTimeSpan, minimumHeight, mzTolerance);
+    ChromatogramBuilderMethod chromBuilder = new ChromatogramBuilderMethod(rawFile, noiseLevel,
+        minimumTimeSpan, minimumHeight, mzTolerance);
     List<Chromatogram> detectedFeatures = chromBuilder.execute();
     Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
 
