@@ -13,7 +13,7 @@
 
 package io.github.msdk.datamodel.impl;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -24,7 +24,6 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -32,45 +31,21 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
  * Simple implementation of the Chromatogram interface.
- *
- * @author plusik
- * @version $Id: $Id
  */
 public class SimpleChromatogram implements Chromatogram {
 
-  private @Nonnull DataPointStore dataPointStore;
   private @Nullable RawDataFile dataFile;
-  private @Nonnull Integer chromatogramNumber, numOfDataPoints;
+  private @Nonnull Integer chromatogramNumber, numOfDataPoints = 0;
   private @Nonnull ChromatogramType chromatogramType;
   private @Nullable Double mz;
   private @Nonnull SeparationType separationType;
-  private Object dataStoreRtId = null, dataStoreIntensityId = null, dataStoreMzId = null;
+  private @Nonnull float rtValues[];
+  private @Nullable double mzValues[];
+  private @Nonnull float intensityValues[];
+  private @Nonnull Range<Float> rtRange;
   private @Nullable IonAnnotation ionAnnotation;
-  private Range<Float> rtRange;
 
-  private final @Nonnull List<IsolationInfo> isolations = new LinkedList<>();
-
-  /**
-   * <p>
-   * Constructor for SimpleChromatogram.
-   * </p>
-   *
-   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
-   * @param chromatogramNumber a {@link java.lang.Integer} object.
-   * @param chromatogramType a {@link io.github.msdk.datamodel.chromatograms.ChromatogramType}
-   *        object.
-   * @param separationType a {@link io.github.msdk.datamodel.rawdata.SeparationType} object.
-   */
-  public SimpleChromatogram(@Nonnull DataPointStore dataPointStore,
-      @Nonnull Integer chromatogramNumber, @Nonnull ChromatogramType chromatogramType,
-      @Nonnull SeparationType separationType) {
-    Preconditions.checkNotNull(chromatogramNumber);
-    this.dataPointStore = dataPointStore;
-    this.chromatogramNumber = chromatogramNumber;
-    this.chromatogramType = chromatogramType;
-    this.separationType = separationType;
-    this.numOfDataPoints = 0;
-  }
+  private final @Nonnull List<IsolationInfo> isolations = new ArrayList<>();
 
   /** {@inheritDoc} */
   @Override
@@ -95,15 +70,6 @@ public class SimpleChromatogram implements Chromatogram {
     return chromatogramNumber;
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   * @param chromatogramNumber a {@link java.lang.Integer} object.
-   */
-  public void setChromatogramNumber(@Nonnull Integer chromatogramNumber) {
-    this.chromatogramNumber = chromatogramNumber;
-  }
-
   /** {@inheritDoc} */
   @Override
   @Nonnull
@@ -114,7 +80,8 @@ public class SimpleChromatogram implements Chromatogram {
   /**
    * {@inheritDoc}
    *
-   * @param newChromatogramType a {@link io.github.msdk.datamodel.chromatograms.ChromatogramType} object.
+   * @param newChromatogramType a {@link io.github.msdk.datamodel.chromatograms.ChromatogramType}
+   *        object.
    */
   public void setChromatogramType(@Nonnull ChromatogramType newChromatogramType) {
     this.chromatogramType = newChromatogramType;
@@ -141,15 +108,28 @@ public class SimpleChromatogram implements Chromatogram {
   public @Nonnull float[] getRetentionTimes(@Nullable float[] array) {
     if ((array == null) || (array.length < numOfDataPoints))
       array = new float[numOfDataPoints];
-    dataPointStore.loadData(dataStoreRtId, array);
+    if (rtValues != null)
+      System.arraycopy(rtValues, 0, array, 0, numOfDataPoints);
     return array;
   }
 
   /** {@inheritDoc} */
   @Override
   public @Nonnull double[] getMzValues() {
-    double [] array = new double[numOfDataPoints];
-    dataPointStore.loadData(dataStoreMzId, array);
+    return getMzValues(null);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @param array an array of float.
+   * @return an array of float.
+   */
+  public @Nonnull double[] getMzValues(@Nullable double[] array) {
+    if ((array == null) || (array.length < numOfDataPoints))
+      array = new double[numOfDataPoints];
+    if (mzValues != null)
+      System.arraycopy(mzValues, 0, array, 0, numOfDataPoints);
     return array;
   }
 
@@ -164,7 +144,8 @@ public class SimpleChromatogram implements Chromatogram {
   public @Nonnull float[] getIntensityValues(@Nullable float array[]) {
     if ((array == null) || (array.length < numOfDataPoints))
       array = new float[numOfDataPoints];
-    dataPointStore.loadData(dataStoreIntensityId, array);
+    if (intensityValues != null)
+      System.arraycopy(intensityValues, 0, array, 0, numOfDataPoints);
     return array;
   }
 
@@ -176,24 +157,37 @@ public class SimpleChromatogram implements Chromatogram {
    * @param intensityValues an array of float.
    * @param size a {@link java.lang.Integer} object.
    */
-  public synchronized void setDataPoints(@Nonnull float rtValues[],
-      @Nullable double mzValues[], @Nonnull float intensityValues[], @Nonnull Integer size) {
+  public synchronized void setDataPoints(@Nonnull float rtValues[], @Nullable double mzValues[],
+      @Nonnull float intensityValues[], @Nonnull Integer size) {
 
-    if (dataStoreRtId != null)
-      dataPointStore.removeData(dataStoreRtId);
-    if (dataStoreMzId != null)
-      dataPointStore.removeData(dataStoreMzId);
-    if (dataStoreIntensityId != null)
-      dataPointStore.removeData(dataStoreIntensityId);
-
-    dataStoreRtId = dataPointStore.storeData(rtValues, size);
+    Preconditions.checkNotNull(rtValues);
+    Preconditions.checkNotNull(intensityValues);
+    Preconditions.checkArgument(rtValues.length >= size);
+    Preconditions.checkArgument(intensityValues.length >= size);
     if (mzValues != null)
-      dataStoreMzId = dataPointStore.storeData(mzValues, size);
-    else
-      dataStoreMzId = null;
-    dataStoreIntensityId = dataPointStore.storeData(intensityValues, size);
+      Preconditions.checkArgument(mzValues.length >= size);
+
+    // Make a copy of the data, instead of saving a reference to the provided array
+    if ((this.rtValues == null) || (this.rtValues.length < size))
+      this.rtValues = new float[size];
+    System.arraycopy(rtValues, 0, this.rtValues, 0, size);
+
+    if ((this.intensityValues == null) || (this.intensityValues.length < size))
+      this.intensityValues = new float[size];
+    System.arraycopy(rtValues, 0, this.rtValues, 0, size);
+
+    if (mzValues != null) {
+      if ((this.mzValues == null) || (this.mzValues.length < size))
+        this.mzValues = new double[size];
+      System.arraycopy(mzValues, 0, this.mzValues, 0, size);
+    } else {
+      this.mzValues = null;
+    }
+
+    // Save the size of the arrays
     this.numOfDataPoints = size;
 
+    // Update the RT range
     if (size > 0)
       this.rtRange = Range.closed(rtValues[0], rtValues[size - 1]);
     else
@@ -261,9 +255,4 @@ public class SimpleChromatogram implements Chromatogram {
     return rtRange;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public String toString() {
-    return String.format("Chromatogram #%d (%s)", chromatogramNumber, chromatogramType);
-  }
 }

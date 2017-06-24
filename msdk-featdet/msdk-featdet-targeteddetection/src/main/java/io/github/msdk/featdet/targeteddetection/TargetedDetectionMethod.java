@@ -24,13 +24,11 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.SimpleChromatogram;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.msdk.util.ChromatogramUtil.CalculationMethod;
 import io.github.msdk.util.MsSpectrumUtil;
@@ -178,8 +176,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
       }
 
       // Final chromatogram
-      chromatogram = new SimpleChromatogram(dataPointStore, chromatogramNumber,
-          ChromatogramType.XIC, SeparationType.UNKNOWN);
+      chromatogram = new SimpleChromatogram();
 
       // Add the data points to the final chromatogram
       float[] rtValues = buildingChromatogram.getRtValues();

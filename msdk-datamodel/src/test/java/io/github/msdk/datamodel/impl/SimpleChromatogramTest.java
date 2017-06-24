@@ -40,14 +40,7 @@ public class SimpleChromatogramTest {
 
   private static @Nonnull DataPointStore dataPointStore =
       DataPointStoreFactory.getMemoryDataStore();
-  private static @Nonnull SimpleChromatogram chromatogram1 =
-      new SimpleChromatogram(dataPointStore, 6, ChromatogramType.TIC, SeparationType.LC);
-
-  @Test
-  public void testChromatogramNumber() throws MSDKException {
-    // Verify chromatogram number
-    Assert.assertEquals(new Integer(6), chromatogram1.getChromatogramNumber());
-  }
+  private static @Nonnull SimpleChromatogram chromatogram1 = new SimpleChromatogram();
 
 
   @Test

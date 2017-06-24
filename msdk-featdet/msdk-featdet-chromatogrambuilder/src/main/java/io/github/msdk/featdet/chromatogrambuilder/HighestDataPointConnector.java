@@ -194,8 +194,7 @@ class HighestDataPointConnector {
     for (BuildingChromatogram buildingChromatogram : buildingChromatograms) {
 
       // Make a new MSDK Chromatogram
-      SimpleChromatogram newChromatogram = new SimpleChromatogram(dataPointStore, chromId,
-          ChromatogramType.XIC, SeparationType.UNKNOWN);
+      SimpleChromatogram newChromatogram = new SimpleChromatogram();
 
       // Copy the data points from the BuildingChromatogram
       rtBuffer = buildingChromatogram.getRtValues(rtBuffer);
