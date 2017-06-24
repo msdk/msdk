@@ -177,6 +177,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 
       // Final chromatogram
       chromatogram = new SimpleChromatogram();
+      chromatogram.setChromatogramNumber(chromatogramNumber);
 
       // Add the data points to the final chromatogram
       float[] rtValues = buildingChromatogram.getRtValues();

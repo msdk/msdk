@@ -72,6 +72,12 @@ public class SimpleChromatogram implements Chromatogram {
   }
 
   /** {@inheritDoc} */
+  public void setChromatogramNumber(@Nonnull Integer chromatogramNumber) {
+    Preconditions.checkNotNull(chromatogramNumber);
+    this.chromatogramNumber = chromatogramNumber;
+  }
+
+  /** {@inheritDoc} */
   @Override
   @Nonnull
   public ChromatogramType getChromatogramType() {
@@ -175,7 +181,7 @@ public class SimpleChromatogram implements Chromatogram {
 
     if ((this.intensityValues == null) || (this.intensityValues.length < size))
       this.intensityValues = new float[size];
-    System.arraycopy(rtValues, 0, this.rtValues, 0, size);
+    System.arraycopy(intensityValues, 0, this.intensityValues, 0, size);
 
     if (mzValues != null) {
       if ((this.mzValues == null) || (this.mzValues.length < size))

@@ -46,7 +46,7 @@ public class MzTabFileImportMethodTest {
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "Sample-2.3.mzTab");
     Assert.assertTrue(inputFile.canRead());
-    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile, dataStore);
+    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable = importer.execute();
     Assert.assertNotNull(featureTable);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -120,7 +120,7 @@ public class MzTabFileImportMethodTest {
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "lipidomics-HFD-LD-study-TG.mzTab");
     Assert.assertTrue(inputFile.canRead());
-    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile, dataStore);
+    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable = importer.execute();
     Assert.assertNotNull(featureTable);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -135,7 +135,7 @@ public class MzTabFileImportMethodTest {
     // Import the file
     inputFile = new File(TEST_DATA_PATH + "lipidomics-HFD-LD-study-PL-DG-SM.mzTab");
     Assert.assertTrue(inputFile.canRead());
-    importer = new MzTabFileImportMethod(inputFile, dataStore);
+    importer = new MzTabFileImportMethod(inputFile);
     featureTable = importer.execute();
     Assert.assertNotNull(featureTable);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);

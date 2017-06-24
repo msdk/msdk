@@ -39,7 +39,7 @@ public class LocalDatabaseSearchMethodTest {
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "Sample-2.3_Small.mzTab");
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
-    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile, dataStore);
+    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable = importer.execute();
     Assert.assertNotNull(featureTable);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);

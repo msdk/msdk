@@ -27,12 +27,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.SimpleChromatogram;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.DataPointSorter.SortingDirection;
 import io.github.msdk.util.DataPointSorter.SortingProperty;
@@ -159,7 +156,7 @@ class HighestDataPointConnector {
 
   }
 
-  void finishChromatograms(@Nonnull RawDataFile inputFile, @Nonnull DataPointStore dataPointStore,
+  void finishChromatograms(@Nonnull RawDataFile inputFile,
       List<Chromatogram> finalList) {
 
     logger.debug("Finishing " + buildingChromatograms.size() + " chromatograms");

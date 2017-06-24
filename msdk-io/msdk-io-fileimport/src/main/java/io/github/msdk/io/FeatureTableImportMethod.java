@@ -75,7 +75,7 @@ public class FeatureTableImportMethod implements MSDKMethod<FeatureTable> {
 
     switch (fileType) {
       case MZTAB:
-        parser = new MzTabFileImportMethod(sourceFile, dataStore);
+        parser = new MzTabFileImportMethod(sourceFile);
         break;
       default:
         throw new MSDKException("Unsupported file type (" + fileType + ") of file " + sourceFile);

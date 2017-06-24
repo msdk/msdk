@@ -47,7 +47,7 @@ public class MzTabFileExportMethodTest {
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "Sample-2.3.mzTab");
     Assert.assertTrue(inputFile.canRead());
-    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile, dataStore);
+    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable = importer.execute();
     Assert.assertNotNull(featureTable);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -66,7 +66,7 @@ public class MzTabFileExportMethodTest {
     featureTable.dispose();
 
     // Import the file again
-    importer = new MzTabFileImportMethod(tempFile, dataStore);
+    importer = new MzTabFileImportMethod(tempFile);
     FeatureTable featureTable2 = importer.execute();
     Assert.assertNotNull(featureTable2);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);

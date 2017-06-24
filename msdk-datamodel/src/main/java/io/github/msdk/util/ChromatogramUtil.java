@@ -444,7 +444,6 @@ public class ChromatogramUtil {
       return null;
 
     double rtValues3[] = findRTs(height * 0.1, rt, rtValues, intensityValues, size);
-    System.out.println("rtval3 " + Arrays.toString(rtValues3));
 
     Double af = (rtValues3[1] - rt) / (rt - rtValues3[0]);
     if (af < 0) {

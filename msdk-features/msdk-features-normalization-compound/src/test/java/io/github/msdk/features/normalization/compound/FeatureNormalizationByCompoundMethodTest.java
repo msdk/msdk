@@ -43,7 +43,7 @@ public class FeatureNormalizationByCompoundMethodTest {
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "singleSample.mzTab");
     Assert.assertTrue(inputFile.canRead());
-    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile, dataStore);
+    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable = importer.execute();
     Assert.assertNotNull(featureTable);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);

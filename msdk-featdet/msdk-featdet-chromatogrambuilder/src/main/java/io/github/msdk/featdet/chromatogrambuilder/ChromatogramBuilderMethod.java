@@ -170,7 +170,7 @@ public class ChromatogramBuilderMethod implements MSDKMethod<List<Chromatogram>>
     }
 
     result = new ArrayList<>();
-    massConnector.finishChromatograms(inputFile, dataPointStore, result);
+    massConnector.finishChromatograms(inputFile, result);
 
     logger.info("Finished chromatogram builder on file " + inputFile.getName());
 

@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.SimpleFeature;
@@ -55,7 +54,6 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
   private int parsedLines, totalLines = 0;
 
   private final @Nonnull File sourceFile;
-  private final @Nonnull DataPointStore dataStore;
   private final @Nonnull Locale locale;
   private String fieldSeparator = ChromaTofParser.FIELD_SEPARATOR_TAB;
   private String quotationCharacter = ChromaTofParser.QUOTATION_CHARACTER_NONE;
@@ -76,10 +74,9 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
    * @param quotationCharacter the quotation character for a field.
    * @see ChromaTofParser
    */
-  public ChromaTofFileImportMethod(@Nonnull File sourceFile, @Nonnull DataPointStore dataStore,
+  public ChromaTofFileImportMethod(@Nonnull File sourceFile,
       @Nonnull Locale locale, String fieldSeparator, String quotationCharacter) {
     this.sourceFile = sourceFile;
-    this.dataStore = dataStore;
     this.fileSample = new SimpleSample(sourceFile.getName());
     this.locale = locale;
     this.fieldSeparator = fieldSeparator;
@@ -94,8 +91,8 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
    * @param sourceFile a {@link java.io.File} object.
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public ChromaTofFileImportMethod(@Nonnull File sourceFile, @Nonnull DataPointStore dataStore) {
-    this(sourceFile, dataStore, Locale.US, null, null);
+  public ChromaTofFileImportMethod(@Nonnull File sourceFile) {
+    this(sourceFile, Locale.US, null, null);
   }
 
   /** {@inheritDoc} */
