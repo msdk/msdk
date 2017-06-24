@@ -24,7 +24,12 @@
 			<artifactId>msdk-datamodel</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>io.github.msdk</groupId>
+			<artifactId>msdk-io-netcdf</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-io-mzml</artifactId>
