@@ -35,8 +35,6 @@ import io.github.msdk.util.tolerances.MzTolerance;
 /**
  * Simple implementation of the Scan interface.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class SimpleMsScan extends AbstractMsSpectrum implements MsScan {
 

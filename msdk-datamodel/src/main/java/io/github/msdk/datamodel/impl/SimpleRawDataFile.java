@@ -33,8 +33,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 /**
  * Implementation of the RawDataFile interface.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class SimpleRawDataFile implements RawDataFile {
 

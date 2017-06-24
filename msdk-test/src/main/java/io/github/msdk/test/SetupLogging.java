@@ -27,8 +27,6 @@ import org.junit.rules.TestWatcher;
  * Activate in your tests by adding the following line to your test class:
  * {@code @Rule public SetupLogging setupLogging;}
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class SetupLogging extends TestWatcher {
 

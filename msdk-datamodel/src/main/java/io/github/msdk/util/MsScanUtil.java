@@ -25,8 +25,6 @@ import io.github.msdk.datamodel.rawdata.MsScan;
  * MsScanUtil class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MsScanUtil {
 

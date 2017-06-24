@@ -35,8 +35,6 @@ import org.slf4j.LoggerFactory;
  * ChromaTofParser class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class ChromaTofParser {
 

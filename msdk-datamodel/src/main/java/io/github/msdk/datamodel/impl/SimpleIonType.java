@@ -23,8 +23,6 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 /**
  * Implementation of IonType
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class SimpleIonType implements IonType {
 

@@ -58,8 +58,6 @@ import it.unimi.dsi.io.ByteBufferInputStream;
  * MzMLSpectrum class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MzMLSpectrum implements MsScan {
   private final @Nonnull MzMLRawDataFile dataFile;

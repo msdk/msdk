@@ -24,8 +24,6 @@ import io.github.msdk.util.MsScanUtil;
  * LocalMaximaCentroidingMethod class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class LocalMaximaCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 

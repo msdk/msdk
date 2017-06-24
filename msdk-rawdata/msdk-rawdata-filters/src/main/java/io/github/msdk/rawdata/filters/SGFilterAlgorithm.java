@@ -26,8 +26,6 @@ import io.github.msdk.util.MsScanUtil;
  * SGFilterAlgorithm class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class SGFilterAlgorithm implements MSDKFilteringAlgorithm {
 

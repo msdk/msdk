@@ -57,8 +57,6 @@ import javolution.xml.stream.XMLStreamReader;
  * MzMLFileParser class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private final @Nonnull File mzMLFile;

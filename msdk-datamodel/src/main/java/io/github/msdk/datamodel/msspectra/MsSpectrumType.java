@@ -18,8 +18,6 @@ package io.github.msdk.datamodel.msspectra;
  * Deutsch, E. W. (2012). File Formats Commonly Used in Mass Spectrometry Proteomics. Molecular
  * &amp; Cellular Proteomics, 11(12), 1612–1621. doi:10.1074/mcp.R112.019695
  *
- * @author plusik
- * @version $Id: $Id
  */
 public enum MsSpectrumType {
 

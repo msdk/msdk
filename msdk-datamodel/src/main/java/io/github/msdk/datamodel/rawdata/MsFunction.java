@@ -23,8 +23,6 @@ import javax.annotation.concurrent.Immutable;
  * instrument-dependent. For convenience, this interface is immutable, so it can be passed by
  * reference and safely used by multiple threads.
  *
- * @author plusik
- * @version $Id: $Id
  */
 @Immutable
 public interface MsFunction {

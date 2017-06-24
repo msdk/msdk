@@ -22,8 +22,6 @@ import org.junit.runner.Description;
  * Activate in your tests by adding the following line to your test class:
  * {@code @Rule public LogMethodName logMethodName;}
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class LogMethodName extends TestWatcher {
 

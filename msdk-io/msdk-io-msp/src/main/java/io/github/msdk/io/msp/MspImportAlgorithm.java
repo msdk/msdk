@@ -38,8 +38,6 @@ import io.github.msdk.util.DataPointSorter.SortingProperty;
  * MspImportAlgorithm class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MspImportAlgorithm {
 

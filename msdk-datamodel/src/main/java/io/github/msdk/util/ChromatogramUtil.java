@@ -26,8 +26,6 @@ import com.google.common.collect.Range;
  * ChromatogramUtil class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class ChromatogramUtil {
 

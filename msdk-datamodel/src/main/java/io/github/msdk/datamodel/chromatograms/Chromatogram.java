@@ -28,8 +28,6 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 /**
  * Represents a single chromatogram.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public interface Chromatogram {
 

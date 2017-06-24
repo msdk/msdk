@@ -24,8 +24,6 @@ import io.github.msdk.util.MsScanUtil;
  * BinningCentroidingAlgorithm class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class BinningCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 

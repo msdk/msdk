@@ -27,8 +27,6 @@ import io.github.msdk.util.tolerances.RTTolerance;
 /**
  * This class searches through a feature table and groups isotopes under a single feature.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class IsotopeGrouperMethod implements MSDKMethod<FeatureTable> {
 

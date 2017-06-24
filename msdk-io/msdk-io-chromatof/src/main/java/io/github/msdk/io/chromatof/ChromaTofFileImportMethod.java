@@ -44,8 +44,6 @@ import io.github.msdk.io.chromatof.ChromaTofParser.TableColumn;
  * ChromaTofFileImportMethod class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
 

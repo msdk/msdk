@@ -31,8 +31,6 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 /**
  * IonType utilities
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class IonTypeUtil {
 

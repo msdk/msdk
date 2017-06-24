@@ -19,7 +19,6 @@ import java.util.Comparator;
  *
  * @author owenmyers
  * Modified by Dharak Shah to include in MSDK
- * @version $Id: $Id
  */
 public class SortAndKeepOriginalIndecies implements Comparator<Integer>{
     private final double[] dataArr;

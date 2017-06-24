@@ -34,8 +34,6 @@ import io.github.msdk.util.tolerances.RTTolerance;
 /**
  * This class creates a list of IonAnnotations for a RawDataFile based the MS2 scans.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
 

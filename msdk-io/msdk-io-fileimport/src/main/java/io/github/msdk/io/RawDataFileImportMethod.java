@@ -35,8 +35,6 @@ import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
  * This class detects the type of the given data file using the FileTypeDetectionAlgorithm and then
  * imports the raw data by performing the right import algorithm.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
 

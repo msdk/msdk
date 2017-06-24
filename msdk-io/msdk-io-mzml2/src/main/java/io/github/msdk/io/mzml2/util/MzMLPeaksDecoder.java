@@ -32,8 +32,6 @@ import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLCompressionType;
  * MzMLIntensityPeaksDecoder class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MzMLPeaksDecoder {
 

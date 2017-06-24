@@ -26,8 +26,6 @@ import io.github.msdk.util.MsScanUtil;
  * CropFilterAlgorithm class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class CropFilterAlgorithm implements MSDKFilteringAlgorithm {
 

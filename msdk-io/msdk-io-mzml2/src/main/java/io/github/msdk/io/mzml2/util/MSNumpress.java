@@ -20,8 +20,6 @@ package io.github.msdk.io.mzml2.util;
  * MSNumpressDouble class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MSNumpress {
 

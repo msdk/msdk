@@ -30,8 +30,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Generic utility methods for csv parsing and numeric conversion.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class ParserUtilities {
 

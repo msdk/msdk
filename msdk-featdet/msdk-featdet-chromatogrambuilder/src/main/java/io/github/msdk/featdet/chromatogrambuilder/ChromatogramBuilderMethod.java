@@ -34,8 +34,6 @@ import io.github.msdk.util.tolerances.MzTolerance;
  * ChromatogramBuilderMethod class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class ChromatogramBuilderMethod implements MSDKMethod<List<Chromatogram>> {
 

@@ -37,8 +37,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * WatersRawImportMethod class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class WatersRawImportMethod implements MSDKMethod<RawDataFile> {
 

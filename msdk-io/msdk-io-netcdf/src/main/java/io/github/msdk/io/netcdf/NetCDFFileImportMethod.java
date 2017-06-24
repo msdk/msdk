@@ -47,8 +47,6 @@ import ucar.nc2.Variable;
  * NetCDFFileImportMethod class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 

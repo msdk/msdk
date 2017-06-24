@@ -19,8 +19,6 @@ import java.util.zip.Inflater;
 /**
  * Compression related utilities
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class ZlibCompressionUtil {
 

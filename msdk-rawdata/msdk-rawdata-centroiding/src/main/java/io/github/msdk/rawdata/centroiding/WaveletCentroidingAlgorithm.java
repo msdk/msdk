@@ -24,8 +24,6 @@ import io.github.msdk.util.MsScanUtil;
  * of a certain spectrum. After get the spectrum in the wavelet's time domain, we use the local
  * maxima to detect possible peaks in the original raw data points.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
