@@ -25,7 +25,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -44,7 +43,6 @@ public class SimpleRawDataFile implements RawDataFile {
   private @Nonnull FileType rawDataFileType;
   private final @Nonnull ArrayList<MsScan> scans;
   private final @Nonnull ArrayList<Chromatogram> chromatograms;
-  private final @Nonnull DataPointStore dataPointStore;
 
   /**
    * <p>Constructor for SimpleRawDataFile.</p>
@@ -55,13 +53,11 @@ public class SimpleRawDataFile implements RawDataFile {
    * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public SimpleRawDataFile(@Nonnull String rawDataFileName, @Nonnull Optional<File> originalRawDataFile,
-      @Nonnull FileType rawDataFileType, @Nonnull DataPointStore dataPointStore) {
+      @Nonnull FileType rawDataFileType) {
     Preconditions.checkNotNull(rawDataFileType);
-    Preconditions.checkNotNull(dataPointStore);
     this.rawDataFileName = rawDataFileName;
     this.originalRawDataFile = originalRawDataFile;
     this.rawDataFileType = rawDataFileType;
-    this.dataPointStore = dataPointStore;
     this.scans = new ArrayList<>();
     this.chromatograms = new ArrayList<>();
   }
@@ -207,7 +203,7 @@ public class SimpleRawDataFile implements RawDataFile {
   /** {@inheritDoc} */
   @Override
   public void dispose() {
-    dataPointStore.dispose();
+    // Do nothing
   }
 
 }

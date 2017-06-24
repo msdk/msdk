@@ -20,8 +20,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
@@ -36,13 +34,10 @@ public class MzDataFileImportMethodTest {
   @Test
   public void testMzDataFile() throws MSDKException {
 
-    // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
-
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "test.mzData");
     Assert.assertTrue(inputFile.canRead());
-    MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile, dataStore);
+    MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -70,14 +65,13 @@ public class MzDataFileImportMethodTest {
   public void testMM14() throws MSDKException {
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "MM14.mzdata");
     Assert.assertTrue(inputFile.canRead());
-    MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile, dataStore);
+    MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -124,14 +118,13 @@ public class MzDataFileImportMethodTest {
   public void testMSMSposChallenge0() throws MSDKException {
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "MSMSpos_Challenge0.mzData");
     Assert.assertTrue(inputFile.canRead());
-    MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile, dataStore);
+    MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);

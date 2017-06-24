@@ -15,7 +15,6 @@ package io.github.msdk.rawdata.centroiding;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
@@ -38,7 +37,6 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
   private static final int WAVELET_ESL = -5;
   private static final int WAVELET_ESR = 5;
 
-  private final @Nonnull DataPointStore dataPointStore;
   private final @Nonnull Integer scaleLevel;
   private final @Nonnull Double waveletWindow;
 
@@ -59,9 +57,7 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
    * @param scaleLevel a {@link java.lang.Integer} object.
    * @param waveletWindow a {@link java.lang.Double} object.
    */
-  public WaveletCentroidingAlgorithm(@Nonnull DataPointStore dataPointStore,
-      @Nonnull Integer scaleLevel, @Nonnull Double waveletWindow) {
-    this.dataPointStore = dataPointStore;
+  public WaveletCentroidingAlgorithm(@Nonnull Integer scaleLevel, @Nonnull Double waveletWindow) {
     this.scaleLevel = scaleLevel;
     this.waveletWindow = waveletWindow;
   }
@@ -71,7 +67,7 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
   public @Nonnull MsScan centroidScan(@Nonnull MsScan inputScan) {
 
     // Copy all scan properties
-    this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
+    this.newScan = MsScanUtil.clone(inputScan, false);
 
     // Load data points
     mzBuffer = inputScan.getMzValues();

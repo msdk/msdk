@@ -20,8 +20,6 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
@@ -40,14 +38,13 @@ public class ThermoRawImportMethodTest {
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[];
     float intensityBuffer[];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "RP240K_01.raw");
     Assert.assertTrue(inputFile.canRead());
-    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile, dataStore);
+    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -101,14 +98,13 @@ public class ThermoRawImportMethodTest {
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "drugx_01.raw");
     Assert.assertTrue(inputFile.canRead());
-    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile, dataStore);
+    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -148,14 +144,13 @@ public class ThermoRawImportMethodTest {
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "tsq_quantum.raw");
     Assert.assertTrue(inputFile.canRead());
-    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile, dataStore);
+    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -191,14 +186,13 @@ public class ThermoRawImportMethodTest {
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "srm.raw");
     Assert.assertTrue(inputFile.canRead());
-    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile, dataStore);
+    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -237,14 +231,13 @@ public class ThermoRawImportMethodTest {
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "pr.raw");
     Assert.assertTrue(inputFile.canRead());
-    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile, dataStore);
+    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -281,14 +274,13 @@ public class ThermoRawImportMethodTest {
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "cnl.raw");
     Assert.assertTrue(inputFile.canRead());
-    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile, dataStore);
+    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);

@@ -82,7 +82,7 @@ public class MSDKCentroidingMethod implements MSDKMethod<RawDataFile> {
 
     // Create a new raw data file
     result = new SimpleRawDataFile(rawDataFile.getName(), rawDataFile.getOriginalFile(),
-        rawDataFile.getRawDataFileType(), store);
+        rawDataFile.getRawDataFileType());
 
     List<MsScan> scans = rawDataFile.getScans();
     totalScans = scans.size();

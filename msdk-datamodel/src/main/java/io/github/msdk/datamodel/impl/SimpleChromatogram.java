@@ -28,6 +28,7 @@ import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
+import io.github.msdk.util.ChromatogramUtil;
 
 /**
  * Simple implementation of the Chromatogram interface.
@@ -188,10 +189,8 @@ public class SimpleChromatogram implements Chromatogram {
     this.numOfDataPoints = size;
 
     // Update the RT range
-    if (size > 0)
-      this.rtRange = Range.closed(rtValues[0], rtValues[size - 1]);
-    else
-      this.rtRange = null;
+    this.rtRange = ChromatogramUtil.getRtRange(rtValues, size);
+
   }
 
   /** {@inheritDoc} */

@@ -14,36 +14,23 @@
 package io.github.msdk.datamodel.impl;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Range;
-
-import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.util.MsSpectrumUtil;
-import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
- * Simple implementation of the MassSpectrum interface.
- *
- * @author plusik
- * @version $Id: $Id
+ * Simple implementation of the MsSpectrum interface.
  */
-public class SimpleMsSpectrum implements MsSpectrum {
-
-  private @Nonnull double mzValues[];
-  private @Nonnull float intensityValues[];
-  private @Nonnull Integer numOfDataPoints;
-  private @Nullable Range<Double> mzRange;
-  private @Nonnull Float totalIonCurrent;
-
-  private @Nonnull MsSpectrumType spectrumType;
-  private @Nullable MzTolerance mzTolerance;
+public class SimpleMsSpectrum extends AbstractMsSpectrum {
 
   /**
-   * <p>Constructor for SimpleMsSpectrum.</p>
+   * 
+   */
+  public SimpleMsSpectrum() {}
+
+  /**
+   * <p>
+   * Constructor for SimpleMsSpectrum.
+   * </p>
    *
    * @param mzValues an array of double.
    * @param intensityValues an array of float.
@@ -52,123 +39,9 @@ public class SimpleMsSpectrum implements MsSpectrum {
    */
   public SimpleMsSpectrum(@Nonnull double mzValues[], @Nonnull float intensityValues[],
       @Nonnull Integer size, @Nonnull MsSpectrumType spectrumType) {
-    Preconditions.checkNotNull(mzValues);
-    Preconditions.checkNotNull(intensityValues);
-    Preconditions.checkNotNull(size);
-    Preconditions.checkNotNull(spectrumType);
-
-    // Make sure the spectrum is sorted
-    for (int i = 0; i < size - 1; i++) {
-      if (mzValues[i] > mzValues[i + 1])
-        throw new MSDKRuntimeException("m/z values must be sorted in ascending order");
-    }
-
-    this.mzValues = mzValues;
-    this.intensityValues = intensityValues;
-    this.numOfDataPoints = size;
-    this.mzRange = MsSpectrumUtil.getMzRange(mzValues, size);
-    this.totalIonCurrent = MsSpectrumUtil.getTIC(intensityValues, numOfDataPoints);
-    this.spectrumType = spectrumType;
+    setDataPoints(mzValues, intensityValues, size);
+    setSpectrumType(spectrumType);
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public @Nonnull Integer getNumberOfDataPoints() {
-    return numOfDataPoints;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public @Nonnull double[] getMzValues() {
-    double[] array = new double[numOfDataPoints];
-    System.arraycopy(mzValues, 0, array, 0, numOfDataPoints);
-    return array;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public @Nonnull float[] getIntensityValues() {
-    float array[] = new float[numOfDataPoints];
-    System.arraycopy(intensityValues, 0, array, 0, numOfDataPoints);
-    return array;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @param mzValues an array of double.
-   * @param intensityValues an array of float.
-   * @param size a {@link java.lang.Integer} object.
-   */
-  public synchronized void setDataPoints(@Nonnull double mzValues[],
-      @Nonnull float intensityValues[], @Nonnull Integer size) {
-
-    Preconditions.checkNotNull(mzValues);
-    Preconditions.checkNotNull(intensityValues);
-    Preconditions.checkNotNull(size);
-
-    // Make sure the spectrum is sorted
-    for (int i = 0; i < size - 1; i++) {
-      if (mzValues[i] > mzValues[i + 1])
-        throw new MSDKRuntimeException("m/z values must be sorted in ascending order");
-    }
-
-    this.mzValues = mzValues;
-    this.intensityValues = intensityValues;
-    this.numOfDataPoints = size;
-    this.mzRange = MsSpectrumUtil.getMzRange(mzValues, size);
-    this.totalIonCurrent = MsSpectrumUtil.getTIC(intensityValues, size);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  @Nonnull
-  public MsSpectrumType getSpectrumType() {
-    return spectrumType;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @param spectrumType a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType} object.
-   */
-  public void setSpectrumType(@Nonnull MsSpectrumType spectrumType) {
-    this.spectrumType = spectrumType;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public MzTolerance getMzTolerance() {
-    return mzTolerance;
-  }
-
-  /**
-   * <p>
-   * Setter for the field <code>mzTolerance</code>.
-   * </p>
-   *
-   * @param mzTolerance a {@link io.github.msdk.util.tolerances.MzTolerance} object.
-   */
-  public void setMzTolerance(MzTolerance mzTolerance) {
-    this.mzTolerance = mzTolerance;
-  }
-
-  /**
-   * <p>
-   * getTIC.
-   * </p>
-   *
-   * @return a {@link java.lang.Float} object.
-   */
-  @Nonnull
-  public Float getTIC() {
-    return totalIonCurrent;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public Range<Double> getMzRange() {
-    return mzRange;
-  }
 
 }

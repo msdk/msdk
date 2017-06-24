@@ -57,7 +57,7 @@ class MzMLMsScan extends AbstractReadOnlyMsScan {
   /** {@inheritDoc} */
   @Override
   @Nonnull
-  public double[] getMzValues() {
+  public double[] getMzValues(double array[]) {
     try {
       MzMLUnmarshaller parser = dataFile.getParser();
       if (parser == null) {
@@ -73,7 +73,7 @@ class MzMLMsScan extends AbstractReadOnlyMsScan {
   /** {@inheritDoc} */
   @Override
   @Nonnull
-  public float[] getIntensityValues() {
+  public float[] getIntensityValues(float array[]) {
     try {
       MzMLUnmarshaller parser = dataFile.getParser();
       if (parser == null) {

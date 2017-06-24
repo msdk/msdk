@@ -33,15 +33,12 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleChromatogram;
 import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
  * This class creates a feature table based on the SRM chromatograms from a raw data file.
@@ -54,7 +51,6 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private final @Nonnull RawDataFile rawDataFile;
-  private final @Nonnull DataPointStore dataStore;
 
   private List<Chromatogram> result;
   private boolean canceled = false;
@@ -66,12 +62,9 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
    * </p>
    *
    * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public SrmDetectionMethod(@Nonnull RawDataFile rawDataFile,
-      @Nonnull DataPointStore dataPointStore) {
+  public SrmDetectionMethod(@Nonnull RawDataFile rawDataFile) {
     this.rawDataFile = rawDataFile;
-    this.dataStore = dataPointStore;
 
     // Make a new array
     result = new ArrayList<>();
@@ -198,8 +191,7 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
       IsolationInfo isolationInfo =
           new SimpleIsolationInfo(q1IsolationMzRangeMap.get(q1), null, q1, null, null);
       isolations.add(isolationInfo);
-      isolationInfo =
-          new SimpleIsolationInfo(q3IsolationMzRangeMap.get(q3), null, q3, null, null);
+      isolationInfo = new SimpleIsolationInfo(q3IsolationMzRangeMap.get(q3), null, q3, null, null);
       isolations.add(isolationInfo);
 
       // Add the chromatogram

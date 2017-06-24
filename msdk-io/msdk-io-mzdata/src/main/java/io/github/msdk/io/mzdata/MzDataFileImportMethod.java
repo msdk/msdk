@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -43,8 +42,6 @@ public class MzDataFileImportMethod implements MSDKMethod<RawDataFile> {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private final @Nonnull File sourceFile;
-  private final @Nonnull FileType fileType = FileType.MZDATA;
-  private final @Nonnull DataPointStore dataStore;
 
   private MzDataSaxHandler saxHandler;
 
@@ -59,9 +56,8 @@ public class MzDataFileImportMethod implements MSDKMethod<RawDataFile> {
    * @param sourceFile a {@link java.io.File} object.
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public MzDataFileImportMethod(@Nonnull File sourceFile, @Nonnull DataPointStore dataStore) {
+  public MzDataFileImportMethod(@Nonnull File sourceFile) {
     this.sourceFile = sourceFile;
-    this.dataStore = dataStore;
   }
 
   /** {@inheritDoc} */
@@ -71,9 +67,9 @@ public class MzDataFileImportMethod implements MSDKMethod<RawDataFile> {
     logger.info("Started parsing file " + sourceFile);
 
     String fileName = sourceFile.getName();
-    newRawFile = new SimpleRawDataFile(fileName, Optional.of(sourceFile), fileType, dataStore);
+    newRawFile = new SimpleRawDataFile(fileName, Optional.of(sourceFile), FileType.MZDATA);
 
-    saxHandler = new MzDataSaxHandler(newRawFile, dataStore);
+    saxHandler = new MzDataSaxHandler(newRawFile);
     SAXParserFactory factory = SAXParserFactory.newInstance();
 
     try {

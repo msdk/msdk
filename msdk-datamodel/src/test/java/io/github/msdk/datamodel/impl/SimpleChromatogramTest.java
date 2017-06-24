@@ -26,8 +26,6 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -38,10 +36,7 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
  */
 public class SimpleChromatogramTest {
 
-  private static @Nonnull DataPointStore dataPointStore =
-      DataPointStoreFactory.getMemoryDataStore();
   private static @Nonnull SimpleChromatogram chromatogram1 = new SimpleChromatogram();
-
 
   @Test
   public void testRawDataFile() throws MSDKException {
@@ -50,7 +45,7 @@ public class SimpleChromatogramTest {
 
     // Change raw data file
     final @Nonnull RawDataFile newRawDataFile =
-        new SimpleRawDataFile("Sample A1", Optional.empty(), FileType.NETCDF, dataPointStore);
+        new SimpleRawDataFile("Sample A1", Optional.empty(), FileType.NETCDF);
     chromatogram1.setRawDataFile(newRawDataFile);
 
     // Verify raw data file
@@ -60,6 +55,10 @@ public class SimpleChromatogramTest {
 
   @Test
   public void testChromatogramType() throws MSDKException {
+
+    // Set chromatogram type
+    chromatogram1.setChromatogramType(ChromatogramType.TIC);
+
     // Verify chromatogram type
     Assert.assertEquals(ChromatogramType.TIC, chromatogram1.getChromatogramType());
 
@@ -72,6 +71,10 @@ public class SimpleChromatogramTest {
 
   @Test
   public void testSeparationType() throws MSDKException {
+
+    // Set separation type
+    chromatogram1.setSeparationType(SeparationType.LC);
+
     // Verify separation type
     Assert.assertEquals(SeparationType.LC, chromatogram1.getSeparationType());
 

@@ -23,7 +23,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
@@ -39,7 +38,7 @@ import io.github.msdk.util.tolerances.MzTolerance;
  * @author plusik
  * @version $Id: $Id
  */
-public class SimpleMsScan extends AbstractSpectrum implements MsScan {
+public class SimpleMsScan extends AbstractMsSpectrum implements MsScan {
 
   private @Nullable RawDataFile dataFile;
   private @Nonnull Integer scanNumber;
@@ -63,9 +62,8 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
    * @param scanNumber a {@link java.lang.Integer} object.
    * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
    */
-  public SimpleMsScan(@Nonnull DataPointStore dataPointStore, @Nonnull Integer scanNumber,
+  public SimpleMsScan(@Nonnull Integer scanNumber,
       @Nonnull MsFunction msFunction) {
-    super(dataPointStore);
     Preconditions.checkNotNull(scanNumber);
     Preconditions.checkNotNull(msFunction);
     this.scanNumber = scanNumber;

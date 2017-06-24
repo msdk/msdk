@@ -20,8 +20,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -42,8 +40,7 @@ public class MzXMLFileImportMethodTest {
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "A1-0_A2.mzXML");
     Assert.assertTrue(inputFile.canRead());
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
-    MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile, dataStore);
+    MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -80,8 +77,7 @@ public class MzXMLFileImportMethodTest {
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "R1_RG59_B4_1.mzXML");
     Assert.assertTrue(inputFile.canRead());
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
-    MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile, dataStore);
+    MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);

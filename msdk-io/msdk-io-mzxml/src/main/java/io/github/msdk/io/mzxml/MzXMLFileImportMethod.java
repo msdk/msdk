@@ -38,7 +38,6 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
@@ -66,7 +65,6 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
   private final @Nonnull FileType fileType = FileType.MZXML;
 
   private SimpleRawDataFile newRawDataFile;
-  private final @Nonnull DataPointStore dataStore;
 
   private int totalScans = 0, parsedScans;
 
@@ -102,9 +100,8 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
    * @param sourceFile a {@link java.io.File} object.
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public MzXMLFileImportMethod(@Nonnull File sourceFile, @Nonnull DataPointStore dataStore) {
+  public MzXMLFileImportMethod(@Nonnull File sourceFile) {
     this.sourceFile = sourceFile;
-    this.dataStore = dataStore;
   }
 
   /** {@inheritDoc} */
@@ -117,7 +114,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
       // Create the XMLBasedRawDataFile object
       newRawDataFile =
-          new SimpleRawDataFile(sourceFile.getName(), Optional.of(sourceFile), fileType, dataStore);
+          new SimpleRawDataFile(sourceFile.getName(), Optional.of(sourceFile), fileType);
 
       // Use the default (non-validating) parser
       SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -193,7 +190,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
         if (Strings.isNullOrEmpty(msFuncName))
           msFuncName = MsFunction.DEFAULT_MS_FUNCTION_NAME;
         MsFunction msFunc = MSDKObjectBuilder.getMsFunction(msFuncName, msLevel);
-        buildingScan = new SimpleMsScan(dataStore, scanNumber, msFunc);
+        buildingScan = new SimpleMsScan(scanNumber, msFunc);
         buildingScan.setRawDataFile(newRawDataFile);
 
         // Scan type & definition
@@ -273,8 +270,8 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
         double precursorMz = 0d;
         if (!textContent.isEmpty())
           precursorMz = Double.parseDouble(textContent);
-        IsolationInfo newIsolation = new SimpleIsolationInfo(
-            Range.singleton(precursorMz), null, precursorMz, precursorCharge, null);
+        IsolationInfo newIsolation = new SimpleIsolationInfo(Range.singleton(precursorMz), null,
+            precursorMz, precursorCharge, null);
         buildingScan.getIsolations().add(newIsolation);
 
         return;

@@ -203,7 +203,7 @@ public class MzMLSpectrum implements MsScan {
 
   /** {@inheritDoc} */
   @Override
-  public double[] getMzValues() {
+  public double[] getMzValues(double array[]) {
     double[] mzValues = null;
     if (getMzBinaryDataInfo().getArrayLength() != numOfDataPoints) {
       logger.warn(
@@ -242,7 +242,7 @@ public class MzMLSpectrum implements MsScan {
 
   /** {@inheritDoc} */
   @Override
-  public float[] getIntensityValues() {
+  public float[] getIntensityValues(float array[]) {
     float[] intensityValues = null;
     if (getIntensityBinaryDataInfo().getArrayLength() != numOfDataPoints) {
       logger.warn(

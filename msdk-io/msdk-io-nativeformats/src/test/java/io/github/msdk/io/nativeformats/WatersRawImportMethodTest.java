@@ -21,13 +21,10 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.nativeformats.WatersRawImportMethod;
 import io.github.msdk.util.MsSpectrumUtil;
 
 public class WatersRawImportMethodTest {
@@ -42,14 +39,13 @@ public class WatersRawImportMethodTest {
     assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[];
     float intensityBuffer[];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "20150813-63.raw");
     Assert.assertTrue(inputFile.canRead());
-    WatersRawImportMethod importer = new WatersRawImportMethod(inputFile, dataStore);
+    WatersRawImportMethod importer = new WatersRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);

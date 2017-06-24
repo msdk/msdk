@@ -32,6 +32,27 @@ import com.google.common.collect.Range;
 public class ChromatogramUtil {
 
   /**
+   * Returns the RT range
+   *
+   * @return a {@link com.google.common.collect.Range} object.
+   */
+  @Nullable
+  public static Range<Float> getRtRange(@Nonnull float rtValues[], @Nonnull Integer size) {
+
+    // Parameter check
+    Preconditions.checkNotNull(rtValues);
+    Preconditions.checkNotNull(size);
+    Preconditions.checkPositionIndex(size, rtValues.length);
+
+    if (size == 0)
+      return null;
+
+    float min = rtValues[0];
+    float max = rtValues[size - 1];
+    return Range.closed(min, max);
+  }
+
+  /**
    * Returns the range of Float of all data points in this feature.
    *
    * @return a

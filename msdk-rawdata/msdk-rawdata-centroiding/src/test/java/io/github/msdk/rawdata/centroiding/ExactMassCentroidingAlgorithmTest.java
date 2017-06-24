@@ -20,8 +20,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -35,9 +33,6 @@ public class ExactMassCentroidingAlgorithmTest {
   @Test
   public void testOrbitrap() throws MSDKException {
 
-    // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
-
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "profile_orbitrap.mzML");
     Assert.assertTrue(inputFile.canRead());
@@ -50,7 +45,7 @@ public class ExactMassCentroidingAlgorithmTest {
 
     MsScan lastScan = scans.get(scans.size() - 1);
 
-    ExactMassCentroidingAlgorithm centroider = new ExactMassCentroidingAlgorithm(dataStore);
+    ExactMassCentroidingAlgorithm centroider = new ExactMassCentroidingAlgorithm();
     final MsScan centroidedScan = centroider.centroidScan(lastScan);
 
     double mzBuffer[] = centroidedScan.getMzValues();

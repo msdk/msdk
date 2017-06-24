@@ -20,12 +20,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
 import io.github.msdk.util.MsSpectrumUtil;
 
 public class NetCDFFileImportMethodTest {
@@ -37,14 +34,13 @@ public class NetCDFFileImportMethodTest {
   public void testWT15() throws MSDKException {
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
     double mzBuffer[];
     float intensityBuffer[];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "wt15.CDF");
     Assert.assertTrue(inputFile.canRead());
-    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile, dataStore);
+    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);

@@ -21,7 +21,6 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.filetypedetection.FileTypeDetectionMethod;
@@ -42,7 +41,6 @@ import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
 public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
 
   private final @Nonnull File sourceFile;
-  private final @Nonnull DataPointStore dataStore;
 
   private RawDataFile result;
   private boolean canceled = false;
@@ -56,9 +54,8 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
    * @param sourceFile a {@link java.io.File} object.
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public RawDataFileImportMethod(@Nonnull File sourceFile, @Nonnull DataPointStore dataStore) {
+  public RawDataFileImportMethod(@Nonnull File sourceFile) {
     this.sourceFile = sourceFile;
-    this.dataStore = dataStore;
   }
 
   /** {@inheritDoc} */
@@ -83,19 +80,19 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
         parser = new MzMLFileImportMethod(sourceFile);
         break;
       case MZXML:
-        parser = new MzXMLFileImportMethod(sourceFile, dataStore);
+        parser = new MzXMLFileImportMethod(sourceFile);
         break;
       case MZDATA:
-        parser = new MzDataFileImportMethod(sourceFile, dataStore);
+        parser = new MzDataFileImportMethod(sourceFile);
         break;
       case NETCDF:
-        parser = new NetCDFFileImportMethod(sourceFile, dataStore);
+        parser = new NetCDFFileImportMethod(sourceFile);
         break;
       case THERMO_RAW:
-        parser = new ThermoRawImportMethod(sourceFile, dataStore);
+        parser = new ThermoRawImportMethod(sourceFile);
         break;
       case WATERS_RAW:
-        parser = new WatersRawImportMethod(sourceFile, dataStore);
+        parser = new WatersRawImportMethod(sourceFile);
         break;
       default:
         throw new MSDKException("Unsupported file type (" + fileType + ") of file " + sourceFile);

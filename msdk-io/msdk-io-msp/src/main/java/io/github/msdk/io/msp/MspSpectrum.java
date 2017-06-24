@@ -18,24 +18,17 @@ import java.util.Hashtable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.impl.AbstractSpectrum;
+import io.github.msdk.datamodel.impl.AbstractMsSpectrum;
 
 /**
  * <p>
  * MspSpectrum class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
-public class MspSpectrum extends AbstractSpectrum {
+public class MspSpectrum extends AbstractMsSpectrum {
 
   private final @Nonnull Hashtable<String, String> properties = new Hashtable<>();
-
-  MspSpectrum(@Nonnull DataPointStore dataStore) {
-    super(dataStore);
-  }
 
   /**
    * <p>

@@ -24,7 +24,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
@@ -54,16 +53,14 @@ class RawDumpParser {
   private Integer precursorCharge;
 
   private final SimpleRawDataFile newRawFile;
-  private final DataPointStore dataStore;
   private byte byteBuffer[] = new byte[100000];
 
   private double mzValues[] = new double[10000];
   private float intensityValues[] = new float[10000];
   private int numOfDataPoints;
 
-  RawDumpParser(SimpleRawDataFile newRawFile, DataPointStore dataStore) {
+  RawDumpParser(SimpleRawDataFile newRawFile) {
     this.newRawFile = newRawFile;
-    this.dataStore = dataStore;
   }
 
   /**
@@ -267,7 +264,7 @@ class RawDumpParser {
         msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
 
       // Create a new scan
-      SimpleMsScan newScan = new SimpleMsScan(dataStore, scanNumber, msFunction);
+      SimpleMsScan newScan = new SimpleMsScan(scanNumber, msFunction);
 
       newScan.setRetentionTime(retentionTime);
       newScan.setDataPoints(mzValues, intensityValues, numOfDataPoints);
@@ -277,8 +274,8 @@ class RawDumpParser {
       newScan.setScanDefinition(scanId);
 
       if (precursorMz != null) {
-        IsolationInfo isolation = new SimpleIsolationInfo(Range.singleton(precursorMz),
-            null, precursorMz, precursorCharge, null);
+        IsolationInfo isolation = new SimpleIsolationInfo(Range.singleton(precursorMz), null,
+            precursorMz, precursorCharge, null);
         newScan.getIsolations().add(isolation);
       }
 
