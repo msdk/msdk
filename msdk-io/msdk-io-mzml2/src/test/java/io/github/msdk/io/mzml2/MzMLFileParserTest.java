@@ -66,6 +66,7 @@ public class MzMLFileParserTest {
         0.000001);
     Assert.assertEquals(new Double(999.832214355469), spectrum.getMzRange().upperEndpoint(),
         0.000001);
+    Assert.assertEquals(509.6600036621094, spectrum.getMzValues()[619], 0.0001);
     Assert.assertEquals("+ c ESI Q1MS [100.000-1000.000]", spectrum.getScanDefinition());
     Assert.assertEquals(new Integer(1), spectrum.getMsLevel());
     Assert.assertEquals(PolarityType.POSITIVE, spectrum.getPolarity());
@@ -110,8 +111,6 @@ public class MzMLFileParserTest {
   @Test
   public void test5peptideFT() throws MSDKException {
 
-    // Create the data structures
-    double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
@@ -134,7 +133,8 @@ public class MzMLFileParserTest {
     Assert.assertEquals(new Integer(1), scan2.getMsLevel());
     Assert.assertEquals(0.474f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
-    mzBuffer = scan2.getMzValues();
+    Assert.assertEquals(209.1818184554577, scan2.getMzValues()[100], 0.00001);
+    scan2.getMzValues();
     intensityBuffer = scan2.getIntensityValues();
     Assert.assertEquals(19800, (int) scan2.getNumberOfDataPoints());
     Float scan2maxInt =
@@ -148,7 +148,7 @@ public class MzMLFileParserTest {
     Assert.assertEquals(new Integer(2), scan5.getMsLevel());
     Assert.assertEquals(2.094f, scan5.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan5.getPolarity());
-    mzBuffer = scan5.getMzValues();
+    Assert.assertEquals(483.4679870605469, scan5.getMzValues()[200], 0.00001);
     intensityBuffer = scan5.getIntensityValues();
     Assert.assertEquals(837, (int) scan5.getNumberOfDataPoints());
     Float scan5maxInt =
@@ -163,8 +163,6 @@ public class MzMLFileParserTest {
   @Test
   public void testPwizTiny() throws MSDKException {
 
-    // Create the data structures
-    double mzBuffer[];
     float intensityBuffer[];
 
     // Import the file
@@ -187,7 +185,7 @@ public class MzMLFileParserTest {
     Assert.assertEquals(new Integer(2), scan2.getMsLevel());
     Assert.assertEquals(359.43f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
-    mzBuffer = scan2.getMzValues();
+    Assert.assertEquals(16.0, scan2.getMzValues()[8], 0.00001);
     intensityBuffer = scan2.getIntensityValues();
     Assert.assertEquals(10, (int) scan2.getNumberOfDataPoints());
     Float scan2maxInt =
@@ -210,8 +208,6 @@ public class MzMLFileParserTest {
   @Test
   public void testParamGroup() throws MSDKException {
 
-    // Create the data structures
-    double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
@@ -234,7 +230,7 @@ public class MzMLFileParserTest {
     Assert.assertEquals(new Integer(2), scan2.getMsLevel());
     Assert.assertEquals(100.002f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
-    mzBuffer = scan2.getMzValues();
+    Assert.assertEquals(111.03714243896029, scan2.getMzValues()[10], 0.00001);
     intensityBuffer = scan2.getIntensityValues();
     Assert.assertEquals(33, (int) scan2.getNumberOfDataPoints());
     Float scan2maxInt =
@@ -247,7 +243,7 @@ public class MzMLFileParserTest {
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan101.getSpectrumType());
     Assert.assertEquals(new Integer(1), scan101.getMsLevel());
     Assert.assertEquals(109.998f, scan101.getRetentionTime(), 0.01f);
-    mzBuffer = scan101.getMzValues();
+    Assert.assertEquals(174.10665617189798, scan101.getMzValues()[10], 0.00001);
     intensityBuffer = scan101.getIntensityValues();
     Assert.assertEquals(21, (int) scan101.getNumberOfDataPoints());
     Float scan5maxInt =
@@ -329,6 +325,8 @@ public class MzMLFileParserTest {
     Assert.assertEquals(new Double(440.706), chromatogram.getIsolations().get(1).getPrecursorMz());
     Assert.assertEquals(ActivationType.CID,
         chromatogram.getIsolations().get(0).getActivationInfo().getActivationType());
+    Assert.assertEquals(0.01095, chromatogram.getRetentionTimes()[0], 0.0001);
+    Assert.assertEquals(38.500003814697266, chromatogram.getIntensityValues()[0], 0.0001);
 
     // 1st chromatogram
     chromatogram = chromatograms.get(0);
@@ -343,8 +341,6 @@ public class MzMLFileParserTest {
   @Test
   public void testEmptyScan() throws MSDKException {
 
-    // Create the data structures
-    double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
@@ -367,7 +363,7 @@ public class MzMLFileParserTest {
     Assert.assertEquals(new Integer(2), scan2.getMsLevel());
     Assert.assertEquals(309.1878f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
-    mzBuffer = scan2.getMzValues();
+    scan2.getMzValues();
     intensityBuffer = scan2.getIntensityValues();
     Assert.assertEquals(0, (int) scan2.getNumberOfDataPoints());
     Float scan2maxInt =
@@ -394,7 +390,61 @@ public class MzMLFileParserTest {
     File inputFile = new File(TEST_DATA_PATH + "truncated.mzML");
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
+    parser.execute();
+
+  }
+
+  @Test
+  public void testZlibAndNumpressCompression() throws MSDKException {
+
+    // Import the file
+    File inputFile = new File(TEST_DATA_PATH + "MzValues_Zlib+Numpress.mzML");
+    Assert.assertTrue(inputFile.canRead());
+    MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
+    Assert.assertNotNull(rawFile);
+    Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
+
+    // The file has 6 scans
+    List<MsScan> scans = rawFile.getScans();
+    Assert.assertNotNull(scans);
+    Assert.assertEquals(6, scans.size());
+
+    // 4th scan, #2103
+    MsScan scan2 = scans.get(3);
+    Assert.assertEquals(new Integer(2103), scan2.getScanNumber());
+    Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
+    Assert.assertEquals(new Integer(1), scan2.getMsLevel());
+    Assert.assertEquals(1127.6449f, scan2.getRetentionTime(), 0.01f);
+    Assert.assertEquals(PolarityType.NEGATIVE, scan2.getPolarity());
+    scan2.getMzValues();
+    Assert.assertEquals(1306, (int) scan2.getNumberOfDataPoints());
+    Float scan2maxInt =
+        MsSpectrumUtil.getMaxIntensity(scan2.getIntensityValues(), scan2.getNumberOfDataPoints());
+    Assert.assertEquals(8746.9599f, scan2maxInt, 0.1f);
+    Assert.assertEquals(new Float(58989.76953125), scan2.getTIC(), 10);
+    Assert.assertEquals(new Double(100.317253112793), scan2.getMzRange().lowerEndpoint(), 0.000001);
+    Assert.assertEquals(new Double(999.715515136719), scan2.getMzRange().upperEndpoint(), 0.000001);
+    Assert.assertEquals("- c ESI Q1MS [100.000-1000.000]", scan2.getScanDefinition());
+
+    // Test isolation data
+    List<IsolationInfo> scan2isolations = scan2.getIsolations();
+    Assert.assertEquals(0, scan2isolations.size());
+
+    // The file has 2 chromatograms
+    List<Chromatogram> chromatograms = rawFile.getChromatograms();
+    Assert.assertNotNull(chromatograms);
+    Assert.assertEquals(2, chromatograms.size());
+
+    // 1st chromatogram
+    Chromatogram chromatogram = chromatograms.get(0);
+    Assert.assertEquals(new Integer(1), chromatogram.getChromatogramNumber());
+    Assert.assertEquals(ChromatogramType.TIC, chromatogram.getChromatogramType());
+    Assert.assertEquals(new Integer(2126), chromatogram.getNumberOfDataPoints());
+    Assert.assertEquals(new Integer(0), (Integer) chromatogram.getIsolations().size());
+    Assert.assertEquals(2126, chromatogram.getRetentionTimes().length);
+
+    rawFile.dispose();
 
   }
 }
