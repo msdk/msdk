@@ -129,6 +129,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
     this.referenceableParamGroupList = new ArrayList<>();
     this.canceled = false;
     this.progress = 0f;
+    this.lastLoggedProgress = 0;
     this.logger = LoggerFactory.getLogger(this.getClass());
     this.tags = new Stack<>();
   }
@@ -149,8 +150,8 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
       List<MsScan> spectrumList = new ArrayList<>();
       List<Chromatogram> chromatogramsList = new ArrayList<>();
-      
-      // TODO populate the list 
+
+      // TODO populate the list
       List<String> msFunctionsList = new ArrayList<>();
 
       // Create the MzMLRawDataFile object
