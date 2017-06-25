@@ -35,6 +35,7 @@ import io.github.msdk.datamodel.impl.SimpleSample;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.util.ChromatogramUtil;
+import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
  * <p>
@@ -53,14 +54,11 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
   private HashMap<MsScan, DataPoint[]> dpCache = null;
 
   // scan counter
-  private float procedure = 0;
-  private int newPeakID = 0;
   private final @Nonnull List<MsScan> scans;
   Datum[] roi[];
   double retentiontime[];
 
   // User parameters
-  private String suffix;
   private double mzTol;
   private double intensitySimilarity;
   private double minimumTimeSpan, maximumTimeSpan;
@@ -88,7 +86,12 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
    *
    * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    */
-  public GridMassMethod(@Nonnull RawDataFile rawDataFile, @Nonnull List<MsScan> scans) {
+  public GridMassMethod(@Nonnull RawDataFile rawDataFile, @Nonnull List<MsScan> scans,
+      @Nonnull MzTolerance mzTol, @Nonnull Double intensitySimilarity,
+      @Nonnull Double minimumTimeSpan, @Nonnull Double maximumTimeSpan,
+      @Nonnull Double smoothTimeSpan, @Nonnull Double smoothTimeMZ, @Nonnull Double smoothMZ,
+      @Nonnull Double additionTimeMaxPeaksPerScan, @Nonnull Double minimumHeight,
+      @Nonnull Double rtPerScan) {
     this.rawDataFile = rawDataFile;
     this.scans = scans;
   }
@@ -208,7 +211,6 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
         if (debug > 0)
           System.out.print(((int) (massSum * dm)) + (scanOk[i] ? " " : "* "));
       }
-      setProcedure(i, totalScans, 1);
     }
 
     if (debug > 0)
@@ -252,7 +254,6 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
         roi[i] = dal.toArray(new Datum[0]);
         roiAL.addAll(dal);
       }
-      setProcedure(i, totalScans, 2);
     }
     logger.info(passed + " intensities >= " + minimumHeight + " of " + (passed + nopassed) + " ("
         + Math.round(passed * 10000.0 / (double) (passed + nopassed)) / 100.0 + "%) on "
@@ -279,7 +280,6 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
       for (m = minMasa - (i % 2) * byMZ / 2; m <= maxMasa; m += byMZ) {
         probes[idata++] = new Probe(m, i);
       }
-      setProcedure(i, totalScans, 3);
     }
 
     // (2) Move each probe to their closest center
@@ -296,7 +296,6 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
       } else {
         okProbes++;
       }
-      setProcedure(i, idata, 4);
     }
     if (okProbes > 0) {
       Probe[] pArr = new Probe[okProbes];
@@ -331,7 +330,6 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
         }
         sbp.addProbe(probes[i]);
       }
-      setProcedure(i, probes.length, 5);
     }
     if (sbp.size() > 0) {
       spots.add(sbp);
@@ -349,7 +347,6 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
           return null;
         assignSpotIdToDatumsFromScans(sx, scanR, mzR);
       }
-      setProcedure(i++, spots.size(), 6);
     }
 
     // (4) Join Tolerable Centers
@@ -389,7 +386,6 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
           }
         }
       }
-      setProcedure(i, spots.size(), 7);
     }
     logger.info("Joins:" + joins);
 
@@ -439,7 +435,6 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
           }
         }
       }
-      setProcedure(i, spots.size(), 8);
     }
 
     // Build peaks from assigned datums
@@ -458,7 +453,6 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
             float area = ChromatogramUtil.getArea(peak.getRetentionTimes(),
                 peak.getIntensityValues(), peak.getNumberOfDataPoints());
             if (area > 1e-6) {
-              newPeakID++;
               SimpleFeatureTableRow newRow = new SimpleFeatureTableRow(newPeakList);
 
               SimpleFeature newFeature = new SimpleFeature();
@@ -509,7 +503,6 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
                     + ", cont ratio=" + sx.getContigousToMaxDatumScansRatio());
         }
       }
-      setProcedure(i++, spots.size(), 9);
     }
     logger.info("Detected " + newPeakList.getRows().size() + " peaks");
 
@@ -518,11 +511,6 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
 
   double intensityRatio(double int1, double int2) {
     return Math.min(int1, int2) / Math.max(int1, int2);
-  }
-
-  void setProcedure(int i, int max, float process) {
-    float procedureLen = 10.0f;
-    procedure = (process + (float) i / (float) max) / procedureLen;
   }
 
   IndexedDataPoint[][] smoothDataPoints(RawDataFile dataFile, double timeSpan, double timeMZSpan,
@@ -663,8 +651,6 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
         iDP[k] = tmpDP[k];
       }
       newMZValues[i] = iDP;
-
-      setProcedure(i, totalScans, 0);
 
       if (i % modts == 0) {
         logger.info("Smoothing/Caching " + dataFile + "..." + (i / modts) * 10 + "%");
