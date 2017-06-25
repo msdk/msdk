@@ -13,9 +13,7 @@
 
 package io.github.msdk.io.mzml2;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -40,13 +38,13 @@ import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
+import io.github.msdk.io.mzml2.data.MzMLCV;
 import io.github.msdk.io.mzml2.data.MzMLCVGroup;
 import io.github.msdk.io.mzml2.data.MzMLCVParam;
 import io.github.msdk.io.mzml2.data.MzMLIsolationWindow;
 import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
 import io.github.msdk.io.mzml2.data.MzMLProduct;
 import io.github.msdk.io.mzml2.data.MzMLRawDataFile;
-import io.github.msdk.io.mzml2.util.ByteBufferInputStreamAdapter;
 import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
 import it.unimi.dsi.io.ByteBufferInputStream;
 
@@ -344,28 +342,9 @@ class MzMLChromatogram implements Chromatogram {
           "Retention time binary data array contains a different array length from the default array length of the scan (#"
               + getChromatogramNumber() + ")");
     }
-    Integer precision;
 
     try {
-      switch (getRtBinaryDataInfo().getBitLength()) {
-        case THIRTY_TWO_BIT_FLOAT:
-        case THIRTY_TWO_BIT_INTEGER:
-          precision = 32;
-          break;
-        case SIXTY_FOUR_BIT_FLOAT:
-        case SIXTY_FOUR_BIT_INTEGER:
-          precision = 64;
-          break;
-        default:
-          precision = null;
-      }
-
-      InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream,
-          getRtBinaryDataInfo().getPosition(), getRtBinaryDataInfo().getEncodedLength());
-      InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
-
-      rtValues = MzMLPeaksDecoder.decodeToFloat(decodedIs, getRtBinaryDataInfo().getEncodedLength(),
-          precision, numOfDataPoints, getRtBinaryDataInfo().getCompressionType());
+      rtValues = MzMLPeaksDecoder.decodeToFloat(mappedByteBufferInputStream, getRtBinaryDataInfo());
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }
@@ -388,30 +367,10 @@ class MzMLChromatogram implements Chromatogram {
           "Intensity binary data array contains a different array length from the default array length of the chromatogram (#"
               + getChromatogramNumber() + ")");
     }
-    Integer precision;
 
     try {
-      switch (getIntensityBinaryDataInfo().getBitLength()) {
-        case THIRTY_TWO_BIT_FLOAT:
-        case THIRTY_TWO_BIT_INTEGER:
-          precision = 32;
-          break;
-        case SIXTY_FOUR_BIT_FLOAT:
-        case SIXTY_FOUR_BIT_INTEGER:
-          precision = 64;
-          break;
-        default:
-          precision = null;
-      }
-
-      InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream,
-          getIntensityBinaryDataInfo().getPosition(),
-          getIntensityBinaryDataInfo().getEncodedLength());
-      InputStream decodedIs = Base64.getDecoder().wrap(encodedIs);
-
       array =
-          MzMLPeaksDecoder.decodeToFloat(decodedIs, getIntensityBinaryDataInfo().getEncodedLength(),
-              precision, numOfDataPoints, getIntensityBinaryDataInfo().getCompressionType());
+          MzMLPeaksDecoder.decodeToFloat(mappedByteBufferInputStream, getIntensityBinaryDataInfo());
     } catch (Exception e) {
       throw (new MSDKRuntimeException(e));
     }

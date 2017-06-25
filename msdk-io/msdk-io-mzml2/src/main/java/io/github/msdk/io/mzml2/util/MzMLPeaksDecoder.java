@@ -15,6 +15,7 @@ package io.github.msdk.io.mzml2.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 import java.util.EnumSet;
 import java.util.zip.DataFormatException;
 import java.util.zip.InflaterInputStream;
@@ -25,7 +26,8 @@ import com.google.common.io.LittleEndianDataInputStream;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
-import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLCompressionType;
+import io.github.msdk.io.mzml2.data.MzMLCompressionType;
+import it.unimi.dsi.io.ByteBufferInputStream;
 
 /**
  * <p>
@@ -55,9 +57,15 @@ public class MzMLPeaksDecoder {
    * @return a float array containing the decoded values
    * @throws io.github.msdk.MSDKException if any.
    */
-  public static float[] decodeToFloat(InputStream is, int lengthIn, Integer precision,
-      int numPoints, MzMLBinaryDataInfo.MzMLCompressionType compression)
-      throws DataFormatException, IOException, MSDKException {
+  public static float[] decodeToFloat(ByteBufferInputStream mappedByteBufferInputStream,
+      MzMLBinaryDataInfo binaryDataInfo) throws DataFormatException, IOException, MSDKException {
+
+    int lengthIn = binaryDataInfo.getEncodedLength();
+    int numPoints = binaryDataInfo.getArrayLength();
+
+    InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream,
+        binaryDataInfo.getPosition(), lengthIn);
+    InputStream is = Base64.getDecoder().wrap(encodedIs);
 
     // for some reason there sometimes might be zero length <peaks> tags
     // (ms2 usually)
@@ -66,8 +74,8 @@ public class MzMLPeaksDecoder {
       return new float[0];
     }
 
-    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
-        MzMLCompressionsHelper.getCompressions(compression);
+    EnumSet<MzMLCompressionType> compressions =
+        getCompressions(binaryDataInfo.getCompressionType());
 
     InflaterInputStream iis = null;
     LittleEndianDataInputStream dis = null;
@@ -77,7 +85,7 @@ public class MzMLPeaksDecoder {
 
     // first check for zlib compression, inflation must be done before
     // NumPress
-    if (compressions.contains(MzMLBinaryDataInfo.MzMLCompressionType.ZLIB)) {
+    if (compressions.contains(MzMLCompressionType.ZLIB)) {
       iis = new InflaterInputStream(is);
       dis = new LittleEndianDataInputStream(iis);
     } else if (compressions.contains(MzMLCompressionType.NO_COMPRESSION)) {
@@ -87,19 +95,19 @@ public class MzMLPeaksDecoder {
     }
 
     // now can check for NumPress
-    if (compressions.contains(MzMLBinaryDataInfo.MzMLCompressionType.NUMPRESS_LINPRED)) {
+    if (compressions.contains(MzMLCompressionType.NUMPRESS_LINPRED)) {
       int numDecodedDoubles = MSNumpress.decodeLinear(bytes, bytes.length, data);
       if (numDecodedDoubles < 0) {
         throw new MSDKException("MSNumpress linear decoder failed");
       }
       return data;
-    } else if (compressions.contains(MzMLBinaryDataInfo.MzMLCompressionType.NUMPRESS_POSINT)) {
+    } else if (compressions.contains(MzMLCompressionType.NUMPRESS_POSINT)) {
       int numDecodedDoubles = MSNumpress.decodePic(bytes, bytes.length, data);
       if (numDecodedDoubles < 0) {
         throw new MSDKException("MSNumpress positive integer decoder failed");
       }
       return data;
-    } else if (compressions.contains(MzMLBinaryDataInfo.MzMLCompressionType.NUMPRESS_SHLOGF)) {
+    } else if (compressions.contains(MzMLCompressionType.NUMPRESS_SHLOGF)) {
       int numDecodedDoubles = MSNumpress.decodeSlof(bytes, bytes.length, data);
       if (numDecodedDoubles < 0) {
         throw new MSDKException("MSNumpress short logged float decoder failed");
@@ -107,9 +115,20 @@ public class MzMLPeaksDecoder {
       return data;
     }
 
-    if (precision == null) {
-      throw new IllegalArgumentException(
-          "Precision MUST be specified, if MS-NUMPRESS compression was not used");
+    Integer precision;
+    switch (binaryDataInfo.getBitLength()) {
+      case THIRTY_TWO_BIT_FLOAT:
+      case THIRTY_TWO_BIT_INTEGER:
+        precision = 32;
+        break;
+      case SIXTY_FOUR_BIT_FLOAT:
+      case SIXTY_FOUR_BIT_INTEGER:
+        precision = 64;
+        break;
+      default:
+        throw new IllegalArgumentException(
+            "Precision MUST be specified and be either 32-bit or 64-bit, "
+                + "if MS-NUMPRESS compression was not used");
     }
 
     switch (precision) {
@@ -158,9 +177,15 @@ public class MzMLPeaksDecoder {
    * @return a double array containing the decoded values
    * @throws io.github.msdk.MSDKException if any.
    */
-  public static double[] decodeToDouble(InputStream is, int lengthIn, Integer precision,
-      int numPoints, MzMLBinaryDataInfo.MzMLCompressionType compression)
-      throws DataFormatException, IOException, MSDKException {
+  public static double[] decodeToDouble(ByteBufferInputStream mappedByteBufferInputStream,
+      MzMLBinaryDataInfo binaryDataInfo) throws DataFormatException, IOException, MSDKException {
+
+    int lengthIn = binaryDataInfo.getEncodedLength();
+    int numPoints = binaryDataInfo.getArrayLength();
+
+    InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream,
+        binaryDataInfo.getPosition(), lengthIn);
+    InputStream is = Base64.getDecoder().wrap(encodedIs);
 
     // for some reason there sometimes might be zero length <peaks> tags
     // (ms2 usually)
@@ -169,8 +194,8 @@ public class MzMLPeaksDecoder {
       return new double[0];
     }
 
-    EnumSet<MzMLBinaryDataInfo.MzMLCompressionType> compressions =
-        MzMLCompressionsHelper.getCompressions(compression);
+    EnumSet<MzMLCompressionType> compressions =
+        getCompressions(binaryDataInfo.getCompressionType());
 
     InflaterInputStream iis = null;
     LittleEndianDataInputStream dis = null;
@@ -180,7 +205,7 @@ public class MzMLPeaksDecoder {
 
     // first check for zlib compression, inflation must be done before
     // NumPress
-    if (compressions.contains(MzMLBinaryDataInfo.MzMLCompressionType.ZLIB)) {
+    if (compressions.contains(MzMLCompressionType.ZLIB)) {
       iis = new InflaterInputStream(is);
       dis = new LittleEndianDataInputStream(iis);
     } else if (compressions.contains(MzMLCompressionType.NO_COMPRESSION)) {
@@ -190,19 +215,19 @@ public class MzMLPeaksDecoder {
     }
 
     // now can check for NumPress
-    if (compressions.contains(MzMLBinaryDataInfo.MzMLCompressionType.NUMPRESS_LINPRED)) {
+    if (compressions.contains(MzMLCompressionType.NUMPRESS_LINPRED)) {
       int numDecodedDoubles = MSNumpress.decodeLinear(bytes, bytes.length, data);
       if (numDecodedDoubles < 0) {
         throw new MSDKException("MSNumpress linear decoder failed");
       }
       return data;
-    } else if (compressions.contains(MzMLBinaryDataInfo.MzMLCompressionType.NUMPRESS_POSINT)) {
+    } else if (compressions.contains(MzMLCompressionType.NUMPRESS_POSINT)) {
       int numDecodedDoubles = MSNumpress.decodePic(bytes, bytes.length, data);
       if (numDecodedDoubles < 0) {
         throw new MSDKException("MSNumpress positive integer decoder failed");
       }
       return data;
-    } else if (compressions.contains(MzMLBinaryDataInfo.MzMLCompressionType.NUMPRESS_SHLOGF)) {
+    } else if (compressions.contains(MzMLCompressionType.NUMPRESS_SHLOGF)) {
       int numDecodedDoubles = MSNumpress.decodeSlof(bytes, bytes.length, data);
       if (numDecodedDoubles < 0) {
         throw new MSDKException("MSNumpress short logged float decoder failed");
@@ -210,9 +235,20 @@ public class MzMLPeaksDecoder {
       return data;
     }
 
-    if (precision == null) {
-      throw new IllegalArgumentException(
-          "Precision MUST be specified, if MS-NUMPRESS compression was not used");
+    Integer precision;
+    switch (binaryDataInfo.getBitLength()) {
+      case THIRTY_TWO_BIT_FLOAT:
+      case THIRTY_TWO_BIT_INTEGER:
+        precision = 32;
+        break;
+      case SIXTY_FOUR_BIT_FLOAT:
+      case SIXTY_FOUR_BIT_INTEGER:
+        precision = 64;
+        break;
+      default:
+        throw new IllegalArgumentException(
+            "Precision MUST be specified and be either 32-bit or 64-bit, "
+                + "if MS-NUMPRESS compression was not used");
     }
 
     switch (precision) {
@@ -243,4 +279,29 @@ public class MzMLPeaksDecoder {
     return data;
   }
 
+  private static EnumSet<MzMLCompressionType> getCompressions(MzMLCompressionType compression) {
+    EnumSet<MzMLCompressionType> compressions = EnumSet.noneOf(MzMLCompressionType.class);
+
+    if (compression == null) {
+      compressions.add(MzMLCompressionType.NO_COMPRESSION);
+      return compressions;
+    }
+
+    switch (compression) {
+      case NUMPRESS_LINPRED_ZLIB:
+        compressions.add(MzMLCompressionType.NUMPRESS_LINPRED);
+        compressions.add(MzMLCompressionType.ZLIB);
+        break;
+      case NUMPRESS_POSINT_ZLIB:
+        compressions.add(MzMLCompressionType.NUMPRESS_POSINT);
+        compressions.add(MzMLCompressionType.ZLIB);
+        break;
+      case NUMPRESS_SHLOGF_ZLIB:
+        break;
+      default:
+        compressions.add(compression);
+    }
+    return compressions;
+
+  }
 }
