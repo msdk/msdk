@@ -254,8 +254,7 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
           xmlStreamReader.close();
         }
       }
-    } catch (IOException | XMLStreamException | javax.xml.stream.XMLStreamException
-        | DatatypeConfigurationException e) {
+    } catch (Exception e) {
       throw (new MSDKException(e));
     }
     return newRawFile;
