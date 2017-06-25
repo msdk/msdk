@@ -1,24 +1,13 @@
-/*
- * (C) Copyright 2015-2016 by MSDK Development Team
- *
- * This software is dual-licensed under either
- *
- * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
- * Software Foundation
- *
- * or (per the licensee's choosing)
- *
- * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
- */
-
-package io.github.msdk.io.mzml2.data;
+package io.github.msdk.io.mzxml;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
@@ -26,13 +15,12 @@ import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
-public class MzMLRawDataFile implements RawDataFile {
+public class MzXMLRawDataFile implements RawDataFile {
 
-  private static final @Nonnull FileType fileType = FileType.MZML;
+  private static final @Nonnull FileType fileType = FileType.MZXML;
 
   private final @Nonnull File sourceFile;
 
-  private final @Nonnull List<String> msFunctions;
   private final @Nonnull List<MsScan> msScans;
   private final @Nonnull List<Chromatogram> chromatograms;
 
@@ -40,7 +28,7 @@ public class MzMLRawDataFile implements RawDataFile {
 
   /**
    * <p>
-   * Constructor for MzMLRawDataFile.
+   * Constructor for MzXMLRawDataFile.
    * </p>
    *
    * @param sourceFile a {@link java.io.File} object.
@@ -48,14 +36,11 @@ public class MzMLRawDataFile implements RawDataFile {
    * @param msScans a {@link java.util.List} object.
    * @param chromatograms a {@link java.util.List} object.
    */
-  @SuppressWarnings("null")
-  public MzMLRawDataFile(@Nonnull File sourceFile, List<String> msFunctions,
-      List<MsScan> msScans, List<Chromatogram> chromatograms) {
+  public MzXMLRawDataFile(@Nonnull File sourceFile) {
     this.sourceFile = sourceFile;
     this.name = sourceFile.getName();
-    this.msFunctions = msFunctions;
-    this.msScans = msScans;
-    this.chromatograms = chromatograms;
+    this.msScans = new ArrayList<>();
+    this.chromatograms = new ArrayList<>();
   }
 
   /** {@inheritDoc} */
@@ -80,19 +65,33 @@ public class MzMLRawDataFile implements RawDataFile {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("null")
   @Override
-  @Nonnull
-  public List<String> getMsFunctions() {
-    return ImmutableList.copyOf(msFunctions);
+  public @Nonnull List<MsScan> getScans() {
+    return ImmutableList.copyOf(msScans);
   }
 
-  /** {@inheritDoc} */
-  @SuppressWarnings("null")
-  @Override
-  @Nonnull
-  public List<MsScan> getScans() {
-    return ImmutableList.copyOf(msScans);
+  /**
+   * {@inheritDoc}
+   *
+   * @param scan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+   */
+  public void addScan(@Nonnull MsScan scan) {
+    Preconditions.checkNotNull(scan);
+    synchronized (msScans) {
+      msScans.add(scan);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @param scan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+   */
+  public void removeScan(@Nonnull MsScan scan) {
+    Preconditions.checkNotNull(scan);
+    synchronized (msScans) {
+      msScans.remove(scan);
+    }
   }
 
   /** {@inheritDoc} */
@@ -107,5 +106,19 @@ public class MzMLRawDataFile implements RawDataFile {
   @Override
   public void dispose() {}
 
+  /** {@inheritDoc} */
+  @Override
+  @Nonnull
+  public List<String> getMsFunctions() {
+    ArrayList<String> msFunctionList = new ArrayList<>();
+    synchronized (msScans) {
+      for (MsScan scan : msScans) {
+        String f = scan.getMsFunction();
+        if ((f != null) && (!msFunctionList.contains(f)))
+          msFunctionList.add(f);
+      }
+    }
+    return msFunctionList;
+  }
 
 }
