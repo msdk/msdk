@@ -16,7 +16,6 @@ package io.github.msdk.io.mzml2.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
-import java.util.EnumSet;
 import java.util.zip.DataFormatException;
 import java.util.zip.InflaterInputStream;
 
@@ -26,7 +25,6 @@ import com.google.common.io.LittleEndianDataInputStream;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
-import io.github.msdk.io.mzml2.data.MzMLCompressionType;
 import it.unimi.dsi.io.ByteBufferInputStream;
 
 /**
@@ -80,48 +78,52 @@ public class MzMLPeaksDecoder {
 
     // first check for zlib compression, inflation must be done before
     // NumPress
-    switch (binaryDataInfo.getCompressionType()) {
-      case ZLIB:
-      case NUMPRESS_LINPRED_ZLIB:
-      case NUMPRESS_POSINT_ZLIB:
-      case NUMPRESS_SHLOGF_ZLIB:
-        iis = new InflaterInputStream(is);
-        dis = new LittleEndianDataInputStream(iis);
-        break;
-      default:
-        dis = new LittleEndianDataInputStream(is);
-        break;
-    }
+    if (binaryDataInfo.getCompressionType() != null) {
+      switch (binaryDataInfo.getCompressionType()) {
+        case ZLIB:
+        case NUMPRESS_LINPRED_ZLIB:
+        case NUMPRESS_POSINT_ZLIB:
+        case NUMPRESS_SHLOGF_ZLIB:
+          iis = new InflaterInputStream(is);
+          dis = new LittleEndianDataInputStream(iis);
+          break;
+        default:
+          dis = new LittleEndianDataInputStream(is);
+          break;
+      }
 
-    // Now we can check for NumPress
-    int numDecodedDoubles;
-    switch (binaryDataInfo.getCompressionType()) {
-      case NUMPRESS_LINPRED:
-      case NUMPRESS_LINPRED_ZLIB:
-        bytes = IOUtils.toByteArray(dis);
-        numDecodedDoubles = MSNumpress.decodeLinear(bytes, bytes.length, data);
-        if (numDecodedDoubles < 0) {
-          throw new MSDKException("MSNumpress linear decoder failed");
-        }
-        return data;
-      case NUMPRESS_POSINT:
-      case NUMPRESS_POSINT_ZLIB:
-        bytes = IOUtils.toByteArray(dis);
-        numDecodedDoubles = MSNumpress.decodePic(bytes, bytes.length, data);
-        if (numDecodedDoubles < 0) {
-          throw new MSDKException("MSNumpress positive integer decoder failed");
-        }
-        return data;
-      case NUMPRESS_SHLOGF:
-      case NUMPRESS_SHLOGF_ZLIB:
-        bytes = IOUtils.toByteArray(dis);
-        numDecodedDoubles = MSNumpress.decodeSlof(bytes, bytes.length, data);
-        if (numDecodedDoubles < 0) {
-          throw new MSDKException("MSNumpress short logged float decoder failed");
-        }
-        return data;
-      default:
-        break;
+      // Now we can check for NumPress
+      int numDecodedDoubles;
+      switch (binaryDataInfo.getCompressionType()) {
+        case NUMPRESS_LINPRED:
+        case NUMPRESS_LINPRED_ZLIB:
+          bytes = IOUtils.toByteArray(dis);
+          numDecodedDoubles = MSNumpress.decodeLinear(bytes, bytes.length, data);
+          if (numDecodedDoubles < 0) {
+            throw new MSDKException("MSNumpress linear decoder failed");
+          }
+          return data;
+        case NUMPRESS_POSINT:
+        case NUMPRESS_POSINT_ZLIB:
+          bytes = IOUtils.toByteArray(dis);
+          numDecodedDoubles = MSNumpress.decodePic(bytes, bytes.length, data);
+          if (numDecodedDoubles < 0) {
+            throw new MSDKException("MSNumpress positive integer decoder failed");
+          }
+          return data;
+        case NUMPRESS_SHLOGF:
+        case NUMPRESS_SHLOGF_ZLIB:
+          bytes = IOUtils.toByteArray(dis);
+          numDecodedDoubles = MSNumpress.decodeSlof(bytes, bytes.length, data);
+          if (numDecodedDoubles < 0) {
+            throw new MSDKException("MSNumpress short logged float decoder failed");
+          }
+          return data;
+        default:
+          break;
+      }
+    } else {
+      dis = new LittleEndianDataInputStream(is);
     }
 
     Integer precision;
@@ -214,48 +216,52 @@ public class MzMLPeaksDecoder {
 
     // first check for zlib compression, inflation must be done before
     // NumPress
-    switch (binaryDataInfo.getCompressionType()) {
-      case ZLIB:
-      case NUMPRESS_LINPRED_ZLIB:
-      case NUMPRESS_POSINT_ZLIB:
-      case NUMPRESS_SHLOGF_ZLIB:
-        iis = new InflaterInputStream(is);
-        dis = new LittleEndianDataInputStream(iis);
-        break;
-      default:
-        dis = new LittleEndianDataInputStream(is);
-        break;
-    }
+    if (binaryDataInfo.getCompressionType() != null) {
+      switch (binaryDataInfo.getCompressionType()) {
+        case ZLIB:
+        case NUMPRESS_LINPRED_ZLIB:
+        case NUMPRESS_POSINT_ZLIB:
+        case NUMPRESS_SHLOGF_ZLIB:
+          iis = new InflaterInputStream(is);
+          dis = new LittleEndianDataInputStream(iis);
+          break;
+        default:
+          dis = new LittleEndianDataInputStream(is);
+          break;
+      }
 
-    // Now we can check for NumPress
-    int numDecodedDoubles;
-    switch (binaryDataInfo.getCompressionType()) {
-      case NUMPRESS_LINPRED:
-      case NUMPRESS_LINPRED_ZLIB:
-        bytes = IOUtils.toByteArray(dis);
-        numDecodedDoubles = MSNumpress.decodeLinear(bytes, bytes.length, data);
-        if (numDecodedDoubles < 0) {
-          throw new MSDKException("MSNumpress linear decoder failed");
-        }
-        return data;
-      case NUMPRESS_POSINT:
-      case NUMPRESS_POSINT_ZLIB:
-        bytes = IOUtils.toByteArray(dis);
-        numDecodedDoubles = MSNumpress.decodePic(bytes, bytes.length, data);
-        if (numDecodedDoubles < 0) {
-          throw new MSDKException("MSNumpress positive integer decoder failed");
-        }
-        return data;
-      case NUMPRESS_SHLOGF:
-      case NUMPRESS_SHLOGF_ZLIB:
-        bytes = IOUtils.toByteArray(dis);
-        numDecodedDoubles = MSNumpress.decodeSlof(bytes, bytes.length, data);
-        if (numDecodedDoubles < 0) {
-          throw new MSDKException("MSNumpress short logged float decoder failed");
-        }
-        return data;
-      default:
-        break;
+      // Now we can check for NumPress
+      int numDecodedDoubles;
+      switch (binaryDataInfo.getCompressionType()) {
+        case NUMPRESS_LINPRED:
+        case NUMPRESS_LINPRED_ZLIB:
+          bytes = IOUtils.toByteArray(dis);
+          numDecodedDoubles = MSNumpress.decodeLinear(bytes, bytes.length, data);
+          if (numDecodedDoubles < 0) {
+            throw new MSDKException("MSNumpress linear decoder failed");
+          }
+          return data;
+        case NUMPRESS_POSINT:
+        case NUMPRESS_POSINT_ZLIB:
+          bytes = IOUtils.toByteArray(dis);
+          numDecodedDoubles = MSNumpress.decodePic(bytes, bytes.length, data);
+          if (numDecodedDoubles < 0) {
+            throw new MSDKException("MSNumpress positive integer decoder failed");
+          }
+          return data;
+        case NUMPRESS_SHLOGF:
+        case NUMPRESS_SHLOGF_ZLIB:
+          bytes = IOUtils.toByteArray(dis);
+          numDecodedDoubles = MSNumpress.decodeSlof(bytes, bytes.length, data);
+          if (numDecodedDoubles < 0) {
+            throw new MSDKException("MSNumpress short logged float decoder failed");
+          }
+          return data;
+        default:
+          break;
+      }
+    } else {
+      dis = new LittleEndianDataInputStream(is);
     }
 
     Integer precision;
