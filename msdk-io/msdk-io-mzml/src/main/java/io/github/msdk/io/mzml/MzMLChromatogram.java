@@ -116,7 +116,7 @@ class MzMLChromatogram implements Chromatogram {
   /** {@inheritDoc} */
   @Override
   @Nonnull
-  public float[] getRetentionTimes(float array[]) {
+  public float[] getRetentionTimes(@Nullable float array[]) {
     if (array == null || array.length < numOfDataPoints) array = new float[numOfDataPoints];
     try {
       MzMLUnmarshaller parser = dataFile.getParser();
@@ -152,7 +152,7 @@ class MzMLChromatogram implements Chromatogram {
   /** {@inheritDoc} */
   @Override
   @Nullable
-  public double[] getMzValues(double array[]) {
+  public double[] getMzValues(@Nullable double array[]) {
     return null;
   }
 

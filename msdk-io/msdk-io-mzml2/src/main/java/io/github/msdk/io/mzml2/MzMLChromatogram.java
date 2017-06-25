@@ -335,7 +335,7 @@ class MzMLChromatogram implements Chromatogram {
   /** {@inheritDoc} */
   @Override
   @Nonnull
-  public float[] getRetentionTimes(float array[]) {
+  public float[] getRetentionTimes(@Nullable float array[]) {
     float[] rtValues = null;
     if (getRtBinaryDataInfo().getArrayLength() != numOfDataPoints) {
       logger.warn(
@@ -375,7 +375,7 @@ class MzMLChromatogram implements Chromatogram {
   /** {@inheritDoc} */
   @Override
   @Nullable
-  public double[] getMzValues(double array[]) {
+  public double[] getMzValues(@Nullable double array[]) {
     return null;
   }
 
