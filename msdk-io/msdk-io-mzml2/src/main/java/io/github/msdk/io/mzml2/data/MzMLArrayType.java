@@ -14,7 +14,9 @@
 package io.github.msdk.io.mzml2.data;
 
 public enum MzMLArrayType {
-  MZ("MS:1000514"), INTENSITY("MS:1000515"), TIME("MS:1000595");
+  MZ("MS:1000514"), // m/z values array
+  INTENSITY("MS:1000515"), // Intensity values array
+  TIME("MS:1000595"); // Retention time values array
 
   private String accession;
 
