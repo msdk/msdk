@@ -72,9 +72,6 @@ public class MzMLPeaksDecoder {
       return new float[0];
     }
 
-    EnumSet<MzMLCompressionType> compressions =
-        getCompressions(binaryDataInfo.getCompressionType());
-
     InflaterInputStream iis = null;
     LittleEndianDataInputStream dis = null;
     byte[] bytes = null;
@@ -83,35 +80,48 @@ public class MzMLPeaksDecoder {
 
     // first check for zlib compression, inflation must be done before
     // NumPress
-    if (compressions.contains(MzMLCompressionType.ZLIB)) {
-      iis = new InflaterInputStream(is);
-      dis = new LittleEndianDataInputStream(iis);
-    } else if (compressions.contains(MzMLCompressionType.NO_COMPRESSION)) {
-      dis = new LittleEndianDataInputStream(is);
+    switch (binaryDataInfo.getCompressionType()) {
+      case ZLIB:
+      case NUMPRESS_LINPRED_ZLIB:
+      case NUMPRESS_POSINT_ZLIB:
+      case NUMPRESS_SHLOGF_ZLIB:
+        iis = new InflaterInputStream(is);
+        dis = new LittleEndianDataInputStream(iis);
+        break;
+      default:
+        dis = new LittleEndianDataInputStream(is);
+        break;
     }
 
-    // now can check for NumPress
-    if (compressions.contains(MzMLCompressionType.NUMPRESS_LINPRED)) {
-      bytes = dis != null ? IOUtils.toByteArray(dis) : IOUtils.toByteArray(is);
-      int numDecodedDoubles = MSNumpress.decodeLinear(bytes, bytes.length, data);
-      if (numDecodedDoubles < 0) {
-        throw new MSDKException("MSNumpress linear decoder failed");
-      }
-      return data;
-    } else if (compressions.contains(MzMLCompressionType.NUMPRESS_POSINT)) {
-      bytes = dis != null ? IOUtils.toByteArray(dis) : IOUtils.toByteArray(is);
-      int numDecodedDoubles = MSNumpress.decodePic(bytes, bytes.length, data);
-      if (numDecodedDoubles < 0) {
-        throw new MSDKException("MSNumpress positive integer decoder failed");
-      }
-      return data;
-    } else if (compressions.contains(MzMLCompressionType.NUMPRESS_SHLOGF)) {
-      bytes = dis != null ? IOUtils.toByteArray(dis) : IOUtils.toByteArray(is);
-      int numDecodedDoubles = MSNumpress.decodeSlof(bytes, bytes.length, data);
-      if (numDecodedDoubles < 0) {
-        throw new MSDKException("MSNumpress short logged float decoder failed");
-      }
-      return data;
+    // Now we can check for NumPress
+    int numDecodedDoubles;
+    switch (binaryDataInfo.getCompressionType()) {
+      case NUMPRESS_LINPRED:
+      case NUMPRESS_LINPRED_ZLIB:
+        bytes = IOUtils.toByteArray(dis);
+        numDecodedDoubles = MSNumpress.decodeLinear(bytes, bytes.length, data);
+        if (numDecodedDoubles < 0) {
+          throw new MSDKException("MSNumpress linear decoder failed");
+        }
+        return data;
+      case NUMPRESS_POSINT:
+      case NUMPRESS_POSINT_ZLIB:
+        bytes = IOUtils.toByteArray(dis);
+        numDecodedDoubles = MSNumpress.decodePic(bytes, bytes.length, data);
+        if (numDecodedDoubles < 0) {
+          throw new MSDKException("MSNumpress positive integer decoder failed");
+        }
+        return data;
+      case NUMPRESS_SHLOGF:
+      case NUMPRESS_SHLOGF_ZLIB:
+        bytes = IOUtils.toByteArray(dis);
+        numDecodedDoubles = MSNumpress.decodeSlof(bytes, bytes.length, data);
+        if (numDecodedDoubles < 0) {
+          throw new MSDKException("MSNumpress short logged float decoder failed");
+        }
+        return data;
+      default:
+        break;
     }
 
     Integer precision;
@@ -125,6 +135,7 @@ public class MzMLPeaksDecoder {
         precision = 64;
         break;
       default:
+        dis.close();
         throw new IllegalArgumentException(
             "Precision MUST be specified and be either 32-bit or 64-bit, "
                 + "if MS-NUMPRESS compression was not used");
@@ -150,11 +161,13 @@ public class MzMLPeaksDecoder {
         break;
       }
       default: {
+        dis.close();
         throw new IllegalArgumentException(
             "Precision can only be 32/64 bits, other values are not valid.");
       }
     }
 
+    dis.close();
     return data;
   }
 
@@ -193,9 +206,6 @@ public class MzMLPeaksDecoder {
       return new double[0];
     }
 
-    EnumSet<MzMLCompressionType> compressions =
-        getCompressions(binaryDataInfo.getCompressionType());
-
     InflaterInputStream iis = null;
     LittleEndianDataInputStream dis = null;
     byte[] bytes = null;
@@ -204,35 +214,48 @@ public class MzMLPeaksDecoder {
 
     // first check for zlib compression, inflation must be done before
     // NumPress
-    if (compressions.contains(MzMLCompressionType.ZLIB)) {
-      iis = new InflaterInputStream(is);
-      dis = new LittleEndianDataInputStream(iis);
-    } else if (compressions.contains(MzMLCompressionType.NO_COMPRESSION)) {
-      dis = new LittleEndianDataInputStream(is);
+    switch (binaryDataInfo.getCompressionType()) {
+      case ZLIB:
+      case NUMPRESS_LINPRED_ZLIB:
+      case NUMPRESS_POSINT_ZLIB:
+      case NUMPRESS_SHLOGF_ZLIB:
+        iis = new InflaterInputStream(is);
+        dis = new LittleEndianDataInputStream(iis);
+        break;
+      default:
+        dis = new LittleEndianDataInputStream(is);
+        break;
     }
 
-    // now can check for NumPress
-    if (compressions.contains(MzMLCompressionType.NUMPRESS_LINPRED)) {
-      bytes = dis != null ? IOUtils.toByteArray(dis) : IOUtils.toByteArray(is);
-      int numDecodedDoubles = MSNumpress.decodeLinear(bytes, bytes.length, data);
-      if (numDecodedDoubles < 0) {
-        throw new MSDKException("MSNumpress linear decoder failed");
-      }
-      return data;
-    } else if (compressions.contains(MzMLCompressionType.NUMPRESS_POSINT)) {
-      bytes = dis != null ? IOUtils.toByteArray(dis) : IOUtils.toByteArray(is);
-      int numDecodedDoubles = MSNumpress.decodePic(bytes, bytes.length, data);
-      if (numDecodedDoubles < 0) {
-        throw new MSDKException("MSNumpress positive integer decoder failed");
-      }
-      return data;
-    } else if (compressions.contains(MzMLCompressionType.NUMPRESS_SHLOGF)) {
-      bytes = dis != null ? IOUtils.toByteArray(dis) : IOUtils.toByteArray(is);
-      int numDecodedDoubles = MSNumpress.decodeSlof(bytes, bytes.length, data);
-      if (numDecodedDoubles < 0) {
-        throw new MSDKException("MSNumpress short logged float decoder failed");
-      }
-      return data;
+    // Now we can check for NumPress
+    int numDecodedDoubles;
+    switch (binaryDataInfo.getCompressionType()) {
+      case NUMPRESS_LINPRED:
+      case NUMPRESS_LINPRED_ZLIB:
+        bytes = IOUtils.toByteArray(dis);
+        numDecodedDoubles = MSNumpress.decodeLinear(bytes, bytes.length, data);
+        if (numDecodedDoubles < 0) {
+          throw new MSDKException("MSNumpress linear decoder failed");
+        }
+        return data;
+      case NUMPRESS_POSINT:
+      case NUMPRESS_POSINT_ZLIB:
+        bytes = IOUtils.toByteArray(dis);
+        numDecodedDoubles = MSNumpress.decodePic(bytes, bytes.length, data);
+        if (numDecodedDoubles < 0) {
+          throw new MSDKException("MSNumpress positive integer decoder failed");
+        }
+        return data;
+      case NUMPRESS_SHLOGF:
+      case NUMPRESS_SHLOGF_ZLIB:
+        bytes = IOUtils.toByteArray(dis);
+        numDecodedDoubles = MSNumpress.decodeSlof(bytes, bytes.length, data);
+        if (numDecodedDoubles < 0) {
+          throw new MSDKException("MSNumpress short logged float decoder failed");
+        }
+        return data;
+      default:
+        break;
     }
 
     Integer precision;
@@ -246,6 +269,7 @@ public class MzMLPeaksDecoder {
         precision = 64;
         break;
       default:
+        dis.close();
         throw new IllegalArgumentException(
             "Precision MUST be specified and be either 32-bit or 64-bit, "
                 + "if MS-NUMPRESS compression was not used");
@@ -271,6 +295,7 @@ public class MzMLPeaksDecoder {
         break;
       }
       default: {
+        dis.close();
         throw new IllegalArgumentException(
             "Precision can only be 32/64 bits, other values are not valid.");
       }
@@ -279,29 +304,4 @@ public class MzMLPeaksDecoder {
     return data;
   }
 
-  private static EnumSet<MzMLCompressionType> getCompressions(MzMLCompressionType compression) {
-    EnumSet<MzMLCompressionType> compressions = EnumSet.noneOf(MzMLCompressionType.class);
-
-    if (compression == null) {
-      compressions.add(MzMLCompressionType.NO_COMPRESSION);
-      return compressions;
-    }
-
-    switch (compression) {
-      case NUMPRESS_LINPRED_ZLIB:
-        compressions.add(MzMLCompressionType.NUMPRESS_LINPRED);
-        compressions.add(MzMLCompressionType.ZLIB);
-        break;
-      case NUMPRESS_POSINT_ZLIB:
-        compressions.add(MzMLCompressionType.NUMPRESS_POSINT);
-        compressions.add(MzMLCompressionType.ZLIB);
-        break;
-      case NUMPRESS_SHLOGF_ZLIB:
-        break;
-      default:
-        compressions.add(compression);
-    }
-    return compressions;
-
-  }
 }
