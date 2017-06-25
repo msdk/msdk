@@ -26,8 +26,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 /**
  * Implementation of Sample
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class SimpleSample implements Sample {
 

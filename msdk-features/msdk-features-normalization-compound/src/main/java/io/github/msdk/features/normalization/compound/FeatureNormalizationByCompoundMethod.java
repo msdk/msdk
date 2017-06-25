@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.impl.SimpleFeatureTable;
@@ -38,7 +37,6 @@ public class FeatureNormalizationByCompoundMethod implements MSDKMethod<FeatureT
 
   // Other variables
   private final @Nonnull FeatureTable featureTable;
-  private final @Nonnull DataPointStore dataPointStore;
   private final @Nonnull FeatureTable result;
   private boolean canceled = false;
   private int processedFeatures = 0, totalFeatures = 0;
@@ -60,10 +58,9 @@ public class FeatureNormalizationByCompoundMethod implements MSDKMethod<FeatureT
    * @param nameSuffix a {@link java.lang.String} object.
    */
   public FeatureNormalizationByCompoundMethod(@Nonnull FeatureTable featureTable,
-      @Nonnull DataPointStore dataPointStore, @Nonnull NormalizationType normalizationType,
+      @Nonnull NormalizationType normalizationType,
       @Nonnull List<FeatureTableRow> internalStandardRows, @Nonnull Integer mzRtWeight) {
     this.featureTable = featureTable;
-    this.dataPointStore = dataPointStore;
     this.normalizationType = normalizationType;
     this.mzRtWeight = mzRtWeight;
     this.internalStandardRows = internalStandardRows;

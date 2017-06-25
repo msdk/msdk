@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
@@ -31,7 +30,6 @@ import io.github.msdk.datamodel.featuretables.Sample;
  */
 public class SimpleFeatureTable implements FeatureTable {
 
-  private @Nonnull DataPointStore dataPointStore;
   private final @Nonnull ArrayList<FeatureTableRow> featureTableRows = new ArrayList<>();
   private final @Nonnull ArrayList<Sample> featureTableSamples = new ArrayList<>();
 
@@ -60,7 +58,7 @@ public class SimpleFeatureTable implements FeatureTable {
   public @Nonnull List<Sample> getSamples() {
     return ImmutableList.copyOf(featureTableSamples);
   }
-  
+
   /** {@inheritDoc} */
   public @Nonnull void setSamples(List<Sample> samples) {
     this.featureTableSamples.clear();
@@ -71,7 +69,7 @@ public class SimpleFeatureTable implements FeatureTable {
   /** {@inheritDoc} */
   @Override
   public void dispose() {
-    dataPointStore.dispose();
+    // Do nothing
   }
 
 

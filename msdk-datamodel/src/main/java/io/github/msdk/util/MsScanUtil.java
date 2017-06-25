@@ -17,17 +17,15 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
  * <p>
  * MsScanUtil class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MsScanUtil {
 
@@ -42,15 +40,12 @@ public class MsScanUtil {
    * @return a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
    */
   @Nonnull
-  static public SimpleMsScan clone(@Nonnull DataPointStore newStore, @Nonnull MsScan scan,
-      @Nonnull Boolean copyDataPoints) {
+  static public SimpleMsScan clone(@Nonnull MsScan scan, @Nonnull Boolean copyDataPoints) {
 
-    Preconditions.checkNotNull(newStore);
     Preconditions.checkNotNull(scan);
     Preconditions.checkNotNull(copyDataPoints);
 
-    SimpleMsScan newScan =
-        new SimpleMsScan(newStore, scan.getScanNumber(), scan.getMsFunction());
+    SimpleMsScan newScan = new SimpleMsScan(scan.getScanNumber(), scan.getMsFunction());
 
     newScan.setPolarity(scan.getPolarity());
     newScan.setMsScanType(scan.getMsScanType());
@@ -66,6 +61,24 @@ public class MsScanUtil {
     }
 
     return newScan;
+  }
+
+  /** {@inheritDoc} */
+  public String msScanToString(@Nonnull MsScan scan) {
+    StringBuilder buf = new StringBuilder();
+    buf.append("Scan ");
+    final RawDataFile rawDataFile2 = scan.getRawDataFile();
+    if (rawDataFile2 != null && rawDataFile2.getOriginalFile() != null) {
+      buf.append(rawDataFile2.getOriginalFilename());
+      buf.append(" ");
+    }
+    if (scan.getMsFunction() != null) {
+      buf.append(scan.getMsFunction());
+      buf.append(" ");
+    }
+    buf.append("#");
+    buf.append(scan.getScanNumber());
+    return buf.toString();
   }
 
 }

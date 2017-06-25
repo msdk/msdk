@@ -27,8 +27,6 @@ import io.github.msdk.datamodel.msspectra.MsSpectrum;
  * MassSpectra. Example ideas for implementation would be a MSP file based library, a third party
  * REST service or other massspectral repositories
  *
- * @author plusik
- * @version $Id: $Id
  */
 public interface Search {
 

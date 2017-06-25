@@ -37,8 +37,6 @@ import io.github.msdk.id.Search;
 /**
  * MoNA specific implementation of the Search Interface
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MonaSearch implements Search, MonaConfiguration {
   /** {@inheritDoc} */

@@ -16,8 +16,6 @@ package io.github.msdk;
 /**
  * MSDK exception class.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MSDKException extends Exception {
 

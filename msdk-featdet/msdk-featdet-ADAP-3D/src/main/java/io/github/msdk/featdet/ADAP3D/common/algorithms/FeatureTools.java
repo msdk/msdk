@@ -30,7 +30,6 @@ import io.github.msdk.featdet.ADAP3D.datamodel.PeakInfo;
  *
  * @author owen myers
  * Modified by Dharak Shah to include in MSDK
- * @version $Id: $Id
  */
 public class FeatureTools {
     /**

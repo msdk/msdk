@@ -46,8 +46,6 @@ import io.github.msdk.io.txt.TxtExportAlgorithm;
  * services.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class PeakInvestigatorScanBundlingMethod implements MSDKMethod<File> {
 

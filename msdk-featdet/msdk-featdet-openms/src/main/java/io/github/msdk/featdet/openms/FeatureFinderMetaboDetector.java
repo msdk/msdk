@@ -46,7 +46,6 @@ import io.github.msdk.MSDKException;
  *
  *         This class creates a list m/z values (double) for a mzML input file
  *         using OpenMS TOPP Tools
- * @version $Id: $Id
  */
 public class FeatureFinderMetaboDetector {
 	private final String OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME;

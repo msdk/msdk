@@ -15,7 +15,6 @@ package io.github.msdk.rawdata.centroiding;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
@@ -25,35 +24,21 @@ import io.github.msdk.util.MsScanUtil;
  * ExactMassCentroidingAlgorithm class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class ExactMassCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
-  private final @Nonnull DataPointStore dataPointStore;
   private SimpleMsScan newScan;
 
   // Data structures
   private @Nonnull double mzBuffer[] = new double[10000];
   private @Nonnull float intensityBuffer[] = new float[10000];
 
-  /**
-   * <p>
-   * Constructor for ExactMassCentroidingMethod.
-   * </p>
-   *
-   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
-   */
-  public ExactMassCentroidingAlgorithm(@Nonnull DataPointStore dataPointStore) {
-    this.dataPointStore = dataPointStore;
-  }
-
   /** {@inheritDoc} */
   @Override
   public @Nonnull MsScan centroidScan(@Nonnull MsScan inputScan) {
 
     // Copy all scan properties
-    this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
+    this.newScan = MsScanUtil.clone(inputScan, false);
 
     // Load data points
     mzBuffer = inputScan.getMzValues();

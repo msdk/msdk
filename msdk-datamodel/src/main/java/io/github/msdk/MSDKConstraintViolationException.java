@@ -19,7 +19,6 @@ package io.github.msdk;
  * </p>
  *
  * @author nilshoffmann
- * @version $Id: $Id
  */
 public class MSDKConstraintViolationException extends MSDKRuntimeException {
 

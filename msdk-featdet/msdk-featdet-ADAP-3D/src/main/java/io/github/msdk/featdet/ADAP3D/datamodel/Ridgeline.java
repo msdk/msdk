@@ -22,7 +22,6 @@ import java.util.List;
  *
  * @author owen myers
  * Modified by Dharak Shah to include in MSDK
- * @version $Id: $Id
  */
 public class Ridgeline {
     public int totalNumberOfScales;

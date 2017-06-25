@@ -26,8 +26,6 @@ import io.github.msdk.datamodel.msspectra.MsSpectrum;
  * MsSpectrumUtil class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MsSpectrumUtil {
 

@@ -18,12 +18,11 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.io.nativeformats.ThermoRawImportMethod;
@@ -32,12 +31,9 @@ public class SrmDetectionMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
-
+  @Ignore
   @Test
   public void test_mzML() throws MSDKException {
-
-    // Create the data structures
-    final DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "SRM.mzML");
@@ -48,7 +44,7 @@ public class SrmDetectionMethodTest {
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
     // SRM detection method
-    SrmDetectionMethod srmMethod = new SrmDetectionMethod(rawFile, dataStore);
+    SrmDetectionMethod srmMethod = new SrmDetectionMethod(rawFile);
     final List<Chromatogram> chromatograms = srmMethod.execute();
     Assert.assertEquals(1.0, srmMethod.getFinishedPercentage(), 0.0001);
 
@@ -60,26 +56,23 @@ public class SrmDetectionMethodTest {
     Assert.assertEquals(722.35, chromatograms.get(18).getMz(), 0.0001);
   }
 
-
+  @Ignore
   @Test
   public void test_Thermo() throws MSDKException {
 
     // Run this test only on Windows
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
-    // Create the data structures
-    final DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
-
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "Thermo-SRM.raw");
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
-    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile, dataStore);
+    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
     // SRM detection method
-    SrmDetectionMethod srmMethod = new SrmDetectionMethod(rawFile, dataStore);
+    SrmDetectionMethod srmMethod = new SrmDetectionMethod(rawFile);
     final List<Chromatogram> chromatograms = srmMethod.execute();
     Assert.assertEquals(1.0, srmMethod.getFinishedPercentage(), 0.0001);
     Assert.assertEquals(3, chromatograms.size());

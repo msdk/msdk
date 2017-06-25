@@ -26,8 +26,6 @@ import io.github.msdk.datamodel.ionannotations.IonType;
 /**
  * Simple IonAnnotation implementation;
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class SimpleIonAnnotation implements IonAnnotation {
 

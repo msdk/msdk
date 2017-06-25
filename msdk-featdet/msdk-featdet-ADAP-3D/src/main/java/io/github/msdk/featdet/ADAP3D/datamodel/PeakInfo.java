@@ -21,7 +21,6 @@ import java.util.Comparator;
  *
  * @author aleksandrsmirnov
  * Modified by Dharak Shah to include in MSDK
- * @version $Id: $Id
  */
 public class PeakInfo 
         implements Comparator<PeakInfo>, Comparable<PeakInfo>, Serializable 

@@ -34,8 +34,6 @@ import it.unimi.dsi.io.ByteBufferInputStream;
  * MzMLIntensityPeaksDecoder class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MzMLPeaksDecoder {
 

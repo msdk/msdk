@@ -17,7 +17,6 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
@@ -27,13 +26,10 @@ import io.github.msdk.util.MsScanUtil;
  * ResampleFilterAlgorithm class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
 
   private double binSize;
-  private final @Nonnull DataPointStore store;
 
   // Data structures
   private @Nonnull double mzBuffer[];
@@ -48,11 +44,10 @@ public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
    * @param binSize a double.
    * @param store a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public ResampleFilterAlgorithm(double binSize, @Nonnull DataPointStore store) {
+  public ResampleFilterAlgorithm(double binSize) {
     if (binSize <= 0.0)
       throw new IllegalArgumentException("Bin size must be >0");
     this.binSize = binSize;
-    this.store = store;
   }
 
   /** {@inheritDoc} */
@@ -68,7 +63,7 @@ public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
     Range<Double> mzRange = scan.getMzRange();
 
     if (mzRange == null) {
-      MsScan result = MsScanUtil.clone(store, scan, true);
+      MsScan result = MsScanUtil.clone(scan, true);
       return result;
     }
 
@@ -111,7 +106,7 @@ public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
     }
 
     // Return a new scan with the new data points
-    SimpleMsScan result = MsScanUtil.clone(store, scan, false);
+    SimpleMsScan result = MsScanUtil.clone(scan, false);
     result.setDataPoints(mzBuffer, intensityBuffer, newNumOfDataPoints);
 
     return result;
