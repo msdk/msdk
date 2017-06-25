@@ -13,12 +13,14 @@
 
 package io.github.msdk.io.mzml2.data;
 
+import javax.annotation.Nonnull;
+
 public class MzMLBinaryDataInfo {
 
   private final int encodedLength;
   private final int arrayLength;
   private long position;
-  private MzMLCompressionType compressionType;
+  private @Nonnull MzMLCompressionType compressionType;
   private MzMLBitLength bitLength;
   private MzMLArrayType arrayType;
 
@@ -33,6 +35,7 @@ public class MzMLBinaryDataInfo {
   public MzMLBinaryDataInfo(int encodedLength, int arrayLength) {
     this.encodedLength = encodedLength;
     this.arrayLength = arrayLength;
+    this.compressionType = MzMLCompressionType.NO_COMPRESSION;
   }
 
   /**

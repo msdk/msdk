@@ -624,7 +624,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   }
 
   public void manageCompression(MzMLBinaryDataInfo binaryInfo, String accession) {
-    if (binaryInfo.getCompressionType() == null)
+    if (binaryInfo.getCompressionType() == MzMLCompressionType.NO_COMPRESSION)
       binaryInfo.setCompressionType(accession);
     else {
       if (binaryInfo.getCompressionType(accession) == MzMLCompressionType.ZLIB) {

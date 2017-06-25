@@ -300,11 +300,6 @@ public class MzMLPeaksDecoder {
         }
         break;
       }
-      default: {
-        dis.close();
-        throw new IllegalArgumentException(
-            "Precision can only be 32/64 bits, other values are not valid.");
-      }
     }
 
     dis.close();
