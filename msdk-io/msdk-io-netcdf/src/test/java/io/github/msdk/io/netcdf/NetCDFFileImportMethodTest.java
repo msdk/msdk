@@ -54,7 +54,7 @@ public class NetCDFFileImportMethodTest {
     MsScan scan3 = scans.get(2);
     Assert.assertEquals(new Integer(3), scan3.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan3.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan3.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan3.getMsLevel());
     Assert.assertEquals(2504.508f, scan3.getRetentionTime(), 0.01f);
     mzBuffer = scan3.getMzValues();
     intensityBuffer = scan3.getIntensityValues();
@@ -67,7 +67,7 @@ public class NetCDFFileImportMethodTest {
     MsScan scan1278 = scans.get(1277);
     Assert.assertEquals(new Integer(1278), scan1278.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan1278.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan1278.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan1278.getMsLevel());
     Assert.assertEquals(4499.826f, scan1278.getRetentionTime(), 0.01f);
     mzBuffer = scan1278.getMzValues();
     intensityBuffer = scan1278.getIntensityValues();

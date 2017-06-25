@@ -69,12 +69,20 @@ public interface MsScan extends MsSpectrum {
   String getScanDefinition();
 
   /**
-   * Returns the MS function of this scan.
+   * Returns the MS function of this scan, e.g. "Full ms", or "SRM".
    *
    * @return MS function.
    */
+  @Nullable
+  String getMsFunction();
+
+  /**
+   * Returns MS level (1 = default, 2 = MS/MS, 3 = MS3 etc.).
+   * 
+   * @return MS level
+   */
   @Nonnull
-  MsFunction getMsFunction();
+  Integer getMsLevel();
 
   /**
    * Returns the type of the MS scan. If unknown, MsScanType.UNKNOWN is returned.
@@ -82,7 +90,9 @@ public interface MsScan extends MsSpectrum {
    * @return MS scan type
    */
   @Nonnull
-  default MsScanType getMsScanType() { return MsScanType.UNKNOWN; }
+  default MsScanType getMsScanType() {
+    return MsScanType.UNKNOWN;
+  }
 
   /**
    * Returns the retention time in seconds
@@ -112,7 +122,9 @@ public interface MsScan extends MsSpectrum {
    * @return Polarity of this scan.
    */
   @Nonnull
-  default PolarityType getPolarity() { return PolarityType.UNKNOWN; }
+  default PolarityType getPolarity() {
+    return PolarityType.UNKNOWN;
+  }
 
   /**
    * Returns the fragmentation parameters of ion source-induced fragmentation, or null if no such

@@ -59,7 +59,7 @@ public class WatersRawImportMethodTest {
     MsScan scan1 = scans.get(0);
     Assert.assertEquals(new Integer(1), scan1.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan1.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan1.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan1.getMsLevel());
     Assert.assertEquals(0.226f, scan1.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan1.getPolarity());
     mzBuffer = scan1.getMzValues();
@@ -73,7 +73,7 @@ public class WatersRawImportMethodTest {
     MsScan scan3000 = scans.get(2999);
     Assert.assertEquals(new Integer(3000), scan3000.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan3000.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan3000.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan3000.getMsLevel());
     Assert.assertEquals(636.228f, scan3000.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.NEGATIVE, scan3000.getPolarity());
     mzBuffer = scan3000.getMzValues();

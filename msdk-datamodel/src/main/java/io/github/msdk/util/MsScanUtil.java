@@ -19,6 +19,7 @@ import com.google.common.base.Preconditions;
 
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
  * <p>
@@ -60,6 +61,24 @@ public class MsScanUtil {
     }
 
     return newScan;
+  }
+
+  /** {@inheritDoc} */
+  public String msScanToString(@Nonnull MsScan scan) {
+    StringBuilder buf = new StringBuilder();
+    buf.append("Scan ");
+    final RawDataFile rawDataFile2 = scan.getRawDataFile();
+    if (rawDataFile2 != null && rawDataFile2.getOriginalFile() != null) {
+      buf.append(rawDataFile2.getOriginalFilename());
+      buf.append(" ");
+    }
+    if (scan.getMsFunction() != null) {
+      buf.append(scan.getMsFunction());
+      buf.append(" ");
+    }
+    buf.append("#");
+    buf.append(scan.getScanNumber());
+    return buf.toString();
   }
 
 }

@@ -32,7 +32,6 @@ import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
@@ -90,13 +89,12 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
     totalChromatograms = parser.getObjectCountForXpath("/run/chromatogramList/chromatogram");
 
     // Prepare data structures
-    List<MsFunction> msFunctionsList = new ArrayList<>();
     List<MsScan> scansList = new ArrayList<>();
     List<Chromatogram> chromatogramsList = new ArrayList<>();
 
     // Create the MzMLRawDataFile object
     final MzMLRawDataFile newRawFile =
-        new MzMLRawDataFile(sourceFile, parser, msFunctionsList, scansList, chromatogramsList);
+        new MzMLRawDataFile(sourceFile, parser, scansList, chromatogramsList);
     this.newRawFile = newRawFile;
 
     // Create the converter from jmzml data model to our data model
@@ -135,8 +133,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
         String scanDefinition = converter.extractScanDefinition(spectrum);
 
         // Get the MS function
-        MsFunction msFunction = converter.extractMsFunction(spectrum);
-        msFunctionsList.add(msFunction);
+        Integer msLevel = converter.extractMsLevel(spectrum);
 
         // Store the chromatography data
         Float rt = converter.extractChromatographyData(spectrum);
@@ -173,7 +170,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
         List<IsolationInfo> isolations = converter.extractIsolations(spectrum);
 
         // Create a new MsScan instance
-        MzMLMsScan scan = new MzMLMsScan(newRawFile, spectrumId, spectrumType, msFunction,
+        MzMLMsScan scan = new MzMLMsScan(newRawFile, spectrumId, spectrumType, "", msLevel,
             rt, scanType, mzRange, scanningRange, scanNumber, scanDefinition, tic, polarity,
             sourceFragmentation, isolations, numOfDataPoints);
 

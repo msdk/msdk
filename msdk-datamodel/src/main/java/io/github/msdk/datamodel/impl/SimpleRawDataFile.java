@@ -26,7 +26,6 @@ import com.google.common.collect.ImmutableList;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
@@ -43,15 +42,17 @@ public class SimpleRawDataFile implements RawDataFile {
   private final @Nonnull ArrayList<Chromatogram> chromatograms;
 
   /**
-   * <p>Constructor for SimpleRawDataFile.</p>
+   * <p>
+   * Constructor for SimpleRawDataFile.
+   * </p>
    *
    * @param rawDataFileName a {@link java.lang.String} object.
    * @param originalRawDataFile a {@link java.util.Optional} object.
    * @param rawDataFileType a {@link io.github.msdk.datamodel.files.FileType} object.
    * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public SimpleRawDataFile(@Nonnull String rawDataFileName, @Nonnull Optional<File> originalRawDataFile,
-      @Nonnull FileType rawDataFileType) {
+  public SimpleRawDataFile(@Nonnull String rawDataFileName,
+      @Nonnull Optional<File> originalRawDataFile, @Nonnull FileType rawDataFileType) {
     Preconditions.checkNotNull(rawDataFileType);
     this.rawDataFileName = rawDataFileName;
     this.originalRawDataFile = originalRawDataFile;
@@ -90,11 +91,11 @@ public class SimpleRawDataFile implements RawDataFile {
   @Override
   @Nonnull
   public String getOriginalFilename() {
-	  if (originalRawDataFile.isPresent()) {
-		  return originalRawDataFile.get().getName();
-	  }
+    if (originalRawDataFile.isPresent()) {
+      return originalRawDataFile.get().getName();
+    }
 
-	  return "Unknown";
+    return "Unknown";
   }
 
   /**
@@ -125,12 +126,12 @@ public class SimpleRawDataFile implements RawDataFile {
   /** {@inheritDoc} */
   @Override
   @Nonnull
-  public List<MsFunction> getMsFunctions() {
-    ArrayList<MsFunction> msFunctionList = new ArrayList<>();
+  public List<String> getMsFunctions() {
+    ArrayList<String> msFunctionList = new ArrayList<>();
     synchronized (scans) {
       for (MsScan scan : scans) {
-        MsFunction f = scan.getMsFunction();
-        if (f != null)
+        String f = scan.getMsFunction();
+        if ((f != null) && (!msFunctionList.contains(f)))
           msFunctionList.add(f);
       }
     }

@@ -60,7 +60,7 @@ public class MzMLFileImportMethodTest {
     MsScan scan2 = scans.get(1);
     Assert.assertEquals(new Integer(2), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.PROFILE, scan2.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan2.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan2.getMsLevel());
     Assert.assertEquals(0.474f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
     mzBuffer = scan2.getMzValues();
@@ -74,7 +74,7 @@ public class MzMLFileImportMethodTest {
     MsScan scan5 = scans.get(4);
     Assert.assertEquals(new Integer(5), scan5.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan5.getSpectrumType());
-    Assert.assertEquals(new Integer(2), scan5.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(2), scan5.getMsLevel());
     Assert.assertEquals(2.094f, scan5.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan5.getPolarity());
     mzBuffer = scan5.getMzValues();
@@ -113,7 +113,7 @@ public class MzMLFileImportMethodTest {
     MsScan scan2 = scans.get(1);
     Assert.assertEquals(new Integer(20), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
-    Assert.assertEquals(new Integer(2), scan2.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(2), scan2.getMsLevel());
     Assert.assertEquals(359.43f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
     mzBuffer = scan2.getMzValues();
@@ -160,7 +160,7 @@ public class MzMLFileImportMethodTest {
     MsScan scan2 = scans.get(1);
     Assert.assertEquals(new Integer(1001), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
-    Assert.assertEquals(new Integer(2), scan2.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(2), scan2.getMsLevel());
     Assert.assertEquals(100.002f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
     mzBuffer = scan2.getMzValues();
@@ -174,7 +174,7 @@ public class MzMLFileImportMethodTest {
     MsScan scan101 = scans.get(100);
     Assert.assertEquals(new Integer(1100), scan101.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan101.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan101.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan101.getMsLevel());
     Assert.assertEquals(109.998f, scan101.getRetentionTime(), 0.01f);
     mzBuffer = scan101.getMzValues();
     intensityBuffer = scan101.getIntensityValues();
@@ -292,7 +292,7 @@ public class MzMLFileImportMethodTest {
     MsScan scan2 = scans.get(1);
     Assert.assertEquals(new Integer(2101), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan2.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan2.getMsLevel());
     Assert.assertEquals(1126.57f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.NEGATIVE, scan2.getPolarity());
     mzBuffer = scan2.getMzValues();
@@ -330,7 +330,7 @@ public class MzMLFileImportMethodTest {
     MsScan scan2 = scans.get(0);
     Assert.assertEquals(new Integer(422), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
-    Assert.assertEquals(new Integer(2), scan2.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(2), scan2.getMsLevel());
     Assert.assertEquals(309.1878f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
     mzBuffer = scan2.getMzValues();

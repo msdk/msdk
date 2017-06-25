@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.impl;
+package io.github.msdk.spectra.spectrumtypedetection;
 
 import java.util.List;
 
@@ -23,7 +23,6 @@ import com.google.common.collect.Range;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
@@ -42,7 +41,7 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
   private final @Nullable String scanDefinition;
 
   private final @Nonnull MsSpectrumType spectrumType;
-  private final @Nonnull MsFunction msFunction;
+  private final @Nonnull String msFunction;
   private final @Nullable Float rt;
   private final @Nonnull MsScanType scanType;
   private final @Nullable Range<Double> mzRange, scanningRange;
@@ -73,7 +72,7 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
    * @param rt a {@link java.lang.Float} object.
    */
   public AbstractReadOnlyMsScan(@Nonnull RawDataFile dataFile, @Nonnull MsSpectrumType spectrumType,
-      @Nonnull MsFunction msFunction, @Nullable Float rt,
+      @Nonnull String msFunction, @Nullable Float rt,
       @Nonnull MsScanType scanType, @Nullable Range<Double> mzRange,
       @Nullable Range<Double> scanningRange, @Nonnull Integer scanNumber,
       @Nullable String scanDefinition, @Nonnull Float tic, @Nonnull PolarityType polarity,
@@ -140,7 +139,7 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
   /** {@inheritDoc} */
   @Override
   @Nonnull
-  public MsFunction getMsFunction() {
+  public String getMsFunction() {
     return msFunction;
   }
 

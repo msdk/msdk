@@ -48,7 +48,7 @@ public class MsMsDetectionMethodTest {
     // MS2 scans
     List<MsScan> msScans = new ArrayList<MsScan>();
     for (MsScan scan : rawFile.getScans()) {
-      Integer msLevel = scan.getMsFunction().getMsLevel();
+      Integer msLevel = scan.getMsLevel();
       if (msLevel != null) {
         if (msLevel.equals(2))
           msScans.add(scan);

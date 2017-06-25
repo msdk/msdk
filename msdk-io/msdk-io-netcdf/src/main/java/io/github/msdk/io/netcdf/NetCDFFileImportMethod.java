@@ -26,11 +26,9 @@ import org.slf4j.LoggerFactory;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
@@ -325,13 +323,10 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
   private @Nonnull MsScan readNextScan(int scanIndex)
       throws IOException, MSDKException, InvalidRangeException {
 
-    // Set a simple MS function, always MS level 1 for netCDF data
-    final MsFunction msFunction = MSDKObjectBuilder.getMsFunction(1);
-
     // Scan number
     final Integer scanNumber = scanIndex + 1;
 
-    SimpleMsScan scan = new SimpleMsScan(scanNumber, msFunction);
+    SimpleMsScan scan = new SimpleMsScan(scanNumber);
 
     // Extract and store the data points
     extractDataPoints(scanIndex);

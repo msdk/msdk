@@ -33,19 +33,16 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -185,12 +182,10 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
         // MS function
         String msFuncName = attrs.getValue("scanType");
-        if (Strings.isNullOrEmpty(msFuncName))
-          msFuncName = MsFunction.DEFAULT_MS_FUNCTION_NAME;
-        MsFunction msFunc = MSDKObjectBuilder.getMsFunction(msFuncName, msLevel);
-        buildingScan = new SimpleMsScan(scanNumber, msFunc);
+        buildingScan = new SimpleMsScan(scanNumber);
         buildingScan.setRawDataFile(newRawDataFile);
-
+        buildingScan.setMsLevel(msLevel);
+        buildingScan.setMsFunction(msFuncName);
         // Scan type & definition
         buildingScan.setMsScanType(MsScanType.UNKNOWN);
         String filterLine = attrs.getValue("filterLine");

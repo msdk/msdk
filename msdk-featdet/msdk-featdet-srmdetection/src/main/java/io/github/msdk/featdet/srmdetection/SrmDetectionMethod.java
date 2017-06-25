@@ -36,7 +36,6 @@ import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.impl.SimpleChromatogram;
 import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
@@ -115,8 +114,8 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
         return null;
 
       // Ignore non SRM scans
-      MsFunction msFunction = scan.getMsFunction();
-      if (!msFunction.getName().equals("srm")) {
+      String msFunction = scan.getMsFunction();
+      if (msFunction == null || (!msFunction.equals("srm"))) {
         parsed++;
         continue;
       }

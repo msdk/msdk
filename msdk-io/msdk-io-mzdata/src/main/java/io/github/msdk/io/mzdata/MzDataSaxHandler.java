@@ -23,13 +23,11 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
@@ -205,11 +203,9 @@ class MzDataSaxHandler extends DefaultHandler {
       MsSpectrumType spectrumType =
           SpectrumTypeDetectionAlgorithm.detectSpectrumType(mzBuffer, intensityBuffer, peaksCount);
 
-      // Create a new scan
-      MsFunction msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
+      SimpleMsScan newScan = new SimpleMsScan(scanNumber);
 
-      SimpleMsScan newScan = new SimpleMsScan(scanNumber, msFunction);
-
+      newScan.setMsLevel(msLevel);
       newScan.setDataPoints(mzBuffer, intensityBuffer, peaksCount);
       newScan.setSpectrumType(spectrumType);
       newScan.setPolarity(polarity);

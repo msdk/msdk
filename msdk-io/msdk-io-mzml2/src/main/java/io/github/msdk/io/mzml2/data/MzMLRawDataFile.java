@@ -23,7 +23,6 @@ import com.google.common.collect.ImmutableList;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
@@ -33,7 +32,7 @@ public class MzMLRawDataFile implements RawDataFile {
 
   private final @Nonnull File sourceFile;
 
-  private final @Nonnull List<MsFunction> msFunctions;
+  private final @Nonnull List<String> msFunctions;
   private final @Nonnull List<MsScan> msScans;
   private final @Nonnull List<Chromatogram> chromatograms;
 
@@ -51,7 +50,7 @@ public class MzMLRawDataFile implements RawDataFile {
    * @param chromatograms a {@link java.util.List} object.
    */
   @SuppressWarnings("null")
-  public MzMLRawDataFile(@Nonnull File sourceFile, List<MsFunction> msFunctions,
+  public MzMLRawDataFile(@Nonnull File sourceFile, List<String> msFunctions,
       List<MsScan> msScans, List<Chromatogram> chromatograms) {
     this.sourceFile = sourceFile;
     this.name = sourceFile.getName();
@@ -85,7 +84,7 @@ public class MzMLRawDataFile implements RawDataFile {
   @SuppressWarnings("null")
   @Override
   @Nonnull
-  public List<MsFunction> getMsFunctions() {
+  public List<String> getMsFunctions() {
     return ImmutableList.copyOf(msFunctions);
   }
 

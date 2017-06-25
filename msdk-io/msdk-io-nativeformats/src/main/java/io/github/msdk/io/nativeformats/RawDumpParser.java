@@ -25,13 +25,11 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
@@ -243,7 +241,7 @@ class RawDumpParser {
           intensityValues, numOfDataPoints);
 
       // Create a new MS function
-      MsFunction msFunction = null;
+      String msFunction = null;
       if ((newRawFile.getRawDataFileType() == FileType.THERMO_RAW)
           && (!Strings.isNullOrEmpty(scanId))) {
         // Parse the MS function from the scan filter line, e.g.
@@ -254,18 +252,17 @@ class RawDumpParser {
 
         for (String fn : thermoMsFunctions) {
           if (scanIdLowerCase.contains(fn)) {
-            msFunction = MSDKObjectBuilder.getMsFunction(fn, msLevel);
+            msFunction = fn;
             break;
           }
         }
 
       }
-      if (msFunction == null)
-        msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
 
       // Create a new scan
-      SimpleMsScan newScan = new SimpleMsScan(scanNumber, msFunction);
-
+      SimpleMsScan newScan = new SimpleMsScan(scanNumber);
+      newScan.setMsFunction(msFunction);
+      newScan.setMsLevel(msLevel);
       newScan.setRetentionTime(retentionTime);
       newScan.setDataPoints(mzValues, intensityValues, numOfDataPoints);
       newScan.setSpectrumType(spectrumType);

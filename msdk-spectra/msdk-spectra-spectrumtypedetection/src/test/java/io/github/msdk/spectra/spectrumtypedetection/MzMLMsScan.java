@@ -21,11 +21,9 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.impl.AbstractReadOnlyMsScan;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.util.tolerances.MzTolerance;
@@ -39,7 +37,7 @@ class MzMLMsScan extends AbstractReadOnlyMsScan {
   private final @Nonnull String spectrumId;
 
   MzMLMsScan(@Nonnull MzMLRawDataFile dataFile, @Nonnull String spectrumId,
-      @Nonnull MsSpectrumType spectrumType, @Nonnull MsFunction msFunction,
+      @Nonnull MsSpectrumType spectrumType, @Nonnull String msFunction,
       @Nullable Float rt, @Nonnull MsScanType scanType,
       @Nullable Range<Double> mzRange, @Nullable Range<Double> scanningRange,
       @Nonnull Integer scanNumber, @Nullable String scanDefinition, @Nonnull Float tic,
@@ -90,6 +88,11 @@ class MzMLMsScan extends AbstractReadOnlyMsScan {
   @Override
   public MzTolerance getMzTolerance() {
     return null;
+  }
+
+  @Override
+  public Integer getMsLevel() {
+    return 1;
   }
 
 }

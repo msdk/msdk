@@ -50,7 +50,7 @@ public class MzDataFileImportMethodTest {
     // 1st scan, #1
     MsScan scan1 = scans.get(0);
     Assert.assertEquals(new Integer(1), scan1.getScanNumber());
-    Assert.assertEquals(new Integer(1), scan1.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan1.getMsLevel());
     Float rt = scan1.getRetentionTime();
     Assert.assertNull(rt);
     Assert.assertEquals(PolarityType.UNKNOWN, scan1.getPolarity());
@@ -85,7 +85,7 @@ public class MzDataFileImportMethodTest {
     MsScan scan1 = scans.get(0);
     Assert.assertEquals(new Integer(1), scan1.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan1.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan1.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan1.getMsLevel());
     Assert.assertEquals(270.336f, scan1.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan1.getPolarity());
     mzBuffer = scan1.getMzValues();
@@ -99,7 +99,7 @@ public class MzDataFileImportMethodTest {
     MsScan scan100 = scans.get(99);
     Assert.assertEquals(new Integer(100), scan100.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan100.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan100.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan100.getMsLevel());
     Assert.assertEquals(303.642f, scan100.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan100.getPolarity());
     mzBuffer = scan100.getMzValues();
@@ -138,7 +138,7 @@ public class MzDataFileImportMethodTest {
     MsScan scan1 = scans.get(0);
     Assert.assertEquals(new Integer(918), scan1.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan1.getSpectrumType());
-    Assert.assertEquals(new Integer(2), scan1.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(2), scan1.getMsLevel());
     Assert.assertEquals(309.350f, scan1.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan1.getPolarity());
     mzBuffer = scan1.getMzValues();
