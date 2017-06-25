@@ -136,7 +136,7 @@ public class TargetedDetectionMethodTest {
       Assert.assertEquals(5513891.5, height, 0.000001);
 
     // Area
-    Double area = ChromatogramUtil.getArea(rtBuffer, intensityBuffer, numOfDataPoints);
+    Float area = ChromatogramUtil.getArea(rtBuffer, intensityBuffer, numOfDataPoints);
     Assert.assertNotNull(area);
     if (area != null)
       Assert.assertEquals(7.519958076518613E7, area, 0.000001);

@@ -26,22 +26,20 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.impl.SimpleChromatogram;
+import io.github.msdk.datamodel.impl.SimpleFeature;
 import io.github.msdk.datamodel.impl.SimpleFeatureTable;
 import io.github.msdk.datamodel.impl.SimpleFeatureTableRow;
+import io.github.msdk.datamodel.impl.SimpleSample;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.util.ChromatogramUtil;
 
 /**
  * <p>
  * GridMassMethod class.
  * </p>
-<<<<<<< HEAD
-=======
- *
->>>>>>> refs/heads/master
  */
 public class GridMassMethod implements MSDKMethod<FeatureTable> {
 
@@ -53,7 +51,7 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
   private int processedScans = 0, totalScans = 0;
 
   private HashMap<MsScan, DataPoint[]> dpCache = null;
-  
+
   // scan counter
   private float procedure = 0;
   private int newPeakID = 0;
@@ -78,6 +76,7 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
   private double maxMasa = 0;
 
   private SimpleFeatureTable newPeakList;
+  private SimpleSample newSample;
 
   private String ignoreTimes = "";
 
@@ -91,7 +90,7 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
    */
   public GridMassMethod(@Nonnull RawDataFile rawDataFile, @Nonnull List<MsScan> scans) {
     this.rawDataFile = rawDataFile;
-    this.scans=scans;
+    this.scans = scans;
   }
 
   /** {@inheritDoc} */
@@ -117,6 +116,12 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
 
     // Create new peak list
     newPeakList = new SimpleFeatureTable();
+    newSample = new SimpleSample(rawDataFile.getName(), rawDataFile);
+
+    // If no scans, return
+    if (scans.size() == 0) {
+      return newPeakList;
+    }
 
     int j;
     // minimumTimeSpan
@@ -158,10 +163,10 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
     boolean[] scanOk = new boolean[totalScans];
     Arrays.fill(scanOk, true);
 
-    logger.info("Smoothing data points (Time min=" + smoothTimeSpan
-        + "; Time m/z=" + smoothTimeMZ + ")");
-    IndexedDataPoint[][] data =
-        smoothDataPoints(rawDataFile, smoothTimeSpan, smoothTimeMZ, 0, smoothMZ, 0, minimumHeight, scans);
+    logger.info(
+        "Smoothing data points (Time min=" + smoothTimeSpan + "; Time m/z=" + smoothTimeMZ + ")");
+    IndexedDataPoint[][] data = smoothDataPoints(rawDataFile, smoothTimeSpan, smoothTimeMZ, 0,
+        smoothMZ, 0, minimumHeight, scans);
 
     logger.info("Determining intensities (mass sum) per scan on " + rawDataFile);
     for (i = 0; i < totalScans; i++) {
@@ -262,8 +267,7 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
     // (1) Generate probes all over
     double byMZ = Math.max(mzTol * 2, 1e-6);
     int byScan = Math.max(1, tolScans / 4);
-    logger.info("Creating Grid of probes every " + byMZ
-        + " m/z and " + byScan + " scans");
+    logger.info("Creating Grid of probes every " + byMZ + " m/z and " + byScan + " scans");
     double m;
     int ndata = (int) Math
         .round((((double) totalScans / (double) byScan) + 1) * ((maxMasa - minMasa + byMZ) / byMZ));
@@ -281,8 +285,7 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
     // (2) Move each probe to their closest center
     double mzR = byMZ / 2;
     int scanR = Math.max(byScan - 1, 2);
-    logger.info("Finding local maxima for each probe radius: scans=" + scanR
-        + ", m/z=" + mzR);
+    logger.info("Finding local maxima for each probe radius: scans=" + scanR + ", m/z=" + mzR);
     int okProbes = 0;
     for (i = 0; i < idata; i++) {
       if (canceled)
@@ -372,15 +375,11 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
             if ((d <= criticScans || overlap) && (intensityRatio(s1.center.intensityCenter,
                 s2.center.intensityCenter) > intensitySimilarity)) {
               if (debug > 2)
-                logger.debug(
-                    "Joining s1 id " + s1.spotId + "=" + s1.center.mzCenter
-                        + " mz [" + s1.minMZ + " ~ " + s1.maxMZ
-                        + "] time=" + retentiontime[s1.center.scanCenter]
-                        + " int=" + s1.center.intensityCenter + " with s2 id " + s2.spotId + "="
-                        + s2.center.mzCenter + " mz [" + s2.minMZ
-                        + " ~ " + s2.maxMZ + "] time="
-                        + retentiontime[s2.center.scanCenter] + " int="
-                        + s2.center.intensityCenter);
+                logger.debug("Joining s1 id " + s1.spotId + "=" + s1.center.mzCenter + " mz ["
+                    + s1.minMZ + " ~ " + s1.maxMZ + "] time=" + retentiontime[s1.center.scanCenter]
+                    + " int=" + s1.center.intensityCenter + " with s2 id " + s2.spotId + "="
+                    + s2.center.mzCenter + " mz [" + s2.minMZ + " ~ " + s2.maxMZ + "] time="
+                    + retentiontime[s2.center.scanCenter] + " int=" + s2.center.intensityCenter);
               assignSpotIdToDatumsFromSpotId(s1, s2, scanR, mzR);
               s1.addProbesFromSpot(s2, true);
               j = i; // restart
@@ -430,10 +429,9 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
         }
         if (totalScans * rtPerScan > maximumTimeSpan) {
           if (debug > 2)
-            logger.debug("Removing " + toRemove.size() + " masses around "
-                + s1.center.mzCenter + " m/z (" + s1.spotId + "), time "
-                + retentiontime[s1.center.scanCenter] + ", intensity "
-                + s1.center.intensityCenter + ", Total Scans=" + totalScans + " ("
+            logger.debug("Removing " + toRemove.size() + " masses around " + s1.center.mzCenter
+                + " m/z (" + s1.spotId + "), time " + retentiontime[s1.center.scanCenter]
+                + ", intensity " + s1.center.intensityCenter + ", Total Scans=" + totalScans + " ("
                 + Math.round(totalScans * rtPerScan * 1000.0) / 1000.0 + " min).");
           for (Integer J : toRemove) {
             // logger.debug("Removing: "+spots.get(J).spotId);
@@ -454,22 +452,30 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
         sx.buildMaxDatumFromScans(roi, minimumHeight);
         if (sx.getMaxDatumScans() >= tolScans && (sx.getContigousMaxDatumScans() >= tolScans
             || sx.getContigousToMaxDatumScansRatio() > 0.5)) {
-          SimpleChromatogram peak = new SimpleChromatogram(dataFile, scanNumbers);
+          SimpleChromatogram peak = new SimpleChromatogram();
+          peak.setRawDataFile(rawDataFile);
           if (addMaxDatumFromScans(sx, peak) > 0) {
-            if (peak.getArea() > 1e-6) {
+            float area = ChromatogramUtil.getArea(peak.getRetentionTimes(),
+                peak.getIntensityValues(), peak.getNumberOfDataPoints());
+            if (area > 1e-6) {
               newPeakID++;
               SimpleFeatureTableRow newRow = new SimpleFeatureTableRow(newPeakList);
-              newRow.addPeak(dataFile, peak);
-              newRow.setComment(sx.toString(retentiontime));
+
+              SimpleFeature newFeature = new SimpleFeature();
+              newFeature.setArea(area);
+              newFeature.setChromatogram(peak);
+              float height = ChromatogramUtil.getMaxHeight(peak.getIntensityValues(),
+                  peak.getNumberOfDataPoints());
+              newFeature.setHeight(height);
+
+              newRow.setFeature(newSample, newFeature);
               newPeakList.addRow(newRow);
               if (debug > 0)
-                logger.debug(
-                    "Peak added id=" + sx.spotId + " " + sx.center.mzCenter
-                        + " mz, time=" + retentiontime[sx.center.scanCenter]
-                        + ", intensity=" + sx.center.intensityCenter + ", probes=" + sx.size()
-                        + ", data scans=" + sx.getMaxDatumScans() + ", cont scans="
-                        + sx.getContigousMaxDatumScans() + ", cont ratio="
-                        + sx.getContigousToMaxDatumScansRatio());
+                logger.debug("Peak added id=" + sx.spotId + " " + sx.center.mzCenter + " mz, time="
+                    + retentiontime[sx.center.scanCenter] + ", intensity="
+                    + sx.center.intensityCenter + ", probes=" + sx.size() + ", data scans="
+                    + sx.getMaxDatumScans() + ", cont scans=" + sx.getContigousMaxDatumScans()
+                    + ", cont ratio=" + sx.getContigousToMaxDatumScansRatio());
               if (debug > 1) {
                 // Peak info:
                 logger.debug(sx.toString());
@@ -477,9 +483,8 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
               }
             } else {
               if (debug > 0)
-                logger.debug("Ignored by area ~ 0 id=" + sx.spotId + " "
-                    + sx.center.mzCenter + " mz, time="
-                    + retentiontime[sx.center.scanCenter] + ", intensity="
+                logger.debug("Ignored by area ~ 0 id=" + sx.spotId + " " + sx.center.mzCenter
+                    + " mz, time=" + retentiontime[sx.center.scanCenter] + ", intensity="
                     + sx.center.intensityCenter + ", probes=" + sx.size() + ", data scans="
                     + sx.getMaxDatumScans() + ", cont scans=" + sx.getContigousMaxDatumScans()
                     + ", cont ratio=" + sx.getContigousToMaxDatumScansRatio());
@@ -487,9 +492,8 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
           }
         } else {
           if (debug > 0)
-            logger.debug("Ignored by continous criteria: id=" + sx.spotId + " "
-                + sx.center.mzCenter + " mz, time="
-                + retentiontime[sx.center.scanCenter] + ", intensity="
+            logger.debug("Ignored by continous criteria: id=" + sx.spotId + " " + sx.center.mzCenter
+                + " mz, time=" + retentiontime[sx.center.scanCenter] + ", intensity="
                 + sx.center.intensityCenter + ", probes=" + sx.size() + ", data scans="
                 + sx.getMaxDatumScans() + ", cont scans=" + sx.getContigousMaxDatumScans()
                 + ", cont ratio=" + sx.getContigousToMaxDatumScansRatio());
@@ -497,12 +501,12 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
       } else {
         if (sx.size() > 0) {
           if (debug > 0)
-            logger.debug("Ignored by time range criteria: id=" + sx.spotId + " "
-                + sx.center.mzCenter + " mz, time="
-                + retentiontime[sx.center.scanCenter] + ", intensity="
-                + sx.center.intensityCenter + ", probes=" + sx.size() + ", data scans="
-                + sx.getMaxDatumScans() + ", cont scans=" + sx.getContigousMaxDatumScans()
-                + ", cont ratio=" + sx.getContigousToMaxDatumScansRatio());
+            logger
+                .debug("Ignored by time range criteria: id=" + sx.spotId + " " + sx.center.mzCenter
+                    + " mz, time=" + retentiontime[sx.center.scanCenter] + ", intensity="
+                    + sx.center.intensityCenter + ", probes=" + sx.size() + ", data scans="
+                    + sx.getMaxDatumScans() + ", cont scans=" + sx.getContigousMaxDatumScans()
+                    + ", cont ratio=" + sx.getContigousToMaxDatumScansRatio());
         }
       }
       setProcedure(i++, spots.size(), 9);
@@ -526,7 +530,6 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
     int totalScans = scans.size();
     DataPoint mzValues[][] = null; // [relative scan][j value]
     DataPoint mzValuesJ[] = null;
-    int mzValuesScan[] = null;
     int mzValuesMZidx[] = null;
     IndexedDataPoint newMZValues[][] = null;
     IndexedDataPoint tmpDP[] = new IndexedDataPoint[0];
@@ -580,20 +583,19 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
           // Allocate
           if (mzValues == null || mzValues.length < sj - si + 1) {
             mzValues = new DataPoint[sj - si + 1][];
-            mzValuesScan = new int[sj - si + 1];
             mzValuesMZidx = new int[sj - si + 1];
           }
           // Load Data Points
           for (j = si; j <= sj; j++) {
             int jsi = j - si;
-            if (mzValues[jsi] == null || jsi >= mzValuesScan.length - 1
-                || mzValuesScan[jsi + 1] != scanNumbers[j]) {
-              Scan xscan = dataFile.getScan(scanNumbers[j]);
-              mzValues[jsi] = xscan.getDataPoints();
-              mzValuesScan[jsi] = scanNumbers[j];
+            if (mzValues[jsi] == null) {
+              // if (mzValues[jsi] == null || jsi >= mzValuesScan.length - 1 || mzValuesScan[jsi +
+              // 1] != scanNumbers[j]) {
+              MsScan xscan = scans.get(j);
+              mzValues[jsi] = getCachedDataPoints(xscan);
             } else {
               mzValues[jsi] = mzValues[jsi + 1];
-              mzValuesScan[jsi] = mzValuesScan[jsi + 1];
+              // mzValuesScan[jsi] = mzValuesScan[jsi + 1];
             }
             mzValuesMZidx[jsi] = 0;
           }
@@ -693,7 +695,7 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
     return Math.abs(x3_4);
   }
 
-  int addMaxDatumFromScans(SpotByProbes s, Chromatogram peak) {
+  int addMaxDatumFromScans(SpotByProbes s, SimpleChromatogram peak) {
 
     int i, j;
     int adds = 0;
@@ -712,8 +714,8 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
         }
         if (max.intensity > 0) {
           adds++;
-          peak.addMzPeak(scans.get(i).getScanNumber(),
-              new DataPoint(max.mzOriginal, max.intensityOriginal));
+          peak.addDataPoint(scans.get(i).getRetentionTime(), max.mzOriginal,
+              new Float(max.intensityOriginal));
         }
       }
     }
@@ -894,8 +896,8 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
     return l;
   }
 
-  Spot intensities(int l, int r, double min, double max, Chromatogram chr, PearsonCorrelation stats,
-      int spotId) {
+  Spot intensities(int l, int r, double min, double max, SimpleChromatogram chr,
+      PearsonCorrelation stats, int spotId) {
     boolean passSpot = false;
     Spot s = new Spot();
     if (r >= scans.size())
@@ -929,7 +931,7 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
         }
         if (chr != null && mzMax != null) {
           // Add ONLY THE MAX INTENSITY PER SCAN
-          chr.addMzPeak(scans[i].getScanNumber(), new DataPoint(mzMax.mz, mzMax.intensity)); // mzMax
+          chr.addDataPoint(scans.get(i).getRetentionTime(), mzMax.mz, new Float(mzMax.intensity));
         }
         if (stats != null && mzMax != null) {
           stats.enter(i, mzMax.mz);
