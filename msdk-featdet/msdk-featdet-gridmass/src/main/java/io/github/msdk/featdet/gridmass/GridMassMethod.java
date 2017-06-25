@@ -38,6 +38,10 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * GridMassMethod class.
  * </p>
+<<<<<<< HEAD
+=======
+ *
+>>>>>>> refs/heads/master
  */
 public class GridMassMethod implements MSDKMethod<FeatureTable> {
 

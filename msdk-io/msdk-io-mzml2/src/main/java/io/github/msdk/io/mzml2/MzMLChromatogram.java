@@ -337,7 +337,7 @@ class MzMLChromatogram implements Chromatogram {
   /** {@inheritDoc} */
   @Override
   @Nonnull
-  public float[] getRetentionTimes() {
+  public float[] getRetentionTimes(float array[]) {
     float[] rtValues = null;
     if (getRtBinaryDataInfo().getArrayLength() != numOfDataPoints) {
       logger.warn(
@@ -371,13 +371,6 @@ class MzMLChromatogram implements Chromatogram {
     }
 
     return rtValues;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  @Nonnull
-  public float[] getIntensityValues() {
-    return getIntensityValues(null);
   }
 
   /** {@inheritDoc} */
@@ -423,7 +416,7 @@ class MzMLChromatogram implements Chromatogram {
   /** {@inheritDoc} */
   @Override
   @Nullable
-  public double[] getMzValues() {
+  public double[] getMzValues(double array[]) {
     return null;
   }
 

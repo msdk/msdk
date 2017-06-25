@@ -21,8 +21,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.Sample;
 
@@ -38,14 +36,11 @@ public class ChromaTofFileImportMethodTest {
   @Ignore
   public void GCxGC_Import() throws MSDKException {
 
-    // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
-
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "GGT1.txt");
     Assert.assertTrue(inputFile.canRead());
-    ChromaTofFileImportMethod importer = new ChromaTofFileImportMethod(inputFile, dataStore,
-        Locale.US, ChromaTofParser.FIELD_SEPARATOR_TAB, ChromaTofParser.QUOTATION_CHARACTER_NONE);
+    ChromaTofFileImportMethod importer = new ChromaTofFileImportMethod(inputFile, Locale.US,
+        ChromaTofParser.FIELD_SEPARATOR_TAB, ChromaTofParser.QUOTATION_CHARACTER_NONE);
     FeatureTable featureTable = importer.execute();
     Assert.assertNotNull(featureTable);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);

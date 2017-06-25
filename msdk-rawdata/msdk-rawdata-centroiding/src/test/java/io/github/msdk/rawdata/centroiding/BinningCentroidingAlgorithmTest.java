@@ -20,8 +20,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -34,9 +32,6 @@ public class BinningCentroidingAlgorithmTest {
 
   @Test
   public void testOrbitrap() throws MSDKException {
-
-    // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "profile_orbitrap.mzML");
@@ -51,7 +46,7 @@ public class BinningCentroidingAlgorithmTest {
     MsScan lastScan = scans.get(scans.size() - 1);
 
     final double binSize = 1.0;
-    BinningCentroidingAlgorithm centroider = new BinningCentroidingAlgorithm(dataStore, binSize);
+    BinningCentroidingAlgorithm centroider = new BinningCentroidingAlgorithm(binSize);
     final MsScan centroidedScan = centroider.centroidScan(lastScan);
 
     double mzBuffer[] = centroidedScan.getMzValues();

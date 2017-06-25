@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
@@ -30,8 +29,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * RawDataFileUtil class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class RawDataFileUtil {
 
@@ -45,12 +42,15 @@ public class RawDataFileUtil {
    * @return a {@link java.util.List} object.
    */
   @Nonnull
-  static public List<MsScan> getScans(RawDataFile rawDataFile, MsFunction msFunction) {
+  static public List<MsScan> getScans(RawDataFile rawDataFile, String msFunction) {
     ArrayList<MsScan> msScanList = new ArrayList<MsScan>();
     List<MsScan> scans = rawDataFile.getScans();
     synchronized (scans) {
       for (MsScan scan : scans) {
-        if (scan.getMsFunction().equals(msFunction))
+        String scanMsFunction = scan.getMsFunction();
+        if (scanMsFunction == null)
+          continue;
+        if (scanMsFunction.equals(msFunction))
           msScanList.add(scan);
       }
     }
@@ -93,17 +93,18 @@ public class RawDataFileUtil {
    * @return a {@link java.util.List} object.
    */
   @Nonnull
-  static public List<MsScan> getScans(RawDataFile rawDataFile, MsFunction msFunction,
+  static public List<MsScan> getScans(RawDataFile rawDataFile, String msFunction,
       Range<Float> rtRange) {
     ArrayList<MsScan> msScanList = new ArrayList<MsScan>();
     List<MsScan> scans = rawDataFile.getScans();
     synchronized (scans) {
       for (MsScan scan : scans) {
         Float scanRT = scan.getRetentionTime();
-        if (scanRT != null) {
-          if (scan.getMsFunction().equals(msFunction) && rtRange.contains(scanRT))
-            msScanList.add(scan);
-        }
+        String scanMsFunction = scan.getMsFunction();
+        if (scanRT == null || scanMsFunction == null)
+          continue;
+        if (scanMsFunction.equals(msFunction) && rtRange.contains(scanRT))
+          msScanList.add(scan);
       }
     }
     return new ArrayList<MsScan>();

@@ -25,8 +25,6 @@ import io.github.msdk.util.tolerances.MzTolerance;
  * interfaces. It may represent a single scan in raw MS data, a calculated isotope pattern, a
  * predicted fragmentation spectrum of a molecule, etc.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public interface MsSpectrum {
 
@@ -60,7 +58,21 @@ public interface MsSpectrum {
    * @return an array of double.
    */
   @Nonnull
-  double[] getMzValues();
+  default double[] getMzValues() {
+    return getMzValues(null);
+  }
+
+  /**
+   * <p>
+   * Returns the m/z values of this spectrum.
+   *
+   * Note: this method may need to read data from disk, therefore it may be quite slow.
+   * </p>
+   *
+   * @return an array of double.
+   */
+  @Nonnull
+  double[] getMzValues(double array[]);
 
   /**
    * <p>
@@ -72,7 +84,21 @@ public interface MsSpectrum {
    * @return an array of float.
    */
   @Nonnull
-  float[] getIntensityValues();
+  default float[] getIntensityValues() {
+    return getIntensityValues(null);
+  }
+
+  /**
+   * <p>
+   * Returns the intensity values of this spectrum.
+   *
+   * Note: this method may need to read data from disk, therefore it may be quite slow.
+   * </p>
+   *
+   * @return an array of float.
+   */
+  @Nonnull
+  float[] getIntensityValues(float array[]);
 
   /**
    * Returns the sum of intensities of all data points (total ion current or TIC).

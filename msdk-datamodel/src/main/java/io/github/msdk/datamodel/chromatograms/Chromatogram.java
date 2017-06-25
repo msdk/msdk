@@ -28,8 +28,6 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 /**
  * Represents a single chromatogram.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public interface Chromatogram {
 
@@ -82,7 +80,12 @@ public interface Chromatogram {
    * @return an array of
    */
   @Nonnull
-  float[] getRetentionTimes();
+  default float[] getRetentionTimes() {
+    return getRetentionTimes(null);
+  }
+
+  @Nonnull
+  float[] getRetentionTimes(@Nullable float array[]);
 
   /**
    * <p>
@@ -92,7 +95,9 @@ public interface Chromatogram {
    * @return an array of float.
    */
   @Nonnull
-  float[] getIntensityValues();
+  default float[] getIntensityValues() {
+    return getIntensityValues(null);
+  }
 
   /**
    * <p>
@@ -113,7 +118,18 @@ public interface Chromatogram {
    * @return an array of double.
    */
   @Nullable
-  double[] getMzValues();
+  default double[] getMzValues() {
+    return getMzValues(null);
+  }
+
+  /**
+   * 
+   * @param array
+   * @return
+   */
+  @Nullable
+  double[] getMzValues(@Nullable double array[]);
+
 
   /**
    * Returns the m/z value of this chromatogram, or null if no m/z value is set for the
@@ -136,7 +152,9 @@ public interface Chromatogram {
   /**
    * Returns the separation type used for separation of molecules.
    *
-   * @return the seperation type. Returns {@link io.github.msdk.datamodel.rawdata.SeparationType#UNKNOWN} for unknown separations.
+   * @return the seperation type. Returns
+   *         {@link io.github.msdk.datamodel.rawdata.SeparationType#UNKNOWN} for unknown
+   *         separations.
    */
   @Nonnull
   SeparationType getSeparationType();

@@ -32,8 +32,6 @@ import io.github.msdk.datamodel.msspectra.MsSpectrum;
  * MspExportAlgorithm class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MspExportAlgorithm {
 

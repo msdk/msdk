@@ -17,7 +17,6 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
@@ -27,14 +26,11 @@ import io.github.msdk.util.MsScanUtil;
  * CropFilterAlgorithm class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class CropFilterAlgorithm implements MSDKFilteringAlgorithm {
 
   private final @Nonnull Range<Double> mzRange;
   private final @Nonnull Range<Float> rtRange;
-  private final @Nonnull DataPointStore store;
 
   // Data structures
   private @Nonnull double mzBuffer[] = new double[10000];
@@ -50,12 +46,9 @@ public class CropFilterAlgorithm implements MSDKFilteringAlgorithm {
    * @param rtRange a {@link com.google.common.collect.Range} object.
    * @param store a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public CropFilterAlgorithm(@Nonnull Range<Double> mzRange, @Nonnull Range<Float> rtRange,
-      @Nonnull DataPointStore store) {
+  public CropFilterAlgorithm(@Nonnull Range<Double> mzRange, @Nonnull Range<Float> rtRange) {
     this.mzRange = mzRange;
     this.rtRange = rtRange;
-    this.store = store;
-
   }
 
   /** {@inheritDoc} */
@@ -74,7 +67,7 @@ public class CropFilterAlgorithm implements MSDKFilteringAlgorithm {
     numOfDataPoints = scan.getNumberOfDataPoints();
 
     // Create a new scan
-    SimpleMsScan newScan = MsScanUtil.clone(store, scan, false);
+    SimpleMsScan newScan = MsScanUtil.clone(scan, false);
 
     if (numOfDataPoints == 0) {
       newScan.setDataPoints(mzBuffer, intensityBuffer, 0);

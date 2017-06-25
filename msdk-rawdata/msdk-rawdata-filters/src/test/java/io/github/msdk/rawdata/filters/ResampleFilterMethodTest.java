@@ -20,8 +20,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -42,12 +40,9 @@ public class ResampleFilterMethodTest {
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
-    // Create the data needed by the Crop Filter Method
-    DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
-
     // Execute the filter
-    ResampleFilterAlgorithm resampleFilter = new ResampleFilterAlgorithm(10.0, store);
-    MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, resampleFilter, store);
+    ResampleFilterAlgorithm resampleFilter = new ResampleFilterAlgorithm(10.0);
+    MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, resampleFilter);
     RawDataFile newRawFile = filterMethod.execute();
     // The result of the method can't be Null
     Assert.assertNotNull(newRawFile);
@@ -64,6 +59,6 @@ public class ResampleFilterMethodTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testZeroBinSize() throws MSDKException {
-    new ResampleFilterAlgorithm(0.0, DataPointStoreFactory.getTmpFileDataStore());
+    new ResampleFilterAlgorithm(0.0);
   }
 }

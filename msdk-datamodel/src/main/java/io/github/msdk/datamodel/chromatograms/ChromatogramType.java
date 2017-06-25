@@ -16,8 +16,6 @@ package io.github.msdk.datamodel.chromatograms;
 /**
  * Represents the type of chromatogram.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public enum ChromatogramType {
 

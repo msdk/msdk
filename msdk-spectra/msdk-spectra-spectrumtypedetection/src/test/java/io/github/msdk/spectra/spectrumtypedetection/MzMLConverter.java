@@ -28,13 +28,11 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleActivationInfo;
 import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -103,12 +101,12 @@ class MzMLConverter {
   }
 
   @Nonnull
-  MsFunction extractMsFunction(Spectrum spectrum) {
+  Integer extractMsLevel(Spectrum spectrum) {
     Integer msLevel = 1;
     String value = extractCVValue(spectrum.getCvParam(), MzMLCV.cvMSLevel);
     if (!Strings.isNullOrEmpty(value))
       msLevel = Integer.parseInt(value);
-    return MSDKObjectBuilder.getMsFunction(msLevel);
+    return msLevel;
   }
 
   @Nullable

@@ -22,8 +22,6 @@ import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -41,8 +39,6 @@ public class TargetedDetectionMethodTest {
   @Test
   public void testOrbitrap() throws MSDKException {
 
-    // Create the data structures
-    final DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     float rtBuffer[];
     double mzBuffer[];
     float intensityBuffer[];
@@ -85,7 +81,7 @@ public class TargetedDetectionMethodTest {
     final Double noiseLevel = 5000d;
 
     TargetedDetectionMethod chromBuilder = new TargetedDetectionMethod(ionAnnotations, rawFile,
-        dataStore, mzTolerance, rtTolerance, intensityTolerance, noiseLevel);
+        mzTolerance, rtTolerance, intensityTolerance, noiseLevel);
     final List<Chromatogram> chromatograms = chromBuilder.execute();
     Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
     Assert.assertNotNull(chromatograms);

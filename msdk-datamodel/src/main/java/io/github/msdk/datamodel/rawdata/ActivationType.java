@@ -20,8 +20,6 @@ package io.github.msdk.datamodel.rawdata;
  * of Terms Relating to Mass Spectrometry (IUPAC Recommendations 2013) Pure Appl. Chem. 2013, 85,
  * 1515-1609.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public enum ActivationType {
 

@@ -20,8 +20,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -41,10 +39,9 @@ public class SGFilterMethodTest {
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
-    DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
     // Execute the filter
-    SGFilterAlgorithm SGFilter = new SGFilterAlgorithm(11, store);
-    MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, SGFilter, store);
+    SGFilterAlgorithm SGFilter = new SGFilterAlgorithm(11);
+    MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, SGFilter);
     RawDataFile newRawFile = filterMethod.execute();
     // The result of the method can't be Null
     Assert.assertNotNull(newRawFile);
@@ -74,11 +71,9 @@ public class SGFilterMethodTest {
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
-    DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
-
     // Execute the filter with wrong parameters
-    SGFilterAlgorithm sgFilter = new SGFilterAlgorithm(110, store);
-    MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, sgFilter, store);
+    SGFilterAlgorithm sgFilter = new SGFilterAlgorithm(110);
+    MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, sgFilter);
     RawDataFile newRawFile = filterMethod.execute();
     // The result of the method can't be Null
     Assert.assertNotNull(newRawFile);

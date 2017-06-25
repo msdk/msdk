@@ -116,7 +116,8 @@ class MzMLChromatogram implements Chromatogram {
   /** {@inheritDoc} */
   @Override
   @Nonnull
-  public float[] getRetentionTimes() {
+  public float[] getRetentionTimes(float array[]) {
+    if (array == null || array.length < numOfDataPoints) array = new float[numOfDataPoints];
     try {
       MzMLUnmarshaller parser = dataFile.getParser();
       if (parser == null) {
@@ -124,17 +125,11 @@ class MzMLChromatogram implements Chromatogram {
       }
       uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram =
           parser.getChromatogramById(chromatogramId);
-      return MzMLConverter.extractRtValues(jmzChromatogram, null);
+      MzMLConverter.extractRtValues(jmzChromatogram, array);
+      return array;
     } catch (MzMLUnmarshallerException e) {
       throw (new MSDKRuntimeException(e));
     }
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  @Nonnull
-  public float[] getIntensityValues() {
-    return getIntensityValues(null);
   }
 
   /** {@inheritDoc} */
@@ -157,7 +152,7 @@ class MzMLChromatogram implements Chromatogram {
   /** {@inheritDoc} */
   @Override
   @Nullable
-  public double[] getMzValues() {
+  public double[] getMzValues(double array[]) {
     return null;
   }
 

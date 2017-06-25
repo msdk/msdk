@@ -25,13 +25,10 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -41,11 +38,8 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  */
 public class SimpleMsScanTest {
 
-  private static @Nonnull DataPointStore dataPointStore =
-      DataPointStoreFactory.getMemoryDataStore();
-  private static @Nonnull MsFunction msFunction = MSDKObjectBuilder.getMsFunction("MS", 1);
-  private static @Nonnull SimpleMsScan msScan1 =
-      new SimpleMsScan(dataPointStore, 123, msFunction);
+  private static @Nonnull String msFunction = "MS";
+  private static @Nonnull SimpleMsScan msScan1 = new SimpleMsScan(123, msFunction);
 
   @Test
   public void testScanNumber() throws MSDKException {
@@ -56,16 +50,17 @@ public class SimpleMsScanTest {
   @Test
   public void testMsFunction() throws MSDKException {
     // Verify ms function
-    Assert.assertEquals("MS", msScan1.getMsFunction().getName());
-    Assert.assertEquals(new Integer(1), msScan1.getMsFunction().getMsLevel());
+    Assert.assertEquals("MS", msScan1.getMsFunction());
+    Assert.assertEquals(new Integer(1), msScan1.getMsLevel());
 
     // Change ms function
-    final @Nonnull MsFunction newMsFunction = MSDKObjectBuilder.getMsFunction("MS TOF", 2);
+    final @Nonnull String newMsFunction = "MS TOF";
     msScan1.setMsFunction(newMsFunction);
+    msScan1.setMsLevel(2);
 
     // Verify ms function
-    Assert.assertEquals("MS TOF", msScan1.getMsFunction().getName());
-    Assert.assertEquals(new Integer(2), msScan1.getMsFunction().getMsLevel());
+    Assert.assertEquals("MS TOF", msScan1.getMsFunction());
+    Assert.assertEquals(new Integer(2), msScan1.getMsLevel());
   }
 
   @Test
@@ -100,7 +95,7 @@ public class SimpleMsScanTest {
 
     // Change raw data file
     final @Nonnull RawDataFile newRawDataFile =
-        new SimpleRawDataFile("Sample B1", null, FileType.MZML, dataPointStore);
+        new SimpleRawDataFile("Sample B1", null, FileType.MZML);
     msScan1.setRawDataFile(newRawDataFile);
 
     // Verify raw data file
@@ -180,9 +175,7 @@ public class SimpleMsScanTest {
       intBuffer[i] = 100f / i;
     }
 
-    DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
-    MsFunction msf = MSDKObjectBuilder.getMsFunction(1);
-    SimpleMsScan scan = new SimpleMsScan(store, 1, msf);
+    SimpleMsScan scan = new SimpleMsScan(1);
     scan.setDataPoints(mzBuffer, intBuffer, 9000);
 
     float sumInt = 0;
@@ -195,21 +188,17 @@ public class SimpleMsScanTest {
 
   @Test
   public void testSetRawDataFile() throws MSDKException {
-    DataPointStore store = DataPointStoreFactory.getTmpFileDataStore();
-    RawDataFile rdf = new SimpleRawDataFile("test", null, FileType.UNKNOWN, store);
-    MsFunction msf = MSDKObjectBuilder.getMsFunction(1);
-    SimpleMsScan scan = new SimpleMsScan(store, 1, msf);
+    RawDataFile rdf = new SimpleRawDataFile("test", null, FileType.UNKNOWN);
+    SimpleMsScan scan = new SimpleMsScan(1);
     scan.setRawDataFile(rdf);
     Assert.assertEquals(rdf, scan.getRawDataFile());
   }
 
   @Test(expected = MSDKRuntimeException.class)
   public void testSetRawDataFileFail() throws MSDKException {
-    DataPointStore store = DataPointStoreFactory.getTmpFileDataStore();
-    RawDataFile rdf = new SimpleRawDataFile("test", null, FileType.UNKNOWN, store);
-    RawDataFile rdf2 = new SimpleRawDataFile("test2", null, FileType.UNKNOWN, store);
-    MsFunction msf = MSDKObjectBuilder.getMsFunction(1);
-    SimpleMsScan scan = new SimpleMsScan(store, 1, msf);
+    RawDataFile rdf = new SimpleRawDataFile("test", null, FileType.UNKNOWN);
+    RawDataFile rdf2 = new SimpleRawDataFile("test2", null, FileType.UNKNOWN);
+    SimpleMsScan scan = new SimpleMsScan(1);
     scan.setRawDataFile(rdf);
     scan.setRawDataFile(rdf2);
   }

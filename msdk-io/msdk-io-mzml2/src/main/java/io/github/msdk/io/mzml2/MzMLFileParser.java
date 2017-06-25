@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
@@ -57,8 +56,6 @@ import javolution.xml.stream.XMLStreamReader;
  * MzMLFileParser class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private final @Nonnull File mzMLFile;
@@ -145,7 +142,9 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
       List<MsScan> spectrumList = new ArrayList<>();
       List<Chromatogram> chromatogramsList = new ArrayList<>();
-      List<MsFunction> msFunctionsList = new ArrayList<>();
+      
+      // TODO populate the list 
+      List<String> msFunctionsList = new ArrayList<>();
 
       // Create the MzMLRawDataFile object
       final MzMLRawDataFile newRawFile =

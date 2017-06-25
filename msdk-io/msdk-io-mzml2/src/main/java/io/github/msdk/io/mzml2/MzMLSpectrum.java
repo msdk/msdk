@@ -29,12 +29,10 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
@@ -58,8 +56,6 @@ import it.unimi.dsi.io.ByteBufferInputStream;
  * MzMLSpectrum class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MzMLSpectrum implements MsScan {
   private final @Nonnull MzMLRawDataFile dataFile;
@@ -203,7 +199,7 @@ public class MzMLSpectrum implements MsScan {
 
   /** {@inheritDoc} */
   @Override
-  public double[] getMzValues() {
+  public double[] getMzValues(double array[]) {
     double[] mzValues = null;
     if (getMzBinaryDataInfo().getArrayLength() != numOfDataPoints) {
       logger.warn(
@@ -242,7 +238,7 @@ public class MzMLSpectrum implements MsScan {
 
   /** {@inheritDoc} */
   @Override
-  public float[] getIntensityValues() {
+  public float[] getIntensityValues(float array[]) {
     float[] intensityValues = null;
     if (getIntensityBinaryDataInfo().getArrayLength() != numOfDataPoints) {
       logger.warn(
@@ -357,12 +353,18 @@ public class MzMLSpectrum implements MsScan {
 
   /** {@inheritDoc} */
   @Override
-  public MsFunction getMsFunction() {
+  public String getMsFunction() {
+    return null;
+  }
+  
+  /** {@inheritDoc} */
+  @Override
+  public Integer getMsLevel() {
     Integer msLevel = 1;
     String value = getCVValue(MzMLCV.cvMSLevel).get();
     if (!Strings.isNullOrEmpty(value))
       msLevel = Integer.parseInt(value);
-    return MSDKObjectBuilder.getMsFunction(msLevel);
+    return msLevel;
   }
 
   /** {@inheritDoc} */

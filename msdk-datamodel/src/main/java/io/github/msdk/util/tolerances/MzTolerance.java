@@ -22,8 +22,6 @@ import com.google.common.collect.Range;
  * MzTolerance interface.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public interface MzTolerance {
 

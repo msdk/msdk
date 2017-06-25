@@ -26,8 +26,6 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 /**
  * Implementation of the Feature interface.
  *
- * @author plusik
- * @version $Id: $Id
  * @since 0.0.8
  */
 public class SimpleFeature implements Feature {

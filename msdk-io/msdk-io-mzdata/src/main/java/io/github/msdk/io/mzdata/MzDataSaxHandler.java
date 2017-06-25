@@ -23,21 +23,17 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 
 class MzDataSaxHandler extends DefaultHandler {
 
   private SimpleRawDataFile newRawFile;
-  private DataPointStore dataStore;
 
   private boolean canceled = false;
   private long totalScans = 0, parsedScans;
@@ -68,9 +64,8 @@ class MzDataSaxHandler extends DefaultHandler {
    * @param newRawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public MzDataSaxHandler(SimpleRawDataFile newRawFile, DataPointStore dataStore) {
+  public MzDataSaxHandler(SimpleRawDataFile newRawFile) {
     this.newRawFile = newRawFile;
-    this.dataStore = dataStore;
     charBuffer = new StringBuilder();
   }
 
@@ -208,11 +203,9 @@ class MzDataSaxHandler extends DefaultHandler {
       MsSpectrumType spectrumType =
           SpectrumTypeDetectionAlgorithm.detectSpectrumType(mzBuffer, intensityBuffer, peaksCount);
 
-      // Create a new scan
-      MsFunction msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
+      SimpleMsScan newScan = new SimpleMsScan(scanNumber);
 
-      SimpleMsScan newScan = new SimpleMsScan(dataStore, scanNumber, msFunction);
-
+      newScan.setMsLevel(msLevel);
       newScan.setDataPoints(mzBuffer, intensityBuffer, peaksCount);
       newScan.setSpectrumType(spectrumType);
       newScan.setPolarity(polarity);
