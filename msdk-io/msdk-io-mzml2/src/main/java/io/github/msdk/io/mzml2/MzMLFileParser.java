@@ -149,8 +149,8 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
       List<MsScan> spectrumList = new ArrayList<>();
       List<Chromatogram> chromatogramsList = new ArrayList<>();
-      
-      // TODO populate the list 
+
+      // TODO populate the list
       List<String> msFunctionsList = new ArrayList<>();
 
       // Create the MzMLRawDataFile object
@@ -623,7 +623,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   }
 
   public void manageCompression(MzMLBinaryDataInfo binaryInfo, String accession) {
-    if (binaryInfo.getCompressionType() == null)
+    if (binaryInfo.getCompressionType() == MzMLCompressionType.NO_COMPRESSION)
       binaryInfo.setCompressionType(accession);
     else {
       if (binaryInfo.getCompressionType(accession) == MzMLCompressionType.ZLIB) {
