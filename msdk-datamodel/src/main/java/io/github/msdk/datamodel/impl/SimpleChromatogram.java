@@ -260,4 +260,58 @@ public class SimpleChromatogram implements Chromatogram {
     return rtRange;
   }
 
+  /**
+   * Adds a data point to the end of the chromatogram
+   */
+  public synchronized void addDataPoint(@Nonnull Float rt, @Nullable Double mz,
+      @Nonnull Float intensity) {
+    Preconditions.checkNotNull(rt);
+    Preconditions.checkNotNull(intensity);
+    if (mzValues != null)
+      Preconditions.checkNotNull(mz);
+
+    // Adding the first data point?
+    if (numOfDataPoints == 0) {
+      rtValues = new float[128];
+      rtValues[0] = rt;
+      intensityValues = new float[128];
+      intensityValues[0] = intensity;
+      if (mz != null) {
+        mzValues = new double[128];
+        mzValues[0] = mz;
+      }
+      numOfDataPoints = 1;
+      return;
+    }
+
+
+    if (rtValues.length <= numOfDataPoints) {
+      float newRtValues[] = new float[Math.min(128, numOfDataPoints * 2)];
+      System.arraycopy(rtValues, 0, newRtValues, 0, numOfDataPoints);
+      rtValues = newRtValues;
+    }
+    rtValues[numOfDataPoints] = rt;
+
+    if (intensityValues.length <= numOfDataPoints) {
+      float newIntensityValues[] = new float[Math.min(128, numOfDataPoints * 2)];
+      System.arraycopy(intensityValues, 0, newIntensityValues, 0, numOfDataPoints);
+      intensityValues = newIntensityValues;
+    }
+    rtValues[numOfDataPoints] = rt;
+
+    if (mz != null) {
+      if (mzValues.length <= numOfDataPoints) {
+        double newMzValues[] = new double[Math.min(128, numOfDataPoints * 2)];
+        System.arraycopy(mzValues, 0, newMzValues, 0, numOfDataPoints);
+        mzValues = newMzValues;
+      }
+      mzValues[numOfDataPoints] = mz;
+    }
+
+    numOfDataPoints++;
+
+  }
+
+
+
 }
