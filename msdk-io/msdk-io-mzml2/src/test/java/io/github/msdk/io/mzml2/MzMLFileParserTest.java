@@ -411,24 +411,24 @@ public class MzMLFileParserTest {
     Assert.assertEquals(6, scans.size());
 
     // 4th scan, #2103
-    MsScan scan2 = scans.get(3);
-    Assert.assertEquals(new Integer(2103), scan2.getScanNumber());
-    Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan2.getMsLevel());
-    Assert.assertEquals(1127.6449f, scan2.getRetentionTime(), 0.01f);
-    Assert.assertEquals(PolarityType.NEGATIVE, scan2.getPolarity());
-    scan2.getMzValues();
-    Assert.assertEquals(1306, (int) scan2.getNumberOfDataPoints());
+    MsScan scan4 = scans.get(3);
+    Assert.assertEquals(new Integer(2103), scan4.getScanNumber());
+    Assert.assertEquals(MsSpectrumType.CENTROIDED, scan4.getSpectrumType());
+    Assert.assertEquals(new Integer(1), scan4.getMsLevel());
+    Assert.assertEquals(1127.6449f, scan4.getRetentionTime(), 0.01f);
+    Assert.assertEquals(PolarityType.NEGATIVE, scan4.getPolarity());
+    Assert.assertEquals(425.50030515961424, scan4.getMzValues()[510], 0.0001);
+    Assert.assertEquals(1306, (int) scan4.getNumberOfDataPoints());
     Float scan2maxInt =
-        MsSpectrumUtil.getMaxIntensity(scan2.getIntensityValues(), scan2.getNumberOfDataPoints());
+        MsSpectrumUtil.getMaxIntensity(scan4.getIntensityValues(), scan4.getNumberOfDataPoints());
     Assert.assertEquals(8746.9599f, scan2maxInt, 0.1f);
-    Assert.assertEquals(new Float(58989.76953125), scan2.getTIC(), 10);
-    Assert.assertEquals(new Double(100.317253112793), scan2.getMzRange().lowerEndpoint(), 0.000001);
-    Assert.assertEquals(new Double(999.715515136719), scan2.getMzRange().upperEndpoint(), 0.000001);
-    Assert.assertEquals("- c ESI Q1MS [100.000-1000.000]", scan2.getScanDefinition());
+    Assert.assertEquals(new Float(58989.76953125), scan4.getTIC(), 10);
+    Assert.assertEquals(new Double(100.317253112793), scan4.getMzRange().lowerEndpoint(), 0.000001);
+    Assert.assertEquals(new Double(999.715515136719), scan4.getMzRange().upperEndpoint(), 0.000001);
+    Assert.assertEquals("- c ESI Q1MS [100.000-1000.000]", scan4.getScanDefinition());
 
     // Test isolation data
-    List<IsolationInfo> scan2isolations = scan2.getIsolations();
+    List<IsolationInfo> scan2isolations = scan4.getIsolations();
     Assert.assertEquals(0, scan2isolations.size());
 
     // The file has 2 chromatograms
@@ -442,7 +442,9 @@ public class MzMLFileParserTest {
     Assert.assertEquals(ChromatogramType.TIC, chromatogram.getChromatogramType());
     Assert.assertEquals(new Integer(2126), chromatogram.getNumberOfDataPoints());
     Assert.assertEquals(new Integer(0), (Integer) chromatogram.getIsolations().size());
-    Assert.assertEquals(2126, chromatogram.getRetentionTimes().length);
+    float[] rtValues = chromatogram.getRetentionTimes();
+    Assert.assertEquals(2126, rtValues.length);
+    Assert.assertEquals(12.60748291015625, rtValues[1410], 0.0001);
 
     rawFile.dispose();
 
