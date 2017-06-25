@@ -316,7 +316,7 @@ public class ChromatogramUtil {
    * @param intensityValues an array of float.
    * @param size a
    */
-  public static @Nullable Double getArea(@Nonnull float rtValues[],
+  public static @Nullable Float getArea(@Nonnull float rtValues[],
       @Nonnull float[] intensityValues, @Nonnull Integer size) {
 
     // Parameter check
@@ -329,7 +329,7 @@ public class ChromatogramUtil {
     if (size == 0)
       return null;
 
-    double area = 0, rtDifference = 0, intensityStart = 0, intensityEnd = 0;
+    float area = 0, rtDifference = 0, intensityStart = 0, intensityEnd = 0;
     for (int i = 0; i < size - 1; i++) {
       rtDifference = rtValues[i + 1] - rtValues[i];
       intensityStart = intensityValues[i];
