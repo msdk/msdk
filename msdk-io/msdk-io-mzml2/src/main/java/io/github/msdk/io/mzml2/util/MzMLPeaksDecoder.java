@@ -88,24 +88,25 @@ public class MzMLPeaksDecoder {
       dis = new LittleEndianDataInputStream(iis);
     } else if (compressions.contains(MzMLCompressionType.NO_COMPRESSION)) {
       dis = new LittleEndianDataInputStream(is);
-    } else {
-      bytes = IOUtils.toByteArray(is);
     }
 
     // now can check for NumPress
     if (compressions.contains(MzMLCompressionType.NUMPRESS_LINPRED)) {
+      bytes = dis != null ? IOUtils.toByteArray(dis) : IOUtils.toByteArray(is);
       int numDecodedDoubles = MSNumpress.decodeLinear(bytes, bytes.length, data);
       if (numDecodedDoubles < 0) {
         throw new MSDKException("MSNumpress linear decoder failed");
       }
       return data;
     } else if (compressions.contains(MzMLCompressionType.NUMPRESS_POSINT)) {
+      bytes = dis != null ? IOUtils.toByteArray(dis) : IOUtils.toByteArray(is);
       int numDecodedDoubles = MSNumpress.decodePic(bytes, bytes.length, data);
       if (numDecodedDoubles < 0) {
         throw new MSDKException("MSNumpress positive integer decoder failed");
       }
       return data;
     } else if (compressions.contains(MzMLCompressionType.NUMPRESS_SHLOGF)) {
+      bytes = dis != null ? IOUtils.toByteArray(dis) : IOUtils.toByteArray(is);
       int numDecodedDoubles = MSNumpress.decodeSlof(bytes, bytes.length, data);
       if (numDecodedDoubles < 0) {
         throw new MSDKException("MSNumpress short logged float decoder failed");
@@ -208,24 +209,25 @@ public class MzMLPeaksDecoder {
       dis = new LittleEndianDataInputStream(iis);
     } else if (compressions.contains(MzMLCompressionType.NO_COMPRESSION)) {
       dis = new LittleEndianDataInputStream(is);
-    } else {
-      bytes = IOUtils.toByteArray(is);
     }
 
     // now can check for NumPress
     if (compressions.contains(MzMLCompressionType.NUMPRESS_LINPRED)) {
+      bytes = dis != null ? IOUtils.toByteArray(dis) : IOUtils.toByteArray(is);
       int numDecodedDoubles = MSNumpress.decodeLinear(bytes, bytes.length, data);
       if (numDecodedDoubles < 0) {
         throw new MSDKException("MSNumpress linear decoder failed");
       }
       return data;
     } else if (compressions.contains(MzMLCompressionType.NUMPRESS_POSINT)) {
+      bytes = dis != null ? IOUtils.toByteArray(dis) : IOUtils.toByteArray(is);
       int numDecodedDoubles = MSNumpress.decodePic(bytes, bytes.length, data);
       if (numDecodedDoubles < 0) {
         throw new MSDKException("MSNumpress positive integer decoder failed");
       }
       return data;
     } else if (compressions.contains(MzMLCompressionType.NUMPRESS_SHLOGF)) {
+      bytes = dis != null ? IOUtils.toByteArray(dis) : IOUtils.toByteArray(is);
       int numDecodedDoubles = MSNumpress.decodeSlof(bytes, bytes.length, data);
       if (numDecodedDoubles < 0) {
         throw new MSDKException("MSNumpress short logged float decoder failed");
