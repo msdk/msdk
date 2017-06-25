@@ -16,7 +16,6 @@ package io.github.msdk.io.mzml2.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
-import java.util.EnumSet;
 import java.util.zip.DataFormatException;
 import java.util.zip.InflaterInputStream;
 
@@ -26,7 +25,6 @@ import com.google.common.io.LittleEndianDataInputStream;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
-import io.github.msdk.io.mzml2.data.MzMLCompressionType;
 import it.unimi.dsi.io.ByteBufferInputStream;
 
 /**
@@ -294,13 +292,9 @@ public class MzMLPeaksDecoder {
         }
         break;
       }
-      default: {
-        dis.close();
-        throw new IllegalArgumentException(
-            "Precision can only be 32/64 bits, other values are not valid.");
-      }
     }
 
+    dis.close();
     return data;
   }
 
