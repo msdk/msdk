@@ -20,8 +20,6 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
@@ -40,14 +38,13 @@ public class ThermoRawImportMethodTest {
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[];
     float intensityBuffer[];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "RP240K_01.raw");
     Assert.assertTrue(inputFile.canRead());
-    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile, dataStore);
+    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -61,7 +58,7 @@ public class ThermoRawImportMethodTest {
     MsScan scan10 = scans.get(9);
     Assert.assertEquals(new Integer(10), scan10.getScanNumber());
     Assert.assertEquals(MsSpectrumType.PROFILE, scan10.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan10.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan10.getMsLevel());
     Assert.assertEquals(37.692f, scan10.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan10.getPolarity());
     mzBuffer = scan10.getMzValues();
@@ -78,7 +75,7 @@ public class ThermoRawImportMethodTest {
     MsScan scan50 = scans.get(49);
     Assert.assertEquals(new Integer(50), scan50.getScanNumber());
     Assert.assertEquals(MsSpectrumType.PROFILE, scan50.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan50.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan50.getMsLevel());
     Assert.assertEquals(202.332f, scan50.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan50.getPolarity());
     mzBuffer = scan50.getMzValues();
@@ -101,14 +98,13 @@ public class ThermoRawImportMethodTest {
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "drugx_01.raw");
     Assert.assertTrue(inputFile.canRead());
-    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile, dataStore);
+    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -122,8 +118,8 @@ public class ThermoRawImportMethodTest {
     MsScan scan220 = scans.get(219);
     Assert.assertEquals(new Integer(220), scan220.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan220.getSpectrumType());
-    Assert.assertEquals(new Integer(2), scan220.getMsFunction().getMsLevel());
-    Assert.assertEquals("srm", scan220.getMsFunction().getName());
+    Assert.assertEquals(new Integer(2), scan220.getMsLevel());
+    Assert.assertEquals("srm", scan220.getMsFunction());
     Assert.assertEquals(293.97f, scan220.getRetentionTime(), 0.01f);
     Assert.assertEquals(1, scan220.getIsolations().size());
     Assert.assertEquals(469.40, scan220.getIsolations().get(0).getPrecursorMz(), 0.01);
@@ -148,14 +144,13 @@ public class ThermoRawImportMethodTest {
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "tsq_quantum.raw");
     Assert.assertTrue(inputFile.canRead());
-    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile, dataStore);
+    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -168,8 +163,8 @@ public class ThermoRawImportMethodTest {
     // 10th scan, #10
     MsScan scan10 = scans.get(9);
     Assert.assertEquals(new Integer(10), scan10.getScanNumber());
-    Assert.assertEquals(new Integer(1), scan10.getMsFunction().getMsLevel());
-    Assert.assertEquals("q1ms", scan10.getMsFunction().getName());
+    Assert.assertEquals(new Integer(1), scan10.getMsLevel());
+    Assert.assertEquals("q1ms", scan10.getMsFunction());
     Assert.assertEquals(14.422f, scan10.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan10.getPolarity());
     mzBuffer = scan10.getMzValues();
@@ -191,14 +186,13 @@ public class ThermoRawImportMethodTest {
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "srm.raw");
     Assert.assertTrue(inputFile.canRead());
-    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile, dataStore);
+    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -212,8 +206,8 @@ public class ThermoRawImportMethodTest {
     MsScan scan10 = scans.get(9);
     Assert.assertEquals(new Integer(10), scan10.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan10.getSpectrumType());
-    Assert.assertEquals(new Integer(2), scan10.getMsFunction().getMsLevel());
-    Assert.assertEquals("srm", scan10.getMsFunction().getName());
+    Assert.assertEquals(new Integer(2), scan10.getMsLevel());
+    Assert.assertEquals("srm", scan10.getMsFunction());
     Assert.assertEquals(165.000, scan10.getIsolations().get(0).getPrecursorMz(), 0.01);
     Assert.assertEquals(9.293f, scan10.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan10.getPolarity());
@@ -237,14 +231,13 @@ public class ThermoRawImportMethodTest {
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "pr.raw");
     Assert.assertTrue(inputFile.canRead());
-    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile, dataStore);
+    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -258,8 +251,8 @@ public class ThermoRawImportMethodTest {
     MsScan scan10 = scans.get(9);
     Assert.assertEquals(new Integer(10), scan10.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan10.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan10.getMsFunction().getMsLevel());
-    Assert.assertEquals("pr", scan10.getMsFunction().getName());
+    Assert.assertEquals(new Integer(1), scan10.getMsFunction());
+    Assert.assertEquals("pr", scan10.getMsFunction());
     Assert.assertEquals(5.115f, scan10.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.NEGATIVE, scan10.getPolarity());
     mzBuffer = scan10.getMzValues();
@@ -281,14 +274,13 @@ public class ThermoRawImportMethodTest {
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "cnl.raw");
     Assert.assertTrue(inputFile.canRead());
-    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile, dataStore);
+    ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -302,8 +294,8 @@ public class ThermoRawImportMethodTest {
     MsScan scan10 = scans.get(9);
     Assert.assertEquals(new Integer(10), scan10.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan10.getSpectrumType());
-    Assert.assertEquals(new Integer(2), scan10.getMsFunction().getMsLevel());
-    Assert.assertEquals("cnl", scan10.getMsFunction().getName());
+    Assert.assertEquals(new Integer(2), scan10.getMsLevel());
+    Assert.assertEquals("cnl", scan10.getMsFunction());
     Assert.assertEquals(5.045f, scan10.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan10.getPolarity());
     mzBuffer = scan10.getMzValues();

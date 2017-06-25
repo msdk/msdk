@@ -27,8 +27,6 @@ import io.github.msdk.datamodel.rawdata.MsScan;
  * at least an m/z value and a retention time. In addition, it can contain more detailed data about
  * the peak, such as S/N ratio or raw data points that constitute the feature (Chromatogram).
  *
- * @author plusik
- * @version $Id: $Id
  * @since 0.0.8
  */
 public interface Feature {

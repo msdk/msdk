@@ -26,10 +26,29 @@ import com.google.common.collect.Range;
  * ChromatogramUtil class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class ChromatogramUtil {
+
+  /**
+   * Returns the RT range
+   *
+   * @return a {@link com.google.common.collect.Range} object.
+   */
+  @Nullable
+  public static Range<Float> getRtRange(@Nonnull float rtValues[], @Nonnull Integer size) {
+
+    // Parameter check
+    Preconditions.checkNotNull(rtValues);
+    Preconditions.checkNotNull(size);
+    Preconditions.checkPositionIndex(size, rtValues.length);
+
+    if (size == 0)
+      return null;
+
+    float min = rtValues[0];
+    float max = rtValues[size - 1];
+    return Range.closed(min, max);
+  }
 
   /**
    * Returns the range of Float of all data points in this feature.
@@ -423,7 +442,6 @@ public class ChromatogramUtil {
       return null;
 
     double rtValues3[] = findRTs(height * 0.1, rt, rtValues, intensityValues, size);
-    System.out.println("rtval3 " + Arrays.toString(rtValues3));
 
     Double af = (rtValues3[1] - rt) / (rt - rtValues3[0]);
     if (af < 0) {

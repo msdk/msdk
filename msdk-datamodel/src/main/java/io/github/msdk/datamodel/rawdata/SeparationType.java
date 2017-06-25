@@ -22,8 +22,6 @@ package io.github.msdk.datamodel.rawdata;
  * Here, the chromatograph would provide the retention time of each acquired data point as
  * additional information.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public enum SeparationType {
 

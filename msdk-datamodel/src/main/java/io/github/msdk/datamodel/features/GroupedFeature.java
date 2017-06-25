@@ -23,8 +23,6 @@ import javax.annotation.Nullable;
  * example is several isotopes grouped together, or several adducts of the same ion (M+H, M+Na,
  * etc).
  *
- * @author plusik
- * @version $Id: $Id
  * @since 0.0.8
  */
 public interface GroupedFeature extends Feature {

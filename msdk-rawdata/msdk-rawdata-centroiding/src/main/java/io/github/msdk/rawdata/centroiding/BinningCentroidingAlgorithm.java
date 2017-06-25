@@ -15,7 +15,6 @@ package io.github.msdk.rawdata.centroiding;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
@@ -25,12 +24,9 @@ import io.github.msdk.util.MsScanUtil;
  * BinningCentroidingAlgorithm class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class BinningCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
-  private final @Nonnull DataPointStore dataPointStore;
   private final @Nonnull Double binSize;
 
   private SimpleMsScan newScan;
@@ -48,9 +44,7 @@ public class BinningCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
    * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    * @param binSize a {@link java.lang.Double} object.
    */
-  public BinningCentroidingAlgorithm(@Nonnull DataPointStore dataPointStore,
-      @Nonnull Double binSize) {
-    this.dataPointStore = dataPointStore;
+  public BinningCentroidingAlgorithm(@Nonnull Double binSize) {
     this.binSize = binSize;
   }
 
@@ -59,7 +53,7 @@ public class BinningCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
   public @Nonnull MsScan centroidScan(@Nonnull MsScan inputScan) {
 
     // Copy all scan properties
-    this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
+    this.newScan = MsScanUtil.clone(inputScan, false);
 
     // Load data points
     mzBuffer = inputScan.getMzValues();

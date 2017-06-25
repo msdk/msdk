@@ -26,7 +26,6 @@ import com.google.common.base.Strings;
 import com.google.common.io.Files;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.ArrayUtil;
@@ -39,8 +38,6 @@ import io.github.msdk.util.DataPointSorter.SortingProperty;
  * MspImportAlgorithm class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MspImportAlgorithm {
 
@@ -86,7 +83,7 @@ public class MspImportAlgorithm {
 
 
     // Create a new MSP spectrum
-    MspSpectrum spectrum = new MspSpectrum(DataPointStoreFactory.getMemoryDataStore());
+    MspSpectrum spectrum = new MspSpectrum();
 
     // Number of peaks, must be specified in the MSP file
     Integer numPeaks = null;

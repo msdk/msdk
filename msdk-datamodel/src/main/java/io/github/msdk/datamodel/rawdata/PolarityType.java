@@ -16,8 +16,6 @@ package io.github.msdk.datamodel.rawdata;
 /**
  * Represents the polarity of ionization.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public enum PolarityType {
 

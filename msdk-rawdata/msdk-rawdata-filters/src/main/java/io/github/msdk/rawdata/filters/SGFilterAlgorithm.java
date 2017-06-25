@@ -17,7 +17,6 @@ import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
@@ -27,8 +26,6 @@ import io.github.msdk.util.MsScanUtil;
  * SGFilterAlgorithm class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class SGFilterAlgorithm implements MSDKFilteringAlgorithm {
 
@@ -74,7 +71,6 @@ public class SGFilterAlgorithm implements MSDKFilteringAlgorithm {
   }
 
   private final int sgDataPoints;
-  private final @Nonnull DataPointStore store;
 
   // Data structures
   private @Nonnull double mzBuffer[] = new double[10000];
@@ -87,11 +83,9 @@ public class SGFilterAlgorithm implements MSDKFilteringAlgorithm {
    * </p>
    *
    * @param sgDataPoints a int.
-   * @param store a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public SGFilterAlgorithm(int sgDataPoints, @Nonnull DataPointStore store) {
+  public SGFilterAlgorithm(int sgDataPoints) {
     this.sgDataPoints = sgDataPoints;
-    this.store = store;
   }
 
   /** {@inheritDoc} */
@@ -99,7 +93,7 @@ public class SGFilterAlgorithm implements MSDKFilteringAlgorithm {
   public MsScan performFilter(@Nonnull MsScan scan) {
 
     if (!Avalues.containsKey(sgDataPoints) || !Hvalues.containsKey(sgDataPoints)) {
-      return MsScanUtil.clone(store, scan, true);
+      return MsScanUtil.clone(scan, true);
     }
 
     int[] aVals = Avalues.get(sgDataPoints);
@@ -143,7 +137,7 @@ public class SGFilterAlgorithm implements MSDKFilteringAlgorithm {
     }
 
     // Return a new scan with the new data points
-    SimpleMsScan result = MsScanUtil.clone(store, scan, false);
+    SimpleMsScan result = MsScanUtil.clone(scan, false);
     result.setDataPoints(mzBuffer, intensityBuffer, newNumOfDataPoints);
 
     return result;

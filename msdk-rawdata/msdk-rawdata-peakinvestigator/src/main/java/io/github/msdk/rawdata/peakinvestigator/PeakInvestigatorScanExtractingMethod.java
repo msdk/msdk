@@ -49,8 +49,6 @@ import io.github.msdk.util.ArrayUtil;
  * {@link io.github.msdk.rawdata.peakinvestigator.PeakInvestigatorMsSpectrum}, which decorates a
  * SimpleMsSpectrum.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class PeakInvestigatorScanExtractingMethod implements MSDKMethod<List<MsSpectrum>> {
 

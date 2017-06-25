@@ -24,8 +24,6 @@ import io.github.msdk.datamodel.rawdata.ActivationType;
 /**
  * Implementation of FragmentationInfo
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class SimpleActivationInfo implements ActivationInfo {
 

@@ -68,7 +68,7 @@ public class MzMLFileExportMethodTest {
     MsScan scan2 = scans.get(1);
     Assert.assertEquals(new Integer(2), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.PROFILE, scan2.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan2.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan2.getMsLevel());
     Assert.assertEquals(0.474f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
     mzBuffer = scan2.getMzValues();
@@ -82,7 +82,7 @@ public class MzMLFileExportMethodTest {
     MsScan scan5 = scans.get(4);
     Assert.assertEquals(new Integer(5), scan5.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan5.getSpectrumType());
-    Assert.assertEquals(new Integer(2), scan5.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(2), scan5.getMsLevel());
     Assert.assertEquals(2.094f, scan5.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan5.getPolarity());
     mzBuffer = scan5.getMzValues();

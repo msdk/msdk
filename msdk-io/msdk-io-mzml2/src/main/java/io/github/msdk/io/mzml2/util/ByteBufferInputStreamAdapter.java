@@ -7,8 +7,6 @@ import it.unimi.dsi.io.ByteBufferInputStream;
 /**
  * <p>ByteBufferInputStreamAdapter class.</p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class ByteBufferInputStreamAdapter extends InputStream {
   private long remainingBytes;

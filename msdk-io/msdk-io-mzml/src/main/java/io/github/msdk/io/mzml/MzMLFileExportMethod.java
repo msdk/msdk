@@ -52,8 +52,6 @@ import uk.ac.ebi.jmzml.xml.io.MzMLInstantMarshaller;
 /**
  * This class exports RawDataFile objects into mzML data format using the jmzml library.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MzMLFileExportMethod implements MSDKMethod<Void> {
 
@@ -190,8 +188,8 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
           spectrum.getCvParam().add(MzMLCV.profileCvParam);
 
         // ms level CV param
-        if (scan.getMsFunction().getMsLevel() != null) {
-          Integer msLevel = scan.getMsFunction().getMsLevel();
+        if (scan.getMsLevel() != null) {
+          Integer msLevel = scan.getMsLevel();
           CVParam msLevelCvParam = new CVParam();
           msLevelCvParam.setAccession(MzMLCV.cvMSLevel);
           msLevelCvParam.setName("ms level");

@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Strings;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleIonType;
 import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
@@ -31,8 +30,6 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 /**
  * IonType utilities
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class IonTypeUtil {
 

@@ -21,13 +21,10 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.nativeformats.WatersRawImportMethod;
 import io.github.msdk.util.MsSpectrumUtil;
 
 public class WatersRawImportMethodTest {
@@ -42,14 +39,13 @@ public class WatersRawImportMethodTest {
     assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[];
     float intensityBuffer[];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "20150813-63.raw");
     Assert.assertTrue(inputFile.canRead());
-    WatersRawImportMethod importer = new WatersRawImportMethod(inputFile, dataStore);
+    WatersRawImportMethod importer = new WatersRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -63,7 +59,7 @@ public class WatersRawImportMethodTest {
     MsScan scan1 = scans.get(0);
     Assert.assertEquals(new Integer(1), scan1.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan1.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan1.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan1.getMsLevel());
     Assert.assertEquals(0.226f, scan1.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan1.getPolarity());
     mzBuffer = scan1.getMzValues();
@@ -77,7 +73,7 @@ public class WatersRawImportMethodTest {
     MsScan scan3000 = scans.get(2999);
     Assert.assertEquals(new Integer(3000), scan3000.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan3000.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan3000.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan3000.getMsLevel());
     Assert.assertEquals(636.228f, scan3000.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.NEGATIVE, scan3000.getPolarity());
     mzBuffer = scan3000.getMzValues();

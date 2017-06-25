@@ -25,8 +25,6 @@ import io.github.msdk.util.tolerances.MzTolerance;
  * This class is used provide m/z-dependent mass tolerances from PeakInvestigator by decorating an
  * existing instance of MsSpectrum.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class PeakInvestigatorMsSpectrum implements MsSpectrum {
 
@@ -83,14 +81,14 @@ public class PeakInvestigatorMsSpectrum implements MsSpectrum {
 
   /** {@inheritDoc} */
   @Override
-  public double[] getMzValues() {
-    return spectrum.getMzValues();
+  public double[] getMzValues(double array[]) {
+    return spectrum.getMzValues(array);
   }
 
   /** {@inheritDoc} */
   @Override
-  public float[] getIntensityValues() {
-    return spectrum.getIntensityValues();
+  public float[] getIntensityValues(float array[]) {
+    return spectrum.getIntensityValues(array);
   }
 
   /** {@inheritDoc} */

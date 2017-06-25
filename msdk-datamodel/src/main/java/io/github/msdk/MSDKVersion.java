@@ -21,8 +21,6 @@ import javax.annotation.Nonnull;
 /**
  * MSDK version
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MSDKVersion {
 
