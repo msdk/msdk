@@ -20,8 +20,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
@@ -36,13 +34,10 @@ public class MzDataFileImportMethodTest {
   @Test
   public void testMzDataFile() throws MSDKException {
 
-    // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
-
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "test.mzData");
     Assert.assertTrue(inputFile.canRead());
-    MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile, dataStore);
+    MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -55,7 +50,7 @@ public class MzDataFileImportMethodTest {
     // 1st scan, #1
     MsScan scan1 = scans.get(0);
     Assert.assertEquals(new Integer(1), scan1.getScanNumber());
-    Assert.assertEquals(new Integer(1), scan1.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan1.getMsLevel());
     Float rt = scan1.getRetentionTime();
     Assert.assertNull(rt);
     Assert.assertEquals(PolarityType.UNKNOWN, scan1.getPolarity());
@@ -70,14 +65,13 @@ public class MzDataFileImportMethodTest {
   public void testMM14() throws MSDKException {
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "MM14.mzdata");
     Assert.assertTrue(inputFile.canRead());
-    MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile, dataStore);
+    MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -91,7 +85,7 @@ public class MzDataFileImportMethodTest {
     MsScan scan1 = scans.get(0);
     Assert.assertEquals(new Integer(1), scan1.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan1.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan1.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan1.getMsLevel());
     Assert.assertEquals(270.336f, scan1.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan1.getPolarity());
     mzBuffer = scan1.getMzValues();
@@ -105,7 +99,7 @@ public class MzDataFileImportMethodTest {
     MsScan scan100 = scans.get(99);
     Assert.assertEquals(new Integer(100), scan100.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan100.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan100.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan100.getMsLevel());
     Assert.assertEquals(303.642f, scan100.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan100.getPolarity());
     mzBuffer = scan100.getMzValues();
@@ -124,14 +118,13 @@ public class MzDataFileImportMethodTest {
   public void testMSMSposChallenge0() throws MSDKException {
 
     // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "MSMSpos_Challenge0.mzData");
     Assert.assertTrue(inputFile.canRead());
-    MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile, dataStore);
+    MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -145,7 +138,7 @@ public class MzDataFileImportMethodTest {
     MsScan scan1 = scans.get(0);
     Assert.assertEquals(new Integer(918), scan1.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan1.getSpectrumType());
-    Assert.assertEquals(new Integer(2), scan1.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(2), scan1.getMsLevel());
     Assert.assertEquals(309.350f, scan1.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan1.getPolarity());
     mzBuffer = scan1.getMzValues();

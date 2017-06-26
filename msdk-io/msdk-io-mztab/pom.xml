@@ -9,7 +9,7 @@
     <artifactId>msdk-io-mztab</artifactId>
 
     <properties>
-        <jmztab.version>3.0.3</jmztab.version>
+        <jmztab.version>3.0.7</jmztab.version>
     </properties>
 
     <repositories>

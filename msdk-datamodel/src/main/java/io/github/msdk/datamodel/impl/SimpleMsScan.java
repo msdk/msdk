@@ -23,10 +23,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
@@ -36,15 +34,14 @@ import io.github.msdk.util.tolerances.MzTolerance;
 /**
  * Simple implementation of the Scan interface.
  *
- * @author plusik
- * @version $Id: $Id
  */
-public class SimpleMsScan extends AbstractSpectrum implements MsScan {
+public class SimpleMsScan extends AbstractMsSpectrum implements MsScan {
 
   private @Nullable RawDataFile dataFile;
   private @Nonnull Integer scanNumber;
   private @Nullable String scanDefinition;
-  private @Nonnull MsFunction msFunction;
+  private @Nullable String msFunction;
+  private @Nonnull Integer msLevel = 1;
   private @Nonnull PolarityType polarity = PolarityType.UNKNOWN;
   private @Nonnull MsScanType msScanType = MsScanType.UNKNOWN;
   private @Nullable MzTolerance mzTolerance;
@@ -63,11 +60,21 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
    * @param scanNumber a {@link java.lang.Integer} object.
    * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
    */
-  public SimpleMsScan(@Nonnull DataPointStore dataPointStore, @Nonnull Integer scanNumber,
-      @Nonnull MsFunction msFunction) {
-    super(dataPointStore);
+  public SimpleMsScan(@Nonnull Integer scanNumber) {
+    this(scanNumber, null);
+  }
+
+  /**
+   * <p>
+   * Constructor for SimpleMsScan.
+   * </p>
+   *
+   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
+   * @param scanNumber a {@link java.lang.Integer} object.
+   * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
+   */
+  public SimpleMsScan(@Nonnull Integer scanNumber, String msFunction) {
     Preconditions.checkNotNull(scanNumber);
-    Preconditions.checkNotNull(msFunction);
     this.scanNumber = scanNumber;
     this.msFunction = msFunction;
   }
@@ -127,8 +134,8 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
 
   /** {@inheritDoc} */
   @Override
-  @Nonnull
-  public MsFunction getMsFunction() {
+  @Nullable
+  public String getMsFunction() {
     return msFunction;
   }
 
@@ -137,9 +144,20 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
    *
    * @param newFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
    */
-  public void setMsFunction(@Nonnull MsFunction newFunction) {
-    Preconditions.checkNotNull(newFunction);
+  public void setMsFunction(@Nullable String newFunction) {
     this.msFunction = newFunction;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @Nullable
+  public Integer getMsLevel() {
+    return msLevel;
+  }
+
+  /** {@inheritDoc} */
+  public void setMsLevel(@Nonnull Integer msLevel) {
+    this.msLevel = msLevel;
   }
 
   /** {@inheritDoc} */
@@ -248,19 +266,4 @@ public class SimpleMsScan extends AbstractSpectrum implements MsScan {
     return isolations;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public String toString() {
-    StringBuilder buf = new StringBuilder();
-    buf.append("Scan ");
-    final RawDataFile rawDataFile2 = dataFile;
-    if (rawDataFile2 != null && rawDataFile2.getOriginalFile() != null) {
-      buf.append(rawDataFile2.getOriginalFilename());
-      buf.append(" ");
-    }
-    buf.append(msFunction.getName());
-    buf.append(" #");
-    buf.append(getScanNumber());
-    return buf.toString();
-  }
 }

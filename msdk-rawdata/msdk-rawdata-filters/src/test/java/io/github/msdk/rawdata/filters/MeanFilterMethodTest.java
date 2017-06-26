@@ -20,8 +20,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -43,12 +41,9 @@ public class MeanFilterMethodTest {
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
-    // Create the data needed by the Mean Filter Method
-    DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
-
     // Execute the filter
-    MeanFilterAlgorithm meanFilter = new MeanFilterAlgorithm(3.5, store);
-    MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, meanFilter, store);
+    MeanFilterAlgorithm meanFilter = new MeanFilterAlgorithm(3.5);
+    MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, meanFilter);
     RawDataFile newRawFile = filterMethod.execute();
 
     Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
@@ -65,8 +60,8 @@ public class MeanFilterMethodTest {
 
     // Test windowLength == 0 -> the resulting scan should be the equal to
     // the input scan
-    meanFilter = new MeanFilterAlgorithm(0.0, store);
-    filterMethod = new MSDKFilteringMethod(rawFile, meanFilter, store);
+    meanFilter = new MeanFilterAlgorithm(0.0);
+    filterMethod = new MSDKFilteringMethod(rawFile, meanFilter);
     newRawFile = filterMethod.execute();
 
     Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);
@@ -105,8 +100,8 @@ public class MeanFilterMethodTest {
 
     // Test windowLength == 100000 -> all the dataPoints should have the
     // same intensity
-    meanFilter = new MeanFilterAlgorithm(10000.0, store);
-    filterMethod = new MSDKFilteringMethod(rawFile, meanFilter, store);
+    meanFilter = new MeanFilterAlgorithm(10000.0);
+    filterMethod = new MSDKFilteringMethod(rawFile, meanFilter);
     newRawFile = filterMethod.execute();
 
     Assert.assertEquals(1.0, filterMethod.getFinishedPercentage(), 0.0001);

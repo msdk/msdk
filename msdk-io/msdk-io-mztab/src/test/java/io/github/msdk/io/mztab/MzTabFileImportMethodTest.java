@@ -25,8 +25,6 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
@@ -40,13 +38,10 @@ public class MzTabFileImportMethodTest {
   @Test
   public void testMzTab_Sample() throws MSDKException {
 
-    // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
-
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "Sample-2.3.mzTab");
     Assert.assertTrue(inputFile.canRead());
-    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile, dataStore);
+    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable = importer.execute();
     Assert.assertNotNull(featureTable);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -114,13 +109,10 @@ public class MzTabFileImportMethodTest {
   @Test
   public void testMzTab_Lipidomics() throws MSDKException {
 
-    // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
-
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "lipidomics-HFD-LD-study-TG.mzTab");
     Assert.assertTrue(inputFile.canRead());
-    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile, dataStore);
+    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable = importer.execute();
     Assert.assertNotNull(featureTable);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -135,7 +127,7 @@ public class MzTabFileImportMethodTest {
     // Import the file
     inputFile = new File(TEST_DATA_PATH + "lipidomics-HFD-LD-study-PL-DG-SM.mzTab");
     Assert.assertTrue(inputFile.canRead());
-    importer = new MzTabFileImportMethod(inputFile, dataStore);
+    importer = new MzTabFileImportMethod(inputFile);
     featureTable = importer.execute();
     Assert.assertNotNull(featureTable);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);

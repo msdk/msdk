@@ -18,8 +18,6 @@ package io.github.msdk.io.mgf;
  * MgfImportAlgorithm class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MgfImportAlgorithm {
 

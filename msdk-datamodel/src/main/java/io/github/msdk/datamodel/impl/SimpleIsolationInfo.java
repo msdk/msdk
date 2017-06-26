@@ -25,8 +25,6 @@ import io.github.msdk.datamodel.rawdata.IsolationInfo;
 /**
  * Implementation of IsolationInfo
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class SimpleIsolationInfo implements IsolationInfo {
 

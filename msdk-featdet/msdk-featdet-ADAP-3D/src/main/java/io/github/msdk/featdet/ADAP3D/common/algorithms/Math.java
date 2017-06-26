@@ -27,7 +27,6 @@ import java.util.TreeSet;
  *
  * @author aleksandrsmirnov
  * Modified by Dharak Shah to include in MSDK
- * @version $Id: $Id
  */
 public class Math {
     

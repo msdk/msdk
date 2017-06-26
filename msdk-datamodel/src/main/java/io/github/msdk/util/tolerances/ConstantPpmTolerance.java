@@ -22,8 +22,6 @@ import com.google.common.collect.Range;
  * ConstantPpmTolerance class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class ConstantPpmTolerance implements MzTolerance {
 

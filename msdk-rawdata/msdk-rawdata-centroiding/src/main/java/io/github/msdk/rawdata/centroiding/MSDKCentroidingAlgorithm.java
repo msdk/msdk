@@ -22,8 +22,6 @@ import io.github.msdk.datamodel.rawdata.MsScan;
  * MSDKCentroidingAlgorithm interface.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public interface MSDKCentroidingAlgorithm {
 

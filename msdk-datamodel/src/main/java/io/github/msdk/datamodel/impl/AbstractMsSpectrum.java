@@ -20,44 +20,26 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
- * Simple implementation of the MassSpectrum interface, which stores its data in a data point store.
+ * Simple implementation of the MsSpectrum interface
  *
- * @author plusik
- * @version $Id: $Id
  */
-public abstract class AbstractSpectrum implements MsSpectrum {
+public abstract class AbstractMsSpectrum implements MsSpectrum {
 
-  private final @Nonnull DataPointStore dataPointStore;
+  private @Nonnull double mzValues[];
+  private @Nonnull float intensityValues[];
 
-  private Object dataStoreMzId = null, dataStoreIntensityId = null;
-
-  private @Nonnull Integer numOfDataPoints;
+  private @Nonnull Integer numOfDataPoints = 0;
   private @Nullable Range<Double> mzRange;
-  private @Nonnull Float totalIonCurrent;
+  private @Nonnull Float totalIonCurrent = 0f;
 
-  private @Nonnull MsSpectrumType spectrumType;
-
-  /**
-   * <p>
-   * Constructor for AbstractSpectrum.
-   * </p>
-   *
-   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
-   */
-  public AbstractSpectrum(@Nonnull DataPointStore dataPointStore) {
-    Preconditions.checkNotNull(dataPointStore);
-    this.dataPointStore = dataPointStore;
-    totalIonCurrent = 0f;
-    numOfDataPoints = 0;
-    spectrumType = MsSpectrumType.CENTROIDED;
-  }
+  private @Nonnull MsSpectrumType spectrumType = MsSpectrumType.CENTROIDED;
+  private @Nullable MzTolerance mzTolerance;
 
   /** {@inheritDoc} */
   @Override
@@ -65,22 +47,31 @@ public abstract class AbstractSpectrum implements MsSpectrum {
     return numOfDataPoints;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param array an array of float.
+   * @return an array of float.
+   */
   @Override
-  public @Nonnull double[] getMzValues() {
-    double array[] = new double[numOfDataPoints];
-    dataPointStore.loadData(dataStoreMzId, array);
+  public @Nonnull double[] getMzValues(@Nullable double[] array) {
+    if ((array == null) || (array.length < numOfDataPoints))
+      array = new double[numOfDataPoints];
+    if (mzValues != null)
+      System.arraycopy(mzValues, 0, array, 0, numOfDataPoints);
     return array;
   }
 
-
   /** {@inheritDoc} */
   @Override
-  public @Nonnull float[] getIntensityValues() {
-    float[] array = new float[numOfDataPoints];
-    dataPointStore.loadData(dataStoreIntensityId, array);
+  public @Nonnull float[] getIntensityValues(@Nullable float array[]) {
+    if ((array == null) || (array.length < numOfDataPoints))
+      array = new float[numOfDataPoints];
+    if (intensityValues != null)
+      System.arraycopy(intensityValues, 0, array, 0, numOfDataPoints);
     return array;
   }
+
 
   /**
    * {@inheritDoc}
@@ -97,17 +88,25 @@ public abstract class AbstractSpectrum implements MsSpectrum {
       if (mzValues[i] > mzValues[i + 1])
         throw new MSDKRuntimeException("m/z values must be sorted in ascending order");
     }
+    Preconditions.checkNotNull(mzValues);
+    Preconditions.checkNotNull(intensityValues);
 
-    if (dataStoreMzId != null)
-      dataPointStore.removeData(dataStoreMzId);
-    if (dataStoreIntensityId != null)
-      dataPointStore.removeData(dataStoreIntensityId);
+    // Make a copy of the data, instead of saving a reference to the provided array
+    if ((this.mzValues == null) || (this.mzValues.length < size))
+      this.mzValues = new double[size];
+    System.arraycopy(mzValues, 0, this.mzValues, 0, size);
 
-    dataStoreMzId = dataPointStore.storeData(mzValues, size);
-    dataStoreIntensityId = dataPointStore.storeData(intensityValues, size);
+    if ((this.intensityValues == null) || (this.intensityValues.length < size))
+      this.intensityValues = new float[size];
+    System.arraycopy(intensityValues, 0, this.intensityValues, 0, size);
+
+    // Save the size of the arrays
     this.numOfDataPoints = size;
+
+    // Calculate values
     this.mzRange = MsSpectrumUtil.getMzRange(mzValues, size);
     this.totalIonCurrent = MsSpectrumUtil.getTIC(intensityValues, size);
+
   }
 
   /** {@inheritDoc} */
@@ -147,7 +146,18 @@ public abstract class AbstractSpectrum implements MsSpectrum {
   /** {@inheritDoc} */
   @Override
   public MzTolerance getMzTolerance() {
-    // By default, no m/z tolerance is defined
-    return null;
+    return mzTolerance;
   }
+
+  /**
+   * <p>
+   * Setter for the field <code>mzTolerance</code>.
+   * </p>
+   *
+   * @param mzTolerance a {@link io.github.msdk.util.tolerances.MzTolerance} object.
+   */
+  public void setMzTolerance(MzTolerance mzTolerance) {
+    this.mzTolerance = mzTolerance;
+  }
+
 }

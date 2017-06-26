@@ -22,8 +22,6 @@ import com.google.common.collect.Range;
  * This class represents m/z tolerance. Tolerance is set using absolute (m/z) and relative (ppm)
  * values. The tolerance range is calculated as the maximum of the absolute and relative values.
  *
- * @author plusik
- * @version $Id: $Id
  */
 @Immutable
 public class MaximumMzTolerance implements MzTolerance {

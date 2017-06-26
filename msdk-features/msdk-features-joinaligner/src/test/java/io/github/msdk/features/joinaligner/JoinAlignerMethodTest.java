@@ -22,8 +22,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.msdk.util.tolerances.MaximumMzTolerance;
@@ -39,13 +37,10 @@ public class JoinAlignerMethodTest {
   @Ignore
   public void testMzTab_Samples() throws MSDKException {
 
-    // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
-
     // Import file 1
     File inputFile = new File(TEST_DATA_PATH + "Sample 1.mzTab");
     Assert.assertTrue(inputFile.canRead());
-    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile, dataStore);
+    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable1 = importer.execute();
     Assert.assertNotNull(featureTable1);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -55,7 +50,7 @@ public class JoinAlignerMethodTest {
     // Import file 2
     inputFile = new File(TEST_DATA_PATH + "Sample 2.mzTab");
     Assert.assertTrue(inputFile.canRead());
-    importer = new MzTabFileImportMethod(inputFile, dataStore);
+    importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable2 = importer.execute();
     Assert.assertNotNull(featureTable2);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -66,8 +61,7 @@ public class JoinAlignerMethodTest {
     RTTolerance rtTolerance = new RTTolerance(0.1f, false);
 
     // 1. Test alignment based on m/z and RT only
-    JoinAlignerMethod method =
-        new JoinAlignerMethod(featureTables, mzTolerance, rtTolerance);
+    JoinAlignerMethod method = new JoinAlignerMethod(featureTables, mzTolerance, rtTolerance);
     FeatureTable featureTable = method.execute();
     Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
     Assert.assertEquals(10, featureTable.getRows().size());;

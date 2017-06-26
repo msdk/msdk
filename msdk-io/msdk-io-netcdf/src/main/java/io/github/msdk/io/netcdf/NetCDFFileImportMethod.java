@@ -25,13 +25,10 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
@@ -48,8 +45,6 @@ import ucar.nc2.Variable;
  * NetCDFFileImportMethod class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
@@ -63,8 +58,6 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
   private float scanRetentionTimes[];
 
   private final @Nonnull File sourceFile;
-  private final @Nonnull FileType fileType = FileType.NETCDF;
-  private final @Nonnull DataPointStore dataStore;
 
   private SimpleRawDataFile newRawFile;
   private boolean canceled = false;
@@ -88,9 +81,8 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
    * @param sourceFile a {@link java.io.File} object.
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public NetCDFFileImportMethod(@Nonnull File sourceFile, @Nonnull DataPointStore dataStore) {
+  public NetCDFFileImportMethod(@Nonnull File sourceFile) {
     this.sourceFile = sourceFile;
-    this.dataStore = dataStore;
   }
 
   /** {@inheritDoc} */
@@ -105,7 +97,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     }
 
     String fileName = sourceFile.getName();
-    newRawFile = new SimpleRawDataFile(fileName, Optional.of(sourceFile), fileType, dataStore);
+    newRawFile = new SimpleRawDataFile(fileName, Optional.of(sourceFile), FileType.NETCDF);
 
     try {
 
@@ -331,13 +323,10 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
   private @Nonnull MsScan readNextScan(int scanIndex)
       throws IOException, MSDKException, InvalidRangeException {
 
-    // Set a simple MS function, always MS level 1 for netCDF data
-    final MsFunction msFunction = MSDKObjectBuilder.getMsFunction(1);
-
     // Scan number
     final Integer scanNumber = scanIndex + 1;
 
-    SimpleMsScan scan = new SimpleMsScan(dataStore, scanNumber, msFunction);
+    SimpleMsScan scan = new SimpleMsScan(scanNumber);
 
     // Extract and store the data points
     extractDataPoints(scanIndex);

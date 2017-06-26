@@ -26,7 +26,6 @@ import io.github.msdk.featdet.ADAP3D.common.algorithms.Math;
  *
  * @author aleksandrsmirnov
  * Modified by Dharak Shah to include in MSDK
- * @version $Id: $Id
  */
 public class Peak implements Cloneable, Serializable {
     private NavigableMap <Double, Double> chromatogram; // (retTime, intensity) - pairs

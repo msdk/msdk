@@ -20,7 +20,6 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
  *
  * @author owenmyers
  * Modified by Dharak Shah to include in MSDK
- * @version $Id: $Id
  */
 public class SignalToNoise {
     /**

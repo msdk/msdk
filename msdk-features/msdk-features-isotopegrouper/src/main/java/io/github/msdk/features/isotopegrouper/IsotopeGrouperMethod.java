@@ -18,10 +18,8 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleFeatureTable;
 import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
@@ -29,8 +27,6 @@ import io.github.msdk.util.tolerances.RTTolerance;
 /**
  * This class searches through a feature table and groups isotopes under a single feature.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class IsotopeGrouperMethod implements MSDKMethod<FeatureTable> {
 
@@ -44,7 +40,6 @@ public class IsotopeGrouperMethod implements MSDKMethod<FeatureTable> {
   private static final double isotopeDistance = 1.0033;
 
   private final @Nonnull FeatureTable featureTable;
-  private final @Nonnull DataPointStore dataStore;
   private final @Nonnull MzTolerance mzTolerance;
   private final @Nonnull RTTolerance rtTolerance;
   private final @Nonnull Integer maximumCharge;
@@ -67,11 +62,10 @@ public class IsotopeGrouperMethod implements MSDKMethod<FeatureTable> {
    * @param maximumCharge a {@link java.lang.Integer} object.
    * @param requireMonotonicShape a {@link java.lang.Boolean} object.
    */
-  public IsotopeGrouperMethod(@Nonnull FeatureTable featureTable, @Nonnull DataPointStore dataStore,
+  public IsotopeGrouperMethod(@Nonnull FeatureTable featureTable,
       @Nonnull MzTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
       @Nonnull Integer maximumCharge, @Nonnull Boolean requireMonotonicShape) {
     this.featureTable = featureTable;
-    this.dataStore = dataStore;
     this.mzTolerance = mzTolerance;
     this.rtTolerance = rtTolerance;
     this.maximumCharge = maximumCharge;

@@ -18,7 +18,6 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
@@ -28,13 +27,10 @@ import io.github.msdk.util.MsScanUtil;
  * MeanFilterAlgorithm class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
 
   private final double windowLength;
-  private final @Nonnull DataPointStore store;
 
   // Data structures
   private @Nonnull double mzBuffer[] = new double[10000];
@@ -49,9 +45,8 @@ public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
    * @param windowLength a double.
    * @param store a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public MeanFilterAlgorithm(double windowLength, @Nonnull DataPointStore store) {
+  public MeanFilterAlgorithm(double windowLength) {
     this.windowLength = windowLength;
-    this.store = store;
   }
 
   /** {@inheritDoc} */
@@ -111,7 +106,7 @@ public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
     }
 
     // Return a new scan with the new data points
-    SimpleMsScan result = MsScanUtil.clone(store, scan, false);
+    SimpleMsScan result = MsScanUtil.clone(scan, false);
     result.setDataPoints(mzBuffer, intensityBuffer, newNumOfDataPoints);
 
     return result;
