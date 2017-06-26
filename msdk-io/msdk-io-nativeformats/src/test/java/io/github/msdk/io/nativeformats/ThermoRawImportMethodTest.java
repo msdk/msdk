@@ -251,7 +251,7 @@ public class ThermoRawImportMethodTest {
     MsScan scan10 = scans.get(9);
     Assert.assertEquals(new Integer(10), scan10.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan10.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan10.getMsFunction());
+    Assert.assertEquals(new Integer(1), scan10.getMsLevel());
     Assert.assertEquals("pr", scan10.getMsFunction());
     Assert.assertEquals(5.115f, scan10.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.NEGATIVE, scan10.getPolarity());
