@@ -16,7 +16,7 @@ public class MzXMLParserBenchmark {
 
     MzXMLParserTest parserTest = new MzXMLParserTest();
     MzXMLFileImportMethodTest importTest = new MzXMLFileImportMethodTest();
-    
+
     long startTime1 = System.currentTimeMillis();
     for (int i = 0; i < numberOfRuns; i++)
       parserTest.testA10A2();

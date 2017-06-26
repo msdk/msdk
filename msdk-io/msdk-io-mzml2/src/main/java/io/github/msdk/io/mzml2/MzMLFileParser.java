@@ -129,6 +129,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
     this.referenceableParamGroupList = new ArrayList<>();
     this.canceled = false;
     this.progress = 0f;
+    this.lastLoggedProgress = 0;
     this.logger = LoggerFactory.getLogger(this.getClass());
     this.tags = new Stack<>();
   }
