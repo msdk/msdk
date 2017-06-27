@@ -8,16 +8,6 @@
 	</parent>
 	<artifactId>msdk-io-mzxml</artifactId>
 
-	<build>
-		<testResources>
-			<testResource>
-				<directory>
-					src/test/resources
-				</directory>
-			</testResource>
-		</testResources>
-	</build>
-
 	<dependencies>
 
 		<dependency>
