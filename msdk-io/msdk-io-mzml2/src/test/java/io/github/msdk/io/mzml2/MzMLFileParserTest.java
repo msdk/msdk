@@ -15,6 +15,10 @@
 package io.github.msdk.io.mzml2;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,12 +40,22 @@ public class MzMLFileParserTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
+  private Path getResourcePath(String resource) throws MSDKException {
+    final URL url = MzMLFileParserTest.class.getClassLoader().getResource(resource);
+    try {
+      return Paths.get(url.toURI()).toAbsolutePath();
+    } catch (URISyntaxException e) {
+      throw new MSDKException(e);
+    }
+  }
+
   @Test
   public void testFileWithUV() throws MSDKException {
 
     // Import the file
-    final String inputFileName = TEST_DATA_PATH + "mzML_with_UV.mzML";
-    final File inputFile = new File(inputFileName);
+    String file = "mzML_with_UV.mzML";
+    final Path path = getResourcePath(file);
+    final File inputFile = path.toFile();
     MzMLFileParser mzParser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = mzParser.execute();
     Assert.assertNotNull(rawFile);
@@ -75,8 +89,8 @@ public class MzMLFileParserTest {
     rawFile.dispose();
 
     // Import the file using the alternate constructor
-    Assert.assertNotNull(new File(inputFileName));
-    MzMLFileParser mzParser2 = new MzMLFileParser(inputFileName);
+    Assert.assertNotNull(new File(path.toString()));
+    MzMLFileParser mzParser2 = new MzMLFileParser(path);
     RawDataFile rawFile2 = mzParser2.execute();
     Assert.assertNotNull(rawFile2);
     Assert.assertEquals(1.0, mzParser2.getFinishedPercentage(), 0.0001);
@@ -114,7 +128,8 @@ public class MzMLFileParserTest {
     float intensityBuffer[] = new float[10000];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "5peptideFT.mzML");
+    String file = "5peptideFT.mzML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
@@ -166,7 +181,8 @@ public class MzMLFileParserTest {
     float intensityBuffer[];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "tiny.pwiz.idx.mzML");
+    String file = "tiny.pwiz.idx.mzML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
@@ -211,7 +227,8 @@ public class MzMLFileParserTest {
     float intensityBuffer[] = new float[10000];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "RawCentriodCidWithMsLevelInRefParamGroup.mzML");
+    String file = "RawCentriodCidWithMsLevelInRefParamGroup.mzML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
@@ -259,7 +276,8 @@ public class MzMLFileParserTest {
   public void testCompressedAndUncompressed() throws MSDKException {
 
     // Import the compressed file
-    File compressedFile = new File(TEST_DATA_PATH + "MzMLFile_7_compressed.mzML");
+    String fileCompressed = "MzMLFile_7_compressed.mzML";
+    File compressedFile = getResourcePath(fileCompressed).toFile();
     Assert.assertTrue(compressedFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(compressedFile);
     RawDataFile compressedRaw = parser.execute();
@@ -267,7 +285,8 @@ public class MzMLFileParserTest {
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
     // Import the uncompressed file
-    File unCompressedFile = new File(TEST_DATA_PATH + "MzMLFile_7_uncompressed.mzML");
+    String fileUncompressed = "MzMLFile_7_uncompressed.mzML";
+    File unCompressedFile = getResourcePath(fileUncompressed).toFile();
     Assert.assertTrue(unCompressedFile.canRead());
     parser = new MzMLFileParser(unCompressedFile);
     RawDataFile uncompressedRaw = parser.execute();
@@ -304,7 +323,8 @@ public class MzMLFileParserTest {
   public void testSRM() throws MSDKException {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "SRM.mzML");
+    String file = "SRM.mzML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
@@ -344,7 +364,8 @@ public class MzMLFileParserTest {
     float intensityBuffer[] = new float[10000];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "emptyScan.mzML");
+    String file = "emptyScan.mzML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
@@ -387,7 +408,8 @@ public class MzMLFileParserTest {
 
     // Try importing an invalid (truncated file).
     // Import should throw an MSDKException.
-    File inputFile = new File(TEST_DATA_PATH + "truncated.mzML");
+    String file = "truncated.mzML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     parser.execute();
@@ -398,7 +420,8 @@ public class MzMLFileParserTest {
   public void testZlibAndNumpressCompression() throws MSDKException {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "MzValues_Zlib+Numpress.mzML");
+    String file = "MzValues_Zlib+Numpress.mzML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
