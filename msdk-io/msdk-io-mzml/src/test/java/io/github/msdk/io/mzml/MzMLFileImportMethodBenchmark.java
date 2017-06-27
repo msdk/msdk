@@ -54,7 +54,7 @@ public class MzMLFileImportMethodBenchmark {
 
     long startTime8 = System.currentTimeMillis();
     for (int i = 0; i < numberOfRuns; i++)
-      importerTest.testZlibAndNumpressCompression();;
+      importerTest.testZlibAndNumpressCompression();
     long endTime8 = System.currentTimeMillis();
 
     logger.info("Average run time with MzMLFileParser File 1: "

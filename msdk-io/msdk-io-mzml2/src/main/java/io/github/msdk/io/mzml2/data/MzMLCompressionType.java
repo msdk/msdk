@@ -29,7 +29,7 @@ public enum MzMLCompressionType {
 
   private String accession;
 
-  private MzMLCompressionType(String accession) {
+  MzMLCompressionType(String accession) {
     this.accession = accession;
   }
 

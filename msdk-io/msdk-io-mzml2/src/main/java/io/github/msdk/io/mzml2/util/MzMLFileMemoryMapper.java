@@ -28,7 +28,6 @@ public abstract class MzMLFileMemoryMapper {
    * @param mzMLFile a {@link java.io.File} object.
    * @return a {@link it.unimi.dsi.io.ByteBufferInputStream} object.
    * @throws java.io.IOException if any.
-   * @throws io.github.msdk.MSDKException if any.
    */
   public static ByteBufferInputStream mapToMemory(File mzMLFile) throws IOException {
 

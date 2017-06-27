@@ -1,10 +1,7 @@
 package io.github.msdk.io.mzml2.util;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 import io.github.msdk.MSDKRuntimeException;
-import java.util.Iterator;
+import java.util.ArrayDeque;
 import javolution.text.CharArray;
 
 /**
@@ -62,9 +59,8 @@ public class TagTracker {
   public boolean inside(CharSequence tag) {
     if (tag == null)
       return false;
-    final Iterator<CharArray> it = stack.iterator();
-    while (it.hasNext()) {
-      if (it.next().contentEquals(tag)) {
+    for (CharArray aStack : stack) {
+      if (aStack.contentEquals(tag)) {
         return true;
       }
     }

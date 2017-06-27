@@ -76,9 +76,9 @@ public class MzMLFileParserTest {
     Assert.assertEquals(new Integer(2114), spectrum.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, spectrum.getSpectrumType());
     Assert.assertEquals(new Float(9.939699e06), spectrum.getTIC(), 10);
-    Assert.assertEquals(new Double(100.175651550293), spectrum.getMzRange().lowerEndpoint(),
+    Assert.assertEquals(100.175651550293, spectrum.getMzRange().lowerEndpoint(),
         0.000001);
-    Assert.assertEquals(new Double(999.832214355469), spectrum.getMzRange().upperEndpoint(),
+    Assert.assertEquals(999.832214355469, spectrum.getMzRange().upperEndpoint(),
         0.000001);
     Assert.assertEquals(509.6600036621094, spectrum.getMzValues()[619], 0.0001);
     Assert.assertEquals("+ c ESI Q1MS [100.000-1000.000]", spectrum.getScanDefinition());
@@ -110,9 +110,9 @@ public class MzMLFileParserTest {
     Assert.assertEquals(new Integer(2117), spectrum2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, spectrum2.getSpectrumType());
     Assert.assertEquals(new Float(43900.85546875), spectrum2.getTIC(), 10);
-    Assert.assertEquals(new Double(100.300285339355), spectrum2.getMzRange().lowerEndpoint(),
+    Assert.assertEquals(100.300285339355, spectrum2.getMzRange().lowerEndpoint(),
         0.000001);
-    Assert.assertEquals(new Double(999.323547363281), spectrum2.getMzRange().upperEndpoint(),
+    Assert.assertEquals(999.323547363281, spectrum2.getMzRange().upperEndpoint(),
         0.000001);
     Assert.assertEquals("- c ESI Q1MS [100.000-1000.000]", spectrum2.getScanDefinition());
     Assert.assertEquals(new Integer(1), spectrum2.getMsLevel());
@@ -446,8 +446,8 @@ public class MzMLFileParserTest {
         MsSpectrumUtil.getMaxIntensity(scan4.getIntensityValues(), scan4.getNumberOfDataPoints());
     Assert.assertEquals(8746.9599f, scan2maxInt, 0.1f);
     Assert.assertEquals(new Float(58989.76953125), scan4.getTIC(), 10);
-    Assert.assertEquals(new Double(100.317253112793), scan4.getMzRange().lowerEndpoint(), 0.000001);
-    Assert.assertEquals(new Double(999.715515136719), scan4.getMzRange().upperEndpoint(), 0.000001);
+    Assert.assertEquals(100.317253112793, scan4.getMzRange().lowerEndpoint(), 0.000001);
+    Assert.assertEquals(999.715515136719, scan4.getMzRange().upperEndpoint(), 0.000001);
     Assert.assertEquals("- c ESI Q1MS [100.000-1000.000]", scan4.getScanDefinition());
 
     // Test isolation data

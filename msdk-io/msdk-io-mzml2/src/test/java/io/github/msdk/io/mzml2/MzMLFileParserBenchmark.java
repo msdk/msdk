@@ -55,7 +55,7 @@ public class MzMLFileParserBenchmark {
 
     long startTime8 = System.currentTimeMillis();
     for (int i = 0; i < numberOfRuns; i++)
-      parserTest.testZlibAndNumpressCompression();;
+      parserTest.testZlibAndNumpressCompression();
     long endTime8 = System.currentTimeMillis();
 
     logger.info("Average run time with MzMLFileParser File 1: "

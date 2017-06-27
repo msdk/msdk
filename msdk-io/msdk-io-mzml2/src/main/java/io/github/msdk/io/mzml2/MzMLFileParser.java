@@ -13,25 +13,8 @@
 
 package io.github.msdk.io.mzml2;
 
-import io.github.msdk.io.mzml2.util.TagTracker;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Nonnull;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -47,12 +30,24 @@ import io.github.msdk.io.mzml2.data.MzMLProduct;
 import io.github.msdk.io.mzml2.data.MzMLRawDataFile;
 import io.github.msdk.io.mzml2.data.MzMLReferenceableParamGroup;
 import io.github.msdk.io.mzml2.util.MzMLFileMemoryMapper;
+import io.github.msdk.io.mzml2.util.TagTracker;
 import it.unimi.dsi.io.ByteBufferInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.annotation.Nonnull;
 import javolution.text.CharArray;
 import javolution.xml.internal.stream.XMLStreamReaderImpl;
 import javolution.xml.stream.XMLStreamConstants;
 import javolution.xml.stream.XMLStreamException;
 import javolution.xml.stream.XMLStreamReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
