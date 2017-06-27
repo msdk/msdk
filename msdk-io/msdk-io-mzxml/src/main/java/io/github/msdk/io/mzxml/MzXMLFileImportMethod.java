@@ -93,7 +93,6 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
    * </p>
    *
    * @param sourceFile a {@link java.io.File} object.
-   * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public MzXMLFileImportMethod(@Nonnull File sourceFile) {
     this.sourceFile = sourceFile;
