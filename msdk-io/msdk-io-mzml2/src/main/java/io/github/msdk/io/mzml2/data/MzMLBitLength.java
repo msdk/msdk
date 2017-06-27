@@ -22,7 +22,7 @@ public enum MzMLBitLength {
 
   private String accession;
 
-  private MzMLBitLength(String accession) {
+  MzMLBitLength(String accession) {
     this.accession = accession;
   }
 

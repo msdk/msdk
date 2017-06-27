@@ -80,9 +80,7 @@ public class MzMLBinaryDataInfo {
    * @return a boolean.
    */
   public boolean isBitLengthAccession(String bitLengthAccession) {
-    if (getBitLength(bitLengthAccession) != null)
-      return true;
-    return false;
+    return getBitLength(bitLengthAccession) != null;
   }
 
   public MzMLBitLength getBitLength(String accession) {
@@ -135,9 +133,7 @@ public class MzMLBinaryDataInfo {
    * @return a boolean.
    */
   public boolean isCompressionTypeAccession(String compressionTypeAccession) {
-    if (getCompressionType(compressionTypeAccession) != null)
-      return true;
-    return false;
+    return getCompressionType(compressionTypeAccession) != null;
   }
 
   public MzMLCompressionType getCompressionType(String accession) {
@@ -190,9 +186,7 @@ public class MzMLBinaryDataInfo {
    * @return a boolean.
    */
   public boolean isArrayTypeAccession(String arrayTypeAccession) {
-    if (getArrayType(arrayTypeAccession) != null)
-      return true;
-    return false;
+    return getArrayType(arrayTypeAccession) != null;
   }
 
   public MzMLArrayType getArrayType(String accession) {

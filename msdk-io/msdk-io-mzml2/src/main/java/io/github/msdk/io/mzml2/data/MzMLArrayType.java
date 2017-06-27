@@ -20,7 +20,7 @@ public enum MzMLArrayType {
 
   private String accession;
 
-  private MzMLArrayType(String accession) {
+  MzMLArrayType(String accession) {
     this.accession = accession;
   }
 
