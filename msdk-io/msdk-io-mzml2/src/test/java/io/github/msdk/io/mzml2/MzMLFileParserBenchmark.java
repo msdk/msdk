@@ -58,21 +58,21 @@ public class MzMLFileParserBenchmark {
       parserTest.testZlibAndNumpressCompression();;
     long endTime8 = System.currentTimeMillis();
 
-    logger.debug("Average run time with MzMLFileParser File 1: "
+    logger.info("Average run time with MzMLFileParser File 1: "
         + (endTime1 - startTime1) / numberOfRuns + "ms");
-    logger.debug("Average run time with MzMLFileParser File 2: "
+    logger.info("Average run time with MzMLFileParser File 2: "
         + (endTime2 - startTime2) / numberOfRuns + "ms");
-    logger.debug("Average run time with MzMLFileParser File 3: "
+    logger.info("Average run time with MzMLFileParser File 3: "
         + (endTime3 - startTime3) / numberOfRuns + "ms");
-    logger.debug("Average run time with MzMLFileParser File 4: "
+    logger.info("Average run time with MzMLFileParser File 4: "
         + (endTime4 - startTime4) / numberOfRuns + "ms");
-    logger.debug("Average run time with MzMLFileParser File 5: "
+    logger.info("Average run time with MzMLFileParser File 5: "
         + (endTime5 - startTime5) / numberOfRuns + "ms");
-    logger.debug("Average run time with MzMLFileParser File 6: "
+    logger.info("Average run time with MzMLFileParser File 6: "
         + (endTime6 - startTime6) / numberOfRuns + "ms");
-    logger.debug("Average run time with MzMLFileParser File 7: "
+    logger.info("Average run time with MzMLFileParser File 7: "
         + (endTime7 - startTime7) / numberOfRuns + "ms");
-    logger.debug("Average run time with MzMLFileParser File 8: "
+    logger.info("Average run time with MzMLFileParser File 8: "
         + (endTime8 - startTime8) / numberOfRuns + "ms");
 
   }
