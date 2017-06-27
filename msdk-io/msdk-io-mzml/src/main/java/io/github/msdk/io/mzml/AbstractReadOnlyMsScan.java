@@ -59,7 +59,7 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
    *
    * @param dataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    * @param spectrumType a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType} object.
-   * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
+   * @param msFunction String description of MS-Function.
    * @param scanType a {@link io.github.msdk.datamodel.rawdata.MsScanType} object.
    * @param mzRange a {@link com.google.common.collect.Range} object.
    * @param scanningRange a {@link com.google.common.collect.Range} object.

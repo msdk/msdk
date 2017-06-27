@@ -43,7 +43,7 @@ public class MzMLBinaryDataInfo {
    * Getter for the field <code>bitLength</code>.
    * </p>
    *
-   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLBitLength} object.
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBitLength} object.
    */
   public MzMLBitLength getBitLength() {
     return bitLength;
@@ -98,7 +98,7 @@ public class MzMLBinaryDataInfo {
    * Getter for the field <code>compressionType</code>.
    * </p>
    *
-   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLCompressionType} object.
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLCompressionType} object.
    */
   public MzMLCompressionType getCompressionType() {
     return compressionType;
@@ -120,7 +120,7 @@ public class MzMLBinaryDataInfo {
    * Setter for the field <code>bitLength</code>.
    * </p>
    *
-   * @param bitLength a {@link io.github.msdk.io.mzml2.data.MzMLCompressionType} object.
+   * @param compressionType a {@link io.github.msdk.io.mzml2.data.MzMLCompressionType} object.
    */
   public void setCompressionType(MzMLCompressionType compressionType) {
     this.compressionType = compressionType;
@@ -153,7 +153,7 @@ public class MzMLBinaryDataInfo {
    * Getter for the field <code>arrayType</code>.
    * </p>
    *
-   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLArrayType} object.
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLArrayType} object.
    */
   public MzMLArrayType getArrayType() {
     return arrayType;
@@ -175,7 +175,7 @@ public class MzMLBinaryDataInfo {
    * Setter for the field <code>bitLength</code>.
    * </p>
    *
-   * @param bitLength a {@link io.github.msdk.io.mzml2.data.MzMLArrayType} object.
+   * @param arrayType a {@link io.github.msdk.io.mzml2.data.MzMLArrayType} object.
    */
   public void setArrayType(MzMLArrayType arrayType) {
     this.arrayType = arrayType;
