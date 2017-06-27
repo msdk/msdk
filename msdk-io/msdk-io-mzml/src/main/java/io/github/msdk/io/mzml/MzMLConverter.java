@@ -54,7 +54,7 @@ class MzMLConverter {
 
   private int lastScanNumber = 0;
 
-  private Map<String, Integer> scanIdTable = new Hashtable<String, Integer>();
+  private Map<String, Integer> scanIdTable = new Hashtable<>();
 
   @Nonnull
   Integer extractScanNumber(Spectrum spectrum) {

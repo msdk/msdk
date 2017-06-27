@@ -407,8 +407,8 @@ public class MzMLFileImportMethodTest {
         MsSpectrumUtil.getMaxIntensity(scan4.getIntensityValues(), scan4.getNumberOfDataPoints());
     Assert.assertEquals(8746.9599f, scan2maxInt, 0.1f);
     Assert.assertEquals(new Float(58989.76953125), scan4.getTIC(), 10);
-    Assert.assertEquals(new Double(100.317253112793), scan4.getMzRange().lowerEndpoint(), 0.000001);
-    Assert.assertEquals(new Double(999.715515136719), scan4.getMzRange().upperEndpoint(), 0.000001);
+    Assert.assertEquals(100.317253112793, scan4.getMzRange().lowerEndpoint(), 0.000001);
+    Assert.assertEquals(999.715515136719, scan4.getMzRange().upperEndpoint(), 0.000001);
     Assert.assertEquals("- c ESI Q1MS [100.000-1000.000]", scan4.getScanDefinition());
 
     // Test isolation data
