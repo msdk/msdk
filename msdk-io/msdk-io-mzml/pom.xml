@@ -17,16 +17,6 @@
         </repository>
 	</repositories>
 
-	<build>
-		<testResources>
-			<testResource>
-				<directory>
-					test/resources
-				</directory>
-			</testResource>
-		</testResources>
-	</build>
-
 	<dependencies>
 
 		<dependency>
