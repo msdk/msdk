@@ -14,6 +14,7 @@
 package io.github.msdk.io.mzml2.data;
 
 import java.util.Optional;
+import org.apache.commons.lang.StringUtils;
 
 public class MzMLCVParam {
 
@@ -29,8 +30,16 @@ public class MzMLCVParam {
    * @param unitAccession a {@link java.lang.String} object.
    */
   public MzMLCVParam(String accession, String value, String unitAccession) {
+    if (accession == null)
+      throw new IllegalArgumentException("Accession can't be null");
+    if (accession.length() == 0)
+      throw new IllegalArgumentException("Accession can't be an empty string");
     this.accession = accession;
+    if (value != null && value.length() == 0)
+      value = null;
     this.value = Optional.ofNullable(value);
+    if (unitAccession != null && unitAccession.length() == 0)
+      unitAccession = null;
     this.unitAccession = Optional.ofNullable(unitAccession);
   }
 
