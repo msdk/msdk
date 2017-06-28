@@ -439,41 +439,38 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
               tracker.exit(closingTagName);
 
-              switch (closingTagName.toString()) {
-                case TAG_SPECTRUM_LIST:
-                  break;
-                case TAG_REF_PARAM_GROUP:
-                  referenceableParamGroupList.add(vars.referenceableParamGroup);
-                  break;
-                case TAG_REF_PARAM_GROUP_LIST:
-                  break;
-                case TAG_PRECURSOR_LIST:
-                  break;
-                case TAG_ISOLATION_WINDOW:
-                  if (tracker.inside(TAG_PRECURSOR)) {
-                    vars.precursor.setIsolationWindow(vars.isolationWindow);
-                  } else if (tracker.inside(TAG_PRODUCT) && tracker.inside(TAG_CHROMATOGRAM)) {
-                    vars.product.setIsolationWindow(vars.isolationWindow);
-                  }
-                  break;
-                case TAG_SELECTED_ION_LIST:
-                  vars.precursor.setSelectedIonList(vars.selectedIonList);
-                  break;
-                case TAG_ACTIVATION:
-                  vars.precursor.setActivation(vars.activation);
-                  break;
-                case TAG_SELECTED_ION:
-                  vars.selectedIonList.addSelectedIon(vars.selectedIon);
-                  break;
-                case TAG_PRECURSOR:
-                  if (tracker.inside(TAG_SPECTRUM))
-                    vars.spectrum.getPrecursorList().addPrecursor(vars.precursor);
-                  else if (tracker.inside(TAG_CHROMATOGRAM))
-                    vars.chromatogram.setPrecursor(vars.precursor);
-                  break;
-                case TAG_PRODUCT:
-                  if (tracker.inside(TAG_CHROMATOGRAM))
-                    vars.chromatogram.setProdcut(vars.product);
+              CharArray s = closingTagName;
+              if (s.equals(TAG_SPECTRUM_LIST)) {
+              } else if (s.equals(TAG_REF_PARAM_GROUP)) {
+                referenceableParamGroupList.add(vars.referenceableParamGroup);
+
+              } else if (s.equals(TAG_REF_PARAM_GROUP_LIST)) {
+              } else if (s.equals(TAG_PRECURSOR_LIST)) {
+              } else if (s.equals(TAG_ISOLATION_WINDOW)) {
+                if (tracker.inside(TAG_PRECURSOR)) {
+                  vars.precursor.setIsolationWindow(vars.isolationWindow);
+                } else if (tracker.inside(TAG_PRODUCT) && tracker.inside(TAG_CHROMATOGRAM)) {
+                  vars.product.setIsolationWindow(vars.isolationWindow);
+                }
+
+              } else if (s.equals(TAG_SELECTED_ION_LIST)) {
+                vars.precursor.setSelectedIonList(vars.selectedIonList);
+
+              } else if (s.equals(TAG_ACTIVATION)) {
+                vars.precursor.setActivation(vars.activation);
+
+              } else if (s.equals(TAG_SELECTED_ION)) {
+                vars.selectedIonList.addSelectedIon(vars.selectedIon);
+
+              } else if (s.equals(TAG_PRECURSOR)) {
+                if (tracker.inside(TAG_SPECTRUM))
+                  vars.spectrum.getPrecursorList().addPrecursor(vars.precursor);
+                else if (tracker.inside(TAG_CHROMATOGRAM))
+                  vars.chromatogram.setPrecursor(vars.precursor);
+
+              } else if (s.equals(TAG_PRODUCT)) {
+                if (tracker.inside(TAG_CHROMATOGRAM))
+                  vars.chromatogram.setProdcut(vars.product);
               }
 
               if (tracker.inside(TAG_SPECTRUM_LIST)) {
