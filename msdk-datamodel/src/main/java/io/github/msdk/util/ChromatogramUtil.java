@@ -13,13 +13,12 @@
 
 package io.github.msdk.util;
 
-import java.util.Arrays;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
+
 
 /**
  * <p>
@@ -28,6 +27,27 @@ import com.google.common.collect.Range;
  *
  */
 public class ChromatogramUtil {
+
+
+  /**
+   * Returns median m/z value of the chromatogram
+   *
+   */
+  @Nullable
+  public static Double getMedianMz(@Nonnull double mzValues[], @Nonnull Integer size) {
+
+    // Parameter check
+    Preconditions.checkNotNull(mzValues);
+    Preconditions.checkNotNull(size);
+    Preconditions.checkPositionIndex(size, mzValues.length);
+
+    if (size == 0)
+      return null;
+
+    Double mz = MathUtils.calcQuantile(mzValues, size, 0.5f);
+    return mz;
+
+  }
 
   /**
    * Returns the RT range
@@ -316,8 +336,8 @@ public class ChromatogramUtil {
    * @param intensityValues an array of float.
    * @param size a
    */
-  public static @Nullable Float getArea(@Nonnull float rtValues[],
-      @Nonnull float[] intensityValues, @Nonnull Integer size) {
+  public static @Nullable Float getArea(@Nonnull float rtValues[], @Nonnull float[] intensityValues,
+      @Nonnull Integer size) {
 
     // Parameter check
     Preconditions.checkNotNull(rtValues);
