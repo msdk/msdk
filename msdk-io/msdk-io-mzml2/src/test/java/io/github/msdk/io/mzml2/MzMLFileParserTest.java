@@ -38,8 +38,6 @@ import io.github.msdk.util.MsSpectrumUtil;
 
 public class MzMLFileParserTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
   private Path getResourcePath(String resource) throws MSDKException {
     final URL url = MzMLFileParserTest.class.getClassLoader().getResource(resource);
     try {
@@ -352,6 +350,11 @@ public class MzMLFileParserTest {
     chromatogram = chromatograms.get(0);
     Assert.assertEquals(ChromatogramType.TIC, chromatogram.getChromatogramType());
     Assert.assertEquals(0, chromatogram.getIsolations().size());
+    
+    // Check m/z values
+    Assert.assertEquals(407.706, chromatograms.get(1).getMz(), 0.001);
+    Assert.assertEquals(1084.486, chromatograms.get(18).getMz(), 0.001);
+    Assert.assertEquals(1042.516, chromatograms.get(35).getMz(), 0.001);
 
     rawFile.dispose();
   }
