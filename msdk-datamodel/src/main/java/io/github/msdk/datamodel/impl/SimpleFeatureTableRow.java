@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
+import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.features.Feature;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
@@ -92,6 +93,14 @@ public class SimpleFeatureTableRow implements FeatureTableRow {
 
   public void setFeature(@Nonnull Sample sample, @Nonnull Feature feature) {
     synchronized (features) {
+      if (featureTable != null) {
+        List<Sample> allSamples = featureTable.getSamples();
+        if (!allSamples.contains(sample)) {
+          throw new MSDKRuntimeException(
+              "Cannot add feature, because the feature table does not contain sample "
+                  + sample.getName());
+        }
+      }
       features.put(sample, feature);
     }
   }
