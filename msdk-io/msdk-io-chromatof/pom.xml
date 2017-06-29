@@ -22,11 +22,6 @@
             <artifactId>cdk-data</artifactId>
             <version>${cdk.version}</version>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>msdk-test</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
+        
     </dependencies>
 </project>
