@@ -24,8 +24,6 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 /**
  * Annotation of a detected feature with a chemical structure, formula, or textual description.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public interface IonAnnotation {
 

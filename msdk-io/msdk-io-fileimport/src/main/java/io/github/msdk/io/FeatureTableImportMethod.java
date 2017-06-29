@@ -21,7 +21,6 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.io.filetypedetection.FileTypeDetectionMethod;
@@ -31,13 +30,10 @@ import io.github.msdk.io.mztab.MzTabFileImportMethod;
  * This class detects the type of the given data file using the FileTypeDetectionAlgorithm and then
  * imports the feature table using the right import algorithm.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class FeatureTableImportMethod implements MSDKMethod<FeatureTable> {
 
   private final @Nonnull File sourceFile;
-  private final @Nonnull DataPointStore dataStore;
 
   private FeatureTable result;
   private boolean canceled = false;
@@ -49,11 +45,9 @@ public class FeatureTableImportMethod implements MSDKMethod<FeatureTable> {
    * </p>
    *
    * @param sourceFile a {@link java.io.File} object.
-   * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public FeatureTableImportMethod(@Nonnull File sourceFile, @Nonnull DataPointStore dataStore) {
+  public FeatureTableImportMethod(@Nonnull File sourceFile) {
     this.sourceFile = sourceFile;
-    this.dataStore = dataStore;
   }
 
   /** {@inheritDoc} */
@@ -75,7 +69,7 @@ public class FeatureTableImportMethod implements MSDKMethod<FeatureTable> {
 
     switch (fileType) {
       case MZTAB:
-        parser = new MzTabFileImportMethod(sourceFile, dataStore);
+        parser = new MzTabFileImportMethod(sourceFile);
         break;
       default:
         throw new MSDKException("Unsupported file type (" + fileType + ") of file " + sourceFile);

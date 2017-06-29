@@ -33,7 +33,6 @@ import com.google.common.io.ByteStreams;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.SimpleFeatureTable;
@@ -50,8 +49,6 @@ import uk.ac.ebi.pride.jmztab.utils.MZTabFileParser;
  * MzTabFileImportMethod class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
 
@@ -60,7 +57,6 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
   private int parsedRows, totalRows = 0, samples;
 
   private final @Nonnull File sourceFile;
-  private final @Nonnull DataPointStore dataStore;
 
   private SimpleFeatureTable newFeatureTable;
   private boolean canceled = false;
@@ -75,9 +71,8 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
    * @param sourceFile a {@link java.io.File} object.
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public MzTabFileImportMethod(@Nonnull File sourceFile, @Nonnull DataPointStore dataStore) {
+  public MzTabFileImportMethod(@Nonnull File sourceFile) {
     this.sourceFile = sourceFile;
-    this.dataStore = dataStore;
   }
 
   /** {@inheritDoc} */

@@ -14,7 +14,6 @@
  * <p>Result class.</p>
  *
  * @author Dharak Shah
- * @version $Id: $Id
  */
 
 

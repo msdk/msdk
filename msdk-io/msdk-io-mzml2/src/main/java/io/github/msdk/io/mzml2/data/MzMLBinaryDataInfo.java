@@ -13,68 +13,14 @@
 
 package io.github.msdk.io.mzml2.data;
 
+import javax.annotation.Nonnull;
+
 public class MzMLBinaryDataInfo {
-
-  public static enum MzMLCompressionType {
-    NUMPRESS_LINPRED("MS:1002312"), // MS-Numpress linear prediction compression
-    NUMPRESS_POSINT("MS:1002313"), // MS-Numpress positive integer compression
-    NUMPRESS_SHLOGF("MS:1002314"), // MS-Numpress short logged float compression
-    ZLIB("MS:1000574"), // zlib compression
-    NO_COMPRESSION("MS:1000576"), // no compression
-    NUMPRESS_LINPRED_ZLIB("MS:1002746"), // MS-Numpress linear prediction compression followed by
-                                         // zlib compression
-    NUMPRESS_POSINT_ZLIB("MS:1002747"), // MS-Numpress positive integer compression followed by zlib
-                                        // compression
-    NUMPRESS_SHLOGF_ZLIB("MS:1002748"); // MS-Numpress short logged float compression followed by
-                                        // zlib compression
-
-    private String accession;
-
-    private MzMLCompressionType(String accession) {
-      this.accession = accession;
-    }
-
-    public String getValue() {
-      return accession;
-    }
-  }
-
-  public static enum MzMLBitLength {
-    THIRTY_TWO_BIT_INTEGER("MS:1000519"), // 32-bit integer
-    SIXTEEN_BIT_FLOAT("MS:1000520"), // 16-bit float
-    THIRTY_TWO_BIT_FLOAT("MS:1000521"), // 32-bit float
-    SIXTY_FOUR_BIT_INTEGER("MS:1000522"), // 64-bit integer
-    SIXTY_FOUR_BIT_FLOAT("MS:1000523"); // 64-bit float
-
-    private String accession;
-
-    private MzMLBitLength(String accession) {
-      this.accession = accession;
-    }
-
-    public String getValue() {
-      return accession;
-    }
-  }
-
-  public static enum MzMLArrayType {
-    MZ("MS:1000514"), INTENSITY("MS:1000515"), TIME("MS:1000595");
-
-    private String accession;
-
-    private MzMLArrayType(String accession) {
-      this.accession = accession;
-    }
-
-    public String getValue() {
-      return accession;
-    }
-  }
 
   private final int encodedLength;
   private final int arrayLength;
   private long position;
-  private MzMLCompressionType compressionType;
+  private @Nonnull MzMLCompressionType compressionType;
   private MzMLBitLength bitLength;
   private MzMLArrayType arrayType;
 
@@ -89,6 +35,7 @@ public class MzMLBinaryDataInfo {
   public MzMLBinaryDataInfo(int encodedLength, int arrayLength) {
     this.encodedLength = encodedLength;
     this.arrayLength = arrayLength;
+    this.compressionType = MzMLCompressionType.NO_COMPRESSION;
   }
 
   /**
@@ -96,7 +43,7 @@ public class MzMLBinaryDataInfo {
    * Getter for the field <code>bitLength</code>.
    * </p>
    *
-   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLBitLength} object.
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBitLength} object.
    */
   public MzMLBitLength getBitLength() {
     return bitLength;
@@ -110,10 +57,18 @@ public class MzMLBinaryDataInfo {
    * @param bitLengthAccession a {@link java.lang.String} object.
    */
   public void setBitLength(String bitLengthAccession) {
-    for (MzMLBitLength bitLength : MzMLBitLength.values()) {
-      if (bitLength.getValue().equals(bitLengthAccession))
-        this.bitLength = bitLength;
-    }
+    this.bitLength = getBitLength(bitLengthAccession);
+  }
+
+  /**
+   * <p>
+   * Setter for the field <code>bitLength</code>.
+   * </p>
+   *
+   * @param bitLength a {@link io.github.msdk.io.mzml2.data.MzMLBitLength} object.
+   */
+  public void setBitLength(MzMLBitLength bitLength) {
+    this.bitLength = bitLength;
   }
 
   /**
@@ -125,11 +80,15 @@ public class MzMLBinaryDataInfo {
    * @return a boolean.
    */
   public boolean isBitLengthAccession(String bitLengthAccession) {
+    return getBitLength(bitLengthAccession) != null;
+  }
+
+  public MzMLBitLength getBitLength(String accession) {
     for (MzMLBitLength bitLength : MzMLBitLength.values()) {
-      if (bitLength.getValue().equals(bitLengthAccession))
-        return true;
+      if (bitLength.getValue().equals(accession))
+        return bitLength;
     }
-    return false;
+    return null;
   }
 
   /**
@@ -137,7 +96,7 @@ public class MzMLBinaryDataInfo {
    * Getter for the field <code>compressionType</code>.
    * </p>
    *
-   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLCompressionType} object.
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLCompressionType} object.
    */
   public MzMLCompressionType getCompressionType() {
     return compressionType;
@@ -151,10 +110,18 @@ public class MzMLBinaryDataInfo {
    * @param compressionTypeAccession a {@link java.lang.String} object.
    */
   public void setCompressionType(String compressionTypeAccession) {
-    for (MzMLCompressionType compressionType : MzMLCompressionType.values()) {
-      if (compressionType.getValue().equals(compressionTypeAccession))
-        this.compressionType = compressionType;
-    }
+    this.compressionType = getCompressionType(compressionTypeAccession);
+  }
+
+  /**
+   * <p>
+   * Setter for the field <code>bitLength</code>.
+   * </p>
+   *
+   * @param compressionType a {@link io.github.msdk.io.mzml2.data.MzMLCompressionType} object.
+   */
+  public void setCompressionType(MzMLCompressionType compressionType) {
+    this.compressionType = compressionType;
   }
 
   /**
@@ -166,11 +133,15 @@ public class MzMLBinaryDataInfo {
    * @return a boolean.
    */
   public boolean isCompressionTypeAccession(String compressionTypeAccession) {
+    return getCompressionType(compressionTypeAccession) != null;
+  }
+
+  public MzMLCompressionType getCompressionType(String accession) {
     for (MzMLCompressionType compressionType : MzMLCompressionType.values()) {
-      if (compressionType.getValue().equals(compressionTypeAccession))
-        return true;
+      if (compressionType.getValue().equals(accession))
+        return compressionType;
     }
-    return false;
+    return null;
   }
 
   /**
@@ -178,7 +149,7 @@ public class MzMLBinaryDataInfo {
    * Getter for the field <code>arrayType</code>.
    * </p>
    *
-   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo.MzMLArrayType} object.
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLArrayType} object.
    */
   public MzMLArrayType getArrayType() {
     return arrayType;
@@ -192,10 +163,18 @@ public class MzMLBinaryDataInfo {
    * @param arrayTypeAccession a {@link java.lang.String} object.
    */
   public void setArrayType(String arrayTypeAccession) {
-    for (MzMLArrayType arrayType : MzMLArrayType.values()) {
-      if (arrayType.getValue().equals(arrayTypeAccession))
-        this.arrayType = arrayType;
-    }
+    this.arrayType = getArrayType(arrayTypeAccession);
+  }
+
+  /**
+   * <p>
+   * Setter for the field <code>bitLength</code>.
+   * </p>
+   *
+   * @param arrayType a {@link io.github.msdk.io.mzml2.data.MzMLArrayType} object.
+   */
+  public void setArrayType(MzMLArrayType arrayType) {
+    this.arrayType = arrayType;
   }
 
   /**
@@ -207,11 +186,15 @@ public class MzMLBinaryDataInfo {
    * @return a boolean.
    */
   public boolean isArrayTypeAccession(String arrayTypeAccession) {
+    return getArrayType(arrayTypeAccession) != null;
+  }
+
+  public MzMLArrayType getArrayType(String accession) {
     for (MzMLArrayType arrayType : MzMLArrayType.values()) {
-      if (arrayType.getValue().equals(arrayTypeAccession))
-        return true;
+      if (arrayType.getValue().equals(accession))
+        return arrayType;
     }
-    return false;
+    return null;
   }
 
   /**

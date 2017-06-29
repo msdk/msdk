@@ -21,8 +21,6 @@ import javax.annotation.Nonnull;
  * implementations of this interface may be provided, depending on the method of serialization and
  * storage.
  *
- * @author plusik
- * @version $Id: $Id
  */
 public interface DataPointStore {
 

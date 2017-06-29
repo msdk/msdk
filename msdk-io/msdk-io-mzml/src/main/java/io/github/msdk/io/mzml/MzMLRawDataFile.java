@@ -14,6 +14,7 @@
 package io.github.msdk.io.mzml;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +25,6 @@ import com.google.common.collect.ImmutableList;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
@@ -36,7 +36,6 @@ class MzMLRawDataFile implements RawDataFile {
   private final @Nonnull File sourceFile;
   private @Nullable MzMLUnmarshaller parser;
 
-  private final @Nonnull List<MsFunction> msFunctions;
   private final @Nonnull List<MsScan> msScans;
   private final @Nonnull List<Chromatogram> chromatograms;
 
@@ -49,16 +48,14 @@ class MzMLRawDataFile implements RawDataFile {
    *
    * @param sourceFile a {@link java.io.File} object.
    * @param parser a {@link uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller} object.
-   * @param msFunctions a {@link java.util.List} object.
    * @param msScans a {@link java.util.List} object.
    * @param chromatograms a {@link java.util.List} object.
    */
   public MzMLRawDataFile(@Nonnull File sourceFile, @Nonnull MzMLUnmarshaller parser,
-      List<MsFunction> msFunctions, List<MsScan> msScans, List<Chromatogram> chromatograms) {
+      List<MsScan> msScans, List<Chromatogram> chromatograms) {
     this.sourceFile = sourceFile;
     this.parser = parser;
     this.name = sourceFile.getName();
-    this.msFunctions = msFunctions;
     this.msScans = msScans;
     this.chromatograms = chromatograms;
   }
@@ -88,8 +85,14 @@ class MzMLRawDataFile implements RawDataFile {
   /** {@inheritDoc} */
   @Override
   @Nonnull
-  public List<MsFunction> getMsFunctions() {
-    return ImmutableList.copyOf(msFunctions);
+  public List<String> getMsFunctions() {
+    ArrayList<String> msFunctionList = new ArrayList<>();
+    for (MsScan scan : msScans) {
+      String f = scan.getMsFunction();
+      if ((f != null) && (!msFunctionList.contains(f)))
+        msFunctionList.add(f);
+    }
+    return msFunctionList;
   }
 
   /** {@inheritDoc} */

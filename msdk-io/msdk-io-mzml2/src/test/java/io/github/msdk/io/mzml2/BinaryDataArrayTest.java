@@ -13,10 +13,8 @@
 
 package io.github.msdk.io.mzml2;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Base64;
+import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
 import org.junit.Assert;
@@ -24,7 +22,10 @@ import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
+import io.github.msdk.io.mzml2.data.MzMLBitLength;
+import io.github.msdk.io.mzml2.data.MzMLCompressionType;
 import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
+import it.unimi.dsi.io.ByteBufferInputStream;
 
 /**
  * 
@@ -117,62 +118,68 @@ public class BinaryDataArrayTest {
 
   @Test
   public void testCompressed64bit() throws MSDKException, DataFormatException, IOException {
-    // Put the String onto an InputStream
-    InputStream is = new ByteArrayInputStream(compressed64bit.getBytes());
+    // Put the String onto an ByteBufferInputStream
+    ByteBufferInputStream is =
+        new ByteBufferInputStream(ByteBuffer.wrap(compressed64bit.getBytes()));
 
-    // Base 64 decode the given String and store the result in an InputStream
-    InputStream decodedIs = Base64.getDecoder().wrap(is);
-    Assert.assertNotNull(decodedIs);
+    // Setting up the BinaryInfo
+    MzMLBinaryDataInfo binaryInfo = new MzMLBinaryDataInfo(664, 99);
+    binaryInfo.setBitLength(MzMLBitLength.SIXTY_FOUR_BIT_FLOAT);
+    binaryInfo.setCompressionType(MzMLCompressionType.ZLIB);
+    binaryInfo.setPosition(0);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result = MzMLPeaksDecoder.decodeToDouble(decodedIs, 664, 64, 99,
-        MzMLBinaryDataInfo.MzMLCompressionType.ZLIB);
+    double[] result = MzMLPeaksDecoder.decodeToDouble(is, binaryInfo);
     Assert.assertArrayEquals(testData64bitFloat, result, 0.0);
 
   }
 
   @Test
   public void testUncompressed64bit() throws MSDKException, DataFormatException, IOException {
-    // Put the String onto an InputStream
-    InputStream is = new ByteArrayInputStream(uncompressed64bit.getBytes());
+    // Put the String onto an ByteBufferInputStream
+    ByteBufferInputStream is =
+        new ByteBufferInputStream(ByteBuffer.wrap(uncompressed64bit.getBytes()));
 
-    // Base 64 decode the given String and store the result in an InputStream
-    InputStream decodedIs = Base64.getDecoder().wrap(is);
-    Assert.assertNotNull(decodedIs);
+    // Setting up the BinaryInfo
+    MzMLBinaryDataInfo binaryInfo = new MzMLBinaryDataInfo(1056, 99);
+    binaryInfo.setBitLength(MzMLBitLength.SIXTY_FOUR_BIT_FLOAT);
+    binaryInfo.setPosition(0);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result = MzMLPeaksDecoder.decodeToDouble(decodedIs, 1056, 64, 99,
-        MzMLBinaryDataInfo.MzMLCompressionType.NO_COMPRESSION);
+    double[] result = MzMLPeaksDecoder.decodeToDouble(is, binaryInfo);
     Assert.assertArrayEquals(testData64bitFloat, result, 0.0);
   }
 
   @Test
   public void testCompressed32bit() throws MSDKException, DataFormatException, IOException {
-    // Put the String onto an InputStream
-    InputStream is = new ByteArrayInputStream(compressed32bit.getBytes());
+    // Put the String onto an ByteBufferInputStream
+    ByteBufferInputStream is =
+        new ByteBufferInputStream(ByteBuffer.wrap(compressed32bit.getBytes()));
 
-    // Base 64 decode the given String and store the result in an InputStream
-    InputStream decodedIs = Base64.getDecoder().wrap(is);
-    Assert.assertNotNull(decodedIs);
+    // Setting up the BinaryInfo
+    MzMLBinaryDataInfo binaryInfo = new MzMLBinaryDataInfo(268, 99);
+    binaryInfo.setBitLength(MzMLBitLength.THIRTY_TWO_BIT_FLOAT);
+    binaryInfo.setCompressionType(MzMLCompressionType.ZLIB);
+    binaryInfo.setPosition(0);
 
     // Decode the decoded byte array and compare with the expected values
-    float[] result = MzMLPeaksDecoder.decodeToFloat(decodedIs, 268, 32, 99,
-        MzMLBinaryDataInfo.MzMLCompressionType.ZLIB);
+    float[] result = MzMLPeaksDecoder.decodeToFloat(is, binaryInfo);
     Assert.assertArrayEquals(testData32bitFloat, result, 0.0f);
   }
 
   @Test
   public void testUncompressed32bit() throws MSDKException, DataFormatException, IOException {
-    // Put the String onto an InputStream
-    InputStream is = new ByteArrayInputStream(uncompressed32bit.getBytes());
+    // Put the String onto an ByteBufferInputStream
+    ByteBufferInputStream is =
+        new ByteBufferInputStream(ByteBuffer.wrap(uncompressed32bit.getBytes()));
 
-    // Base 64 decode the given String and store the result in an InputStream
-    InputStream decodedIs = Base64.getDecoder().wrap(is);
-    Assert.assertNotNull(decodedIs);
+    // Setting up the BinaryInfo
+    MzMLBinaryDataInfo binaryInfo = new MzMLBinaryDataInfo(528, 99);
+    binaryInfo.setBitLength(MzMLBitLength.THIRTY_TWO_BIT_FLOAT);
+    binaryInfo.setPosition(0);
 
     // Decode the decoded byte array and compare with the expected values
-    float[] result = MzMLPeaksDecoder.decodeToFloat(decodedIs, 528, 32, 99,
-        MzMLBinaryDataInfo.MzMLCompressionType.NO_COMPRESSION);
+    float[] result = MzMLPeaksDecoder.decodeToFloat(is, binaryInfo);
     Assert.assertArrayEquals(testData32bitFloat, result, 0.0f);
   }
 

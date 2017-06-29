@@ -23,8 +23,6 @@ import io.github.msdk.MSDKException;
 /**
  * <p>FeatureFinderMetaboLocator class.</p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class FeatureFinderMetaboLocator {
 

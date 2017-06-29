@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -32,8 +31,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * MSDKFilteringMethod class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
 
@@ -41,7 +38,6 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
 
   private final @Nonnull MSDKFilteringAlgorithm filteringAlgorithm;
   private final @Nonnull RawDataFile rawDataFile;
-  private final @Nonnull DataPointStore store;
 
   private int processedScans = 0, totalScans = 0;
   private SimpleRawDataFile result;
@@ -58,10 +54,9 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
    * @param store a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public MSDKFilteringMethod(@Nonnull RawDataFile rawDataFile,
-      @Nonnull MSDKFilteringAlgorithm filteringAlgorithm, @Nonnull DataPointStore store) {
+      @Nonnull MSDKFilteringAlgorithm filteringAlgorithm) {
     this.filteringAlgorithm = filteringAlgorithm;
     this.rawDataFile = rawDataFile;
-    this.store = store;
   }
 
   /** {@inheritDoc} */
@@ -82,7 +77,7 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
 
     // Create a new raw data file
     result = new SimpleRawDataFile(rawDataFile.getName(), rawDataFile.getOriginalFile(),
-        rawDataFile.getRawDataFileType(), store);
+        rawDataFile.getRawDataFileType());
 
     List<MsScan> scans = rawDataFile.getScans();
     totalScans = scans.size();

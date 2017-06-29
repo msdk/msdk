@@ -14,14 +14,16 @@
 package io.github.msdk.io.mzxml;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -31,6 +33,14 @@ public class MzXMLFileImportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
+  private Path getResourcePath(String resource) throws MSDKException {
+    final URL url = MzXMLFileImportMethodTest.class.getClassLoader().getResource(resource);
+    try {
+      return Paths.get(url.toURI()).toAbsolutePath();
+    } catch (URISyntaxException e) {
+      throw new MSDKException(e);
+    }
+  }
 
   @Test
   public void testA10A2() throws MSDKException {
@@ -40,10 +50,10 @@ public class MzXMLFileImportMethodTest {
     float intensityBuffer[];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "A1-0_A2.mzXML");
+    String file =  "A1-0_A2.mzXML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
-    MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile, dataStore);
+    MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -56,7 +66,7 @@ public class MzXMLFileImportMethodTest {
     // 1st scan, #1
     MsScan scan1 = scans.get(0);
     Assert.assertEquals(new Integer(1), scan1.getScanNumber());
-    Assert.assertEquals(new Integer(1), scan1.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan1.getMsLevel());
     Assert.assertEquals(PolarityType.POSITIVE, scan1.getPolarity());
     mzBuffer = scan1.getMzValues();
     intensityBuffer = scan1.getIntensityValues();
@@ -78,10 +88,10 @@ public class MzXMLFileImportMethodTest {
     float intensityBuffer[];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "R1_RG59_B4_1.mzXML");
+    String file = "R1_RG59_B4_1.mzXML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
-    DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
-    MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile, dataStore);
+    MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -94,7 +104,7 @@ public class MzXMLFileImportMethodTest {
     // 1st scan, #1000
     MsScan scan1 = scans.get(0);
     Assert.assertEquals(new Integer(1000), scan1.getScanNumber());
-    Assert.assertEquals(new Integer(2), scan1.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(2), scan1.getMsLevel());
     Assert.assertEquals(1596.72f, scan1.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan1.getPolarity());
     mzBuffer = scan1.getMzValues();
@@ -107,7 +117,7 @@ public class MzXMLFileImportMethodTest {
     // 300th scan, #1299
     MsScan scan299 = scans.get(299);
     Assert.assertEquals(new Integer(1299), scan299.getScanNumber());
-    Assert.assertEquals(new Integer(1), scan299.getMsFunction().getMsLevel());
+    Assert.assertEquals(new Integer(1), scan299.getMsLevel());
     Assert.assertEquals(1765.578f, scan299.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan299.getPolarity());
     mzBuffer = scan299.getMzValues();

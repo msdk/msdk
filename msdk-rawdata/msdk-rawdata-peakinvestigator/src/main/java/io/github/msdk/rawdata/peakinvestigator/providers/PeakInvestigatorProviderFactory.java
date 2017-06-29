@@ -21,8 +21,6 @@ import com.veritomyx.actions.PiVersionsAction;
  * PeakInvestigatorProviderFactory interface.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public interface PeakInvestigatorProviderFactory {
   /**

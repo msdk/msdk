@@ -24,8 +24,6 @@ import java.util.List;
  * DataPointSorter class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class DataPointSorter {
 

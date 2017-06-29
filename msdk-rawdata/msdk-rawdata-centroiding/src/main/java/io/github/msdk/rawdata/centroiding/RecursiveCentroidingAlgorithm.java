@@ -17,7 +17,6 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsScanUtil;
@@ -27,12 +26,9 @@ import io.github.msdk.util.MsScanUtil;
  * RecursiveCentroidingAlgorithm class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
-  private final @Nonnull DataPointStore dataPointStore;
   private final @Nonnull Range<Double> mzPeakWidthRange;
 
   private SimpleMsScan newScan;
@@ -52,9 +48,7 @@ public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
    * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    * @param mzPeakWidthRange a {@link com.google.common.collect.Range} object.
    */
-  public RecursiveCentroidingAlgorithm(@Nonnull DataPointStore dataPointStore,
-      @Nonnull Range<Double> mzPeakWidthRange) {
-    this.dataPointStore = dataPointStore;
+  public RecursiveCentroidingAlgorithm(@Nonnull Range<Double> mzPeakWidthRange) {
     this.mzPeakWidthRange = mzPeakWidthRange;
   }
 
@@ -63,7 +57,7 @@ public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
   public @Nonnull MsScan centroidScan(@Nonnull MsScan inputScan) {
 
     // Copy all scan properties
-    this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
+    this.newScan = MsScanUtil.clone(inputScan, false);
 
     // Load data points
     mzBuffer = inputScan.getMzValues();

@@ -42,11 +42,8 @@ import io.github.msdk.MSDKException;
 /**
  * <p>FeatureFinderMetaboDetector class.</p>
  *
- * @author Adhithya
- *
  *         This class creates a list m/z values (double) for a mzML input file
  *         using OpenMS TOPP Tools
- * @version $Id: $Id
  */
 public class FeatureFinderMetaboDetector {
 	private final String OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME;
@@ -147,9 +144,9 @@ public class FeatureFinderMetaboDetector {
 		if (Strings.isNullOrEmpty(OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME)) {
 			throw new MSDKException("FeatureFinderMetabo not found. Please install OpenMS on your machine.");
 		}
-		final String cmdOutput = execShellCommand(
-				OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME + " -in " + mzMLFILE_PATH + " -out " + FEATURE_XML_FILE_PATH);
-		logger.info(cmdOutput);
+		final String cmd = OPENMS_FEATURE_FINDER_METABO_LIBRARY_NAME + " -in \"" + mzMLFILE_PATH + "\" -out \"" + FEATURE_XML_FILE_PATH + "\"";
+		final String cmdOutput = execShellCommand(cmd);
+		logger.debug("Executing command " + cmd);
 		if (!FEATURE_XML_FILE.exists()) {
 			String error = "";
 			Scanner cmdOutputParser = new Scanner(cmdOutput);

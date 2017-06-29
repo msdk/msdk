@@ -28,13 +28,11 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.impl.SimpleActivationInfo;
 import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -56,7 +54,7 @@ class MzMLConverter {
 
   private int lastScanNumber = 0;
 
-  private Map<String, Integer> scanIdTable = new Hashtable<String, Integer>();
+  private Map<String, Integer> scanIdTable = new Hashtable<>();
 
   @Nonnull
   Integer extractScanNumber(Spectrum spectrum) {
@@ -103,12 +101,12 @@ class MzMLConverter {
   }
 
   @Nonnull
-  MsFunction extractMsFunction(Spectrum spectrum) {
+  Integer extractMsLevel(Spectrum spectrum) {
     Integer msLevel = 1;
     String value = extractCVValue(spectrum.getCvParam(), MzMLCV.cvMSLevel);
     if (!Strings.isNullOrEmpty(value))
       msLevel = Integer.parseInt(value);
-    return MSDKObjectBuilder.getMsFunction(msLevel);
+    return msLevel;
   }
 
   @Nullable
@@ -282,8 +280,8 @@ class MzMLConverter {
           isolationWindowUpper = 0.5;
         Range<Double> isolationRange = Range.closed(isolationWindowTarget - isolationWindowLower,
             isolationWindowTarget + isolationWindowUpper);
-        IsolationInfo isolation = new SimpleIsolationInfo(isolationRange, null,
-            precursorMz, precursorCharge, null);
+        IsolationInfo isolation =
+            new SimpleIsolationInfo(isolationRange, null, precursorMz, precursorCharge, null);
         isolations.add(isolation);
       }
     }
@@ -377,22 +375,21 @@ class MzMLConverter {
         productIsolationMz = Double.parseDouble(cvVal);
 
       if (precursorActivationEnergy != null) {
-        activationInfo =
-            new SimpleActivationInfo(precursorActivationEnergy, precursorActivation);
+        activationInfo = new SimpleActivationInfo(precursorActivationEnergy, precursorActivation);
       }
 
       List<IsolationInfo> isolations = new ArrayList<>();
       IsolationInfo isolationInfo = null;
 
       if (precursorIsolationMz != null) {
-        isolationInfo = new SimpleIsolationInfo(Range.singleton(precursorIsolationMz),
-            null, precursorIsolationMz, null, activationInfo);
+        isolationInfo = new SimpleIsolationInfo(Range.singleton(precursorIsolationMz), null,
+            precursorIsolationMz, null, activationInfo);
         isolations.add(isolationInfo);
       }
 
       if (productIsolationMz != null) {
-        isolationInfo = new SimpleIsolationInfo(Range.singleton(productIsolationMz),
-            null, productIsolationMz, null, null);
+        isolationInfo = new SimpleIsolationInfo(Range.singleton(productIsolationMz), null,
+            productIsolationMz, null, null);
         isolations.add(isolationInfo);
       }
 
@@ -450,8 +447,7 @@ class MzMLConverter {
 
   }
 
-  static @Nonnull float[] extractRtValues(
-      uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram,
+  static @Nonnull float[] extractRtValues(uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram,
       @Nullable float[] array) {
 
     BinaryDataArrayList dataList = jmzChromatogram.getBinaryDataArrayList();

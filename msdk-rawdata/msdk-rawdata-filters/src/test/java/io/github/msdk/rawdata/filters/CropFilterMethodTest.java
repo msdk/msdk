@@ -22,8 +22,6 @@ import org.junit.Test;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -51,11 +49,10 @@ public class CropFilterMethodTest {
     Range<Double> scanRange = scans.get(0).getMzRange();
     Range<Double> mzRange =
         Range.closed(scanRange.lowerEndpoint() + 10, scanRange.upperEndpoint() - 10);
-    DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
 
     // Execute the filter
-    CropFilterAlgorithm cropFilter = new CropFilterAlgorithm(mzRange, rtRange, store);
-    MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, cropFilter, store);
+    CropFilterAlgorithm cropFilter = new CropFilterAlgorithm(mzRange, rtRange);
+    MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, cropFilter);
     RawDataFile newRawFile = filterMethod.execute();
     // The result of the method can't be Null
     Assert.assertNotNull(newRawFile);
@@ -87,11 +84,10 @@ public class CropFilterMethodTest {
     // Create the data needed by the Crop Filter Method
     Range<Float> rtRange = Range.all();
     Range<Double> mzRange = Range.closed(1000.0, 2000.0);
-    DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
 
     // Execute the filter
-    CropFilterAlgorithm cropFilter = new CropFilterAlgorithm(mzRange, rtRange, store);
-    MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, cropFilter, store);
+    CropFilterAlgorithm cropFilter = new CropFilterAlgorithm(mzRange, rtRange);
+    MSDKFilteringMethod filterMethod = new MSDKFilteringMethod(rawFile, cropFilter);
     RawDataFile newRawFile = filterMethod.execute();
     // The result of the method can't be Null
     Assert.assertNotNull(newRawFile);

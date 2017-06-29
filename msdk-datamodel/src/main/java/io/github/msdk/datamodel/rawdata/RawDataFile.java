@@ -70,7 +70,7 @@ public interface RawDataFile {
    * @return A list of MS functions.
    */
   @Nonnull
-  List<MsFunction> getMsFunctions();
+  List<String> getMsFunctions();
 
   /**
    * Returns an immutable list of all scans. The list can be safely iterated over, as it cannot be

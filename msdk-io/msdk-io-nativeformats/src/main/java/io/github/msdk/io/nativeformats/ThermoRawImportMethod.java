@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -38,16 +37,12 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * ThermoRawImportMethod class.
  * </p>
  *
- * @author plusik
- * @version $Id: $Id
  */
 public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private final @Nonnull File sourceFile;
-  private final @Nonnull FileType fileType = FileType.THERMO_RAW;
-  private final @Nonnull DataPointStore dataStore;
 
   private SimpleRawDataFile newRawFile;
   private boolean canceled = false;
@@ -63,9 +58,8 @@ public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
    * @param sourceFile a {@link java.io.File} object.
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
-  public ThermoRawImportMethod(@Nonnull File sourceFile, @Nonnull DataPointStore dataStore) {
+  public ThermoRawImportMethod(@Nonnull File sourceFile) {
     this.sourceFile = sourceFile;
-    this.dataStore = dataStore;
   }
 
   /** {@inheritDoc} */
@@ -105,10 +99,10 @@ public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
 
       // Create the new RawDataFile
       String fileName = sourceFile.getName();
-      newRawFile = new SimpleRawDataFile(fileName, Optional.of(sourceFile), fileType, dataStore);
+      newRawFile = new SimpleRawDataFile(fileName, Optional.of(sourceFile), FileType.THERMO_RAW);
 
       // Read the dump data
-      parser = new RawDumpParser(newRawFile, dataStore);
+      parser = new RawDumpParser(newRawFile);
       parser.readRAWDump(dumpStream);
 
       // Cleanup
