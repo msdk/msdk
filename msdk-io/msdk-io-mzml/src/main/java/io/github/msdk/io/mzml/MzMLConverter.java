@@ -42,6 +42,7 @@ import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.ParamGroup;
 import uk.ac.ebi.jmzml.model.mzml.Precursor;
 import uk.ac.ebi.jmzml.model.mzml.PrecursorList;
+import uk.ac.ebi.jmzml.model.mzml.Product;
 import uk.ac.ebi.jmzml.model.mzml.Scan;
 import uk.ac.ebi.jmzml.model.mzml.ScanList;
 import uk.ac.ebi.jmzml.model.mzml.SelectedIonList;
@@ -54,7 +55,7 @@ class MzMLConverter {
 
   private int lastScanNumber = 0;
 
-  private Map<String, Integer> scanIdTable = new Hashtable<String, Integer>();
+  private Map<String, Integer> scanIdTable = new Hashtable<>();
 
   @Nonnull
   Integer extractScanNumber(Spectrum spectrum) {
@@ -500,7 +501,17 @@ class MzMLConverter {
 
   @Nullable
   Double extractMz(uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram) {
-    return null;
+    Product isolationProduct = jmzChromatogram.getProduct();
+    if (isolationProduct == null)
+      return null;
+    ParamGroup isolationWindow = isolationProduct.getIsolationWindow();
+    if (isolationWindow == null)
+      return null;
+    String cvVal = extractCVValue(isolationWindow.getCvParam(), MzMLCV.cvIsolationWindowTarget);
+    if (!Strings.isNullOrEmpty(cvVal))
+      return Double.parseDouble(cvVal);
+    else
+      return null;
   }
 
   private boolean haveCVParam(@Nullable List<CVParam> cvParams, @Nonnull String cvParam) {

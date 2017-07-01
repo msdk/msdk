@@ -38,6 +38,7 @@ import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.util.ChromatogramUtil;
 
 /**
  * This class creates a feature table based on the SRM chromatograms from a raw data file.
@@ -49,7 +50,7 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 
   private final @Nonnull RawDataFile rawDataFile;
 
-  private List<Chromatogram> result;
+  private List<Chromatogram> result = new ArrayList<>();
   private boolean canceled = false;
   private int parsed = 0, total = 0;
 
@@ -62,16 +63,13 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
    */
   public SrmDetectionMethod(@Nonnull RawDataFile rawDataFile) {
     this.rawDataFile = rawDataFile;
-
-    // Make a new array
-    result = new ArrayList<>();
   }
 
   /** {@inheritDoc} */
   @Override
   public List<Chromatogram> execute() throws MSDKException {
 
-    logger.info("Started Srm chromatogram builder on file " + rawDataFile.getName());
+    logger.info("Started SRM chromatogram builder on file " + rawDataFile.getName());
 
     // Chromatograms
     List<Chromatogram> chromatograms = rawDataFile.getChromatograms();
@@ -81,7 +79,7 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
     List<MsScan> scans = rawDataFile.getScans();
     total += scans.size();
 
-    // Check if we have any chomatograms or scans
+    // Check if we have any chromatograms or scans
     if (total == 0) {
       throw new MSDKException("No chromatograms or scans provided for SRM detection method");
     }
@@ -100,12 +98,12 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 
       // Add the SRM chromatogram to the list
       result.add(chromatogram);
-
+ 
       parsed++;
     }
 
     // Iterate over all scans
-    Map<String, BuildingChromatogram> chromatogramMap = new HashMap<String, BuildingChromatogram>();
+    Map<String, SimpleChromatogram> chromatogramMap = new HashMap<String, SimpleChromatogram>();
     Map<Double, Range<Double>> q1IsolationMzRangeMap = new HashMap<Double, Range<Double>>();
     Map<Double, Range<Double>> q3IsolationMzRangeMap = new HashMap<Double, Range<Double>>();
     for (MsScan scan : scans) {
@@ -115,7 +113,7 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 
       // Ignore non SRM scans
       String msFunction = scan.getMsFunction();
-      if (msFunction == null || (!msFunction.equals("srm"))) {
+      if (msFunction == null || (!msFunction.toLowerCase().contains("srm"))) {
         parsed++;
         continue;
       }
@@ -142,9 +140,9 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
       }
 
       // Get the chromatogram for the Q1 and Q3 value or generate a new
-      BuildingChromatogram buildingChromatogram = chromatogramMap.get(q1 + ";" + q3);
+      SimpleChromatogram buildingChromatogram = chromatogramMap.get(q1 + ";" + q3);
       if (buildingChromatogram == null) {
-        buildingChromatogram = new BuildingChromatogram();
+        buildingChromatogram = new SimpleChromatogram();
         chromatogramMap.put(q1 + ";" + q3, buildingChromatogram);
 
         // Store the mz isolation range for the q1 and q3 values
@@ -154,31 +152,19 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 
       // Add the new data point
       Float rt = scan.getRetentionTime();
-      float intenstiy = scan.getIntensityValues()[0]; // Assume only 1
-                                                      // value
-      buildingChromatogram.addDataPoint(rt, 0d, intenstiy);
+      float intenstiy = scan.getIntensityValues()[0]; // Assume only 1 value
+      buildingChromatogram.addDataPoint(rt, null, intenstiy);
 
       parsed++;
     }
 
     // Add the newly generated chromatograms to the result list
-    int chromatogramNumber = 1;
-    Iterator<Map.Entry<String, BuildingChromatogram>> iterator =
+    Iterator<Map.Entry<String, SimpleChromatogram>> iterator =
         chromatogramMap.entrySet().iterator();
     while (iterator.hasNext()) {
-      Map.Entry<String, BuildingChromatogram> entry = iterator.next();
+      Map.Entry<String, SimpleChromatogram> entry = iterator.next();
       String q1q3 = entry.getKey();
-      BuildingChromatogram buildingChromatogram = entry.getValue();
-
-      // Create the final chromatogram
-      SimpleChromatogram chromatogram = new SimpleChromatogram();
-
-      // Add the data points to the final chromatogram
-      float[] rtValues = buildingChromatogram.getRtValues();
-      double[] mzValues = buildingChromatogram.getMzValues();
-      float[] intensityValues = buildingChromatogram.getIntensityValues();
-      int size = buildingChromatogram.getSize();
-      chromatogram.setDataPoints(rtValues, mzValues, intensityValues, size);
+      SimpleChromatogram chromatogram = entry.getValue();
 
       // Set the Q1 and Q3 values to the isolations for the chromatogram
       String[] strs = q1q3.split(";");
@@ -191,10 +177,15 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
       isolationInfo = new SimpleIsolationInfo(q3IsolationMzRangeMap.get(q3), null, q3, null, null);
       isolations.add(isolationInfo);
 
+      if ((chromatogram.getMz() == null) && (chromatogram.getMzValues() != null)) {
+        double mzValues[] = chromatogram.getMzValues();
+        Integer size = chromatogram.getNumberOfDataPoints();
+        Double newMz = ChromatogramUtil.getMedianMz(mzValues, size);
+        chromatogram.setMz(newMz);
+      }
+
       // Add the chromatogram
       result.add(chromatogram);
-
-      chromatogramNumber++;
 
       iterator.remove();
     }

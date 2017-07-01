@@ -1,6 +1,10 @@
 package io.github.msdk.io.mzxml;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.Assert;
@@ -15,6 +19,14 @@ import io.github.msdk.util.MsSpectrumUtil;
 public class MzXMLParserTest {
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
+  private Path getResourcePath(String resource) throws MSDKException {
+    final URL url = MzXMLParserTest.class.getClassLoader().getResource(resource);
+    try {
+      return Paths.get(url.toURI()).toAbsolutePath();
+    } catch (URISyntaxException e) {
+      throw new MSDKException(e);
+    }
+  }
 
   @Test
   public void testA10A2() throws MSDKException {
@@ -22,7 +34,8 @@ public class MzXMLParserTest {
     float intensityBuffer[];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "A1-0_A2.mzXML");
+    String file = "A1-0_A2.mzXML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzXMLFileParser parser = new MzXMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
@@ -57,7 +70,8 @@ public class MzXMLParserTest {
     float intensityBuffer[];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "R1_RG59_B4_1.mzXML");
+    String file = "R1_RG59_B4_1.mzXML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzXMLFileParser parser = new MzXMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();

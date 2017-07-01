@@ -1,9 +1,7 @@
 package io.github.msdk.io.mzxml;
 
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Base64;
@@ -11,7 +9,6 @@ import java.util.Date;
 import java.util.zip.InflaterInputStream;
 
 import javax.annotation.Nonnull;
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
@@ -34,7 +31,6 @@ import it.unimi.dsi.io.ByteBufferInputStream;
 import javolution.text.CharArray;
 import javolution.xml.internal.stream.XMLStreamReaderImpl;
 import javolution.xml.stream.XMLStreamConstants;
-import javolution.xml.stream.XMLStreamException;
 import javolution.xml.stream.XMLStreamReader;
 
 public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
@@ -168,6 +164,8 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
                 CharArray precision = getRequiredAttribute(xmlStreamReader, "precision");
                 vars.precision = precision.toString();
 
+                vars.peaksStart = xmlStreamReader.getLocation().getCharacterOffset();
+
               } else if (openingTagName.contentEquals(TAG_PRECURSOR_MZ)) {
                 CharArray precursorCharge =
                     xmlStreamReader.getAttributeValue(null, "precursorCharge");
@@ -189,6 +187,7 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
                 case TAG_PEAKS:
                   double[] mzValues = new double[vars.peaksCount];
                   float[] intensityValues = new float[vars.peaksCount];
+
                   // Base64 decoder
                   InputStream decodedIs = Base64.getDecoder().wrap(vars.peaksChars);
                   InflaterInputStream iis = null;
@@ -197,13 +196,10 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
                   // Decompress if the array is compressed
                   if (vars.compressionFlag) {
                     iis = new InflaterInputStream(decodedIs);
-                  }
-
-                  // Load the required input stream to peakStream
-                  if (iis == null)
-                    peakStream = new DataInputStream(decodedIs);
-                  else
                     peakStream = new DataInputStream(iis);
+                  } else {
+                    peakStream = new DataInputStream(decodedIs);
+                  }
 
                   for (int i = 0; i < vars.peaksCount; i++) {
 
@@ -233,8 +229,8 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
               if (vars.currentTag != null) {
                 switch (vars.currentTag.toString()) {
                   case TAG_PEAKS:
-                    vars.peaksChars =
-                        new ByteArrayInputStream(xmlStreamReader.getText().toString().getBytes());
+                    vars.peaksChars = new ByteBufferInputStreamAdapter(is.copy(), vars.peaksStart,
+                        xmlStreamReader.getTextLength());
                     break;
                   case TAG_PRECURSOR_MZ:
                     IsolationInfo newIsolation = new SimpleIsolationInfo(
@@ -304,6 +300,7 @@ class Vars {
   int peaksCount;
   boolean compressionFlag;
   CharArray currentTag;
+  Integer peaksStart;
   InputStream peaksChars;
 
   Vars() {
@@ -312,6 +309,7 @@ class Vars {
     peaksCount = 0;
     compressionFlag = false;
     currentTag = null;
+    peaksStart = 0;
     peaksChars = null;
   }
 }

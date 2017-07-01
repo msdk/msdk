@@ -177,7 +177,7 @@ public class MSNumpress {
   public static double decodeFixedPoint(byte[] data) {
     long fp = 0;
     for (int i = 0; i < 8; i++) {
-      fp = fp | ((0xFFl & data[7 - i]) << (8 * i));
+      fp = fp | ((0xFFL & data[7 - i]) << (8 * i));
     }
     return Double.longBitsToDouble(fp);
   }
@@ -200,7 +200,7 @@ public class MSNumpress {
     if (dataSize == 0)
       return 0;
     if (dataSize == 1)
-      return Math.floor(0xFFFFFFFFl / data[0]);
+      return Math.floor(0xFFFFFFFFL / data[0]);
     double maxDouble = Math.max(data[0], data[1]);
 
     for (int i = 2; i < dataSize; i++) {
@@ -209,7 +209,7 @@ public class MSNumpress {
       maxDouble = Math.max(maxDouble, Math.ceil(Math.abs(diff) + 1));
     }
 
-    return Math.floor(0x7FFFFFFFl / maxDouble);
+    return Math.floor(0x7FFFFFFFL / maxDouble);
   }
 
 
@@ -323,7 +323,7 @@ public class MSNumpress {
 
     ints[1] = 0;
     for (int i = 0; i < 4; i++) {
-      ints[1] = ints[1] | ((0xFFl & data[8 + i]) << (i * 8));
+      ints[1] = ints[1] | ((0xFFL & data[8 + i]) << (i * 8));
     }
     result[0] = ints[1] / fixedPoint;
 
@@ -334,7 +334,7 @@ public class MSNumpress {
 
     ints[2] = 0;
     for (int i = 0; i < 4; i++) {
-      ints[2] = ints[2] | ((0xFFl & data[12 + i]) << (i * 8));
+      ints[2] = ints[2] | ((0xFFL & data[12 + i]) << (i * 8));
     }
     result[1] = ints[2] / fixedPoint;
 
@@ -391,7 +391,7 @@ public class MSNumpress {
 
     ints[1] = 0;
     for (int i = 0; i < 4; i++) {
-      ints[1] = ints[1] | ((0xFFl & data[8 + i]) << (i * 8));
+      ints[1] = ints[1] | ((0xFFL & data[8 + i]) << (i * 8));
     }
     result[0] = ints[1] / fixedPoint;
 
@@ -402,7 +402,7 @@ public class MSNumpress {
 
     ints[2] = 0;
     for (int i = 0; i < 4; i++) {
-      ints[2] = ints[2] | ((0xFFl & data[12 + i]) << (i * 8));
+      ints[2] = ints[2] | ((0xFFL & data[12 + i]) << (i * 8));
     }
     result[1] = ints[2] / fixedPoint;
 

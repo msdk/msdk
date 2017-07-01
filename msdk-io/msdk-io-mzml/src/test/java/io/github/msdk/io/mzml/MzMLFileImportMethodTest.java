@@ -14,6 +14,10 @@
 package io.github.msdk.io.mzml;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,14 +39,23 @@ public class MzMLFileImportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
+  private Path getResourcePath(String resource) throws MSDKException {
+    final URL url = MzMLFileImportMethodTest.class.getClassLoader().getResource(resource);
+    try {
+      return Paths.get(url.toURI()).toAbsolutePath();
+    } catch (URISyntaxException e) {
+      throw new MSDKException(e);
+    }
+  }
 
   @Test
   public void test5peptideFT() throws MSDKException {
 
     float intensityBuffer[] = new float[10000];
 
-    // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "5peptideFT.mzML");
+    String fileName = "5peptideFT.mzML";
+    File inputFile = getResourcePath(fileName).toFile();
+    //File inputFile = new File(TEST_DATA_PATH + fileName);
     Assert.assertTrue(inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
@@ -93,7 +106,8 @@ public class MzMLFileImportMethodTest {
     float intensityBuffer[];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "tiny.pwiz.idx.mzML");
+    String fileName = "tiny.pwiz.idx.mzML";
+    final File inputFile = getResourcePath(fileName).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
@@ -138,7 +152,8 @@ public class MzMLFileImportMethodTest {
     float intensityBuffer[] = new float[10000];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "RawCentriodCidWithMsLevelInRefParamGroup.mzML");
+    String fileName = "RawCentriodCidWithMsLevelInRefParamGroup.mzML";
+    final File inputFile = getResourcePath(fileName).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
@@ -186,7 +201,8 @@ public class MzMLFileImportMethodTest {
   public void testCompressedAndUncompressed() throws MSDKException {
 
     // Import the compressed file
-    File compressedFile = new File(TEST_DATA_PATH + "MzMLFile_7_compressed.mzML");
+    String fileNameCompressed = "MzMLFile_7_compressed.mzML";
+    final File compressedFile = getResourcePath(fileNameCompressed).toFile();
     Assert.assertTrue(compressedFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(compressedFile);
     RawDataFile compressedRaw = importer.execute();
@@ -194,7 +210,8 @@ public class MzMLFileImportMethodTest {
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
     // Import the uncompressed file
-    File unCompressedFile = new File(TEST_DATA_PATH + "MzMLFile_7_uncompressed.mzML");
+    String fileNameUncompressed = "MzMLFile_7_uncompressed.mzML";
+    final File unCompressedFile = getResourcePath(fileNameUncompressed).toFile();
     Assert.assertTrue(unCompressedFile.canRead());
     importer = new MzMLFileImportMethod(unCompressedFile);
     RawDataFile uncompressedRaw = importer.execute();
@@ -231,7 +248,8 @@ public class MzMLFileImportMethodTest {
   public void testSRM() throws MSDKException {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "SRM.mzML");
+    String fileName = "SRM.mzML";
+    final File inputFile = getResourcePath(fileName).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
@@ -270,7 +288,8 @@ public class MzMLFileImportMethodTest {
     float intensityBuffer[] = new float[10000];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "mzML_with_UV.mzML");
+    String fileName = "mzML_with_UV.mzML";
+    final File inputFile = getResourcePath(fileName).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
@@ -306,7 +325,8 @@ public class MzMLFileImportMethodTest {
     float intensityBuffer[] = new float[10000];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "emptyScan.mzML");
+    String fileName = "emptyScan.mzML";
+    final File inputFile = getResourcePath(fileName).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
@@ -349,7 +369,8 @@ public class MzMLFileImportMethodTest {
 
     // Try importing an invalid (truncated file).
     // Import should throw an MSDKException.
-    File inputFile = new File(TEST_DATA_PATH + "truncated.mzML");
+    String fileName = "truncated.mzML";
+    final File inputFile = getResourcePath(fileName).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     importer.execute();
@@ -360,7 +381,8 @@ public class MzMLFileImportMethodTest {
   public void testZlibAndNumpressCompression() throws MSDKException {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "MzValues_Zlib+Numpress.mzML");
+    String fileName = "MzValues_Zlib+Numpress.mzML";
+    final File inputFile = getResourcePath(fileName).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
@@ -385,8 +407,8 @@ public class MzMLFileImportMethodTest {
         MsSpectrumUtil.getMaxIntensity(scan4.getIntensityValues(), scan4.getNumberOfDataPoints());
     Assert.assertEquals(8746.9599f, scan2maxInt, 0.1f);
     Assert.assertEquals(new Float(58989.76953125), scan4.getTIC(), 10);
-    Assert.assertEquals(new Double(100.317253112793), scan4.getMzRange().lowerEndpoint(), 0.000001);
-    Assert.assertEquals(new Double(999.715515136719), scan4.getMzRange().upperEndpoint(), 0.000001);
+    Assert.assertEquals(100.317253112793, scan4.getMzRange().lowerEndpoint(), 0.000001);
+    Assert.assertEquals(999.715515136719, scan4.getMzRange().upperEndpoint(), 0.000001);
     Assert.assertEquals("- c ESI Q1MS [100.000-1000.000]", scan4.getScanDefinition());
 
     // Test isolation data

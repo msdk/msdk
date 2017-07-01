@@ -13,22 +13,21 @@
 
 package io.github.msdk.io.chromatof;
 
-import io.github.msdk.io.chromatof.ChromaTofParser.ColumnName;
-import io.github.msdk.io.chromatof.ChromaTofParser.TableColumn;
-import io.github.msdk.test.LogMethodName;
-import io.github.msdk.test.SetupLogging;
-import io.github.msdk.test.ZipResourceExtractor;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.github.msdk.io.chromatof.ChromaTofParser.ColumnName;
+import io.github.msdk.io.chromatof.ChromaTofParser.TableColumn;
 
 /**
  * Tests for {@link ChromaTofParser} for 1D and 2D data.
@@ -40,10 +39,6 @@ public class ChromaTofParserTest {
 
   @Rule
   public TemporaryFolder tf = new TemporaryFolder();
-  @Rule
-  public SetupLogging sl = new SetupLogging();
-  @Rule
-  public LogMethodName lmn = new LogMethodName();
 
   @Test
   public void testChromaTofParser2DRT1RT2() throws IOException {

@@ -14,6 +14,10 @@
 package io.github.msdk.io.mzxml;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.Assert;
@@ -29,6 +33,14 @@ public class MzXMLFileImportMethodTest {
 
   private static final String TEST_DATA_PATH = "src/test/resources/";
 
+  private Path getResourcePath(String resource) throws MSDKException {
+    final URL url = MzXMLFileImportMethodTest.class.getClassLoader().getResource(resource);
+    try {
+      return Paths.get(url.toURI()).toAbsolutePath();
+    } catch (URISyntaxException e) {
+      throw new MSDKException(e);
+    }
+  }
 
   @Test
   public void testA10A2() throws MSDKException {
@@ -38,7 +50,8 @@ public class MzXMLFileImportMethodTest {
     float intensityBuffer[];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "A1-0_A2.mzXML");
+    String file =  "A1-0_A2.mzXML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
@@ -75,7 +88,8 @@ public class MzXMLFileImportMethodTest {
     float intensityBuffer[];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "R1_RG59_B4_1.mzXML");
+    String file = "R1_RG59_B4_1.mzXML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();

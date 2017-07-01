@@ -126,7 +126,7 @@ class MzMLChromatogram implements Chromatogram {
    * Setter for the field <code>mzBinaryDataInfo</code>.
    * </p>
    *
-   * @param mzBinaryDataInfo a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo} object.
+   * @param rtBinaryDataInfo a {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo} object.
    */
   public void setRtBinaryDataInfo(MzMLBinaryDataInfo rtBinaryDataInfo) {
     this.rtBinaryDataInfo = rtBinaryDataInfo;

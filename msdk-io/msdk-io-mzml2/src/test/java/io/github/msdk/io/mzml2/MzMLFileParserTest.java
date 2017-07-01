@@ -15,6 +15,10 @@
 package io.github.msdk.io.mzml2;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,14 +38,22 @@ import io.github.msdk.util.MsSpectrumUtil;
 
 public class MzMLFileParserTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
+  private Path getResourcePath(String resource) throws MSDKException {
+    final URL url = MzMLFileParserTest.class.getClassLoader().getResource(resource);
+    try {
+      return Paths.get(url.toURI()).toAbsolutePath();
+    } catch (URISyntaxException e) {
+      throw new MSDKException(e);
+    }
+  }
 
   @Test
   public void testFileWithUV() throws MSDKException {
 
     // Import the file
-    final String inputFileName = TEST_DATA_PATH + "mzML_with_UV.mzML";
-    final File inputFile = new File(inputFileName);
+    String file = "mzML_with_UV.mzML";
+    final Path path = getResourcePath(file);
+    final File inputFile = path.toFile();
     MzMLFileParser mzParser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = mzParser.execute();
     Assert.assertNotNull(rawFile);
@@ -62,9 +74,9 @@ public class MzMLFileParserTest {
     Assert.assertEquals(new Integer(2114), spectrum.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, spectrum.getSpectrumType());
     Assert.assertEquals(new Float(9.939699e06), spectrum.getTIC(), 10);
-    Assert.assertEquals(new Double(100.175651550293), spectrum.getMzRange().lowerEndpoint(),
+    Assert.assertEquals(100.175651550293, spectrum.getMzRange().lowerEndpoint(),
         0.000001);
-    Assert.assertEquals(new Double(999.832214355469), spectrum.getMzRange().upperEndpoint(),
+    Assert.assertEquals(999.832214355469, spectrum.getMzRange().upperEndpoint(),
         0.000001);
     Assert.assertEquals(509.6600036621094, spectrum.getMzValues()[619], 0.0001);
     Assert.assertEquals("+ c ESI Q1MS [100.000-1000.000]", spectrum.getScanDefinition());
@@ -75,8 +87,8 @@ public class MzMLFileParserTest {
     rawFile.dispose();
 
     // Import the file using the alternate constructor
-    Assert.assertNotNull(new File(inputFileName));
-    MzMLFileParser mzParser2 = new MzMLFileParser(inputFileName);
+    Assert.assertNotNull(new File(path.toString()));
+    MzMLFileParser mzParser2 = new MzMLFileParser(path);
     RawDataFile rawFile2 = mzParser2.execute();
     Assert.assertNotNull(rawFile2);
     Assert.assertEquals(1.0, mzParser2.getFinishedPercentage(), 0.0001);
@@ -96,9 +108,9 @@ public class MzMLFileParserTest {
     Assert.assertEquals(new Integer(2117), spectrum2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, spectrum2.getSpectrumType());
     Assert.assertEquals(new Float(43900.85546875), spectrum2.getTIC(), 10);
-    Assert.assertEquals(new Double(100.300285339355), spectrum2.getMzRange().lowerEndpoint(),
+    Assert.assertEquals(100.300285339355, spectrum2.getMzRange().lowerEndpoint(),
         0.000001);
-    Assert.assertEquals(new Double(999.323547363281), spectrum2.getMzRange().upperEndpoint(),
+    Assert.assertEquals(999.323547363281, spectrum2.getMzRange().upperEndpoint(),
         0.000001);
     Assert.assertEquals("- c ESI Q1MS [100.000-1000.000]", spectrum2.getScanDefinition());
     Assert.assertEquals(new Integer(1), spectrum2.getMsLevel());
@@ -114,7 +126,8 @@ public class MzMLFileParserTest {
     float intensityBuffer[] = new float[10000];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "5peptideFT.mzML");
+    String file = "5peptideFT.mzML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
@@ -166,7 +179,8 @@ public class MzMLFileParserTest {
     float intensityBuffer[];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "tiny.pwiz.idx.mzML");
+    String file = "tiny.pwiz.idx.mzML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
@@ -211,7 +225,8 @@ public class MzMLFileParserTest {
     float intensityBuffer[] = new float[10000];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "RawCentriodCidWithMsLevelInRefParamGroup.mzML");
+    String file = "RawCentriodCidWithMsLevelInRefParamGroup.mzML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
@@ -259,7 +274,8 @@ public class MzMLFileParserTest {
   public void testCompressedAndUncompressed() throws MSDKException {
 
     // Import the compressed file
-    File compressedFile = new File(TEST_DATA_PATH + "MzMLFile_7_compressed.mzML");
+    String fileCompressed = "MzMLFile_7_compressed.mzML";
+    File compressedFile = getResourcePath(fileCompressed).toFile();
     Assert.assertTrue(compressedFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(compressedFile);
     RawDataFile compressedRaw = parser.execute();
@@ -267,7 +283,8 @@ public class MzMLFileParserTest {
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
     // Import the uncompressed file
-    File unCompressedFile = new File(TEST_DATA_PATH + "MzMLFile_7_uncompressed.mzML");
+    String fileUncompressed = "MzMLFile_7_uncompressed.mzML";
+    File unCompressedFile = getResourcePath(fileUncompressed).toFile();
     Assert.assertTrue(unCompressedFile.canRead());
     parser = new MzMLFileParser(unCompressedFile);
     RawDataFile uncompressedRaw = parser.execute();
@@ -304,7 +321,8 @@ public class MzMLFileParserTest {
   public void testSRM() throws MSDKException {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "SRM.mzML");
+    String file = "SRM.mzML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
@@ -332,6 +350,11 @@ public class MzMLFileParserTest {
     chromatogram = chromatograms.get(0);
     Assert.assertEquals(ChromatogramType.TIC, chromatogram.getChromatogramType());
     Assert.assertEquals(0, chromatogram.getIsolations().size());
+    
+    // Check m/z values
+    Assert.assertEquals(407.706, chromatograms.get(1).getMz(), 0.001);
+    Assert.assertEquals(1084.486, chromatograms.get(18).getMz(), 0.001);
+    Assert.assertEquals(1042.516, chromatograms.get(35).getMz(), 0.001);
 
     rawFile.dispose();
   }
@@ -344,7 +367,8 @@ public class MzMLFileParserTest {
     float intensityBuffer[] = new float[10000];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "emptyScan.mzML");
+    String file = "emptyScan.mzML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
@@ -387,7 +411,8 @@ public class MzMLFileParserTest {
 
     // Try importing an invalid (truncated file).
     // Import should throw an MSDKException.
-    File inputFile = new File(TEST_DATA_PATH + "truncated.mzML");
+    String file = "truncated.mzML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     parser.execute();
@@ -398,7 +423,8 @@ public class MzMLFileParserTest {
   public void testZlibAndNumpressCompression() throws MSDKException {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "MzValues_Zlib+Numpress.mzML");
+    String file = "MzValues_Zlib+Numpress.mzML";
+    File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileParser parser = new MzMLFileParser(inputFile);
     RawDataFile rawFile = parser.execute();
@@ -423,8 +449,8 @@ public class MzMLFileParserTest {
         MsSpectrumUtil.getMaxIntensity(scan4.getIntensityValues(), scan4.getNumberOfDataPoints());
     Assert.assertEquals(8746.9599f, scan2maxInt, 0.1f);
     Assert.assertEquals(new Float(58989.76953125), scan4.getTIC(), 10);
-    Assert.assertEquals(new Double(100.317253112793), scan4.getMzRange().lowerEndpoint(), 0.000001);
-    Assert.assertEquals(new Double(999.715515136719), scan4.getMzRange().upperEndpoint(), 0.000001);
+    Assert.assertEquals(100.317253112793, scan4.getMzRange().lowerEndpoint(), 0.000001);
+    Assert.assertEquals(999.715515136719, scan4.getMzRange().upperEndpoint(), 0.000001);
     Assert.assertEquals("- c ESI Q1MS [100.000-1000.000]", scan4.getScanDefinition());
 
     // Test isolation data
