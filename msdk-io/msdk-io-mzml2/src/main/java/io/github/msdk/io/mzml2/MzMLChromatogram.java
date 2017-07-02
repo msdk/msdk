@@ -248,6 +248,19 @@ class MzMLChromatogram implements Chromatogram {
   @Override
   @Nullable
   public Double getMz() {
+    // Set mz value only if it hasn't been fetched before
+    if (mz == null) {
+      // Try getting the mz value from the product isolation window
+      // set mz value to the respective cv value only if the value is present
+      if (product != null) {
+        if (product.getIsolationWindow().isPresent()) {
+          Optional<String> cvval =
+              getCVValue(product.getIsolationWindow().get(), MzMLCV.cvIsolationWindowTarget);
+          if (cvval.isPresent())
+            mz = Double.valueOf(cvval.get());
+        }
+      }
+    }
     return mz;
   }
 

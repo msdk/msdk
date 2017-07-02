@@ -14,8 +14,8 @@ public class TagTracker {
   private ArrayDeque<CharArray> pool;
   protected final static int DEFAULT_CHAR_ARR_SIZE = 64;
   /**
-   * If the stack grows larger than this value, something is likely not OK.
-   * Will throw an exception in such a case.
+   * If the stack grows larger than this value, something is likely not OK. Will throw an exception
+   * in such a case.
    */
   private int maxDepth;
   protected static final int DEFAULT_MAX_DEPTH = 128;
@@ -34,9 +34,6 @@ public class TagTracker {
   }
 
   public void enter(CharArray tag) {
-    if (tag.contentEquals("selectedIonList")) {
-      int a = 1;
-    }
     final CharArray arr = borrowArr(tag.length());
     copyContent(tag, arr);
     stack.push(arr);
@@ -83,12 +80,13 @@ public class TagTracker {
 
   /**
    * Copy content from c1 to c2. If c2's buffer is not big enough, it will be reassigned.
+   * 
    * @param c1 Copy from.
    * @param c2 Copy to. Potentially increasing the buffer size and erasing all previous content.
    */
   private void copyContent(final CharArray c1, CharArray c2) {
     final char[] a1 = c1.array();
-    final char[] a2 = c2.array().length >=  c1.length() ? c2.array() : new char[c1.length()];
+    final char[] a2 = c2.array().length >= c1.length() ? c2.array() : new char[c1.length()];
     for (int i = 0; i < c1.length(); i++) {
       a2[i] = a1[c1.offset() + i];
     }
