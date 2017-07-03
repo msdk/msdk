@@ -39,17 +39,36 @@ public class PeakSimilarityTest {
 		double peakSimilarityThreshold = 0;
 		double epsilon = 0;
 		List<Double> similarityValues = new ArrayList<Double>();
-		int mzIndex = objsliceSparseMatrix.mzValues.indexOf(objsliceSparseMatrix.roundMZ(mz));
+		int roundedMz = objsliceSparseMatrix.roundMZ(mz);
+		int mzIndex = objsliceSparseMatrix.mzValues.indexOf(roundedMz);
 		MultiKeyMap slice = objsliceSparseMatrix.getHorizontalSlice(mz, leftBound, rightBound);
 		
 		for(int i=leftBound;i<rightBound;i++){
-			SliceSparseMatrix.SparseMatrixTriplet obj1= (SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, mz);
-			SliceSparseMatrix.SparseMatrixTriplet obj2= (SliceSparseMatrix.SparseMatrixTriplet)slice.get(i+1, mz);
-			area1 += 0.5* (obj1.intensity+obj2.intensity);
+			SliceSparseMatrix.SparseMatrixTriplet obj1= (SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, roundedMz);
+			SliceSparseMatrix.SparseMatrixTriplet obj2= (SliceSparseMatrix.SparseMatrixTriplet)slice.get(i+1, roundedMz);
+			if(obj1==null && obj2!=null){
+				area1 += 0.5* (0+obj2.intensity);
+			}
+			else if(obj2==null && obj1!=null){
+				area1 += 0.5* (obj1.intensity+0);
+			}
+			else if (obj1==null && obj2==null) {
+				area1 += 0;
+			}
+			
+			else{
+				area1 += 0.5* (obj1.intensity+obj2.intensity);
+			}
+			
 		}
 		
 		for(int i=0;i<arrayCount;i++){
-			normzlizedEIC[i]= ((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, mz)).intensity/(float) area1;			
+			if((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, roundedMz) != null){
+				normzlizedEIC[i]= ((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, roundedMz)).intensity/(float) area1;	
+			}
+			else{
+				normzlizedEIC[i] = 0;
+			}	
 		}
 		
 		while(curSimilarity>peakSimilarityThreshold){
@@ -64,7 +83,19 @@ public class PeakSimilarityTest {
 			for(int i=rightBound;i<rightBound;i++){
 				SliceSparseMatrix.SparseMatrixTriplet obj1= (SliceSparseMatrix.SparseMatrixTriplet)curSlice.get(i, curMZ);
 				SliceSparseMatrix.SparseMatrixTriplet obj2= (SliceSparseMatrix.SparseMatrixTriplet)curSlice.get(i+1,curMZ);
-				area2 += 0.5* (obj1.intensity+obj2.intensity);
+				if(obj1==null && obj2!=null){
+					area1 += 0.5* (0+obj2.intensity);
+				}
+				else if(obj2==null && obj1!=null){
+					area1 += 0.5* (obj1.intensity+0);
+				}
+				else if (obj1==null && obj2==null) {
+					area1 += 0;
+				}
+				
+				else{
+					area1 += 0.5* (obj1.intensity+obj2.intensity);
+				}
 			}
 			
 			if(area2<epsilon){
@@ -73,7 +104,12 @@ public class PeakSimilarityTest {
 			}
 			
 			for(int i=0;i<arrayCount;i++){
-				curEIC[i]= ((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, curMZ)).intensity/(float) area2;			
+				if((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i+leftBound, curMZ)!=null){
+					curEIC[i]= ((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i+leftBound, curMZ)).intensity/(float) area2;	
+				}
+				else{
+					curEIC[i] = 0;
+				}		
 			}
 			
 			for(int j=0;j<arrayCount-1;j++){
@@ -104,7 +140,19 @@ public class PeakSimilarityTest {
 			for(int i=leftBound;i<rightBound;i++){
 				SliceSparseMatrix.SparseMatrixTriplet obj1= (SliceSparseMatrix.SparseMatrixTriplet)curSlice.get(i, curMZ);
 				SliceSparseMatrix.SparseMatrixTriplet obj2= (SliceSparseMatrix.SparseMatrixTriplet)curSlice.get(i+1, curMZ);
-				area2 += 0.5* (obj1.intensity+obj2.intensity);
+				if(obj1==null && obj2!=null){
+					area1 += 0.5* (0+obj2.intensity);
+				}
+				else if(obj2==null && obj1!=null){
+					area1 += 0.5* (obj1.intensity+0);
+				}
+				else if (obj1==null && obj2==null) {
+					area1 += 0;
+				}
+				
+				else{
+					area1 += 0.5* (obj1.intensity+obj2.intensity);
+				}
 			}
 			
 			if(area2<epsilon){
@@ -113,7 +161,12 @@ public class PeakSimilarityTest {
 			}
 			
 			for(int i=0;i<arrayCount;i++){
-				curEIC[i]= ((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, curMZ)).intensity/(float) area2;			
+				if((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, curMZ)!=null){
+					curEIC[i]= ((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, curMZ)).intensity/(float) area2;	
+				}
+				else{
+					curEIC[i] = 0;
+				}		
 			}
 			
 			for(int j=0;j<arrayCount-1;j++){
