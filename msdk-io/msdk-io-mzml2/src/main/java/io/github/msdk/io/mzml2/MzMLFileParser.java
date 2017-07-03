@@ -67,6 +67,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
   final static String ATTR_ACCESSION = "accession";
   final static String ATTR_VALUE = "value";
+  final static String ATTR_NAME = "name";
   final static String ATTR_UNIT_ACCESSION = "unitAccession";
 
   final static String TAG_SPECTRUM = "spectrum";
@@ -551,6 +552,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private MzMLCVParam createMzMLCVParam(XMLStreamReader xmlStreamReader) {
     CharArray accession = xmlStreamReader.getAttributeValue(null, ATTR_ACCESSION);
     CharArray value = xmlStreamReader.getAttributeValue(null, ATTR_VALUE);
+    CharArray name = xmlStreamReader.getAttributeValue(null, ATTR_NAME);
     CharArray unitAccession = xmlStreamReader.getAttributeValue(null, ATTR_UNIT_ACCESSION);
 
     // accession is a required attribute
@@ -560,9 +562,10 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
     // these attributes are optional
     String valueStr = value == null ? null : value.toString();
+    String nameStr = name == null ? null : name.toString();
     String unitAccessionStr = unitAccession == null ? null : unitAccession.toString();
 
-    return new MzMLCVParam(accession.toString(), valueStr, unitAccessionStr);
+    return new MzMLCVParam(accession.toString(), valueStr, nameStr, unitAccessionStr);
   }
 
 
