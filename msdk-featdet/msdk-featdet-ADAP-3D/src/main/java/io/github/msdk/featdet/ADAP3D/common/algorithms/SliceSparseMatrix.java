@@ -76,7 +76,7 @@ public class SliceSparseMatrix {
 	 *  mzValues is used to store all the mz values from raw file. 
 	 * </p>
 	 */
-	private final List<Integer> mzValues;
+	public final List<Integer> mzValues;
 	
 	/**
 	 * <p>
@@ -371,7 +371,7 @@ public class SliceSparseMatrix {
 	   * @param mz a {@link java.lang.Double} object
 	   * @return roundedmz a {@link java.lang.Integer} object
 	   */
-	private int roundMZ(double mz){
+	public int roundMZ(double mz){
 		int roundedmz = (int)Math.round(mz*roundMzFactor);
 		return roundedmz;
 	}

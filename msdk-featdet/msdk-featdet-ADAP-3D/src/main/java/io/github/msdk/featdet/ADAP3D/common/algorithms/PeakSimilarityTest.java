@@ -13,21 +13,25 @@
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
 import org.apache.commons.collections4.map.MultiKeyMap;
+
+import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.SparseMatrixTriplet;
+
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PeakSimilarityTest {
 
-	public void peakSimilarityFunction(SliceSparseMatrix objsliceSparseMatrix,double mz,int leftBound,int rightBound,double fwhm){
+	public List<Double> peakSimilarityFunction(SliceSparseMatrix objsliceSparseMatrix,double mz,int leftBound,int rightBound,double fwhm){
 		
+		int arrayCount = rightBound-leftBound+1;
 		double param_c = 0.2;
 		double param_b = Math.exp(-1/param_c);
 		double param_a = 1.0/(1.0-param_b);
 		double area1 = 0.0; 
 		double area2 = 0.0;
 		double diffArea = 0.0;
-		double[] normzlizedEIC = new double[rightBound-leftBound+1];
+		double[] normzlizedEIC = new double[arrayCount];
 		double curSimilarity = 1.0;
 		int curInc = 0;
 		int curInc2 = 0;
@@ -35,7 +39,7 @@ public class PeakSimilarityTest {
 		double peakSimilarityThreshold = 0;
 		double epsilon = 0;
 		List<Double> similarityValues = new ArrayList<Double>();
-		
+		int mzIndex = objsliceSparseMatrix.mzValues.indexOf(objsliceSparseMatrix.roundMZ(mz));
 		MultiKeyMap slice = objsliceSparseMatrix.getHorizontalSlice(mz, leftBound, rightBound);
 		
 		for(int i=leftBound;i<rightBound;i++){
@@ -44,23 +48,22 @@ public class PeakSimilarityTest {
 			area1 += 0.5* (obj1.intensity+obj2.intensity);
 		}
 		
-		for(int i=leftBound;i<rightBound;i++){
+		for(int i=0;i<arrayCount;i++){
 			normzlizedEIC[i]= ((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, mz)).intensity/(float) area1;			
 		}
 		
-	
-		
 		while(curSimilarity>peakSimilarityThreshold){
 			curInc += 1;
-			double[] curEIC = new double[rightBound-leftBound+1];
+			int curMZ = objsliceSparseMatrix.mzValues.get(mzIndex+curInc);
+			double[] curEIC = new double[arrayCount];
 			if(curInc>=2*fwhm)
 				break;
 			
 			MultiKeyMap curSlice = objsliceSparseMatrix.getHorizontalSlice(mz+curInc, leftBound, rightBound);
 			
-			for(int i=leftBound;i<rightBound;i++){
-				SliceSparseMatrix.SparseMatrixTriplet obj1= (SliceSparseMatrix.SparseMatrixTriplet)curSlice.get(i, mz+curInc);
-				SliceSparseMatrix.SparseMatrixTriplet obj2= (SliceSparseMatrix.SparseMatrixTriplet)curSlice.get(i+1, mz+curInc);
+			for(int i=rightBound;i<rightBound;i++){
+				SliceSparseMatrix.SparseMatrixTriplet obj1= (SliceSparseMatrix.SparseMatrixTriplet)curSlice.get(i, curMZ);
+				SliceSparseMatrix.SparseMatrixTriplet obj2= (SliceSparseMatrix.SparseMatrixTriplet)curSlice.get(i+1,curMZ);
 				area2 += 0.5* (obj1.intensity+obj2.intensity);
 			}
 			
@@ -69,11 +72,11 @@ public class PeakSimilarityTest {
 				continue;
 			}
 			
-			for(int i=leftBound;i<rightBound;i++){
-				curEIC[i]= ((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, mz+curInc)).intensity/(float) area2;			
+			for(int i=0;i<arrayCount;i++){
+				curEIC[i]= ((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, curMZ)).intensity/(float) area2;			
 			}
 			
-			for(int j=leftBound;j<rightBound;j++){
+			for(int j=0;j<arrayCount-1;j++){
 				diffArea += Math.abs(0.5*((normzlizedEIC[j] - curEIC[j])+(normzlizedEIC[j+1] - curEIC[j+1])));
 			}
 			
@@ -91,15 +94,16 @@ public class PeakSimilarityTest {
 		
 		while(curSimilarity>peakSimilarityThreshold){
 			curInc2 += 1;
-			double[] curEIC = new double[rightBound-leftBound+1];
+			int curMZ = objsliceSparseMatrix.mzValues.get(mzIndex-curInc2);
+			double[] curEIC = new double[arrayCount];
 			if(((mz-curInc2)<0) || (curInc>=2*fwhm))
 				break;
 			
 			MultiKeyMap curSlice = objsliceSparseMatrix.getHorizontalSlice(mz-curInc2, leftBound, rightBound);
 			
 			for(int i=leftBound;i<rightBound;i++){
-				SliceSparseMatrix.SparseMatrixTriplet obj1= (SliceSparseMatrix.SparseMatrixTriplet)curSlice.get(i, mz-curInc2);
-				SliceSparseMatrix.SparseMatrixTriplet obj2= (SliceSparseMatrix.SparseMatrixTriplet)curSlice.get(i+1, mz-curInc2);
+				SliceSparseMatrix.SparseMatrixTriplet obj1= (SliceSparseMatrix.SparseMatrixTriplet)curSlice.get(i, curMZ);
+				SliceSparseMatrix.SparseMatrixTriplet obj2= (SliceSparseMatrix.SparseMatrixTriplet)curSlice.get(i+1, curMZ);
 				area2 += 0.5* (obj1.intensity+obj2.intensity);
 			}
 			
@@ -108,11 +112,11 @@ public class PeakSimilarityTest {
 				continue;
 			}
 			
-			for(int i=leftBound;i<rightBound;i++){
-				curEIC[i]= ((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, mz+curInc)).intensity/(float) area2;			
+			for(int i=0;i<arrayCount;i++){
+				curEIC[i]= ((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, curMZ)).intensity/(float) area2;			
 			}
 			
-			for(int j=leftBound;j<rightBound;j++){
+			for(int j=0;j<arrayCount-1;j++){
 				diffArea += Math.abs(0.5*((normzlizedEIC[j] - curEIC[j])+(normzlizedEIC[j+1] - curEIC[j+1])));
 			}
 			
@@ -124,7 +128,7 @@ public class PeakSimilarityTest {
 		
 		curInc2-=1;
 		curInc2 -= subtractFromCurInc;
-		
+		return similarityValues;
 		
 	}
 }
