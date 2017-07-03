@@ -36,7 +36,7 @@ public class PeakSimilarityTest {
 		int curInc = 0;
 		int curInc2 = 0;
 		int subtractFromCurInc = 0;
-		double peakSimilarityThreshold = 0;
+		double peakSimilarityThreshold = 0.7;
 		double epsilon = 0;
 		List<Double> similarityValues = new ArrayList<Double>();
 		int roundedMz = objsliceSparseMatrix.roundMZ(mz);
@@ -173,7 +173,7 @@ public class PeakSimilarityTest {
 				diffArea += Math.abs(0.5*((normzlizedEIC[j] - curEIC[j])+(normzlizedEIC[j+1] - curEIC[j+1])));
 			}
 			
-			curSimilarity = (Math.exp(-diffArea/param_c)-param_b)*param_a;
+			curSimilarity = ((Math.exp(-diffArea/param_c))+param_b)*param_a;
 			
 			if(curSimilarity>peakSimilarityThreshold)
 				similarityValues.add(curSimilarity);
