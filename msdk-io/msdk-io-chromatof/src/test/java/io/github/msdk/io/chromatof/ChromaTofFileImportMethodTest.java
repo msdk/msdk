@@ -13,14 +13,13 @@
 package io.github.msdk.io.chromatof;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.Sample;
 
@@ -29,22 +28,18 @@ import io.github.msdk.datamodel.featuretables.Sample;
  */
 public class ChromaTofFileImportMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
-
   @Test
-  @Ignore
-  public void GCxGC_Import() throws MSDKException {
+  public void GCxGC_Import() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "GGT1.txt");
+    final URL url = this.getClass().getClassLoader().getResource("GGT1.txt");
+    File inputFile = new File(url.toURI());
     Assert.assertTrue(inputFile.canRead());
     ChromaTofFileImportMethod importer = new ChromaTofFileImportMethod(inputFile, Locale.US,
         ChromaTofParser.FIELD_SEPARATOR_TAB, ChromaTofParser.QUOTATION_CHARACTER_NONE);
     FeatureTable featureTable = importer.execute();
     Assert.assertNotNull(featureTable);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
-
 
     // The table has 1 sample
     List<Sample> samples = featureTable.getSamples();

@@ -10,7 +10,7 @@
  *
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
-package io.github.msdk.test;
+package io.github.msdk.io.chromatof;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * </p>
  *
  */
-public class ZipResourceExtractor {
+ class ZipResourceExtractor {
 
   private static final Logger log = LoggerFactory.getLogger(ZipResourceExtractor.class);
 

@@ -14,14 +14,13 @@
 package io.github.msdk.featdet.srmdetection;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Assume;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -29,14 +28,12 @@ import io.github.msdk.io.nativeformats.ThermoRawImportMethod;
 
 public class SrmDetectionMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
-  @Ignore
   @Test
-  public void test_mzML() throws MSDKException {
+  public void test_mzML() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "SRM.mzML");
+    final URL url = getClass().getClassLoader().getResource("SRM.mzML");
+    File inputFile = new File(url.toURI());
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
@@ -50,21 +47,25 @@ public class SrmDetectionMethodTest {
 
     // Verify data
     Assert.assertEquals(36, chromatograms.size());
-
+    for (int i = 0; i < 36; i++) {
+      Assert.assertNotNull(chromatograms.get(i));
+    }
+    
     // m/z
-    Assert.assertEquals(481.9, chromatograms.get(0).getMz(), 0.0001);
-    Assert.assertEquals(722.35, chromatograms.get(18).getMz(), 0.0001);
+    Assert.assertEquals(407.706, chromatograms.get(0).getMz(), 0.001);
+    Assert.assertEquals(1084.486, chromatograms.get(17).getMz(), 0.001);
+    Assert.assertEquals(1042.516, chromatograms.get(34).getMz(), 0.001);
   }
 
-  @Ignore
   @Test
-  public void test_Thermo() throws MSDKException {
+  public void test_Thermo() throws Exception {
 
     // Run this test only on Windows
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "Thermo-SRM.raw");
+    final URL url = getClass().getClassLoader().getResource("Thermo-SRM.raw");
+    File inputFile = new File(url.toURI());
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
     ThermoRawImportMethod importer = new ThermoRawImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();

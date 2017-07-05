@@ -14,6 +14,7 @@
 package io.github.msdk.io.chromatof;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -26,6 +27,8 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Lists;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
@@ -117,6 +120,7 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
 
     String fileName = sourceFile.getName();
     newFeatureTable = new SimpleFeatureTable();
+    newFeatureTable.setSamples(Collections.singletonList(fileSample));
     boolean normalizeColumnNames = false;
 
     ChromaTofParser parser = new ChromaTofParser(fieldSeparator, quotationCharacter, Locale.US);
