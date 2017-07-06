@@ -34,6 +34,10 @@ import org.apache.commons.collections4.map.MultiKeyMap;
  * slice contains intensities for one mz value for different scans.
  * </p>
  */
+//In this class sparse matrix has been implemented in the form of multikey map. Mz and scan number are keys and object containing  
+//Intensities along information like retention time and whether the value is still in matrix or not is the value.
+//Consider Scan numbers as column index and mz values as row index.
+//cell values as object containing Intensities along with other information like retention time and whether the value is still in matrix or not. 
 public class SliceSparseMatrix {
 		
 	/**

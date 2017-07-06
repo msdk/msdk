@@ -23,6 +23,7 @@ import java.util.List;
  * PeakSimilarityTest Class.
  * </p>
  */
+//PeakSimilarity test is used for finding adjacent similar peaks for given mz value and it decides whether the peak is good or not.
 public class PeakSimilarityTest {
 	
 	/**
@@ -30,6 +31,8 @@ public class PeakSimilarityTest {
 	 * PeakSimilarityResult class is used for returning lower and upper mz bound,boolean good peak value and list of similarity value.
 	 * </p>
 	 */
+	//Object of this class will return lowest mz boundary and highest mz boundary of adjacent similar peaks for given mz value.
+	//It will also return if the peak is good or not for given mz value.
 	public static class PeakSimilarityResult{
 		List<Double> similarityValues;
 		boolean goodPeak;
@@ -52,28 +55,40 @@ public class PeakSimilarityTest {
 	 */
 	public PeakSimilarityResult peakSimilarityFunction(SliceSparseMatrix objsliceSparseMatrix,double mz,int leftBound,int rightBound,double fwhm){
 		
+		//Here I'm rounding Full width half max(fwhm) and mz value by factor of 10000. 
+		//I've done the same for creating sparse matrix in SliceSparseMatrix Class.
 		double roundedFWHM = fwhm*10000;
+		
+		//Here normzlizedEICArray size has been defined  based on right side boundary and left side boundary as exact same
+		//number of values as rightBound-leftBound+1.
 		int arrayCount = rightBound-leftBound+1;
 		
+		//normzlizedEICArray is used for storing normalized intensities.
 		double[] normzlizedEICArray = new double[arrayCount];
 		List<Double> upperSimilarityValues = new ArrayList<Double>();
 		List<Double> lowerSimilarityValues = new ArrayList<Double>();
 		int roundedMz = objsliceSparseMatrix.roundMZ(mz);
+		//mzIndex is index of given mz from the sorted list of all mz values from raw file. 
 		int mzIndex = objsliceSparseMatrix.mzValues.indexOf(roundedMz);
+		//slice is used to store horizontal row from sparse matrix for given mz, left boundary and right boundary.
+		// left boundary and right boundary are used in form of scan numbers.
 		MultiKeyMap slice = objsliceSparseMatrix.getHorizontalSlice(mz, leftBound, rightBound);
 		double numSimEitherSideThreshold = fwhm/2;
-		
+		//normzlizedEIC method is used for normalizing intensities for given mz value. It updates normzlizedEICArray.
 		normzlizedEIC(slice,leftBound,rightBound,roundedMz,normzlizedEICArray);
 		
+		//Here we're getting highest mz value for which the peak is similar to given mz value.
 		int upperMzBound = findSimilarity(objsliceSparseMatrix,leftBound,rightBound,roundedMz,
 				roundedFWHM,mzIndex,normzlizedEICArray,upperSimilarityValues,true);
 		
+		//Here we're getting lowest mz value for which the peak is similar to given mz value.
 		int lowerMzBound = findSimilarity(objsliceSparseMatrix,leftBound,rightBound,roundedMz,
 				roundedFWHM,mzIndex,normzlizedEICArray,lowerSimilarityValues,false);
 		
 		List<Double> similarityValues = new ArrayList<Double>(upperSimilarityValues);
 		similarityValues.addAll(lowerSimilarityValues);
-				
+		
+		//Assigning values to object.
 		PeakSimilarityResult objPeakSimilarityResult = new PeakSimilarityResult();
 		objPeakSimilarityResult.similarityValues = similarityValues;
 		objPeakSimilarityResult.lowerMzBound = lowerMzBound;
@@ -82,6 +97,7 @@ public class PeakSimilarityTest {
 		int lowerBoundryDiff = roundedMz-lowerMzBound;
 		int upperBoundryDiff = upperMzBound - roundedMz;
 		
+		//This is the condition for determing whether the peak is good or not.
 		if((upperBoundryDiff>=numSimEitherSideThreshold) && (lowerBoundryDiff>=numSimEitherSideThreshold) && 
 				(upperBoundryDiff+lowerBoundryDiff>=fwhm)){
 			objPeakSimilarityResult.goodPeak = true;
@@ -132,12 +148,14 @@ public class PeakSimilarityTest {
 			
 			curInc += 1;
 			
+			//This condition is used to determine whether we're finding similar peaks for mz values lower or upper.
+			//than given mz value.curMzIndex maintains index of cur mz in sorted mz value list. 
 			if(upperBound == true)
 				curMzIndex = mzIndex+curInc;
 			else
 				curMzIndex = mzIndex-curInc;
 			
-			
+			//This condition checks whether we've mz values above or below given mz value.
 			if(objsliceSparseMatrix.mzValues.get(curMzIndex)!= null)
 				curMZ = objsliceSparseMatrix.mzValues.get(curMzIndex);
 			else
@@ -151,22 +169,28 @@ public class PeakSimilarityTest {
 			if((curMZ==0) && (mzDiff>=2*roundedFWHM))
 				break;
 			
+			//for getting slice of sparse matrix we need to provide original mz values which are there in raw file.
 			double originalCurMZ = (double)curMZ/10000;
+			//curEIC will store normalized intensities for adjacent mz values.
 			double[] curEIC = new double[arrayCount];
 			
-			
+			//Here current horizontal slice from sparse matrix is stored adjacent mz value.
 			MultiKeyMap curSlice = objsliceSparseMatrix.getHorizontalSlice(originalCurMZ, leftBound, rightBound);
 			area = normzlizedEIC(curSlice,leftBound,rightBound,curMZ,curEIC);
 			
+			//if area is too small continue.
 			if(area<epsilon){
 				subtractFromCurInc += 1;
 				continue;
 			}
-						
+			
+			diffArea = 0;
+			//This is the implementation of trapezoid.
 			for(int j=0;j<arrayCount-1;j++){
 				diffArea += Math.abs(0.5*((normzlizedEIC[j] - curEIC[j])+(normzlizedEIC[j+1] - curEIC[j+1])));
 			}
 			
+			//Here similarity value is calculated.
 			curSimilarity = ((Math.exp(-diffArea/param_c))-param_b)*param_a;
 			
 			if(curSimilarity>peakSimilarityThreshold)
@@ -198,6 +222,7 @@ public class PeakSimilarityTest {
 		double area = 0.0; 
 		int arrayCount = rightBound-leftBound+1;
 		
+		//Here area has been calculated for normalizing the intensities.
 		for(int i=leftBound;i<rightBound;i++){
 			SliceSparseMatrix.SparseMatrixTriplet obj1= (SliceSparseMatrix.SparseMatrixTriplet)slice.get(i, roundedMz);
 			SliceSparseMatrix.SparseMatrixTriplet obj2= (SliceSparseMatrix.SparseMatrixTriplet)slice.get(i+1, roundedMz);
@@ -217,6 +242,7 @@ public class PeakSimilarityTest {
 			
 		}
 		
+		//Here intensities are normalized.
 		for(int i=0;i<arrayCount;i++){
 			if((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i+leftBound, roundedMz) != null){
 				normzlizedEIC[i]= ((SliceSparseMatrix.SparseMatrixTriplet)slice.get(i+leftBound, roundedMz)).intensity/(float) area;	
