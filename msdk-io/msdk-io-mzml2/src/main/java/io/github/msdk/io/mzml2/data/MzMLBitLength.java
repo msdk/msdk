@@ -20,7 +20,7 @@ public enum MzMLBitLength {
   SIXTY_FOUR_BIT_INTEGER("MS:1000522"), // 64-bit integer
   SIXTY_FOUR_BIT_FLOAT("MS:1000523"); // 64-bit float
 
-  private String accession;
+  private final String accession;
 
   MzMLBitLength(String accession) {
     this.accession = accession;

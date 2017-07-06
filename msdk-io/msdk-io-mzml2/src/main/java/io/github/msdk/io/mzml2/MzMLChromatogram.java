@@ -377,6 +377,7 @@ class MzMLChromatogram implements Chromatogram {
   }
 
   /** {@inheritDoc} */
+  @Override
   @Nonnull
   public float[] getIntensityValues(@Nullable float[] array) {
     if (getIntensityBinaryDataInfo().getArrayLength() != numOfDataPoints) {
