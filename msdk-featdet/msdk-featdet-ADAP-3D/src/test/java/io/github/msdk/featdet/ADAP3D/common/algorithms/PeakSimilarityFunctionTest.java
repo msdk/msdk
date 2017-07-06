@@ -50,6 +50,8 @@ public class PeakSimilarityFunctionTest {
 	    double fwhm = objCurveTool.estimateFwhmMs(20);
 	    PeakSimilarityTest.PeakSimilarityResult objPeakSimilarityResult = objPeakSimilarityTest.peakSimilarityFunction(objSliceSparseMatrix, 140.1037, 1, 23, fwhm);
 	    Assert.assertEquals(4, objPeakSimilarityResult.similarityValues.size());
+	    Assert.assertEquals(1401028, objPeakSimilarityResult.lowerMzBound);
+	    Assert.assertEquals(1401047, objPeakSimilarityResult.upperMzBound);
 	  }
 
 }

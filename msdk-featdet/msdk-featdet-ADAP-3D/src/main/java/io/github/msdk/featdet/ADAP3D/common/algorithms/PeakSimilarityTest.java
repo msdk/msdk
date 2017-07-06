@@ -18,8 +18,18 @@ import java.lang.Math;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>
+ * PeakSimilarityTest Class.
+ * </p>
+ */
 public class PeakSimilarityTest {
 	
+	/**
+	 * <p>
+	 * PeakSimilarityResult class is used for returning lower and upper mz bound,boolean good peak value and list of similarity value.
+	 * </p>
+	 */
 	public static class PeakSimilarityResult{
 		List<Double> similarityValues;
 		boolean goodPeak;
@@ -27,12 +37,25 @@ public class PeakSimilarityTest {
 		int upperMzBound;
 	}
 
+	/**
+	 * <p>
+	 * peakSimilarityFunction method is used for getting similarity values for adjacent peaks, upper and 
+	 * lower mz bounds and decides whether the peak is good or bad.
+	 * @param objsliceSparseMatrix a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix} object.
+	 * @param mz a {@link java.lang.Double} object.
+	 * @param leftBound a {@link java.lang.Integer} object.
+	 * @param rightBound a {@link java.lang.Integer} object.
+	 * @param fwhm a {@link java.lang.Double} object.
+	 * 
+	 * @return a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.PeakSimilarityTest.PeakSimilarityResult} object
+	 * </p>
+	 */
 	public PeakSimilarityResult peakSimilarityFunction(SliceSparseMatrix objsliceSparseMatrix,double mz,int leftBound,int rightBound,double fwhm){
 		
 		double roundedFWHM = fwhm*10000;
 		int arrayCount = rightBound-leftBound+1;
 		
-		double[] normzlizedEIC = new double[arrayCount];
+		double[] normzlizedEICArray = new double[arrayCount];
 		List<Double> upperSimilarityValues = new ArrayList<Double>();
 		List<Double> lowerSimilarityValues = new ArrayList<Double>();
 		int roundedMz = objsliceSparseMatrix.roundMZ(mz);
@@ -40,13 +63,13 @@ public class PeakSimilarityTest {
 		MultiKeyMap slice = objsliceSparseMatrix.getHorizontalSlice(mz, leftBound, rightBound);
 		double numSimEitherSideThreshold = fwhm/2;
 		
-		normzlizedEIC(slice,leftBound,rightBound,roundedMz,normzlizedEIC);
+		normzlizedEIC(slice,leftBound,rightBound,roundedMz,normzlizedEICArray);
 		
 		int upperMzBound = findSimilarity(objsliceSparseMatrix,leftBound,rightBound,roundedMz,
-				roundedFWHM,mzIndex,normzlizedEIC,upperSimilarityValues,true);
+				roundedFWHM,mzIndex,normzlizedEICArray,upperSimilarityValues,true);
 		
 		int lowerMzBound = findSimilarity(objsliceSparseMatrix,leftBound,rightBound,roundedMz,
-				roundedFWHM,mzIndex,normzlizedEIC,lowerSimilarityValues,false);
+				roundedFWHM,mzIndex,normzlizedEICArray,lowerSimilarityValues,false);
 		
 		List<Double> similarityValues = new ArrayList<Double>(upperSimilarityValues);
 		similarityValues.addAll(lowerSimilarityValues);
@@ -71,6 +94,22 @@ public class PeakSimilarityTest {
 		
 	}
 	
+	/**
+	 * <p>
+	 * findSimilarity method is used for getting similarity values and lower and upper mz bounds for adjacent peaks.
+	 * @param objsliceSparseMatrix a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix} object.
+	 * @param roundedMz a {@link java.lang.Integer} object.
+	 * @param leftBound a {@link java.lang.Integer} object.
+	 * @param rightBound a {@link java.lang.Integer} object.
+	 * @param roundedFWHM a {@link java.lang.Double} object.
+	 * @param mzIndex a {@link java.lang.Integer} object.
+	 * @param normzlizedEIC a {@link java.lang.Double} array.
+	 * @param similarityValues a {@link java.lang.Double} empty list.
+	 * @param upperBound a {@link java.lang.Boolean} object.
+	 * 
+	 * @return curMZ a {@link java.lang.Double} object.
+	 * </p>
+	 */
 	private int findSimilarity(SliceSparseMatrix objsliceSparseMatrix,int leftBound,int rightBound,int roundedMz,
 			double roundedFWHM,int mzIndex,double[] normzlizedEIC ,List<Double> similarityValues,boolean upperBound){
 		
@@ -142,6 +181,18 @@ public class PeakSimilarityTest {
 		return curMZ;
 	} 
 	
+	/**
+	 * <p>
+	 * normzlizedEIC method is used for normalizing EIC and calculating area.
+	 * @param objsliceSparseMatrix a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix} object.
+	 * @param roundedMz a {@link java.lang.Integer} object.
+	 * @param leftBound a {@link java.lang.Integer} object.
+	 * @param rightBound a {@link java.lang.Integer} object.
+	 * @param normzlizedEIC a {@link java.lang.Double} array.
+	 * 
+	 * @return area a {@link java.lang.Double} object.
+	 * </p>
+	 */
 	private double normzlizedEIC(MultiKeyMap slice,int leftBound,int rightBound,int roundedMz, double[] normzlizedEIC){
 		
 		double area = 0.0; 
