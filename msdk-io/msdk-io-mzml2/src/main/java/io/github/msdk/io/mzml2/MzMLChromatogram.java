@@ -79,7 +79,7 @@ class MzMLChromatogram implements Chromatogram {
     this.separationType = SeparationType.UNKNOWN;
     this.rtBinaryDataInfo = null;
     this.intensityBinaryDataInfo = null;
-    this.chromatogramType = null;
+    this.chromatogramType = ChromatogramType.UNKNOWN;
     this.mz = null;
     this.rtRange = null;
 
@@ -225,22 +225,33 @@ class MzMLChromatogram implements Chromatogram {
   @Override
   @Nonnull
   public ChromatogramType getChromatogramType() {
-    if (chromatogramType == null) {
-      if (getCVValue(MzMLCV.cvChromatogramTIC).isPresent())
-        chromatogramType = ChromatogramType.TIC;
+    if (chromatogramType != ChromatogramType.UNKNOWN)
+      return chromatogramType;
 
-      if (getCVValue(MzMLCV.cvChromatogramMRM_SRM).isPresent())
-        chromatogramType = ChromatogramType.MRM_SRM;
+    int count = 0;
 
-      if (getCVValue(MzMLCV.cvChromatogramSIC).isPresent())
-        chromatogramType = ChromatogramType.SIC;
-
-      if (getCVValue(MzMLCV.cvChromatogramBPC).isPresent())
-        chromatogramType = ChromatogramType.BPC;
-
-      if (chromatogramType == null)
-        chromatogramType = ChromatogramType.UNKNOWN;
+    if (getCVValue(MzMLCV.cvChromatogramTIC).isPresent()) {
+      chromatogramType = ChromatogramType.TIC;
+      count++;
     }
+    if (getCVValue(MzMLCV.cvChromatogramMRM_SRM).isPresent()) {
+      chromatogramType = ChromatogramType.MRM_SRM;
+      count++;
+    }
+    if (getCVValue(MzMLCV.cvChromatogramSIC).isPresent()) {
+      chromatogramType = ChromatogramType.SIC;
+      count++;
+    }
+    if (getCVValue(MzMLCV.cvChromatogramBPC).isPresent()) {
+      chromatogramType = ChromatogramType.BPC;
+      count++;
+    }
+
+    if (count > 1) {
+      logger.error("More than one chromatogram type defined by CV terms not allowed");
+      chromatogramType = ChromatogramType.UNKNOWN;
+    }
+
     return chromatogramType;
   }
 
@@ -417,11 +428,11 @@ class MzMLChromatogram implements Chromatogram {
       if (cvParam.getAccession().equals(accession)) {
         value = cvParam.getValue();
         if (!value.isPresent())
-          value = Optional.ofNullable("");
+          value = Optional.of("");
         return value;
       }
     }
-    return Optional.ofNullable(null);
+    return Optional.empty();
   }
 
   /**
@@ -439,11 +450,11 @@ class MzMLChromatogram implements Chromatogram {
       if (cvParam.getAccession().equals(accession)) {
         value = cvParam.getValue();
         if (!value.isPresent())
-          value = Optional.ofNullable("");
+          value = Optional.of("");
         return value;
       }
     }
-    return Optional.ofNullable(null);
+    return Optional.empty();
   }
 
 }

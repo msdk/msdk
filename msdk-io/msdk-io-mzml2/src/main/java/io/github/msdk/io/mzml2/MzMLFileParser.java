@@ -487,6 +487,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                       }
                     }
                     break;
+
                   case TAG_SPECTRUM:
                     if (vars.spectrum.getMzBinaryDataInfo() != null
                         && vars.spectrum.getIntensityBinaryDataInfo() != null)
@@ -495,6 +496,11 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                       // logger.warn("Didn't find m/z or intensity data array for spectrum scan (#"
                       // + vars.spectrum.getScanNumber() + "). Skipping scan.");
                     }
+                    break;
+
+                  default:
+                    // we don't care about other tags
+                    break;
                 }
 
               }
@@ -513,6 +519,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                       }
                     }
                     break;
+
                   case TAG_CHROMATOGRAM:
                     if (vars.chromatogram.getRtBinaryDataInfo() != null
                         && vars.chromatogram.getIntensityBinaryDataInfo() != null)
@@ -521,6 +528,11 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                       // logger.warn("Didn't find rt or intensity data array for spectrum scan (#"
                       // + vars.spectrum.getScanNumber() + "). Skipping scan.");
                     }
+                    break;
+
+                  default:
+                    // we don't care about other tags
+                    break;
                 }
 
               }
@@ -663,7 +675,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
     this.canceled = true;
   }
 
-  private class Vars {
+  private static class Vars {
 
     int defaultArrayLength;
     boolean skipBinaryDataArray;

@@ -123,7 +123,7 @@ public class MzMLFileParserTest {
   @Test
   public void test5peptideFT() throws MSDKException {
 
-    float intensityBuffer[] = new float[10000];
+    float intensityBuffer[];
 
     // Import the file
     String file = "5peptideFT.mzML";
@@ -222,7 +222,7 @@ public class MzMLFileParserTest {
   @Test
   public void testParamGroup() throws MSDKException {
 
-    float intensityBuffer[] = new float[10000];
+    float intensityBuffer[];
 
     // Import the file
     String file = "RawCentriodCidWithMsLevelInRefParamGroup.mzML";
@@ -364,7 +364,7 @@ public class MzMLFileParserTest {
   @Test
   public void testEmptyScan() throws MSDKException {
 
-    float intensityBuffer[] = new float[10000];
+    float intensityBuffer[];
 
     // Import the file
     String file = "emptyScan.mzML";
