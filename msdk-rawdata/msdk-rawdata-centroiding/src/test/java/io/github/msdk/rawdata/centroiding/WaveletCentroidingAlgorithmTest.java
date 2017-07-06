@@ -55,8 +55,8 @@ public class WaveletCentroidingAlgorithmTest {
 
     Integer basePeak = MsSpectrumUtil.getBasePeakIndex(intensityBuffer, numOfDataPoints);
 
-    Assert.assertEquals(1.49854E8f, intensityBuffer[basePeak], 1E5);
-    Assert.assertEquals(281.4996043, mzBuffer[basePeak], 0.000001);
+    Assert.assertEquals(3.53683E7f, intensityBuffer[basePeak], 1E5);
+    Assert.assertEquals(281.2476185, mzBuffer[basePeak], 0.000001);
 
     rawFile.dispose();
 
