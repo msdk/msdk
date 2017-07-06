@@ -60,7 +60,7 @@ public class MzMLSpectrum implements MsScan {
   private final @Nonnull ByteBufferInputStream mappedByteBufferInputStream;
   private final @Nonnull String id;
   private final @Nonnull Integer scanNumber;
-  private final @Nonnull int numOfDataPoints;
+  private final int numOfDataPoints;
 
   private ArrayList<MzMLCVParam> cvParams;
   private MzMLPrecursorList precursorList;
@@ -82,7 +82,7 @@ public class MzMLSpectrum implements MsScan {
    * @param dataFile a {@link io.github.msdk.io.mzml2.data.MzMLRawDataFile} object.
    */
   public MzMLSpectrum(MzMLRawDataFile dataFile, ByteBufferInputStream is, String id,
-      Integer scanNumber, Integer numOfDataPoints) {
+      Integer scanNumber, int numOfDataPoints) {
     this.cvParams = new ArrayList<>();
     this.precursorList = new MzMLPrecursorList();
     this.dataFile = dataFile;

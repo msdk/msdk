@@ -27,7 +27,7 @@ public enum MzMLCompressionType {
   NUMPRESS_SHLOGF_ZLIB("MS:1002748"); // MS-Numpress short logged float compression followed by
                                       // zlib compression
 
-  private String accession;
+  private final String accession;
 
   MzMLCompressionType(String accession) {
     this.accession = accession;

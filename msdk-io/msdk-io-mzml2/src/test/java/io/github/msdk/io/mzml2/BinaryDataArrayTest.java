@@ -15,6 +15,7 @@ package io.github.msdk.io.mzml2;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.DataFormatException;
 
 import org.junit.Assert;
@@ -63,7 +64,7 @@ public class BinaryDataArrayTest {
 
   // binary test data: compressed, base64 encoded, 64 bit precision
   // extracted from file: MzMLFile_7_compressed.mzML (line 74) "m/z array"
-  private final String compressed64bit = "eJwtkWlIVFEAhWUQERGREHFDokQUEQmREIlDoE"
+  private final static String compressed64bit = "eJwtkWlIVFEAhWUQERGREHFDokQUEQmREIlDoE"
       + "gbaUVI9GOQfgwiIiYxmkRZuVRWluWSmrPoLI7jzJvtJSGhIlYQYYJESERIDCYiJ"
       + "ZEleN995/4Z3ptzz/K9mBj9/HdtL5+prYL+a8TujbrXzU9NfG7E9RRv5bfWZr43"
       + "oyWaeyTe08b/b6Ls69me/oZ26u5g5kSioaCzg/oulAaXrs2+vMd7D6Bm392oVh/"
@@ -77,7 +78,7 @@ public class BinaryDataArrayTest {
 
   // binary test data: uncompressed, base64 encoded, 64 bit precision
   // extracted from file: MzMLFile_7_uncompressed.mzML (line 74) "m/z array"
-  private final String uncompressed64bit = "AAAAAAAAAAD8qfHSTWJQP/yp8dJNYmA/+n5qvH"
+  private final static String uncompressed64bit = "AAAAAAAAAAD8qfHSTWJQP/yp8dJNYmA/+n5qvH"
       + "STaD/8qfHSTWJwP3sUrkfhenQ/+n5qvHSTeD956SYxCKx8P/yp8dJNYoA/O99Pj"
       + "Zdugj97FK5H4XqEP7pJDAIrh4Y/+n5qvHSTiD85tMh2vp+KP3npJjEIrIw/uB6F"
       + "61G4jj/8qfHSTWKQP5zEILByaJE/O99PjZdukj/b+X5qvHSTP3sUrkfhepQ/Gy/"
@@ -97,7 +98,7 @@ public class BinaryDataArrayTest {
 
   // binary test data: compressed, base64 encoded, 32 bit precision
   // extracted from file: MzMLFile_7_compressed.mzML (line 80) "intensity array"
-  private final String compressed32bit = "eJwVxCFIQ2EAhdE/GAyGhQXDwoLBYFgwGAa+jQ"
+  private final static String compressed32bit = "eJwVxCFIQ2EAhdE/GAyGhQXDwoLBYFgwGAa+jQ"
       + "WDYcFgMCwYDIYFw4LhITLGGGOIyBAZDxkyhsgQkSFDHrJgNC4uGo1Gj5fv3BD+F"
       + "++6SMQkpCwJpRAy5CkQUaVGnZgWPfokjJgwJeWTLxYs+eaHX0I5hBVWWSNDlnVy"
       + "5Nlgky0KbLNDkYgKe+xT5YBDjqhxzAmn1DmjwTkxF1zSpEWbDl16XHHNDX1uuWN"
@@ -105,7 +106,7 @@ public class BinaryDataArrayTest {
 
   // binary test data: uncompressed, base64 encoded, 32 bit precision
   // extracted from file: MzMLFile_7_uncompressed.mzML (line 80) "intensity array"
-  private final String uncompressed32bit = "AAAAAAAAgD8AAABAAABAQAAAgEAAAKBAAADAQA"
+  private final static String uncompressed32bit = "AAAAAAAAgD8AAABAAABAQAAAgEAAAKBAAADAQA"
       + "AA4EAAAABBAAAQQQAAIEEAADBBAABAQQAAUEEAAGBBAABwQQAAgEEAAIhBAACQQ"
       + "QAAmEEAAKBBAACoQQAAsEEAALhBAADAQQAAyEEAANBBAADYQQAA4EEAAOhBAADw"
       + "QQAA+EEAAABCAAAEQgAACEIAAAxCAAAQQgAAFEIAABhCAAAcQgAAIEIAACRCAAA"
@@ -120,7 +121,7 @@ public class BinaryDataArrayTest {
   public void testCompressed64bit() throws MSDKException, DataFormatException, IOException {
     // Put the String onto an ByteBufferInputStream
     ByteBufferInputStream is =
-        new ByteBufferInputStream(ByteBuffer.wrap(compressed64bit.getBytes()));
+        new ByteBufferInputStream(ByteBuffer.wrap(compressed64bit.getBytes(StandardCharsets.UTF_8)));
 
     // Setting up the BinaryInfo
     MzMLBinaryDataInfo binaryInfo = new MzMLBinaryDataInfo(664, 99);
@@ -138,7 +139,7 @@ public class BinaryDataArrayTest {
   public void testUncompressed64bit() throws MSDKException, DataFormatException, IOException {
     // Put the String onto an ByteBufferInputStream
     ByteBufferInputStream is =
-        new ByteBufferInputStream(ByteBuffer.wrap(uncompressed64bit.getBytes()));
+        new ByteBufferInputStream(ByteBuffer.wrap(uncompressed64bit.getBytes(StandardCharsets.UTF_8)));
 
     // Setting up the BinaryInfo
     MzMLBinaryDataInfo binaryInfo = new MzMLBinaryDataInfo(1056, 99);
@@ -154,7 +155,7 @@ public class BinaryDataArrayTest {
   public void testCompressed32bit() throws MSDKException, DataFormatException, IOException {
     // Put the String onto an ByteBufferInputStream
     ByteBufferInputStream is =
-        new ByteBufferInputStream(ByteBuffer.wrap(compressed32bit.getBytes()));
+        new ByteBufferInputStream(ByteBuffer.wrap(compressed32bit.getBytes(StandardCharsets.UTF_8)));
 
     // Setting up the BinaryInfo
     MzMLBinaryDataInfo binaryInfo = new MzMLBinaryDataInfo(268, 99);
@@ -171,7 +172,7 @@ public class BinaryDataArrayTest {
   public void testUncompressed32bit() throws MSDKException, DataFormatException, IOException {
     // Put the String onto an ByteBufferInputStream
     ByteBufferInputStream is =
-        new ByteBufferInputStream(ByteBuffer.wrap(uncompressed32bit.getBytes()));
+        new ByteBufferInputStream(ByteBuffer.wrap(uncompressed32bit.getBytes(StandardCharsets.UTF_8)));
 
     // Setting up the BinaryInfo
     MzMLBinaryDataInfo binaryInfo = new MzMLBinaryDataInfo(528, 99);
