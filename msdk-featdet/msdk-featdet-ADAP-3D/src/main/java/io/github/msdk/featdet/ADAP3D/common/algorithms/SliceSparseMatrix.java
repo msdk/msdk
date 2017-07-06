@@ -32,12 +32,13 @@ import org.apache.commons.collections4.map.MultiKeyMap;
  * <p>
  * SliceSparseMatrix class is used for slicing the sparse matrix of raw data as per given mz value.
  * slice contains intensities for one mz value for different scans.
+ * In this class sparse matrix has been implemented in the form of multikey map. Mz and scan number are keys and object containing  
+ * Intensities along information like retention time and whether the value is still in matrix or not is the value.
+ * Consider Scan numbers as column index and mz values as row index.
+ * cell values as object containing Intensities along with other information like retention time and whether the value is still in matrix or not.
  * </p>
  */
-//In this class sparse matrix has been implemented in the form of multikey map. Mz and scan number are keys and object containing  
-//Intensities along information like retention time and whether the value is still in matrix or not is the value.
-//Consider Scan numbers as column index and mz values as row index.
-//cell values as object containing Intensities along with other information like retention time and whether the value is still in matrix or not. 
+ 
 public class SliceSparseMatrix {
 		
 	/**
@@ -84,7 +85,7 @@ public class SliceSparseMatrix {
 	
 	/**
 	 * <p>
-	 * This is the data model for creating triplet representation of sparse matrix. 
+	 * Triplet is used for representing elements of sparse matrix. 
 	 * </p>
 	 */
 	public static class Triplet {
@@ -111,7 +112,7 @@ public class SliceSparseMatrix {
 	   * such as mz,intensity,rt,scan number
 	   * </p>
 	   * 
-	   *  @param rawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object
+	   *  @param rawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object. This is raw data file object by which we can pass raw file.
 	   */
 	public SliceSparseMatrix(RawDataFile rawFile){
 		listOfScans = rawFile.getScans();
@@ -211,10 +212,12 @@ public class SliceSparseMatrix {
 	   * This method returns the MultiKeyMap slice of data for given mz,lowerScanBound,upperScanBound
 	   * </p>
 	   * 
-	   * @param mz a {@link java.lang.Double} object
-	   * @param lowerScanBound a {@link java.lang.Integer} object
-	   * @param upperScanBound a {@link java.lang.Integer} object
-	   * @return sliceMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object
+	   * @param mz a {@link java.lang.Double} object. This is original m/z value from raw file.
+	   * @param lowerScanBound a {@link java.lang.Integer} object. This is lowest scan number in the horizontal matrix slice. 
+	   * @param upperScanBound a {@link java.lang.Integer} object. This is highest scan number in the horizontal matrix slice. 
+	   * 
+	   * @return sliceMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This object contains horizontal slice 
+	   * with single m/z value,different scan numbers and different intensities along with retention time.
 	   */
 	public MultiKeyMap getHorizontalSlice(double mz,int lowerScanBound,int upperScanBound){
 		
@@ -234,6 +237,18 @@ public class SliceSparseMatrix {
 		return sliceMap;
 	}
 
+	 /**
+	   * <p>
+	   * This method returns the MultiKeyMap slice of data for rounded mz,lowerScanBound,upperScanBound
+	   * </p>
+	   * 
+	   * @param roundedMZ a {@link java.lang.Double} object. This is rounded m/z value which is already multiplied by 10000.
+	   * @param lowerScanBound a {@link java.lang.Integer} object. This is lowest scan number in the horizontal matrix slice. 
+	   * @param upperScanBound a {@link java.lang.Integer} object. This is highest scan number in the horizontal matrix slice. 
+	   * 
+	   * @return sliceMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This object contains horizontal slice 
+	   * with single m/z value,different scan numbers and different intensities along with retention time.
+	   */
 	public MultiKeyMap getHorizontalSlice(int roundedMZ, int lowerScanBound, int upperScanBound) {
 		return getHorizontalSlice((double) roundedMZ / roundMzFactor, lowerScanBound, upperScanBound);
 	}
@@ -243,8 +258,9 @@ public class SliceSparseMatrix {
 	   * This method returns the List of type VerticalSliceDataPoint for given Scan Number.
 	   * </p>
 	   * 
-	   * @param scanNumber a {@link java.lang.Integer} object
-	   * @return datapointList a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.VerticalSliceDataPoint} list
+	   * @param scanNumber a {@link java.lang.Integer} object. This is scan number for which we get vertical slice from sparse matrix.
+	   * @return datapointList a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.VerticalSliceDataPoint} list.
+	   * This is list containing m/z and intensities for one scan number.
 	   */
 	public List<VerticalSliceDataPoint> getVerticalSlice(int scanNumber){
 		
@@ -276,7 +292,7 @@ public class SliceSparseMatrix {
 	   * This method finds next maximum intensity from filterListOfTriplet
 	   * </p>
 	   * 
-	   * @return tripletObject a {@link Triplet} object
+	   * @return tripletObject a {@link Triplet} object. This is element of sparse matrix.
 	   */
 	public Triplet findNextMaxIntensity(){
 		
@@ -307,11 +323,11 @@ public class SliceSparseMatrix {
 	
 	/**
 	   * <p>
-	   * This method returns sorted list of ContinuousWaveletTransform.DataPoint object.Object contain retention time and intensity values 
+	   * This method returns sorted list of ContinuousWaveletTransform.DataPoint object.Object contain retention time and intensity values.
 	   * </p>
 	   * 
-	   * @param slice a {@link org.apache.commons.collections4.map.MultiKeyMap} object
-	   * @return listOfDataPoint a {@link Triplet} list
+	   * @param slice a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This is horizontal slice from sparse matrix.
+	   * @return listOfDataPoint a {@link Triplet} list. This returns list of retention time and intensities.
 	   */
 	public List<ContinuousWaveletTransform.DataPoint> getCWTDataPoint(MultiKeyMap slice){
 		
@@ -355,10 +371,10 @@ public class SliceSparseMatrix {
 	   * This method removes data points from whole data set for given mz,lowerscanbound and upperscanbound 
 	   * </p>
 	   * 
-	   * @param mz a {@link java.lang.Double} object
-	   * @param lowerScanBound a {@link java.lang.Integer} object
-	   * @param upperScanBound a {@link java.lang.Integer} object
-	   * @return tripletMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object
+	   * @param mz a {@link java.lang.Double} object.This takes original m/z value from raw file.
+	   * @param lowerScanBound a {@link java.lang.Integer} object.This is lowest scan number.
+	   * @param upperScanBound a {@link java.lang.Integer} object.This is highest scan number.
+	   * @return tripletMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This is whole sparse matrix.
 	   */
 	public MultiKeyMap removeDataPoints(double mz,int lowerScanBound,int upperScanBound){
 		int roundedmz = roundMZ(mz);
@@ -376,8 +392,8 @@ public class SliceSparseMatrix {
 	   * This method rounds mz value based on roundMz variable  
 	   * </p>
 	   * 
-	   * @param mz a {@link java.lang.Double} object
-	   * @return roundedmz a {@link java.lang.Integer} object
+	   * @param mz a {@link java.lang.Double} object. This takes original m/z value from raw file.
+	   * @return roundedmz a {@link java.lang.Integer} object. This value is rounded by multiplying 10000. 
 	   */
 	public int roundMZ(double mz){
 		int roundedmz = (int)Math.round(mz*roundMzFactor);
@@ -396,6 +412,8 @@ public class SliceSparseMatrix {
 	/**
 	   * <p>
 	   * This method returns size of raw data file in terms of total scans.
+	   * 
+	   * @return size a {@link java.lang.Integer} object. This is total number of scans in raw file.
 	   * </p>
 	   */
 	public int getSizeOfRawDataFile(){

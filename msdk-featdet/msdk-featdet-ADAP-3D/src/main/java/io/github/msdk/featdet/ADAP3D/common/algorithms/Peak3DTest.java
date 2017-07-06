@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * <p>
- * Peak3DTest is used for testing a peak by comparing adjacent m/z-slices in profile data.
+ * Peak3DTest is used for determining true or false peak by comparing adjacent m/z-slices in profile data.
  * </p>
  */
 public class Peak3DTest {
@@ -28,10 +28,11 @@ public class Peak3DTest {
 	/**
 	 * <p>
 	 * Result class is used for returning lower and upper mz bound,boolean good peak value and list of similarity value.
+	 * Object of this class will return lowest mz boundary and highest mz boundary of adjacent similar peaks for given mz value.
+	 * Here lowerMzBound and upperMzBound are integer because for sparse matrix we've rounded the mz value by multiplying 10000. 
+	 * It will also return if the peak is good or not for given mz value.
 	 * </p>
 	 */
-	//Object of this class will return lowest mz boundary and highest mz boundary of adjacent similar peaks for given mz value.
-	//It will also return if the peak is good or not for given mz value.
 	public static class Result {
 		List<Double> similarityValues;
 		boolean goodPeak;
@@ -80,11 +81,11 @@ public class Peak3DTest {
      * exceed certain thresholds, which depend on FWHM-value.
      *
 	 *
-	 * @param mz a {@link java.lang.Double} object.
-	 * @param leftBound a {@link java.lang.Integer} object.
-	 * @param rightBound a {@link java.lang.Integer} object.
+	 * @param mz a {@link java.lang.Double} object. It's double because original m/z value from raw file is passed in the method.
+	 * @param leftBound a {@link java.lang.Integer} object. This is lowest scan number from which peak determining starts.
+	 * @param rightBound a {@link java.lang.Integer} object. This is highest scan number on which peak determining ends.
 	 * 
-	 * @return a {@link Result} object
+	 * @return a {@link Result} object. Result object contains similarity values, lower and upper mz boundaries for adjacent similar peaks.
 	 * </p>
 	 */
 	public Result execute(double mz, int leftBound, int rightBound){
@@ -152,16 +153,18 @@ public class Peak3DTest {
      *
      *    similarity = height * (exp(-diffArea / factor) - shift)
      *
-	 * @param roundedMz a {@link java.lang.Integer} object.
-	 * @param leftBound a {@link java.lang.Integer} object.
-	 * @param rightBound a {@link java.lang.Integer} object.
-	 * @param roundedFWHM a {@link java.lang.Double} object.
-	 * @param mzIndex a {@link java.lang.Integer} object.
-	 * @param referenceEIC a {@link java.lang.Double} array.
-	 * @param similarityValues a {@link java.lang.Double} empty list.
-	 * @param direction a {@link Enum} object.
+	 * @param roundedMz a {@link java.lang.Integer} object. This is m/z value which is multiplied by 10000 because of it's use in sparse matrix.
+	 * @param leftBound a {@link java.lang.Integer} object. This is lowest scan number from which peak determining starts.
+	 * @param rightBound a {@link java.lang.Integer} object. This is highest scan number on which peak determining ends.
+	 * @param roundedFWHM a {@link java.lang.Double} object. fwhm is also multiplied by 10000 as m/z is multiplied by same. 
+	 * @param mzIndex a {@link java.lang.Integer} object. This is the index of given m/z value in sorted list of all m/z values. 
+	 * @param referenceEIC a {@link java.lang.Double} array. This array contains normalize intensities for given m/z value.(Intensities/area)
+	 * @param similarityValues a {@link java.lang.Double} empty list. This empty list stores similarity values. 
+	 * @param direction a {@link Enum} object. This enum provides direction whether to call function for m/z values greater than given m/z 
+	 * or less than given m/z.
 	 * 
-	 * @return curMZ a {@link java.lang.Double} object.
+	 * @return curMZ a {@link java.lang.Double} object. This is m/z value greater or less than given m/z value
+	 *  which is used for finding similar peaks.
 	 * </p>
 	 */
 	private int findMZbound(int leftBound, int rightBound, int roundedMz,
@@ -234,12 +237,12 @@ public class Peak3DTest {
 	/**
 	 * <p>
 	 * normalize method is used for normalizing EIC by calculating its area and dividing each intensity by the area.
-	 * @param roundedMz a {@link java.lang.Integer} object.
-	 * @param leftBound a {@link java.lang.Integer} object.
-	 * @param rightBound a {@link java.lang.Integer} object.
-	 * @param referenceEIC a {@link java.lang.Double} array.
+	 * @param roundedMz a {@link java.lang.Integer} object.This is m/z value which is multiplied by 10000 because of it's use in sparse matrix.
+	 * @param leftBound a {@link java.lang.Integer} object. This is lowest scan number from which peak determining starts.
+	 * @param rightBound a {@link java.lang.Integer} object. This is highest scan number on which peak determining ends.
+	 * @param referenceEIC a {@link java.lang.Double} array. This array contains normalize intensities for given m/z value.(Intensities/area)
 	 * 
-	 * @return area a {@link java.lang.Double} object.
+	 * @return area a {@link java.lang.Double} object. This is area of normalize intensity points.
 	 * </p>
 	 */
 	private double normalize(MultiKeyMap slice, int leftBound, int rightBound, int roundedMz, double[] referenceEIC){
