@@ -25,8 +25,6 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 
-import org.apache.commons.collections4.MapIterator;
-import org.apache.commons.collections4.keyvalue.MultiKey;
 import org.apache.commons.collections4.map.MultiKeyMap;
 
 
@@ -89,7 +87,7 @@ public class SliceSparseMatrixTest {
 	public void testRemoveDataPoints() throws MSDKException,IOException{
 		MultiKeyMap updatedTripletMap = objSliceSparseMatrix.removeDataPoints(301.15106201171875, 0, 10);
 		for(int i=0;i<11;i++){
-			SliceSparseMatrix.SparseMatrixTriplet triplet = (SliceSparseMatrix.SparseMatrixTriplet)updatedTripletMap.get(new Integer(i),new Integer(3011511));
+			SliceSparseMatrix.Triplet triplet = (SliceSparseMatrix.Triplet)updatedTripletMap.get(new Integer(i),new Integer(3011511));
 			if(triplet!=null)
 				Assert.assertTrue(triplet.removed);
 		}

@@ -52,7 +52,7 @@ public class SliceSparseMatrix {
 	 *  filterListOfTriplet is used for adding intensities for same mz values under same scan numbers. 
 	 * </p>
 	 */
-	private final List<SparseMatrixTriplet> filterListOfTriplet;
+	private final List<Triplet> filterListOfTriplet;
 	
 	/**
 	 * <p>
@@ -87,7 +87,7 @@ public class SliceSparseMatrix {
 	 * This is the data model for creating triplet representation of sparse matrix. 
 	 * </p>
 	 */
-	public static class SparseMatrixTriplet {
+	public static class Triplet {
 		public int mz;
 		public int scanNumber;
 		public float intensity;
@@ -115,7 +115,7 @@ public class SliceSparseMatrix {
 	   */
 	public SliceSparseMatrix(RawDataFile rawFile){
 		listOfScans = rawFile.getScans();
-		List<SparseMatrixTriplet> listOfTriplet = new ArrayList<SparseMatrixTriplet>();
+		List<Triplet> listOfTriplet = new ArrayList<Triplet>();
 	    
 	    for(int i=0;i<listOfScans.size();i++){
 	    	MsScan scan = listOfScans.get(i);
@@ -134,7 +134,7 @@ public class SliceSparseMatrix {
 	    		continue;
 	    	
 	    	for(int j=0;j<mzBuffer.length;j++){
-	    		SparseMatrixTriplet triplet = new SparseMatrixTriplet();
+	    		Triplet triplet = new Triplet();
 	    		triplet.intensity = intensityBuffer[j];
 	    		triplet.mz = roundMZ(mzBuffer[j]);
 	    		triplet.scanNumber  = i;
@@ -146,10 +146,10 @@ public class SliceSparseMatrix {
 	    
 	   	    
 	    
-	    Comparator<SparseMatrixTriplet> compare = new Comparator<SparseMatrixTriplet>() {
+	    Comparator<Triplet> compare = new Comparator<Triplet>() {
 			
 			@Override
-			public int compare(SparseMatrixTriplet o1, SparseMatrixTriplet o2) {
+			public int compare(Triplet o1, Triplet o2) {
 				
 				Integer  scan1 = o1.scanNumber;
 				Integer  scan2 = o2.scanNumber;
@@ -169,9 +169,9 @@ public class SliceSparseMatrix {
 		
 		Collections.sort(listOfTriplet, compare);	
 		
-		filterListOfTriplet = new ArrayList<SparseMatrixTriplet>();
-		SparseMatrixTriplet currTriplet = new SparseMatrixTriplet();
-		SparseMatrixTriplet lastFilterTriplet = new SparseMatrixTriplet();
+		filterListOfTriplet = new ArrayList<Triplet>();
+		Triplet currTriplet = new Triplet();
+		Triplet lastFilterTriplet = new Triplet();
 		tripletMap = new MultiKeyMap ();
 		int index = 0;
 		Set<Integer> mzSet = new HashSet<Integer>(); 
@@ -223,7 +223,7 @@ public class SliceSparseMatrix {
 				
 		for(int i = lowerScanBound;i<=upperScanBound;i++){
 			if(tripletMap.containsKey(new Integer(i),new Integer(roundedmz))){
-				SparseMatrixTriplet triplet = (SparseMatrixTriplet)tripletMap.get(new Integer(i),new Integer(roundedmz));
+				Triplet triplet = (Triplet)tripletMap.get(new Integer(i),new Integer(roundedmz));
 				sliceMap.put(i, roundedmz,triplet);
 			}
 			else{
@@ -232,6 +232,10 @@ public class SliceSparseMatrix {
 		}
 			
 		return sliceMap;
+	}
+
+	public MultiKeyMap getHorizontalSlice(int roundedMZ, int lowerScanBound, int upperScanBound) {
+		return getHorizontalSlice((double) roundedMZ / roundMzFactor, lowerScanBound, upperScanBound);
 	}
 	
 	/**
@@ -252,7 +256,7 @@ public class SliceSparseMatrix {
 			
 			if(tripletMap.containsKey(new Integer(scanNumber),new Integer(roundedMZ))){
 				
-				datapoint.intensity = ((SparseMatrixTriplet)tripletMap.get(new Integer(scanNumber),new Integer(roundedMZ))).intensity;
+				datapoint.intensity = ((Triplet)tripletMap.get(new Integer(scanNumber),new Integer(roundedMZ))).intensity;
 				datapoint.mz = (float)roundedMZ/roundMzFactor;
 				datapointList.add(datapoint);
 			}
@@ -272,15 +276,15 @@ public class SliceSparseMatrix {
 	   * This method finds next maximum intensity from filterListOfTriplet
 	   * </p>
 	   * 
-	   * @return tripletObject a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.SparseMatrixTriplet} object 
+	   * @return tripletObject a {@link Triplet} object
 	   */
-	public SparseMatrixTriplet findNextMaxIntensity(){
+	public Triplet findNextMaxIntensity(){
 		
-		SparseMatrixTriplet tripletObject = null;
-		 Comparator<SparseMatrixTriplet> compare = new Comparator<SparseMatrixTriplet>() {
+		Triplet tripletObject = null;
+		 Comparator<Triplet> compare = new Comparator<Triplet>() {
 				
 				@Override
-				public int compare(SparseMatrixTriplet o1, SparseMatrixTriplet o2) {
+				public int compare(Triplet o1, Triplet o2) {
 					
 					Float  intensity1 = o1.intensity;
 					Float  intensity2 = o2.intensity;
@@ -307,7 +311,7 @@ public class SliceSparseMatrix {
 	   * </p>
 	   * 
 	   * @param slice a {@link org.apache.commons.collections4.map.MultiKeyMap} object
-	   * @return listOfDataPoint a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.SparseMatrixTriplet} list
+	   * @return listOfDataPoint a {@link Triplet} list
 	   */
 	public List<ContinuousWaveletTransform.DataPoint> getCWTDataPoint(MultiKeyMap slice){
 		
@@ -318,7 +322,7 @@ public class SliceSparseMatrix {
 			ContinuousWaveletTransform.DataPoint dataPoint = new ContinuousWaveletTransform.DataPoint();
 			iterator.next();
 			MultiKey sliceKey = (MultiKey) iterator.getKey();
-			 SparseMatrixTriplet triplet = (SparseMatrixTriplet)slice.get(sliceKey);
+			 Triplet triplet = (Triplet)slice.get(sliceKey);
 			 if(triplet != null){
 				 dataPoint.rt = triplet.rt/60;
 				 dataPoint.intensity = triplet.intensity;
@@ -360,7 +364,7 @@ public class SliceSparseMatrix {
 		int roundedmz = roundMZ(mz);
 		for(int i = lowerScanBound;i<=upperScanBound;i++){
 			if(tripletMap.containsKey(new Integer(i),new Integer(roundedmz))){
-				SparseMatrixTriplet triplet = (SparseMatrixTriplet)tripletMap.get(new Integer(i),new Integer(roundedmz));
+				Triplet triplet = (Triplet)tripletMap.get(new Integer(i),new Integer(roundedmz));
 				triplet.removed = true;
 			}
 		}
