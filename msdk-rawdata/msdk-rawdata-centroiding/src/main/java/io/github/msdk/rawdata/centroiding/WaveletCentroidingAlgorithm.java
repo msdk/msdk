@@ -38,14 +38,6 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
   private final @Nonnull Integer scaleLevel;
   private final @Nonnull Double waveletWindow;
 
-  private SimpleMsScan newScan;
-
-  // Data structures
-  private @Nonnull double mzBuffer[];
-  private @Nonnull float intensityBuffer[];
-  private @Nonnull float cwtDataPoints[];
-  private int numOfDataPoints, newNumOfDataPoints;
-
   /**
    * <p>
    * Constructor for WaveletCentroidingMethod.
@@ -65,13 +57,12 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
   public @Nonnull MsScan centroidScan(@Nonnull MsScan inputScan) {
 
     // Copy all scan properties
-    this.newScan = MsScanUtil.clone(inputScan, false);
+    SimpleMsScan newScan = MsScanUtil.clone(inputScan, false);
 
     // Load data points
-    mzBuffer = inputScan.getMzValues();
-    intensityBuffer = inputScan.getIntensityValues();
-    numOfDataPoints = inputScan.getNumberOfDataPoints();
-    newNumOfDataPoints = 0;
+    double[] mzBuffer = inputScan.getMzValues();
+    float[] intensityBuffer = inputScan.getIntensityValues();
+    int numOfDataPoints = inputScan.getNumberOfDataPoints();
 
     // If there are no data points, just return the scan
     if (numOfDataPoints == 0) {
@@ -79,8 +70,8 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
       return newScan;
     }
 
-    performCWT();
-    getMzPeaks();
+    float[] cwtDataPoints = performCWT(intensityBuffer, numOfDataPoints, scaleLevel, waveletWindow);
+    int newNumOfDataPoints = extractMzPeaks(cwtDataPoints, mzBuffer, intensityBuffer);
 
     // Store the new data points
     newScan.setDataPoints(mzBuffer, intensityBuffer, newNumOfDataPoints);
@@ -90,14 +81,12 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
   }
 
   /**
-   * Perform the CWT over raw data points in the selected scale level
-   * 
-   * @param dataPoints
+   * Perform the CWT over raw intensities in the selected scale level
    */
-  private void performCWT() {
+  private static @Nonnull float[] performCWT(@Nonnull float[] intensityBuffer, int numOfDataPoints,
+      int scaleLevel, double waveletWindow) {
 
-    if (cwtDataPoints.length < numOfDataPoints)
-      cwtDataPoints = new float[numOfDataPoints * 2];
+    float[] cwtDataPoints = new float[numOfDataPoints * 2];
 
     double wstep = ((WAVELET_ESR - WAVELET_ESL) / NPOINTS);
     double[] W = new double[(int) NPOINTS];
@@ -143,6 +132,7 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
       cwtDataPoints[dx] = intensity;
     }
 
+    return cwtDataPoints;
   }
 
   /**
@@ -152,7 +142,7 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
    * @param double a Window Width of the wavelet
    * @param double b Offset from the center of the peak
    */
-  private double cwtMEXHATreal(double x, double a, double b) {
+  private static double cwtMEXHATreal(double x, double a, double b) {
     /* c = 2 / ( sqrt(3) * pi^(1/4) ) */
     final double c = 0.8673250705840776;
     final double TINY = 1E-200;
@@ -167,11 +157,14 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
   /**
    * This function searches for maxima from wavelet data points
+   * 
+   * @return Number of peaks found
    */
-  private void getMzPeaks() {
+  private static int extractMzPeaks(float[] cwtDataPoints, double[] mzBuffer, float[] intensityBuffer) {
 
     int peakMaxInd = 0;
-    int stopInd = numOfDataPoints - 1;
+    int stopInd = cwtDataPoints.length / 2 - 1;
+    int newNumOfDataPoints = 0;
 
     for (int ind = 0; ind <= stopInd; ind++) {
 
@@ -202,6 +195,7 @@ public class WaveletCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
       newNumOfDataPoints++;
     }
 
+    return newNumOfDataPoints;
   }
 
 }
