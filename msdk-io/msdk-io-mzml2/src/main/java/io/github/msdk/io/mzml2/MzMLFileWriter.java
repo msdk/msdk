@@ -14,19 +14,18 @@
 package io.github.msdk.io.mzml2;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.security.DigestOutputStream;
+import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
@@ -43,6 +42,9 @@ import io.github.msdk.io.mzml2.data.MzMLCV;
 import io.github.msdk.io.mzml2.data.MzMLCVParam;
 import io.github.msdk.io.mzml2.data.MzMLCompressionType;
 import io.github.msdk.io.mzml2.util.MzMLPeaksEncoder;
+import io.github.msdk.io.mzml2.util.MzMLTags;
+import javolution.xml.internal.stream.XMLStreamWriterImpl;
+import javolution.xml.stream.XMLStreamException;
 
 public class MzMLFileWriter implements MSDKMethod<Void> {
 
@@ -51,64 +53,34 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
   private static final String XML_ENCODING = "UTF-8";
   private static final String XML_VERSION = "1.0";
   private static final String MZML_NAMESPACE = "http://psi.hupo.org/ms/mzml";
+  private static final String XML_SCHEMA_INSTANCE = "http://www.w3.org/2001/XMLSchema-instance";
+  private static final String XML_SCHEMA_LOCATION =
+      "http://psi.hupo.org/ms/mzml http://psidev.info/files/ms/mzML/xsd/mzML1.1.0.xsd";
   private static final String DEFAULT_VERSION = "1.1.0";
   private static final String CV_REF_MS = "MS";
 
-  private static final String TAG_MZML = "mzML";
-  private static final String TAG_CV_LIST = "cvList";
-  private static final String TAG_DATA_PROCESSING_LIST = "dataProcessingList";
-  private static final String TAG_DATA_PROCESSING = "dataProcessing";
-  private static final String TAG_PROCESSING_METHOD = "processingMethod";
-  private static final String TAG_RUN = "run";
-  private static final String TAG_SPECTRUM_LIST = "spectrumList";
-  private static final String TAG_SPECTRUM = "spectrum";
-  private static final String TAG_CV_PARAM = "cvParam";
-  private static final String TAG_SCAN_LIST = "scanList";
-  private static final String TAG_SCAN = "scan";
-  private static final String TAG_SCAN_WINDOW_LIST = "scanWindowList";
-  private static final String TAG_SCAN_WINDOW = "scanWindow";
-  private static final String TAG_BINARY_DATA_ARRAY_LIST = "binaryDataArrayList";
-  private static final String TAG_BINARY_DATA_ARRAY = "binaryDataArray";
-  private static final String TAG_BINARY = "binary";
-  private static final String TAG_CHROMATOGRAM_LIST = "chromatogramList";
-  private static final String TAG_CHROMATOGRAM = "chromatogram";
-  private static final String TAG_PRECURSOR = "precursor";
-  private static final String TAG_ISOLATION_WINDOW = "isolationWindow";
-  private static final String TAG_ACTIVATION = "activation";
-  private static final String TAG_PRODUCT = "product";
-
-  private static final String ATTR_ID = "id";
-  private static final String ATTR_VERSION = "version";
-  private static final String ATTR_COUNT = "count";
-  private static final String ATTR_SOFTWARE_REF = "softwareRef";
-  private static final String ATTR_ORDER = "order";
-  private static final String ATTR_DEFAULT_ARRAY_LENGTH = "defaultArrayLength";
-  private static final String ATTR_INDEX = "index";
-  private static final String ATTR_CV_REF = "cvRef";
-  private static final String ATTR_NAME = "name";
-  private static final String ATTR_ACCESSION = "accession";
-  private static final String ATTR_VALUE = "value";
-  private static final String ATTR_UNIT_ACCESSION = "unitAccession";
-  private static final String ATTR_ENCODED_LENGTH = "encodedLength";
+  private static final String PREFIX_XMLNS = "xmlns";
+  private static final String PREFIX_XSI = "xsi";
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private final @Nonnull RawDataFile rawDataFile;
   private final @Nonnull File target;
-  private final @Nonnull MzMLCompressionType doubleValuesCompression;
-  private final @Nonnull MzMLCompressionType floatValuesCompression;
+  private final @Nonnull MzMLCompressionType doubleArrayCompression;
+  private final @Nonnull MzMLCompressionType floatArrayCompression;
 
   private boolean canceled = false;
 
-  private long totalScans = 0, totalChromatograms = 0, parsedScans, parsedChromatograms;
+  private long totalScans = 0, totalChromatograms = 0, parsedScans, parsedChromatograms,
+      indexListOffset;
 
   public MzMLFileWriter(@Nonnull RawDataFile rawDataFile, @Nonnull File target,
-      @Nonnull MzMLCompressionType doubleValuesCompression,
-      MzMLCompressionType floatValuesCompression) {
+      @Nonnull MzMLCompressionType doubleArrayCompression,
+      MzMLCompressionType floatArrayCompression) {
     this.rawDataFile = rawDataFile;
     this.target = target;
-    this.doubleValuesCompression = doubleValuesCompression;
-    this.floatValuesCompression = floatValuesCompression;
+    this.doubleArrayCompression = doubleArrayCompression;
+    this.floatArrayCompression = floatArrayCompression;
   }
 
   @Override
@@ -121,40 +93,58 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
     totalScans = scans.size();
     totalChromatograms = chromatograms.size();
 
+    // index offsets
+    List<Long> spectrumIndices = new ArrayList<>();
+    List<Long> chromatogramIndices = new ArrayList<>();
+
     try {
 
-      FileWriter writer = new FileWriter(target);
-      XMLStreamWriter xmlStreamWriter =
-          XMLOutputFactory.newInstance().createXMLStreamWriter(writer);
-      xmlStreamWriter = new IndentingXMLStreamWriter(xmlStreamWriter);
+      FileOutputStream fos = new FileOutputStream(target);
+      MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
+      DigestOutputStream dos = new DigestOutputStream(fos, sha1);
+      dos.on(true);
+      XMLStreamWriterImpl xmlStreamWriter = new XMLStreamWriterImpl();
+      xmlStreamWriter.setOutput(dos);
       xmlStreamWriter.setDefaultNamespace(MZML_NAMESPACE);
 
       // <?xml>
       xmlStreamWriter.writeStartDocument(XML_ENCODING, XML_VERSION);
 
-      // <mzML>
-      xmlStreamWriter.writeStartElement(TAG_MZML);
+      // <indexedmzML>
+      xmlStreamWriter.writeStartElement(MzMLTags.TAG_INDEXED_MZML);
       xmlStreamWriter.writeDefaultNamespace(MZML_NAMESPACE);
-      xmlStreamWriter.writeAttribute(ATTR_ID, rawDataFile.getName());
-      xmlStreamWriter.writeAttribute(ATTR_VERSION, DEFAULT_VERSION);
+      xmlStreamWriter.writeAttribute(PREFIX_XMLNS, MZML_NAMESPACE, MzMLTags.ATTR_XSI,
+          XML_SCHEMA_INSTANCE);
+      xmlStreamWriter.writeAttribute(PREFIX_XSI, MZML_NAMESPACE, MzMLTags.ATTR_SCHEME_LOCATION,
+          XML_SCHEMA_LOCATION);
+
+      // <mzML>
+      xmlStreamWriter.writeStartElement(MzMLTags.TAG_MZML);
+      xmlStreamWriter.writeDefaultNamespace(MZML_NAMESPACE);
+      xmlStreamWriter.writeAttribute(PREFIX_XMLNS, MZML_NAMESPACE, MzMLTags.ATTR_XSI,
+          XML_SCHEMA_INSTANCE);
+      xmlStreamWriter.writeAttribute(PREFIX_XSI, MZML_NAMESPACE, MzMLTags.ATTR_SCHEME_LOCATION,
+          XML_SCHEMA_LOCATION);
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ID, rawDataFile.getName());
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_VERSION, DEFAULT_VERSION);
 
       // <cvList>
-      xmlStreamWriter.writeStartElement(TAG_CV_LIST);
+      xmlStreamWriter.writeStartElement(MzMLTags.TAG_CV_LIST);
       // TODO: Hold cvList in the existing RawDataFile model
       xmlStreamWriter.writeEndElement();
 
       // <dataProcessingList>
-      xmlStreamWriter.writeStartElement(TAG_DATA_PROCESSING_LIST);
-      xmlStreamWriter.writeAttribute(ATTR_COUNT, "1");
+      xmlStreamWriter.writeStartElement(MzMLTags.TAG_DATA_PROCESSING_LIST);
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_COUNT, "1");
 
       // <dataProcessing>
-      xmlStreamWriter.writeStartElement(TAG_DATA_PROCESSING);
-      xmlStreamWriter.writeAttribute(ATTR_ID, dataProcessingId);
+      xmlStreamWriter.writeStartElement(MzMLTags.TAG_DATA_PROCESSING);
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ID, dataProcessingId);
 
       // <processingMethod>
-      xmlStreamWriter.writeStartElement(TAG_PROCESSING_METHOD);
-      xmlStreamWriter.writeAttribute(ATTR_SOFTWARE_REF, softwareId);
-      xmlStreamWriter.writeAttribute(ATTR_ORDER, "0");
+      xmlStreamWriter.writeStartElement(MzMLTags.TAG_PROCESSING_METHOD);
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_SOFTWARE_REF, softwareId);
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ORDER, "0");
 
       // Closing tags
       xmlStreamWriter.writeEndElement(); // </processingMethod>
@@ -162,12 +152,12 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
       xmlStreamWriter.writeEndElement(); // </dataProcessingList>
 
       // <run>
-      xmlStreamWriter.writeStartElement(TAG_RUN);
-      xmlStreamWriter.writeAttribute(ATTR_ID, rawDataFile.getName());
+      xmlStreamWriter.writeStartElement(MzMLTags.TAG_RUN);
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ID, rawDataFile.getName());
 
       // <spectrumList>
-      xmlStreamWriter.writeStartElement(TAG_SPECTRUM_LIST);
-      xmlStreamWriter.writeAttribute(ATTR_COUNT, String.valueOf(scans.size()));
+      xmlStreamWriter.writeStartElement(MzMLTags.TAG_SPECTRUM_LIST);
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_COUNT, String.valueOf(scans.size()));
 
       byte[] mzBuffer = null;
       byte[] intensityBuffer = null;
@@ -175,17 +165,19 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
       for (MsScan scan : scans) {
 
         if (canceled) {
-          writer.close();
+          dos.close();
+          fos.close();
           xmlStreamWriter.close();
           target.delete();
           return null;
         }
 
         // <spectrum>
-        xmlStreamWriter.writeStartElement(TAG_SPECTRUM);
-        xmlStreamWriter.writeAttribute(ATTR_INDEX, String.valueOf(parsedScans));
-        xmlStreamWriter.writeAttribute(ATTR_ID, "scan=" + scan.getScanNumber());
-        xmlStreamWriter.writeAttribute(ATTR_DEFAULT_ARRAY_LENGTH,
+        spectrumIndices.add(xmlStreamWriter.getLocation().getCharacterOffsetInLong());
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_SPECTRUM);
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_INDEX, String.valueOf(parsedScans));
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ID, "scan=" + scan.getScanNumber());
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_DEFAULT_ARRAY_LENGTH,
             String.valueOf(scan.getNumberOfDataPoints()));
 
         // spectrum type CV param
@@ -219,11 +211,11 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
         }
 
         // <scanList>
-        xmlStreamWriter.writeStartElement(TAG_SCAN_LIST);
-        xmlStreamWriter.writeAttribute(ATTR_COUNT, "1");
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_SCAN_LIST);
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_COUNT, "1");
 
         // <scan>
-        xmlStreamWriter.writeStartElement(TAG_SCAN);
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_SCAN);
 
         // scan definition CV param
         if (scan.getScanDefinition() != null) {
@@ -246,11 +238,11 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
           writeCVParam(xmlStreamWriter, MzMLCV.polarityNegativeCvParam);
 
         // <scanWindowList>
-        xmlStreamWriter.writeStartElement(TAG_SCAN_WINDOW_LIST);
-        xmlStreamWriter.writeAttribute(ATTR_COUNT, "1");
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_SCAN_WINDOW_LIST);
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_COUNT, "1");
 
         // <scanWindow>
-        xmlStreamWriter.writeStartElement(TAG_SCAN_WINDOW);
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_SCAN_WINDOW);
 
         // scan window range CV param
         if (scan.getScanningRange() != null) {
@@ -269,28 +261,29 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
         xmlStreamWriter.writeEndElement(); // </scanList>
 
         // <binaryDataArrayList>
-        xmlStreamWriter.writeStartElement(TAG_BINARY_DATA_ARRAY_LIST);
-        xmlStreamWriter.writeAttribute(ATTR_COUNT, "2");
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_BINARY_DATA_ARRAY_LIST);
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_COUNT, "2");
 
         // <binaryDataArray> (m/z)
-        mzBuffer = MzMLPeaksEncoder.encodeDouble(scan.getMzValues(), doubleValuesCompression);
-        xmlStreamWriter.writeStartElement(TAG_BINARY_DATA_ARRAY);
-        xmlStreamWriter.writeAttribute(ATTR_ENCODED_LENGTH, String.valueOf(mzBuffer.length));
+        mzBuffer = MzMLPeaksEncoder.encodeDouble(scan.getMzValues(), doubleArrayCompression);
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_BINARY_DATA_ARRAY);
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ENCODED_LENGTH,
+            String.valueOf(mzBuffer.length));
 
         // data array precision CV param
         writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLBitLength.SIXTY_FOUR_BIT_FLOAT.getValue(),
             "", "64-bit float", null));
 
         // data array compression CV param
-        writeCVParam(xmlStreamWriter, new MzMLCVParam(doubleValuesCompression.getAccession(), "",
-            doubleValuesCompression.getName(), null));
+        writeCVParam(xmlStreamWriter, new MzMLCVParam(doubleArrayCompression.getAccession(), "",
+            doubleArrayCompression.getName(), null));
 
         // data array type CV param
         writeCVParam(xmlStreamWriter,
             new MzMLCVParam(MzMLArrayType.MZ.getValue(), "", "m/z array", MzMLCV.cvMz));
 
         // <binary>
-        xmlStreamWriter.writeStartElement(TAG_BINARY);
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_BINARY);
         xmlStreamWriter.writeCharacters(new String(mzBuffer));
 
         // Closing tags
@@ -299,24 +292,25 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
 
         // <binaryDataArray> (intensity)
         intensityBuffer =
-            MzMLPeaksEncoder.encodeFloat(scan.getIntensityValues(), floatValuesCompression);
-        xmlStreamWriter.writeStartElement(TAG_BINARY_DATA_ARRAY);
-        xmlStreamWriter.writeAttribute(ATTR_ENCODED_LENGTH, String.valueOf(intensityBuffer.length));
+            MzMLPeaksEncoder.encodeFloat(scan.getIntensityValues(), floatArrayCompression);
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_BINARY_DATA_ARRAY);
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ENCODED_LENGTH,
+            String.valueOf(intensityBuffer.length));
 
         // data array precision CV param
         writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLBitLength.THIRTY_TWO_BIT_FLOAT.getValue(),
             "", "32-bit float", null));
 
         // data array compression CV param
-        writeCVParam(xmlStreamWriter, new MzMLCVParam(floatValuesCompression.getAccession(), "",
-            floatValuesCompression.getName(), null));
+        writeCVParam(xmlStreamWriter, new MzMLCVParam(floatArrayCompression.getAccession(), "",
+            floatArrayCompression.getName(), null));
 
         // data array type CV param
         writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLArrayType.INTENSITY.getValue(), "",
             "intensity array", MzMLCV.cvUnitsIntensity1));
 
         // <binary>
-        xmlStreamWriter.writeStartElement(TAG_BINARY);
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_BINARY);
         xmlStreamWriter.writeCharacters(new String(intensityBuffer));
 
         // Closing tags
@@ -332,25 +326,27 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
       xmlStreamWriter.writeEndElement(); // </spectrumList>
 
       // <chromatogramList>
-      xmlStreamWriter.writeStartElement(TAG_CHROMATOGRAM_LIST);
-      xmlStreamWriter.writeAttribute(ATTR_COUNT, String.valueOf(chromatograms.size()));
+      xmlStreamWriter.writeStartElement(MzMLTags.TAG_CHROMATOGRAM_LIST);
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_COUNT, String.valueOf(chromatograms.size()));
 
       byte[] rtBuffer = null;
       byte[] intensityBuffer2 = null;
 
       for (Chromatogram chromatogram : chromatograms) {
         if (canceled) {
-          writer.close();
+          dos.close();
+          fos.close();
           xmlStreamWriter.close();
           target.delete();
           return null;
         }
 
         // <chromatogram>
-        xmlStreamWriter.writeStartElement(TAG_CHROMATOGRAM);
-        xmlStreamWriter.writeAttribute(ATTR_INDEX, String.valueOf(parsedChromatograms));
-        xmlStreamWriter.writeAttribute(ATTR_ID, chromatogram.getChromatogramType().name());
-        xmlStreamWriter.writeAttribute(ATTR_DEFAULT_ARRAY_LENGTH,
+        chromatogramIndices.add(xmlStreamWriter.getLocation().getCharacterOffsetInLong());
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_CHROMATOGRAM);
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_INDEX, String.valueOf(parsedChromatograms));
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ID, chromatogram.getChromatogramType().name());
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_DEFAULT_ARRAY_LENGTH,
             String.valueOf(chromatogram.getNumberOfDataPoints()));
 
         // chromatogram type CV param
@@ -380,11 +376,11 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
           IsolationInfo isolationInfo = chromatogram.getIsolations().get(0);
 
           // <precursor>
-          xmlStreamWriter.writeStartElement(TAG_PRECURSOR);
+          xmlStreamWriter.writeStartElement(MzMLTags.TAG_PRECURSOR);
 
           if (isolationInfo.getPrecursorMz() != null) {
             // <isolationWindow>
-            xmlStreamWriter.writeStartElement(TAG_ISOLATION_WINDOW);
+            xmlStreamWriter.writeStartElement(MzMLTags.TAG_ISOLATION_WINDOW);
 
             Double mz = isolationInfo.getPrecursorMz();
             writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLCV.cvIsolationWindowTarget,
@@ -395,7 +391,7 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
 
           if (isolationInfo.getActivationInfo() != null) {
             // <activation>
-            xmlStreamWriter.writeStartElement(TAG_ACTIVATION);
+            xmlStreamWriter.writeStartElement(MzMLTags.TAG_ACTIVATION);
 
             ActivationInfo activationInfo = isolationInfo.getActivationInfo();
 
@@ -422,10 +418,10 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
         // product m/z value CV param
         if (chromatogram.getMz() != null) {
           // <product>
-          xmlStreamWriter.writeStartElement(TAG_PRODUCT);
+          xmlStreamWriter.writeStartElement(MzMLTags.TAG_PRODUCT);
 
           // <isolationWindow>
-          xmlStreamWriter.writeStartElement(TAG_ISOLATION_WINDOW);
+          xmlStreamWriter.writeStartElement(MzMLTags.TAG_ISOLATION_WINDOW);
 
           Double mz = chromatogram.getMz();
           writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLCV.cvIsolationWindowTarget,
@@ -437,29 +433,30 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
         }
 
         // <binaryDataArrayList>
-        xmlStreamWriter.writeStartElement(TAG_BINARY_DATA_ARRAY_LIST);
-        xmlStreamWriter.writeAttribute(ATTR_COUNT, "2");
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_BINARY_DATA_ARRAY_LIST);
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_COUNT, "2");
 
         // <binaryDataArray> (time)
         rtBuffer = MzMLPeaksEncoder.encodeFloat(chromatogram.getRetentionTimes(null),
-            floatValuesCompression);
-        xmlStreamWriter.writeStartElement(TAG_BINARY_DATA_ARRAY);
-        xmlStreamWriter.writeAttribute(ATTR_ENCODED_LENGTH, String.valueOf(rtBuffer.length));
+            floatArrayCompression);
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_BINARY_DATA_ARRAY);
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ENCODED_LENGTH,
+            String.valueOf(rtBuffer.length));
 
         // data array precision CV param
         writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLBitLength.THIRTY_TWO_BIT_FLOAT.getValue(),
             "", "32-bit float", null));
 
         // data array compression CV param
-        writeCVParam(xmlStreamWriter, new MzMLCVParam(floatValuesCompression.getAccession(), "",
-            floatValuesCompression.getName(), null));
+        writeCVParam(xmlStreamWriter, new MzMLCVParam(floatArrayCompression.getAccession(), "",
+            floatArrayCompression.getName(), null));
 
         // data array type CV param
         writeCVParam(xmlStreamWriter,
             new MzMLCVParam(MzMLArrayType.TIME.getValue(), "", "time array", MzMLCV.cvUnitsMin2));
 
         // <binary>
-        xmlStreamWriter.writeStartElement(TAG_BINARY);
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_BINARY);
         xmlStreamWriter.writeCharacters(new String(rtBuffer));
 
         // Closing tags
@@ -468,9 +465,9 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
 
         // <binaryDataArray> (intensity)
         intensityBuffer2 =
-            MzMLPeaksEncoder.encodeFloat(chromatogram.getIntensityValues(), floatValuesCompression);
-        xmlStreamWriter.writeStartElement(TAG_BINARY_DATA_ARRAY);
-        xmlStreamWriter.writeAttribute(ATTR_ENCODED_LENGTH,
+            MzMLPeaksEncoder.encodeFloat(chromatogram.getIntensityValues(), floatArrayCompression);
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_BINARY_DATA_ARRAY);
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ENCODED_LENGTH,
             String.valueOf(intensityBuffer2.length));
 
         // data array precision CV param
@@ -478,15 +475,15 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
             "", "32-bit float", null));
 
         // data array compression CV param
-        writeCVParam(xmlStreamWriter, new MzMLCVParam(floatValuesCompression.getAccession(), "",
-            floatValuesCompression.getName(), null));
+        writeCVParam(xmlStreamWriter, new MzMLCVParam(floatArrayCompression.getAccession(), "",
+            floatArrayCompression.getName(), null));
 
         // data array type CV param
         writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLArrayType.INTENSITY.getValue(), "",
             "intensity array", MzMLCV.cvUnitsIntensity1));
 
         // <binary>
-        xmlStreamWriter.writeStartElement(TAG_BINARY);
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_BINARY);
         xmlStreamWriter.writeCharacters(new String(intensityBuffer2));
 
         // Closing tags
@@ -502,6 +499,56 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
       xmlStreamWriter.writeEndElement(); // </chromatogramList>
       xmlStreamWriter.writeEndElement(); // </run>
       xmlStreamWriter.writeEndElement(); // </mzML>
+
+      // <indexList>
+      indexListOffset = xmlStreamWriter.getLocation().getCharacterOffsetInLong();
+      xmlStreamWriter.writeStartElement(MzMLTags.TAG_INDEX_LIST);
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_COUNT, "2");
+
+      // <index> (spectrum)
+      xmlStreamWriter.writeStartElement(MzMLTags.TAG_INDEX);
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_NAME, MzMLTags.TAG_SPECTRUM);
+
+      for (int i = 0; i < scans.size(); i++) {
+        // offset
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_OFFSET);
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ID_REF,
+            "scan=" + scans.get(i).getScanNumber());
+        xmlStreamWriter.writeCharacters(String.valueOf(spectrumIndices.get(i)));
+        xmlStreamWriter.writeEndElement(); // </offset>
+      }
+
+      xmlStreamWriter.writeEndElement(); // </index>
+
+      // <index> (chromatogram)
+      xmlStreamWriter.writeStartElement(MzMLTags.TAG_INDEX);
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_NAME, MzMLTags.TAG_CHROMATOGRAM);
+
+      for (int i = 0; i < chromatograms.size(); i++) {
+        // offset
+        xmlStreamWriter.writeStartElement(MzMLTags.TAG_OFFSET);
+        xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ID_REF,
+            chromatograms.get(i).getChromatogramType().name());
+        xmlStreamWriter.writeCharacters(String.valueOf(chromatogramIndices.get(i)));
+        xmlStreamWriter.writeEndElement(); // </offset>
+      }
+
+      xmlStreamWriter.writeEndElement(); // </index>
+      xmlStreamWriter.writeEndElement(); // </indexList>
+
+      // <indexListOffset>
+      xmlStreamWriter.writeStartElement(MzMLTags.TAG_INDEX_LIST_OFFSET);
+      xmlStreamWriter.writeCharacters(String.valueOf(indexListOffset));
+      xmlStreamWriter.writeEndElement(); // </indexListOffset>
+
+      // <fileChecksum>
+      dos.on(false);
+      String sha1Checksum = DigestUtils.shaHex(sha1.digest());
+      xmlStreamWriter.writeStartElement(MzMLTags.TAG_FILE_CHECKSUM);
+      xmlStreamWriter.writeCharacters(sha1Checksum);
+      xmlStreamWriter.writeEndElement(); // </fileChecksum>
+
+      xmlStreamWriter.writeEndElement(); // </indexedmzML>
 
       // Wrapping up
       xmlStreamWriter.writeEndDocument();
@@ -530,17 +577,17 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
     this.canceled = true;
   }
 
-  private void writeCVParam(XMLStreamWriter xmlStreamWriter, MzMLCVParam cvParam)
+  private void writeCVParam(XMLStreamWriterImpl xmlStreamWriter, MzMLCVParam cvParam)
       throws XMLStreamException {
 
     // <cvParam>
-    xmlStreamWriter.writeStartElement(TAG_CV_PARAM);
+    xmlStreamWriter.writeStartElement(MzMLTags.TAG_CV_PARAM);
 
     // cvRef="MS"
-    xmlStreamWriter.writeAttribute(ATTR_CV_REF, CV_REF_MS);
+    xmlStreamWriter.writeAttribute(MzMLTags.ATTR_CV_REF, CV_REF_MS);
 
     // accession="..."
-    xmlStreamWriter.writeAttribute(ATTR_ACCESSION, cvParam.getAccession());
+    xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ACCESSION, cvParam.getAccession());
 
     // Get optional CV param attribute such as value, name and unitAccession and write if they are
     // present
@@ -548,12 +595,12 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
         unitAccession = cvParam.getUnitAccession();
 
     if (name.isPresent())
-      xmlStreamWriter.writeAttribute(ATTR_NAME, name.get());
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_NAME, name.get());
 
-    xmlStreamWriter.writeAttribute(ATTR_VALUE, value.orElse(""));
+    xmlStreamWriter.writeAttribute(MzMLTags.ATTR_VALUE, value.orElse(""));
 
     if (unitAccession.isPresent())
-      xmlStreamWriter.writeAttribute(ATTR_UNIT_ACCESSION, unitAccession.get());
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_UNIT_ACCESSION, unitAccession.get());
 
     xmlStreamWriter.writeEndElement(); // </cvParam>
 

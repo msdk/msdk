@@ -62,6 +62,7 @@ public class MzMLFileWriterTest {
 
     // Export the file to a new mzML
     File tempFile = File.createTempFile("msdk", ".mzML");
+    tempFile.deleteOnExit();
     MzMLFileWriter exporter = new MzMLFileWriter(rawFile, tempFile,
         MzMLCompressionType.NUMPRESS_LINPRED_ZLIB, MzMLCompressionType.ZLIB);
     exporter.execute();
@@ -108,8 +109,6 @@ public class MzMLFileWriterTest {
     // Cleanup
     rawFile.dispose();
     newMzMLFile.dispose();
-    tempFile.delete();
-
   }
 
   @Test
@@ -126,6 +125,7 @@ public class MzMLFileWriterTest {
 
     // Export the file to a new mzML
     File tempFile = File.createTempFile("msdk", ".mzML");
+    tempFile.deleteOnExit();
     MzMLFileWriter exporter = new MzMLFileWriter(rawFile, tempFile,
         MzMLCompressionType.NUMPRESS_LINPRED_ZLIB, MzMLCompressionType.ZLIB);
     exporter.execute();
@@ -169,7 +169,6 @@ public class MzMLFileWriterTest {
     // Cleanup
     rawFile.dispose();
     newMzMLFile.dispose();
-    tempFile.delete();
   }
 
 }

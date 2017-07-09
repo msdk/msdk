@@ -30,6 +30,7 @@ import io.github.msdk.io.mzml2.data.MzMLProduct;
 import io.github.msdk.io.mzml2.data.MzMLRawDataFile;
 import io.github.msdk.io.mzml2.data.MzMLReferenceableParamGroup;
 import io.github.msdk.io.mzml2.util.MzMLFileMemoryMapper;
+import io.github.msdk.io.mzml2.util.MzMLTags;
 import io.github.msdk.io.mzml2.util.TagTracker;
 import it.unimi.dsi.io.ByteBufferInputStream;
 import java.io.File;
@@ -46,6 +47,7 @@ import javolution.xml.internal.stream.XMLStreamReaderImpl;
 import javolution.xml.stream.XMLStreamConstants;
 import javolution.xml.stream.XMLStreamException;
 import javolution.xml.stream.XMLStreamReader;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,28 +67,6 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   private TagTracker tracker;
   Logger logger;
 
-  final static String ATTR_ACCESSION = "accession";
-  final static String ATTR_VALUE = "value";
-  final static String ATTR_NAME = "name";
-  final static String ATTR_UNIT_ACCESSION = "unitAccession";
-
-  final static String TAG_SPECTRUM = "spectrum";
-  final static String TAG_SPECTRUM_LIST = "spectrumList";
-  final static String TAG_REF_PARAM_GROUP = "referenceableParamGroup";
-  final static String TAG_REF_PARAM_GROUP_REF = "referenceableParamGroupRef";
-  final static String TAG_REF_PARAM_GROUP_LIST = "referenceableParamGroupList";
-  final static String TAG_CV_PARAM = "cvParam";
-  final static String TAG_BINARY = "binary";
-  final static String TAG_BINARY_DATA_ARRAY = "binaryDataArray";
-  final static String TAG_PRECURSOR = "precursor";
-  final static String TAG_PRECURSOR_LIST = "precursorList";
-  final static String TAG_ISOLATION_WINDOW = "isolationWindow";
-  final static String TAG_SELECTED_ION_LIST = "selectedIonList";
-  final static String TAG_SELECTED_ION = "selectedIon";
-  final static String TAG_ACTIVATION = "activation";
-  final static String TAG_CHROMATOGRAM = "chromatogram";
-  final static String TAG_CHROMATOGRAM_LIST = "chromatogramList";
-  final static String TAG_PRODUCT = "product";
   final static String CV_ACCESSION_MZ_ARRAY = "MS:1000514";
   final static String CV_ACCESSION_RT_ARRAY = "MS:1000595";
   final static String CV_ACCESSION_INTENSITY_ARRAY = "MS:1000515";
@@ -188,13 +168,13 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
               tracker.enter(openingTagName);
 
-              if (tracker.inside(TAG_REF_PARAM_GROUP_LIST)) {
+              if (tracker.inside(MzMLTags.TAG_REF_PARAM_GROUP_LIST)) {
 
-                if (openingTagName.contentEquals(TAG_REF_PARAM_GROUP)) {
+                if (openingTagName.contentEquals(MzMLTags.TAG_REF_PARAM_GROUP)) {
                   final CharArray id = getRequiredAttribute(xmlStreamReader, "id");
                   vars.referenceableParamGroup = new MzMLReferenceableParamGroup(id.toString());
 
-                } else if (openingTagName.contentEquals(TAG_CV_PARAM)) {
+                } else if (openingTagName.contentEquals(MzMLTags.TAG_CV_PARAM)) {
                   MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
                   vars.referenceableParamGroup.addCVParam(cvParam);
 
@@ -202,8 +182,8 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                 continue;
               }
 
-              if (tracker.inside(TAG_SPECTRUM_LIST)) {
-                if (openingTagName.contentEquals(TAG_SPECTRUM)) {
+              if (tracker.inside(MzMLTags.TAG_SPECTRUM_LIST)) {
+                if (openingTagName.contentEquals(MzMLTags.TAG_SPECTRUM)) {
                   String id = getRequiredAttribute(xmlStreamReader, "id").toString();
                   Integer index = getRequiredAttribute(xmlStreamReader, "index").toInt();
                   vars.defaultArrayLength =
@@ -213,7 +193,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                       new MzMLSpectrum(newRawFile, is, id, scanNumber, vars.defaultArrayLength);
 
 
-                } else if (openingTagName.contentEquals(TAG_BINARY_DATA_ARRAY)) {
+                } else if (openingTagName.contentEquals(MzMLTags.TAG_BINARY_DATA_ARRAY)) {
                   vars.skipBinaryDataArray = false;
                   int encodedLength =
                       getRequiredAttribute(xmlStreamReader, "encodedLength").toInt();
@@ -228,14 +208,14 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                   }
 
 
-                } else if (openingTagName.contentEquals(TAG_CV_PARAM)) {
-                  if (!tracker.inside(TAG_BINARY_DATA_ARRAY) && vars.spectrum != null) {
+                } else if (openingTagName.contentEquals(MzMLTags.TAG_CV_PARAM)) {
+                  if (!tracker.inside(MzMLTags.TAG_BINARY_DATA_ARRAY) && vars.spectrum != null) {
                     MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
                     vars.spectrum.getCVParams().add(cvParam);
                   }
 
 
-                } else if (openingTagName.contentEquals(TAG_BINARY)) {
+                } else if (openingTagName.contentEquals(MzMLTags.TAG_BINARY)) {
                   if (vars.spectrum != null && !vars.skipBinaryDataArray) {
                     int bomOffset = xmlStreamReader.getLocation().getBomLength();
                     // TODO Fetch long value from getCharacterOffset()
@@ -244,7 +224,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                   }
 
 
-                } else if (openingTagName.contentEquals(TAG_REF_PARAM_GROUP_REF)) {
+                } else if (openingTagName.contentEquals(MzMLTags.TAG_REF_PARAM_GROUP_REF)) {
                   String refValue = getRequiredAttribute(xmlStreamReader, "ref").toString();
                   for (MzMLReferenceableParamGroup ref : referenceableParamGroupList) {
                     if (ref.getParamGroupName().equals(refValue)) {
@@ -255,9 +235,10 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
                 }
 
-                if (tracker.inside(TAG_SPECTRUM) && tracker.inside(TAG_BINARY_DATA_ARRAY)
-                    && openingTagName.contentEquals(TAG_CV_PARAM) && vars.binaryDataInfo != null
-                    && !vars.skipBinaryDataArray) {
+                if (tracker.inside(MzMLTags.TAG_SPECTRUM)
+                    && tracker.inside(MzMLTags.TAG_BINARY_DATA_ARRAY)
+                    && openingTagName.contentEquals(MzMLTags.TAG_CV_PARAM)
+                    && vars.binaryDataInfo != null && !vars.skipBinaryDataArray) {
                   String accession = getRequiredAttribute(xmlStreamReader, "accession").toString();
                   if (vars.binaryDataInfo.isBitLengthAccession(accession)) {
                     vars.binaryDataInfo.setBitLength(accession);
@@ -271,39 +252,39 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
                 }
 
-                if (tracker.inside(TAG_PRECURSOR_LIST)) {
+                if (tracker.inside(MzMLTags.TAG_PRECURSOR_LIST)) {
 
-                  if (openingTagName.contentEquals(TAG_PRECURSOR)) {
+                  if (openingTagName.contentEquals(MzMLTags.TAG_PRECURSOR)) {
                     final CharArray spectrumRef =
                         xmlStreamReader.getAttributeValue(null, "spectrumRef");
                     String spectrumRefString = spectrumRef == null ? null : spectrumRef.toString();
                     vars.precursor = new MzMLPrecursorElement(spectrumRefString);
 
-                  } else if (openingTagName.contentEquals(TAG_ISOLATION_WINDOW)) {
+                  } else if (openingTagName.contentEquals(MzMLTags.TAG_ISOLATION_WINDOW)) {
                     vars.isolationWindow = new MzMLIsolationWindow();
 
-                  } else if (openingTagName.contentEquals(TAG_SELECTED_ION_LIST)) {
+                  } else if (openingTagName.contentEquals(MzMLTags.TAG_SELECTED_ION_LIST)) {
                     vars.selectedIonList = new MzMLPrecursorSelectedIonList();
 
-                  } else if (openingTagName.contentEquals(TAG_ACTIVATION)) {
+                  } else if (openingTagName.contentEquals(MzMLTags.TAG_ACTIVATION)) {
                     vars.activation = new MzMLPrecursorActivation();
 
-                  } else if (tracker.inside(TAG_ISOLATION_WINDOW)) {
-                    if (openingTagName.contentEquals(TAG_CV_PARAM)) {
+                  } else if (tracker.inside(MzMLTags.TAG_ISOLATION_WINDOW)) {
+                    if (openingTagName.contentEquals(MzMLTags.TAG_CV_PARAM)) {
                       MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
                       vars.isolationWindow.addCVParam(cvParam);
                     }
 
-                  } else if (tracker.inside(TAG_SELECTED_ION_LIST)) {
-                    if (openingTagName.contentEquals(TAG_SELECTED_ION)) {
+                  } else if (tracker.inside(MzMLTags.TAG_SELECTED_ION_LIST)) {
+                    if (openingTagName.contentEquals(MzMLTags.TAG_SELECTED_ION)) {
                       vars.selectedIon = new MzMLPrecursorSelectedIon();
-                    } else if (openingTagName.contentEquals(TAG_CV_PARAM)) {
+                    } else if (openingTagName.contentEquals(MzMLTags.TAG_CV_PARAM)) {
                       MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
                       vars.selectedIon.addCVParam(cvParam);
                     }
 
-                  } else if (tracker.inside(TAG_ACTIVATION)) {
-                    if (openingTagName.contentEquals(TAG_CV_PARAM)) {
+                  } else if (tracker.inside(MzMLTags.TAG_ACTIVATION)) {
+                    if (openingTagName.contentEquals(MzMLTags.TAG_CV_PARAM)) {
                       MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
                       vars.activation.addCVParam(cvParam);
                     }
@@ -311,8 +292,8 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                 }
 
 
-              } else if (tracker.inside(TAG_CHROMATOGRAM_LIST)) {
-                if (openingTagName.contentEquals(TAG_CHROMATOGRAM)) {
+              } else if (tracker.inside(MzMLTags.TAG_CHROMATOGRAM_LIST)) {
+                if (openingTagName.contentEquals(MzMLTags.TAG_CHROMATOGRAM)) {
                   String chromatogramId = getRequiredAttribute(xmlStreamReader, "id").toString();
                   Integer chromatogramNumber =
                       getRequiredAttribute(xmlStreamReader, "index").toInt() + 1;
@@ -321,14 +302,15 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                   vars.chromatogram = new MzMLChromatogram(newRawFile, is, chromatogramId,
                       chromatogramNumber, vars.defaultArrayLength);
 
-                } else if (openingTagName.contentEquals(TAG_CV_PARAM)) {
-                  if (!tracker.inside(TAG_BINARY_DATA_ARRAY) && !tracker.inside(TAG_PRECURSOR)
-                      && !tracker.inside(TAG_PRODUCT) && vars.chromatogram != null) {
+                } else if (openingTagName.contentEquals(MzMLTags.TAG_CV_PARAM)) {
+                  if (!tracker.inside(MzMLTags.TAG_BINARY_DATA_ARRAY)
+                      && !tracker.inside(MzMLTags.TAG_PRECURSOR)
+                      && !tracker.inside(MzMLTags.TAG_PRODUCT) && vars.chromatogram != null) {
                     MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
                     vars.chromatogram.getCVParams().add(cvParam);
                   }
 
-                } else if (openingTagName.contentEquals(TAG_BINARY_DATA_ARRAY)) {
+                } else if (openingTagName.contentEquals(MzMLTags.TAG_BINARY_DATA_ARRAY)) {
                   vars.skipBinaryDataArray = false;
                   int encodedLength =
                       getRequiredAttribute(xmlStreamReader, "encodedLength").toInt();
@@ -342,7 +324,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                         new MzMLBinaryDataInfo(encodedLength, vars.defaultArrayLength);
                   }
 
-                } else if (openingTagName.contentEquals(TAG_BINARY)) {
+                } else if (openingTagName.contentEquals(MzMLTags.TAG_BINARY)) {
                   if (vars.chromatogram != null && !vars.skipBinaryDataArray) {
                     int bomOffset = xmlStreamReader.getLocation().getBomLength();
                     // TODO Fetch long value from getCharacterOffset()
@@ -350,7 +332,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                         xmlStreamReader.getLocation().getCharacterOffset() + bomOffset);
                   }
 
-                } else if (openingTagName.contentEquals(TAG_REF_PARAM_GROUP_REF)) {
+                } else if (openingTagName.contentEquals(MzMLTags.TAG_REF_PARAM_GROUP_REF)) {
                   String refValue = xmlStreamReader.getAttributeValue(null, "ref").toString();
                   for (MzMLReferenceableParamGroup ref : referenceableParamGroupList) {
                     if (ref.getParamGroupName().equals(refValue)) {
@@ -361,9 +343,10 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
                 }
 
-                if (tracker.inside(TAG_CHROMATOGRAM) && tracker.inside(TAG_BINARY_DATA_ARRAY)
-                    && openingTagName.contentEquals(TAG_CV_PARAM) && vars.binaryDataInfo != null
-                    && !vars.skipBinaryDataArray) {
+                if (tracker.inside(MzMLTags.TAG_CHROMATOGRAM)
+                    && tracker.inside(MzMLTags.TAG_BINARY_DATA_ARRAY)
+                    && openingTagName.contentEquals(MzMLTags.TAG_CV_PARAM)
+                    && vars.binaryDataInfo != null && !vars.skipBinaryDataArray) {
                   String accession = getRequiredAttribute(xmlStreamReader, "accession").toString();
                   if (vars.binaryDataInfo.isBitLengthAccession(accession)) {
                     vars.binaryDataInfo.setBitLength(accession);
@@ -377,51 +360,49 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
                 }
 
-                if (openingTagName.contentEquals(TAG_PRECURSOR)) {
+                if (openingTagName.contentEquals(MzMLTags.TAG_PRECURSOR)) {
                   final CharArray spectrumRef =
                       xmlStreamReader.getAttributeValue(null, "spectrumRef");
                   String spectrumRefString = spectrumRef == null ? null : spectrumRef.toString();
                   vars.precursor = new MzMLPrecursorElement(spectrumRefString);
 
-                } else if (openingTagName.contentEquals(TAG_PRODUCT)) {
+                } else if (openingTagName.contentEquals(MzMLTags.TAG_PRODUCT)) {
                   vars.product = new MzMLProduct();
 
-                } else if (tracker.inside(TAG_PRECURSOR)) {
-                  if (openingTagName.contentEquals(TAG_ISOLATION_WINDOW)) {
+                } else if (tracker.inside(MzMLTags.TAG_PRECURSOR)) {
+                  if (openingTagName.contentEquals(MzMLTags.TAG_ISOLATION_WINDOW)) {
                     vars.isolationWindow = new MzMLIsolationWindow();
-
-                  } else if (openingTagName.contentEquals(TAG_SELECTED_ION_LIST)) {
                     vars.selectedIonList = new MzMLPrecursorSelectedIonList();
 
-                  } else if (openingTagName.contentEquals(TAG_ACTIVATION)) {
+                  } else if (openingTagName.contentEquals(MzMLTags.TAG_ACTIVATION)) {
                     vars.activation = new MzMLPrecursorActivation();
 
-                  } else if (tracker.inside(TAG_ISOLATION_WINDOW)) {
-                    if (openingTagName.contentEquals(TAG_CV_PARAM)) {
+                  } else if (tracker.inside(MzMLTags.TAG_ISOLATION_WINDOW)) {
+                    if (openingTagName.contentEquals(MzMLTags.TAG_CV_PARAM)) {
                       MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
                       vars.isolationWindow.addCVParam(cvParam);
                     }
 
-                  } else if (tracker.inside(TAG_SELECTED_ION_LIST)) {
-                    if (openingTagName.contentEquals(TAG_SELECTED_ION)) {
+                  } else if (tracker.inside(MzMLTags.TAG_SELECTED_ION_LIST)) {
+                    if (openingTagName.contentEquals(MzMLTags.TAG_SELECTED_ION)) {
                       vars.selectedIon = new MzMLPrecursorSelectedIon();
-                    } else if (openingTagName.contentEquals(TAG_CV_PARAM)) {
+                    } else if (openingTagName.contentEquals(MzMLTags.TAG_CV_PARAM)) {
                       MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
                       vars.selectedIon.addCVParam(cvParam);
                     }
 
-                  } else if (tracker.inside(TAG_ACTIVATION)) {
-                    if (openingTagName.contentEquals(TAG_CV_PARAM)) {
+                  } else if (tracker.inside(MzMLTags.TAG_ACTIVATION)) {
+                    if (openingTagName.contentEquals(MzMLTags.TAG_CV_PARAM)) {
                       MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
                       vars.activation.addCVParam(cvParam);
                     }
                   }
-                } else if (tracker.inside(TAG_PRODUCT)) {
-                  if (openingTagName.contentEquals(TAG_ISOLATION_WINDOW)) {
+                } else if (tracker.inside(MzMLTags.TAG_PRODUCT)) {
+                  if (openingTagName.contentEquals(MzMLTags.TAG_ISOLATION_WINDOW)) {
                     vars.isolationWindow = new MzMLIsolationWindow();
 
-                  } else if (tracker.inside(TAG_ISOLATION_WINDOW)) {
-                    if (openingTagName.contentEquals(TAG_CV_PARAM)) {
+                  } else if (tracker.inside(MzMLTags.TAG_ISOLATION_WINDOW)) {
+                    if (openingTagName.contentEquals(MzMLTags.TAG_CV_PARAM)) {
                       MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
                       vars.isolationWindow.addCVParam(cvParam);
 
@@ -441,42 +422,43 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
               tracker.exit(closingTagName);
 
               CharArray s = closingTagName;
-              if (s.equals(TAG_SPECTRUM_LIST)) {
-              } else if (s.equals(TAG_REF_PARAM_GROUP)) {
+              if (s.equals(MzMLTags.TAG_SPECTRUM_LIST)) {
+              } else if (s.equals(MzMLTags.TAG_REF_PARAM_GROUP)) {
                 referenceableParamGroupList.add(vars.referenceableParamGroup);
 
-              } else if (s.equals(TAG_REF_PARAM_GROUP_LIST)) {
-              } else if (s.equals(TAG_PRECURSOR_LIST)) {
-              } else if (s.equals(TAG_ISOLATION_WINDOW)) {
-                if (tracker.inside(TAG_PRECURSOR)) {
+              } else if (s.equals(MzMLTags.TAG_REF_PARAM_GROUP_LIST)) {
+              } else if (s.equals(MzMLTags.TAG_PRECURSOR_LIST)) {
+              } else if (s.equals(MzMLTags.TAG_ISOLATION_WINDOW)) {
+                if (tracker.inside(MzMLTags.TAG_PRECURSOR)) {
                   vars.precursor.setIsolationWindow(vars.isolationWindow);
-                } else if (tracker.inside(TAG_PRODUCT) && tracker.inside(TAG_CHROMATOGRAM)) {
+                } else if (tracker.inside(MzMLTags.TAG_PRODUCT)
+                    && tracker.inside(MzMLTags.TAG_CHROMATOGRAM)) {
                   vars.product.setIsolationWindow(vars.isolationWindow);
                 }
 
-              } else if (s.equals(TAG_SELECTED_ION_LIST)) {
+              } else if (s.equals(MzMLTags.TAG_SELECTED_ION_LIST)) {
                 vars.precursor.setSelectedIonList(vars.selectedIonList);
 
-              } else if (s.equals(TAG_ACTIVATION)) {
+              } else if (s.equals(MzMLTags.TAG_ACTIVATION)) {
                 vars.precursor.setActivation(vars.activation);
 
-              } else if (s.equals(TAG_SELECTED_ION)) {
+              } else if (s.equals(MzMLTags.TAG_SELECTED_ION)) {
                 vars.selectedIonList.addSelectedIon(vars.selectedIon);
 
-              } else if (s.equals(TAG_PRECURSOR)) {
-                if (tracker.inside(TAG_SPECTRUM))
+              } else if (s.equals(MzMLTags.TAG_PRECURSOR)) {
+                if (tracker.inside(MzMLTags.TAG_SPECTRUM))
                   vars.spectrum.getPrecursorList().addPrecursor(vars.precursor);
-                else if (tracker.inside(TAG_CHROMATOGRAM))
+                else if (tracker.inside(MzMLTags.TAG_CHROMATOGRAM))
                   vars.chromatogram.setPrecursor(vars.precursor);
 
-              } else if (s.equals(TAG_PRODUCT)) {
-                if (tracker.inside(TAG_CHROMATOGRAM))
+              } else if (s.equals(MzMLTags.TAG_PRODUCT)) {
+                if (tracker.inside(MzMLTags.TAG_CHROMATOGRAM))
                   vars.chromatogram.setProdcut(vars.product);
               }
 
-              if (tracker.inside(TAG_SPECTRUM_LIST)) {
+              if (tracker.inside(MzMLTags.TAG_SPECTRUM_LIST)) {
                 switch (closingTagName.toString()) {
-                  case TAG_BINARY_DATA_ARRAY:
+                  case MzMLTags.TAG_BINARY_DATA_ARRAY:
                     if (!vars.skipBinaryDataArray) {
                       if (CV_ACCESSION_MZ_ARRAY
                           .equals(vars.binaryDataInfo.getArrayType().getValue())) {
@@ -488,7 +470,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                       }
                     }
                     break;
-                  case TAG_SPECTRUM:
+                  case MzMLTags.TAG_SPECTRUM:
                     if (vars.spectrum.getMzBinaryDataInfo() != null
                         && vars.spectrum.getIntensityBinaryDataInfo() != null)
                       spectrumList.add(vars.spectrum);
@@ -500,9 +482,9 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
 
               }
 
-              if (tracker.inside(TAG_CHROMATOGRAM_LIST)) {
+              if (tracker.inside(MzMLTags.TAG_CHROMATOGRAM_LIST)) {
                 switch (closingTagName.toString()) {
-                  case TAG_BINARY_DATA_ARRAY:
+                  case MzMLTags.TAG_BINARY_DATA_ARRAY:
                     if (!vars.skipBinaryDataArray) {
                       if (CV_ACCESSION_RT_ARRAY
                           .equals(vars.binaryDataInfo.getArrayType().getValue())) {
@@ -514,7 +496,7 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
                       }
                     }
                     break;
-                  case TAG_CHROMATOGRAM:
+                  case MzMLTags.TAG_CHROMATOGRAM:
                     if (vars.chromatogram.getRtBinaryDataInfo() != null
                         && vars.chromatogram.getIntensityBinaryDataInfo() != null)
                       chromatogramsList.add(vars.chromatogram);
@@ -550,10 +532,10 @@ public class MzMLFileParser implements MSDKMethod<RawDataFile> {
   }
 
   private MzMLCVParam createMzMLCVParam(XMLStreamReader xmlStreamReader) {
-    CharArray accession = xmlStreamReader.getAttributeValue(null, ATTR_ACCESSION);
-    CharArray value = xmlStreamReader.getAttributeValue(null, ATTR_VALUE);
-    CharArray name = xmlStreamReader.getAttributeValue(null, ATTR_NAME);
-    CharArray unitAccession = xmlStreamReader.getAttributeValue(null, ATTR_UNIT_ACCESSION);
+    CharArray accession = xmlStreamReader.getAttributeValue(null, MzMLTags.ATTR_ACCESSION);
+    CharArray value = xmlStreamReader.getAttributeValue(null, MzMLTags.ATTR_VALUE);
+    CharArray name = xmlStreamReader.getAttributeValue(null, MzMLTags.ATTR_NAME);
+    CharArray unitAccession = xmlStreamReader.getAttributeValue(null, MzMLTags.ATTR_UNIT_ACCESSION);
 
     // accession is a required attribute
     if (accession == null) {
