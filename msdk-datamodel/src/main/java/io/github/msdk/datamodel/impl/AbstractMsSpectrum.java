@@ -83,13 +83,14 @@ public abstract class AbstractMsSpectrum implements MsSpectrum {
   public synchronized void setDataPoints(@Nonnull double mzValues[],
       @Nonnull float intensityValues[], @Nonnull Integer size) {
 
+    Preconditions.checkNotNull(mzValues);
+    Preconditions.checkNotNull(intensityValues);
+
     // Make sure the spectrum is sorted
     for (int i = 0; i < size - 1; i++) {
       if (mzValues[i] > mzValues[i + 1])
         throw new MSDKRuntimeException("m/z values must be sorted in ascending order");
     }
-    Preconditions.checkNotNull(mzValues);
-    Preconditions.checkNotNull(intensityValues);
 
     // Make a copy of the data, instead of saving a reference to the provided array
     if ((this.mzValues == null) || (this.mzValues.length < size))

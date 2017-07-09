@@ -1,3 +1,15 @@
+/*
+ * (C) Copyright 2015-2017 by MSDK Development Team
+ *
+ * This software is dual-licensed under either
+ *
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
+ *
+ * or (per the licensee's choosing)
+ *
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
+ */
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
 import java.util.List;
@@ -34,9 +46,9 @@ public class CurveTool {
 	 * <p>
 	 * estimateFwhmMs method estimates the FWHM for given number of random scans.
 	 * 
-	 * @param numberOfScansForFWHMCalc a {@link java.lang.Integer} object.
+	 * @param numberOfScansForFWHMCalc a {@link java.lang.Integer} object. This is number scans required for estimation of fwhm.
 	 * 
-	 * @return fwhm a {@link java.lang.Double} object.
+	 * @return fwhm a {@link java.lang.Double} object.This is Full width half maximum.
 	 * </p>
 	 */
 	public double estimateFwhmMs(int numberOfScansForFWHMCalc){
@@ -85,11 +97,11 @@ public class CurveTool {
 	
 	/**
 	 * <p>
-	 * roundFWHM method rounds the values of FWHM.
+	 * roundFWHM method rounds the values of FWHM.This is Full width half maximum.
 	 * 
 	 * @param fwhm a {@link java.lang.Double} object.
 	 * 
-	 * @return roundedFWHM a {@link java.lang.Integer} object.
+	 * @return roundedFWHM a {@link java.lang.Integer} object. This value is rounded integer value of fwhm.
 	 * </p>
 	 */
 	private int roundFWHM(double fwhm){
@@ -101,9 +113,10 @@ public class CurveTool {
 	 * <p>
 	 * createDataFile method creates text file for Gaussian results.
 	 * 
-	 * @param datapoint a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.VerticalSliceDataPoint} list.
-	 * @param parameters a {@link java.lang.Double} array.
-	 * @param scanNumber a {@link java.lang.Integer} object.
+	 * @param datapoint a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.VerticalSliceDataPoint} list. 
+	 * This list contains m/z values and corresponding intensities. 
+	 * @param parameters a {@link java.lang.Double} array. This is array of Gaussian parameters.
+	 * @param scanNumber a {@link java.lang.Integer} object. This is random scan numbers for which we're finding gaussian fit.
 	 * </p>
 	 */
 	private void createDataFile(List<SliceSparseMatrix.VerticalSliceDataPoint> datapoint,double[] parameters,int scanNumber){

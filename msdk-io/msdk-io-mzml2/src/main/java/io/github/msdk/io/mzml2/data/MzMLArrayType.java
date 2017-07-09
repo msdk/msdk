@@ -18,7 +18,7 @@ public enum MzMLArrayType {
   INTENSITY("MS:1000515"), // Intensity values array
   TIME("MS:1000595"); // Retention time values array
 
-  private String accession;
+  private final String accession;
 
   MzMLArrayType(String accession) {
     this.accession = accession;

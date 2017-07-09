@@ -51,23 +51,6 @@ public class ChromatogramBuilderMethod implements MSDKMethod<List<Chromatogram>>
 
   /**
    * <p>
-   * Constructor for ChromatogramBuilderMethod. This version expects every scan to provide its own
-   * MzTolerance.
-   * </p>
-   *
-   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
-   * @param inputFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-   * @param minimumTimeSpan a {@link java.lang.Double} object.
-   * @param minimumHeight a {@link java.lang.Double} object.
-   * @param noiseLevel a {@link java.lang.Float} object.
-   */
-  public ChromatogramBuilderMethod(@Nonnull RawDataFile inputFile, @Nonnull Double noiseLevel,
-      @Nonnull Double minimumTimeSpan, @Nonnull Double minimumHeight) {
-    this(inputFile, inputFile.getScans(), noiseLevel, minimumTimeSpan, minimumHeight, null);
-  }
-
-  /**
-   * <p>
    * Constructor for ChromatogramBuilderMethod. This version uses the same MzTolerance for every
    * scan that does not provide its own MzTolerance.
    * </p>
@@ -153,8 +136,7 @@ public class ChromatogramBuilderMethod implements MSDKMethod<List<Chromatogram>>
       if (mzTolerance == null && this.mzTolerance != null) {
         mzTolerance = this.mzTolerance;
       } else {
-        throw new MSDKException(
-            String.format("Unable to find a m/z tolerance for scan %l.", scan.getScanNumber()));
+        throw new MSDKException("Unable to find a m/z tolerance for scan" + scan.getScanNumber());
       }
       massConnector.addScan(inputFile, scan, mzTolerance);
       processedScans++;
