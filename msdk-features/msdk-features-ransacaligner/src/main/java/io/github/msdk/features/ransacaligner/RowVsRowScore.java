@@ -15,7 +15,6 @@
 package io.github.msdk.features.ransacaligner;
 
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * This class represents a score between a feature table row and an aligned
@@ -35,13 +34,8 @@ class RowVsRowScore implements Comparable<RowVsRowScore> {
         // Get m/z and RT values
         Double mz1 = featureTableRow.getMz();
         Double mz2 = alignedRow.getMz();
-        ChromatographyInfo ChromatographyInfo2 = alignedRow.getChromatographyInfo();
-        Float rt2 = null;
+        Float rt2 = alignedRow.getRT();
        
-        if (ChromatographyInfo2 != null) {
-            rt2 = ChromatographyInfo2.getRetentionTime();
-        }
-
         // Calculate difference between m/z
         double mzDiff = 999;
         if (mz1 != null && mz2 != null)

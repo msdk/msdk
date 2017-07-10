@@ -20,7 +20,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -31,14 +30,11 @@ import io.github.msdk.util.tolerances.RTTolerance;
 
 public class MsMsDetectionMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
-
   @Test
-  public void testOrbitrap() throws MSDKException {
+  public void testOrbitrap() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "msms.mzML");
+    File inputFile = new File(this.getClass().getClassLoader().getResource("msms.mzML").toURI());
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();

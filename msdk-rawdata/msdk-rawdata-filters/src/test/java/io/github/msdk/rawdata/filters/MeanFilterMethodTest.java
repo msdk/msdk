@@ -19,21 +19,18 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 
 public class MeanFilterMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
-
   @Test
-  public void testMeanFilter() throws MSDKException {
+  public void testMeanFilter() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "orbitrap_300-600mz.mzML");
+    File inputFile =
+        new File(this.getClass().getClassLoader().getResource("orbitrap_300-600mz.mzML").toURI());
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
