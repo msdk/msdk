@@ -57,7 +57,7 @@ public enum SeparationType {
 
   private final int featureDimensions;
 
-  private SeparationType(int separationDimensions) {
+  SeparationType(int separationDimensions) {
     this.featureDimensions = separationDimensions;
   }
 

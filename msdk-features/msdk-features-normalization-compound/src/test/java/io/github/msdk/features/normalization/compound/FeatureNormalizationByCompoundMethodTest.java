@@ -21,7 +21,6 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
@@ -29,14 +28,13 @@ import io.github.msdk.io.mztab.MzTabFileImportMethod;
 
 public class FeatureNormalizationByCompoundMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
   @Ignore
   @Test
-  public void testMzTab_Sample() throws MSDKException {
+  public void testMzTab_Sample() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "singleSample.mzTab");
+    File inputFile =
+        new File(this.getClass().getClassLoader().getResource("singleSample.mzTab").toURI());
     Assert.assertTrue(inputFile.canRead());
     MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable = importer.execute();

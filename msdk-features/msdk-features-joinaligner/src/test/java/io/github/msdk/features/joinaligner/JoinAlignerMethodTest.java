@@ -21,7 +21,6 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.msdk.util.tolerances.MaximumMzTolerance;
@@ -30,15 +29,12 @@ import io.github.msdk.util.tolerances.RTTolerance;
 
 public class JoinAlignerMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
-
   @Test
   @Ignore
-  public void testMzTab_Samples() throws MSDKException {
+  public void testMzTab_Samples() throws Exception {
 
     // Import file 1
-    File inputFile = new File(TEST_DATA_PATH + "Sample 1.mzTab");
+    File inputFile = new File(this.getClass().getClassLoader().getResource("Sample 1.mzTab").toURI());
     Assert.assertTrue(inputFile.canRead());
     MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable1 = importer.execute();
@@ -48,7 +44,7 @@ public class JoinAlignerMethodTest {
     featureTables.add(featureTable1);
 
     // Import file 2
-    inputFile = new File(TEST_DATA_PATH + "Sample 2.mzTab");
+    inputFile = new File(this.getClass().getClassLoader().getResource("Sample 2.mzTab").toURI());
     Assert.assertTrue(inputFile.canRead());
     importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable2 = importer.execute();

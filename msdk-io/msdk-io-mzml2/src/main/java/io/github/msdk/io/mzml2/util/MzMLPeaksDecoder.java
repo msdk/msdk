@@ -213,6 +213,7 @@ public class MzMLPeaksDecoder {
           iis = new InflaterInputStream(is);
           dis = new LittleEndianDataInputStream(iis);
           break;
+
         default:
           dis = new LittleEndianDataInputStream(is);
           break;
