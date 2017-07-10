@@ -15,6 +15,10 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,15 +35,24 @@ import io.github.msdk.io.mzml.MzMLFileImportMethod;
 
 public class ContinuousWaveletTransformTest {
 	
-	private static final String TEST_DATA_PATH = "src/test/resources/";
 	private static RawDataFile rawFile;
 	
-	@SuppressWarnings("null")
+	 private static Path getResourcePath(String resource) throws MSDKException {
+		    final URL url = ContinuousWaveletTransformTest.class.getClassLoader().getResource(resource);
+		    try {
+		      return Paths.get(url.toURI()).toAbsolutePath();
+		    } catch (URISyntaxException e) {
+		      throw new MSDKException(e);
+		    }
+		  }
+	
 	@BeforeClass
 	public static void loadData() throws MSDKException {
 		
 	    // Import the file
-	    File inputFile = new File(TEST_DATA_PATH + "orbitrap_300-600mz.mzML");
+		String file = "orbitrap_300-600mz.mzML";
+		Path path = getResourcePath(file);
+	    File inputFile = path.toFile();
 	    Assert.assertTrue("Cannot read test data", inputFile.canRead());
 	    MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
 	    rawFile = importer.execute();
@@ -47,7 +60,6 @@ public class ContinuousWaveletTransformTest {
 	    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 	  }
 
-	@SuppressWarnings("null")
 	@Test
 	public void testCWT() throws MSDKException,IOException{
 		

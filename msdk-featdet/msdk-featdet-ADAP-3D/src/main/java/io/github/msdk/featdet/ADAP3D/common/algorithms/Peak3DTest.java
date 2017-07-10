@@ -14,6 +14,8 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
 import org.apache.commons.collections4.map.MultiKeyMap;
 
+import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
+
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +99,7 @@ public class Peak3DTest {
 
 		//slice is used to store horizontal row from sparse matrix for given mz, left boundary and right boundary.
 		// left boundary and right boundary are used in form of scan numbers.
-		MultiKeyMap slice = objsliceSparseMatrix.getHorizontalSlice(mz, leftBound, rightBound);
+		MultiKeyMap<Integer,Triplet> slice = objsliceSparseMatrix.getHorizontalSlice(mz, leftBound, rightBound);
 
         //referenceEIC is used for storing normalized intensities for m/z-value equal to mz.
         double[] referenceEIC = new double[rightBound - leftBound + 1];
@@ -211,7 +213,7 @@ public class Peak3DTest {
 			double[] curEIC = new double[arrayCount];
 			
 			//Here current horizontal slice from sparse matrix is stored adjacent mz value.
-			MultiKeyMap curSlice = objsliceSparseMatrix.getHorizontalSlice(curMZ, leftBound, rightBound);
+			MultiKeyMap<Integer,Triplet> curSlice = objsliceSparseMatrix.getHorizontalSlice(curMZ, leftBound, rightBound);
 			double area = normalize(curSlice,leftBound,rightBound,curMZ,curEIC);
 			
 			//if area is too small continue.
@@ -245,7 +247,7 @@ public class Peak3DTest {
 	 * @return area a {@link java.lang.Double} object. This is area of normalize intensity points.
 	 * </p>
 	 */
-	private double normalize(MultiKeyMap slice, int leftBound, int rightBound, int roundedMz, double[] referenceEIC){
+	private double normalize(MultiKeyMap<Integer,Triplet> slice, int leftBound, int rightBound, int roundedMz, double[] referenceEIC){
 
         double area = 0.0;
 

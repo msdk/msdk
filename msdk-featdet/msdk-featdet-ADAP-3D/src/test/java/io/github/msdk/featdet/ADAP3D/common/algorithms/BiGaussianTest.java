@@ -13,7 +13,10 @@
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.commons.collections4.map.MultiKeyMap;
 import org.junit.Assert;
@@ -22,18 +25,29 @@ import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
 import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
 
 public class BiGaussianTest {
 	
-	  private static final String TEST_DATA_PATH = "src/test/resources/";
 	  private static RawDataFile rawFile;
 	  private static SliceSparseMatrix objSliceSparseMatrix;
+	  
+	  private static Path getResourcePath(String resource) throws MSDKException {
+		    final URL url = BiGaussianTest.class.getClassLoader().getResource(resource);
+		    try {
+		      return Paths.get(url.toURI()).toAbsolutePath();
+		    } catch (URISyntaxException e) {
+		      throw new MSDKException(e);
+		    }
+		  }
 	  
 	  @BeforeClass
 	  public static void loadData() throws MSDKException {
 	    // Import the file
-	    File inputFile = new File(TEST_DATA_PATH + "test_output.cdf");
+		String file = "test_output.cdf";
+		Path path = getResourcePath(file);
+	    File inputFile = path.toFile();
 	    Assert.assertTrue("Cannot read test data", inputFile.canRead());
 	    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile);
 	    rawFile = importer.execute();
@@ -45,9 +59,9 @@ public class BiGaussianTest {
 	  
 	  @Test
 	  public void testgetBiGaussianValue() throws MSDKException{
-		  MultiKeyMap horizontalSlice = objSliceSparseMatrix.getHorizontalSlice(140.1037, 1, 23);
+		  MultiKeyMap<Integer, Triplet> horizontalSlice = objSliceSparseMatrix.getHorizontalSlice(140.1037, 1, 23);
 		  BiGaussian objBiGaussian = new BiGaussian(horizontalSlice,140.1037, 1, 23);
 		  double biGaussianValue = objBiGaussian.getBiGaussianValue(6);
-		  Assert.assertEquals(23971, biGaussianValue,1);		
+		  Assert.assertEquals(23438, biGaussianValue,1);		
 	  } 
 }

@@ -46,7 +46,7 @@ public class SliceSparseMatrix {
 	 *  tripletMap is used for creating MultiKeyMap type of hashmap from raw data file. 
 	 * </p>
 	 */
-	private final MultiKeyMap tripletMap;
+	private final MultiKeyMap<Integer, Triplet> tripletMap;
 	
 	/**
 	 * <p>
@@ -173,7 +173,7 @@ public class SliceSparseMatrix {
 		filterListOfTriplet = new ArrayList<Triplet>();
 		Triplet currTriplet = new Triplet();
 		Triplet lastFilterTriplet = new Triplet();
-		tripletMap = new MultiKeyMap ();
+		tripletMap = new MultiKeyMap<Integer, Triplet> ();
 		int index = 0;
 		Set<Integer> mzSet = new HashSet<Integer>(); 
 		
@@ -194,17 +194,8 @@ public class SliceSparseMatrix {
 		}
 		mzValues = new ArrayList<Integer>(mzSet);
 				
-		Comparator<Integer> compareMZ = new Comparator<Integer>() {
-			
-			@Override
-			public int compare(Integer o1, Integer o2) {
-				Integer mz1 = o1;
-				Integer mz2 = o2;
-				return mz1.compareTo(mz2);
-			}
-		};
 		
-		Collections.sort(mzValues, compareMZ);
+		Collections.sort(mzValues);
 	}
 		
 	 /**
@@ -219,10 +210,10 @@ public class SliceSparseMatrix {
 	   * @return sliceMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This object contains horizontal slice 
 	   * with single m/z value,different scan numbers and different intensities along with retention time.
 	   */
-	public MultiKeyMap getHorizontalSlice(double mz,int lowerScanBound,int upperScanBound){
+	public MultiKeyMap<Integer, Triplet> getHorizontalSlice(double mz,int lowerScanBound,int upperScanBound){
 		
 		int roundedmz = roundMZ(mz);
-		MultiKeyMap  sliceMap = new MultiKeyMap ();
+		MultiKeyMap<Integer, Triplet>  sliceMap = new MultiKeyMap<Integer, Triplet> ();
 				
 		for(int i = lowerScanBound;i<=upperScanBound;i++){
 			if(tripletMap.containsKey(new Integer(i),new Integer(roundedmz))){
@@ -249,7 +240,7 @@ public class SliceSparseMatrix {
 	   * @return sliceMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This object contains horizontal slice 
 	   * with single m/z value,different scan numbers and different intensities along with retention time.
 	   */
-	public MultiKeyMap getHorizontalSlice(int roundedMZ, int lowerScanBound, int upperScanBound) {
+	public MultiKeyMap<Integer, Triplet> getHorizontalSlice(int roundedMZ, int lowerScanBound, int upperScanBound) {
 		return getHorizontalSlice((double) roundedMZ / roundMzFactor, lowerScanBound, upperScanBound);
 	}
 	
@@ -329,15 +320,15 @@ public class SliceSparseMatrix {
 	   * @param slice a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This is horizontal slice from sparse matrix.
 	   * @return listOfDataPoint a {@link Triplet} list. This returns list of retention time and intensities.
 	   */
-	public List<ContinuousWaveletTransform.DataPoint> getCWTDataPoint(MultiKeyMap slice){
+	public List<ContinuousWaveletTransform.DataPoint> getCWTDataPoint(MultiKeyMap<Integer,Triplet> slice){
 		
-		MapIterator iterator = slice.mapIterator();
+		MapIterator<MultiKey<? extends Integer>, Triplet> iterator = slice.mapIterator();
 		List<ContinuousWaveletTransform.DataPoint> listOfDataPoint = new ArrayList<ContinuousWaveletTransform.DataPoint>();
 		
 		while (iterator.hasNext())  {
 			ContinuousWaveletTransform.DataPoint dataPoint = new ContinuousWaveletTransform.DataPoint();
 			iterator.next();
-			MultiKey sliceKey = (MultiKey) iterator.getKey();
+			MultiKey<Integer> sliceKey = (MultiKey<Integer>) iterator.getKey();
 			 Triplet triplet = (Triplet)slice.get(sliceKey);
 			 if(triplet != null){
 				 dataPoint.rt = triplet.rt/60;
@@ -376,7 +367,7 @@ public class SliceSparseMatrix {
 	   * @param upperScanBound a {@link java.lang.Integer} object.This is highest scan number.
 	   * @return tripletMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This is whole sparse matrix.
 	   */
-	public MultiKeyMap removeDataPoints(double mz,int lowerScanBound,int upperScanBound){
+	public MultiKeyMap<Integer,Triplet> removeDataPoints(double mz,int lowerScanBound,int upperScanBound){
 		int roundedmz = roundMZ(mz);
 		for(int i = lowerScanBound;i<=upperScanBound;i++){
 			if(tripletMap.containsKey(new Integer(i),new Integer(roundedmz))){
