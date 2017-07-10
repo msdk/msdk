@@ -100,7 +100,18 @@ public class BiGaussian {
 	}
 	
 	
-	
+	/**
+	 * <p>
+	 * InterpolationX is used to calculate X value of Halfwidth-halfheight point of either left or right half of BiGaussian.
+	 * </p>
+	 * 
+	 * @param mu a {@link java.lang.Integer} object. This is X value for maximum height in terms of scan number.
+	 * @param halfHeight  a {@link java.lang.Double} object. This is m/z value from the raw file.
+	 * @param leftBound a {@link java.lang.Integer} object. This is minimum scan number.
+	 * @param rightBound a {@link java.lang.Integer} object. This is maximum scan number.
+	 * @param roundedmz a {@link java.lang.Integer} object. This is rounded m/z value.
+	 * @param direction a {@link Enum} object. This decides for which half we want to calculate X value.
+	 */
 	private double InterpolationX(int mu,double halfHeight,int leftBound,int rightBound,int roundedmz,Direction direction){
 		
 		int i = mu;
