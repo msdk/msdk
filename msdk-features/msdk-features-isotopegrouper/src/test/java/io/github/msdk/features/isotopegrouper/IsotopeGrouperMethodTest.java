@@ -20,10 +20,7 @@ import io.github.msdk.MSDKException;
 
 public class IsotopeGrouperMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
   @Ignore("Ignored because the module is unfinished")
-
   @Test
   public void singleSampleTest() throws MSDKException {
 

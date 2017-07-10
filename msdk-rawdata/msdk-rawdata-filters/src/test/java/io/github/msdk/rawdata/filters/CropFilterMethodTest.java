@@ -21,21 +21,18 @@ import org.junit.Test;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 
 public class CropFilterMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
-
   @Test
-  public void testCropFilter() throws MSDKException {
+  public void testCropFilter() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "orbitrap_300-600mz.mzML");
+    File inputFile =
+        new File(this.getClass().getClassLoader().getResource("orbitrap_300-600mz.mzML").toURI());
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
@@ -71,10 +68,11 @@ public class CropFilterMethodTest {
 
 
   @Test
-  public void testNoMatch() throws MSDKException {
+  public void testNoMatch() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "orbitrap_300-600mz.mzML");
+    File inputFile =
+        new File(this.getClass().getClassLoader().getResource("orbitrap_300-600mz.mzML").toURI());
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();

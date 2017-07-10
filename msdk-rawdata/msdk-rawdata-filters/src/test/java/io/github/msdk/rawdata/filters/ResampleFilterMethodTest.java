@@ -26,14 +26,12 @@ import io.github.msdk.io.mzml.MzMLFileImportMethod;
 
 public class ResampleFilterMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
-
   @Test
-  public void testResampleFilter() throws MSDKException {
+  public void testResampleFilter() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "orbitrap_300-600mz.mzML");
+    File inputFile =
+        new File(this.getClass().getClassLoader().getResource("orbitrap_300-600mz.mzML").toURI());
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();

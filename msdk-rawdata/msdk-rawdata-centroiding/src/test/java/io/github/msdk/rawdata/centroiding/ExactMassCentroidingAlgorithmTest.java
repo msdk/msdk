@@ -19,7 +19,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
@@ -27,14 +26,12 @@ import io.github.msdk.util.MsSpectrumUtil;
 
 public class ExactMassCentroidingAlgorithmTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
-
   @Test
-  public void testOrbitrap() throws MSDKException {
+  public void testOrbitrap() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "profile_orbitrap.mzML");
+    File inputFile =
+        new File(this.getClass().getClassLoader().getResource("profile_orbitrap.mzML").toURI());
     Assert.assertTrue(inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();

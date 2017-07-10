@@ -13,8 +13,9 @@
  */
 package io.github.msdk.features.ransacaligner;
 
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import java.util.Comparator;
+
+import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 
 public class AlignStructMol implements Comparator<AlignStructMol> {
 
@@ -27,8 +28,8 @@ public class AlignStructMol implements Comparator<AlignStructMol> {
     public AlignStructMol(FeatureTableRow row1, FeatureTableRow row2) {
 	this.row1 = row1;
 	this.row2 = row2;
-	RT = row1.getChromatographyInfo().getRetentionTime();
-	RT2 = row2.getChromatographyInfo().getRetentionTime();
+	RT = row1.getRT();
+	RT2 = row2.getRT();
     }
 
    /* public AlignStructMol(FeatureTableRow row1, FeatureTableRow row2, RawDataFile file,
