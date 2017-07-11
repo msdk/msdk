@@ -15,6 +15,7 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.lang.Math;
 
 import org.apache.commons.collections4.MapIterator;
@@ -36,21 +37,15 @@ import org.apache.commons.collections4.keyvalue.MultiKey;
  */
 public class BiGaussian {
 	
-	//This is used to store horizontal slice of sparse matrix.
-	private final MultiKeyMap<Integer, Triplet> horizontalSlice;
-	
-	//This is used to store all the intensities of slice. 
-	private final List<Double> listOfIntensities;
 	
 	enum Direction {RIGHT, LEFT}
 	
+	
 	//This is used for storing BiGaussian parameters inside constructor.	
-	private static class BiGaussianParams{
-		public static double maxHeight;
-		public static int mu;
-		public static double sigmaLeft;
-		public static double sigmaRight;
-	}
+		  public final double maxHeight;
+		  public final int mu;
+		  public final double sigmaLeft;
+		  public final double sigmaRight;
 	
 	/**
 	 * <p>
@@ -63,40 +58,29 @@ public class BiGaussian {
 	 * @param rightBound a {@link java.lang.Integer} object. This is maximum scan number.
 	 */
 	BiGaussian(MultiKeyMap<Integer, Triplet> horizontalSlice,double mz,int leftBound,int rightBound){
-		
-		this.horizontalSlice = horizontalSlice;
-		
-		List<SliceSparseMatrix.Triplet> listOfTripletsInSlice = new ArrayList<SliceSparseMatrix.Triplet>(horizontalSlice.values());
-		
-		listOfIntensities = new ArrayList<Double>();
-		
-		for(int i=0;i<listOfTripletsInSlice.size();i++){
-			double intensity = listOfTripletsInSlice.get(i)!=null?listOfTripletsInSlice.get(i).intensity:0;
-			listOfIntensities.add(intensity);
-		}
 				
-		Collections.sort(listOfIntensities);
-		
 		//This is max height for BiGaussian fit. It's in terms of intensities.
-		double maxHeight = listOfIntensities.get(listOfIntensities.size()-1);
+		maxHeight = horizontalSlice.values()
+				   .stream()
+				   .map(x -> x != null ? x.intensity : 0.0)
+				   .max(Double::compareTo)
+				   .orElse(0.0);
 		
 		//Below logic is for finding BiGaussian parameters.		
-		int mu = getScanNumber(maxHeight);
+		mu = getScanNumber(horizontalSlice,maxHeight);
 		int roundedmz = (int) Math.round(mz * 10000); 
 		double halfHeight = (double) maxHeight/2; 
 		
-		BiGaussianParams.maxHeight = maxHeight;
-		BiGaussianParams.mu = mu;
-	
-		double interpolationLeftSideX = InterpolationX(mu,halfHeight,leftBound,rightBound,roundedmz,Direction.LEFT);		
+			
+		double interpolationLeftSideX = InterpolationX(horizontalSlice,mu,halfHeight,leftBound,rightBound,roundedmz,Direction.LEFT);		
 		//This is sigma left for BiGaussian. 
-		BiGaussianParams.sigmaLeft = (mu - interpolationLeftSideX)/Math.sqrt(2*Math.log(2)); 
+		sigmaLeft = (mu - interpolationLeftSideX)/Math.sqrt(2*Math.log(2)); 
 		
 		
-		double interpolationRightSideX = InterpolationX(mu,halfHeight,leftBound,rightBound,roundedmz,Direction.RIGHT);		
+		
+		double interpolationRightSideX = InterpolationX(horizontalSlice,mu,halfHeight,leftBound,rightBound,roundedmz,Direction.RIGHT);		
 		//This is sigma right for BiGaussian. 
-		BiGaussianParams.sigmaRight = ((interpolationRightSideX - mu))/Math.sqrt(2*Math.log(2));
-		
+		sigmaRight = ((interpolationRightSideX - mu))/Math.sqrt(2*Math.log(2));		
 	}
 	
 	
@@ -112,7 +96,7 @@ public class BiGaussian {
 	 * @param roundedmz a {@link java.lang.Integer} object. This is rounded m/z value.
 	 * @param direction a {@link Enum} object. This decides for which half we want to calculate X value.
 	 */
-	private double InterpolationX(int mu,double halfHeight,int leftBound,int rightBound,int roundedmz,Direction direction){
+	private double InterpolationX(MultiKeyMap<Integer, Triplet> horizontalSlice,int mu,double halfHeight,int leftBound,int rightBound,int roundedmz,Direction direction){
 		
 		int i = mu;
 		double  interpolationY1 = 0;
@@ -124,17 +108,17 @@ public class BiGaussian {
 			i += previousX2;
 			SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(i,roundedmz);
 			
-			if(triplet1!=null){
+			if(triplet1!=null && triplet1.intensity < halfHeight){
 				interpolationY1 = triplet1.intensity;
-			}
-			
-			if(interpolationY1 <halfHeight && triplet1!=null){
 				SliceSparseMatrix.Triplet triplet2 =  horizontalSlice.get(i-previousX2,roundedmz);
 				if(triplet2!=null){
 					interpolationY2 = triplet2.intensity;
 					break;
 				}
 			}
+			
+			
+
 			
 		}
 		
@@ -150,7 +134,7 @@ public class BiGaussian {
 	 * 
 	 * @param height  a {@link java.lang.Double} object. This is intensity value from the horizontal slice from sparse matrix.
 	 */
-	private int getScanNumber(double height){
+	private int getScanNumber(MultiKeyMap<Integer, Triplet> horizontalSlice,double height){
 		int mu = 0;
 		MapIterator<MultiKey<? extends Integer>, Triplet> iterator = horizontalSlice.mapIterator();
 		
@@ -175,11 +159,11 @@ public class BiGaussian {
 	 * </p>
 	 * @param x  a {@link java.lang.Integer} object. This is scan number.
 	 */
-	public double getBiGaussianValue(int x){
-		
-		double sigma = x >= BiGaussianParams.mu ? BiGaussianParams.sigmaRight : BiGaussianParams.sigmaLeft;
-		double exponentialTerm = Math.exp(-1 * Math.pow(x-BiGaussianParams.mu, 2) / (2 * Math.pow(sigma,2)));
-		return BiGaussianParams.maxHeight  * exponentialTerm;
+	public double getValue(int x){
+
+		double sigma = x >= mu ? sigmaRight : sigmaLeft;
+		double exponentialTerm = Math.exp(-1 * Math.pow(x-mu, 2) / (2 * Math.pow(sigma,2)));
+		return maxHeight  * exponentialTerm;
 		
 	}
 }
