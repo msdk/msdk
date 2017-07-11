@@ -59,7 +59,6 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
   private static final String DEFAULT_VERSION = "1.1.0";
   private static final String CV_REF_MS = "MS";
 
-  private static final String PREFIX_XMLNS = "xmlns";
   private static final String PREFIX_XSI = "xsi";
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -105,7 +104,10 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
       dos.on(true);
       XMLStreamWriterImpl xmlStreamWriter = new XMLStreamWriterImpl();
       xmlStreamWriter.setOutput(dos);
+
+      // Setting namespace and prefixes
       xmlStreamWriter.setDefaultNamespace(MZML_NAMESPACE);
+      xmlStreamWriter.setPrefix(PREFIX_XSI, XML_SCHEMA_INSTANCE);
 
       // <?xml>
       xmlStreamWriter.writeStartDocument(XML_ENCODING, XML_VERSION);
@@ -113,17 +115,15 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
       // <indexedmzML>
       xmlStreamWriter.writeStartElement(MzMLTags.TAG_INDEXED_MZML);
       xmlStreamWriter.writeDefaultNamespace(MZML_NAMESPACE);
-      xmlStreamWriter.writeAttribute(PREFIX_XMLNS, MZML_NAMESPACE, MzMLTags.ATTR_XSI,
-          XML_SCHEMA_INSTANCE);
-      xmlStreamWriter.writeAttribute(PREFIX_XSI, MZML_NAMESPACE, MzMLTags.ATTR_SCHEME_LOCATION,
+      xmlStreamWriter.writeNamespace(PREFIX_XSI, XML_SCHEMA_INSTANCE);
+      xmlStreamWriter.writeAttribute(XML_SCHEMA_INSTANCE, MzMLTags.ATTR_SCHEME_LOCATION,
           XML_SCHEMA_LOCATION);
 
       // <mzML>
       xmlStreamWriter.writeStartElement(MzMLTags.TAG_MZML);
       xmlStreamWriter.writeDefaultNamespace(MZML_NAMESPACE);
-      xmlStreamWriter.writeAttribute(PREFIX_XMLNS, MZML_NAMESPACE, MzMLTags.ATTR_XSI,
-          XML_SCHEMA_INSTANCE);
-      xmlStreamWriter.writeAttribute(PREFIX_XSI, MZML_NAMESPACE, MzMLTags.ATTR_SCHEME_LOCATION,
+      xmlStreamWriter.writeNamespace(PREFIX_XSI, XML_SCHEMA_INSTANCE);
+      xmlStreamWriter.writeAttribute(XML_SCHEMA_INSTANCE, MzMLTags.ATTR_SCHEME_LOCATION,
           XML_SCHEMA_LOCATION);
       xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ID, rawDataFile.getName());
       xmlStreamWriter.writeAttribute(MzMLTags.ATTR_VERSION, DEFAULT_VERSION);
