@@ -138,7 +138,7 @@ public class MzMLBinaryDataInfo {
 
   public MzMLCompressionType getCompressionType(String accession) {
     for (MzMLCompressionType compressionType : MzMLCompressionType.values()) {
-      if (compressionType.getValue().equals(accession))
+      if (compressionType.getAccession().equals(accession))
         return compressionType;
     }
     return null;

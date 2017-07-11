@@ -13,8 +13,6 @@
 
 package io.github.msdk.io.mzml2.data;
 
-import uk.ac.ebi.jmzml.model.mzml.CVParam;
-
 /**
  * Controlled vocabulary (CV) values for mzML files.
  *
@@ -28,7 +26,8 @@ public class MzMLCV {
   public static final String MS_RT_SCAN_START = "MS:1000016"; // "scan start time"
   public static final String MS_RT_RETENTION_TIME = "MS:1000894"; // "retention time"
   public static final String MS_RT_RETENTION_TIME_LOCAL = "MS:1000895"; // "local retention time"
-  public static final String MS_RT_RETENTION_TIME_NORMALIZED = "MS:1000896"; // "normalized retention time"
+  public static final String MS_RT_RETENTION_TIME_NORMALIZED = "MS:1000896"; // "normalized
+                                                                             // retention time"
 
   // MS level
   public static final String cvMSLevel = "MS:1000511";
@@ -53,26 +52,19 @@ public class MzMLCV {
   // Polarity
   public static final String cvPolarityPositive = "MS:1000130";
   public static final String cvPolarityNegative = "MS:1000129";
-  public static final CVParam polarityPositiveCvParam = new CVParam();
-  public static final CVParam polarityNegativeCvParam = new CVParam();
+  public static final MzMLCVParam polarityPositiveCvParam =
+      new MzMLCVParam(cvPolarityPositive, "", "positive scan", null);
+  public static final MzMLCVParam polarityNegativeCvParam =
+      new MzMLCVParam(cvPolarityNegative, "", "negative scan", null);
 
   // Centroid vs profile
   public static final String cvCentroidSpectrum = "MS:1000127";
   public static final String cvProfileSpectrum = "MS:1000128";
-  public static final CVParam centroidCvParam = new CVParam();
-  public static final CVParam profileCvParam = new CVParam();
+  public static final MzMLCVParam centroidCvParam =
+      new MzMLCVParam(cvCentroidSpectrum, "", "centroid mass spectrum", null);
+  public static final MzMLCVParam profileCvParam =
+      new MzMLCVParam(cvProfileSpectrum, "", "profile spectrum", null);
 
-  // Fill in the CVParam details
-  static {
-    polarityPositiveCvParam.setAccession(cvPolarityPositive);
-    polarityPositiveCvParam.setName("positive scan");
-    polarityNegativeCvParam.setAccession(cvPolarityNegative);
-    polarityNegativeCvParam.setName("negative scan");
-    centroidCvParam.setAccession(cvCentroidSpectrum);
-    centroidCvParam.setName("centroid mass spectrum");
-    profileCvParam.setAccession(cvProfileSpectrum);
-    profileCvParam.setName("profile spectrum");
-  }
 
   // Total Ion Current
   public static final String cvTIC = "MS:1000285";
@@ -108,5 +100,8 @@ public class MzMLCV {
 
   // UV spectrum, actually "electromagnetic radiation spectrum"
   public static final String cvUVSpectrum = "MS:1000804";
+
+  // Intensity array unit
+  public static final String cvUnitsIntensity1 = "MS:1000131";
 
 }
