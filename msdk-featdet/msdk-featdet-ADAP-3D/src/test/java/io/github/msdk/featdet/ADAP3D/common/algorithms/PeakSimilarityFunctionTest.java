@@ -27,48 +27,48 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
 
 public class PeakSimilarityFunctionTest {
-	
-	  private static RawDataFile rawFile;
-	  private static CurveTool objCurveTool;
-	  private static SliceSparseMatrix objSliceSparseMatrix;
-	  
-	  private static Path getResourcePath(String resource) throws MSDKException {
-		    final URL url = PeakSimilarityFunctionTest.class.getClassLoader().getResource(resource);
-		    try {
-		      return Paths.get(url.toURI()).toAbsolutePath();
-		    } catch (URISyntaxException e) {
-		      throw new MSDKException(e);
-		    }
-		  }
-	  
 
-	  @BeforeClass
-	  public static void loadData() throws MSDKException {
+  private static RawDataFile rawFile;
+  private static CurveTool objCurveTool;
+  private static SliceSparseMatrix objSliceSparseMatrix;
 
-	    // Import the file
-		String file = "test_output.cdf";
-		Path path = getResourcePath(file);
-		File inputFile = path.toFile();
-	    Assert.assertTrue("Cannot read test data", inputFile.canRead());
-	    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile);
-	    rawFile = importer.execute();
-	    objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
-	    objCurveTool = new CurveTool(objSliceSparseMatrix);
-	    Assert.assertNotNull(rawFile);
-	    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
-	  }
-	  
-	  @Test
-	  public void testPeakSimilarityFunction() throws MSDKException {
+  private static Path getResourcePath(String resource) throws MSDKException {
+    final URL url = PeakSimilarityFunctionTest.class.getClassLoader().getResource(resource);
+    try {
+      return Paths.get(url.toURI()).toAbsolutePath();
+    } catch (URISyntaxException e) {
+      throw new MSDKException(e);
+    }
+  }
 
-		  double fwhm = objCurveTool.estimateFwhmMs(20);
 
-		Peak3DTest objPeak3DTest = new Peak3DTest(objSliceSparseMatrix, fwhm);
+  @BeforeClass
+  public static void loadData() throws MSDKException {
 
-	    Peak3DTest.Result objResult = objPeak3DTest.execute(140.1037, 1, 23);
-	    Assert.assertEquals(4, objResult.similarityValues.size());
-	    Assert.assertEquals(1401028, objResult.lowerMzBound);
-	    Assert.assertEquals(1401047, objResult.upperMzBound);
-	  }
+    // Import the file
+    String file = "test_output.cdf";
+    Path path = getResourcePath(file);
+    File inputFile = path.toFile();
+    Assert.assertTrue("Cannot read test data", inputFile.canRead());
+    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile);
+    rawFile = importer.execute();
+    objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
+    objCurveTool = new CurveTool(objSliceSparseMatrix);
+    Assert.assertNotNull(rawFile);
+    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+  }
+
+  @Test
+  public void testPeakSimilarityFunction() throws MSDKException {
+
+    double fwhm = objCurveTool.estimateFwhmMs(20);
+
+    Peak3DTest objPeak3DTest = new Peak3DTest(objSliceSparseMatrix, fwhm);
+
+    Peak3DTest.Result objResult = objPeak3DTest.execute(140.1037, 1, 23);
+    Assert.assertEquals(4, objResult.similarityValues.size());
+    Assert.assertEquals(1401028, objResult.lowerMzBound);
+    Assert.assertEquals(1401047, objResult.upperMzBound);
+  }
 
 }

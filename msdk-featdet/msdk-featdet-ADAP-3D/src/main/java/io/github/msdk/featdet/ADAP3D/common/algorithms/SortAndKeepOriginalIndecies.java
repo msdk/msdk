@@ -15,50 +15,52 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 import java.util.Comparator;
 
 /**
- * <p>SortAndKeepOriginalIndecies class.</p>
+ * <p>
+ * SortAndKeepOriginalIndecies class.
+ * </p>
  *
- * @author owenmyers
- * Modified by Dharak Shah to include in MSDK
+ * @author owenmyers Modified by Dharak Shah to include in MSDK
  */
-public class SortAndKeepOriginalIndecies implements Comparator<Integer>{
-    private final double[] dataArr;
-    /**
-     * <p>Constructor for SortAndKeepOriginalIndecies.</p>
-     *
-     * @param dataInArr an array of double.
-     */
-    public SortAndKeepOriginalIndecies(double[] dataInArr)
-    {
-        this.dataArr =dataInArr;
+public class SortAndKeepOriginalIndecies implements Comparator<Integer> {
+  private final double[] dataArr;
+
+  /**
+   * <p>
+   * Constructor for SortAndKeepOriginalIndecies.
+   * </p>
+   *
+   * @param dataInArr an array of double.
+   */
+  public SortAndKeepOriginalIndecies(double[] dataInArr) {
+    this.dataArr = dataInArr;
+  }
+
+  /**
+   * <p>
+   * makeArrOfIndecies.
+   * </p>
+   *
+   * @return an array of {@link java.lang.Integer} objects.
+   */
+  public Integer[] makeArrOfIndecies() {
+    Integer[] indecies = new Integer[dataArr.length];
+    for (int i = 0; i < dataArr.length; i++) {
+      indecies[i] = i;
     }
-    
-    /**
-     * <p>makeArrOfIndecies.</p>
-     *
-     * @return an array of {@link java.lang.Integer} objects.
-     */
-    public Integer[] makeArrOfIndecies(){
-        Integer[] indecies = new Integer[dataArr.length];
-        for (int i = 0; i < dataArr.length;i++){
-            indecies[i] = i;
-        }
-        return indecies;
+    return indecies;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public int compare(Integer index1, Integer index2) {
+    if (dataArr[index2] > dataArr[index1]) {
+      return -1;
+    } else if (dataArr[index2] < dataArr[index1]) {
+      return 1;
+    } else {
+      return 0;
     }
-    
-    /** {@inheritDoc} */
-    @Override
-    public int compare(Integer index1, Integer index2)
-    {
-        if (dataArr[index2]>dataArr[index1]){
-            return -1;
-        }
-        else if (dataArr[index2]<dataArr[index1]){
-            return 1;
-        }
-        else{
-            return 0;
-        }
-    }
-    
-    
+  }
+
+
 }

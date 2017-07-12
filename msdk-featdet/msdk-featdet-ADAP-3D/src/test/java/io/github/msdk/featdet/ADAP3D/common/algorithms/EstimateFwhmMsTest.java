@@ -33,20 +33,20 @@ public class EstimateFwhmMsTest {
   private static CurveTool objCurveTool;
 
   private static Path getResourcePath(String resource) throws MSDKException {
-	    final URL url = EstimateFwhmMsTest.class.getClassLoader().getResource(resource);
-	    try {
-	      return Paths.get(url.toURI()).toAbsolutePath();
-	    } catch (URISyntaxException e) {
-	      throw new MSDKException(e);
-	    }
-	  }
-  
+    final URL url = EstimateFwhmMsTest.class.getClassLoader().getResource(resource);
+    try {
+      return Paths.get(url.toURI()).toAbsolutePath();
+    } catch (URISyntaxException e) {
+      throw new MSDKException(e);
+    }
+  }
+
   @BeforeClass
   public static void loadData() throws MSDKException {
 
     // Import the file
-	String file = "test_output.cdf";
-	Path path = getResourcePath(file);
+    String file = "test_output.cdf";
+    Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
     NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile);

@@ -29,39 +29,40 @@ import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet
 import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
 
 public class BiGaussianTest {
-	
-	  private static RawDataFile rawFile;
-	  private static SliceSparseMatrix objSliceSparseMatrix;
-	  
-	  private static Path getResourcePath(String resource) throws MSDKException {
-		    final URL url = BiGaussianTest.class.getClassLoader().getResource(resource);
-		    try {
-		      return Paths.get(url.toURI()).toAbsolutePath();
-		    } catch (URISyntaxException e) {
-		      throw new MSDKException(e);
-		    }
-		  }
-	  
-	  @BeforeClass
-	  public static void loadData() throws MSDKException {
-	    // Import the file
-		String file = "test_output.cdf";
-		Path path = getResourcePath(file);
-	    File inputFile = path.toFile();
-	    Assert.assertTrue("Cannot read test data", inputFile.canRead());
-	    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile);
-	    rawFile = importer.execute();
-	    objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
-	    Assert.assertNotNull(rawFile);
-	    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
-	  }
-	  
-	  
-	  @Test
-	  public void testgetBiGaussianValue() throws MSDKException{
-		  MultiKeyMap<Integer, Triplet> horizontalSlice = objSliceSparseMatrix.getHorizontalSlice(140.1037, 1, 23);
-		  BiGaussian objBiGaussian = new BiGaussian(horizontalSlice,140.1037, 1, 23);
-		  double biGaussianValue = objBiGaussian.getValue(6);
-		  Assert.assertEquals(23438, biGaussianValue,1);		
-	  } 
+
+  private static RawDataFile rawFile;
+  private static SliceSparseMatrix objSliceSparseMatrix;
+
+  private static Path getResourcePath(String resource) throws MSDKException {
+    final URL url = BiGaussianTest.class.getClassLoader().getResource(resource);
+    try {
+      return Paths.get(url.toURI()).toAbsolutePath();
+    } catch (URISyntaxException e) {
+      throw new MSDKException(e);
+    }
+  }
+
+  @BeforeClass
+  public static void loadData() throws MSDKException {
+    // Import the file
+    String file = "test_output.cdf";
+    Path path = getResourcePath(file);
+    File inputFile = path.toFile();
+    Assert.assertTrue("Cannot read test data", inputFile.canRead());
+    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile);
+    rawFile = importer.execute();
+    objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
+    Assert.assertNotNull(rawFile);
+    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+  }
+
+
+  @Test
+  public void testgetBiGaussianValue() throws MSDKException {
+    MultiKeyMap<Integer, Triplet> horizontalSlice =
+        objSliceSparseMatrix.getHorizontalSlice(140.1037, 1, 23);
+    BiGaussian objBiGaussian = new BiGaussian(horizontalSlice, 140.1037, 1, 23);
+    double biGaussianValue = objBiGaussian.getValue(6);
+    Assert.assertEquals(23438, biGaussianValue, 1);
+  }
 }
