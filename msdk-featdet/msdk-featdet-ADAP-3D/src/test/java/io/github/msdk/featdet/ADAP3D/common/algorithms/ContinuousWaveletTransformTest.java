@@ -14,7 +14,6 @@
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -87,8 +86,6 @@ public class ContinuousWaveletTransformTest {
 
     }
 
-    double[] x = new double[rtBuffer.size()];
-    double[] signal = new double[correctIntensityBuffer.size()];
     List<ContinuousWaveletTransform.DataPoint> listOfDataPoint =
         new ArrayList<ContinuousWaveletTransform.DataPoint>();
 
@@ -107,19 +104,13 @@ public class ContinuousWaveletTransformTest {
 
     List<Result> peakList = continuousWavelet.findPeaks();
     boolean peakAssertion = false;
-    // File outputFile = new File(TEST_DATA_PATH + "output.txt");
-    // StringBuffer buffer = new StringBuffer ();
-    // FileWriter writer = new FileWriter(outputFile);
+
 
     for (int j = 0; j < peakList.size(); j++) {
-      // buffer.append(peakList.get(j).curLeftBound).append(",").append(peakList.get(j).curRightBound).append("\r\n");
-      // writer.write(buffer.toString());
-      // buffer = new StringBuffer();
       if (peakList.get(j).curLeftBound == 113 && peakList.get(j).curRightBound == 130) {
         peakAssertion = true;
       }
     }
-    // writer.close();
     Assert.assertEquals(true, peakAssertion);
 
   }

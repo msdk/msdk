@@ -4,14 +4,10 @@
  */
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 /**
@@ -144,7 +140,6 @@ public class SignalToNoise {
       stdDevStats.addValue(intensities[i]);
     }
     double peakHeight = stdDevStats.getMax();
-    double meanOfSignal = stdDevStats.getMean();
     stdDevStats.clear();
 
     int peakWidth = peakRight - peakLeft;
@@ -223,17 +218,7 @@ public class SignalToNoise {
     // Lets try looking at the std from collecting all of the data first
     double bestNoise = allWindowSTD.getMean();
 
-    // for a good looking peak we think the difference between the noise with and without the peak
-    // included should
-    // be about a factor of 2. Specificaly with the peak the noise should be 2x higher than without
-    // if it is real.
-    double bestWithPeakNoise = toFindMinWithPeakNoise.getMin();
 
-    double smallestLocalMean = toFindLocalMean.getMin();
-    double meanDifference = java.lang.Math.abs(smallestLocalMean - meanOfSignal);
-    // if (meanOfSignal>(1.2*smallestLocalMean)){
-    // return -1;
-    // }
 
     // before calculating the signal to noise ratio we need to "normalize" the height.
     // What can happen is if a bad peak is found on a plateau the local stadard deviation will be
@@ -301,7 +286,6 @@ public class SignalToNoise {
     }
 
     double peakHeight = stdDevStats.getMax();
-    double meanOfSignal = stdDevStats.getMean();
     stdDevStats.clear();
 
     int peakWidth = peakRight - peakLeft;
@@ -356,16 +340,6 @@ public class SignalToNoise {
     // be about a factor of 2. Specificaly with the peak the noise should be 2x higher than without
     // if it is real.
     double bestNoPeakNoise = toFindMinNoPeakNoise.getMin();
-    double bestWithPeakNoise = toFindMinWithPeakNoise.getMin();
-
-    double smallestLocalMean = toFindLocalMean.getMin();
-    double meanDifference = java.lang.Math.abs(smallestLocalMean - meanOfSignal);
-    // if (meanOfSignal>(1.5*smallestLocalMean)){
-    //
-    // }
-    // if (bestWithPeakNoise/bestNoPeakNoise <= 1.5){
-    // return false;
-    // }
 
 
 
@@ -433,7 +407,6 @@ public class SignalToNoise {
     }
 
     double peakHeight = stdDevStats.getMax();
-    double meanOfSignal = stdDevStats.getMean();
     stdDevStats.clear();
 
     int peakWidth = peakRight - peakLeft;
@@ -622,7 +595,6 @@ public class SignalToNoise {
     }
 
     double peakHeight = stdDevStats.getMax();
-    double meanOfSignal = stdDevStats.getMean();
     stdDevStats.clear();
 
     int peakWidth = peakRight - peakLeft;
@@ -717,20 +689,5 @@ public class SignalToNoise {
     // double SNRatio = (meanOfSignal-smallIntensityAvg)/bestNoPeakNoise;
 
     return SNRatio;
-  }
-
-  private static void writeArray(double[] arrIn) {
-    try {
-      PrintWriter writer = new PrintWriter("look_at_tmp_arr.txt", "UTF-8");
-      for (int i = 0; i < arrIn.length; i++) {
-
-        writer.print(java.lang.String.valueOf(arrIn[i]) + " ");
-      }
-      // writer.print("\n");
-
-      writer.close();
-    } catch (IOException e) {
-      System.out.println("problem writing look_at_tmp_arr.txt");
-    }
   }
 }

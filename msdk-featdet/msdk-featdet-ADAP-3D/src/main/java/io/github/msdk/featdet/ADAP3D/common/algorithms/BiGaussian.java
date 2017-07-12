@@ -12,10 +12,7 @@
  */
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+
 import java.lang.Math;
 
 import org.apache.commons.collections4.MapIterator;
@@ -111,20 +108,20 @@ public class BiGaussian {
       double halfHeight, int leftBound, int rightBound, int roundedmz, Direction direction) {
 
     int i = mu;
-    double interpolationY1 = 0;
-    double interpolationY2 = 0;
-    int previousX2 = direction == Direction.RIGHT ? 1 : -1;
+    double Y1 = 0;
+    double Y2 = 0;
+    int step = direction == Direction.RIGHT ? 1 : -1;
 
     while (leftBound <= i && i <= rightBound) {
 
-      i += previousX2;
+      i += step;
       SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(i, roundedmz);
 
       if (triplet1 != null && triplet1.intensity < halfHeight) {
-        interpolationY1 = triplet1.intensity;
-        SliceSparseMatrix.Triplet triplet2 = horizontalSlice.get(i - previousX2, roundedmz);
+        Y1 = triplet1.intensity;
+        SliceSparseMatrix.Triplet triplet2 = horizontalSlice.get(i - step, roundedmz);
         if (triplet2 != null) {
-          interpolationY2 = triplet2.intensity;
+          Y2 = triplet2.intensity;
           break;
         }
       }
@@ -133,9 +130,15 @@ public class BiGaussian {
 
     }
 
-    double interpolationX = ((halfHeight - interpolationY1) * ((i - previousX2) - i)
-        / (interpolationY2 - interpolationY1)) + i;
-    return interpolationX;
+    /*
+     * I've used the formula of line passing through points (x1,y1) and (x2,y2) in interpolationX.
+     * Those are the points which are exactly above and below of halfHeight(halfMaxIntensity). I've
+     * to find exact point between those two points. I've y-value for that point as halfHeight but I
+     * don't have x-value. X-value is scan number and Y-value is intensity.
+     */
+
+    double X = ((halfHeight - Y1) * ((i - step) - i) / (Y2 - Y1)) + i;
+    return X;
   }
 
   /**
@@ -153,7 +156,7 @@ public class BiGaussian {
     while (iterator.hasNext()) {
       iterator.next();
 
-      MultiKey<Integer> mk = (MultiKey<Integer>) iterator.getKey();
+      MultiKey<? extends Integer> mk = (MultiKey<? extends Integer>) iterator.getKey();
       double intensity = iterator.getValue() != null ? (iterator.getValue()).intensity : 0;
 
       if (intensity == height) {

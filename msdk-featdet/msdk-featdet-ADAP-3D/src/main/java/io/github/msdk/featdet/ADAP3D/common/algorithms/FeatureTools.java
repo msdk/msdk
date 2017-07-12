@@ -14,15 +14,10 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.NavigableMap;
-import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 
-import io.github.msdk.featdet.ADAP3D.datamodel.PeakInfo;
 
 
 /**
@@ -147,20 +142,16 @@ public class FeatureTools {
     // double edgeHightDiffRatio=deltaToHeightRatio;
 
 
-    // first get the value of the peak
-    int peakIndex = 0;
     double peakHeight = 0.0;
 
     for (int i = peakLeft; i < (peakRight + 1); i++) {
       double curInt = intensities[i];
       if (curInt > peakHeight) {
         peakHeight = curInt;
-        peakIndex = i;
       }
     }
     assert (peakHeight > 0.0);
 
-    double peakRT = rt[peakIndex];
     double leftInt = intensities[peakLeft];
     double rightInt = intensities[peakRight];
 

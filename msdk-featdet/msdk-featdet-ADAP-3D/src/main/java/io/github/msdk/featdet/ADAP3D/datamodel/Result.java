@@ -11,16 +11,19 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 /**
- * <p>Result class.</p>
+ * <p>
+ * Result class.
+ * </p>
  *
  * @author Dharak Shah
  */
 
 
 package io.github.msdk.featdet.ADAP3D.datamodel;
+
 public class Result {
-	public int curLeftBound;
-	public int curRightBound;
-	public double bestCoefficient;
-	public double curArea;
+  public int curLeftBound;
+  public int curRightBound;
+  public double bestCoefficient;
+  public double curArea;
 }

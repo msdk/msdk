@@ -12,8 +12,6 @@
  */
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,8 +27,6 @@ import io.github.msdk.featdet.ADAP3D.datamodel.Result;
 
 import io.github.msdk.featdet.ADAP3D.datamodel.Ridgeline;
 
-import java.lang.String;
-
 
 
 /**
@@ -44,7 +40,6 @@ public class ContinuousWaveletTransform {
   private double incrementScale;
   private ArrayList<Double> arrScales = new ArrayList<Double>();
   private HashMap<Double, Integer> mapScaleToIndex = new HashMap<Double, Integer>();
-  private String waveletType;
   private double[] signal;
   private double[] x;
   private double avgXSpace;
@@ -526,106 +521,6 @@ public class ContinuousWaveletTransform {
       yOut[2 * i + 1] = addInX;
     }
     return yOut;
-  }
-  // public double[] doubleTheNumberOfPtsWavelet(double[] waveletY,double[] doublePtsCurX){
-  // double[] wavOut = new double[waveletY.length*2-1];
-  // for (int i=1; i<waveletY.length-1; i++){
-  // double addInX = rickerWavelet(i-xIndexOfWaveletMax, (double) waveletScale);
-  // wavOut[2*i]=waveletY[i];
-  // wavOut[2*i+1]=addInX;
-  // }
-  // return wavOut;
-  // }
-
-  // // Currently this can only be 'ricker'.
-  // public void setWaveletType(String waveletTypeIn){
-  // waveletType = waveletTypeIn;
-  // }
-  private void writeDataAndWavelet(double[] x, double[] y, double[] wav) {
-    try {
-      PrintWriter writer = new PrintWriter("look_at_wavelet_and_data.txt", "UTF-8");
-      for (int i = 0; i < x.length; i++) {
-        writer.println(
-            String.valueOf(x[i]) + " " + String.valueOf(y[i]) + " " + String.valueOf(wav[i]));
-      }
-      writer.close();
-    } catch (IOException e) {
-      System.out.println("problem writinglook_at_wavelet_and_data.txt");
-    }
-  }
-
-  private void writeAllCoeffs() {
-    try {
-      PrintWriter writer = new PrintWriter("look_at_java_all_coefs.txt", "UTF-8");
-      for (int i = 0; i < allCoefficients.length; i++) {
-        int j;
-        for (j = 0; j < allCoefficients[0].length; j++) {
-          writer.print(String.valueOf(allCoefficients[i][j]) + " ");
-        }
-        writer.print("\n");
-      }
-      writer.close();
-    } catch (IOException e) {
-      System.out.println("problem writing look_at_java_all_coefs.txt");
-    }
-  }
-
-  private void writeMaximaLocations(Integer[] maxIndecies) {
-    try {
-      PrintWriter writer = new PrintWriter("look_at_maxima_positions.txt", "UTF-8");
-      for (int i = 0; i < maxIndecies.length; i++) {
-        writer.print(String.valueOf(maxIndecies[i].toString() + " "));
-      }
-      writer.close();
-    } catch (IOException e) {
-      System.out.print("problem writing look_at_maxima_positions.txt");
-    }
-  }
-
-  private void writeRidgelines() {
-    // make a blank matrix of zeros and fill with the locations of the ridgelines
-    double[][] ridgeArr = new double[arrScales.size()][];
-
-    for (int i = 0; i < arrScales.size(); i++) {
-      ridgeArr[i] = new double[x.length];
-      fill(ridgeArr[i], 0.0);
-    }
-
-    for (int i = 0; i < ridgeLineArr.size(); i++) {
-      Ridgeline curRL = ridgeLineArr.get(i);
-      for (int j = 0; j < curRL.scales_.size(); j++) {
-        double curScale = curRL.scales_.get(j);
-        int curIndex = curRL.indecies_.get(j);
-        ridgeArr[mapScaleToIndex.get(curScale)][curIndex] = i + 100;
-      }
-    }
-
-    try {
-      PrintWriter writer = new PrintWriter("look_at_ridgelines.txt", "UTF-8");
-      for (int i = 0; i < arrScales.size(); i++) {
-        for (int j = 0; j < x.length; j++) {
-          writer.print(String.valueOf(ridgeArr[i][j]) + " ");
-        }
-        writer.print("\n");
-      }
-      writer.close();
-    } catch (IOException e) {
-      System.out.print("problem writing look_at_ridgelines.txt");
-    }
-  }
-
-  private void writeIntensityAndRT() {
-    try {
-      PrintWriter writer = new PrintWriter("IntensityAndRT.txt", "UTF-8");
-      writer.print("Intensity" + " " + "RT" + "\r\n");
-      for (int i = 0; i < x.length; i++) {
-        writer.print(signal[i] + "," + x[i] + "\r\n");
-      }
-      writer.close();
-    } catch (IOException e) {
-      System.out.print("problem writing IntensityAndRT.txt");
-      System.out.println(e);
-    }
   }
 
 }

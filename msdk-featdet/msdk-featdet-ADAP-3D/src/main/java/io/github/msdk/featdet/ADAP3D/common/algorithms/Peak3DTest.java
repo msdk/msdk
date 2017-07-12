@@ -220,7 +220,7 @@ public class Peak3DTest {
 
       curMZ = objsliceSparseMatrix.mzValues.get(curMzIndex);
 
-      if (curMZ == null && Math.abs(curMZ - roundedMz) >= 2 * roundedFWHM)
+      if (curMZ == null || Math.abs(curMZ - roundedMz) >= 2 * roundedFWHM)
         break;
 
       // //for getting slice of sparse matrix we need to provide original mz values which are there
@@ -252,6 +252,7 @@ public class Peak3DTest {
         similarityValues.add(curSimilarity);
     }
 
+    curMZ = curMZ == null ? roundedMz : curMZ;
     return curMZ;
   }
 
@@ -279,20 +280,11 @@ public class Peak3DTest {
 
     // Here area has been calculated for normalizing the intensities.
     for (int i = leftBound; i < rightBound; i++) {
-      SliceSparseMatrix.Triplet obj1 = (SliceSparseMatrix.Triplet) slice.get(i, roundedMz);
-      SliceSparseMatrix.Triplet obj2 = (SliceSparseMatrix.Triplet) slice.get(i + 1, roundedMz);
-      if (obj1 == null && obj2 != null) {
-        area += 0.5 * (0 + obj2.intensity);
-      } else if (obj2 == null && obj1 != null) {
-        area += 0.5 * (obj1.intensity + 0);
-      } else if (obj1 == null && obj2 == null) {
-        area += 0;
-      }
-
-      else {
-        area += 0.5 * (obj1.intensity + obj2.intensity);
-      }
-
+      SliceSparseMatrix.Triplet obj1 = slice.get(i, roundedMz);
+      SliceSparseMatrix.Triplet obj2 = slice.get(i + 1, roundedMz);
+      double intensity1 = obj1 == null ? 0.0 : obj1.intensity;
+      double intensity2 = obj2 == null ? 0.0 : obj2.intensity;
+      area += 0.5 * (intensity1 + intensity2);
     }
 
     final int arrayCount = rightBound - leftBound + 1;

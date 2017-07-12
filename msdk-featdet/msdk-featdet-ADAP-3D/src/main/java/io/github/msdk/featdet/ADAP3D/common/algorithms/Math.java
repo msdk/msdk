@@ -132,7 +132,7 @@ public class Math {
    */
   static public double continuous_dot_product(final Map<Double, Double> f1,
       final Map<Double, Double> f2) {
-    return continuous_dot_product(new TreeMap(f1), new TreeMap(f2));
+    return continuous_dot_product(new TreeMap<Double, Double>(f1), new TreeMap<Double, Double>(f2));
   }
 
   /**
@@ -263,7 +263,8 @@ public class Math {
    */
   static public double discrete_dot_product(final Map<Double, Double> f1,
       final Map<Double, Double> f2, double tolerance) {
-    return discrete_dot_product(new TreeMap(f1), new TreeMap(f2), tolerance);
+    return discrete_dot_product(new TreeMap<Double, Double>(f1), new TreeMap<Double, Double>(f2),
+        tolerance);
   }
 
   /**

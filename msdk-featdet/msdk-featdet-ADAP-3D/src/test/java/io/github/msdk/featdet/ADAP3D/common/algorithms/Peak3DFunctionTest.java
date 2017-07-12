@@ -26,14 +26,14 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
 
-public class PeakSimilarityFunctionTest {
+public class Peak3DFunctionTest {
 
   private static RawDataFile rawFile;
   private static CurveTool objCurveTool;
   private static SliceSparseMatrix objSliceSparseMatrix;
 
   private static Path getResourcePath(String resource) throws MSDKException {
-    final URL url = PeakSimilarityFunctionTest.class.getClassLoader().getResource(resource);
+    final URL url = Peak3DFunctionTest.class.getClassLoader().getResource(resource);
     try {
       return Paths.get(url.toURI()).toAbsolutePath();
     } catch (URISyntaxException e) {
