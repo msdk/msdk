@@ -53,13 +53,7 @@ public class SortAndKeepOriginalIndecies implements Comparator<Integer> {
   /** {@inheritDoc} */
   @Override
   public int compare(Integer index1, Integer index2) {
-    if (dataArr[index2] > dataArr[index1]) {
-      return -1;
-    } else if (dataArr[index2] < dataArr[index1]) {
-      return 1;
-    } else {
-      return 0;
-    }
+    return Double.compare(dataArr[index1], dataArr[index2]);
   }
 
 

@@ -26,6 +26,7 @@ import org.apache.commons.math3.fitting.WeightedObservedPoints;
  */
 public class CurveTool {
 
+  private static final double fwhmConstant = 2.35482;
   private SliceSparseMatrix objSliceSparseMatrix;
 
   /**
@@ -78,7 +79,7 @@ public class CurveTool {
 
       try {
         double[] parameters = GaussianCurveFitter.create().fit(obs.toList());
-        sigma += 2.35482 * parameters[2];
+        sigma += fwhmConstant * parameters[2];
 
       } catch (MathIllegalArgumentException e) {
         continue;
