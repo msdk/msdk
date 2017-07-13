@@ -14,10 +14,14 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
 import java.util.List;
 import java.util.Random;
+import java.lang.Math;
 
+import org.apache.commons.collections4.map.MultiKeyMap;
 import org.apache.commons.math3.exception.MathIllegalArgumentException;
 import org.apache.commons.math3.fitting.GaussianCurveFitter;
 import org.apache.commons.math3.fitting.WeightedObservedPoints;
+
+import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
 
 /**
  * <p>
@@ -90,4 +94,80 @@ public class CurveTool {
     return fwhm;
   }
 
+  
+  public static double similarityValue(double[] referenceEIC, double[] gaussianValues,
+      int leftBound, int rightBound) {
+    double diffArea = 0.0;
+    // This is the implementation of trapezoid.
+    for (int j = 0; j < rightBound - leftBound; j++) {
+      diffArea += Math.abs(0.5 * ((referenceEIC[j] - gaussianValues[j])
+          + (referenceEIC[j + 1] - gaussianValues[j + 1])));
+    }
+
+    final double exponentFactor = 0.2;
+    final double exponentShift = Math.exp(-1 / exponentFactor);
+    final double exponentHeight = 1.0 / (1.0 - exponentShift);
+
+    // Here similarity value is calculated.
+    double curSimilarity =
+        ((Math.exp(-diffArea / exponentFactor)) - exponentShift) * exponentHeight;
+    return curSimilarity;
+  }
+
+  /**
+   * <p>
+   * normalize method is used for normalizing EIC by calculating its area and dividing each
+   * intensity by the area.
+   * 
+   * @param roundedMz a {@link java.lang.Integer} object.This is m/z value which is multiplied by
+   *        10000 because of it's use in sparse matrix.
+   * @param leftBound a {@link java.lang.Integer} object. This is lowest scan number from which peak
+   *        determining starts.
+   * @param rightBound a {@link java.lang.Integer} object. This is highest scan number on which peak
+   *        determining ends.
+   * @param referenceEIC a {@link java.lang.Double} array. This array contains normalize intensities
+   *        for given m/z value.(Intensities/area)
+   * 
+   * @return area a {@link java.lang.Double} object. This is area of normalize intensity points.
+   *         </p>
+   */
+  public static double normalize(MultiKeyMap<Integer, Triplet> slice, int leftBound, int rightBound,
+      int roundedMz, double[] referenceEIC) {
+
+    double[] intensityValues = new double[rightBound - leftBound + 1];
+
+    // Here area has been calculated for normalizing the intensities.
+    for (int i = 0; i < rightBound - leftBound + 1; i++) {
+      SliceSparseMatrix.Triplet obj = slice.get(i + leftBound, roundedMz);
+      intensityValues[i] = obj == null ? 0.0 : obj.intensity;
+    }
+
+    return normalize(intensityValues, referenceEIC);
+  }
+
+  /**
+   * <p>
+   * normalize method is used for normalizing values by calculating its area and dividing each
+   * value by the area.
+   * </p>
+   * 
+   * @param values a {@link java.lang.Double} array. This array will have values to be normalized.
+   * @param normValues a {@link java.lang.Double} array. This array will have normalized values.
+   * 
+   * @return area a {@link java.lang.Double} object. This is area of normalize intensity points.
+   */
+  public static double normalize(double[] values, double[] normValues) {
+
+    double area = 0.0;
+    // Here area has been calculated for normalizing the intensities.
+    for (int i = 0; i < values.length - 1; i++) {
+      area += 0.5 * (values[i] + values[i + 1]);
+    }
+
+    for (int i = 0; i < values.length; i++) {
+      normValues[i] = values[i] / area;
+    }
+
+    return area;
+  }
 }
