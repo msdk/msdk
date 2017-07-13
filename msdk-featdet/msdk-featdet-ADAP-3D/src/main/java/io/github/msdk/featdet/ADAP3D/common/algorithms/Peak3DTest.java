@@ -59,6 +59,12 @@ public class Peak3DTest {
     this.fwhm = fwhm;
   }
 
+  public Peak3DTest() {
+    super();
+    this.objsliceSparseMatrix = null;
+    this.fwhm = 0;
+  }
+
   /**
    * <p>
    * execute method is used for testing a peak with given m/z-value (variable mz) and left and right
@@ -115,7 +121,7 @@ public class Peak3DTest {
     double[] referenceEIC = new double[rightBound - leftBound + 1];
     // normalize method is used for normalizing intensities for given mz value. It updates
     // referenceEIC.
-    normalize(slice, leftBound, rightBound, roundedMz, referenceEIC);
+    CurveTool.normalize(slice, leftBound, rightBound, roundedMz, referenceEIC);
 
 
     // We save all similarity values to this list
@@ -188,10 +194,6 @@ public class Peak3DTest {
   private int findMZbound(int leftBound, int rightBound, int roundedMz, double roundedFWHM,
       int mzIndex, double[] referenceEIC, List<Double> similarityValues, Direction direction) {
 
-    final double exponentFactor = 0.2;
-    final double exponentShift = Math.exp(-1 / exponentFactor);
-    final double exponentHeight = 1.0 / (1.0 - exponentShift);
-
     final double peakSimilarityThreshold = 0.7;
     final double epsilon = 1E-8;
 
@@ -232,21 +234,14 @@ public class Peak3DTest {
       // Here current horizontal slice from sparse matrix is stored adjacent mz value.
       MultiKeyMap<Integer, Triplet> curSlice =
           objsliceSparseMatrix.getHorizontalSlice(curMZ, leftBound, rightBound);
-      double area = normalize(curSlice, leftBound, rightBound, curMZ, curEIC);
+      double area = CurveTool.normalize(curSlice, leftBound, rightBound, curMZ, curEIC);
 
       // if area is too small continue.
       if (area < epsilon)
         continue;
 
-      double diffArea = 0.0;
-      // This is the implementation of trapezoid.
-      for (int j = 0; j < arrayCount - 1; j++) {
-        diffArea +=
-            Math.abs(0.5 * ((referenceEIC[j] - curEIC[j]) + (referenceEIC[j + 1] - curEIC[j + 1])));
-      }
-
       // Here similarity value is calculated.
-      curSimilarity = ((Math.exp(-diffArea / exponentFactor)) - exponentShift) * exponentHeight;
+      curSimilarity = CurveTool.similarityValue(referenceEIC, curEIC, leftBound, rightBound);
 
       if (curSimilarity > peakSimilarityThreshold)
         similarityValues.add(curSimilarity);
@@ -254,53 +249,5 @@ public class Peak3DTest {
 
     curMZ = curMZ == null ? roundedMz : curMZ;
     return curMZ;
-  }
-
-  /**
-   * <p>
-   * normalize method is used for normalizing EIC by calculating its area and dividing each
-   * intensity by the area.
-   * 
-   * @param roundedMz a {@link java.lang.Integer} object.This is m/z value which is multiplied by
-   *        10000 because of it's use in sparse matrix.
-   * @param leftBound a {@link java.lang.Integer} object. This is lowest scan number from which peak
-   *        determining starts.
-   * @param rightBound a {@link java.lang.Integer} object. This is highest scan number on which peak
-   *        determining ends.
-   * @param referenceEIC a {@link java.lang.Double} array. This array contains normalize intensities
-   *        for given m/z value.(Intensities/area)
-   * 
-   * @return area a {@link java.lang.Double} object. This is area of normalize intensity points.
-   *         </p>
-   */
-  private double normalize(MultiKeyMap<Integer, Triplet> slice, int leftBound, int rightBound,
-      int roundedMz, double[] referenceEIC) {
-
-    double area = 0.0;
-
-    // Here area has been calculated for normalizing the intensities.
-    for (int i = leftBound; i < rightBound; i++) {
-      SliceSparseMatrix.Triplet obj1 = slice.get(i, roundedMz);
-      SliceSparseMatrix.Triplet obj2 = slice.get(i + 1, roundedMz);
-      double intensity1 = obj1 == null ? 0.0 : obj1.intensity;
-      double intensity2 = obj2 == null ? 0.0 : obj2.intensity;
-      area += 0.5 * (intensity1 + intensity2);
-    }
-
-    final int arrayCount = rightBound - leftBound + 1;
-
-    // Here intensities are normalized.
-    for (int i = 0; i < arrayCount; i++) {
-      SliceSparseMatrix.Triplet triplet =
-          (SliceSparseMatrix.Triplet) slice.get(i + leftBound, roundedMz);
-
-      if (triplet != null) {
-        referenceEIC[i] = triplet.intensity / (float) area;
-      } else {
-        referenceEIC[i] = 0;
-      }
-    }
-
-    return area;
   }
 }
