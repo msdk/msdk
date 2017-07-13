@@ -15,6 +15,7 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 import org.apache.commons.collections4.map.MultiKeyMap;
 
 import java.lang.Math;
+import java.util.stream.IntStream;
 
 import io.github.msdk.featdet.ADAP3D.common.algorithms.Peak3DTest.Result;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
@@ -27,6 +28,8 @@ import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet
  * </p>
  */
 public class BiGaussianSimilarityTest {
+
+  private static final double peakSimilarityThreshold = 0.25;
 
   /**
    * <p>
@@ -55,20 +58,15 @@ public class BiGaussianSimilarityTest {
     CurveTool.normalize(slice, leftBound, rightBound, (int) Math.round(mz * 10000), referenceEIC);
 
     BiGaussian objBiGaussian = new BiGaussian(slice, 140.1037, 1, 23);
-    double[] bigaussianValues = new double[rightBound - leftBound + 1];
-
-    for (int i = 0; i < referenceEIC.length; i++) {
-      bigaussianValues[i] = objBiGaussian.getValue(leftBound + i);
-    }
+    double[] bigaussianValues = IntStream.range(0, referenceEIC.length)
+        .mapToDouble(i -> objBiGaussian.getValue(leftBound + i)).toArray();
 
     double[] normBigaussianValues = new double[rightBound - leftBound + 1];
     CurveTool.normalize(bigaussianValues, normBigaussianValues);
 
     double similarityValue =
         CurveTool.similarityValue(referenceEIC, normBigaussianValues, leftBound, rightBound);
-    final double peakSimilarityThreshold = 0.25;
 
-    boolean goodPeak = similarityValue > peakSimilarityThreshold ? true : false;
-    return goodPeak;
+    return similarityValue > peakSimilarityThreshold;
   }
 }

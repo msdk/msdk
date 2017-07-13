@@ -29,7 +29,10 @@ import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet
  * </p>
  */
 public class CurveTool {
-
+  
+  private static final double exponentFactor = 0.2;
+  private static final double exponentShift = Math.exp(-1 / exponentFactor);
+  private static final double exponentHeight = 1.0 / (1.0 - exponentShift);
   private static final double fwhmConstant = 2.35482;
   private SliceSparseMatrix objSliceSparseMatrix;
 
@@ -103,10 +106,6 @@ public class CurveTool {
       diffArea += Math.abs(0.5 * ((referenceEIC[j] - gaussianValues[j])
           + (referenceEIC[j + 1] - gaussianValues[j + 1])));
     }
-
-    final double exponentFactor = 0.2;
-    final double exponentShift = Math.exp(-1 / exponentFactor);
-    final double exponentHeight = 1.0 / (1.0 - exponentShift);
 
     // Here similarity value is calculated.
     double curSimilarity =

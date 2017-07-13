@@ -62,6 +62,6 @@ public class BiGaussianSimilarityFunctionTest {
         objSliceSparseMatrix.getHorizontalSlice(140.1037, 1, 9);
     BiGaussianSimilarityTest objBiGaussian = new BiGaussianSimilarityTest();
     boolean goodPeak = objBiGaussian.execute(horizontalSlice, 1, 9, 140.1037);
-    Assert.assertEquals(true, goodPeak);
+    Assert.assertTrue(goodPeak);
   }
 }
