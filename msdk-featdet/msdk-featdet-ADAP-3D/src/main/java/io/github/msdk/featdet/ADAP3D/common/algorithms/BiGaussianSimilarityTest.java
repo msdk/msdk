@@ -29,7 +29,7 @@ import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet
  */
 public class BiGaussianSimilarityTest {
 
-  private static final double PEAKSIMILARITYTHRESHOLD = 0.25;
+  private static final double PEAK_SIMILARITY_THRESHOLD = 0.25;
 
   /**
    * <p>
@@ -67,6 +67,6 @@ public class BiGaussianSimilarityTest {
     double similarityValue =
         CurveTool.similarityValue(referenceEIC, normBigaussianValues, leftBound, rightBound);
 
-    return similarityValue > PEAKSIMILARITYTHRESHOLD;
+    return similarityValue > PEAK_SIMILARITY_THRESHOLD;
   }
 }
