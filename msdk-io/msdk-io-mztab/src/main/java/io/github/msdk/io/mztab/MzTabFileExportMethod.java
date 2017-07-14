@@ -219,55 +219,33 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
 
       // Get ion annotation
       /*
-        for (IonAnnotation ionAnnotation : ionAnnotations) {
-          // Annotation ID
-          String ionAnnotationId = ionAnnotation.getAnnotationId();
-          if (!Strings.isNullOrEmpty(ionAnnotationId)) {
-            identifier = identifier + itemSeparator + escapeString(ionAnnotationId);
-            writeFeature = true;
-          }
-
-          // Formula
-          IMolecularFormula ionFormula = ionAnnotation.getFormula();
-          if (ionFormula != null) {
-            formula = formula + itemSeparator
-                + escapeString(MolecularFormulaManipulator.getString(ionFormula));
-            writeFeature = true;
-          }
-
-          // Chemical structure = SMILES
-          IAtomContainer chemicalStructure = ionAnnotation.getChemicalStructure();
-          if (chemicalStructure != null) {
-            try {
-              SmilesGenerator sg = SmilesGenerator.generic();
-              smiles = smiles + itemSeparator + sg.create(chemicalStructure);
-            } catch (CDKException e) {
-              logger.info("Could not create SMILE for " + ionAnnotation.getDescription());
-            }
-          }
-
-          // InchiKey
-          String ik = ionAnnotation.getInchiKey();
-          if (!Strings.isNullOrEmpty(ik)) {
-            inchiKey += itemSeparator + escapeString(ik);
-            writeFeature = true;
-          }
-
-          // Description
-          String ionDescription = ionAnnotation.getDescription();
-          if (!Strings.isNullOrEmpty(ionDescription)) {
-            description = description + itemSeparator + escapeString(ionDescription);
-            writeFeature = true;
-          }
-
-          // URL
-          URL ionUrl = ionAnnotation.getAccessionURL();
-          if (ionUrl != null) {
-            url = url + itemSeparator + escapeString(ionUrl.toString());
-            writeFeature = true;
-          }
-        
-      }*/
+       * for (IonAnnotation ionAnnotation : ionAnnotations) { // Annotation ID String
+       * ionAnnotationId = ionAnnotation.getAnnotationId(); if
+       * (!Strings.isNullOrEmpty(ionAnnotationId)) { identifier = identifier + itemSeparator +
+       * escapeString(ionAnnotationId); writeFeature = true; }
+       * 
+       * // Formula IMolecularFormula ionFormula = ionAnnotation.getFormula(); if (ionFormula !=
+       * null) { formula = formula + itemSeparator +
+       * escapeString(MolecularFormulaManipulator.getString(ionFormula)); writeFeature = true; }
+       * 
+       * // Chemical structure = SMILES IAtomContainer chemicalStructure =
+       * ionAnnotation.getChemicalStructure(); if (chemicalStructure != null) { try {
+       * SmilesGenerator sg = SmilesGenerator.generic(); smiles = smiles + itemSeparator +
+       * sg.create(chemicalStructure); } catch (CDKException e) {
+       * logger.info("Could not create SMILE for " + ionAnnotation.getDescription()); } }
+       * 
+       * // InchiKey String ik = ionAnnotation.getInchiKey(); if (!Strings.isNullOrEmpty(ik)) {
+       * inchiKey += itemSeparator + escapeString(ik); writeFeature = true; }
+       * 
+       * // Description String ionDescription = ionAnnotation.getDescription(); if
+       * (!Strings.isNullOrEmpty(ionDescription)) { description = description + itemSeparator +
+       * escapeString(ionDescription); writeFeature = true; }
+       * 
+       * // URL URL ionUrl = ionAnnotation.getAccessionURL(); if (ionUrl != null) { url = url +
+       * itemSeparator + escapeString(ionUrl.toString()); writeFeature = true; }
+       * 
+       * }
+       */
 
       // Write feature to file?
       if (exportAllFeatures || writeFeature) {
@@ -302,12 +280,16 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
           sm.setOptionColumnValue(new Assay(sampleCounter), "rt", row.getRT().toString());
 
           // Height
-          String peakHeight = feature.getHeight().toString();
-          sm.setOptionColumnValue(new Assay(sampleCounter), "height", peakHeight);
+          if (feature.getHeight() != null) {
+            String peakHeight = feature.getHeight().toString();
+            sm.setOptionColumnValue(new Assay(sampleCounter), "height", peakHeight);
+          }
 
           // Area
-          Float peakArea = feature.getArea();
-          sm.setAbundanceColumnValue(new Assay(sampleCounter), peakArea.doubleValue());
+          if (feature.getArea() != null) {
+            Float peakArea = feature.getArea();
+            sm.setAbundanceColumnValue(new Assay(sampleCounter), peakArea.doubleValue());
+          }
 
         }
 
