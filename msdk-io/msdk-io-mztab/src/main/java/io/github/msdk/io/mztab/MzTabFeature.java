@@ -17,12 +17,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import org.openscience.cdk.DefaultChemObjectBuilder;
 import org.openscience.cdk.exception.InvalidSmilesException;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.smiles.SmilesParser;
+import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
+import com.google.common.base.Strings;
 import com.google.common.math.DoubleMath;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
@@ -45,7 +47,11 @@ class MzTabFeature implements Feature, IonAnnotation {
 
   @Override
   public Double getMz() {
-    return smallMolecule.getExpMassToCharge();
+    String sampleMzString = smallMolecule.getOptionColumnValue(sampleAssay, "mz");
+    if (Strings.isNullOrEmpty(sampleMzString))
+      return smallMolecule.getExpMassToCharge();
+    else
+      return Double.parseDouble(sampleMzString);
   }
 
   @Override
@@ -55,7 +61,11 @@ class MzTabFeature implements Feature, IonAnnotation {
 
   @Override
   public Float getArea() {
-    return smallMolecule.getAbundanceColumnValue(sampleAssay).floatValue();
+    Double abundance = smallMolecule.getAbundanceColumnValue(sampleAssay);
+    if (abundance == null)
+      return null;
+    else
+      return abundance.floatValue();
   }
 
   @Override
@@ -91,7 +101,7 @@ class MzTabFeature implements Feature, IonAnnotation {
   @Override
   public IAtomContainer getChemicalStructure() {
     try {
-      SmilesParser sp = new SmilesParser(DefaultChemObjectBuilder.getInstance());
+      SmilesParser sp = new SmilesParser(SilentChemObjectBuilder.getInstance());
       String smiles = smallMolecule.getSmiles().toString();
       IAtomContainer chemicalStructure = sp.parseSmiles(smiles);
       return chemicalStructure;
@@ -103,8 +113,10 @@ class MzTabFeature implements Feature, IonAnnotation {
 
   @Override
   public IMolecularFormula getFormula() {
-    smallMolecule.getChemicalFormula();
-    return null;
+    String formula = smallMolecule.getChemicalFormula();
+    IMolecularFormula cdkFormula = MolecularFormulaManipulator.getMolecularFormula(formula,
+        SilentChemObjectBuilder.getInstance());
+    return cdkFormula;
   }
 
   @Override
@@ -119,6 +131,11 @@ class MzTabFeature implements Feature, IonAnnotation {
 
   @Override
   public String getDescription() {
+    if (smallMolecule.getIdentifier() != null) {
+      String smID = smallMolecule.getIdentifier().toString();
+      if (!Strings.isNullOrEmpty(smID))
+        return smID;
+    }
     return smallMolecule.getDescription();
   }
 

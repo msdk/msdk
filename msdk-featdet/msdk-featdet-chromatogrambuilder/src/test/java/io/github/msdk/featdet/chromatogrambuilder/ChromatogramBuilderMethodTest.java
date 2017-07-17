@@ -29,16 +29,15 @@ import io.github.msdk.util.tolerances.MzTolerance;
 
 public class ChromatogramBuilderMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
   private static RawDataFile rawFile;
 
 
   @BeforeClass
-  public static void loadData() throws MSDKException {
+  public static void loadData() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "orbitrap_300-600mz.mzML");
+    File inputFile = new File(ChromatogramBuilderMethodTest.class.getClassLoader()
+        .getResource("orbitrap_300-600mz.mzML").toURI());
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     rawFile = importer.execute();

@@ -19,20 +19,18 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 
 public class LocalDatabaseSearchMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
   @Ignore
   @Test
-  public void identificationTest() throws MSDKException {
+  public void identificationTest() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "Sample-2.3_Small.mzTab");
+    File inputFile =
+        new File(this.getClass().getClassLoader().getResource("Sample-2.3_Small.mzTab").toURI());
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
     MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable = importer.execute();

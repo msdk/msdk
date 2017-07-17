@@ -20,7 +20,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
@@ -33,11 +32,8 @@ import io.github.msdk.util.tolerances.RTTolerance;
 
 public class TargetedDetectionMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
-
   @Test
-  public void testOrbitrap() throws MSDKException {
+  public void testOrbitrap() throws Exception {
 
     float rtBuffer[];
     double mzBuffer[];
@@ -45,7 +41,8 @@ public class TargetedDetectionMethodTest {
     int numOfDataPoints;
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "orbitrap_300-600mz.mzML");
+    File inputFile =
+        new File(this.getClass().getClassLoader().getResource("orbitrap_300-600mz.mzML").toURI());
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();

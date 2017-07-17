@@ -14,18 +14,14 @@
 package io.github.msdk.io.mztab;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.openscience.cdk.DefaultChemObjectBuilder;
-import org.openscience.cdk.interfaces.IChemObjectBuilder;
 import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
@@ -33,14 +29,12 @@ import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 
 public class MzTabFileExportMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
-  @Ignore
   @Test
-  public void testMzTab_Sample() throws MSDKException, IOException {
+  public void testMzTab_Sample() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "Sample-2.3.mzTab");
+    File inputFile =
+        new File(this.getClass().getClassLoader().getResource("Sample-2.3.mzTab").toURI());
     Assert.assertTrue(inputFile.canRead());
     MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable = importer.execute();
@@ -81,9 +75,8 @@ public class MzTabFileExportMethodTest {
     FeatureTableRow row = featureTable.getRows().get(7);
     IonAnnotation ionAnnotation = row.getFeature(0).getIonAnnotation();
     Assert.assertEquals("HEPES", ionAnnotation.getDescription());
-    IChemObjectBuilder builder = DefaultChemObjectBuilder.getInstance();
-    IMolecularFormula cdkFormula =
-        MolecularFormulaManipulator.getMolecularFormula("C8H18N2O4S", builder);
+    IMolecularFormula cdkFormula = MolecularFormulaManipulator.getMolecularFormula("C8H18N2O4S",
+        SilentChemObjectBuilder.getInstance());
     String formula = MolecularFormulaManipulator.getString(ionAnnotation.getFormula());
     String formula2 = MolecularFormulaManipulator.getString(cdkFormula);
     Assert.assertTrue(formula.equals(formula2));
@@ -105,20 +98,20 @@ public class MzTabFileExportMethodTest {
     sample = featureTable.getSamples().get(5);
 
     // Area
-    Float area = row.getFeature(0).getArea();
+    Float area = row.getFeature(sample).getArea();
     Assert.assertNotNull(area);
-    Assert.assertEquals(11480605.3259747, area, 0.0000001);
+    Assert.assertEquals(11480605, area, 0.0000001);
 
     // RT
     Float rt = row.getFeature(0).getRetentionTime();
     Assert.assertEquals(30.324697494506836, rt, 0.0000001);
 
     // Height
-    Float height = row.getFeature(0).getHeight();
+    Float height = row.getFeature(sample).getHeight();
     Assert.assertNull(height);
 
     // m/z
-    Double mz = row.getFeature(0).getMz();
+    Double mz = row.getFeature(sample).getMz();
     Assert.assertNotNull(mz);
     Assert.assertEquals(144.927825927734, mz, 0.0000001);
 

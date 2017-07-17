@@ -11,6 +11,7 @@
 	<description>MSDK package for feature table methods</description>
 	<modules>
 		<module>msdk-features-joinaligner</module>
+		<module>msdk-features-ransacaligner</module>
 		<module>msdk-features-isotopegrouper</module>
 		<module>msdk-features-normalization-compound</module>
 	</modules>
