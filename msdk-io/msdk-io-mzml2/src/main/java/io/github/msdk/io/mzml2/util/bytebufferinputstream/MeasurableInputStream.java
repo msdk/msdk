@@ -1,4 +1,4 @@
-package io.github.msdk.io.mzml2.util.ByteBuffer;
+package io.github.msdk.io.mzml2.util.bytebufferinputstream;
 
 /*
  * Copyright (C) 2005-2014 Sebastiano Vigna
@@ -15,27 +15,13 @@ package io.github.msdk.io.mzml2.util.ByteBuffer;
  */
 
 
+import java.io.InputStream;
+
 /**
- * A basic interface specifying positioning methods for a byte stream.
+ * An {@link InputStream} that implements also the {@link MeasurableStream} interface.
  *
- * @author Sebastiano Vigna
- * @since 4.4
+ * @since 5.0.4
  */
 
-public interface RepositionableStream {
-
-  /**
-   * Sets the current stream position.
-   *
-   * @param newPosition the new stream position.
-   */
-  void position(long newPosition) throws java.io.IOException;
-
-  /**
-   * Returns the current stream position.
-   *
-   * @return the current stream position.
-   */
-  long position() throws java.io.IOException;
-
+public abstract class MeasurableInputStream extends InputStream implements MeasurableStream {
 }

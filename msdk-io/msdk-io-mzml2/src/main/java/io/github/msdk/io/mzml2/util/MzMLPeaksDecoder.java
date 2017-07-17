@@ -25,7 +25,7 @@ import com.google.common.io.LittleEndianDataInputStream;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
-import io.github.msdk.io.mzml2.util.ByteBuffer.ByteBufferInputStream;
+import io.github.msdk.io.mzml2.util.bytebufferinputstream.ByteBufferInputStream;
 
 /**
  * <p>

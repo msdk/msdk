@@ -47,7 +47,7 @@ import io.github.msdk.io.mzml2.data.MzMLScanList;
 import io.github.msdk.io.mzml2.data.MzMLScanWindow;
 import io.github.msdk.io.mzml2.data.MzMLScanWindowList;
 import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
-import io.github.msdk.io.mzml2.util.ByteBuffer.ByteBufferInputStream;
+import io.github.msdk.io.mzml2.util.bytebufferinputstream.ByteBufferInputStream;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.msdk.util.tolerances.MzTolerance;

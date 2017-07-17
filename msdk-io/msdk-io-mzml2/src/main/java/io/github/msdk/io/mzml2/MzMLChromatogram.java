@@ -45,7 +45,7 @@ import io.github.msdk.io.mzml2.data.MzMLIsolationWindow;
 import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
 import io.github.msdk.io.mzml2.data.MzMLProduct;
 import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
-import io.github.msdk.io.mzml2.util.ByteBuffer.ByteBufferInputStream;
+import io.github.msdk.io.mzml2.util.bytebufferinputstream.ByteBufferInputStream;
 
 class MzMLChromatogram implements Chromatogram {
 

@@ -26,7 +26,7 @@ import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
 import io.github.msdk.io.mzml2.data.MzMLBitLength;
 import io.github.msdk.io.mzml2.data.MzMLCompressionType;
 import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
-import io.github.msdk.io.mzml2.util.ByteBuffer.ByteBufferInputStream;
+import io.github.msdk.io.mzml2.util.bytebufferinputstream.ByteBufferInputStream;
 
 /**
  * 

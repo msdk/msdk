@@ -1,4 +1,4 @@
-package io.github.msdk.io.mzml2.util.ByteBuffer;
+package io.github.msdk.io.mzml2.util.bytebufferinputstream;
 
 /*
  * DSI utilities
@@ -24,6 +24,7 @@ import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
+import java.util.Arrays;
 
 
 /**
@@ -132,7 +133,7 @@ public class ByteBufferInputStream extends MeasurableInputStream implements Repo
           fileChannel.map(mapMode, i * CHUNK_SIZE, Math.min(CHUNK_SIZE, size - i * CHUNK_SIZE));
     byteBuffer[0].position(0);
     final boolean[] readyToUse = new boolean[chunks];
-    BooleanArrays.fill(readyToUse, true);
+    Arrays.fill(readyToUse, true);
     return new ByteBufferInputStream(byteBuffer, size, 0, readyToUse);
   }
 

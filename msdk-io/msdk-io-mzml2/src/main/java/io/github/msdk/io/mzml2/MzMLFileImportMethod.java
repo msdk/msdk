@@ -49,7 +49,7 @@ import io.github.msdk.io.mzml2.data.MzMLScanWindowList;
 import io.github.msdk.io.mzml2.util.MzMLFileMemoryMapper;
 import io.github.msdk.io.mzml2.util.MzMLTags;
 import io.github.msdk.io.mzml2.util.TagTracker;
-import io.github.msdk.io.mzml2.util.ByteBuffer.ByteBufferInputStream;
+import io.github.msdk.io.mzml2.util.bytebufferinputstream.ByteBufferInputStream;
 import javolution.text.CharArray;
 import javolution.xml.internal.stream.XMLStreamReaderImpl;
 import javolution.xml.stream.XMLStreamConstants;

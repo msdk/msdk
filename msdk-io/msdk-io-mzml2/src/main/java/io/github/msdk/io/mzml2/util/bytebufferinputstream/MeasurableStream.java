@@ -1,4 +1,4 @@
-package io.github.msdk.io.mzml2.util.ByteBuffer;
+package io.github.msdk.io.mzml2.util.bytebufferinputstream;
 
 /*
  * Copyright (C) 2005-2014 Sebastiano Vigna
