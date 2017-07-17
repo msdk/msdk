@@ -6,17 +6,17 @@ import org.slf4j.LoggerFactory;
 import io.github.msdk.MSDKException;
 
 
-public class MzMLFileParserBenchmark {
+public class MzMLFileImportMethodBenchmark {
 
   public static void main(String[] args) throws MSDKException, NumberFormatException {
 
     int numberOfRuns = 10;
-    Logger logger = LoggerFactory.getLogger(MzMLFileParserBenchmark.class);
+    Logger logger = LoggerFactory.getLogger(MzMLFileImportMethodBenchmark.class);
 
     if (args.length > 0)
       numberOfRuns = Integer.valueOf(args[0]);
 
-    MzMLFileParserTest parserTest = new MzMLFileParserTest();
+    MzMLFileImportMethodTest parserTest = new MzMLFileImportMethodTest();
 
     long startTime1 = System.currentTimeMillis();
     for (int i = 0; i < numberOfRuns; i++)

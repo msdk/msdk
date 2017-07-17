@@ -97,6 +97,7 @@ public class MzMLCV {
   // Data arrays
   public static final String cvMzArray = "MS:1000514";
   public static final String cvIntensityArray = "MS:1000515";
+  public static final String cvRetentionTimeArray = "MS:1000595";
 
   // UV spectrum, actually "electromagnetic radiation spectrum"
   public static final String cvUVSpectrum = "MS:1000804";

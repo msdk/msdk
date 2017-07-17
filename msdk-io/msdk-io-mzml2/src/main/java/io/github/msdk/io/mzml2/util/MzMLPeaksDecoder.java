@@ -25,7 +25,7 @@ import com.google.common.io.LittleEndianDataInputStream;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
-import it.unimi.dsi.io.ByteBufferInputStream;
+import io.github.msdk.io.mzml2.util.ByteBuffer.ByteBufferInputStream;
 
 /**
  * <p>
@@ -39,9 +39,9 @@ public class MzMLPeaksDecoder {
    * Converts a base64 encoded mz or intensity string used in mzML files to an array of floats. If
    * the original precision was 64 bit, you still get floats as output.
    *
-   * @param mappedByteBufferInputStream  decoded from a base64 encoded string<br>
+   * @param mappedByteBufferInputStream decoded from a base64 encoded string<br>
    *        E.g. like: eNoNxltIkwEYBuAOREZFhrCudGFbbraTU+Zmue...
-   * @param binaryDataInfo  meta-info about the compressed data
+   * @param binaryDataInfo meta-info about the compressed data
    * @throws java.util.zip.DataFormatException if any.
    * @throws java.io.IOException if any.
    * @return a float array containing the decoded values
@@ -53,9 +53,9 @@ public class MzMLPeaksDecoder {
     int lengthIn = binaryDataInfo.getEncodedLength();
     int numPoints = binaryDataInfo.getArrayLength();
 
-    InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream,
-        binaryDataInfo.getPosition(), lengthIn);
-    InputStream is = Base64.getDecoder().wrap(encodedIs);
+
+    mappedByteBufferInputStream.constrain(binaryDataInfo.getPosition(), lengthIn);
+    InputStream is = Base64.getDecoder().wrap(mappedByteBufferInputStream);
 
     // for some reason there sometimes might be zero length <peaks> tags
     // (ms2 usually)
@@ -171,9 +171,9 @@ public class MzMLPeaksDecoder {
    * Converts a base64 encoded mz or intensity string used in mzML files to an array of doubles. If
    * the original precision was 32 bit, you still get doubles as output.
    *
-   * @param mappedByteBufferInputStream  decoded from a base64 encoded string<br>
+   * @param mappedByteBufferInputStream decoded from a base64 encoded string<br>
    *        E.g. like: eNoNxltIkwEYBuAOREZFhrCudGFbbraTU+Zmue...
-   * @param binaryDataInfo  meta-info about encoded data
+   * @param binaryDataInfo meta-info about encoded data
    * @throws java.util.zip.DataFormatException if any.
    * @throws java.io.IOException if any.
    * @return a double array containing the decoded values
@@ -185,9 +185,9 @@ public class MzMLPeaksDecoder {
     int lengthIn = binaryDataInfo.getEncodedLength();
     int numPoints = binaryDataInfo.getArrayLength();
 
-    InputStream encodedIs = new ByteBufferInputStreamAdapter(mappedByteBufferInputStream,
-        binaryDataInfo.getPosition(), lengthIn);
-    InputStream is = Base64.getDecoder().wrap(encodedIs);
+
+    mappedByteBufferInputStream.constrain(binaryDataInfo.getPosition(), lengthIn);
+    InputStream is = Base64.getDecoder().wrap(mappedByteBufferInputStream);
 
     // for some reason there sometimes might be zero length <peaks> tags
     // (ms2 usually)

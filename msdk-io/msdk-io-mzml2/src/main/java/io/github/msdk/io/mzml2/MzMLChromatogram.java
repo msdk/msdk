@@ -44,9 +44,8 @@ import io.github.msdk.io.mzml2.data.MzMLCVParam;
 import io.github.msdk.io.mzml2.data.MzMLIsolationWindow;
 import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
 import io.github.msdk.io.mzml2.data.MzMLProduct;
-import io.github.msdk.io.mzml2.data.MzMLRawDataFile;
 import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
-import it.unimi.dsi.io.ByteBufferInputStream;
+import io.github.msdk.io.mzml2.util.ByteBuffer.ByteBufferInputStream;
 
 class MzMLChromatogram implements Chromatogram {
 
@@ -66,7 +65,7 @@ class MzMLChromatogram implements Chromatogram {
   private SeparationType separationType;
   private Range<Float> rtRange;
 
-  private Logger logger = LoggerFactory.getLogger(MzMLFileParser.class);
+  private Logger logger = LoggerFactory.getLogger(MzMLFileImportMethod.class);
 
   MzMLChromatogram(@Nonnull MzMLRawDataFile dataFile, ByteBufferInputStream is,
       String chromatogramId, Integer chromatogramNumber, Integer numOfDataPoints) {
@@ -447,7 +446,7 @@ class MzMLChromatogram implements Chromatogram {
    */
   public Optional<String> getCVValue(MzMLCVGroup group, String accession) {
     Optional<String> value;
-    for (MzMLCVParam cvParam : group.getCVParams()) {
+    for (MzMLCVParam cvParam : group.getCVParamsList()) {
       if (cvParam.getAccession().equals(accession)) {
         value = cvParam.getValue();
         if (!value.isPresent())

@@ -14,7 +14,6 @@
 package io.github.msdk.io.mzml2.data;
 
 import java.util.Optional;
-import org.apache.commons.lang.StringUtils;
 
 public class MzMLCVParam {
 

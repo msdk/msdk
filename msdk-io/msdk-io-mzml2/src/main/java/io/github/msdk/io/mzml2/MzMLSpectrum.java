@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
@@ -42,12 +41,16 @@ import io.github.msdk.io.mzml2.data.MzMLCVParam;
 import io.github.msdk.io.mzml2.data.MzMLIsolationWindow;
 import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
 import io.github.msdk.io.mzml2.data.MzMLPrecursorList;
-import io.github.msdk.io.mzml2.data.MzMLRawDataFile;
+import io.github.msdk.io.mzml2.data.MzMLProductList;
+import io.github.msdk.io.mzml2.data.MzMLScan;
+import io.github.msdk.io.mzml2.data.MzMLScanList;
+import io.github.msdk.io.mzml2.data.MzMLScanWindow;
+import io.github.msdk.io.mzml2.data.MzMLScanWindowList;
 import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
+import io.github.msdk.io.mzml2.util.ByteBuffer.ByteBufferInputStream;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
-import it.unimi.dsi.io.ByteBufferInputStream;
 
 /**
  * <p>
@@ -62,8 +65,10 @@ public class MzMLSpectrum implements MsScan {
   private final @Nonnull Integer scanNumber;
   private final int numOfDataPoints;
 
-  private ArrayList<MzMLCVParam> cvParams;
+  private MzMLCVGroup cvParams;
   private MzMLPrecursorList precursorList;
+  private MzMLProductList productList;
+  private MzMLScanList scanList;
   private MzMLBinaryDataInfo mzBinaryDataInfo;
   private MzMLBinaryDataInfo intensityBinaryDataInfo;
   private MsSpectrumType spectrumType;
@@ -72,19 +77,21 @@ public class MzMLSpectrum implements MsScan {
   private Range<Double> mzRange;
   private Range<Double> mzScanWindowRange;
 
-  private Logger logger = LoggerFactory.getLogger(MzMLFileParser.class);
+  private Logger logger = LoggerFactory.getLogger(MzMLFileImportMethod.class);
 
   /**
    * <p>
    * Constructor for MzMLSpectrum.
    * </p>
    *
-   * @param dataFile a {@link io.github.msdk.io.mzml2.data.MzMLRawDataFile} object.
+   * @param dataFile a {@link io.github.msdk.io.mzml2.MzMLRawDataFile} object.
    */
   public MzMLSpectrum(MzMLRawDataFile dataFile, ByteBufferInputStream is, String id,
       Integer scanNumber, int numOfDataPoints) {
-    this.cvParams = new ArrayList<>();
+    this.cvParams = new MzMLCVGroup();
     this.precursorList = new MzMLPrecursorList();
+    this.productList = new MzMLProductList();
+    this.scanList = new MzMLScanList();
     this.dataFile = dataFile;
     this.mappedByteBufferInputStream = is;
     this.id = id;
@@ -107,7 +114,7 @@ public class MzMLSpectrum implements MsScan {
    *
    * @return a {@link java.util.ArrayList} object.
    */
-  public ArrayList<MzMLCVParam> getCVParams() {
+  public MzMLCVGroup getCVParams() {
     return cvParams;
   }
 
@@ -176,6 +183,28 @@ public class MzMLSpectrum implements MsScan {
    */
   public MzMLPrecursorList getPrecursorList() {
     return precursorList;
+  }
+
+  /**
+   * <p>
+   * getProductList.
+   * </p>
+   *
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLProductList} object.
+   */
+  public MzMLProductList getProductList() {
+    return productList;
+  }
+
+  /**
+   * <p>
+   * getScanList.
+   * </p>
+   *
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLScanList} object.
+   */
+  public MzMLScanList getScanList() {
+    return scanList;
   }
 
   /**
@@ -308,7 +337,11 @@ public class MzMLSpectrum implements MsScan {
   /** {@inheritDoc} */
   @Override
   public String getScanDefinition() {
-    return getCVValue(MzMLCV.cvScanFilterString).get();
+    Optional<String> scanDefinition = Optional.ofNullable(null);
+    if (!getScanList().getScans().isEmpty()) {
+      scanDefinition = getCVValue(getScanList().getScans().get(0), MzMLCV.cvScanFilterString);
+    }
+    return scanDefinition.orElse("");
   }
 
   /** {@inheritDoc} */
@@ -316,14 +349,14 @@ public class MzMLSpectrum implements MsScan {
   public String getMsFunction() {
     return null;
   }
-  
+
   /** {@inheritDoc} */
   @Override
   public Integer getMsLevel() {
     Integer msLevel = 1;
-    String value = getCVValue(MzMLCV.cvMSLevel).get();
-    if (!Strings.isNullOrEmpty(value))
-      msLevel = Integer.parseInt(value);
+    Optional<String> value = getCVValue(MzMLCV.cvMSLevel);
+    if (value.isPresent())
+      msLevel = Integer.parseInt(value.get());
     return msLevel;
   }
 
@@ -337,19 +370,27 @@ public class MzMLSpectrum implements MsScan {
   @Override
   public Range<Double> getScanningRange() {
     if (mzScanWindowRange == null) {
-      Optional<String> cvv = getCVValue(MzMLCV.cvScanWindowLowerLimit);
-      Optional<String> cvv1 = getCVValue(MzMLCV.cvScanWindowUpperLimit);
-      if (!cvv.isPresent() || !cvv1.isPresent()) {
-        mzScanWindowRange = getMzRange();
-        return mzScanWindowRange;
-      }
-      try {
-        mzScanWindowRange = Range.closed(Double.valueOf(cvv.get()), Double.valueOf(cvv1.get()));
-      } catch (NumberFormatException e) {
-        throw (new MSDKRuntimeException(
-            "Could not convert scan window range value in mzML file to a double\n" + e));
+      if (!getScanList().getScans().isEmpty()) {
+        Optional<MzMLScanWindowList> scanWindowList =
+            getScanList().getScans().get(0).getScanWindowList();
+        if (scanWindowList.isPresent() && !scanWindowList.get().getScanWindows().isEmpty()) {
+          MzMLScanWindow scanWindow = scanWindowList.get().getScanWindows().get(0);
+          Optional<String> cvv = getCVValue(scanWindow, MzMLCV.cvScanWindowLowerLimit);
+          Optional<String> cvv1 = getCVValue(scanWindow, MzMLCV.cvScanWindowUpperLimit);
+          if (!cvv.isPresent() || !cvv1.isPresent()) {
+            mzScanWindowRange = getMzRange();
+            return mzScanWindowRange;
+          }
+          try {
+            mzScanWindowRange = Range.closed(Double.valueOf(cvv.get()), Double.valueOf(cvv1.get()));
+          } catch (NumberFormatException e) {
+            throw (new MSDKRuntimeException(
+                "Could not convert scan window range value in mzML file to a double\n" + e));
+          }
+        }
       }
     }
+
     return mzScanWindowRange;
   }
 
@@ -361,6 +402,16 @@ public class MzMLSpectrum implements MsScan {
 
     if (getCVValue(MzMLCV.cvPolarityNegative).isPresent())
       return PolarityType.NEGATIVE;
+
+    // Check in the scans of the spectrum for Polarity
+    if (!getScanList().getScans().isEmpty()) {
+      MzMLScan scan = getScanList().getScans().get(0);
+      if (getCVValue(scan, MzMLCV.cvPolarityPositive).isPresent())
+        return PolarityType.POSITIVE;
+
+      if (getCVValue(scan, MzMLCV.cvPolarityNegative).isPresent())
+        return PolarityType.NEGATIVE;
+    }
 
     return PolarityType.UNKNOWN;
   }
@@ -433,46 +484,49 @@ public class MzMLSpectrum implements MsScan {
     if (retentionTime != null)
       return retentionTime;
 
-    for (MzMLCVParam param : cvParams) {
-      String accession = param.getAccession();
-      Optional<String> unitAccession = param.getUnitAccession();
-      Optional<String> value = param.getValue();
+    if (!getScanList().getScans().isEmpty()) {
+      for (MzMLCVParam param : getScanList().getScans().get(0).getCVParamsList()) {
+        String accession = param.getAccession();
+        Optional<String> unitAccession = param.getUnitAccession();
+        Optional<String> value = param.getValue();
 
-      // check accession
-      switch (accession) {
-        case MzMLCV.MS_RT_SCAN_START:
-        case MzMLCV.MS_RT_RETENTION_TIME:
-        case MzMLCV.MS_RT_RETENTION_TIME_LOCAL:
-        case MzMLCV.MS_RT_RETENTION_TIME_NORMALIZED:
-          if (!value.isPresent()) {
-            throw new IllegalStateException(
-                "For retention time cvParam the `value` must have been specified");
-          }
-          if (unitAccession.isPresent()) {
-            // there was a time unit defined
-            switch (param.getUnitAccession().get()) {
-              case MzMLCV.cvUnitsMin1:
-              case MzMLCV.cvUnitsMin2:
-                retentionTime = Float.parseFloat(value.get()) * 60f;
-                break;
-              case MzMLCV.cvUnitsSec:
-                retentionTime = Float.parseFloat(value.get());
-                break;
-
-              default:
-                throw new IllegalStateException(
-                    "Unknown time unit encountered: [" + unitAccession + "]");
+        // check accession
+        switch (accession) {
+          case MzMLCV.MS_RT_SCAN_START:
+          case MzMLCV.MS_RT_RETENTION_TIME:
+          case MzMLCV.MS_RT_RETENTION_TIME_LOCAL:
+          case MzMLCV.MS_RT_RETENTION_TIME_NORMALIZED:
+            if (!value.isPresent()) {
+              throw new IllegalStateException(
+                  "For retention time cvParam the `value` must have been specified");
             }
-          } else {
-            // no time units defined, return the value as is
-            retentionTime = Float.parseFloat(value.get());
-          }
-          break;
+            if (unitAccession.isPresent()) {
+              // there was a time unit defined
+              switch (param.getUnitAccession().get()) {
+                case MzMLCV.cvUnitsMin1:
+                case MzMLCV.cvUnitsMin2:
+                  retentionTime = Float.parseFloat(value.get()) * 60f;
+                  break;
+                case MzMLCV.cvUnitsSec:
+                  retentionTime = Float.parseFloat(value.get());
+                  break;
 
-        default:
-          continue; // not a retention time parameter
+                default:
+                  throw new IllegalStateException(
+                      "Unknown time unit encountered: [" + unitAccession + "]");
+              }
+            } else {
+              // no time units defined, return the value as is
+              retentionTime = Float.parseFloat(value.get());
+            }
+            break;
+
+          default:
+            continue; // not a retention time parameter
+        }
       }
     }
+
     return retentionTime;
   }
 
@@ -491,16 +545,7 @@ public class MzMLSpectrum implements MsScan {
    * @return a {@link java.lang.String} object.
    */
   public Optional<String> getCVValue(String accession) {
-    for (MzMLCVParam cvParam : cvParams) {
-      Optional<String> value;
-      if (cvParam.getAccession().equals(accession)) {
-        value = cvParam.getValue();
-        if (!value.isPresent())
-          value = Optional.ofNullable("");
-        return value;
-      }
-    }
-    return Optional.ofNullable(null);
+    return getCVValue(cvParams, accession);
   }
 
   /**
@@ -514,7 +559,7 @@ public class MzMLSpectrum implements MsScan {
    */
   public Optional<String> getCVValue(MzMLCVGroup group, String accession) {
     Optional<String> value;
-    for (MzMLCVParam cvParam : group.getCVParams()) {
+    for (MzMLCVParam cvParam : group.getCVParamsList()) {
       if (cvParam.getAccession().equals(accession)) {
         value = cvParam.getValue();
         if (!value.isPresent())
