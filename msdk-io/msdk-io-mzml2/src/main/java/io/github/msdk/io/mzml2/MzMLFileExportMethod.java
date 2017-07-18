@@ -39,14 +39,18 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml2.data.MzMLArrayType;
 import io.github.msdk.io.mzml2.data.MzMLBitLength;
 import io.github.msdk.io.mzml2.data.MzMLCV;
+import io.github.msdk.io.mzml2.data.MzMLCVGroup;
 import io.github.msdk.io.mzml2.data.MzMLCVParam;
 import io.github.msdk.io.mzml2.data.MzMLCompressionType;
+import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
+import io.github.msdk.io.mzml2.data.MzMLPrecursorSelectedIon;
+import io.github.msdk.io.mzml2.data.MzMLProduct;
 import io.github.msdk.io.mzml2.util.MzMLPeaksEncoder;
 import io.github.msdk.io.mzml2.util.MzMLTags;
 import javolution.xml.internal.stream.XMLStreamWriterImpl;
 import javolution.xml.stream.XMLStreamException;
 
-public class MzMLFileWriter implements MSDKMethod<Void> {
+public class MzMLFileExportMethod implements MSDKMethod<Void> {
 
   private static final String dataProcessingId = "MSDK_mzml_export";
   private static final String softwareId = "MSDK";
@@ -73,7 +77,7 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
   private long totalScans = 0, totalChromatograms = 0, parsedScans, parsedChromatograms,
       indexListOffset;
 
-  public MzMLFileWriter(@Nonnull RawDataFile rawDataFile, @Nonnull File target,
+  public MzMLFileExportMethod(@Nonnull RawDataFile rawDataFile, @Nonnull File target,
       @Nonnull MzMLCompressionType doubleArrayCompression,
       MzMLCompressionType floatArrayCompression) {
     this.rawDataFile = rawDataFile;
@@ -180,35 +184,55 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
         xmlStreamWriter.writeAttribute(MzMLTags.ATTR_DEFAULT_ARRAY_LENGTH,
             String.valueOf(scan.getNumberOfDataPoints()));
 
+        MzMLSpectrum spectrum = (MzMLSpectrum) scan;
+
         // spectrum type CV param
-        if (scan.getSpectrumType() == MsSpectrumType.CENTROIDED)
-          writeCVParam(xmlStreamWriter, MzMLCV.centroidCvParam);
-        else
-          writeCVParam(xmlStreamWriter, MzMLCV.profileCvParam);
+        if (!(rawDataFile instanceof MzMLRawDataFile) || (rawDataFile instanceof MzMLRawDataFile
+            && !spectrum.getCVValue(MzMLCV.cvCentroidSpectrum).isPresent()
+            && !spectrum.getCVValue(MzMLCV.cvProfileSpectrum).isPresent())) {
+          if (scan.getSpectrumType() == MsSpectrumType.CENTROIDED)
+            writeCVParam(xmlStreamWriter, MzMLCV.centroidCvParam);
+          else
+            writeCVParam(xmlStreamWriter, MzMLCV.profileCvParam);
+        }
 
         // ms level CV param
-        if (scan.getMsLevel() != null) {
-          Integer msLevel = scan.getMsLevel();
-          writeCVParam(xmlStreamWriter,
-              new MzMLCVParam(MzMLCV.cvMSLevel, String.valueOf(msLevel), "ms level", null));
+        if (!(rawDataFile instanceof MzMLRawDataFile) || (rawDataFile instanceof MzMLRawDataFile
+            && !spectrum.getCVValue(MzMLCV.cvMSLevel).isPresent())) {
+          if (scan.getMsLevel() != null) {
+            Integer msLevel = scan.getMsLevel();
+            writeCVParam(xmlStreamWriter,
+                new MzMLCVParam(MzMLCV.cvMSLevel, String.valueOf(msLevel), "ms level", null));
+          }
         }
 
         // total ion current CV param
-        if (scan.getTIC() != null) {
-          Float tic = scan.getTIC();
-          writeCVParam(xmlStreamWriter,
-              new MzMLCVParam(MzMLCV.cvTIC, String.valueOf(tic), "total ion current", null));
+        if (!(rawDataFile instanceof MzMLRawDataFile) || (rawDataFile instanceof MzMLRawDataFile
+            && !spectrum.getCVValue(MzMLCV.cvTIC).isPresent())) {
+          if (scan.getTIC() != null) {
+            Float tic = scan.getTIC();
+            writeCVParam(xmlStreamWriter,
+                new MzMLCVParam(MzMLCV.cvTIC, String.valueOf(tic), "total ion current", null));
+          }
         }
 
         // m/z range CV param
-        if (scan.getMzRange() != null) {
-          Double lowestMz = scan.getMzRange().lowerEndpoint();
-          Double highestMz = scan.getMzRange().upperEndpoint();
-          writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLCV.cvLowestMz, String.valueOf(lowestMz),
-              "lowest observed m/z", MzMLCV.cvMz));
-          writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLCV.cvHighestMz,
-              String.valueOf(highestMz), "highest observed m/z", MzMLCV.cvMz));
+        if (!(rawDataFile instanceof MzMLRawDataFile) || (rawDataFile instanceof MzMLRawDataFile
+            && !spectrum.getCVValue(MzMLCV.cvLowestMz).isPresent()
+            || !spectrum.getCVValue(MzMLCV.cvHighestMz).isPresent())) {
+          if (scan.getMzRange() != null) {
+            Double lowestMz = scan.getMzRange().lowerEndpoint();
+            Double highestMz = scan.getMzRange().upperEndpoint();
+            writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLCV.cvLowestMz,
+                String.valueOf(lowestMz), "lowest observed m/z", MzMLCV.cvMz));
+            writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLCV.cvHighestMz,
+                String.valueOf(highestMz), "highest observed m/z", MzMLCV.cvMz));
+          }
         }
+
+        // Write the missing CV params parsed
+        if (rawDataFile instanceof MzMLRawDataFile)
+          writeCVGroup(xmlStreamWriter, spectrum.getCVParams());
 
         // <scanList>
         xmlStreamWriter.writeStartElement(MzMLTags.TAG_SCAN_LIST);
@@ -259,6 +283,83 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
         xmlStreamWriter.writeEndElement(); // </scanWindowList>
         xmlStreamWriter.writeEndElement(); // </scan>
         xmlStreamWriter.writeEndElement(); // </scanList>
+
+        if (rawDataFile instanceof MzMLRawDataFile
+            && spectrum.getPrecursorList().getPrecursorElements().size() > 0) {
+
+          // <precursorList>
+          xmlStreamWriter.writeStartElement(MzMLTags.TAG_PRECURSOR_LIST);
+          xmlStreamWriter.writeAttribute(MzMLTags.ATTR_COUNT,
+              String.valueOf(spectrum.getPrecursorList().getPrecursorElements().size()));
+
+          for (MzMLPrecursorElement precursor : spectrum.getPrecursorList()
+              .getPrecursorElements()) {
+
+            // <precursor>
+            xmlStreamWriter.writeStartElement(MzMLTags.TAG_PRECURSOR);
+            xmlStreamWriter.writeAttribute(MzMLTags.ATTR_SPECTRUM_REF,
+                precursor.getSpectrumRef().orElse(""));
+
+            if (precursor.getSelectedIonList().isPresent()) {
+
+              // <slectedIonList>
+              xmlStreamWriter.writeStartElement(MzMLTags.TAG_SELECTED_ION_LIST);
+              xmlStreamWriter.writeAttribute(MzMLTags.ATTR_COUNT,
+                  String.valueOf(precursor.getSelectedIonList().get().getSelectedIonList().size()));
+
+              for (MzMLPrecursorSelectedIon selectedIon : precursor.getSelectedIonList().get()
+                  .getSelectedIonList()) {
+
+                // <selectedIon>
+                xmlStreamWriter.writeStartElement(MzMLTags.TAG_SELECTED_ION);
+                writeCVGroup(xmlStreamWriter, selectedIon);
+                xmlStreamWriter.writeEndElement(); // </selectedIon>
+              }
+              xmlStreamWriter.writeEndElement(); // </selectedIonList>
+
+            }
+            xmlStreamWriter.writeEndElement(); // </precursor>
+
+            if (precursor.getIsolationWindow().isPresent()) {
+
+              // <isolationWindow>
+              xmlStreamWriter.writeStartElement(MzMLTags.TAG_ISOLATION_WINDOW);
+              writeCVGroup(xmlStreamWriter, precursor.getIsolationWindow().get());
+              xmlStreamWriter.writeEndElement(); // </isolationWindow>
+            }
+
+            // <activation>
+            xmlStreamWriter.writeStartElement(MzMLTags.TAG_ACTIVATION);
+            writeCVGroup(xmlStreamWriter, precursor.getActivation());
+            xmlStreamWriter.writeEndElement(); // </activation>
+
+          }
+
+          xmlStreamWriter.writeEndElement(); // </precursorList>
+
+          if (!spectrum.getProductList().getProducts().isEmpty()) {
+
+            // <productList>
+            xmlStreamWriter.writeStartElement(MzMLTags.TAG_PRODUCT_LIST);
+            xmlStreamWriter.writeAttribute(MzMLTags.ATTR_COUNT,
+                String.valueOf(spectrum.getProductList().getProducts().size()));
+
+            for (MzMLProduct product : spectrum.getProductList().getProducts()) {
+              // <product>
+              xmlStreamWriter.writeStartElement(MzMLTags.TAG_PRODUCT);
+
+              // <isolationWindow>
+              xmlStreamWriter.writeStartElement(MzMLTags.TAG_ISOLATION_WINDOW);
+              if (product.getIsolationWindow().isPresent())
+                writeCVGroup(xmlStreamWriter, product.getIsolationWindow().get());
+              xmlStreamWriter.writeEndElement(); // </isolationWindow>
+
+              xmlStreamWriter.writeEndElement(); // </product>
+            }
+
+            xmlStreamWriter.writeEndElement(); // </productList>
+          }
+        }
 
         // <binaryDataArrayList>
         xmlStreamWriter.writeStartElement(MzMLTags.TAG_BINARY_DATA_ARRAY_LIST);
@@ -554,7 +655,9 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
       xmlStreamWriter.writeEndDocument();
       xmlStreamWriter.close();
 
-    } catch (Exception e) {
+    } catch (
+
+    Exception e) {
       throw new MSDKException(e);
     }
 
@@ -604,6 +707,12 @@ public class MzMLFileWriter implements MSDKMethod<Void> {
 
     xmlStreamWriter.writeEndElement(); // </cvParam>
 
+  }
+
+  private void writeCVGroup(XMLStreamWriterImpl xmlStreamWriter, MzMLCVGroup cvGroup)
+      throws XMLStreamException {
+    for (MzMLCVParam cvParam : cvGroup.getCVParamsList())
+      writeCVParam(xmlStreamWriter, cvParam);
   }
 
 }

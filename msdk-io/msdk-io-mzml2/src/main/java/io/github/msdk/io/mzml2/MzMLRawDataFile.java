@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml2.data;
+package io.github.msdk.io.mzml2;
 
 import java.io.File;
 import java.util.List;

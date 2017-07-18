@@ -26,7 +26,7 @@ import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
 import io.github.msdk.io.mzml2.data.MzMLBitLength;
 import io.github.msdk.io.mzml2.data.MzMLCompressionType;
 import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
-import it.unimi.dsi.io.ByteBufferInputStream;
+import io.github.msdk.io.mzml2.util.bytebufferinputstream.ByteBufferInputStream;
 
 /**
  * 
@@ -120,8 +120,8 @@ public class BinaryDataArrayTest {
   @Test
   public void testCompressed64bit() throws MSDKException, DataFormatException, IOException {
     // Put the String onto an ByteBufferInputStream
-    ByteBufferInputStream is =
-        new ByteBufferInputStream(ByteBuffer.wrap(compressed64bit.getBytes(StandardCharsets.UTF_8)));
+    ByteBufferInputStream is = new ByteBufferInputStream(
+        ByteBuffer.wrap(compressed64bit.getBytes(StandardCharsets.UTF_8)));
 
     // Setting up the BinaryInfo
     MzMLBinaryDataInfo binaryInfo = new MzMLBinaryDataInfo(664, 99);
@@ -138,8 +138,8 @@ public class BinaryDataArrayTest {
   @Test
   public void testUncompressed64bit() throws MSDKException, DataFormatException, IOException {
     // Put the String onto an ByteBufferInputStream
-    ByteBufferInputStream is =
-        new ByteBufferInputStream(ByteBuffer.wrap(uncompressed64bit.getBytes(StandardCharsets.UTF_8)));
+    ByteBufferInputStream is = new ByteBufferInputStream(
+        ByteBuffer.wrap(uncompressed64bit.getBytes(StandardCharsets.UTF_8)));
 
     // Setting up the BinaryInfo
     MzMLBinaryDataInfo binaryInfo = new MzMLBinaryDataInfo(1056, 99);
@@ -154,8 +154,8 @@ public class BinaryDataArrayTest {
   @Test
   public void testCompressed32bit() throws MSDKException, DataFormatException, IOException {
     // Put the String onto an ByteBufferInputStream
-    ByteBufferInputStream is =
-        new ByteBufferInputStream(ByteBuffer.wrap(compressed32bit.getBytes(StandardCharsets.UTF_8)));
+    ByteBufferInputStream is = new ByteBufferInputStream(
+        ByteBuffer.wrap(compressed32bit.getBytes(StandardCharsets.UTF_8)));
 
     // Setting up the BinaryInfo
     MzMLBinaryDataInfo binaryInfo = new MzMLBinaryDataInfo(268, 99);
@@ -171,8 +171,8 @@ public class BinaryDataArrayTest {
   @Test
   public void testUncompressed32bit() throws MSDKException, DataFormatException, IOException {
     // Put the String onto an ByteBufferInputStream
-    ByteBufferInputStream is =
-        new ByteBufferInputStream(ByteBuffer.wrap(uncompressed32bit.getBytes(StandardCharsets.UTF_8)));
+    ByteBufferInputStream is = new ByteBufferInputStream(
+        ByteBuffer.wrap(uncompressed32bit.getBytes(StandardCharsets.UTF_8)));
 
     // Setting up the BinaryInfo
     MzMLBinaryDataInfo binaryInfo = new MzMLBinaryDataInfo(528, 99);

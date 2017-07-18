@@ -36,10 +36,10 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.util.MsSpectrumUtil;
 
-public class MzMLFileParserTest {
+public class MzMLFileImportMethodTest {
 
   private Path getResourcePath(String resource) throws MSDKException {
-    final URL url = MzMLFileParserTest.class.getClassLoader().getResource(resource);
+    final URL url = MzMLFileImportMethodTest.class.getClassLoader().getResource(resource);
     try {
       return Paths.get(url.toURI()).toAbsolutePath();
     } catch (URISyntaxException e) {
@@ -54,7 +54,7 @@ public class MzMLFileParserTest {
     String file = "mzML_with_UV.mzML";
     final Path path = getResourcePath(file);
     final File inputFile = path.toFile();
-    MzMLFileParser mzParser = new MzMLFileParser(inputFile);
+    MzMLFileImportMethod mzParser = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = mzParser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, mzParser.getFinishedPercentage(), 0.0001);
@@ -88,7 +88,7 @@ public class MzMLFileParserTest {
 
     // Import the file using the alternate constructor
     Assert.assertNotNull(new File(path.toString()));
-    MzMLFileParser mzParser2 = new MzMLFileParser(path);
+    MzMLFileImportMethod mzParser2 = new MzMLFileImportMethod(path);
     RawDataFile rawFile2 = mzParser2.execute();
     Assert.assertNotNull(rawFile2);
     Assert.assertEquals(1.0, mzParser2.getFinishedPercentage(), 0.0001);
@@ -129,7 +129,7 @@ public class MzMLFileParserTest {
     String file = "5peptideFT.mzML";
     File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
-    MzMLFileParser parser = new MzMLFileParser(inputFile);
+    MzMLFileImportMethod parser = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
@@ -182,7 +182,7 @@ public class MzMLFileParserTest {
     String file = "tiny.pwiz.idx.mzML";
     File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
-    MzMLFileParser parser = new MzMLFileParser(inputFile);
+    MzMLFileImportMethod parser = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
@@ -228,7 +228,7 @@ public class MzMLFileParserTest {
     String file = "RawCentriodCidWithMsLevelInRefParamGroup.mzML";
     File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
-    MzMLFileParser parser = new MzMLFileParser(inputFile);
+    MzMLFileImportMethod parser = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
@@ -277,7 +277,7 @@ public class MzMLFileParserTest {
     String fileCompressed = "MzMLFile_7_compressed.mzML";
     File compressedFile = getResourcePath(fileCompressed).toFile();
     Assert.assertTrue(compressedFile.canRead());
-    MzMLFileParser parser = new MzMLFileParser(compressedFile);
+    MzMLFileImportMethod parser = new MzMLFileImportMethod(compressedFile);
     RawDataFile compressedRaw = parser.execute();
     Assert.assertNotNull(compressedRaw);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
@@ -286,7 +286,7 @@ public class MzMLFileParserTest {
     String fileUncompressed = "MzMLFile_7_uncompressed.mzML";
     File unCompressedFile = getResourcePath(fileUncompressed).toFile();
     Assert.assertTrue(unCompressedFile.canRead());
-    parser = new MzMLFileParser(unCompressedFile);
+    parser = new MzMLFileImportMethod(unCompressedFile);
     RawDataFile uncompressedRaw = parser.execute();
     Assert.assertNotNull(uncompressedRaw);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
@@ -324,7 +324,7 @@ public class MzMLFileParserTest {
     String file = "SRM.mzML";
     File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
-    MzMLFileParser parser = new MzMLFileParser(inputFile);
+    MzMLFileImportMethod parser = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
@@ -370,7 +370,7 @@ public class MzMLFileParserTest {
     String file = "emptyScan.mzML";
     File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
-    MzMLFileParser parser = new MzMLFileParser(inputFile);
+    MzMLFileImportMethod parser = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
@@ -414,7 +414,7 @@ public class MzMLFileParserTest {
     String file = "truncated.mzML";
     File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
-    MzMLFileParser parser = new MzMLFileParser(inputFile);
+    MzMLFileImportMethod parser = new MzMLFileImportMethod(inputFile);
     parser.execute();
 
   }
@@ -426,7 +426,7 @@ public class MzMLFileParserTest {
     String file = "MzValues_Zlib+Numpress.mzML";
     File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
-    MzMLFileParser parser = new MzMLFileParser(inputFile);
+    MzMLFileImportMethod parser = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);

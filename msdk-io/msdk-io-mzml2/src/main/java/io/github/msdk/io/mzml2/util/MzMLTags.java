@@ -38,6 +38,7 @@ public abstract class MzMLTags {
   public static final String TAG_ISOLATION_WINDOW = "isolationWindow";
   public static final String TAG_ACTIVATION = "activation";
   public static final String TAG_PRODUCT = "product";
+  public static final String TAG_PRODUCT_LIST = "productList";
   public final static String TAG_REF_PARAM_GROUP = "referenceableParamGroup";
   public final static String TAG_REF_PARAM_GROUP_REF = "referenceableParamGroupRef";
   public final static String TAG_REF_PARAM_GROUP_LIST = "referenceableParamGroupList";
@@ -66,5 +67,6 @@ public abstract class MzMLTags {
   public static final String ATTR_UNIT_ACCESSION = "unitAccession";
   public static final String ATTR_ENCODED_LENGTH = "encodedLength";
   public static final String ATTR_ID_REF = "idRef";
+  public static final String ATTR_SPECTRUM_REF = "spectrumRef";
 
 }

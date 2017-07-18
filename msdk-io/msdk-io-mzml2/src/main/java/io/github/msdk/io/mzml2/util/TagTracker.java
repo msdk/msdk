@@ -15,6 +15,8 @@ package io.github.msdk.io.mzml2.util;
 
 import io.github.msdk.MSDKRuntimeException;
 import java.util.ArrayDeque;
+import java.util.Iterator;
+
 import javolution.text.CharArray;
 
 /**
