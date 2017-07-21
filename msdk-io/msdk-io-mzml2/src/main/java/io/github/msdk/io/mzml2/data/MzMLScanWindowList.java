@@ -15,18 +15,19 @@ package io.github.msdk.io.mzml2.data;
 
 import java.util.ArrayList;
 
-public class MzMLCVGroup {
-  private ArrayList<MzMLCVParam> cvParams;
+public class MzMLScanWindowList {
+  private ArrayList<MzMLScanWindow> scanWindows;
 
-  public MzMLCVGroup() {
-    this.cvParams = new ArrayList<>();
+  public MzMLScanWindowList() {
+    this.scanWindows = new ArrayList<>();
   }
 
-  public ArrayList<MzMLCVParam> getCVParamsList() {
-    return cvParams;
+  public ArrayList<MzMLScanWindow> getScanWindows() {
+    return scanWindows;
   }
 
-  public void addCVParam(MzMLCVParam cvParam) {
-    cvParams.add(cvParam);
+  public void addScanWindow(MzMLScanWindow scanWindow) {
+    scanWindows.add(scanWindow);
   }
+
 }

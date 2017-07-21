@@ -17,14 +17,11 @@ import java.io.File;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.openscience.cdk.DefaultChemObjectBuilder;
-import org.openscience.cdk.interfaces.IChemObjectBuilder;
 import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
@@ -32,14 +29,12 @@ import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 
 public class MzTabFileImportMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
-  @Ignore
   @Test
-  public void testMzTab_Sample() throws MSDKException {
+  public void testMzTab_Sample() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "Sample-2.3.mzTab");
+    File inputFile =
+        new File(this.getClass().getClassLoader().getResource("Sample-2.3.mzTab").toURI());
     Assert.assertTrue(inputFile.canRead());
     MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable = importer.execute();
@@ -60,13 +55,13 @@ public class MzTabFileImportMethodTest {
     // ********************
     FeatureTableRow row = featureTable.getRows().get(7);
     IonAnnotation ionAnnotation = row.getFeature(0).getIonAnnotation();
+    Assert.assertNotNull(ionAnnotation);
+    Assert.assertNotNull(ionAnnotation.getDescription());
+    Assert.assertNotNull(ionAnnotation.getFormula());
     Assert.assertEquals("HEPES", ionAnnotation.getDescription());
-    IChemObjectBuilder builder = DefaultChemObjectBuilder.getInstance();
-    IMolecularFormula cdkFormula =
-        MolecularFormulaManipulator.getMolecularFormula("C8H18N2O4S", builder);
-    String formula = MolecularFormulaManipulator.getString(ionAnnotation.getFormula());
-    String formula2 = MolecularFormulaManipulator.getString(cdkFormula);
-    Assert.assertTrue(formula.equals(formula2));
+    IMolecularFormula cdkFormula = MolecularFormulaManipulator.getMolecularFormula("C8H18N2O4S",
+        SilentChemObjectBuilder.getInstance());
+    Assert.assertTrue(MolecularFormulaManipulator.compare(cdkFormula, ionAnnotation.getFormula()));
 
     // ********************
     // Row 5
@@ -78,39 +73,39 @@ public class MzTabFileImportMethodTest {
     Sample sample = featureTable.getSamples().get(5);
     Assert.assertEquals("36C sample 2", sample.getName());
 
+    
     // ********************
     // Last row
     // ********************
     row = featureTable.getRows().get(297);
-    sample = featureTable.getSamples().get(5);
 
     // Area
-    Float area = row.getFeature(0).getArea();
+    Float area = row.getFeature(sample).getArea();
     Assert.assertNotNull(area);
-    Assert.assertEquals(11480605.3259747, area, 0.0000001);
+    Assert.assertEquals(1.1480605E7, area, 0.1);
 
     // RT
     Float rt = row.getFeature(0).getRetentionTime();
     Assert.assertEquals(30.324697494506836, rt, 0.0000001);
 
     // Height
-    Float height = row.getFeature(0).getHeight();
+    Float height = row.getFeature(sample).getHeight();
     Assert.assertNull(height);
 
     // m/z
-    Double mz = row.getFeature(0).getMz();
+    Double mz = row.getFeature(sample).getMz();
     Assert.assertNotNull(mz);
-    Assert.assertEquals(144.927825927734, mz, 0.0000001);
+    Assert.assertEquals(144.92782592773438, mz, 0.0000001);
 
     featureTable.dispose();
   }
 
-  @Ignore
   @Test
-  public void testMzTab_Lipidomics() throws MSDKException {
+  public void testMzTab_Lipidomics() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "lipidomics-HFD-LD-study-TG.mzTab");
+    File inputFile = new File(
+        this.getClass().getClassLoader().getResource("lipidomics-HFD-LD-study-TG.mzTab").toURI());
     Assert.assertTrue(inputFile.canRead());
     MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
     FeatureTable featureTable = importer.execute();
@@ -123,12 +118,18 @@ public class MzTabFileImportMethodTest {
     Assert.assertEquals(18, samples.size());
 
     featureTable.dispose();
+  }
+
+  @Test
+  public void testMzTab_Lipidomics2() throws Exception {
+
 
     // Import the file
-    inputFile = new File(TEST_DATA_PATH + "lipidomics-HFD-LD-study-PL-DG-SM.mzTab");
+    File inputFile = new File(this.getClass().getClassLoader()
+        .getResource("lipidomics-HFD-LD-study-PL-DG-SM.mzTab").toURI());
     Assert.assertTrue(inputFile.canRead());
-    importer = new MzTabFileImportMethod(inputFile);
-    featureTable = importer.execute();
+    MzTabFileImportMethod importer = new MzTabFileImportMethod(inputFile);
+    FeatureTable featureTable = importer.execute();
     Assert.assertNotNull(featureTable);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
@@ -139,13 +140,12 @@ public class MzTabFileImportMethodTest {
     // Annotation 27 - PC32:1
     FeatureTableRow row = featureTable.getRows().get(27);
     IonAnnotation ionAnnotation = row.getFeature(0).getIonAnnotation();
+    Assert.assertNotNull(ionAnnotation);
+    Assert.assertNotNull(ionAnnotation.getFormula());
     Assert.assertEquals("PC32:1", ionAnnotation.getDescription());
-    IChemObjectBuilder builder = DefaultChemObjectBuilder.getInstance();
-    IMolecularFormula cdkFormula =
-        MolecularFormulaManipulator.getMolecularFormula("C40H78P1O8N1", builder);
-    String formula = MolecularFormulaManipulator.getString(ionAnnotation.getFormula());
-    String formula2 = MolecularFormulaManipulator.getString(cdkFormula);
-    Assert.assertTrue(formula.equals(formula2));
+    IMolecularFormula cdkFormula = MolecularFormulaManipulator.getMolecularFormula("C40H78P1O8N1",
+        SilentChemObjectBuilder.getInstance());
+    Assert.assertTrue(MolecularFormulaManipulator.compare(cdkFormula, ionAnnotation.getFormula()));
 
     featureTable.dispose();
   }

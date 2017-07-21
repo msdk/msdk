@@ -18,12 +18,14 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 
-import it.unimi.dsi.io.ByteBufferInputStream;
+import io.github.msdk.io.mzml2.util.bytebufferinputstream.ByteBufferInputStream;
 
 public abstract class MzMLFileMemoryMapper {
 
   /**
-   * <p>mapToMemory.</p>
+   * <p>
+   * mapToMemory.
+   * </p>
    *
    * @param mzMLFile a {@link java.io.File} object.
    * @return a {@link it.unimi.dsi.io.ByteBufferInputStream} object.
@@ -33,7 +35,7 @@ public abstract class MzMLFileMemoryMapper {
 
     RandomAccessFile aFile = new RandomAccessFile(mzMLFile, "r");
     FileChannel inChannel = aFile.getChannel();
-    ByteBufferInputStream is = ByteBufferInputStream.map(inChannel);
+    ByteBufferInputStream is = ByteBufferInputStream.map(inChannel, FileChannel.MapMode.READ_ONLY);
     aFile.close();
 
     return is;
