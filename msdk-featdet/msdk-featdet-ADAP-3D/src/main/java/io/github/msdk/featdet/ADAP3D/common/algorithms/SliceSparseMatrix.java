@@ -346,7 +346,7 @@ public class SliceSparseMatrix {
       iterator.next();
       MultiKey<Integer> sliceKey = (MultiKey<Integer>) iterator.getKey();
       Triplet triplet = (Triplet) slice.get(sliceKey);
-      if (triplet != null) {
+      if (triplet != null && triplet.removed == false) {
         dataPoint.rt = triplet.rt / 60;
         dataPoint.intensity = triplet.intensity;
         listOfDataPoint.add(dataPoint);
@@ -386,13 +386,35 @@ public class SliceSparseMatrix {
    * @return tripletMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This is
    *         whole sparse matrix.
    */
-  public MultiKeyMap<Integer, Triplet> removeDataPoints(double mz, int lowerScanBound,
+  public MultiKeyMap<Integer, Triplet> removeDataPoints(int roundedmz, int lowerScanBound,
       int upperScanBound) {
-    int roundedmz = roundMZ(mz);
     for (int i = lowerScanBound; i <= upperScanBound; i++) {
       if (tripletMap.containsKey(new Integer(i), new Integer(roundedmz))) {
         Triplet triplet = (Triplet) tripletMap.get(new Integer(i), new Integer(roundedmz));
         triplet.removed = true;
+      }
+    }
+    return tripletMap;
+  }
+
+  /**
+   * <p>
+   * This method restores data points from whole data set for given mz,lowerscanbound and
+   * upperscanbound
+   * </p>
+   * 
+   * @param mz a {@link java.lang.Double} object.This takes original m/z value from raw file.
+   * @param lowerScanBound a {@link java.lang.Integer} object.This is lowest scan number.
+   * @param upperScanBound a {@link java.lang.Integer} object.This is highest scan number.
+   * @return tripletMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This is
+   *         whole sparse matrix.
+   */
+  public MultiKeyMap<Integer, Triplet> restoreDataPoints(int roundedmz, int lowerScanBound,
+      int upperScanBound) {
+    for (int i = lowerScanBound; i <= upperScanBound; i++) {
+      if (tripletMap.containsKey(new Integer(i), new Integer(roundedmz))) {
+        Triplet triplet = (Triplet) tripletMap.get(new Integer(i), new Integer(roundedmz));
+        triplet.removed = false;
       }
     }
     return tripletMap;

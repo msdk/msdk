@@ -29,11 +29,11 @@ import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet
  * </p>
  */
 public class CurveTool {
-  
+
+  public static final double FWHM_CONSTANT = 2.35482;
   private static final double EXPONENT_FACTOR = 0.2;
   private static final double EXPONENT_SHIFT = Math.exp(-1 / EXPONENT_FACTOR);
   private static final double EXPONENT_HEIGHT = 1.0 / (1.0 - EXPONENT_SHIFT);
-  private static final double FWHM_CONSTANT = 2.35482;
   private SliceSparseMatrix objSliceSparseMatrix;
 
   /**
@@ -97,7 +97,7 @@ public class CurveTool {
     return fwhm;
   }
 
-  
+
   public static double similarityValue(double[] referenceEIC, double[] gaussianValues,
       int leftBound, int rightBound) {
     double diffArea = 0.0;
@@ -146,8 +146,8 @@ public class CurveTool {
 
   /**
    * <p>
-   * normalize method is used for normalizing values by calculating its area and dividing each
-   * value by the area.
+   * normalize method is used for normalizing values by calculating its area and dividing each value
+   * by the area.
    * </p>
    * 
    * @param values a {@link java.lang.Double} array. This array will have values to be normalized.

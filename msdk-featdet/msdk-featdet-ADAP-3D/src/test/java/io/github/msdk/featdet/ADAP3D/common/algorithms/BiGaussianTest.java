@@ -60,9 +60,9 @@ public class BiGaussianTest {
   @Test
   public void testgetBiGaussianValue() throws MSDKException {
     MultiKeyMap<Integer, Triplet> horizontalSlice =
-        objSliceSparseMatrix.getHorizontalSlice(140.1037, 1, 23);
-    BiGaussian objBiGaussian = new BiGaussian(horizontalSlice, 140.1037, 1, 23);
+        objSliceSparseMatrix.getHorizontalSlice(1401040, 1, 23);
+    BiGaussian objBiGaussian = new BiGaussian(horizontalSlice, 1401040, 1, 23);
     double biGaussianValue = objBiGaussian.getValue(6);
-    Assert.assertEquals(23438, biGaussianValue, 1);
+    Assert.assertEquals(18454, biGaussianValue, 1);
   }
 }

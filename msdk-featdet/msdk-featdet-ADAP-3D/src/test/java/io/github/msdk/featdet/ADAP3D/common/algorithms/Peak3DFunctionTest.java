@@ -61,14 +61,14 @@ public class Peak3DFunctionTest {
   @Test
   public void testPeakSimilarityFunction() throws MSDKException {
 
-    double fwhm = objCurveTool.estimateFwhmMs(20);
+    int fwhm = objSliceSparseMatrix.roundMZ(objCurveTool.estimateFwhmMs(20));
 
     Peak3DTest objPeak3DTest = new Peak3DTest(objSliceSparseMatrix, fwhm);
 
-    Peak3DTest.Result objResult = objPeak3DTest.execute(140.1037, 1, 23);
-    Assert.assertEquals(4, objResult.similarityValues.size());
-    Assert.assertEquals(1401028, objResult.lowerMzBound);
-    Assert.assertEquals(1401047, objResult.upperMzBound);
+    Peak3DTest.Result objResult = objPeak3DTest.execute(1401037, 1, 23,0.5);
+    Assert.assertEquals(5, objResult.similarityValues.size());
+    Assert.assertEquals(1401025, objResult.lowerMzBound);
+    Assert.assertEquals(1401043, objResult.upperMzBound);
   }
 
 }

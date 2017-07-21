@@ -60,6 +60,6 @@ public class EstimateFwhmMsTest {
   @Test
   public void testestimateFwhmMs() throws MSDKException {
     double fwhm = objCurveTool.estimateFwhmMs(20);
-    Assert.assertEquals(1, fwhm, 1);
+    Assert.assertEquals(0.001, fwhm, 0.0005);
   }
 }

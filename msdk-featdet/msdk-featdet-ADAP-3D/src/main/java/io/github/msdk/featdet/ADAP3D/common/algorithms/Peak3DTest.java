@@ -48,21 +48,23 @@ public class Peak3DTest {
     UP, DOWN
   }
 
+  public static final double EPSILON = 1E-8;
+
   /* Instance of SliceSparseMatrix containing the profile data */
   private final SliceSparseMatrix objsliceSparseMatrix;
 
   /* Full-Width Half-Max of m/z-profiles */
-  private final double fwhm;
+  private final int roundedFWHM;
 
-  public Peak3DTest(SliceSparseMatrix objsliceSparseMatrix, double fwhm) {
+  public Peak3DTest(SliceSparseMatrix objsliceSparseMatrix, int fwhm) {
     this.objsliceSparseMatrix = objsliceSparseMatrix;
-    this.fwhm = fwhm;
+    this.roundedFWHM = fwhm;
   }
 
   public Peak3DTest() {
     super();
     this.objsliceSparseMatrix = null;
-    this.fwhm = 0;
+    this.roundedFWHM = 0;
   }
 
   /**
@@ -93,8 +95,8 @@ public class Peak3DTest {
    * depend on FWHM-value.
    *
    *
-   * @param mz a {@link java.lang.Double} object. It's double because original m/z value from raw
-   *        file is passed in the method.
+   * @param roundedMz a {@link java.lang.Double} object. It's rounded m/z value. Original m/z value
+   *        multiplied by 10000.
    * @param leftBound a {@link java.lang.Integer} object. This is lowest scan number from which peak
    *        determining starts.
    * @param rightBound a {@link java.lang.Integer} object. This is highest scan number on which peak
@@ -104,18 +106,18 @@ public class Peak3DTest {
    *         boundaries for adjacent similar peaks.
    *         </p>
    */
-  public Result execute(double mz, int leftBound, int rightBound) {
+  public Result execute(int roundedMz, int leftBound, int rightBound,
+      double peakSimilarityThreshold) {
 
     // Here I'm rounding Full width half max(fwhm) and mz value by factor of roundMZfactor.
     // For instance, roundedMz = (int) mz * 10000
-    int roundedFWHM = objsliceSparseMatrix.roundMZ(fwhm);
-    int roundedMz = objsliceSparseMatrix.roundMZ(mz);
+    // int roundedFWHM = objsliceSparseMatrix.roundMZ(fwhm);
 
     // slice is used to store horizontal row from sparse matrix for given mz, left boundary and
     // right boundary.
     // left boundary and right boundary are used in form of scan numbers.
     MultiKeyMap<Integer, Triplet> slice =
-        objsliceSparseMatrix.getHorizontalSlice(mz, leftBound, rightBound);
+        objsliceSparseMatrix.getHorizontalSlice(roundedMz, leftBound, rightBound);
 
     // referenceEIC is used for storing normalized intensities for m/z-value equal to mz.
     double[] referenceEIC = new double[rightBound - leftBound + 1];
@@ -132,11 +134,11 @@ public class Peak3DTest {
 
     // Here we're getting highest mz value for which the EIC is similar to given mz value.
     int upperMzBound = findMZbound(leftBound, rightBound, roundedMz, roundedFWHM, mzIndex,
-        referenceEIC, similarityValues, Direction.UP);
+        referenceEIC, similarityValues, peakSimilarityThreshold, Direction.UP);
 
     // Here we're getting lowest mz value for which the EIC is similar to given mz value.
     int lowerMzBound = findMZbound(leftBound, rightBound, roundedMz, roundedFWHM, mzIndex,
-        referenceEIC, similarityValues, Direction.DOWN);
+        referenceEIC, similarityValues, peakSimilarityThreshold, Direction.DOWN);
 
     // Assigning values to object.
     Result objResult = new Result();
@@ -148,8 +150,8 @@ public class Peak3DTest {
     int upperBoundaryDiff = upperMzBound - roundedMz;
 
     // This is the condition for determing whether the peak is good or not.
-    if ((upperBoundaryDiff >= fwhm / 2) && (lowerBoundaryDiff >= fwhm / 2)
-        && (upperBoundaryDiff + lowerBoundaryDiff >= fwhm)) {
+    if ((upperBoundaryDiff >= roundedFWHM / 2) && (lowerBoundaryDiff >= roundedFWHM / 2)
+        && (upperBoundaryDiff + lowerBoundaryDiff >= roundedFWHM)) {
       objResult.goodPeak = true;
     } else {
       objResult.goodPeak = false;
@@ -192,16 +194,15 @@ public class Peak3DTest {
    *         </p>
    */
   private int findMZbound(int leftBound, int rightBound, int roundedMz, double roundedFWHM,
-      int mzIndex, double[] referenceEIC, List<Double> similarityValues, Direction direction) {
+      int mzIndex, double[] referenceEIC, List<Double> similarityValues,
+      double peakSimilarityThreshold, Direction direction) {
 
-    final double peakSimilarityThreshold = 0.7;
-    final double epsilon = 1E-8;
 
     final int multiplier = direction == Direction.UP ? 1 : -1;
     final int arrayCount = rightBound - leftBound + 1;
 
     Integer curMZ = null;
-
+    Integer mzBound = null;
 
 
     int curMzIndex = 0;
@@ -221,6 +222,7 @@ public class Peak3DTest {
       // This condition checks whether we've mz values above or below given mz value.
 
       curMZ = objsliceSparseMatrix.mzValues.get(curMzIndex);
+      mzBound = objsliceSparseMatrix.mzValues.get(curMzIndex - multiplier);
 
       if (curMZ == null || Math.abs(curMZ - roundedMz) >= 2 * roundedFWHM)
         break;
@@ -237,7 +239,7 @@ public class Peak3DTest {
       double area = CurveTool.normalize(curSlice, leftBound, rightBound, curMZ, curEIC);
 
       // if area is too small continue.
-      if (area < epsilon)
+      if (area < EPSILON)
         continue;
 
       // Here similarity value is calculated.
@@ -247,7 +249,7 @@ public class Peak3DTest {
         similarityValues.add(curSimilarity);
     }
 
-    curMZ = curMZ == null ? roundedMz : curMZ;
-    return curMZ;
+    mzBound = mzBound == null ? roundedMz : mzBound;
+    return mzBound;
   }
 }

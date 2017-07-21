@@ -102,7 +102,7 @@ public class SliceSparseMatrixTest {
   @Test
   public void testRemoveDataPoints() throws MSDKException, IOException {
     MultiKeyMap<Integer, Triplet> updatedTripletMap =
-        objSliceSparseMatrix.removeDataPoints(301.15106201171875, 0, 10);
+        objSliceSparseMatrix.removeDataPoints(3011511, 0, 10);
     for (int i = 0; i < 11; i++) {
       SliceSparseMatrix.Triplet triplet =
           (SliceSparseMatrix.Triplet) updatedTripletMap.get(new Integer(i), new Integer(3011511));

@@ -58,11 +58,12 @@ public class BiGaussian {
    * 
    * @param horizontalSlice a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This
    *        is horizontal slice from the sparse matrix.
-   * @param mz a {@link java.lang.Double} object. This is m/z value from the raw file.
+   * @param roundedmz a {@link java.lang.Double} object. It's rounded m/z value. Original m/z value
+   *        multiplied by 10000.
    * @param leftBound a {@link java.lang.Integer} object. This is minimum scan number.
    * @param rightBound a {@link java.lang.Integer} object. This is maximum scan number.
    */
-  BiGaussian(MultiKeyMap<Integer, Triplet> horizontalSlice, double mz, int leftBound,
+  BiGaussian(MultiKeyMap<Integer, Triplet> horizontalSlice, int roundedmz, int leftBound,
       int rightBound) {
 
     // This is max height for BiGaussian fit. It's in terms of intensities.
@@ -71,7 +72,6 @@ public class BiGaussian {
 
     // Below logic is for finding BiGaussian parameters.
     mu = getScanNumber(horizontalSlice, maxHeight);
-    int roundedmz = (int) Math.round(mz * 10000);
     double halfHeight = (double) maxHeight / 2;
 
 
@@ -108,8 +108,8 @@ public class BiGaussian {
       double halfHeight, int leftBound, int rightBound, int roundedmz, Direction direction) {
 
     int i = mu;
-    double Y1 = 0;
-    double Y2 = 0;
+    Double Y1 = null;
+    Double Y2 = null;
     int step = direction == Direction.RIGHT ? 1 : -1;
 
     while (leftBound <= i && i <= rightBound) {
@@ -118,18 +118,18 @@ public class BiGaussian {
       SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(i, roundedmz);
 
       if (triplet1 != null && triplet1.intensity < halfHeight) {
-        Y1 = triplet1.intensity;
+        Y1 = (double) triplet1.intensity;
         SliceSparseMatrix.Triplet triplet2 = horizontalSlice.get(i - step, roundedmz);
         if (triplet2 != null) {
-          Y2 = triplet2.intensity;
+          Y2 = (double) triplet2.intensity;
           break;
         }
       }
 
 
-
     }
-
+    if (Y1 == null || Y2 == null)
+      throw new IllegalArgumentException("Cannot find BiGaussian.");
     /*
      * I've used the formula of line passing through points (x1,y1) and (x2,y2) in interpolationX.
      * Those are the points which are exactly above and below of halfHeight(halfMaxIntensity). I've

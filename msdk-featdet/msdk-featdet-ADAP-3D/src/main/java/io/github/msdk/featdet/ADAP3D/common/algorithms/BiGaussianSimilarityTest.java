@@ -14,7 +14,6 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
 import org.apache.commons.collections4.map.MultiKeyMap;
 
-import java.lang.Math;
 import java.util.stream.IntStream;
 
 import io.github.msdk.featdet.ADAP3D.common.algorithms.Peak3DTest.Result;
@@ -29,8 +28,6 @@ import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet
  */
 public class BiGaussianSimilarityTest {
 
-  private static final double PEAK_SIMILARITY_THRESHOLD = 0.25;
-
   /**
    * <p>
    * execute method is used for testing a peak with given m/z-value (variable mz) and left and right
@@ -44,29 +41,33 @@ public class BiGaussianSimilarityTest {
    *        determining starts.
    * @param rightBound a {@link java.lang.Integer} object. This is highest scan number on which peak
    *        determining ends.
-   * @param mz a {@link java.lang.Double} object. It's double because original m/z value from raw
-   *        file is passed in the method.
+   * @param roundedMZ a {@link java.lang.Double} object. It's rounded m/z value. Original m/z value
+   *        multiplied by 10000.
    * 
    * @return a {@link Result} object. Result object contains similarity values, lower and upper mz
    *         boundaries for adjacent similar peaks.
    *         </p>
    */
   public boolean execute(MultiKeyMap<Integer, Triplet> slice, int leftBound, int rightBound,
-      double mz) {
+      int roundedMZ, double biGaussianSimilarityThreshold) {
 
     double[] referenceEIC = new double[rightBound - leftBound + 1];
-    CurveTool.normalize(slice, leftBound, rightBound, (int) Math.round(mz * 10000), referenceEIC);
+    CurveTool.normalize(slice, leftBound, rightBound, roundedMZ, referenceEIC);
 
-    BiGaussian objBiGaussian = new BiGaussian(slice, mz, leftBound, rightBound);
-    double[] bigaussianValues = IntStream.range(0, referenceEIC.length)
-        .mapToDouble(i -> objBiGaussian.getValue(leftBound + i)).toArray();
+    try {
+      BiGaussian objBiGaussian = new BiGaussian(slice, roundedMZ, leftBound, rightBound);
+      double[] bigaussianValues = IntStream.range(0, referenceEIC.length)
+          .mapToDouble(i -> objBiGaussian.getValue(leftBound + i)).toArray();
 
-    double[] normBigaussianValues = new double[rightBound - leftBound + 1];
-    CurveTool.normalize(bigaussianValues, normBigaussianValues);
+      double[] normBigaussianValues = new double[rightBound - leftBound + 1];
+      CurveTool.normalize(bigaussianValues, normBigaussianValues);
 
-    double similarityValue =
-        CurveTool.similarityValue(referenceEIC, normBigaussianValues, leftBound, rightBound);
+      double similarityValue =
+          CurveTool.similarityValue(referenceEIC, normBigaussianValues, leftBound, rightBound);
 
-    return similarityValue > PEAK_SIMILARITY_THRESHOLD;
+      return similarityValue > biGaussianSimilarityThreshold;
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
   }
 }

@@ -17,23 +17,23 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
-import org.apache.commons.collections4.map.MultiKeyMap;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
 import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
 
-public class BiGaussianSimilarityFunctionTest {
+public class PeakDetectionTest {
+
   private static RawDataFile rawFile;
   private static SliceSparseMatrix objSliceSparseMatrix;
 
   private static Path getResourcePath(String resource) throws MSDKException {
-    final URL url = BiGaussianTest.class.getClassLoader().getResource(resource);
+    final URL url = Peak3DFunctionTest.class.getClassLoader().getResource(resource);
     try {
       return Paths.get(url.toURI()).toAbsolutePath();
     } catch (URISyntaxException e) {
@@ -41,8 +41,10 @@ public class BiGaussianSimilarityFunctionTest {
     }
   }
 
+
   @BeforeClass
   public static void loadData() throws MSDKException {
+
     // Import the file
     String file = "test_output.cdf";
     Path path = getResourcePath(file);
@@ -55,13 +57,14 @@ public class BiGaussianSimilarityFunctionTest {
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
   }
 
-
   @Test
-  public void testgetBiGaussianValue() throws MSDKException {
-    MultiKeyMap<Integer, Triplet> horizontalSlice =
-        objSliceSparseMatrix.getHorizontalSlice(1401040, 1, 9);
-    BiGaussianSimilarityTest objBiGaussian = new BiGaussianSimilarityTest();
-    boolean goodPeak = objBiGaussian.execute(horizontalSlice, 1, 9, 1401040,0.25);
-    Assert.assertTrue(goodPeak);
+  public void testPeakDetection() {
+
+    Parameters objParameters = new Parameters();
+    PeakDetection objPeakDetection = new PeakDetection(objSliceSparseMatrix, objParameters);
+    List<PeakDetection.GoodPeakInfo> peakList = objPeakDetection.execute();
+    Assert.assertNotNull(peakList);
+    Assert.assertEquals(139.0114, peakList.get(0).mz, 0.001);
   }
+
 }
