@@ -13,6 +13,7 @@
 
 package io.github.msdk.io.mzml2;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,12 +46,11 @@ import io.github.msdk.io.mzml2.data.MzMLIsolationWindow;
 import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
 import io.github.msdk.io.mzml2.data.MzMLProduct;
 import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
-import io.github.msdk.io.mzml2.util.bytebufferinputstream.ByteBufferInputStream;
 
 class MzMLChromatogram implements Chromatogram {
 
   private final @Nonnull MzMLRawDataFile dataFile;
-  private final @Nonnull ByteBufferInputStream mappedByteBufferInputStream;
+  private @Nonnull InputStream inputStream;
   private final @Nonnull String chromatogramId;
   private final @Nonnull Integer chromatogramNumber;
   private final @Nonnull Integer numOfDataPoints;
@@ -64,14 +64,16 @@ class MzMLChromatogram implements Chromatogram {
   private Double mz;
   private SeparationType separationType;
   private Range<Float> rtRange;
+  private float[] rtValues;
+  private float[] intensityValues;
 
   private Logger logger = LoggerFactory.getLogger(MzMLFileImportMethod.class);
 
-  MzMLChromatogram(@Nonnull MzMLRawDataFile dataFile, ByteBufferInputStream is,
-      String chromatogramId, Integer chromatogramNumber, Integer numOfDataPoints) {
+  MzMLChromatogram(@Nonnull MzMLRawDataFile dataFile, InputStream is, String chromatogramId,
+      Integer chromatogramNumber, Integer numOfDataPoints) {
     this.cvParams = new ArrayList<>();
     this.dataFile = dataFile;
-    this.mappedByteBufferInputStream = is;
+    this.inputStream = is;
     this.chromatogramId = chromatogramId;
     this.chromatogramNumber = chromatogramNumber;
     this.numOfDataPoints = numOfDataPoints;
@@ -81,6 +83,8 @@ class MzMLChromatogram implements Chromatogram {
     this.chromatogramType = ChromatogramType.UNKNOWN;
     this.mz = null;
     this.rtRange = null;
+    this.rtValues = null;
+    this.intensityValues = null;
 
   }
 
@@ -156,13 +160,24 @@ class MzMLChromatogram implements Chromatogram {
 
   /**
    * <p>
-   * getByteBufferInputStream.
+   * getInputStream.
    * </p>
    *
-   * @return a {@link it.unimi.dsi.io.ByteBufferInputStream} object.
+   * @return a {@link io.github.msdk.io.mzml2.util.io.ByteBufferInputStream} object.
    */
-  public ByteBufferInputStream getByteBufferInputStream() {
-    return mappedByteBufferInputStream;
+  public InputStream getInputStream() {
+    return inputStream;
+  }
+
+  /**
+   * <p>
+   * setInputStream.
+   * </p>
+   *
+   * @param inputStream a {@link java.io.InputStream} object.
+   */
+  public void setInputStream(InputStream inputStream) {
+    this.inputStream = inputStream;
   }
 
   /**
@@ -359,17 +374,18 @@ class MzMLChromatogram implements Chromatogram {
   @Override
   @Nonnull
   public float[] getRetentionTimes(@Nullable float array[]) {
-    float[] rtValues = null;
-    if (getRtBinaryDataInfo().getArrayLength() != numOfDataPoints) {
-      logger.warn(
-          "Retention time binary data array contains a different array length from the default array length of the scan (#"
-              + getChromatogramNumber() + ")");
-    }
+    if (rtValues == null) {
+      if (getRtBinaryDataInfo().getArrayLength() != numOfDataPoints) {
+        logger.warn(
+            "Retention time binary data array contains a different array length from the default array length of the scan (#"
+                + getChromatogramNumber() + ")");
+      }
 
-    try {
-      rtValues = MzMLPeaksDecoder.decodeToFloat(mappedByteBufferInputStream, getRtBinaryDataInfo());
-    } catch (Exception e) {
-      throw (new MSDKRuntimeException(e));
+      try {
+        rtValues = MzMLPeaksDecoder.decodeToFloat(inputStream, getRtBinaryDataInfo(), array);
+      } catch (Exception e) {
+        throw (new MSDKRuntimeException(e));
+      }
     }
 
     return rtValues;
@@ -379,20 +395,22 @@ class MzMLChromatogram implements Chromatogram {
   @Override
   @Nonnull
   public float[] getIntensityValues(@Nullable float[] array) {
-    if (getIntensityBinaryDataInfo().getArrayLength() != numOfDataPoints) {
-      logger.warn(
-          "Intensity binary data array contains a different array length from the default array length of the chromatogram (#"
-              + getChromatogramNumber() + ")");
+    if (intensityValues == null) {
+      if (getIntensityBinaryDataInfo().getArrayLength() != numOfDataPoints) {
+        logger.warn(
+            "Intensity binary data array contains a different array length from the default array length of the chromatogram (#"
+                + getChromatogramNumber() + ")");
+      }
+
+      try {
+        intensityValues =
+            MzMLPeaksDecoder.decodeToFloat(inputStream, getIntensityBinaryDataInfo(), array);
+      } catch (Exception e) {
+        throw (new MSDKRuntimeException(e));
+      }
     }
 
-    try {
-      array =
-          MzMLPeaksDecoder.decodeToFloat(mappedByteBufferInputStream, getIntensityBinaryDataInfo());
-    } catch (Exception e) {
-      throw (new MSDKRuntimeException(e));
-    }
-
-    return array;
+    return intensityValues;
 
   }
 

@@ -19,7 +19,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -52,11 +55,19 @@ public class MzMLFileExportMethodTest {
 
     float intensityBuffer[];
 
+    // Set up Predicate<MsScan>
+    List<Integer> scansToParse = new ArrayList<>();
+    scansToParse.addAll(Arrays.asList(2, 5));
+    Predicate<MsScan> msScanPredicate = getMsScanPredicate(scansToParse);
+    List<Integer> chromatogramsToParse = new ArrayList<>();
+    Predicate<Chromatogram> chromatogramPredicate = getChromatogramPredicate(chromatogramsToParse);
+
     // Import the file
     String file = "5peptideFT.mzML";
     File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
-    MzMLFileImportMethod parser = new MzMLFileImportMethod(inputFile);
+    MzMLFileImportMethod parser =
+        new MzMLFileImportMethod(inputFile, msScanPredicate, chromatogramPredicate);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
@@ -70,23 +81,25 @@ public class MzMLFileExportMethodTest {
     Assert.assertEquals(1.0, exporter.getFinishedPercentage(), 0.0001);
 
     // Import the new mzML
-    parser = new MzMLFileImportMethod(tempFile);
+    parser = new MzMLFileImportMethod(tempFile, msScanPredicate, chromatogramPredicate);
     RawDataFile newMzMLFile = parser.execute();
     Assert.assertNotNull(newMzMLFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
-    // Check number of scans
+    // The file has 7 scans, 2 in the RawFile
     List<MsScan> scans = newMzMLFile.getScans();
     Assert.assertNotNull(scans);
-    Assert.assertEquals(rawFile.getScans().size(), scans.size());
+    Assert.assertEquals(7, scans.size());
 
     // 2nd scan, #2
     MsScan scan2 = scans.get(1);
-    Assert.assertEquals(new Integer(2), scan2.getScanNumber());
+    Assert.assertEquals(Integer.valueOf(2), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.PROFILE, scan2.getSpectrumType());
-    Assert.assertEquals(new Integer(1), scan2.getMsLevel());
+    Assert.assertEquals(Integer.valueOf(1), scan2.getMsLevel());
     Assert.assertEquals(0.474f, scan2.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
+    Assert.assertEquals(209.1818184554577, scan2.getMzValues()[100], 0.00001);
+    scan2.getMzValues();
     intensityBuffer = scan2.getIntensityValues();
     Assert.assertEquals(19800, (int) scan2.getNumberOfDataPoints());
     Float scan2maxInt =
@@ -95,11 +108,12 @@ public class MzMLFileExportMethodTest {
 
     // 5th scan, #5
     MsScan scan5 = scans.get(4);
-    Assert.assertEquals(new Integer(5), scan5.getScanNumber());
+    Assert.assertEquals(Integer.valueOf(5), scan5.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan5.getSpectrumType());
-    Assert.assertEquals(new Integer(2), scan5.getMsLevel());
+    Assert.assertEquals(Integer.valueOf(2), scan5.getMsLevel());
     Assert.assertEquals(2.094f, scan5.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan5.getPolarity());
+    Assert.assertEquals(483.4679870605469, scan5.getMzValues()[200], 0.00001);
     intensityBuffer = scan5.getIntensityValues();
     Assert.assertEquals(837, (int) scan5.getNumberOfDataPoints());
     Float scan5maxInt =
@@ -114,11 +128,19 @@ public class MzMLFileExportMethodTest {
   @Test
   public void testSRM() throws MSDKException, IOException {
 
+    // Set up Predicate<MsScan>
+    List<Integer> scansToParse = new ArrayList<>();
+    Predicate<MsScan> msScanPredicate = getMsScanPredicate(scansToParse);
+    List<Integer> chromatogramsToParse = new ArrayList<>();
+    chromatogramsToParse.addAll(Arrays.asList(1, 2, 4, 19, 36));
+    Predicate<Chromatogram> chromatogramPredicate = getChromatogramPredicate(chromatogramsToParse);
+
     // Import the file
     String file = "SRM.mzML";
     File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
-    MzMLFileImportMethod parser = new MzMLFileImportMethod(inputFile);
+    MzMLFileImportMethod parser =
+        new MzMLFileImportMethod(inputFile, msScanPredicate, chromatogramPredicate);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
@@ -132,29 +154,30 @@ public class MzMLFileExportMethodTest {
     Assert.assertEquals(1.0, exporter.getFinishedPercentage(), 0.0001);
 
     // Import the new mzML
-    parser = new MzMLFileImportMethod(tempFile);
+    parser = new MzMLFileImportMethod(tempFile, msScanPredicate, chromatogramPredicate);
     RawDataFile newMzMLFile = parser.execute();
     Assert.assertNotNull(newMzMLFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
-    // The file has 37 chromatograms
+    // The file has 37 chromatograms, 5 in the RawFile
     List<Chromatogram> chromatograms = newMzMLFile.getChromatograms();
     Assert.assertNotNull(chromatograms);
     Assert.assertEquals(37, chromatograms.size());
 
-    // 4th chromatogram
+    // 4th chromatogram, #4
     Chromatogram chromatogram = chromatograms.get(3);
-    Assert.assertEquals(new Integer(4), chromatogram.getChromatogramNumber());
+    Assert.assertEquals(Integer.valueOf(4), chromatogram.getChromatogramNumber());
     Assert.assertEquals(ChromatogramType.MRM_SRM, chromatogram.getChromatogramType());
-    Assert.assertEquals(new Integer(1608), chromatogram.getNumberOfDataPoints());
-    Assert.assertEquals(new Integer(2), (Integer) chromatogram.getIsolations().size());
-    Assert.assertEquals(new Double(440.706), chromatogram.getIsolations().get(1).getPrecursorMz());
+    Assert.assertEquals(Integer.valueOf(1608), chromatogram.getNumberOfDataPoints());
+    Assert.assertEquals(Integer.valueOf(2), (Integer) chromatogram.getIsolations().size());
+    Assert.assertEquals(Double.valueOf(440.706),
+        chromatogram.getIsolations().get(1).getPrecursorMz());
     Assert.assertEquals(ActivationType.CID,
         chromatogram.getIsolations().get(0).getActivationInfo().getActivationType());
     Assert.assertEquals(0.01095, chromatogram.getRetentionTimes()[0], 0.0001);
     Assert.assertEquals(38.500003814697266, chromatogram.getIntensityValues()[0], 0.0001);
 
-    // 1st chromatogram
+    // 1st chromatogram, #1
     chromatogram = chromatograms.get(0);
     Assert.assertEquals(ChromatogramType.TIC, chromatogram.getChromatogramType());
     Assert.assertEquals(0, chromatogram.getIsolations().size());
@@ -172,11 +195,19 @@ public class MzMLFileExportMethodTest {
   @Test
   public void testFileWithUV() throws MSDKException, IOException {
 
+    // Set up Predicate<MsScan>
+    List<Integer> scansToParse = new ArrayList<>();
+    scansToParse.addAll(Arrays.asList(2114, 2117));
+    Predicate<MsScan> msScanPredicate = getMsScanPredicate(scansToParse);
+    List<Integer> chromatogramsToParse = new ArrayList<>();
+    Predicate<Chromatogram> chromatogramPredicate = getChromatogramPredicate(chromatogramsToParse);
+
     // Import the file
     String file = "mzML_with_UV.mzML";
     final Path path = getResourcePath(file);
     final File inputFile = path.toFile();
-    MzMLFileImportMethod mzParser = new MzMLFileImportMethod(inputFile);
+    MzMLFileImportMethod mzParser =
+        new MzMLFileImportMethod(inputFile, msScanPredicate, chromatogramPredicate);
     RawDataFile rawFile = mzParser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, mzParser.getFinishedPercentage(), 0.0001);
@@ -190,15 +221,15 @@ public class MzMLFileExportMethodTest {
     Assert.assertEquals(1.0, exporter.getFinishedPercentage(), 0.0001);
 
     // Import the new mzML
-    mzParser = new MzMLFileImportMethod(tempFile);
+    mzParser = new MzMLFileImportMethod(tempFile, msScanPredicate, chromatogramPredicate);
     RawDataFile newMzMLFile = mzParser.execute();
     Assert.assertNotNull(newMzMLFile);
     Assert.assertEquals(1.0, mzParser.getFinishedPercentage(), 0.0001);
 
-    // The file has 27 scans
+    // The file has 27 scans, 2 scans in the RawFile
     Assert.assertEquals(27, newMzMLFile.getScans().size());
 
-    // 14th Scan, #2114
+    // 15th Scan, #2114
     MzMLSpectrum spectrum = (MzMLSpectrum) newMzMLFile.getScans().get(14);
     Assert.assertNotNull(spectrum);
     Assert.assertNotNull(spectrum.getMzValues());
@@ -229,11 +260,19 @@ public class MzMLFileExportMethodTest {
 
     float intensityBuffer[];
 
+    // Set up Predicate<MsScan>
+    List<Integer> scansToParse = new ArrayList<>();
+    scansToParse.addAll(Arrays.asList(20));
+    Predicate<MsScan> msScanPredicate = getMsScanPredicate(scansToParse);
+    List<Integer> chromatogramsToParse = new ArrayList<>();
+    Predicate<Chromatogram> chromatogramPredicate = getChromatogramPredicate(chromatogramsToParse);
+
     // Import the file
     String file = "tiny.pwiz.idx.mzML";
     File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
-    MzMLFileImportMethod parser = new MzMLFileImportMethod(inputFile);
+    MzMLFileImportMethod parser =
+        new MzMLFileImportMethod(inputFile, msScanPredicate, chromatogramPredicate);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
@@ -248,12 +287,12 @@ public class MzMLFileExportMethodTest {
     Assert.assertEquals(1.0, exporter.getFinishedPercentage(), 0.0001);
 
     // Import the new mzML
-    parser = new MzMLFileImportMethod(tempFile);
+    parser = new MzMLFileImportMethod(tempFile, msScanPredicate, chromatogramPredicate);
     RawDataFile newMzMLFile = parser.execute();
     Assert.assertNotNull(newMzMLFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
-    // The file has 4 scans
+    // The file has 4 scans, 1 passes Predicate
     List<MsScan> scans = newMzMLFile.getScans();
     Assert.assertNotNull(scans);
     Assert.assertEquals(4, scans.size());
@@ -291,11 +330,19 @@ public class MzMLFileExportMethodTest {
 
     float intensityBuffer[];
 
+    // Set up Predicate<MsScan>
+    List<Integer> scansToParse = new ArrayList<>();
+    scansToParse.addAll(Arrays.asList(1001, 1100));
+    Predicate<MsScan> msScanPredicate = getMsScanPredicate(scansToParse);
+    List<Integer> chromatogramsToParse = new ArrayList<>();
+    Predicate<Chromatogram> chromatogramPredicate = getChromatogramPredicate(chromatogramsToParse);
+
     // Import the file
     String file = "RawCentriodCidWithMsLevelInRefParamGroup.mzML";
     File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
-    MzMLFileImportMethod parser = new MzMLFileImportMethod(inputFile);
+    MzMLFileImportMethod parser =
+        new MzMLFileImportMethod(inputFile, msScanPredicate, chromatogramPredicate);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
@@ -309,12 +356,12 @@ public class MzMLFileExportMethodTest {
     Assert.assertEquals(1.0, exporter.getFinishedPercentage(), 0.0001);
 
     // Import the new mzML
-    parser = new MzMLFileImportMethod(tempFile);
+    parser = new MzMLFileImportMethod(tempFile, msScanPredicate, chromatogramPredicate);
     RawDataFile newMzMLFile = parser.execute();
     Assert.assertNotNull(newMzMLFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
-    // The file has 102 scans
+    // The file has 102 scans, 2 scans in the RawFile
     List<MsScan> scans = newMzMLFile.getScans();
     Assert.assertNotNull(scans);
     Assert.assertEquals(102, scans.size());
@@ -333,7 +380,7 @@ public class MzMLFileExportMethodTest {
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan2.getNumberOfDataPoints());
     Assert.assertEquals(6.8E3f, scan2maxInt, 1E2f);
 
-    // 101th scan, #1100
+    // 101st scan, #1100
     MsScan scan101 = scans.get(100);
     Assert.assertEquals(Integer.valueOf(1100), scan101.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan101.getSpectrumType());
@@ -354,11 +401,20 @@ public class MzMLFileExportMethodTest {
   @Test
   public void testZlibAndNumpressCompression() throws MSDKException, IOException {
 
+    // Set up Predicate<MsScan>
+    List<Integer> scansToParse = new ArrayList<>();
+    scansToParse.addAll(Arrays.asList(2103));
+    Predicate<MsScan> msScanPredicate = getMsScanPredicate(scansToParse);
+    List<Integer> chromatogramsToParse = new ArrayList<>();
+    chromatogramsToParse.addAll(Arrays.asList(1));
+    Predicate<Chromatogram> chromatogramPredicate = getChromatogramPredicate(chromatogramsToParse);
+
     // Import the file
     String file = "MzValues_Zlib+Numpress.mzML";
     File inputFile = getResourcePath(file).toFile();
     Assert.assertTrue(inputFile.canRead());
-    MzMLFileImportMethod parser = new MzMLFileImportMethod(inputFile);
+    MzMLFileImportMethod parser =
+        new MzMLFileImportMethod(inputFile, msScanPredicate, chromatogramPredicate);
     RawDataFile rawFile = parser.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
@@ -372,12 +428,12 @@ public class MzMLFileExportMethodTest {
     Assert.assertEquals(1.0, exporter.getFinishedPercentage(), 0.0001);
 
     // Import the new mzML
-    parser = new MzMLFileImportMethod(tempFile);
+    parser = new MzMLFileImportMethod(tempFile, msScanPredicate, chromatogramPredicate);
     RawDataFile newMzMLFile = parser.execute();
     Assert.assertNotNull(newMzMLFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
-    // The file has 6 scans
+    // The file has 6 scans, 1 in the RawFile
     List<MsScan> scans = newMzMLFile.getScans();
     Assert.assertNotNull(scans);
     Assert.assertEquals(6, scans.size());
@@ -405,7 +461,7 @@ public class MzMLFileExportMethodTest {
     List<IsolationInfo> scan2isolations = scan4.getIsolations();
     Assert.assertEquals(0, scan2isolations.size());
 
-    // The file has 2 chromatograms
+    // The file has 2 chromatograms, 1 in RawFile
     List<Chromatogram> chromatograms = newMzMLFile.getChromatograms();
     Assert.assertNotNull(chromatograms);
     Assert.assertEquals(2, chromatograms.size());
@@ -423,6 +479,14 @@ public class MzMLFileExportMethodTest {
     // Cleanup
     rawFile.dispose();
     newMzMLFile.dispose();
+  }
+
+  private Predicate<MsScan> getMsScanPredicate(List<Integer> scansToParse) {
+    return s -> scansToParse.contains(s.getScanNumber());
+  }
+
+  private Predicate<Chromatogram> getChromatogramPredicate(List<Integer> chromatogramsToParse) {
+    return c -> chromatogramsToParse.contains(c.getChromatogramNumber());
   }
 
 }

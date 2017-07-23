@@ -25,8 +25,8 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
 import io.github.msdk.io.mzml2.data.MzMLBitLength;
 import io.github.msdk.io.mzml2.data.MzMLCompressionType;
+import io.github.msdk.io.mzml2.util.ByteBufferInputStream;
 import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
-import io.github.msdk.io.mzml2.util.bytebufferinputstream.ByteBufferInputStream;
 
 /**
  * 
@@ -130,7 +130,7 @@ public class BinaryDataArrayTest {
     binaryInfo.setPosition(0);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result = MzMLPeaksDecoder.decodeToDouble(is, binaryInfo);
+    double[] result = MzMLPeaksDecoder.decodeToDouble(is, binaryInfo, null);
     Assert.assertArrayEquals(testData64bitFloat, result, 0.0);
 
   }
@@ -147,7 +147,7 @@ public class BinaryDataArrayTest {
     binaryInfo.setPosition(0);
 
     // Decode the decoded byte array and compare with the expected values
-    double[] result = MzMLPeaksDecoder.decodeToDouble(is, binaryInfo);
+    double[] result = MzMLPeaksDecoder.decodeToDouble(is, binaryInfo, null);
     Assert.assertArrayEquals(testData64bitFloat, result, 0.0);
   }
 
@@ -164,7 +164,7 @@ public class BinaryDataArrayTest {
     binaryInfo.setPosition(0);
 
     // Decode the decoded byte array and compare with the expected values
-    float[] result = MzMLPeaksDecoder.decodeToFloat(is, binaryInfo);
+    float[] result = MzMLPeaksDecoder.decodeToFloat(is, binaryInfo, null);
     Assert.assertArrayEquals(testData32bitFloat, result, 0.0f);
   }
 
@@ -180,7 +180,7 @@ public class BinaryDataArrayTest {
     binaryInfo.setPosition(0);
 
     // Decode the decoded byte array and compare with the expected values
-    float[] result = MzMLPeaksDecoder.decodeToFloat(is, binaryInfo);
+    float[] result = MzMLPeaksDecoder.decodeToFloat(is, binaryInfo, null);
     Assert.assertArrayEquals(testData32bitFloat, result, 0.0f);
   }
 

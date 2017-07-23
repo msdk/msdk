@@ -30,7 +30,7 @@ public class MzMLRawDataFile implements RawDataFile {
 
   private static final @Nonnull FileType fileType = FileType.MZML;
 
-  private final @Nonnull File sourceFile;
+  private final File sourceFile;
 
   private final @Nonnull List<String> msFunctions;
   private final @Nonnull List<MsScan> msScans;
@@ -49,10 +49,10 @@ public class MzMLRawDataFile implements RawDataFile {
    * @param chromatograms a {@link java.util.List} object.
    */
   @SuppressWarnings("null")
-  public MzMLRawDataFile(@Nonnull File sourceFile, List<String> msFunctions,
-      List<MsScan> msScans, List<Chromatogram> chromatograms) {
+  public MzMLRawDataFile(File sourceFile, List<String> msFunctions, List<MsScan> msScans,
+      List<Chromatogram> chromatograms) {
     this.sourceFile = sourceFile;
-    this.name = sourceFile.getName();
+    this.name = sourceFile != null ? sourceFile.getName() : null;
     this.msFunctions = msFunctions;
     this.msScans = msScans;
     this.chromatograms = chromatograms;
@@ -67,7 +67,6 @@ public class MzMLRawDataFile implements RawDataFile {
 
   /** {@inheritDoc} */
   @Override
-  @Nonnull
   public Optional<File> getOriginalFile() {
     return Optional.ofNullable(sourceFile);
   }
