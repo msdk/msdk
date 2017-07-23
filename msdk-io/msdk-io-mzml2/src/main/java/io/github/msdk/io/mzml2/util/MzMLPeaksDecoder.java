@@ -13,6 +13,7 @@
 
 package io.github.msdk.io.mzml2.util;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
@@ -46,8 +47,8 @@ public class MzMLPeaksDecoder {
    * @return a float array containing the decoded values
    * @throws io.github.msdk.MSDKException if any.
    */
-  public static float[] decodeToFloat(InputStream inputStream, MzMLBinaryDataInfo binaryDataInfo)
-      throws DataFormatException, IOException, MSDKException {
+  public static float[] decodeToFloat(InputStream inputStream, MzMLBinaryDataInfo binaryDataInfo,
+      float[] data) throws DataFormatException, IOException, MSDKException {
 
     int lengthIn = binaryDataInfo.getEncodedLength();
     int numPoints = binaryDataInfo.getArrayLength();
@@ -72,7 +73,8 @@ public class MzMLPeaksDecoder {
     LittleEndianDataInputStream dis = null;
     byte[] bytes = null;
 
-    float[] data = new float[numPoints];
+    if (data == null || data.length < numPoints)
+      data = new float[numPoints];
 
     // first check for zlib compression, inflation must be done before
     // NumPress
@@ -141,33 +143,41 @@ public class MzMLPeaksDecoder {
                 + "if MS-NUMPRESS compression was not used");
     }
 
-    switch (precision) {
-      case (32): {
-        int asInt;
+    try {
+      switch (precision) {
+        case (32): {
+          int asInt;
 
-        for (int i = 0; i < numPoints; i++) {
-          asInt = dis.readInt();
-          data[i] = Float.intBitsToFloat(asInt);
+          for (int i = 0; i < numPoints; i++) {
+            asInt = dis.readInt();
+            data[i] = Float.intBitsToFloat(asInt);
+          }
+          break;
         }
-        break;
-      }
-      case (64): {
-        long asLong;
+        case (64): {
+          long asLong;
 
-        for (int i = 0; i < numPoints; i++) {
-          asLong = dis.readLong();
-          data[i] = (float) Double.longBitsToDouble(asLong);
+          for (int i = 0; i < numPoints; i++) {
+            asLong = dis.readLong();
+            data[i] = (float) Double.longBitsToDouble(asLong);
+          }
+          break;
         }
-        break;
+        default: {
+          dis.close();
+          throw new IllegalArgumentException(
+              "Precision can only be 32/64 bits, other values are not valid.");
+        }
       }
-      default: {
-        dis.close();
-        throw new IllegalArgumentException(
-            "Precision can only be 32/64 bits, other values are not valid.");
-      }
+    } catch (EOFException eof) {
+      // If the stream reaches EOF unexpectedly, it is probably because the particular
+      // scan/chromatogram didn't pass the Predicate
+      throw new MSDKException(
+          "Couldn't obtain values. Please make sure the scan/chromatogram passes the Predicate.");
+    } finally {
+      dis.close();
     }
 
-    dis.close();
     return data;
   }
 
@@ -183,8 +193,8 @@ public class MzMLPeaksDecoder {
    * @return a double array containing the decoded values
    * @throws io.github.msdk.MSDKException if any.
    */
-  public static double[] decodeToDouble(InputStream inputStream, MzMLBinaryDataInfo binaryDataInfo)
-      throws DataFormatException, IOException, MSDKException {
+  public static double[] decodeToDouble(InputStream inputStream, MzMLBinaryDataInfo binaryDataInfo,
+      double[] data) throws DataFormatException, IOException, MSDKException {
 
     int lengthIn = binaryDataInfo.getEncodedLength();
     int numPoints = binaryDataInfo.getArrayLength();
@@ -210,7 +220,8 @@ public class MzMLPeaksDecoder {
     LittleEndianDataInputStream dis = null;
     byte[] bytes = null;
 
-    double[] data = new double[numPoints];
+    if (data == null || data.length < numPoints)
+      data = new double[numPoints];
 
     // first check for zlib compression, inflation must be done before
     // NumPress
@@ -280,28 +291,35 @@ public class MzMLPeaksDecoder {
                 + "if MS-NUMPRESS compression was not used");
     }
 
-    switch (precision) {
-      case (32): {
-        int asInt;
+    try {
+      switch (precision) {
+        case (32): {
+          int asInt;
 
-        for (int i = 0; i < numPoints; i++) {
-          asInt = dis.readInt();
-          data[i] = Float.intBitsToFloat(asInt);
+          for (int i = 0; i < numPoints; i++) {
+            asInt = dis.readInt();
+            data[i] = Float.intBitsToFloat(asInt);
+          }
+          break;
         }
-        break;
-      }
-      case (64): {
-        long asLong;
+        case (64): {
+          long asLong;
 
-        for (int i = 0; i < numPoints; i++) {
-          asLong = dis.readLong();
-          data[i] = Double.longBitsToDouble(asLong);
+          for (int i = 0; i < numPoints; i++) {
+            asLong = dis.readLong();
+            data[i] = Double.longBitsToDouble(asLong);
+          }
+          break;
         }
-        break;
       }
+    } catch (EOFException eof) {
+      // If the stream reaches EOF unexpectedly, it is probably because the particular
+      // scan/chromatogram didn't pass the Predicate
+      throw new MSDKException(
+          "Couldn't obtain values. Please make sure the scan/chromatogram passes the Predicate.");
+    } finally {
+      dis.close();
     }
-
-    dis.close();
     return data;
   }
 

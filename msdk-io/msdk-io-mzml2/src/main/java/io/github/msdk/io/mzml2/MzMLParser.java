@@ -382,8 +382,7 @@ class MzMLParser {
         case MzMLTags.TAG_SPECTRUM:
           if (vars.spectrum.getMzBinaryDataInfo() != null
               && vars.spectrum.getIntensityBinaryDataInfo() != null) {
-            if (importer.getMsScanPredicate().test(vars.spectrum))
-              vars.spectrumList.add(vars.spectrum);
+            vars.spectrumList.add(vars.spectrum);
           }
           break;
 
@@ -399,12 +398,11 @@ class MzMLParser {
         case MzMLTags.TAG_CHROMATOGRAM:
           if (vars.chromatogram.getRtBinaryDataInfo() != null
               && vars.chromatogram.getIntensityBinaryDataInfo() != null)
-            if (importer.getChromatogramPredicate().test(vars.chromatogram))
-              vars.chromatogramsList.add(vars.chromatogram);
-            else {
-              // logger.warn("Didn't find rt or intensity data array for spectrum scan (#"
-              // + vars.spectrum.getScanNumber() + "). Skipping scan.");
-            }
+            vars.chromatogramsList.add(vars.chromatogram);
+          else {
+            // logger.warn("Didn't find rt or intensity data array for spectrum scan (#"
+            // + vars.spectrum.getScanNumber() + "). Skipping scan.");
+          }
           break;
 
         default:

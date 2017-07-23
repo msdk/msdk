@@ -250,11 +250,12 @@ public class MzMLSpectrum implements MsScan {
       }
 
       try {
-        mzValues = MzMLPeaksDecoder.decodeToDouble(inputStream, getMzBinaryDataInfo());
+        mzValues = MzMLPeaksDecoder.decodeToDouble(inputStream, getMzBinaryDataInfo(), array);
       } catch (Exception e) {
         throw (new MSDKRuntimeException(e));
       }
     }
+
     return mzValues;
 
   }
@@ -270,7 +271,8 @@ public class MzMLSpectrum implements MsScan {
       }
 
       try {
-        intensityValues = MzMLPeaksDecoder.decodeToFloat(inputStream, getIntensityBinaryDataInfo());
+        intensityValues =
+            MzMLPeaksDecoder.decodeToFloat(inputStream, getIntensityBinaryDataInfo(), array);
       } catch (Exception e) {
         throw (new MSDKRuntimeException(e));
       }

@@ -382,12 +382,11 @@ class MzMLChromatogram implements Chromatogram {
       }
 
       try {
-        rtValues = MzMLPeaksDecoder.decodeToFloat(inputStream, getRtBinaryDataInfo());
+        rtValues = MzMLPeaksDecoder.decodeToFloat(inputStream, getRtBinaryDataInfo(), array);
       } catch (Exception e) {
         throw (new MSDKRuntimeException(e));
       }
     }
-    array = rtValues;
 
     return rtValues;
   }
@@ -404,12 +403,12 @@ class MzMLChromatogram implements Chromatogram {
       }
 
       try {
-        intensityValues = MzMLPeaksDecoder.decodeToFloat(inputStream, getIntensityBinaryDataInfo());
+        intensityValues =
+            MzMLPeaksDecoder.decodeToFloat(inputStream, getIntensityBinaryDataInfo(), array);
       } catch (Exception e) {
         throw (new MSDKRuntimeException(e));
       }
     }
-    array = intensityValues;
 
     return intensityValues;
 
