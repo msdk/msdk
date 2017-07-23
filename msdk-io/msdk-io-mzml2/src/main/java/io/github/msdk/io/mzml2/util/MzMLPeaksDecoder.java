@@ -25,7 +25,6 @@ import com.google.common.io.LittleEndianDataInputStream;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
-import io.github.msdk.io.mzml2.util.bytebufferinputstream.ByteBufferInputStream;
 
 /**
  * <p>
@@ -47,15 +46,20 @@ public class MzMLPeaksDecoder {
    * @return a float array containing the decoded values
    * @throws io.github.msdk.MSDKException if any.
    */
-  public static float[] decodeToFloat(ByteBufferInputStream mappedByteBufferInputStream,
-      MzMLBinaryDataInfo binaryDataInfo) throws DataFormatException, IOException, MSDKException {
+  public static float[] decodeToFloat(InputStream inputStream, MzMLBinaryDataInfo binaryDataInfo)
+      throws DataFormatException, IOException, MSDKException {
 
     int lengthIn = binaryDataInfo.getEncodedLength();
     int numPoints = binaryDataInfo.getArrayLength();
+    InputStream is = null;
 
-
-    mappedByteBufferInputStream.constrain(binaryDataInfo.getPosition(), lengthIn);
-    InputStream is = Base64.getDecoder().wrap(mappedByteBufferInputStream);
+    if (inputStream instanceof ByteBufferInputStream) {
+      ByteBufferInputStream mappedByteBufferInputStream = (ByteBufferInputStream) inputStream;
+      mappedByteBufferInputStream.constrain(binaryDataInfo.getPosition(), lengthIn);
+      is = Base64.getDecoder().wrap(mappedByteBufferInputStream);
+    } else {
+      is = Base64.getDecoder().wrap(inputStream);
+    }
 
     // for some reason there sometimes might be zero length <peaks> tags
     // (ms2 usually)
@@ -179,15 +183,21 @@ public class MzMLPeaksDecoder {
    * @return a double array containing the decoded values
    * @throws io.github.msdk.MSDKException if any.
    */
-  public static double[] decodeToDouble(ByteBufferInputStream mappedByteBufferInputStream,
-      MzMLBinaryDataInfo binaryDataInfo) throws DataFormatException, IOException, MSDKException {
+  public static double[] decodeToDouble(InputStream inputStream, MzMLBinaryDataInfo binaryDataInfo)
+      throws DataFormatException, IOException, MSDKException {
 
     int lengthIn = binaryDataInfo.getEncodedLength();
     int numPoints = binaryDataInfo.getArrayLength();
 
+    InputStream is = null;
 
-    mappedByteBufferInputStream.constrain(binaryDataInfo.getPosition(), lengthIn);
-    InputStream is = Base64.getDecoder().wrap(mappedByteBufferInputStream);
+    if (inputStream instanceof ByteBufferInputStream) {
+      ByteBufferInputStream mappedByteBufferInputStream = (ByteBufferInputStream) inputStream;
+      mappedByteBufferInputStream.constrain(binaryDataInfo.getPosition(), lengthIn);
+      is = Base64.getDecoder().wrap(mappedByteBufferInputStream);
+    } else {
+      is = Base64.getDecoder().wrap(inputStream);
+    }
 
     // for some reason there sometimes might be zero length <peaks> tags
     // (ms2 usually)

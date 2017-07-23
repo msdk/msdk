@@ -1,4 +1,4 @@
-package io.github.msdk.io.mzml2.util.bytebufferinputstream;
+package io.github.msdk.io.mzml2.util;
 
 /*
  * DSI utilities
@@ -43,7 +43,7 @@ import java.util.Arrays;
  * @since 1.2
  */
 
-public class ByteBufferInputStream extends MeasurableInputStream implements RepositionableStream {
+public class ByteBufferInputStream extends InputStream {
   private static int CHUNK_SHIFT = 30;
 
   /** The size of a chunk created by {@link #map(FileChannel, FileChannel.MapMode)}. */
@@ -213,12 +213,10 @@ public class ByteBufferInputStream extends MeasurableInputStream implements Repo
     return realLength;
   }
 
-  @Override
   public long length() {
     return size;
   }
 
-  @Override
   public long position() {
     return ((long) curr << CHUNK_SHIFT) + byteBuffer(curr).position();
   }

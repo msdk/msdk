@@ -1,5 +1,7 @@
 package io.github.msdk.io.mzml2;
 
+import java.io.FileNotFoundException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,7 +10,8 @@ import io.github.msdk.MSDKException;
 
 public class MzMLFileImportMethodBenchmark {
 
-  public static void main(String[] args) throws MSDKException, NumberFormatException {
+  public static void main(String[] args)
+      throws MSDKException, NumberFormatException, FileNotFoundException {
 
     int numberOfRuns = 10;
     Logger logger = LoggerFactory.getLogger(MzMLFileImportMethodBenchmark.class);
