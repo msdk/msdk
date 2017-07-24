@@ -48,7 +48,7 @@ class MzMLChromatogram implements Chromatogram {
   private final @Nonnull Integer chromatogramNumber;
   private final @Nonnull Integer numOfDataPoints;
 
-  private ArrayList<MzMLCVParam> cvParams;
+  private MzMLCVGroup cvParams;
   private MzMLPrecursorElement precursor;
   private MzMLProduct product;
   private MzMLBinaryDataInfo rtBinaryDataInfo;
@@ -76,7 +76,7 @@ class MzMLChromatogram implements Chromatogram {
    */
   MzMLChromatogram(@Nonnull MzMLRawDataFile dataFile, InputStream is, String chromatogramId,
       Integer chromatogramNumber, Integer numOfDataPoints) {
-    this.cvParams = new ArrayList<>();
+    this.cvParams = new MzMLCVGroup();
     this.dataFile = dataFile;
     this.inputStream = is;
     this.chromatogramId = chromatogramId;
@@ -114,7 +114,7 @@ class MzMLChromatogram implements Chromatogram {
    *
    * @return a {@link java.util.ArrayList} object.
    */
-  public ArrayList<MzMLCVParam> getCVParams() {
+  public MzMLCVGroup getCVParams() {
     return cvParams;
   }
 
@@ -449,16 +449,7 @@ class MzMLChromatogram implements Chromatogram {
    *         An empty {@link java.util.Optional Optional<String>} otherwise
    */
   public Optional<String> getCVValue(String accession) {
-    for (MzMLCVParam cvParam : cvParams) {
-      Optional<String> value;
-      if (cvParam.getAccession().equals(accession)) {
-        value = cvParam.getValue();
-        if (!value.isPresent())
-          value = Optional.of("");
-        return value;
-      }
-    }
-    return Optional.empty();
+    return getCVValue(cvParams, accession);
   }
 
   /**
