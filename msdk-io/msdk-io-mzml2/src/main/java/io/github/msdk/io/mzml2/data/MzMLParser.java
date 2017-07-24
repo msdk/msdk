@@ -1,3 +1,16 @@
+/*
+ * (C) Copyright 2015-2017 by MSDK Development Team
+ *
+ * This software is dual-licensed under either
+ *
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
+ *
+ * or (per the licensee's choosing)
+ *
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
+ */
+
 package io.github.msdk.io.mzml2.data;
 
 import java.io.InputStream;
@@ -15,8 +28,16 @@ import io.github.msdk.io.mzml2.MzMLFileImportMethod;
 import io.github.msdk.io.mzml2.util.TagTracker;
 import javolution.text.CharArray;
 import javolution.xml.internal.stream.XMLStreamReaderImpl;
+import javolution.xml.stream.XMLStreamConstants;
 import javolution.xml.stream.XMLStreamReader;
 
+/**
+ * <p>
+ * Used to parse mzML meta-data and initialize
+ * {@link io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo MzMLBinaryDataInfo}
+ * </p>
+ *
+ */
 public class MzMLParser {
 
   private Vars vars;
@@ -24,6 +45,14 @@ public class MzMLParser {
   private final MzMLRawDataFile newRawFile;
   private final MzMLFileImportMethod importer;
 
+  /**
+   * <p>
+   * Constructor for {@link io.github.msdk.io.mzml2.data.MzMLParser MzMLParser}
+   * </p>
+   * 
+   * @param importer an instance of an initialized
+   *        {@link io.github.msdk.io.mzml2.MzMLFileImportMethod MzMLFileImportMethod}
+   */
   public MzMLParser(MzMLFileImportMethod importer) {
     this.vars = new Vars();
     this.tracker = new TagTracker();
@@ -32,6 +61,18 @@ public class MzMLParser {
         vars.spectrumList, vars.chromatogramsList);
   }
 
+  /**
+   * <p>
+   * Carry out the required parsing of the mzML data when the
+   * {@link javolution.xml.internal.stream.XMLStreamReaderImpl XMLStreamReaderImpl} enters the given
+   * tag
+   * </p>
+   * 
+   * @param xmlStreamReader an instance of {@link javolution.xml.internal.stream.XMLStreamReaderImpl
+   * XMLStreamReaderImpl
+   * @param is {@link java.io.InputStream InputStream} of the mzML data
+   * @param openingTagName The tag <code>xmlStreamReader</code> entered
+   */
   public void processOpeningTag(XMLStreamReaderImpl xmlStreamReader, InputStream is,
       CharArray openingTagName) {
     tracker.enter(openingTagName);
@@ -120,10 +161,10 @@ public class MzMLParser {
               .setPosition(xmlStreamReader.getLocation().getCharacterOffset() + bomOffset);
         }
         if (!vars.skipBinaryDataArray) {
-          if (MzMLCV.cvMzArray.equals(vars.binaryDataInfo.getArrayType().getValue())) {
+          if (MzMLCV.cvMzArray.equals(vars.binaryDataInfo.getArrayType().getAccession())) {
             vars.spectrum.setMzBinaryDataInfo(vars.binaryDataInfo);
           }
-          if (MzMLCV.cvIntensityArray.equals(vars.binaryDataInfo.getArrayType().getValue())) {
+          if (MzMLCV.cvIntensityArray.equals(vars.binaryDataInfo.getArrayType().getAccession())) {
             vars.spectrum.setIntensityBinaryDataInfo(vars.binaryDataInfo);
           }
         }
@@ -204,7 +245,7 @@ public class MzMLParser {
             && !tracker.inside(MzMLTags.TAG_PRECURSOR) && !tracker.inside(MzMLTags.TAG_PRODUCT)
             && vars.chromatogram != null) {
           MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
-          vars.chromatogram.getCVParams().add(cvParam);
+          vars.chromatogram.getCVParams().addCVParam(cvParam);;
         }
 
       } else if (openingTagName.contentEquals(MzMLTags.TAG_BINARY_DATA_ARRAY)) {
@@ -225,10 +266,11 @@ public class MzMLParser {
               .setPosition(xmlStreamReader.getLocation().getCharacterOffset() + bomOffset);
         }
         if (!vars.skipBinaryDataArray) {
-          if (MzMLCV.cvRetentionTimeArray.equals(vars.binaryDataInfo.getArrayType().getValue())) {
+          if (MzMLCV.cvRetentionTimeArray
+              .equals(vars.binaryDataInfo.getArrayType().getAccession())) {
             vars.chromatogram.setRtBinaryDataInfo(vars.binaryDataInfo);;
           }
-          if (MzMLCV.cvIntensityArray.equals(vars.binaryDataInfo.getArrayType().getValue())) {
+          if (MzMLCV.cvIntensityArray.equals(vars.binaryDataInfo.getArrayType().getAccession())) {
             vars.chromatogram.setIntensityBinaryDataInfo(vars.binaryDataInfo);
           }
         }
@@ -237,7 +279,7 @@ public class MzMLParser {
         String refValue = xmlStreamReader.getAttributeValue(null, "ref").toString();
         for (MzMLReferenceableParamGroup ref : vars.referenceableParamGroupList) {
           if (ref.getParamGroupName().equals(refValue)) {
-            vars.chromatogram.getCVParams().addAll(ref.getCVParamsList());
+            vars.chromatogram.getCVParams().getCVParamsList().addAll(ref.getCVParamsList());
             break;
           }
         }
@@ -314,6 +356,17 @@ public class MzMLParser {
     }
   }
 
+  /**
+   * <p>
+   * Carry out the required parsing of the mzML data when the
+   * {@link javolution.xml.internal.stream.XMLStreamReaderImpl XMLStreamReaderImpl} exits the given
+   * tag
+   * </p>
+   * 
+   * @param xmlStreamReader an instance of {@link javolution.xml.internal.stream.XMLStreamReaderImpl
+   * XMLStreamReaderImpl
+   * @param openingTagName The tag <code>xmlStreamReader</code> exited
+   */
   public void processClosingTag(XMLStreamReaderImpl xmlStreamReader, CharArray closingTagName) {
     tracker.exit(closingTagName);
 
@@ -381,13 +434,23 @@ public class MzMLParser {
 
   }
 
+  /**
+   * <p>
+   * Carry out the required parsing of the mzML data when the
+   * {@link javolution.xml.internal.stream.XMLStreamReaderImpl XMLStreamReaderImpl} when
+   * {@link XMLStreamConstants#CHARACTERS CHARACTERS} are found
+   * </p>
+   * 
+   * @param xmlStreamReader an instance of {@link javolution.xml.internal.stream.XMLStreamReaderImpl
+   *        XMLStreamReaderImpl
+   */
   public void processCharacters(XMLStreamReaderImpl xmlStreamReader) {
     if (!newRawFile.getOriginalFile().isPresent()
         && tracker.current().contentEquals(MzMLTags.TAG_BINARY) && !vars.skipBinaryDataArray) {
       if (tracker.inside(MzMLTags.TAG_SPECTRUM_LIST)
           && importer.getMsScanPredicate().test(vars.spectrum)) {
         vars.spectrum.setInputStream(IOUtils.toInputStream(xmlStreamReader.getText()));
-        switch (vars.binaryDataInfo.getArrayType().getValue()) {
+        switch (vars.binaryDataInfo.getArrayType().getAccession()) {
           case MzMLCV.cvMzArray:
             vars.spectrum.getMzValues();
             break;
@@ -399,7 +462,7 @@ public class MzMLParser {
       } else if (tracker.inside(MzMLTags.TAG_CHROMATOGRAM_LIST)
           && importer.getChromatogramPredicate().test(vars.chromatogram)) {
         vars.chromatogram.setInputStream(IOUtils.toInputStream(xmlStreamReader.getText()));
-        switch (vars.binaryDataInfo.getArrayType().getValue()) {
+        switch (vars.binaryDataInfo.getArrayType().getAccession()) {
           case MzMLCV.cvRetentionTimeArray:
             vars.chromatogram.getRetentionTimes();
             break;
@@ -412,6 +475,16 @@ public class MzMLParser {
     }
   }
 
+  /**
+   * <p>
+   * Call this method when the <code>xmlStreamReader</code> enters <code>&lt;cvParam&gt;</code> tag
+   * </p>
+   * 
+   * @param xmlStreamReader an instance of {@link javolution.xml.internal.stream.XMLStreamReaderImpl
+   * XMLStreamReaderImpl
+   * @return {@link io.github.msdk.io.mzml2.data.MzMLCVParam MzMLCVParam} object notation of the
+   *         <code>&lt;cvParam&gt;</code> entered
+   */
   private MzMLCVParam createMzMLCVParam(XMLStreamReader xmlStreamReader) {
     CharArray accession = xmlStreamReader.getAttributeValue(null, MzMLTags.ATTR_ACCESSION);
     CharArray value = xmlStreamReader.getAttributeValue(null, MzMLTags.ATTR_VALUE);
@@ -459,7 +532,7 @@ public class MzMLParser {
 
   /**
    * <p>
-   * Gets the required attribute from xmlStreamReader, throws an exception of the attribute is not
+   * Gets the required attribute from xmlStreamReader, throws an exception if the attribute is not
    * found
    * </p>
    *
@@ -511,10 +584,19 @@ public class MzMLParser {
     }
   }
 
+  /**
+   * 
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLRawDataFile MzMLRawDataFile} containing the
+   *         parsed data
+   */
   public MzMLRawDataFile getMzMLRawFile() {
     return newRawFile;
   }
 
+  /**
+   * 
+   * Static class for holding temporary instances of variables initialized while parsing
+   */
   private static class Vars {
 
     int defaultArrayLength;

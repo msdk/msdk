@@ -26,11 +26,11 @@ public class MzMLBinaryDataInfo {
 
   /**
    * <p>
-   * Constructor for MzMLBinaryDataInfo.
+   * Constructor for MzMLBinaryDataInfo
    * </p>
    *
-   * @param encodedLength a int.
-   * @param arrayLength a int.
+   * @param encodedLength the length of the base64 encoded data (number of bytes)
+   * @param arrayLength number of data points in the decoded data array
    */
   public MzMLBinaryDataInfo(int encodedLength, int arrayLength) {
     this.encodedLength = encodedLength;
@@ -39,11 +39,10 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>
-   * Getter for the field <code>bitLength</code>.
-   * </p>
    *
-   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBitLength} object.
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBitLength MzMLBitLength} corresponding to the
+   *         bit length of the binary data array
+   * 
    */
   public MzMLBitLength getBitLength() {
     return bitLength;
@@ -51,10 +50,10 @@ public class MzMLBinaryDataInfo {
 
   /**
    * <p>
-   * Setter for the field <code>bitLength</code>.
+   * Sets the precision bit length of the binary data array
    * </p>
    *
-   * @param bitLengthAccession a {@link java.lang.String} object.
+   * @param bitLengthAccession The CV Parameter accession as {@link java.lang.String String}
    */
   public void setBitLength(String bitLengthAccession) {
     this.bitLength = getBitLength(bitLengthAccession);
@@ -62,7 +61,7 @@ public class MzMLBinaryDataInfo {
 
   /**
    * <p>
-   * Setter for the field <code>bitLength</code>.
+   * Sets the precision bit length of the binary data array
    * </p>
    *
    * @param bitLength a {@link io.github.msdk.io.mzml2.data.MzMLBitLength} object.
@@ -73,16 +72,25 @@ public class MzMLBinaryDataInfo {
 
   /**
    * <p>
-   * isBitLengthAccession.
+   * Check if the given CV Parameter accession is that of bit length
    * </p>
    *
-   * @param bitLengthAccession a {@link java.lang.String} object.
-   * @return a boolean.
+   * @param bitLengthAccession The CV Parameter accession as {@link java.lang.String String}
+   * @return true if the given accession is of a bit length CV Parameter, false otherwise
    */
   public boolean isBitLengthAccession(String bitLengthAccession) {
     return getBitLength(bitLengthAccession) != null;
   }
 
+  /**
+   * <p>
+   * Gets the bit length for the given accession
+   * </p>
+   * 
+   * @param accession The CV Parameter accession as {@link java.lang.String String}
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLBitLength MzMLBitLength} enum constant if the
+   *         accession corresponds to a valid bit length, null otherwise
+   */
   public MzMLBitLength getBitLength(String accession) {
     for (MzMLBitLength bitLength : MzMLBitLength.values()) {
       if (bitLength.getValue().equals(accession))
@@ -92,11 +100,9 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>
-   * Getter for the field <code>compressionType</code>.
-   * </p>
    *
-   * @return a {@link io.github.msdk.io.mzml2.data.MzMLCompressionType} object.
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLCompressionType MzMLCompressionType}
+   *         corresponding to the compression of the binary data array
    */
   public MzMLCompressionType getCompressionType() {
     return compressionType;
@@ -104,10 +110,10 @@ public class MzMLBinaryDataInfo {
 
   /**
    * <p>
-   * Setter for the field <code>compressionType</code>.
+   * Sets the compression type of the binary data array
    * </p>
    *
-   * @param compressionTypeAccession a {@link java.lang.String} object.
+   * @param compressionTypeAccession the CV Parameter accession as {@link java.lang.String String}
    */
   public void setCompressionType(String compressionTypeAccession) {
     this.compressionType = getCompressionType(compressionTypeAccession);
@@ -115,7 +121,7 @@ public class MzMLBinaryDataInfo {
 
   /**
    * <p>
-   * Setter for the field <code>bitLength</code>.
+   * Sets the compression type of the binary data array
    * </p>
    *
    * @param compressionType a {@link io.github.msdk.io.mzml2.data.MzMLCompressionType} object.
@@ -126,16 +132,25 @@ public class MzMLBinaryDataInfo {
 
   /**
    * <p>
-   * isCompressionTypeAccession.
+   * Check if the given CV Parameter accession is that of a compression method
    * </p>
    *
-   * @param compressionTypeAccession a {@link java.lang.String} object.
-   * @return a boolean.
+   * @param compressionTypeAccession The CV Parameter accession as {@link java.lang.String String}
+   * @return true if the given accession is of a compression type CV Parameter, false otherwise
    */
   public boolean isCompressionTypeAccession(String compressionTypeAccession) {
     return getCompressionType(compressionTypeAccession) != null;
   }
 
+  /**
+   * <p>
+   * Gets the compression type for the given accession
+   * </p>
+   * 
+   * @param accession The CV Parameter accession as {@link java.lang.String String}
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLCompressionType MzMLCompressionType} enum
+   *         constant if the accession corresponds to a valid compression type, null otherwise
+   */
   public MzMLCompressionType getCompressionType(String accession) {
     for (MzMLCompressionType compressionType : MzMLCompressionType.values()) {
       if (compressionType.getAccession().equals(accession))
@@ -145,11 +160,9 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
-   * <p>
-   * Getter for the field <code>arrayType</code>.
-   * </p>
    *
-   * @return a {@link io.github.msdk.io.mzml2.data.MzMLArrayType} object.
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLArrayType MzMLArrayType} enum constant
+   *         corresponding to the the array type of the binary data array
    */
   public MzMLArrayType getArrayType() {
     return arrayType;
@@ -157,10 +170,10 @@ public class MzMLBinaryDataInfo {
 
   /**
    * <p>
-   * Setter for the field <code>arrayType</code>.
+   * Sets the array type of the binary data array
    * </p>
    *
-   * @param arrayTypeAccession a {@link java.lang.String} object.
+   * @param arrayTypeAccession the CV Parameter accession as {@link java.lang.String String}
    */
   public void setArrayType(String arrayTypeAccession) {
     this.arrayType = getArrayType(arrayTypeAccession);
@@ -168,7 +181,7 @@ public class MzMLBinaryDataInfo {
 
   /**
    * <p>
-   * Setter for the field <code>bitLength</code>.
+   * Sets the bit length of the binary data array
    * </p>
    *
    * @param arrayType a {@link io.github.msdk.io.mzml2.data.MzMLArrayType} object.
@@ -179,30 +192,38 @@ public class MzMLBinaryDataInfo {
 
   /**
    * <p>
-   * isArrayTypeAccession.
+   * Check if the given CV Parameter accession is that of a binary data array type
    * </p>
    *
-   * @param arrayTypeAccession a {@link java.lang.String} object.
-   * @return a boolean.
+   * @param arrayTypeAccession the CV Parameter accession as {@link java.lang.String String}
+   * @return true if the given accession is of a binary data array type CV Parameter, false
+   *         otherwise
    */
   public boolean isArrayTypeAccession(String arrayTypeAccession) {
     return getArrayType(arrayTypeAccession) != null;
   }
 
+  /**
+   * <p>
+   * Gets the binary data array type for the given accession
+   * </p>
+   * 
+   * @param accession The CV Parameter accession as {@link java.lang.String String}
+   * @return a {@link io.github.msdk.io.mzml2.data.MzMLArrayType MzMLArrayType} enum constant if the
+   *         accession corresponds to a valid binary data array type, null otherwise
+   */
   public MzMLArrayType getArrayType(String accession) {
     for (MzMLArrayType arrayType : MzMLArrayType.values()) {
-      if (arrayType.getValue().equals(accession))
+      if (arrayType.getAccession().equals(accession))
         return arrayType;
     }
     return null;
   }
 
   /**
-   * <p>
-   * Getter for the field <code>position</code>.
-   * </p>
    *
-   * @return a long.
+   * @return The position of the binary array in the {@link java.io.InputStream InputStream}
+   *         corresponding to the MzML format data
    */
   public long getPosition() {
     return position;
@@ -210,32 +231,28 @@ public class MzMLBinaryDataInfo {
 
   /**
    * <p>
-   * Setter for the field <code>position</code>.
+   * Set the position of the binary array in the {@link java.io.InputStream InputStream}
+   * corresponding to the MzML format data
    * </p>
    *
-   * @param position a long.
+   * @param position a <code>long</code> number defining the position of the binary array in the
+   *        {@link java.io.InputStream InputStream} corresponding to the MzML format data
    */
   public void setPosition(long position) {
     this.position = position;
   }
 
   /**
-   * <p>
-   * Getter for the field <code>encodedLength</code>.
-   * </p>
    *
-   * @return a int.
+   * @return the length of the base64 encoded data (number of bytes)
    */
   public int getEncodedLength() {
     return encodedLength;
   }
 
   /**
-   * <p>
-   * Getter for the field <code>arrayLength</code>.
-   * </p>
    *
-   * @return a int.
+   * @return the of data points in the decoded data array
    */
   public int getArrayLength() {
     return arrayLength;
