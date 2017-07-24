@@ -486,6 +486,124 @@ public class MzMLFileExportMethodTest {
     newMzMLFile.dispose();
   }
 
+  @Test
+  public void testPredicate() throws Exception {
+
+    // Import the file
+    String file = "5peptideFT.mzML";
+    Path inputFile = getResourcePath(file);
+    MzMLFileImportMethod parser =
+        new MzMLFileImportMethod(inputFile, s -> false, c -> false);
+    RawDataFile rawFile = parser.execute();
+    Assert.assertNotNull(rawFile);
+    Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
+
+    // The file has 7 scans, 2 in the RawFile
+    List<MsScan> scans = rawFile.getScans();
+    Assert.assertNotNull(scans);
+    Assert.assertEquals(7, scans.size());
+
+
+    // 1st scan, #2
+    MsScan scan2 = scans.get(0);
+    Assert.assertEquals(Integer.valueOf(2), scan2.getScanNumber());
+    Assert.assertEquals(MsSpectrumType.PROFILE, scan2.getSpectrumType());
+    Assert.assertEquals(Integer.valueOf(1), scan2.getMsLevel());
+    Assert.assertEquals(0.474f, scan2.getRetentionTime(), 0.01f);
+    Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
+    Assert.assertEquals(209.1818184554577, scan2.getMzValues()[100], 0.00001);
+    float[] intensityBuffer = scan2.getIntensityValues();
+    Assert.assertEquals(19800, (int) scan2.getNumberOfDataPoints());
+    Float scan2maxInt =
+        MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan2.getNumberOfDataPoints());
+    Assert.assertEquals(1.8E5f, scan2maxInt, 1E4f);
+
+    // 2nd scan, #5
+    MsScan scan5 = scans.get(1);
+    Assert.assertEquals(Integer.valueOf(5), scan5.getScanNumber());
+    Assert.assertEquals(MsSpectrumType.CENTROIDED, scan5.getSpectrumType());
+    Assert.assertEquals(Integer.valueOf(2), scan5.getMsLevel());
+    Assert.assertEquals(2.094f, scan5.getRetentionTime(), 0.01f);
+    Assert.assertEquals(PolarityType.POSITIVE, scan5.getPolarity());
+    Assert.assertEquals(483.4679870605469, scan5.getMzValues()[200], 0.00001);
+    intensityBuffer = scan5.getIntensityValues();
+    Assert.assertEquals(837, (int) scan5.getNumberOfDataPoints());
+    Float scan5maxInt =
+        MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan5.getNumberOfDataPoints());
+    Assert.assertEquals(8.6E3f, scan5maxInt, 1E2f);
+
+    // Cleanup
+    rawFile.dispose();
+  }
+  
+  @Test
+  public void testCentroidProfile() throws Exception {
+
+    // Import a profile mode file
+    String file = "5peptideFT.mzML";
+    Path inputFile = getResourcePath(file);
+    MzMLFileImportMethod parser =
+        new MzMLFileImportMethod(inputFile, s -> false, c -> false);
+    RawDataFile rawFile = parser.execute();
+    Assert.assertNotNull(rawFile);
+    Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
+    Assert.assertEquals(MsSpectrumType.PROFILE, rawFile.getScans().get(1).getSpectrumType());
+
+    // Process the file with a centroiding method
+    MSDKCentroidingMethod centroider = new MSDKCentroidingMethod(rawFile, new BinningCentroidingAlgorithm(0.1));
+    RawDataFile centroidedRawFile = centroider.execute();
+    Assert.assertNotNull(centroidedRawFile);
+    Assert.assertEquals(1.0, centroider.getFinishedPercentage(), 0.0001);
+    
+    // Export the file to a new mzML
+    File tempFile = File.createTempFile("msdk", ".mzML");
+    tempFile.deleteOnExit();
+    MzMLFileExportMethod exporter = new MzMLFileExportMethod(centroidedRawFile, tempFile,
+        MzMLCompressionType.ZLIB, MzMLCompressionType.ZLIB);
+    exporter.execute();
+    Assert.assertEquals(1.0, exporter.getFinishedPercentage(), 0.0001);
+
+    // Import the new mzML
+    parser = new MzMLFileImportMethod(tempFile, s -> false, c -> false);
+    RawDataFile newMzMLFile = parser.execute();
+    Assert.assertNotNull(newMzMLFile);
+    Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
+    
+    // Check that all scans are recorded as centroided
+    for (MsScan scan : rawFile.getScans()) {
+      Assert.assertEquals(MsSpectrumType.CENTROIDED, scan.getSpectrumType());
+    }
+    
+    // The file has 7 scans, 2 in the RawFile
+    List<MsScan> scans = newMzMLFile.getScans();
+    Assert.assertNotNull(scans);
+    Assert.assertEquals(7, scans.size());
+
+    // 2nd scan, #2
+    MsScan scan2 = scans.get(1);
+    Assert.assertEquals(Integer.valueOf(2), scan2.getScanNumber());
+    Assert.assertEquals(Integer.valueOf(1), scan2.getMsLevel());
+    Assert.assertEquals(0.474f, scan2.getRetentionTime(), 0.01f);
+    Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
+    Float scan2maxInt =
+        MsSpectrumUtil.getMaxIntensity(scan2.getIntensityValues(), scan2.getNumberOfDataPoints());
+    Assert.assertEquals(1.8E5f, scan2maxInt, 1E4f);
+
+    // 5th scan, #5
+    MsScan scan5 = scans.get(4);
+    Assert.assertEquals(Integer.valueOf(5), scan5.getScanNumber());
+    Assert.assertEquals(Integer.valueOf(2), scan5.getMsLevel());
+    Assert.assertEquals(2.094f, scan5.getRetentionTime(), 0.01f);
+    Assert.assertEquals(PolarityType.POSITIVE, scan5.getPolarity());
+    Float scan5maxInt =
+        MsSpectrumUtil.getMaxIntensity(scan5.getIntensityValues(), scan5.getNumberOfDataPoints());
+    Assert.assertEquals(8.6E3f, scan5maxInt, 1E2f);
+
+    // Cleanup
+    rawFile.dispose();
+    newMzMLFile.dispose();
+  }
+
   private Predicate<MsScan> getMsScanPredicate(List<Integer> scansToParse) {
     return s -> scansToParse.contains(s.getScanNumber());
   }
