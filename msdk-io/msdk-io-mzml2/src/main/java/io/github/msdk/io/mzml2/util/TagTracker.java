@@ -20,13 +20,14 @@ import javolution.text.CharArray;
 
 /**
  * This class is not thread safe. If more than one thread attempts to use {@link #enter(CharArray)}
- * or {@link #exit(CharArray)} methods, the behaviour is undefined.
+ * or {@link #exit(CharArray)} methods, the behavior is undefined.
  */
 public class TagTracker {
 
   private ArrayDeque<CharArray> stack;
   private ArrayDeque<CharArray> pool;
   protected final static int DEFAULT_CHAR_ARR_SIZE = 64;
+
   /**
    * If the stack grows larger than this value, something is likely not OK. Will throw an exception
    * in such a case.

@@ -15,6 +15,11 @@ package io.github.msdk.io.mzml2.data;
 
 import java.util.Optional;
 
+/**
+ * A CV Parameter object which contains the CV Parameter's accession and value, name & unitAccession
+ * if available
+ *
+ */
 public class MzMLCVParam {
 
   private final String accession;
@@ -24,13 +29,13 @@ public class MzMLCVParam {
 
   /**
    * <p>
-   * Constructor for MzMLCVParam.
+   * Constructor for MzMLCVParam
    * </p>
    *
-   * @param accession a {@link java.lang.String} object.
-   * @param value a {@link java.lang.String} object.
-   * @param name a {@link java.lang.String} object.
-   * @param unitAccession a {@link java.lang.String} object.
+   * @param accession the CV Parameter accession as {@link java.lang.String String}
+   * @param value the CV Parameter value as {@link java.lang.String String}
+   * @param name the CV Parameter name as {@link java.lang.String String}
+   * @param unitAccession the CV Parameter unit accession as {@link java.lang.String String}
    */
   public MzMLCVParam(String accession, String value, String name, String unitAccession) {
     if (accession == null)
@@ -50,11 +55,8 @@ public class MzMLCVParam {
   }
 
   /**
-   * <p>
-   * Getter for the field <code>accession</code>.
-   * </p>
    *
-   * @return a {@link java.lang.String} object.
+   * @return the CV Parameter accession as {@link java.lang.String String}
    */
   public String getAccession() {
     return accession;
@@ -62,33 +64,24 @@ public class MzMLCVParam {
 
 
   /**
-   * <p>
-   * Getter for the field <code>value</code>.
-   * </p>
    *
-   * @return a {@link java.lang.String} object.
+   * @return the CV Parameter value as {@link java.util.Optional Optional<String>}
    */
   public Optional<String> getValue() {
     return value;
   }
 
   /**
-   * <p>
-   * Getter for the field <code>name</code>.
-   * </p>
-   *
-   * @return a {@link java.lang.String} object.
+   * 
+   * @return the CV Parameter name as {@link java.util.Optional Optional<String>}
    */
   public Optional<String> getName() {
     return name;
   }
 
   /**
-   * <p>
-   * Getter for the field <code>unitAccession</code>.
-   * </p>
    *
-   * @return a {@link java.lang.String} object.
+   * @return the CV Parameter unit accession as {@link java.util.Optional Optional<String>}
    */
   public Optional<String> getUnitAccession() {
     return unitAccession;

@@ -18,20 +18,28 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 
+/**
+ * <p>
+ * Used to load a {@link java.io.File File} onto a
+ * {@link io.github.msdk.io.mzml2.util.ByteBufferInputStream ByteBufferInputStream}
+ * </p>
+ *
+ */
 public abstract class FileMemoryMapper {
 
   /**
    * <p>
-   * mapToMemory.
+   * Used to load a {@link java.io.File File} onto a
+   * {@link io.github.msdk.io.mzml2.util.ByteBufferInputStream ByteBufferInputStream} *
    * </p>
    *
-   * @param mzMLFile a {@link java.io.File} object.
-   * @return a {@link io.github.msdk.io.mzml2.util.io.ByteBufferInputStream} object.
-   * @throws java.io.IOException if any.
+   * @param file the {@link java.io.File File} to be mapped
+   * @return a {@link io.github.msdk.io.mzml2.util.io.ByteBufferInputStream ByteBufferInputStream}
+   * @throws java.io.IOException if any
    */
-  public static ByteBufferInputStream mapToMemory(File mzMLFile) throws IOException {
+  public static ByteBufferInputStream mapToMemory(File file) throws IOException {
 
-    RandomAccessFile aFile = new RandomAccessFile(mzMLFile, "r");
+    RandomAccessFile aFile = new RandomAccessFile(file, "r");
     FileChannel inChannel = aFile.getChannel();
     ByteBufferInputStream is = ByteBufferInputStream.map(inChannel, FileChannel.MapMode.READ_ONLY);
     aFile.close();
