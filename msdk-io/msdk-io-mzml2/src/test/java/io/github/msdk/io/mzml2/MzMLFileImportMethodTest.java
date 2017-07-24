@@ -141,7 +141,7 @@ public class MzMLFileImportMethodTest {
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
-    // The file has 7 scans, 3 in the RawFile
+    // The file has 7 scans, 3 pass the predicate
     List<MsScan> scans = rawFile.getScans();
     Assert.assertNotNull(scans);
     Assert.assertEquals(7, scans.size());
@@ -509,7 +509,7 @@ public class MzMLFileImportMethodTest {
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
-    // The file has 6 scans, 1 in the RawFile
+    // The file has 6 scans, 1 pass the predicate
     List<MsScan> scans = rawFile.getScans();
     Assert.assertNotNull(scans);
     Assert.assertEquals(6, scans.size());
@@ -567,7 +567,7 @@ public class MzMLFileImportMethodTest {
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
-    // The file has 7 scans, 2 in the RawFile
+    // The file has 7 scans, 2 pass the predicate
     List<MsScan> scans = rawFile.getScans();
     Assert.assertNotNull(scans);
     Assert.assertEquals(7, scans.size());

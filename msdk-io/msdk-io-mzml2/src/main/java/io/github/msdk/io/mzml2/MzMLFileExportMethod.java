@@ -213,7 +213,9 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
         xmlStreamWriter.writeAttribute(MzMLTags.ATTR_DEFAULT_ARRAY_LENGTH,
             String.valueOf(scan.getNumberOfDataPoints()));
 
-        MzMLMsScan spectrum = (MzMLMsScan) scan;
+        MzMLMsScan spectrum = null;
+        if (scan instanceof MzMLMsScan)
+          spectrum = (MzMLMsScan) scan;
 
         // spectrum type CV param
         if (!(rawDataFile instanceof MzMLRawDataFile) || (rawDataFile instanceof MzMLRawDataFile
