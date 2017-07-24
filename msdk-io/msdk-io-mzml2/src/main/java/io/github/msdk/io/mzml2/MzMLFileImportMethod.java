@@ -41,8 +41,12 @@ import javolution.xml.stream.XMLStreamException;
  * This class contains methods which parse data in MzML format from {@link java.io.File File},
  * {@link java.nio.file.Path Path} or {@link java.io.InputStream InputStream} <br>
  * {@link io.github.msdk.datamodel.rawdata.MsScan Scan}s and
- * {@link io.github.msdk.datamodel.chromatograms.Chromatogram Chromatogram}s to be parsed can be
- * optionally specified using {@link java.util.function.Predicate Predicate}.
+ * {@link io.github.msdk.datamodel.chromatograms.Chromatogram Chromatogram}s will be parsed, and the
+ * values pre-loaded when the {@link java.util.function.Predicate Predicate} is passed. Other
+ * {@link io.github.msdk.datamodel.rawdata.MsScan Scan}s and
+ * {@link io.github.msdk.datamodel.chromatograms.Chromatogram Chromatogram}s can be loaded on demand
+ * if the source is a {@link java.io.File File}, whereas, they will be dropped if the source is an
+ * {@link java.io.InputStream InputStream}
  * </p>
  *
  */
