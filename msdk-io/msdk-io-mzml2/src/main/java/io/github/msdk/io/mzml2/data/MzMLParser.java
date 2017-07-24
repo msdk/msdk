@@ -416,8 +416,8 @@ public class MzMLParser {
     } else if (tracker.inside(MzMLTags.TAG_SPECTRUM_LIST)) {
       if (closingTagName.contentEquals(MzMLTags.TAG_SPECTRUM)) {
         if (vars.spectrum.getMzBinaryDataInfo() != null
-            && vars.spectrum.getIntensityBinaryDataInfo() != null
-            && importer.getMsScanPredicate().test(vars.spectrum)) {
+            && vars.spectrum.getIntensityBinaryDataInfo() != null && (importer.getMzMLFile() != null
+                || importer.getMsScanPredicate().test(vars.spectrum))) {
           vars.spectrumList.add(vars.spectrum);
         }
       }
@@ -426,7 +426,8 @@ public class MzMLParser {
       if (closingTagName.contentEquals(MzMLTags.TAG_CHROMATOGRAM)) {
         if (vars.chromatogram.getRtBinaryDataInfo() != null
             && vars.chromatogram.getIntensityBinaryDataInfo() != null
-            && importer.getChromatogramPredicate().test(vars.chromatogram))
+            && (importer.getMzMLFile() != null
+                || importer.getChromatogramPredicate().test(vars.chromatogram)))
           vars.chromatogramsList.add(vars.chromatogram);
       }
 
