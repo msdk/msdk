@@ -13,10 +13,9 @@
 
 package io.github.msdk.io.mzml2.util;
 
-import io.github.msdk.MSDKRuntimeException;
 import java.util.ArrayDeque;
-import java.util.Iterator;
 
+import io.github.msdk.MSDKRuntimeException;
 import javolution.text.CharArray;
 
 /**
@@ -77,6 +76,13 @@ public class TagTracker {
       }
     }
     return false;
+  }
+
+  public CharArray current() {
+    final CharArray top = stack.peek();
+    if (top == null)
+      return new CharArray("");
+    return top;
   }
 
   private CharArray createArr(int capacity) {

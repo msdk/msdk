@@ -18,9 +18,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 
-import io.github.msdk.io.mzml2.util.bytebufferinputstream.ByteBufferInputStream;
-
-public abstract class MzMLFileMemoryMapper {
+public abstract class FileMemoryMapper {
 
   /**
    * <p>
@@ -28,7 +26,7 @@ public abstract class MzMLFileMemoryMapper {
    * </p>
    *
    * @param mzMLFile a {@link java.io.File} object.
-   * @return a {@link it.unimi.dsi.io.ByteBufferInputStream} object.
+   * @return a {@link io.github.msdk.io.mzml2.util.io.ByteBufferInputStream} object.
    * @throws java.io.IOException if any.
    */
   public static ByteBufferInputStream mapToMemory(File mzMLFile) throws IOException {

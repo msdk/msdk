@@ -42,11 +42,13 @@ import io.github.msdk.io.mzml2.data.MzMLCV;
 import io.github.msdk.io.mzml2.data.MzMLCVGroup;
 import io.github.msdk.io.mzml2.data.MzMLCVParam;
 import io.github.msdk.io.mzml2.data.MzMLCompressionType;
+import io.github.msdk.io.mzml2.data.MzMLMsScan;
+import io.github.msdk.io.mzml2.data.MzMLPeaksEncoder;
 import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
 import io.github.msdk.io.mzml2.data.MzMLPrecursorSelectedIon;
 import io.github.msdk.io.mzml2.data.MzMLProduct;
-import io.github.msdk.io.mzml2.util.MzMLPeaksEncoder;
-import io.github.msdk.io.mzml2.util.MzMLTags;
+import io.github.msdk.io.mzml2.data.MzMLRawDataFile;
+import io.github.msdk.io.mzml2.data.MzMLTags;
 import javolution.xml.internal.stream.XMLStreamWriterImpl;
 import javolution.xml.stream.XMLStreamException;
 
@@ -184,7 +186,7 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
         xmlStreamWriter.writeAttribute(MzMLTags.ATTR_DEFAULT_ARRAY_LENGTH,
             String.valueOf(scan.getNumberOfDataPoints()));
 
-        MzMLSpectrum spectrum = (MzMLSpectrum) scan;
+        MzMLMsScan spectrum = (MzMLMsScan) scan;
 
         // spectrum type CV param
         if (!(rawDataFile instanceof MzMLRawDataFile) || (rawDataFile instanceof MzMLRawDataFile

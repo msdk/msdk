@@ -11,8 +11,9 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml2;
+package io.github.msdk.io.mzml2.data;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,20 +35,7 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
-import io.github.msdk.io.mzml2.data.MzMLCV;
-import io.github.msdk.io.mzml2.data.MzMLCVGroup;
-import io.github.msdk.io.mzml2.data.MzMLCVParam;
-import io.github.msdk.io.mzml2.data.MzMLIsolationWindow;
-import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
-import io.github.msdk.io.mzml2.data.MzMLPrecursorList;
-import io.github.msdk.io.mzml2.data.MzMLProductList;
-import io.github.msdk.io.mzml2.data.MzMLScan;
-import io.github.msdk.io.mzml2.data.MzMLScanList;
-import io.github.msdk.io.mzml2.data.MzMLScanWindow;
-import io.github.msdk.io.mzml2.data.MzMLScanWindowList;
-import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
-import io.github.msdk.io.mzml2.util.bytebufferinputstream.ByteBufferInputStream;
+import io.github.msdk.io.mzml2.MzMLFileImportMethod;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
@@ -58,9 +46,9 @@ import io.github.msdk.util.tolerances.MzTolerance;
  * </p>
  *
  */
-public class MzMLSpectrum implements MsScan {
+public class MzMLMsScan implements MsScan {
   private final @Nonnull MzMLRawDataFile dataFile;
-  private final @Nonnull ByteBufferInputStream mappedByteBufferInputStream;
+  private @Nonnull InputStream inputStream;
   private final @Nonnull String id;
   private final @Nonnull Integer scanNumber;
   private final int numOfDataPoints;
@@ -76,6 +64,8 @@ public class MzMLSpectrum implements MsScan {
   private Float retentionTime;
   private Range<Double> mzRange;
   private Range<Double> mzScanWindowRange;
+  private double[] mzValues;
+  private float[] intensityValues;
 
   private Logger logger = LoggerFactory.getLogger(MzMLFileImportMethod.class);
 
@@ -84,16 +74,16 @@ public class MzMLSpectrum implements MsScan {
    * Constructor for MzMLSpectrum.
    * </p>
    *
-   * @param dataFile a {@link io.github.msdk.io.mzml2.MzMLRawDataFile} object.
+   * @param dataFile a {@link io.github.msdk.io.mzml2.data.MzMLRawDataFile} object.
    */
-  public MzMLSpectrum(MzMLRawDataFile dataFile, ByteBufferInputStream is, String id,
-      Integer scanNumber, int numOfDataPoints) {
+  public MzMLMsScan(MzMLRawDataFile dataFile, InputStream is, String id, Integer scanNumber,
+      int numOfDataPoints) {
     this.cvParams = new MzMLCVGroup();
     this.precursorList = new MzMLPrecursorList();
     this.productList = new MzMLProductList();
     this.scanList = new MzMLScanList();
     this.dataFile = dataFile;
-    this.mappedByteBufferInputStream = is;
+    this.inputStream = is;
     this.id = id;
     this.scanNumber = scanNumber;
     this.numOfDataPoints = numOfDataPoints;
@@ -104,6 +94,8 @@ public class MzMLSpectrum implements MsScan {
     this.retentionTime = null;
     this.mzRange = null;
     this.mzScanWindowRange = null;
+    this.mzValues = null;
+    this.intensityValues = null;
 
   }
 
@@ -165,13 +157,24 @@ public class MzMLSpectrum implements MsScan {
 
   /**
    * <p>
-   * getByteBufferInputStream.
+   * getInputStream.
    * </p>
    *
-   * @return a {@link it.unimi.dsi.io.ByteBufferInputStream} object.
+   * @return a {@link io.github.msdk.io.mzml2.util.io.ByteBufferInputStream} object.
    */
-  public ByteBufferInputStream getByteBufferInputStream() {
-    return mappedByteBufferInputStream;
+  public InputStream getInputStream() {
+    return inputStream;
+  }
+
+  /**
+   * <p>
+   * setInputStream.
+   * </p>
+   *
+   * @param inputStream a {@link java.io.InputStream} object.
+   */
+  public void setInputStream(InputStream inputStream) {
+    this.inputStream = inputStream;
   }
 
   /**
@@ -227,40 +230,41 @@ public class MzMLSpectrum implements MsScan {
   /** {@inheritDoc} */
   @Override
   public double[] getMzValues(double array[]) {
-    double[] mzValues = null;
-    if (getMzBinaryDataInfo().getArrayLength() != numOfDataPoints) {
-      logger.warn(
-          "m/z binary data array contains a different array length from the default array length of the scan (#"
-              + getScanNumber() + ")");
-    }
+    if (mzValues == null) {
+      if (getMzBinaryDataInfo().getArrayLength() != numOfDataPoints) {
+        logger.warn(
+            "m/z binary data array contains a different array length from the default array length of the scan (#"
+                + getScanNumber() + ")");
+      }
 
-    try {
-      mzValues =
-          MzMLPeaksDecoder.decodeToDouble(mappedByteBufferInputStream, getMzBinaryDataInfo());
-    } catch (Exception e) {
-      throw (new MSDKRuntimeException(e));
+      try {
+        mzValues = MzMLPeaksDecoder.decodeToDouble(inputStream, getMzBinaryDataInfo(), array);
+      } catch (Exception e) {
+        throw (new MSDKRuntimeException(e));
+      }
     }
 
     return mzValues;
+
   }
 
   /** {@inheritDoc} */
   @Override
   public float[] getIntensityValues(float array[]) {
-    float[] intensityValues = null;
-    if (getIntensityBinaryDataInfo().getArrayLength() != numOfDataPoints) {
-      logger.warn(
-          "Intensity binary data array contains a different array length from the default array length of the scan (#"
-              + getScanNumber() + ")");
-    }
+    if (intensityValues == null) {
+      if (getIntensityBinaryDataInfo().getArrayLength() != numOfDataPoints) {
+        logger.warn(
+            "Intensity binary data array contains a different array length from the default array length of the scan (#"
+                + getScanNumber() + ")");
+      }
 
-    try {
-      intensityValues =
-          MzMLPeaksDecoder.decodeToFloat(mappedByteBufferInputStream, getIntensityBinaryDataInfo());
-    } catch (Exception e) {
-      throw (new MSDKRuntimeException(e));
+      try {
+        intensityValues =
+            MzMLPeaksDecoder.decodeToFloat(inputStream, getIntensityBinaryDataInfo(), array);
+      } catch (Exception e) {
+        throw (new MSDKRuntimeException(e));
+      }
     }
-
     return intensityValues;
   }
 
@@ -467,8 +471,10 @@ public class MzMLSpectrum implements MsScan {
                 - Double.valueOf(isolationWindowLower.get()),
             Double.valueOf(isolationWindowTarget.get())
                 + Double.valueOf(isolationWindowLower.get()));
+        Integer precursorChargeInt =
+            precursorCharge.isPresent() ? Integer.valueOf(precursorCharge.get()) : null;
         IsolationInfo isolation = new SimpleIsolationInfo(isolationRange, null,
-            Double.valueOf(precursorMz.get()), Integer.valueOf(precursorCharge.get()), null);
+            Double.valueOf(precursorMz.get()), precursorChargeInt, null);
         isolations.add(isolation);
 
       }
