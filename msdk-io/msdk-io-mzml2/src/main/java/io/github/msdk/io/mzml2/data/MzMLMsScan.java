@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml2;
+package io.github.msdk.io.mzml2.data;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -35,19 +35,7 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
-import io.github.msdk.io.mzml2.data.MzMLCV;
-import io.github.msdk.io.mzml2.data.MzMLCVGroup;
-import io.github.msdk.io.mzml2.data.MzMLCVParam;
-import io.github.msdk.io.mzml2.data.MzMLIsolationWindow;
-import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
-import io.github.msdk.io.mzml2.data.MzMLPrecursorList;
-import io.github.msdk.io.mzml2.data.MzMLProductList;
-import io.github.msdk.io.mzml2.data.MzMLScan;
-import io.github.msdk.io.mzml2.data.MzMLScanList;
-import io.github.msdk.io.mzml2.data.MzMLScanWindow;
-import io.github.msdk.io.mzml2.data.MzMLScanWindowList;
-import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
+import io.github.msdk.io.mzml2.MzMLFileImportMethod;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
@@ -58,7 +46,7 @@ import io.github.msdk.util.tolerances.MzTolerance;
  * </p>
  *
  */
-public class MzMLSpectrum implements MsScan {
+public class MzMLMsScan implements MsScan {
   private final @Nonnull MzMLRawDataFile dataFile;
   private @Nonnull InputStream inputStream;
   private final @Nonnull String id;
@@ -86,9 +74,9 @@ public class MzMLSpectrum implements MsScan {
    * Constructor for MzMLSpectrum.
    * </p>
    *
-   * @param dataFile a {@link io.github.msdk.io.mzml2.MzMLRawDataFile} object.
+   * @param dataFile a {@link io.github.msdk.io.mzml2.data.MzMLRawDataFile} object.
    */
-  public MzMLSpectrum(MzMLRawDataFile dataFile, InputStream is, String id, Integer scanNumber,
+  public MzMLMsScan(MzMLRawDataFile dataFile, InputStream is, String id, Integer scanNumber,
       int numOfDataPoints) {
     this.cvParams = new MzMLCVGroup();
     this.precursorList = new MzMLPrecursorList();
@@ -483,8 +471,10 @@ public class MzMLSpectrum implements MsScan {
                 - Double.valueOf(isolationWindowLower.get()),
             Double.valueOf(isolationWindowTarget.get())
                 + Double.valueOf(isolationWindowLower.get()));
+        Integer precursorChargeInt =
+            precursorCharge.isPresent() ? Integer.valueOf(precursorCharge.get()) : null;
         IsolationInfo isolation = new SimpleIsolationInfo(isolationRange, null,
-            Double.valueOf(precursorMz.get()), Integer.valueOf(precursorCharge.get()), null);
+            Double.valueOf(precursorMz.get()), precursorChargeInt, null);
         isolations.add(isolation);
 
       }

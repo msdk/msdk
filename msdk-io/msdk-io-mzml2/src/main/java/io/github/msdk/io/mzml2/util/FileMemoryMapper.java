@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 
-public abstract class MzMLFileMemoryMapper {
+public abstract class FileMemoryMapper {
 
   /**
    * <p>

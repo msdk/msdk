@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml2.util;
+package io.github.msdk.io.mzml2.data;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -21,7 +21,7 @@ import java.util.zip.Deflater;
 import org.apache.commons.codec.binary.Base64;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.io.mzml2.data.MzMLCompressionType;
+import io.github.msdk.io.mzml2.util.MSNumpress;
 
 public abstract class MzMLPeaksEncoder {
 

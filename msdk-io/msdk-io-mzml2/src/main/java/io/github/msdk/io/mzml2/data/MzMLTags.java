@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml2.util;
+package io.github.msdk.io.mzml2.data;
 
 public abstract class MzMLTags {
 

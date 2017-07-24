@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml2.util;
+package io.github.msdk.io.mzml2.data;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -25,7 +25,8 @@ import org.apache.commons.io.IOUtils;
 import com.google.common.io.LittleEndianDataInputStream;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
+import io.github.msdk.io.mzml2.util.ByteBufferInputStream;
+import io.github.msdk.io.mzml2.util.MSNumpress;
 
 /**
  * <p>

@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.io.mzml2;
+package io.github.msdk.io.mzml2.data;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -38,14 +38,7 @@ import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
-import io.github.msdk.io.mzml2.data.MzMLCV;
-import io.github.msdk.io.mzml2.data.MzMLCVGroup;
-import io.github.msdk.io.mzml2.data.MzMLCVParam;
-import io.github.msdk.io.mzml2.data.MzMLIsolationWindow;
-import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
-import io.github.msdk.io.mzml2.data.MzMLProduct;
-import io.github.msdk.io.mzml2.util.MzMLPeaksDecoder;
+import io.github.msdk.io.mzml2.MzMLFileImportMethod;
 
 class MzMLChromatogram implements Chromatogram {
 
