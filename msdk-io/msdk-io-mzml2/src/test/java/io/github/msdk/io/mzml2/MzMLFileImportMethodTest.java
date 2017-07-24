@@ -157,13 +157,14 @@ public class MzMLFileImportMethodTest {
     List<MsScan> scans = rawFile.getScans();
     Assert.assertNotNull(scans);
     Assert.assertEquals(7, scans.size());
-
+    
     // 2nd scan, #2
     MsScan scan2 = scans.get(1);
     Assert.assertEquals(Integer.valueOf(2), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.PROFILE, scan2.getSpectrumType());
     Assert.assertEquals(Integer.valueOf(1), scan2.getMsLevel());
     Assert.assertEquals(0.474f, scan2.getRetentionTime(), 0.01f);
+    Assert.assertEquals(0, scan2.getIsolations().size());
     Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
     Assert.assertEquals(209.1818184554577, scan2.getMzValues()[100], 0.00001);
     scan2.getMzValues();
@@ -173,11 +174,20 @@ public class MzMLFileImportMethodTest {
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan2.getNumberOfDataPoints());
     Assert.assertEquals(1.8E5f, scan2maxInt, 1E4f);
 
+    // 2nd scan, #3
+    MsScan scan3 = scans.get(2);
+    Assert.assertEquals(Integer.valueOf(3), scan3.getScanNumber());
+    Assert.assertEquals(MsSpectrumType.CENTROIDED, scan3.getSpectrumType());
+    Assert.assertEquals(Integer.valueOf(2), scan3.getMsLevel());
+    Assert.assertEquals(1, scan3.getIsolations().size());
+    Assert.assertEquals(PolarityType.POSITIVE, scan3.getPolarity());
+    
     // 5th scan, #5
     MsScan scan5 = scans.get(4);
     Assert.assertEquals(Integer.valueOf(5), scan5.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan5.getSpectrumType());
     Assert.assertEquals(Integer.valueOf(2), scan5.getMsLevel());
+    Assert.assertEquals(1, scan2.getIsolations().size());
     Assert.assertEquals(2.094f, scan5.getRetentionTime(), 0.01f);
     Assert.assertEquals(PolarityType.POSITIVE, scan5.getPolarity());
     Assert.assertEquals(483.4679870605469, scan5.getMzValues()[200], 0.00001);
