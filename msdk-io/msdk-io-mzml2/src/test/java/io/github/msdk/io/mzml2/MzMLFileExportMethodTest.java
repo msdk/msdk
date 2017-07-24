@@ -38,6 +38,8 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzml2.data.MzMLCompressionType;
 import io.github.msdk.io.mzml2.data.MzMLMsScan;
+import io.github.msdk.rawdata.centroiding.BinningCentroidingAlgorithm;
+import io.github.msdk.rawdata.centroiding.MSDKCentroidingMethod;
 import io.github.msdk.util.MsSpectrumUtil;
 
 public class MzMLFileExportMethodTest {
