@@ -27,7 +27,10 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.mzml2.util.MzMLFileMemoryMapper;
+import io.github.msdk.io.mzml2.data.MzMLParser;
+import io.github.msdk.io.mzml2.data.MzMLRawDataFile;
+import io.github.msdk.io.mzml2.util.ByteBufferInputStream;
+import io.github.msdk.io.mzml2.util.FileMemoryMapper;
 import javolution.text.CharArray;
 import javolution.xml.internal.stream.XMLStreamReaderImpl;
 import javolution.xml.stream.XMLStreamConstants;
@@ -40,7 +43,7 @@ import javolution.xml.stream.XMLStreamException;
  *
  */
 public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
-  final File mzMLFile;
+  private final File mzMLFile;
   final InputStream inputStream;
   private MzMLRawDataFile newRawFile;
   private volatile boolean canceled;
@@ -57,9 +60,31 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    *
    * @param mzMLFilePath a {@link java.lang.String} object.
    */
+  public MzMLFileImportMethod(String mzMLFilePath) {
+    this(new File(mzMLFilePath), null, null);
+  }
+
+  /**
+   * <p>
+   * Constructor for MzMLFileParser.
+   * </p>
+   *
+   * @param mzMLFilePath a {@link java.lang.String} object.
+   */
   public MzMLFileImportMethod(String mzMLFilePath, Predicate<MsScan> msScanPredicate,
       Predicate<Chromatogram> chromatogramPredicate) {
     this(new File(mzMLFilePath), msScanPredicate, chromatogramPredicate);
+  }
+
+  /**
+   * <p>
+   * Constructor for MzMLFileParser.
+   * </p>
+   *
+   * @param mzMLFilePath a {@link java.nio.file.Path} object.
+   */
+  public MzMLFileImportMethod(Path mzMLFilePath) {
+    this(mzMLFilePath.toFile(), null, null);
   }
 
   /**
@@ -81,9 +106,31 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    *
    * @param mzMLFile a {@link java.io.File} object.
    */
+  public MzMLFileImportMethod(File mzMLFile) {
+    this(mzMLFile, null, null, null);
+  }
+
+  /**
+   * <p>
+   * Constructor for MzMLFileParser.
+   * </p>
+   *
+   * @param mzMLFile a {@link java.io.File} object.
+   */
   public MzMLFileImportMethod(File mzMLFile, Predicate<MsScan> msScanPredicate,
       Predicate<Chromatogram> chromatogramPredicate) {
     this(mzMLFile, null, msScanPredicate, chromatogramPredicate);
+  }
+
+  /**
+   * <p>
+   * Constructor for MzMLFileParser.
+   * </p>
+   *
+   * @param inputStream a {@link java.io.InputStream} object.
+   */
+  public MzMLFileImportMethod(InputStream inputStream) {
+    this(null, inputStream, null, null);
   }
 
   /**
@@ -106,8 +153,8 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
     this.progress = 0f;
     this.lastLoggedProgress = 0;
     this.logger = LoggerFactory.getLogger(this.getClass());
-    this.msScanPredicate = msScanPredicate;
-    this.chromatogramPredicate = chromatogramPredicate;
+    this.msScanPredicate = msScanPredicate != null ? msScanPredicate : s -> true;
+    this.chromatogramPredicate = chromatogramPredicate != null ? chromatogramPredicate : c -> true;
   }
 
   /**
@@ -127,7 +174,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
       if (mzMLFile != null) {
         logger.info("Began parsing file: " + mzMLFile.getAbsolutePath());
-        is = MzMLFileMemoryMapper.mapToMemory(mzMLFile);
+        is = FileMemoryMapper.mapToMemory(mzMLFile);
       } else if (inputStream != null) {
         logger.info("Began parsing file from stream");
         is = inputStream;
@@ -155,8 +202,10 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
           // XXX Can't track progress this way now, switched to using the primitive InputStream
           // without the length() function
-          progress = is.available() == 0 ? 0
-              : ((float) xmlStreamReader.getLocation().getCharacterOffset() / is.available());
+          // Update: We can track progress if source is a file
+          if (mzMLFile != null)
+            progress = ((float) (xmlStreamReader.getLocation().getCharacterOffset())
+                / ((ByteBufferInputStream) is).length());
 
           // Log progress after every 10% completion
           if ((int) (progress * 100) >= lastLoggedProgress + 10) {
@@ -221,6 +270,10 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
   public Predicate<Chromatogram> getChromatogramPredicate() {
     return chromatogramPredicate;
+  }
+
+  public File getMzMLFile() {
+    return mzMLFile;
   }
 
 }

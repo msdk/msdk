@@ -1,4 +1,4 @@
-package io.github.msdk.io.mzml2;
+package io.github.msdk.io.mzml2.data;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -11,27 +11,13 @@ import org.apache.commons.io.IOUtils;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.io.mzml2.data.MzMLBinaryDataInfo;
-import io.github.msdk.io.mzml2.data.MzMLCV;
-import io.github.msdk.io.mzml2.data.MzMLCVParam;
-import io.github.msdk.io.mzml2.data.MzMLCompressionType;
-import io.github.msdk.io.mzml2.data.MzMLIsolationWindow;
-import io.github.msdk.io.mzml2.data.MzMLPrecursorActivation;
-import io.github.msdk.io.mzml2.data.MzMLPrecursorElement;
-import io.github.msdk.io.mzml2.data.MzMLPrecursorSelectedIon;
-import io.github.msdk.io.mzml2.data.MzMLPrecursorSelectedIonList;
-import io.github.msdk.io.mzml2.data.MzMLProduct;
-import io.github.msdk.io.mzml2.data.MzMLReferenceableParamGroup;
-import io.github.msdk.io.mzml2.data.MzMLScan;
-import io.github.msdk.io.mzml2.data.MzMLScanWindow;
-import io.github.msdk.io.mzml2.data.MzMLScanWindowList;
-import io.github.msdk.io.mzml2.util.MzMLTags;
+import io.github.msdk.io.mzml2.MzMLFileImportMethod;
 import io.github.msdk.io.mzml2.util.TagTracker;
 import javolution.text.CharArray;
 import javolution.xml.internal.stream.XMLStreamReaderImpl;
 import javolution.xml.stream.XMLStreamReader;
 
-class MzMLParser {
+public class MzMLParser {
 
   private Vars vars;
   private TagTracker tracker;
@@ -42,7 +28,7 @@ class MzMLParser {
     this.vars = new Vars();
     this.tracker = new TagTracker();
     this.importer = importer;
-    this.newRawFile = new MzMLRawDataFile(importer.mzMLFile, vars.msFunctionsList,
+    this.newRawFile = new MzMLRawDataFile(importer.getMzMLFile(), vars.msFunctionsList,
         vars.spectrumList, vars.chromatogramsList);
   }
 
@@ -70,7 +56,7 @@ class MzMLParser {
         vars.defaultArrayLength =
             getRequiredAttribute(xmlStreamReader, "defaultArrayLength").toInt();
         Integer scanNumber = getScanNumber(id).orElse(index + 1);
-        vars.spectrum = new MzMLSpectrum(newRawFile, is, id, scanNumber, vars.defaultArrayLength);
+        vars.spectrum = new MzMLMsScan(newRawFile, is, id, scanNumber, vars.defaultArrayLength);
 
 
       } else if (openingTagName.contentEquals(MzMLTags.TAG_BINARY_DATA_ARRAY)) {
@@ -332,8 +318,7 @@ class MzMLParser {
     tracker.exit(closingTagName);
 
     CharArray s = closingTagName;
-    if (s.equals(MzMLTags.TAG_SPECTRUM_LIST)) {
-    } else if (s.equals(MzMLTags.TAG_REF_PARAM_GROUP)) {
+    if (s.equals(MzMLTags.TAG_REF_PARAM_GROUP)) {
       vars.referenceableParamGroupList.add(vars.referenceableParamGroup);
 
     } else if (s.equals(MzMLTags.TAG_ISOLATION_WINDOW)) {
@@ -375,39 +360,21 @@ class MzMLParser {
       if (tracker.inside(MzMLTags.TAG_SPECTRUM))
         vars.spectrum.getScanList().addScan(vars.scan);
 
-    }
-
-    if (tracker.inside(MzMLTags.TAG_SPECTRUM_LIST)) {
-      switch (closingTagName.toString()) {
-        case MzMLTags.TAG_SPECTRUM:
-          if (vars.spectrum.getMzBinaryDataInfo() != null
-              && vars.spectrum.getIntensityBinaryDataInfo() != null) {
-            vars.spectrumList.add(vars.spectrum);
-          }
-          break;
-
-        default:
-          // we don't care about other tags
-          break;
+    } else if (tracker.inside(MzMLTags.TAG_SPECTRUM_LIST)) {
+      if (closingTagName.contentEquals(MzMLTags.TAG_SPECTRUM)) {
+        if (vars.spectrum.getMzBinaryDataInfo() != null
+            && vars.spectrum.getIntensityBinaryDataInfo() != null
+            && importer.getMsScanPredicate().test(vars.spectrum)) {
+          vars.spectrumList.add(vars.spectrum);
+        }
       }
 
-    }
-
-    if (tracker.inside(MzMLTags.TAG_CHROMATOGRAM_LIST)) {
-      switch (closingTagName.toString()) {
-        case MzMLTags.TAG_CHROMATOGRAM:
-          if (vars.chromatogram.getRtBinaryDataInfo() != null
-              && vars.chromatogram.getIntensityBinaryDataInfo() != null)
-            vars.chromatogramsList.add(vars.chromatogram);
-          else {
-            // logger.warn("Didn't find rt or intensity data array for spectrum scan (#"
-            // + vars.spectrum.getScanNumber() + "). Skipping scan.");
-          }
-          break;
-
-        default:
-          // we don't care about other tags
-          break;
+    } else if (tracker.inside(MzMLTags.TAG_CHROMATOGRAM_LIST)) {
+      if (closingTagName.contentEquals(MzMLTags.TAG_CHROMATOGRAM)) {
+        if (vars.chromatogram.getRtBinaryDataInfo() != null
+            && vars.chromatogram.getIntensityBinaryDataInfo() != null
+            && importer.getChromatogramPredicate().test(vars.chromatogram))
+          vars.chromatogramsList.add(vars.chromatogram);
       }
 
     }
@@ -552,7 +519,7 @@ class MzMLParser {
 
     int defaultArrayLength;
     boolean skipBinaryDataArray;
-    MzMLSpectrum spectrum;
+    MzMLMsScan spectrum;
     MzMLChromatogram chromatogram;
     MzMLBinaryDataInfo binaryDataInfo;
     MzMLReferenceableParamGroup referenceableParamGroup;
