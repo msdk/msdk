@@ -13,6 +13,12 @@
 
 package io.github.msdk.io.mzml2.data;
 
+/**
+ * <p>
+ * Class containing String constants of various XML tags and attributes found in the mzML format
+ * </p>
+ *
+ */
 public abstract class MzMLTags {
 
   public static final String TAG_INDEXED_MZML = "indexedmzML";

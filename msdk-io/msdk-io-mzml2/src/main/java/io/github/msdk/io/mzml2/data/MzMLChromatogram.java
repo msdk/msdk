@@ -48,7 +48,7 @@ class MzMLChromatogram implements Chromatogram {
   private final @Nonnull Integer chromatogramNumber;
   private final @Nonnull Integer numOfDataPoints;
 
-  private ArrayList<MzMLCVParam> cvParams;
+  private MzMLCVGroup cvParams;
   private MzMLPrecursorElement precursor;
   private MzMLProduct product;
   private MzMLBinaryDataInfo rtBinaryDataInfo;
@@ -62,9 +62,21 @@ class MzMLChromatogram implements Chromatogram {
 
   private Logger logger = LoggerFactory.getLogger(MzMLFileImportMethod.class);
 
+  /**
+   * <p>
+   * Constructor for {@link io.github.msdk.io.mzml2.data.MzMLChromatogram MzMLChromatogram}
+   * </p>
+   * 
+   * @param dataFile a {@link io.github.msdk.io.mzml2.data.MzMLRawDataFile MzMLRawDataFile} object
+   *        the parser stores the data in
+   * @param is an {@link java.io.InputStream InputStream} of the MzML format data
+   * @param chromatogramId the Chromatogram ID
+   * @param chromatogramNumber the Chromatogram number
+   * @param numOfDataPoints the number of data points in the retention time and intensity arrays
+   */
   MzMLChromatogram(@Nonnull MzMLRawDataFile dataFile, InputStream is, String chromatogramId,
       Integer chromatogramNumber, Integer numOfDataPoints) {
-    this.cvParams = new ArrayList<>();
+    this.cvParams = new MzMLCVGroup();
     this.dataFile = dataFile;
     this.inputStream = is;
     this.chromatogramId = chromatogramId;
@@ -102,7 +114,7 @@ class MzMLChromatogram implements Chromatogram {
    *
    * @return a {@link java.util.ArrayList} object.
    */
-  public ArrayList<MzMLCVParam> getCVParams() {
+  public MzMLCVGroup getCVParams() {
     return cvParams;
   }
 
@@ -427,33 +439,30 @@ class MzMLChromatogram implements Chromatogram {
 
   /**
    * <p>
-   * getCVValue.
+   * Search for the CV Parameter value for the given accession in the
+   * {@link io.github.msdk.datamodel.chromatograms.Chromatogram Chromatogram}'s CV Parameters
    * </p>
-   *
-   * @param accession a {@link java.lang.String} object.
-   * @return a {@link java.lang.String} object.
+   * 
+   * @param accession the CV Parameter accession as {@link java.lang.String String}
+   * @return an {@link java.util.Optional Optional<String>} containing the CV Parameter value for
+   *         the given accession, if present <br>
+   *         An empty {@link java.util.Optional Optional<String>} otherwise
    */
   public Optional<String> getCVValue(String accession) {
-    for (MzMLCVParam cvParam : cvParams) {
-      Optional<String> value;
-      if (cvParam.getAccession().equals(accession)) {
-        value = cvParam.getValue();
-        if (!value.isPresent())
-          value = Optional.of("");
-        return value;
-      }
-    }
-    return Optional.empty();
+    return getCVValue(cvParams, accession);
   }
 
   /**
    * <p>
-   * getCVValue.
+   * Search for the CV Parameter value for the given accession in the given
+   * {@link io.github.msdk.io.mzml2.data.MzMLCVGroup MzMLCVGroup}
    * </p>
    *
-   * @param group a {@link io.github.msdk.io.mzml2.data.MzMLCVGroup} object.
-   * @param accession a {@link java.lang.String} object.
-   * @return a {@link java.lang.String} object.
+   * @param group the {@link io.github.msdk.io.mzml2.data.MzMLCVGroup MzMLCVGroup} to search through
+   * @param accession the CV Parameter accession as {@link java.lang.String String}
+   * @return an {@link java.util.Optional Optional<String>} containing the CV Parameter value for
+   *         the given accession, if present <br>
+   *         An empty {@link java.util.Optional Optional<String>} otherwise
    */
   public Optional<String> getCVValue(MzMLCVGroup group, String accession) {
     Optional<String> value;

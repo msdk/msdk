@@ -15,6 +15,12 @@ package io.github.msdk.io.mzml2.data;
 
 import java.util.ArrayList;
 
+/**
+ * <p>
+ * A group (or list) of {@link io.github.msdk.io.mzml2.data.MzMLCVParam CV Parameter}s
+ * </p>
+ * 
+ */
 public class MzMLCVGroup {
   private ArrayList<MzMLCVParam> cvParams;
 
@@ -22,10 +28,24 @@ public class MzMLCVGroup {
     this.cvParams = new ArrayList<>();
   }
 
+  /**
+   * 
+   * @return an {@link java.util.ArrayList ArrayList<MzMLCVParam>} of
+   *         {@link io.github.msdk.io.mzml2.data.MzMLCVParam CV Parameter}s
+   */
   public ArrayList<MzMLCVParam> getCVParamsList() {
     return cvParams;
   }
 
+  /**
+   * <p>
+   * Adds a {@link io.github.msdk.io.mzml2.data.MzMLCVParam CV Parameter} to the
+   * {@link io.github.msdk.io.mzml2.data.MzMLCVGroup MzMLCVGroup}
+   * </p>
+   * 
+   * @param cvParam the {@link io.github.msdk.io.mzml2.data.MzMLCVParam CV Parameter} to be added to
+   *        the {@link io.github.msdk.io.mzml2.data.MzMLCVGroup MzMLCVGroup}
+   */
   public void addCVParam(MzMLCVParam cvParam) {
     cvParams.add(cvParam);
   }

@@ -141,13 +141,13 @@ public class MzMLFileImportMethodTest {
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
-    // The file has 7 scans, 3 in the RawFile
+    // The file has 7 scans, 3 pass the predicate
     List<MsScan> scans = rawFile.getScans();
     Assert.assertNotNull(scans);
-    Assert.assertEquals(scansToParse.size(), scans.size());
+    Assert.assertEquals(7, scans.size());
 
-    // 1st scan, #2
-    MsScan scan2 = scans.get(0);
+    // 2nd scan, #2
+    MsScan scan2 = scans.get(1);
     Assert.assertEquals(Integer.valueOf(2), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.PROFILE, scan2.getSpectrumType());
     Assert.assertEquals(Integer.valueOf(1), scan2.getMsLevel());
@@ -162,16 +162,16 @@ public class MzMLFileImportMethodTest {
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan2.getNumberOfDataPoints());
     Assert.assertEquals(1.8E5f, scan2maxInt, 1E4f);
 
-    // 2nd scan, #3
-    MsScan scan3 = scans.get(1);
+    // 3rd scan, #3
+    MsScan scan3 = scans.get(2);
     Assert.assertEquals(Integer.valueOf(3), scan3.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan3.getSpectrumType());
     Assert.assertEquals(Integer.valueOf(2), scan3.getMsLevel());
     Assert.assertEquals(1, scan3.getIsolations().size());
     Assert.assertEquals(PolarityType.POSITIVE, scan3.getPolarity());
 
-    // 3rd scan, #5
-    MsScan scan5 = scans.get(2);
+    // 5th scan, #5
+    MsScan scan5 = scans.get(4);
     Assert.assertEquals(Integer.valueOf(5), scan5.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan5.getSpectrumType());
     Assert.assertEquals(Integer.valueOf(2), scan5.getMsLevel());
@@ -269,13 +269,13 @@ public class MzMLFileImportMethodTest {
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
-    // The file has 102 scans, 2 scans in the RawFile
+    // The file has 102 scans, 2 pass the predicate
     List<MsScan> scans = rawFile.getScans();
     Assert.assertNotNull(scans);
-    Assert.assertEquals(scansToParse.size(), scans.size());
+    Assert.assertEquals(102, scans.size());
 
-    // 1st scan, #1001
-    MsScan scan2 = scans.get(0);
+    // 2nd scan, #1001
+    MsScan scan2 = scans.get(1);
     Assert.assertEquals(Integer.valueOf(1001), scan2.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
     Assert.assertEquals(Integer.valueOf(2), scan2.getMsLevel());
@@ -288,8 +288,8 @@ public class MzMLFileImportMethodTest {
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan2.getNumberOfDataPoints());
     Assert.assertEquals(6.8E3f, scan2maxInt, 1E2f);
 
-    // 1st scan, #1100
-    MsScan scan101 = scans.get(1);
+    // 101st scan, #1100
+    MsScan scan101 = scans.get(100);
     Assert.assertEquals(Integer.valueOf(1100), scan101.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan101.getSpectrumType());
     Assert.assertEquals(Integer.valueOf(1), scan101.getMsLevel());
@@ -338,8 +338,8 @@ public class MzMLFileImportMethodTest {
     // These files have 3 scans
     List<MsScan> compressedScans = compressedRaw.getScans();
     List<MsScan> unCompressedScans = uncompressedRaw.getScans();
-    Assert.assertEquals(scansToParse.size(), compressedScans.size());
-    Assert.assertEquals(scansToParse.size(), unCompressedScans.size());
+    Assert.assertEquals(3, compressedScans.size());
+    Assert.assertEquals(3, unCompressedScans.size());
 
 
     for (int i = 0; i < 3; i++) {
@@ -382,13 +382,13 @@ public class MzMLFileImportMethodTest {
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
-    // The file has 37 chromatograms, 5 in the RawFile
+    // The file has 37 chromatograms, 5 pass the predicate
     List<Chromatogram> chromatograms = rawFile.getChromatograms();
     Assert.assertNotNull(chromatograms);
-    Assert.assertEquals(chromatogramsToParse.size(), chromatograms.size());
+    Assert.assertEquals(37, chromatograms.size());
 
-    // 3rd chromatogram, #4
-    Chromatogram chromatogram = chromatograms.get(2);
+    // 4th chromatogram, #4
+    Chromatogram chromatogram = chromatograms.get(3);
     Assert.assertEquals(Integer.valueOf(4), chromatogram.getChromatogramNumber());
     Assert.assertEquals(ChromatogramType.MRM_SRM, chromatogram.getChromatogramType());
     Assert.assertEquals(Integer.valueOf(1608), chromatogram.getNumberOfDataPoints());
@@ -407,8 +407,8 @@ public class MzMLFileImportMethodTest {
 
     // Check m/z values
     Assert.assertEquals(407.706, chromatograms.get(1).getMz(), 0.001);
-    Assert.assertEquals(1084.486, chromatograms.get(3).getMz(), 0.001);
-    Assert.assertEquals(1042.516, chromatograms.get(4).getMz(), 0.001);
+    Assert.assertEquals(1084.486, chromatograms.get(18).getMz(), 0.001);
+    Assert.assertEquals(1042.516, chromatograms.get(35).getMz(), 0.001);
 
     rawFile.dispose();
   }
@@ -509,13 +509,13 @@ public class MzMLFileImportMethodTest {
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
 
-    // The file has 6 scans, 1 in the RawFile
+    // The file has 6 scans, 1 pass the predicate
     List<MsScan> scans = rawFile.getScans();
     Assert.assertNotNull(scans);
-    Assert.assertEquals(scansToParse.size(), scans.size());
+    Assert.assertEquals(6, scans.size());
 
-    // 1st scan, #2103
-    MsScan scan4 = scans.get(0);
+    // 4th, #2103
+    MsScan scan4 = scans.get(3);
     Assert.assertEquals(Integer.valueOf(2103), scan4.getScanNumber());
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan4.getSpectrumType());
     Assert.assertEquals(Integer.valueOf(1), scan4.getMsLevel());
@@ -537,10 +537,10 @@ public class MzMLFileImportMethodTest {
     List<IsolationInfo> scan2isolations = scan4.getIsolations();
     Assert.assertEquals(0, scan2isolations.size());
 
-    // The file has 2 chromatograms, 1 in RawFile
+    // The file has 2 chromatograms, 1 passed the predicate
     List<Chromatogram> chromatograms = rawFile.getChromatograms();
     Assert.assertNotNull(chromatograms);
-    Assert.assertEquals(chromatogramsToParse.size(), chromatograms.size());
+    Assert.assertEquals(2, chromatograms.size());
 
     // 1st chromatogram
     Chromatogram chromatogram = chromatograms.get(0);
@@ -554,6 +554,54 @@ public class MzMLFileImportMethodTest {
 
     rawFile.dispose();
 
+  }
+
+  @Test
+  public void testPredicate() throws Exception {
+
+    // Import the file
+    String file = "5peptideFT.mzML";
+    Path inputFile = getResourcePath(file);
+    MzMLFileImportMethod parser = new MzMLFileImportMethod(inputFile, s -> false, c -> false);
+    RawDataFile rawFile = parser.execute();
+    Assert.assertNotNull(rawFile);
+    Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
+
+    // The file has 7 scans, 2 pass the predicate
+    List<MsScan> scans = rawFile.getScans();
+    Assert.assertNotNull(scans);
+    Assert.assertEquals(7, scans.size());
+
+    // 2nd scan, #2
+    MsScan scan2 = scans.get(1);
+    Assert.assertEquals(Integer.valueOf(2), scan2.getScanNumber());
+    Assert.assertEquals(MsSpectrumType.PROFILE, scan2.getSpectrumType());
+    Assert.assertEquals(Integer.valueOf(1), scan2.getMsLevel());
+    Assert.assertEquals(0.474f, scan2.getRetentionTime(), 0.01f);
+    Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
+    Assert.assertEquals(209.1818184554577, scan2.getMzValues()[100], 0.00001);
+    float[] intensityBuffer = scan2.getIntensityValues();
+    Assert.assertEquals(19800, (int) scan2.getNumberOfDataPoints());
+    Float scan2maxInt =
+        MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan2.getNumberOfDataPoints());
+    Assert.assertEquals(1.8E5f, scan2maxInt, 1E4f);
+
+    // 5th scan, #5
+    MsScan scan5 = scans.get(4);
+    Assert.assertEquals(Integer.valueOf(5), scan5.getScanNumber());
+    Assert.assertEquals(MsSpectrumType.CENTROIDED, scan5.getSpectrumType());
+    Assert.assertEquals(Integer.valueOf(2), scan5.getMsLevel());
+    Assert.assertEquals(2.094f, scan5.getRetentionTime(), 0.01f);
+    Assert.assertEquals(PolarityType.POSITIVE, scan5.getPolarity());
+    Assert.assertEquals(483.4679870605469, scan5.getMzValues()[200], 0.00001);
+    intensityBuffer = scan5.getIntensityValues();
+    Assert.assertEquals(837, (int) scan5.getNumberOfDataPoints());
+    Float scan5maxInt =
+        MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan5.getNumberOfDataPoints());
+    Assert.assertEquals(8.6E3f, scan5maxInt, 1E2f);
+
+    // Cleanup
+    rawFile.dispose();
   }
 
   private Predicate<MsScan> getMsScanPredicate(List<Integer> scansToParse) {

@@ -13,6 +13,10 @@
 
 package io.github.msdk.io.mzml2.data;
 
+/**
+ * Enumeration of different types of arrays which are parsed by the MzML Parser
+ *
+ */
 public enum MzMLArrayType {
   MZ("MS:1000514"), // m/z values array
   INTENSITY("MS:1000515"), // Intensity values array
@@ -24,7 +28,12 @@ public enum MzMLArrayType {
     this.accession = accession;
   }
 
-  public String getValue() {
+  /**
+   * 
+   * @return the CV Parameter accession of the binary data array type as {@link java.lang.String
+   *         String}
+   */
+  public String getAccession() {
     return accession;
   }
 }

@@ -13,7 +13,10 @@
 
 package io.github.msdk.io.mzml2.data;
 
-
+/**
+ * Enumeration of different compression types which are parsed by the MzML Parser
+ *
+ */
 public enum MzMLCompressionType {
   NUMPRESS_LINPRED("MS:1002312", "MS-Numpress linear prediction compression"), //
   NUMPRESS_POSINT("MS:1002313", "MS-Numpress positive integer compression"), //
@@ -35,10 +38,18 @@ public enum MzMLCompressionType {
     this.name = name;
   }
 
+  /**
+   * 
+   * @return the CV Parameter accession of the compression type as {@link java.lang.String String}
+   */
   public String getAccession() {
     return accession;
   }
 
+  /**
+   * 
+   * @return the CV Parameter name of the compression type as {@link java.lang.String String}
+   */
   public String getName() {
     return name;
   }
