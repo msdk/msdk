@@ -60,6 +60,8 @@ public class CurveTool {
     double sigma = 0;
     int countProperIteration = 0;
     int countTotalIteration = 0;
+    WeightedObservedPoints obs = new WeightedObservedPoints();
+    GaussianCurveFitter fitter = GaussianCurveFitter.create();
 
     while (countProperIteration < numberOfScansForFWHMCalc) {
       countTotalIteration++;
@@ -78,14 +80,13 @@ public class CurveTool {
       if (verticalSlice == null)
         continue;
 
-      WeightedObservedPoints obs = new WeightedObservedPoints();
-
+      obs.clear();
       for (SliceSparseMatrix.VerticalSliceDataPoint datapoint : verticalSlice) {
         obs.add(datapoint.mz, datapoint.intensity);
       }
 
       try {
-        double[] parameters = GaussianCurveFitter.create().fit(obs.toList());
+        double[] parameters = fitter.fit(obs.toList());
         sigma += FWHM_CONSTANT * parameters[2];
 
       } catch (MathIllegalArgumentException e) {

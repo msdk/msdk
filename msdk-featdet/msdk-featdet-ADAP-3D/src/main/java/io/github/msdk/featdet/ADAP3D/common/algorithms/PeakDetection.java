@@ -54,21 +54,55 @@ public class PeakDetection {
    * This method executes the iteration method to find good peaks.
    * </p>
    * 
+   * @param maxIteration a {@link java.lang.Integer} object. This is the maximum number of times
+   *        iteration method will be executed.
    * @return peakList a list of {@link GoodPeakInfo} object type. This contains information of good
    *         peaks.
    */
-  public List<GoodPeakInfo> execute() {
+  public List<GoodPeakInfo> execute(int maxIteration) {
 
-    Triplet maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
     CurveTool objCurveTool = new CurveTool(objSliceSparseMatrix);
-    double fwhm = objCurveTool.estimateFwhmMs(20);
+    double fwhm = objCurveTool.estimateFwhmMs(objParameters.getRandomNumOfScan());
+    int roundedFWHM = objSliceSparseMatrix.roundMZ(fwhm);
+    int maxCount = 0;
+    Triplet maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
+    List<GoodPeakInfo> peakList = new ArrayList<GoodPeakInfo>();
+
+    while (maxCount < maxIteration) {
+      GoodPeakInfo goodPeak = iteration(maxIntensityTriplet, roundedFWHM);
+      if (goodPeak != null)
+        peakList.add(goodPeak);
+
+      maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
+      maxCount++;
+    }
+
+
+    return peakList;
+  }
+
+
+  /**
+   * <p>
+   * This method executes the iteration method to find good peaks.
+   * </p>
+   * 
+   * @return peakList a list of {@link GoodPeakInfo} object type. This contains information of good
+   *         peaks.
+   */
+  public List<GoodPeakInfo> execute(double intensityThreshold) {
+
+
+    CurveTool objCurveTool = new CurveTool(objSliceSparseMatrix);
+    double fwhm = objCurveTool.estimateFwhmMs(objParameters.getRandomNumOfScan());
     int roundedFWHM = objSliceSparseMatrix.roundMZ(fwhm);
 
 
-    maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
+    Triplet maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
     List<GoodPeakInfo> peakList = new ArrayList<GoodPeakInfo>();
 
-    while (maxIntensityTriplet.intensity > objParameters.getIntensityThreshold()) {
+
+    while (maxIntensityTriplet.intensity > intensityThreshold) {
       GoodPeakInfo goodPeak = iteration(maxIntensityTriplet, roundedFWHM);
       if (goodPeak != null)
         peakList.add(goodPeak);

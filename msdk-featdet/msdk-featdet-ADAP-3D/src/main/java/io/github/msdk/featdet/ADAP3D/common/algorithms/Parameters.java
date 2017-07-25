@@ -22,7 +22,7 @@ public class Parameters {
   private int coefAreaRatioTolerance = 100;
   private double minPeakWidth = 0.0;
   private double maxPeakWidth = 10.0;
-  private double intensityThreshold = 5000;
+  private int randomNumOfScan = 20;
 
   public void setPeakSimilarityThreshold(double thresholdValue) {
     peakSimilarityThreshold = thresholdValue;
@@ -82,11 +82,11 @@ public class Parameters {
     return maxPeakWidth;
   }
   
-  public void setIntensityThreshold(double intensity){
-    intensityThreshold = intensity;
+  public void setRandomNumOfScan(int fwhmScans) {
+    randomNumOfScan = fwhmScans;
   }
-  
-  public double getIntensityThreshold(){
-    return intensityThreshold;
+
+  public int getRandomNumOfScan() {
+    return randomNumOfScan;
   }
 }

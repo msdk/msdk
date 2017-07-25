@@ -154,16 +154,16 @@ public class SliceSparseMatrix {
       @Override
       public int compare(Triplet o1, Triplet o2) {
 
-        Integer scan1 = o1.scanNumber;
-        Integer scan2 = o2.scanNumber;
-        int scanCompare = scan1.compareTo(scan2);
+        int scan1 = o1.scanNumber;
+        int scan2 = o2.scanNumber;
+        int scanCompare = Integer.compare(scan1,scan2);
 
         if (scanCompare != 0) {
           return scanCompare;
         } else {
-          Integer mz1 = o1.mz;
-          Integer mz2 = o2.mz;
-          return mz1.compareTo(mz2);
+          int mz1 = o1.mz;
+          int mz2 = o2.mz;
+          return Integer.compare(mz1,mz2);
         }
       }
     };
@@ -197,6 +197,19 @@ public class SliceSparseMatrix {
 
 
     Collections.sort(mzValues);
+    
+    Comparator<Triplet> compareIntensity = new Comparator<Triplet>() {
+
+      @Override
+      public int compare(Triplet o1, Triplet o2) {
+
+        Float intensity1 = o1.intensity;
+        Float intensity2 = o2.intensity;
+        int intensityCompare = intensity2.compareTo(intensity1);
+        return intensityCompare;
+      }
+    };
+    Collections.sort(filterListOfTriplet, compareIntensity);
   }
 
   /**
@@ -221,8 +234,8 @@ public class SliceSparseMatrix {
     MultiKeyMap<Integer, Triplet> sliceMap = new MultiKeyMap<Integer, Triplet>();
 
     for (int i = lowerScanBound; i <= upperScanBound; i++) {
-      if (tripletMap.containsKey(new Integer(i), new Integer(roundedmz))) {
-        Triplet triplet = (Triplet) tripletMap.get(new Integer(i), new Integer(roundedmz));
+      if (tripletMap.containsKey(i, roundedmz)) {
+        Triplet triplet = (Triplet) tripletMap.get(i, roundedmz);
         sliceMap.put(i, roundedmz, triplet);
       } else {
         sliceMap.put(i, roundedmz, null);
@@ -272,10 +285,10 @@ public class SliceSparseMatrix {
     for (int roundedMZ : mzValues) {
       VerticalSliceDataPoint datapoint = new VerticalSliceDataPoint();
 
-      if (tripletMap.containsKey(new Integer(scanNumber), new Integer(roundedMZ))) {
+      if (tripletMap.containsKey(scanNumber, roundedMZ)) {
 
         datapoint.intensity =
-            ((Triplet) tripletMap.get(new Integer(scanNumber), new Integer(roundedMZ))).intensity;
+            ((Triplet) tripletMap.get(scanNumber, roundedMZ)).intensity;
         datapoint.mz = (float) roundedMZ / roundMzFactor;
         datapointList.add(datapoint);
       } else {
@@ -299,18 +312,6 @@ public class SliceSparseMatrix {
   public Triplet findNextMaxIntensity() {
 
     Triplet tripletObject = null;
-    Comparator<Triplet> compare = new Comparator<Triplet>() {
-
-      @Override
-      public int compare(Triplet o1, Triplet o2) {
-
-        Float intensity1 = o1.intensity;
-        Float intensity2 = o2.intensity;
-        int intensityCompare = intensity2.compareTo(intensity1);
-        return intensityCompare;
-      }
-    };
-    Collections.sort(filterListOfTriplet, compare);
 
     for (int i = maxIntensityIndex; i < filterListOfTriplet.size(); i++) {
       if (filterListOfTriplet.get(i).removed == false) {
@@ -389,8 +390,8 @@ public class SliceSparseMatrix {
   public MultiKeyMap<Integer, Triplet> removeDataPoints(int roundedmz, int lowerScanBound,
       int upperScanBound) {
     for (int i = lowerScanBound; i <= upperScanBound; i++) {
-      if (tripletMap.containsKey(new Integer(i), new Integer(roundedmz))) {
-        Triplet triplet = (Triplet) tripletMap.get(new Integer(i), new Integer(roundedmz));
+      if (tripletMap.containsKey(i, roundedmz)) {
+        Triplet triplet = (Triplet) tripletMap.get(i, roundedmz);
         triplet.removed = true;
       }
     }
@@ -412,8 +413,8 @@ public class SliceSparseMatrix {
   public MultiKeyMap<Integer, Triplet> restoreDataPoints(int roundedmz, int lowerScanBound,
       int upperScanBound) {
     for (int i = lowerScanBound; i <= upperScanBound; i++) {
-      if (tripletMap.containsKey(new Integer(i), new Integer(roundedmz))) {
-        Triplet triplet = (Triplet) tripletMap.get(new Integer(i), new Integer(roundedmz));
+      if (tripletMap.containsKey(i, roundedmz)) {
+        Triplet triplet = (Triplet) tripletMap.get(i, roundedmz);
         triplet.removed = false;
       }
     }
