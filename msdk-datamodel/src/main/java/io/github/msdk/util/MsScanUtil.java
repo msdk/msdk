@@ -51,6 +51,7 @@ public class MsScanUtil {
     newScan.setMsScanType(scan.getMsScanType());
     newScan.setScanningRange(scan.getScanningRange());
     newScan.setRetentionTime(scan.getRetentionTime());
+    newScan.setMsLevel(scan.getMsLevel());
     newScan.setSourceInducedFragmentation(scan.getSourceInducedFragmentation());
     newScan.getIsolations().addAll(scan.getIsolations());
 

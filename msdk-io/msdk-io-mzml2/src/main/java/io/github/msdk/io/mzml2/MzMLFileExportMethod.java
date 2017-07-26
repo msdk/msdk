@@ -52,6 +52,13 @@ import io.github.msdk.io.mzml2.data.MzMLTags;
 import javolution.xml.internal.stream.XMLStreamWriterImpl;
 import javolution.xml.stream.XMLStreamException;
 
+/**
+ * <p>
+ * This class contains methods which can be used to write data contained in a
+ * {@link o.github.msdk.datamodel.rawdata.RawDataFile RawDataFile} to a file, in mzML format
+ * </p>
+ *
+ */
 public class MzMLFileExportMethod implements MSDKMethod<Void> {
 
   private static final String dataProcessingId = "MSDK_mzml_export";
@@ -79,6 +86,17 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
   private long totalScans = 0, totalChromatograms = 0, parsedScans, parsedChromatograms,
       indexListOffset;
 
+  /**
+   * <p>
+   * Constructor for MzMLFileExportMethod.
+   * </p>
+   * 
+   * @param rawDataFile the input {@link o.github.msdk.datamodel.rawdata.RawDataFile RawDataFile}
+   *        which contains the data to be exported
+   * @param target the target {@link java.io.File File} to write the data, in mzML format
+   * @param doubleArrayCompression compression type for <code>double[]</code> which are encoded
+   * @param floatArrayCompression compression type for <code>float[]</code> which are encoded
+   */
   public MzMLFileExportMethod(@Nonnull RawDataFile rawDataFile, @Nonnull File target,
       @Nonnull MzMLCompressionType doubleArrayCompression,
       MzMLCompressionType floatArrayCompression) {
@@ -88,6 +106,15 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
     this.floatArrayCompression = floatArrayCompression;
   }
 
+  /**
+   * <p>
+   * Execute the process of writing the data from the the input
+   * {@link o.github.msdk.datamodel.rawdata.RawDataFile RawDataFile} to the target
+   * {@link java.io.File File}
+   * </p>
+   * 
+   * @return nothing, a void method
+   */
   @Override
   public Void execute() throws MSDKException {
 
@@ -186,7 +213,9 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
         xmlStreamWriter.writeAttribute(MzMLTags.ATTR_DEFAULT_ARRAY_LENGTH,
             String.valueOf(scan.getNumberOfDataPoints()));
 
-        MzMLMsScan spectrum = (MzMLMsScan) scan;
+        MzMLMsScan spectrum = null;
+        if (scan instanceof MzMLMsScan)
+          spectrum = (MzMLMsScan) scan;
 
         // spectrum type CV param
         if (!(rawDataFile instanceof MzMLRawDataFile) || (rawDataFile instanceof MzMLRawDataFile
@@ -383,7 +412,7 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
 
         // data array type CV param
         writeCVParam(xmlStreamWriter,
-            new MzMLCVParam(MzMLArrayType.MZ.getValue(), "", "m/z array", MzMLCV.cvMz));
+            new MzMLCVParam(MzMLArrayType.MZ.getAccession(), "", "m/z array", MzMLCV.cvMz));
 
         // <binary>
         xmlStreamWriter.writeStartElement(MzMLTags.TAG_BINARY);
@@ -409,7 +438,7 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
             floatArrayCompression.getName(), null));
 
         // data array type CV param
-        writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLArrayType.INTENSITY.getValue(), "",
+        writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLArrayType.INTENSITY.getAccession(), "",
             "intensity array", MzMLCV.cvUnitsIntensity1));
 
         // <binary>
@@ -555,8 +584,8 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
             floatArrayCompression.getName(), null));
 
         // data array type CV param
-        writeCVParam(xmlStreamWriter,
-            new MzMLCVParam(MzMLArrayType.TIME.getValue(), "", "time array", MzMLCV.cvUnitsMin2));
+        writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLArrayType.TIME.getAccession(), "",
+            "time array", MzMLCV.cvUnitsMin2));
 
         // <binary>
         xmlStreamWriter.writeStartElement(MzMLTags.TAG_BINARY);
@@ -582,7 +611,7 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
             floatArrayCompression.getName(), null));
 
         // data array type CV param
-        writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLArrayType.INTENSITY.getValue(), "",
+        writeCVParam(xmlStreamWriter, new MzMLCVParam(MzMLArrayType.INTENSITY.getAccession(), "",
             "intensity array", MzMLCV.cvUnitsIntensity1));
 
         // <binary>
@@ -682,6 +711,16 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
     this.canceled = true;
   }
 
+  /**
+   * <p>
+   * Write a <code>&lt;cvParam&gt;</code> to the <code>xmlStreamWriter</code>
+   * </p>
+   * 
+   * @param xmlStreamWriter an {@link javolution.xml.internal.stream.XMLStreamWriterImpl
+   *        XMLStreamWriterImpl} instance
+   * @param cvParam the CV Parameter to be written to the target {@link java.io.File File}
+   * @throws XMLStreamException
+   */
   private void writeCVParam(XMLStreamWriterImpl xmlStreamWriter, MzMLCVParam cvParam)
       throws XMLStreamException {
 
@@ -711,6 +750,17 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
 
   }
 
+  /**
+   * <p>
+   * Write a group (or list) of <code>&lt;cvParam&gt;</code> to the <code>xmlStreamWriter</code>
+   * </p>
+   * 
+   * @param xmlStreamWriter an {@link javolution.xml.internal.stream.XMLStreamWriterImpl
+   *        XMLStreamWriterImpl} instance
+   * @param cvGroup the list (or group) of CV Parameters to be written to the target
+   *        {@link java.io.File File}
+   * @throws XMLStreamException
+   */
   private void writeCVGroup(XMLStreamWriterImpl xmlStreamWriter, MzMLCVGroup cvGroup)
       throws XMLStreamException {
     for (MzMLCVParam cvParam : cvGroup.getCVParamsList())
