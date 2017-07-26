@@ -12,8 +12,6 @@
  */
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
-import org.apache.commons.collections4.map.MultiKeyMap;
-
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
 
 import java.lang.Math;
@@ -116,8 +114,8 @@ public class Peak3DTest {
     // slice is used to store horizontal row from sparse matrix for given mz, left boundary and
     // right boundary.
     // left boundary and right boundary are used in form of scan numbers.
-    MultiKeyMap<Integer, Triplet> slice =
-        objsliceSparseMatrix.getHorizontalSlice(roundedMz, leftBound, rightBound);
+    List<Triplet> slice =
+        (List<Triplet>) objsliceSparseMatrix.getHorizontalSlice(roundedMz, leftBound, rightBound);
 
     // referenceEIC is used for storing normalized intensities for m/z-value equal to mz.
     double[] referenceEIC = new double[rightBound - leftBound + 1];
@@ -234,8 +232,8 @@ public class Peak3DTest {
       double[] curEIC = new double[arrayCount];
 
       // Here current horizontal slice from sparse matrix is stored adjacent mz value.
-      MultiKeyMap<Integer, Triplet> curSlice =
-          objsliceSparseMatrix.getHorizontalSlice(curMZ, leftBound, rightBound);
+      List<Triplet> curSlice =
+          (List<Triplet>) objsliceSparseMatrix.getHorizontalSlice(curMZ, leftBound, rightBound);
       double area = CurveTool.normalize(curSlice, leftBound, rightBound, curMZ, curEIC);
 
       // if area is too small continue.

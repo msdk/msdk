@@ -15,8 +15,6 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections4.map.MultiKeyMap;
-
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
 import io.github.msdk.featdet.ADAP3D.datamodel.Result;
 
@@ -137,7 +135,7 @@ public class PeakDetection {
             : triplet.scanNumber + objParameters.getDelta();
 
     // Here we're getting horizontal slice.
-    MultiKeyMap<Integer, Triplet> slice =
+    List<Triplet> slice =
         objSliceSparseMatrix.getHorizontalSlice(triplet.mz, lowerScanBound, upperScanBound);
 
     // Below CWT is called to get bounds of peak.
@@ -171,12 +169,12 @@ public class PeakDetection {
 
 
 
-        MultiKeyMap<Integer, Triplet> curSlice = objSliceSparseMatrix.getHorizontalSlice(triplet.mz,
+        List<Triplet> curSlice = objSliceSparseMatrix.getHorizontalSlice(triplet.mz,
             peakList.get(i).curLeftBound, peakList.get(i).curRightBound);
 
-        double sliceMaxIntensity = curSlice.values().stream()
+        double sliceMaxIntensity = curSlice.stream()
             .map(x -> x != null ? x.intensity : 0.0).max(Double::compareTo).orElse(0.0);
-        int scanNumber = curSlice.values().stream()
+        int scanNumber = curSlice.stream()
             .map(x -> x != null && x.intensity == sliceMaxIntensity ? x.scanNumber : 0)
             .max(Integer::compareTo).orElse(0);
 

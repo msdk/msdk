@@ -12,11 +12,12 @@
  */
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.lang.Math;
 
-import org.apache.commons.collections4.map.MultiKeyMap;
 import org.apache.commons.math3.exception.MathIllegalArgumentException;
 import org.apache.commons.math3.fitting.GaussianCurveFitter;
 import org.apache.commons.math3.fitting.WeightedObservedPoints;
@@ -131,15 +132,36 @@ public class CurveTool {
    * @return area a {@link java.lang.Double} object. This is area of normalize intensity points.
    *         </p>
    */
-  public static double normalize(MultiKeyMap<Integer, Triplet> slice, int leftBound, int rightBound,
-      int roundedMz, double[] referenceEIC) {
+  public static double normalize(List<Triplet> slice, int leftBound, int rightBound, int roundedMz,
+      double[] referenceEIC) {
 
+    Comparator<Triplet> compare = new Comparator<Triplet>() {
+
+      @Override
+      public int compare(Triplet o1, Triplet o2) {
+        int scan1 = o1.scanNumber;
+        int scan2 = o2.scanNumber;
+        int scanCompare = Integer.compare(scan1, scan2);
+
+        if (scanCompare != 0) {
+          return scanCompare;
+        } else {
+          int mz1 = o1.mz;
+          int mz2 = o2.mz;
+          return Integer.compare(mz1, mz2);
+        }
+      }
+    };
+    Collections.sort(slice, compare);
     double[] intensityValues = new double[rightBound - leftBound + 1];
 
     // Here area has been calculated for normalizing the intensities.
     for (int i = 0; i < rightBound - leftBound + 1; i++) {
-      SliceSparseMatrix.Triplet obj = slice.get(i + leftBound, roundedMz);
-      intensityValues[i] = obj == null ? 0.0 : obj.intensity;
+      Triplet searchTriplet = new Triplet();
+      searchTriplet.mz = roundedMz;
+      searchTriplet.scanNumber = i + leftBound;
+      SliceSparseMatrix.Triplet obj = slice.get(Collections.binarySearch(slice, searchTriplet,compare));
+      intensityValues[i] = obj.intensity;
     }
 
     return normalize(intensityValues, referenceEIC);

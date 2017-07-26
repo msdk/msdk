@@ -25,7 +25,6 @@ import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
 import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 
 public class PeakDetectionTest {
@@ -47,7 +46,7 @@ public class PeakDetectionTest {
   public static void loadData() throws MSDKException {
 
     // Import the file
-    String file = "small.mzxml";
+    String file = "small.mzXML";
     Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
@@ -55,7 +54,7 @@ public class PeakDetectionTest {
     rawFile = importer.execute();
     objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
     Assert.assertNotNull(rawFile);
-    // Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+   // Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
   }
 
   @Test

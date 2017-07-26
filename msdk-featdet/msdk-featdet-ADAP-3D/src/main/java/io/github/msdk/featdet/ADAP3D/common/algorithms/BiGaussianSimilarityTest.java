@@ -12,8 +12,7 @@
  */
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
-import org.apache.commons.collections4.map.MultiKeyMap;
-
+import java.util.List;
 import java.util.stream.IntStream;
 
 import io.github.msdk.featdet.ADAP3D.common.algorithms.Peak3DTest.Result;
@@ -48,7 +47,7 @@ public class BiGaussianSimilarityTest {
    *         boundaries for adjacent similar peaks.
    *         </p>
    */
-  public boolean execute(MultiKeyMap<Integer, Triplet> slice, int leftBound, int rightBound,
+  public boolean execute(List<Triplet> slice, int leftBound, int rightBound,
       int roundedMZ, double biGaussianSimilarityThreshold) {
 
     double[] referenceEIC = new double[rightBound - leftBound + 1];

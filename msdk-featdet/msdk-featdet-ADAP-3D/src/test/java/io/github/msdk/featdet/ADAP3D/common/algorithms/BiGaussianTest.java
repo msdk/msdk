@@ -18,11 +18,11 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.apache.commons.collections4.map.MultiKeyMap;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.List;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
@@ -59,8 +59,7 @@ public class BiGaussianTest {
 
   @Test
   public void testgetBiGaussianValue() throws MSDKException {
-    MultiKeyMap<Integer, Triplet> horizontalSlice =
-        objSliceSparseMatrix.getHorizontalSlice(1401040, 1, 23);
+    List<Triplet> horizontalSlice = objSliceSparseMatrix.getHorizontalSlice(1401040, 1, 23);
     BiGaussian objBiGaussian = new BiGaussian(horizontalSlice, 1401040, 1, 23);
     double biGaussianValue = objBiGaussian.getValue(6);
     Assert.assertEquals(18454, biGaussianValue, 1);
