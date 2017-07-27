@@ -172,8 +172,8 @@ public class PeakDetection {
         List<Triplet> curSlice = objSliceSparseMatrix.getHorizontalSlice(triplet.mz,
             peakList.get(i).curLeftBound, peakList.get(i).curRightBound);
 
-        double sliceMaxIntensity = curSlice.stream()
-            .map(x -> x != null ? x.intensity : 0.0).max(Double::compareTo).orElse(0.0);
+        double sliceMaxIntensity = curSlice.stream().map(x -> x != null ? x.intensity : 0.0)
+            .max(Double::compareTo).orElse(0.0);
         int scanNumber = curSlice.stream()
             .map(x -> x != null && x.intensity == sliceMaxIntensity ? x.scanNumber : 0)
             .max(Integer::compareTo).orElse(0);
