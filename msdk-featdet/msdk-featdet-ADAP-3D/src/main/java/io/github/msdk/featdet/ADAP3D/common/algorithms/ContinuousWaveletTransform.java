@@ -420,26 +420,19 @@ public class ContinuousWaveletTransform {
       rightBoundIntegrate = x.length - 1;
     }
 
-    double[] curX = new double[rightBoundIntegrate - leftBoundIntegrate + 1];
     double[] curY = new double[rightBoundIntegrate - leftBoundIntegrate + 1];
     double[] waveletY = new double[rightBoundIntegrate - leftBoundIntegrate + 1];
 
     int curIndex = 0;
     for (int i = leftBoundIntegrate; i <= rightBoundIntegrate; i++) {
-      curX[curIndex] = x[i];
+      
       curY[curIndex] = signal[i];
       // for the wavelt work in units of indecies because wavelt for numbers smaller than one is not
       // approriate.
       waveletY[curIndex] = rickerWavelet(x[i] - x[xIndexOfWaveletMax], (double) waveletScale);
       curIndex += 1;
     }
-    // double[] doublePtsCurX = doubleTheNumberOfPtsX(curX);
-    // double[] doublePtsDataY = doubleTheNumberOfPtsDataY(curY);
-    // double[] doublePtsWavelet = doubleTheNumberOfPtsWavelet(waveletY, (double) waveletScale);
-
-    // writeDataAndWavelet(curX,curY,waveletY);
-
-    double innerProd = innerProduct(curX, curY, waveletY);
+    double innerProd = innerProduct(curY, waveletY);
     return innerProd;
   }
 
@@ -454,32 +447,13 @@ public class ContinuousWaveletTransform {
   // This function can only take two arrays of equivelent length.
   // in the msconvert code they just add the wavelet * the intensity... Lets just do this
   // for now to see if we can get the same results.
-  public double innerProduct(double[] x, double[] arr1, double[] arr2) {
+  public double innerProduct(double[] arr1, double[] arr2) {
     int l = arr1.length;
-    double[] multArr = new double[arr1.length];
-    for (int i = 0; i < l; i++) {
-      multArr[i] = arr1[i] * arr2[i];
-    }
     double sum = 0.0;
     for (int i = 0; i < l; i++) {
-      sum += multArr[i];
+      sum += arr1[i] * arr2[i];
     }
     return sum;
-    // // Because EICs can be messy best to just use trapazoidal rule
-    // double area = 0.0;
-    // for (int i=0; i < l-1; i++){
-    // double curXSpace = x[i+1]-x[i];
-    // // lowest height of the two adjacent points
-    // double curYLow = Math.min(multArr[i+1],multArr[i]);
-    // double curYHigh= Math.max(multArr[i+1],multArr[i]);
-    // double triangleArea = 0.5*curXSpace*(curYHigh-curYLow);
-    // // triangle area needs to be set as negative if the points are below zero
-    // if (){
-    //
-    // }
-    // double rectangleArea = curXSpace*curYLow;
-    //
-    // }
   }
 
 

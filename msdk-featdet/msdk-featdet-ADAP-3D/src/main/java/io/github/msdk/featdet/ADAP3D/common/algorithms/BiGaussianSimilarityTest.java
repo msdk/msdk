@@ -34,7 +34,7 @@ public class BiGaussianSimilarityTest {
    * intensity values from slice of sparse matrix.
    * </p>
    * 
-   * @param slice a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This is
+   * @param slice a {@link java.util.List} object. This is
    *        horizontal slice from sparse matrix of given m/z value.
    * @param leftBound a {@link java.lang.Integer} object. This is lowest scan number from which peak
    *        determining starts.

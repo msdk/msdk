@@ -69,7 +69,7 @@ public class SliceSparseMatrixTest {
   @Test
   public void getVerticalSlice() throws MSDKException, IOException {
     List<SliceSparseMatrix.VerticalSliceDataPoint> slice = objSliceSparseMatrix.getVerticalSlice(5);
-    Assert.assertEquals(46004, slice.size());
+    Assert.assertEquals(369, slice.size());
   }
 
   @Test

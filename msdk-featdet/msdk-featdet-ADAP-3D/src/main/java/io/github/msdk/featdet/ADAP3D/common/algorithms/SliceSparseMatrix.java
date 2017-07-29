@@ -357,9 +357,10 @@ public class SliceSparseMatrix {
     int maxIntensityMZ = oneScanTriplet.get(0).mz;
     Collections.sort(oneScanTriplet, compareScanMz);
 
+    Triplet searchMz = new Triplet();
     for (int roundedMZ : mzValues) {
       VerticalSliceDataPoint datapoint = new VerticalSliceDataPoint();
-      Triplet searchMz = new Triplet();
+
       searchMz.mz = roundedMZ;
       searchMz.scanNumber = scanNumber;
       if (roundedMZ >= (maxIntensityMZ - roundMzFactor)
@@ -464,8 +465,10 @@ public class SliceSparseMatrix {
    */
   public List<Triplet> removeDataPoints(int roundedmz, int lowerScanBound, int upperScanBound) {
 
+    Triplet searchTriplet = new Triplet();
+
     for (int i = lowerScanBound; i <= upperScanBound; i++) {
-      Triplet searchTriplet = new Triplet();
+
       searchTriplet.mz = roundedmz;
       searchTriplet.scanNumber = i;
       int index = Collections.binarySearch(filterListOfTriplet, searchTriplet, compareScanMz);
@@ -491,8 +494,10 @@ public class SliceSparseMatrix {
    */
   public List<Triplet> restoreDataPoints(int roundedmz, int lowerScanBound, int upperScanBound) {
 
+    Triplet searchTriplet = new Triplet();
+
     for (int i = lowerScanBound; i <= upperScanBound; i++) {
-      Triplet searchTriplet = new Triplet();
+
       searchTriplet.mz = roundedmz;
       searchTriplet.scanNumber = i;
       int index = Collections.binarySearch(filterListOfTriplet, searchTriplet, compareScanMz);

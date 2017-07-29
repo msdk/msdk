@@ -56,7 +56,7 @@ public class BiGaussian {
    * SigmaLeft and SigmaRight.
    * </p>
    * 
-   * @param horizontalSlice a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This
+   * @param horizontalSlice a {@link java.util.List} object. This
    *        is horizontal slice from the sparse matrix.
    * @param roundedmz a {@link java.lang.Double} object. It's rounded m/z value. Original m/z value
    *        multiplied by 10000.
