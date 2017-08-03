@@ -261,6 +261,7 @@ public class ContinuousWaveletTransform {
       result.curRightBound = curRightBound;
       result.bestCoefficient = bestCoefficient;
       result.curArea = curArea;
+      result.coefOverArea = normedCoef;
 
       // add the result object in the result list
       resultList.add(result);
@@ -420,20 +421,22 @@ public class ContinuousWaveletTransform {
       rightBoundIntegrate = x.length - 1;
     }
 
-    double[] curY = new double[rightBoundIntegrate - leftBoundIntegrate + 1];
-    double[] waveletY = new double[rightBoundIntegrate - leftBoundIntegrate + 1];
+   //  double[] curY = new double[rightBoundIntegrate - leftBoundIntegrate + 1];
+    // double[] waveletY = new double[rightBoundIntegrate - leftBoundIntegrate + 1];
 
-    int curIndex = 0;
+    double innerProduct = 0.0;
+    //int curIndex = 0;
     for (int i = leftBoundIntegrate; i <= rightBoundIntegrate; i++) {
       
-      curY[curIndex] = signal[i];
+     double  curY = signal[i];
       // for the wavelt work in units of indecies because wavelt for numbers smaller than one is not
       // approriate.
-      waveletY[curIndex] = rickerWavelet(x[i] - x[xIndexOfWaveletMax], (double) waveletScale);
-      curIndex += 1;
+      double waveletY = rickerWavelet(x[i] - x[xIndexOfWaveletMax], (double) waveletScale);
+      innerProduct += curY * waveletY;
+      //curIndex += 1;
     }
-    double innerProd = innerProduct(curY, waveletY);
-    return innerProd;
+    // double innerProd = innerProduct(curY, waveletY);
+    return innerProduct;
   }
 
   // This just takes an x value and the parameters of the wavelet and retuns the y value for that x
@@ -447,14 +450,14 @@ public class ContinuousWaveletTransform {
   // This function can only take two arrays of equivelent length.
   // in the msconvert code they just add the wavelet * the intensity... Lets just do this
   // for now to see if we can get the same results.
-  public double innerProduct(double[] arr1, double[] arr2) {
-    int l = arr1.length;
-    double sum = 0.0;
-    for (int i = 0; i < l; i++) {
-      sum += arr1[i] * arr2[i];
-    }
-    return sum;
-  }
+//  public double innerProduct(double[] arr1, double[] arr2) {
+//    int l = arr1.length;
+//    double sum = 0.0;
+//    for (int i = 0; i < l; i++) {
+//      sum += arr1[i] * arr2[i];
+//    }
+//    return sum;
+//  }
 
 
   public void setSignal(List<DataPoint> listOfDataPoint) {

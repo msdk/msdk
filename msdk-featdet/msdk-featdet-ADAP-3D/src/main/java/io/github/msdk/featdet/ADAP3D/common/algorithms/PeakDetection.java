@@ -12,6 +12,8 @@
  */
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +31,11 @@ public class PeakDetection {
     double mz;
     int upperScanBound;
     int lowerScanBound;
+    Result objResult;
   }
 
   private SliceSparseMatrix objSliceSparseMatrix;
-  private Parameters objParameters;
+  // private Parameters objParameters;
 
   /**
    * <p>
@@ -42,9 +45,9 @@ public class PeakDetection {
    * @param objSliceSparseMatrix is sparse matrix created from raw data file.
    * @param objParameter contains all the necessary parameters to find the peak.
    */
-  PeakDetection(SliceSparseMatrix objSliceSparseMatrix, Parameters objParameter) {
+  PeakDetection(SliceSparseMatrix objSliceSparseMatrix) {
     this.objSliceSparseMatrix = objSliceSparseMatrix;
-    this.objParameters = objParameter;
+    // this.objParameters = objParameter;
   }
 
   /**
@@ -57,25 +60,22 @@ public class PeakDetection {
    * @return peakList a list of {@link GoodPeakInfo} object type. This contains information of good
    *         peaks.
    */
-  public List<GoodPeakInfo> execute(int maxIteration) {
-
-    CurveTool objCurveTool = new CurveTool(objSliceSparseMatrix);
-    double fwhm = objCurveTool.estimateFwhmMs(objParameters.getRandomNumOfScan());
-    int roundedFWHM = objSliceSparseMatrix.roundMZ(fwhm);
+  public List<GoodPeakInfo> execute(int maxIteration, Parameters objParameters, int roundedFWHM) {
     int maxCount = 0;
     Triplet maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
     List<GoodPeakInfo> peakList = new ArrayList<GoodPeakInfo>();
 
     while (maxCount < maxIteration) {
-      GoodPeakInfo goodPeak = iteration(maxIntensityTriplet, roundedFWHM);
+      if (peakList.size() == 20)
+        break;
+      GoodPeakInfo goodPeak = iteration(maxIntensityTriplet, roundedFWHM, objParameters);
       if (goodPeak != null)
         peakList.add(goodPeak);
+
 
       maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
       maxCount++;
     }
-
-
     return peakList;
   }
 
@@ -88,20 +88,14 @@ public class PeakDetection {
    * @return peakList a list of {@link GoodPeakInfo} object type. This contains information of good
    *         peaks.
    */
-  public List<GoodPeakInfo> execute(double intensityThreshold) {
-
-
-    CurveTool objCurveTool = new CurveTool(objSliceSparseMatrix);
-    double fwhm = objCurveTool.estimateFwhmMs(objParameters.getRandomNumOfScan());
-    int roundedFWHM = objSliceSparseMatrix.roundMZ(fwhm);
-
+  public List<GoodPeakInfo> execute(Parameters objParameters, int roundedFWHM) {
 
     Triplet maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
     List<GoodPeakInfo> peakList = new ArrayList<GoodPeakInfo>();
 
 
-    while (maxIntensityTriplet.intensity > intensityThreshold) {
-      GoodPeakInfo goodPeak = iteration(maxIntensityTriplet, roundedFWHM);
+    while (maxIntensityTriplet != null) {
+      GoodPeakInfo goodPeak = iteration(maxIntensityTriplet, roundedFWHM, objParameters);
       if (goodPeak != null)
         peakList.add(goodPeak);
 
@@ -124,7 +118,7 @@ public class PeakDetection {
    * @return objPeakInfo a {@link GoodPeakInfo} object. This contains information of good peak. If
    *         there's no good peak it'll return null.
    */
-  private GoodPeakInfo iteration(Triplet triplet, int fwhm) {
+  private GoodPeakInfo iteration(Triplet triplet, int fwhm, Parameters objParameters) {
 
     GoodPeakInfo objPeakInfo = null;
     int lowerScanBound = triplet.scanNumber - objParameters.getDelta() < 0 ? 0
@@ -170,7 +164,8 @@ public class PeakDetection {
 
 
         List<Triplet> curSlice = objSliceSparseMatrix.getHorizontalSlice(triplet.mz,
-            peakList.get(i).curLeftBound, peakList.get(i).curRightBound);
+            peakList.get(i).curLeftBound + lowerScanBound,
+            peakList.get(i).curRightBound + lowerScanBound);
 
         double sliceMaxIntensity = curSlice.stream().map(x -> x != null ? x.intensity : 0.0)
             .max(Double::compareTo).orElse(0.0);
@@ -184,30 +179,58 @@ public class PeakDetection {
             removeDataPoints(triplet.mz - fwhm, triplet.mz + fwhm, lowerScanBound, upperScanBound);
             remove = false;
           }
-          restoreDataPoints(triplet.mz - fwhm, triplet.mz + fwhm, peakList.get(i).curLeftBound,
-              peakList.get(i).curRightBound);
+          restoreDataPoints(triplet.mz - fwhm, triplet.mz + fwhm,
+              peakList.get(i).curLeftBound + lowerScanBound,
+              peakList.get(i).curRightBound + lowerScanBound);
         }
 
         // If there's peak at apex.
         else {
-          Peak3DTest.Result peak = objPeak3DTest.execute(triplet.mz, peakList.get(i).curLeftBound,
-              peakList.get(i).curRightBound, objParameters.getPeakSimilarityThreshold());
-          boolean goodPeak = objBiGaussianTest.execute(curSlice, peakList.get(i).curLeftBound,
-              peakList.get(i).curRightBound, triplet.mz,
-              objParameters.getBiGaussianSimilarityThreshold());
+          Peak3DTest.Result peak =
+              objPeak3DTest.execute(triplet.mz, peakList.get(i).curLeftBound + lowerScanBound,
+                  peakList.get(i).curRightBound + lowerScanBound,
+                  objParameters.getPeakSimilarityThreshold());
+          boolean goodPeak =
+              objBiGaussianTest.execute(curSlice, peakList.get(i).curLeftBound + lowerScanBound,
+                  peakList.get(i).curRightBound + lowerScanBound, triplet.mz,
+                  objParameters.getBiGaussianSimilarityThreshold());
 
           // If there's good peak
           if (peak.goodPeak && goodPeak) {
-            removeDataPoints(peak.lowerMzBound, peak.upperMzBound, peakList.get(i).curLeftBound,
-                peakList.get(i).curRightBound);
+            removeDataPoints(peak.lowerMzBound, peak.upperMzBound,
+                peakList.get(i).curLeftBound + lowerScanBound,
+                peakList.get(i).curRightBound + lowerScanBound);
             objPeakInfo = new GoodPeakInfo();
             objPeakInfo.mz = (double) triplet.mz / 10000;
-            objPeakInfo.lowerScanBound = peakList.get(i).curLeftBound;
-            objPeakInfo.upperScanBound = peakList.get(i).curRightBound;
+            objPeakInfo.lowerScanBound = peakList.get(i).curLeftBound + lowerScanBound;
+            objPeakInfo.upperScanBound = peakList.get(i).curRightBound + lowerScanBound;
+            objPeakInfo.objResult = peakList.get(i);
+            try {
+              File file = new File("src/test/resources/" + "output" + triplet.mz + ".txt");
+              FileWriter writer = new FileWriter(file);
+              for (int j = peak.lowerMzBound; j <= peak.upperMzBound; j++) {
+                List<Triplet> printslice = objSliceSparseMatrix.getHorizontalSlice(j,
+                    objPeakInfo.lowerScanBound, objPeakInfo.upperScanBound);
+                if (printslice.size() != 0) {
+                  StringBuffer buffer = new StringBuffer();
+                  for (int k = 0; k < printslice.size(); k++) {
+                    buffer.append(j).append(",").append(printslice.get(k).intensity).append("\r\n");
+                    writer.write(buffer.toString());
+                    buffer = new StringBuffer();
+                  }
+                  buffer = new StringBuffer();
+                  buffer.append("end");
+                  writer.write(buffer.toString());
+                }
+              }
+              writer.close();
+            } catch (Exception e) {
 
+            }
           } else {
-            removeDataPoints(peak.lowerMzBound, peak.upperMzBound, peakList.get(i).curLeftBound,
-                peakList.get(i).curRightBound);
+            removeDataPoints(peak.lowerMzBound, peak.upperMzBound,
+                peakList.get(i).curLeftBound + lowerScanBound,
+                peakList.get(i).curRightBound + lowerScanBound);
           }
         }
 

@@ -16,13 +16,11 @@ public class Parameters {
 
   private double peakSimilarityThreshold = 0.5;
   private double biGaussianSimilarityThreshold = 0.25;
-  private int largestWaveletScale = 10;
-  private int delta = largestWaveletScale * 5;
   private int largeScaleIn = 10;
-  private int coefAreaRatioTolerance = 100;
+  private int delta = largeScaleIn * 5;
+  private double coefAreaRatioTolerance = 100;
   private double minPeakWidth = 0.0;
   private double maxPeakWidth = 10.0;
-  private int randomNumOfScan = 20;
 
   public void setPeakSimilarityThreshold(double thresholdValue) {
     peakSimilarityThreshold = thresholdValue;
@@ -41,8 +39,8 @@ public class Parameters {
   }
 
   public void setDelta(int scale) {
-    largestWaveletScale = scale;
-    delta = largestWaveletScale * 5;
+    largeScaleIn = scale;
+    delta = largeScaleIn * 5;
 
   }
 
@@ -58,11 +56,11 @@ public class Parameters {
     return largeScaleIn;
   }
 
-  public void setCoefAreaRatioTolerance(int areaRatioTolerance) {
-    coefAreaRatioTolerance = areaRatioTolerance;
+  public void setCoefAreaRatioTolerance(double coefOverAreaThreshold) {
+    coefAreaRatioTolerance = coefOverAreaThreshold;
   }
 
-  public int getCoefAreaRatioTolerance() {
+  public double getCoefAreaRatioTolerance() {
     return coefAreaRatioTolerance;
   }
 
@@ -80,13 +78,5 @@ public class Parameters {
 
   public double getMaxPeakWidth() {
     return maxPeakWidth;
-  }
-  
-  public void setRandomNumOfScan(int fwhmScans) {
-    randomNumOfScan = fwhmScans;
-  }
-
-  public int getRandomNumOfScan() {
-    return randomNumOfScan;
   }
 }

@@ -24,6 +24,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
+import io.github.msdk.datamodel.impl.SimpleFeature;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 
@@ -33,7 +34,7 @@ public class PeakDetectionTest {
   private static SliceSparseMatrix objSliceSparseMatrix;
 
   private static Path getResourcePath(String resource) throws MSDKException {
-    final URL url = Peak3DFunctionTest.class.getClassLoader().getResource(resource);
+    final URL url = PeakDetectionTest.class.getClassLoader().getResource(resource);
     try {
       return Paths.get(url.toURI()).toAbsolutePath();
     } catch (URISyntaxException e) {
@@ -46,7 +47,7 @@ public class PeakDetectionTest {
   public static void loadData() throws MSDKException {
 
     // Import the file
-    String file = "small.mzXML";
+    String file = "DC_010814_StandardsMixTest1_34StandardMix_01.mzXML";
     Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
@@ -54,17 +55,15 @@ public class PeakDetectionTest {
     rawFile = importer.execute();
     objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
     Assert.assertNotNull(rawFile);
-   // Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
   }
 
   @Test
   public void testPeakDetection() {
 
-    Parameters objParameters = new Parameters();
-    PeakDetection objPeakDetection = new PeakDetection(objSliceSparseMatrix, objParameters);
-    List<PeakDetection.GoodPeakInfo> peakList = objPeakDetection.execute(4999.9);
-    Assert.assertNotNull(peakList);
-    Assert.assertEquals(165.0938, peakList.get(0).mz, 0.001);
+    ADAP3DAlgorithm ob = new ADAP3DAlgorithm(objSliceSparseMatrix);
+    List<SimpleFeature> featureList = ob.execute();   
+    Assert.assertNotNull(featureList);
   }
 
 }

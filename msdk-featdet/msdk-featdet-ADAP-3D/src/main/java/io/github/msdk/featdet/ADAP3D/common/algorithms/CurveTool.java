@@ -15,7 +15,6 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 import java.lang.Math;
 
 import org.apache.commons.math3.exception.MathIllegalArgumentException;
@@ -56,27 +55,26 @@ public class CurveTool {
    * @return fwhm a {@link java.lang.Double} object.This is Full width half maximum.
    *         </p>
    */
-  public double estimateFwhmMs(int numberOfScansForFWHMCalc) {
+  public double estimateFwhmMs() {
 
     double sigma = 0;
     int countProperIteration = 0;
-    int countTotalIteration = 0;
-    //WeightedObservedPoints obs = new WeightedObservedPoints();
-//    GaussianCurveFitter fitter = GaussianCurveFitter.create();
+    int size = objSliceSparseMatrix.getSizeOfRawDataFile();
+    // int countTotalIteration = 0;int numberOfScansForFWHMCalc
 
-    while (countProperIteration < numberOfScansForFWHMCalc) {
-      countTotalIteration++;
+    while (countProperIteration < size) {
+      // countTotalIteration++;
 
 
-      if (countTotalIteration > objSliceSparseMatrix.getSizeOfRawDataFile()) {
-        System.out.println(countTotalIteration);
-        throw new IllegalArgumentException("Cannot calculate FWHM.");
-      }
+      // if (countTotalIteration > objSliceSparseMatrix.getSizeOfRawDataFile()) {
+      // System.out.println(countTotalIteration);
+      // throw new IllegalArgumentException("Cannot calculate FWHM.");
+      // }
 
-      Random generator = new Random();
-      int randInt = generator.nextInt(objSliceSparseMatrix.getSizeOfRawDataFile());
+      // Random generator = new Random();
+      // int randInt = generator.nextInt(objSliceSparseMatrix.getSizeOfRawDataFile());
       List<SliceSparseMatrix.VerticalSliceDataPoint> verticalSlice =
-          objSliceSparseMatrix.getVerticalSlice(randInt);
+          objSliceSparseMatrix.getVerticalSlice(countProperIteration);
 
       if (verticalSlice == null)
         continue;
@@ -95,7 +93,7 @@ public class CurveTool {
       }
       countProperIteration++;
     }
-    double fwhm = sigma / numberOfScansForFWHMCalc;
+    double fwhm = sigma / size;
     return fwhm;
   }
 
@@ -160,7 +158,8 @@ public class CurveTool {
       Triplet searchTriplet = new Triplet();
       searchTriplet.mz = roundedMz;
       searchTriplet.scanNumber = i + leftBound;
-      SliceSparseMatrix.Triplet obj = slice.get(Collections.binarySearch(slice, searchTriplet,compare));
+      SliceSparseMatrix.Triplet obj =
+          slice.get(Collections.binarySearch(slice, searchTriplet, compare));
       intensityValues[i] = obj.intensity;
     }
 
@@ -190,6 +189,16 @@ public class CurveTool {
       normValues[i] = values[i] / area;
     }
 
+    return area;
+  }
+
+  public static float normalize(float[] values) {
+
+    float area = 0;
+    // Here area has been calculated for normalizing the intensities.
+    for (int i = 0; i < values.length - 1; i++) {
+      area += 0.5 * (values[i] + values[i + 1]);
+    }
     return area;
   }
 }

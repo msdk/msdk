@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
+import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 
 public class EstimateFwhmMsTest {
 
@@ -45,21 +45,20 @@ public class EstimateFwhmMsTest {
   public static void loadData() throws MSDKException {
 
     // Import the file
-    String file = "test_output.cdf";
+    String file = "small.mzXML";
     Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
-    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile);
+    MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile);
     rawFile = importer.execute();
     SliceSparseMatrix objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
     objCurveTool = new CurveTool(objSliceSparseMatrix);
     Assert.assertNotNull(rawFile);
-    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
   }
 
   @Test
   public void testestimateFwhmMs() throws MSDKException {
-    double fwhm = objCurveTool.estimateFwhmMs(20);
+    double fwhm = objCurveTool.estimateFwhmMs();
     Assert.assertEquals(0.001, fwhm, 0.0005);
   }
 }

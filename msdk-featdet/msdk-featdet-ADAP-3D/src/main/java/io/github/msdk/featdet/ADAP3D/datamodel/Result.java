@@ -26,4 +26,5 @@ public class Result {
   public int curRightBound;
   public double bestCoefficient;
   public double curArea;
+  public double coefOverArea;
 }

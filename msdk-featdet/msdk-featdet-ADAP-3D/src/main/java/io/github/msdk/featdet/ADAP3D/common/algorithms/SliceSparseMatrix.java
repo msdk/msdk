@@ -24,6 +24,7 @@ import java.lang.Math;
 
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.featdet.ADAP3D.common.algorithms.PeakDetection.GoodPeakInfo;
 
 
 
@@ -190,14 +191,15 @@ public class SliceSparseMatrix {
       currTriplet = listOfTriplet.get(i);
       mzSet.add(listOfTriplet.get(i).mz);
       lastFilterTriplet = filterListOfTriplet.get(index);
-      if (currTriplet.mz == lastFilterTriplet.mz
-          && currTriplet.scanNumber == lastFilterTriplet.scanNumber) {
-        lastFilterTriplet.intensity += currTriplet.intensity;
-      } else {
-        filterListOfTriplet.add(currTriplet);
-        index++;
+      if (currTriplet.intensity > 1000) {
+        if (currTriplet.mz == lastFilterTriplet.mz
+            && currTriplet.scanNumber == lastFilterTriplet.scanNumber) {
+          lastFilterTriplet.intensity += currTriplet.intensity;
+        } else {
+          filterListOfTriplet.add(currTriplet);
+          index++;
+        }
       }
-
     }
     mzValues = new ArrayList<Integer>(mzSet);
     Collections.sort(mzValues);
@@ -535,13 +537,58 @@ public class SliceSparseMatrix {
   /**
    * <p>
    * This method returns size of raw data file in terms of total scans.
-   * 
+   * </p>
    * @return size a {@link java.lang.Integer} object. This is total number of scans in raw file.
-   *         </p>
    */
   public int getSizeOfRawDataFile() {
     int size = listOfScans.size();
     return size;
   }
 
+  /**
+   * <p>
+   * This method returns retention time array for given upper and lower scan bounds.
+   * </p>
+   * @return retentionTime a {@link java.lang.Float} array.
+   */
+  public float[] getRetentionTimeArray(int lowerScanBound, int upperScanbound) {
+
+    float[] retentionTime = new float[upperScanbound - lowerScanBound + 1];
+
+    for (int i = 0; i < upperScanbound - lowerScanBound + 1; i++) {
+      retentionTime[i] = (float) getRetentionTime(i + lowerScanBound);
+    }
+    return retentionTime;
+  }
+
+  /**
+   * <p>
+   * This method returns intensity array for detected peak
+   * </p>
+   * @return intensities a {@link java.lang.Float} array.
+   */
+  public float[] getIntensities(GoodPeakInfo peak) {
+
+    float[] intensities = new float[peak.upperScanBound - peak.lowerScanBound + 1];
+
+    for (int i = 0; i < peak.upperScanBound - peak.lowerScanBound + 1; i++) {
+      Triplet searchTriplet = new Triplet();
+      searchTriplet.scanNumber = i + peak.lowerScanBound;
+      searchTriplet.mz = roundMZ(peak.mz);
+
+      int index = Collections.binarySearch(filterListOfTriplet, searchTriplet, compareScanMz);
+      if (index >= 0) {
+        intensities[i] = filterListOfTriplet.get(index).intensity;
+      } else {
+        intensities[i] = 0;
+      }
+    }
+
+    return intensities;
+  }
+  
+  
+  public double getRetentionTime(int scanNumber){
+    return rtMap.get(scanNumber);
+  }
 }
