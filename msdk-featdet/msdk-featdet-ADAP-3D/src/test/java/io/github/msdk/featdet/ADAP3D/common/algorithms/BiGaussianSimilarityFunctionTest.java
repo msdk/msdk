@@ -57,9 +57,9 @@ public class BiGaussianSimilarityFunctionTest {
 
   @Test
   public void testgetBiGaussianValue() throws MSDKException {
-    List<Triplet> horizontalSlice = objSliceSparseMatrix.getHorizontalSlice(1401040, 1, 9);
+    List<Triplet> horizontalSlice = objSliceSparseMatrix.getHorizontalSlice(1700358, 214, 224);
     BiGaussianSimilarityTest objBiGaussian = new BiGaussianSimilarityTest();
-    boolean goodPeak = objBiGaussian.execute(horizontalSlice, 1, 9, 1401040, 0.25);
+    boolean goodPeak = objBiGaussian.execute(horizontalSlice, 214, 224, 1700358, 0.25);
     Assert.assertTrue(goodPeak);
   }
 }

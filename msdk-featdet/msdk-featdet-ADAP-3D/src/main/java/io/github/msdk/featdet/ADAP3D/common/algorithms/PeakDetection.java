@@ -206,20 +206,23 @@ public class PeakDetection {
             objPeakInfo.upperScanBound = peakList.get(i).curRightBound + lowerScanBound;
             objPeakInfo.objResult = peakList.get(i);
             try {
-              File file = new File("src/test/resources/" + "output" + triplet.mz + ".txt");
+              File file = new File("src/test/resources/peaks/" + "output" + triplet.mz + ".txt");
               FileWriter writer = new FileWriter(file);
               for (int j = peak.lowerMzBound; j <= peak.upperMzBound; j++) {
                 List<Triplet> printslice = objSliceSparseMatrix.getHorizontalSlice(j,
                     objPeakInfo.lowerScanBound, objPeakInfo.upperScanBound);
-                if (printslice.size() != 0) {
+
+                if (printslice.size() != 0 && printslice.stream().map(x -> (double) x.intensity)
+                    .max(Double::compareTo).orElse(0.0) != 0) {
                   StringBuffer buffer = new StringBuffer();
                   for (int k = 0; k < printslice.size(); k++) {
-                    buffer.append(j).append(",").append(printslice.get(k).intensity).append("\r\n");
+                    buffer.append(j).append(",").append(printslice.get(k).intensity).append(",")
+                        .append(printslice.get(k).scanNumber).append("\r\n");
                     writer.write(buffer.toString());
                     buffer = new StringBuffer();
                   }
                   buffer = new StringBuffer();
-                  buffer.append("end");
+                  buffer.append("\r\n");
                   writer.write(buffer.toString());
                 }
               }

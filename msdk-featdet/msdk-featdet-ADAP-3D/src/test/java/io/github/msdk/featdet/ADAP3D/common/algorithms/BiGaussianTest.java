@@ -58,9 +58,9 @@ public class BiGaussianTest {
 
   @Test
   public void testgetBiGaussianValue() throws MSDKException {
-    List<Triplet> horizontalSlice = objSliceSparseMatrix.getHorizontalSlice(1401040, 1, 23);
-    BiGaussian objBiGaussian = new BiGaussian(horizontalSlice, 1401040, 1, 23);
-    double biGaussianValue = objBiGaussian.getValue(6);
-    Assert.assertEquals(18454, biGaussianValue, 1);
+    List<Triplet> horizontalSlice = objSliceSparseMatrix.getHorizontalSlice(1700358, 214, 224);
+    BiGaussian objBiGaussian = new BiGaussian(horizontalSlice, 1700358, 214, 224);
+    double biGaussianValue = objBiGaussian.getValue(220);
+    Assert.assertEquals(24608, biGaussianValue, 1);
   }
 }

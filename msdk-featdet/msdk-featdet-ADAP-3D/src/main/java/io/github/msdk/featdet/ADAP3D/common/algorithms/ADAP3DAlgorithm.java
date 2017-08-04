@@ -22,6 +22,12 @@ import org.apache.commons.lang3.ArrayUtils;
 import io.github.msdk.datamodel.impl.SimpleChromatogram;
 import io.github.msdk.datamodel.impl.SimpleFeature;
 
+/**
+ * <p>
+ * This class is used to run the whole ADAP3D algorithm and get peaks.
+ * </p>
+ *
+ */
 public class ADAP3DAlgorithm {
 
   private SliceSparseMatrix objSliceSparseMatrix;
@@ -95,6 +101,13 @@ public class ADAP3DAlgorithm {
 
 
 
+  /**
+   * <p>
+   * This method takes list of GoodPeakInfo and returns list of type SimpleFeature.
+   * This method also builds Chromatogram for each good peak.
+   * </p>
+   * @return featureList a list of {@link io.github.msdk.datamodel.impl.SimpleFeature}
+   */
   private List<SimpleFeature> getFeature(List<PeakDetection.GoodPeakInfo> goodPeakList) {
 
     List<SimpleFeature> featureList = new ArrayList<SimpleFeature>();

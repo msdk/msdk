@@ -64,10 +64,10 @@ public class Peak3DFunctionTest {
 
     Peak3DTest objPeak3DTest = new Peak3DTest(objSliceSparseMatrix, fwhm);
 
-    Peak3DTest.Result objResult = objPeak3DTest.execute(1401037, 1, 23,0.5);
-    Assert.assertEquals(5, objResult.similarityValues.size());
-    Assert.assertEquals(1401025, objResult.lowerMzBound);
-    Assert.assertEquals(1401043, objResult.upperMzBound);
+    Peak3DTest.Result objResult = objPeak3DTest.execute(1700358, 214, 224,0.0021);
+    Assert.assertEquals(7, objResult.similarityValues.size());
+    Assert.assertEquals(1700316, objResult.lowerMzBound);
+    Assert.assertEquals(1700399, objResult.upperMzBound);
   }
 
 }
