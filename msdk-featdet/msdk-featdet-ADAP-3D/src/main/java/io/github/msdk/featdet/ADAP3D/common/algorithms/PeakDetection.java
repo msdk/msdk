@@ -206,7 +206,7 @@ public class PeakDetection {
             objPeakInfo.upperScanBound = peakList.get(i).curRightBound + lowerScanBound;
             objPeakInfo.objResult = peakList.get(i);
             try {
-              File file = new File("src/test/resources/peaks/" + "output" + triplet.mz + ".txt");
+              File file = new File("src/test/resources/" + "output" + triplet.mz + ".txt");
               FileWriter writer = new FileWriter(file);
               for (int j = peak.lowerMzBound; j <= peak.upperMzBound; j++) {
                 List<Triplet> printslice = objSliceSparseMatrix.getHorizontalSlice(j,
