@@ -12,8 +12,6 @@
  */
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +29,8 @@ public class PeakDetection {
     double mz;
     int upperScanBound;
     int lowerScanBound;
+    float maxHeight;
+    int maxHeightScanNumber;
     Result objResult;
   }
 
@@ -204,32 +204,9 @@ public class PeakDetection {
             objPeakInfo.mz = (double) triplet.mz / 10000;
             objPeakInfo.lowerScanBound = peakList.get(i).curLeftBound + lowerScanBound;
             objPeakInfo.upperScanBound = peakList.get(i).curRightBound + lowerScanBound;
+            objPeakInfo.maxHeight = triplet.intensity;
+            objPeakInfo.maxHeightScanNumber = triplet.scanNumber;
             objPeakInfo.objResult = peakList.get(i);
-            try {
-              File file = new File("src/test/resources/" + "output" + triplet.mz + ".txt");
-              FileWriter writer = new FileWriter(file);
-              for (int j = peak.lowerMzBound; j <= peak.upperMzBound; j++) {
-                List<Triplet> printslice = objSliceSparseMatrix.getHorizontalSlice(j,
-                    objPeakInfo.lowerScanBound, objPeakInfo.upperScanBound);
-
-                if (printslice.size() != 0 && printslice.stream().map(x -> (double) x.intensity)
-                    .max(Double::compareTo).orElse(0.0) != 0) {
-                  StringBuffer buffer = new StringBuffer();
-                  for (int k = 0; k < printslice.size(); k++) {
-                    buffer.append(j).append(",").append(printslice.get(k).intensity).append(",")
-                        .append(printslice.get(k).scanNumber).append("\r\n");
-                    writer.write(buffer.toString());
-                    buffer = new StringBuffer();
-                  }
-                  buffer = new StringBuffer();
-                  buffer.append("\r\n");
-                  writer.write(buffer.toString());
-                }
-              }
-              writer.close();
-            } catch (Exception e) {
-
-            }
           } else {
             removeDataPoints(peak.lowerMzBound, peak.upperMzBound,
                 peakList.get(i).curLeftBound + lowerScanBound,

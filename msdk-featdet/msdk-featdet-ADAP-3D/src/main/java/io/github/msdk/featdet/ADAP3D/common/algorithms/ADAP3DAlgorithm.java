@@ -40,14 +40,14 @@ public class ADAP3DAlgorithm {
 
   /**
    * <p>
-   * This method finds first 20 peaks from raw file and calculate parameters.
-   * Then it runs algorithm with new parameters and find rest of the peaks.
-   * It returns the list of SimpleFeature which includes chromatogram.
+   * This method finds first 20 peaks from raw file and calculate parameters. Then it runs algorithm
+   * with new parameters and find rest of the peaks. It returns the list of SimpleFeature which
+   * includes chromatogram.
    * </p>
    * 
    * @return newFeatureList a list of {@link io.github.msdk.datamodel.impl.SimpleFeature}
    * 
-   * */
+   */
   public List<SimpleFeature> execute() {
 
     CurveTool objCurveTool = new CurveTool(objSliceSparseMatrix);
@@ -66,8 +66,8 @@ public class ADAP3DAlgorithm {
     double avgPeakWidth = 0.0;
 
     for (int i = 0; i < goodPeakList.size(); i++) {
-      peakWidth[i] = objSliceSparseMatrix.getRetentionTime(goodPeakList.get(i).upperScanBound)/60
-          - objSliceSparseMatrix.getRetentionTime(goodPeakList.get(i).lowerScanBound)/60;
+      peakWidth[i] = objSliceSparseMatrix.getRetentionTime(goodPeakList.get(i).upperScanBound) / 60
+          - objSliceSparseMatrix.getRetentionTime(goodPeakList.get(i).lowerScanBound) / 60;
       avgPeakWidth += peakWidth[i];
       avgCoefOverArea += goodPeakList.get(i).objResult.coefOverArea;
     }
@@ -75,14 +75,15 @@ public class ADAP3DAlgorithm {
     avgPeakWidth = avgPeakWidth / goodPeakList.size();
     avgCoefOverArea = avgCoefOverArea / goodPeakList.size();
 
-    int highestWaveletScale = (int) (avgPeakWidth*60 / 2);
+    int highestWaveletScale = (int) (avgPeakWidth * 60 / 2);
     double coefOverAreaThreshold = avgCoefOverArea / 1.5;
 
-   
-    List<Double> peakWidthList = Arrays.asList(ArrayUtils.toObject(peakWidth));
-    double peakDurationLowerBound =  avgPeakWidth - LOW_BOUND_PEAK_WIDTH_PERCENT*avgPeakWidth;
 
-    double peakDurationUpperBound = Collections.max(peakWidthList) + LOW_BOUND_PEAK_WIDTH_PERCENT*avgPeakWidth;
+    List<Double> peakWidthList = Arrays.asList(ArrayUtils.toObject(peakWidth));
+    double peakDurationLowerBound = avgPeakWidth - LOW_BOUND_PEAK_WIDTH_PERCENT * avgPeakWidth;
+
+    double peakDurationUpperBound =
+        Collections.max(peakWidthList) + LOW_BOUND_PEAK_WIDTH_PERCENT * avgPeakWidth;
 
     objParameters.setLargeScaleIn(highestWaveletScale);
     objParameters.setMinPeakWidth(peakDurationLowerBound);
@@ -103,9 +104,10 @@ public class ADAP3DAlgorithm {
 
   /**
    * <p>
-   * This method takes list of GoodPeakInfo and returns list of type SimpleFeature.
-   * This method also builds Chromatogram for each good peak.
+   * This method takes list of GoodPeakInfo and returns list of type SimpleFeature. This method also
+   * builds Chromatogram for each good peak.
    * </p>
+   * 
    * @return featureList a list of {@link io.github.msdk.datamodel.impl.SimpleFeature}
    */
   private List<SimpleFeature> getFeature(List<PeakDetection.GoodPeakInfo> goodPeakList) {
@@ -131,14 +133,11 @@ public class ADAP3DAlgorithm {
       chromatogram.setDataPoints(rtArray, mzArray, intensityArray,
           upperScanBound - lowerScanBound + 1);
 
-      List<Float> intsitiyList = Arrays.asList(ArrayUtils.toObject(intensityArray));
-
-      float maxHeight = Collections.max(intsitiyList);
-
       SimpleFeature feature = new SimpleFeature();
       feature.setArea(CurveTool.normalize(intensityArray));
-      feature.setHeight(maxHeight);
-      feature.setRetentionTime(rtArray[intsitiyList.indexOf(maxHeight)]);
+      feature.setHeight(goodPeakList.get(i).maxHeight);
+      feature.setRetentionTime(
+          (float) objSliceSparseMatrix.getRetentionTime(goodPeakList.get(i).maxHeightScanNumber));
       feature.setMz(mz);
       feature.setChromatogram(chromatogram);
       featureList.add(feature);

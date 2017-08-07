@@ -47,7 +47,7 @@ public class PeakDetectionTest {
   public static void loadData() throws MSDKException {
 
     // Import the file
-    String file = "DC_010814_StandardsMixTest1_34StandardMix_01.mzXML";
+    String file = "small.mzXML";
     Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
@@ -55,7 +55,6 @@ public class PeakDetectionTest {
     rawFile = importer.execute();
     objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
     Assert.assertNotNull(rawFile);
-    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
   }
 
   @Test
