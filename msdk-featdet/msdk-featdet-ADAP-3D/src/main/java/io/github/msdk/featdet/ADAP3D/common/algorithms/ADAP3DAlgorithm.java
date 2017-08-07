@@ -116,13 +116,13 @@ public class ADAP3DAlgorithm {
     int lowerScanBound;
     int upperScanBound;
 
-    for (int i = 0; i < goodPeakList.size(); i++) {
+    for (PeakDetection.GoodPeakInfo goodPeakInfo : goodPeakList) {
 
-      lowerScanBound = goodPeakList.get(i).lowerScanBound;
-      upperScanBound = goodPeakList.get(i).upperScanBound;
-      double mz = goodPeakList.get(i).mz;
+      lowerScanBound = goodPeakInfo.lowerScanBound;
+      upperScanBound = goodPeakInfo.upperScanBound;
+      double mz = goodPeakInfo.mz;
       float[] rtArray = objSliceSparseMatrix.getRetentionTimeArray(lowerScanBound, upperScanBound);
-      float[] intensityArray = objSliceSparseMatrix.getIntensities(goodPeakList.get(i));
+      float[] intensityArray = objSliceSparseMatrix.getIntensities(goodPeakInfo);
       double[] mzArray = new double[upperScanBound - lowerScanBound + 1];
 
       for (int j = 0; j < upperScanBound - lowerScanBound + 1; j++) {
@@ -135,9 +135,12 @@ public class ADAP3DAlgorithm {
 
       SimpleFeature feature = new SimpleFeature();
       feature.setArea(CurveTool.normalize(intensityArray));
-      feature.setHeight(goodPeakList.get(i).maxHeight);
-      feature.setRetentionTime(
-          (float) objSliceSparseMatrix.getRetentionTime(goodPeakList.get(i).maxHeightScanNumber));
+      feature.setHeight(goodPeakInfo.maxHeight);
+
+      int maxHeightScanNumber = goodPeakInfo.maxHeightScanNumber;
+      float retentionTime = (float) objSliceSparseMatrix.getRetentionTime(maxHeightScanNumber);
+      
+      feature.setRetentionTime(retentionTime);
       feature.setMz(mz);
       feature.setChromatogram(chromatogram);
       featureList.add(feature);
