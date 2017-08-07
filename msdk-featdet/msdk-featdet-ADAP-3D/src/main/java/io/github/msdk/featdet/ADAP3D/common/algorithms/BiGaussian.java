@@ -107,8 +107,8 @@ public class BiGaussian {
       int leftBound, int rightBound, int roundedmz, Direction direction) {
 
     int i = mu;
-    Double Y1 = null;
-    Double Y2 = null;
+    double Y1 = Double.NaN;
+    double Y2 = Double.NaN;
     int step = direction == Direction.RIGHT ? 1 : -1;
 
     Comparator<Triplet> compareScanMz = new Comparator<Triplet>() {
@@ -161,7 +161,7 @@ public class BiGaussian {
 
 
     }
-    if (Y1 == null || Y2 == null)
+    if (Y1 == Double.NaN || Y2 == Double.NaN)
       throw new IllegalArgumentException("Cannot find BiGaussian.");
     /*
      * I've used the formula of line passing through points (x1,y1) and (x2,y2) in interpolationX.

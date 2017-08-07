@@ -63,16 +63,7 @@ public class CurveTool {
     // int countTotalIteration = 0;int numberOfScansForFWHMCalc
 
     while (countProperIteration < size) {
-      // countTotalIteration++;
-
-
-      // if (countTotalIteration > objSliceSparseMatrix.getSizeOfRawDataFile()) {
-      // System.out.println(countTotalIteration);
-      // throw new IllegalArgumentException("Cannot calculate FWHM.");
-      // }
-
-      // Random generator = new Random();
-      // int randInt = generator.nextInt(objSliceSparseMatrix.getSizeOfRawDataFile());
+     
       List<SliceSparseMatrix.VerticalSliceDataPoint> verticalSlice =
           objSliceSparseMatrix.getVerticalSlice(countProperIteration);
 

@@ -421,21 +421,17 @@ public class ContinuousWaveletTransform {
       rightBoundIntegrate = x.length - 1;
     }
 
-   //  double[] curY = new double[rightBoundIntegrate - leftBoundIntegrate + 1];
-    // double[] waveletY = new double[rightBoundIntegrate - leftBoundIntegrate + 1];
 
     double innerProduct = 0.0;
-    //int curIndex = 0;
+
     for (int i = leftBoundIntegrate; i <= rightBoundIntegrate; i++) {
-      
-     double  curY = signal[i];
+
+      double curY = signal[i];
       // for the wavelt work in units of indecies because wavelt for numbers smaller than one is not
       // approriate.
       double waveletY = rickerWavelet(x[i] - x[xIndexOfWaveletMax], (double) waveletScale);
       innerProduct += curY * waveletY;
-      //curIndex += 1;
     }
-    // double innerProd = innerProduct(curY, waveletY);
     return innerProduct;
   }
 
@@ -446,19 +442,6 @@ public class ContinuousWaveletTransform {
         * (1.0 - Math.pow(x, 2.0) / Math.pow(scalParam, 2.0));
     return Math.exp(-Math.pow(x, 2.0) / (2.0 * Math.pow(scalParam, 2))) * A;
   }
-
-  // This function can only take two arrays of equivelent length.
-  // in the msconvert code they just add the wavelet * the intensity... Lets just do this
-  // for now to see if we can get the same results.
-//  public double innerProduct(double[] arr1, double[] arr2) {
-//    int l = arr1.length;
-//    double sum = 0.0;
-//    for (int i = 0; i < l; i++) {
-//      sum += arr1[i] * arr2[i];
-//    }
-//    return sum;
-//  }
-
 
   public void setSignal(List<DataPoint> listOfDataPoint) {
     signal = new double[listOfDataPoint.size()];
