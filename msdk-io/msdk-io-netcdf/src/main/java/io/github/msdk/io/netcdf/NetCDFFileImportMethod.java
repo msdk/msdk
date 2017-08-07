@@ -16,6 +16,7 @@ package io.github.msdk.io.netcdf;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -64,6 +65,8 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
   private Variable massValueVariable, intensityValueVariable;
 
+  private Predicate<MsScan> msScanPredicate;
+
   // Some software produces netcdf files with a scale factor such as 0.05
   // TODO: need junit test for this
   private double massValueScaleFactor = 1;
@@ -82,7 +85,12 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public NetCDFFileImportMethod(@Nonnull File sourceFile) {
+    this(sourceFile, null);
+  }
+
+  public NetCDFFileImportMethod(@Nonnull File sourceFile, Predicate<MsScan> msScanPredicate) {
     this.sourceFile = sourceFile;
+    this.msScanPredicate = msScanPredicate != null ? msScanPredicate : s -> true;
   }
 
   /** {@inheritDoc} */
@@ -115,7 +123,13 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
           return null;
         }
 
-        MsScan buildingScan = readNextScan(scanIndex);
+        NetCDFMsScan buildingScan = new NetCDFMsScan(scanIndex + 1, scanStartPositions,
+            scanRetentionTimes, massValueVariable, intensityValueVariable, massValueScaleFactor,
+            intensityValueScaleFactor);
+
+        if (msScanPredicate.test(buildingScan))
+          buildingScan.parseScan(null, null);
+
         newRawFile.addScan(buildingScan);
         parsedScans++;
 
@@ -309,73 +323,6 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
           }
         }
       }
-    }
-
-  }
-
-  /**
-   * Reads one scan from the file. Requires that general information has already been read.
-   * 
-   * @throws MSDKException
-   * @throws InvalidRangeException
-   */
-
-  private @Nonnull MsScan readNextScan(int scanIndex)
-      throws IOException, MSDKException, InvalidRangeException {
-
-    // Scan number
-    final Integer scanNumber = scanIndex + 1;
-
-    SimpleMsScan scan = new SimpleMsScan(scanNumber);
-
-    // Extract and store the data points
-    extractDataPoints(scanIndex);
-    scan.setDataPoints(mzValues, intensityValues, numOfDataPoints);
-
-    // Auto-detect whether this scan is centroided
-    MsSpectrumType spectrumType = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mzValues,
-        intensityValues, numOfDataPoints);
-    scan.setSpectrumType(spectrumType);
-
-    scan.setRetentionTime(scanRetentionTimes[scanIndex]);
-
-    return scan;
-
-  }
-
-  /**
-   * 
-   * @param scanIndex
-   * @param dataPoints
-   * @throws InvalidRangeException
-   * @throws IOException
-   */
-  private void extractDataPoints(int scanIndex) throws IOException, InvalidRangeException {
-
-    // Find the Index of mass and intensity values
-    final int scanStartPosition[] = {scanStartPositions[scanIndex]};
-    final int scanLength[] = {scanStartPositions[scanIndex + 1] - scanStartPositions[scanIndex]};
-    final Array massValueArray = massValueVariable.read(scanStartPosition, scanLength);
-    final Array intensityValueArray = intensityValueVariable.read(scanStartPosition, scanLength);
-    final Index massValuesIndex = massValueArray.getIndex();
-    final Index intensityValuesIndex = intensityValueArray.getIndex();
-
-    // Get number of data points
-    numOfDataPoints = massValueArray.getShape()[0];
-
-    // Allocate space
-    if (mzValues.length < numOfDataPoints)
-      mzValues = new double[numOfDataPoints * 2];
-    if (intensityValues.length < numOfDataPoints)
-      intensityValues = new float[numOfDataPoints * 2];
-
-    // Load the data points
-    for (int i = 0; i < numOfDataPoints; i++) {
-      final Index massIndex0 = massValuesIndex.set0(i);
-      final Index intensityIndex0 = intensityValuesIndex.set0(i);
-      mzValues[i] = massValueArray.getDouble(massIndex0) * massValueScaleFactor;
-      intensityValues[i] =
-          (float) (intensityValueArray.getDouble(intensityIndex0) * intensityValueScaleFactor);
     }
 
   }
