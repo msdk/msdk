@@ -35,6 +35,12 @@
 			<groupId>uk.ac.ebi.jmzml</groupId>
 			<artifactId>jmzml</artifactId>
 			<version>1.7.9</version>
+			<exclusions>
+				<exclusion>
+					<groupId>uk.ac.ebi.pride.architectural</groupId>
+					<artifactId>pride-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 	</dependencies>
