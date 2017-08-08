@@ -15,7 +15,7 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 public class Parameters {
 
   private double peakSimilarityThreshold = 0.5;
-  private double biGaussianSimilarityThreshold = 0.25;
+  private double biGaussianSimilarityThreshold = 0.5;
   private int largeScaleIn = 10;
   private int delta = largeScaleIn * 5;
   private double coefAreaRatioTolerance = 100;
