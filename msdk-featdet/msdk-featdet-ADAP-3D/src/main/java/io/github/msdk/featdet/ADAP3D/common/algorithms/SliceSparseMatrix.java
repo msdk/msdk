@@ -15,17 +15,17 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.lang.Math;
 
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.featdet.ADAP3D.common.algorithms.PeakDetection.GoodPeakInfo;
 
-import org.apache.commons.collections4.MapIterator;
-import org.apache.commons.collections4.keyvalue.MultiKey;
-import org.apache.commons.collections4.map.MultiKeyMap;
 
 
 /**
@@ -47,7 +47,15 @@ public class SliceSparseMatrix {
    * tripletMap is used for creating MultiKeyMap type of hashmap from raw data file.
    * </p>
    */
-  private final MultiKeyMap<Integer, Triplet> tripletMap;
+  private final HashMap<Integer, Float> rtMap;
+
+  private final List<Triplet> sortListAccordingToMzScan;
+  private final List<Triplet> sortListAccordingToIntensity;
+  private final List<Triplet> sortListAccordingToScan;
+  Comparator<Triplet> compareMzScan;
+  Comparator<Triplet> compareIntensity;
+  Comparator<Triplet> compareScanMz;
+  Comparator<Triplet> compareScan;
 
   /**
    * <p>
@@ -93,8 +101,7 @@ public class SliceSparseMatrix {
     public int mz;
     public int scanNumber;
     public float intensity;
-    public float rt;
-    public boolean removed;
+    public byte removed;
   }
 
   /**
@@ -119,6 +126,7 @@ public class SliceSparseMatrix {
   public SliceSparseMatrix(RawDataFile rawFile) {
     listOfScans = rawFile.getScans();
     List<Triplet> listOfTriplet = new ArrayList<Triplet>();
+    rtMap = new HashMap<Integer, Float>();
 
     for (int i = 0; i < listOfScans.size(); i++) {
       MsScan scan = listOfScans.get(i);
@@ -135,46 +143,46 @@ public class SliceSparseMatrix {
 
       if (rt == null)
         continue;
+      rtMap.put(i, rt);
 
       for (int j = 0; j < mzBuffer.length; j++) {
         Triplet triplet = new Triplet();
         triplet.intensity = intensityBuffer[j];
         triplet.mz = roundMZ(mzBuffer[j]);
         triplet.scanNumber = i;
-        triplet.rt = rt;
-        triplet.removed = false;
+        triplet.removed = 0;
         listOfTriplet.add(triplet);
       }
     }
 
 
 
-    Comparator<Triplet> compare = new Comparator<Triplet>() {
+    compareScanMz = new Comparator<Triplet>() {
 
       @Override
       public int compare(Triplet o1, Triplet o2) {
 
-        Integer scan1 = o1.scanNumber;
-        Integer scan2 = o2.scanNumber;
-        int scanCompare = scan1.compareTo(scan2);
+        int scan1 = o1.scanNumber;
+        int scan2 = o2.scanNumber;
+        int scanCompare = Integer.compare(scan1, scan2);
 
         if (scanCompare != 0) {
           return scanCompare;
         } else {
-          Integer mz1 = o1.mz;
-          Integer mz2 = o2.mz;
-          return mz1.compareTo(mz2);
+          int mz1 = o1.mz;
+          int mz2 = o2.mz;
+          return Integer.compare(mz1, mz2);
         }
       }
     };
 
 
-    Collections.sort(listOfTriplet, compare);
+    Collections.sort(listOfTriplet, compareScanMz);
 
     filterListOfTriplet = new ArrayList<Triplet>();
     Triplet currTriplet = new Triplet();
     Triplet lastFilterTriplet = new Triplet();
-    tripletMap = new MultiKeyMap<Integer, Triplet>();
+    // tripletMap = new MultiKeyMap<Integer, Triplet>();
     int index = 0;
     Set<Integer> mzSet = new HashSet<Integer>();
 
@@ -183,20 +191,71 @@ public class SliceSparseMatrix {
       currTriplet = listOfTriplet.get(i);
       mzSet.add(listOfTriplet.get(i).mz);
       lastFilterTriplet = filterListOfTriplet.get(index);
-      if (currTriplet.mz == lastFilterTriplet.mz
-          && currTriplet.scanNumber == lastFilterTriplet.scanNumber) {
-        lastFilterTriplet.intensity += currTriplet.intensity;
-      } else {
-        filterListOfTriplet.add(currTriplet);
-        tripletMap.put(currTriplet.scanNumber, currTriplet.mz, currTriplet);
-        index++;
+      if (currTriplet.intensity > 1000) {
+        if (currTriplet.mz == lastFilterTriplet.mz
+            && currTriplet.scanNumber == lastFilterTriplet.scanNumber) {
+          lastFilterTriplet.intensity += currTriplet.intensity;
+        } else {
+          filterListOfTriplet.add(currTriplet);
+          index++;
+        }
       }
-
     }
     mzValues = new ArrayList<Integer>(mzSet);
-
-
     Collections.sort(mzValues);
+
+    sortListAccordingToScan = new ArrayList<>(filterListOfTriplet);
+    compareScan = new Comparator<Triplet>() {
+
+      @Override
+      public int compare(Triplet o1, Triplet o2) {
+
+        int scan1 = o1.scanNumber;
+        int scan2 = o2.scanNumber;
+        int scanCompare = Integer.compare(scan1, scan2);
+        return scanCompare;
+      }
+    };
+
+    Collections.sort(sortListAccordingToScan, compareScan);
+
+
+    sortListAccordingToIntensity = new ArrayList<>(filterListOfTriplet);
+
+    compareIntensity = new Comparator<Triplet>() {
+
+      @Override
+      public int compare(Triplet o1, Triplet o2) {
+
+        Float intensity1 = o1.intensity;
+        Float intensity2 = o2.intensity;
+        int intensityCompare = intensity2.compareTo(intensity1);
+        return intensityCompare;
+      }
+    };
+    Collections.sort(sortListAccordingToIntensity, compareIntensity);
+    // Collections.sort(filterListOfTriplet, compareIntensity);
+
+    sortListAccordingToMzScan = new ArrayList<>(filterListOfTriplet);
+    compareMzScan = new Comparator<Triplet>() {
+
+      @Override
+      public int compare(Triplet o1, Triplet o2) {
+
+        int mz1 = o1.mz;
+        int mz2 = o2.mz;
+        int scanCompare = Integer.compare(mz1, mz2);
+
+        if (scanCompare != 0) {
+          return scanCompare;
+        } else {
+          int scan1 = o1.scanNumber;
+          int scan2 = o2.scanNumber;
+          return Integer.compare(scan1, scan2);
+        }
+      }
+    };
+    Collections.sort(sortListAccordingToMzScan, compareMzScan);
   }
 
   /**
@@ -214,22 +273,27 @@ public class SliceSparseMatrix {
    *         contains horizontal slice with single m/z value,different scan numbers and different
    *         intensities along with retention time.
    */
-  public MultiKeyMap<Integer, Triplet> getHorizontalSlice(double mz, int lowerScanBound,
-      int upperScanBound) {
+  public List<Triplet> getHorizontalSlice(double mz, int lowerScanBound, int upperScanBound) {
 
     int roundedmz = roundMZ(mz);
-    MultiKeyMap<Integer, Triplet> sliceMap = new MultiKeyMap<Integer, Triplet>();
+    List<Triplet> sliceList = new ArrayList<Triplet>();
 
     for (int i = lowerScanBound; i <= upperScanBound; i++) {
-      if (tripletMap.containsKey(new Integer(i), new Integer(roundedmz))) {
-        Triplet triplet = (Triplet) tripletMap.get(new Integer(i), new Integer(roundedmz));
-        sliceMap.put(i, roundedmz, triplet);
+      Triplet searchTriplet = new Triplet();
+      searchTriplet.mz = roundedmz;
+      searchTriplet.scanNumber = i;
+      int index = Collections.binarySearch(sortListAccordingToMzScan, searchTriplet, compareMzScan);
+      if (index >= 0) {
+        Triplet triplet = sortListAccordingToMzScan.get(index);
+        sliceList.add(triplet);
       } else {
-        sliceMap.put(i, roundedmz, null);
+        searchTriplet.intensity = 0;
+        searchTriplet.removed = 0;
+        sliceList.add(searchTriplet);
       }
     }
 
-    return sliceMap;
+    return sliceList;
   }
 
   /**
@@ -248,8 +312,7 @@ public class SliceSparseMatrix {
    *         contains horizontal slice with single m/z value,different scan numbers and different
    *         intensities along with retention time.
    */
-  public MultiKeyMap<Integer, Triplet> getHorizontalSlice(int roundedMZ, int lowerScanBound,
-      int upperScanBound) {
+  public List<Triplet> getHorizontalSlice(int roundedMZ, int lowerScanBound, int upperScanBound) {
     return getHorizontalSlice((double) roundedMZ / roundMzFactor, lowerScanBound, upperScanBound);
   }
 
@@ -266,22 +329,54 @@ public class SliceSparseMatrix {
    */
   public List<VerticalSliceDataPoint> getVerticalSlice(int scanNumber) {
 
-
+    List<Triplet> oneScanTriplet = new ArrayList<Triplet>();
     List<VerticalSliceDataPoint> datapointList = new ArrayList<VerticalSliceDataPoint>();
 
+    Triplet searchTriplet = new Triplet();
+    searchTriplet.scanNumber = scanNumber;
+    int index1 = Collections.binarySearch(sortListAccordingToScan, searchTriplet, compareScan);
+    int index2 = index1;
+    oneScanTriplet.add(sortListAccordingToScan.get(index1));
+
+    while (index1 >= 0) {
+      index1--;
+      if (index1 < 0 || sortListAccordingToScan.get(index1).scanNumber != scanNumber) {
+        break;
+      }
+      oneScanTriplet.add(sortListAccordingToScan.get(index1));
+    }
+
+    while (index2 >= 0) {
+      index2++;
+      if (index2 > filterListOfTriplet.size() - 1
+          || filterListOfTriplet.get(index2).scanNumber != scanNumber) {
+        break;
+      }
+      oneScanTriplet.add(filterListOfTriplet.get(index2));
+    }
+
+    Collections.sort(oneScanTriplet, compareIntensity);
+    int maxIntensityMZ = oneScanTriplet.get(0).mz;
+    Collections.sort(oneScanTriplet, compareScanMz);
+
+    Triplet searchMz = new Triplet();
     for (int roundedMZ : mzValues) {
       VerticalSliceDataPoint datapoint = new VerticalSliceDataPoint();
 
-      if (tripletMap.containsKey(new Integer(scanNumber), new Integer(roundedMZ))) {
-
-        datapoint.intensity =
-            ((Triplet) tripletMap.get(new Integer(scanNumber), new Integer(roundedMZ))).intensity;
-        datapoint.mz = (float) roundedMZ / roundMzFactor;
-        datapointList.add(datapoint);
-      } else {
-        datapoint.intensity = (float) 0.0;
-        datapoint.mz = (float) roundedMZ / roundMzFactor;
-        datapointList.add(datapoint);
+      searchMz.mz = roundedMZ;
+      searchMz.scanNumber = scanNumber;
+      if (roundedMZ >= (maxIntensityMZ - roundMzFactor)
+          && roundedMZ <= (maxIntensityMZ + roundMzFactor)) {
+        int mzInex = Collections.binarySearch(oneScanTriplet, searchMz, compareScanMz);
+        if (mzInex >= 0) {
+          datapoint.intensity = oneScanTriplet.get(mzInex).intensity;
+          datapoint.mz = (float) roundedMZ / roundMzFactor;
+          datapointList.add(datapoint);
+        } else {
+          datapoint.intensity = (float) 0.0;
+          datapoint.mz = (float) roundedMZ / roundMzFactor;
+          datapointList.add(datapoint);
+        }
       }
     }
     return datapointList;
@@ -299,22 +394,10 @@ public class SliceSparseMatrix {
   public Triplet findNextMaxIntensity() {
 
     Triplet tripletObject = null;
-    Comparator<Triplet> compare = new Comparator<Triplet>() {
 
-      @Override
-      public int compare(Triplet o1, Triplet o2) {
-
-        Float intensity1 = o1.intensity;
-        Float intensity2 = o2.intensity;
-        int intensityCompare = intensity2.compareTo(intensity1);
-        return intensityCompare;
-      }
-    };
-    Collections.sort(filterListOfTriplet, compare);
-
-    for (int i = maxIntensityIndex; i < filterListOfTriplet.size(); i++) {
-      if (filterListOfTriplet.get(i).removed == false) {
-        tripletObject = filterListOfTriplet.get(i);
+    for (int i = maxIntensityIndex; i < sortListAccordingToIntensity.size(); i++) {
+      if (sortListAccordingToIntensity.get(i).removed == 0) {
+        tripletObject = sortListAccordingToIntensity.get(i);
         maxIntensityIndex = i + 1;
         break;
       }
@@ -334,25 +417,21 @@ public class SliceSparseMatrix {
    * @return listOfDataPoint a {@link Triplet} list. This returns list of retention time and
    *         intensities.
    */
-  public List<ContinuousWaveletTransform.DataPoint> getCWTDataPoint(
-      MultiKeyMap<Integer, Triplet> slice) {
+  public List<ContinuousWaveletTransform.DataPoint> getCWTDataPoint(List<Triplet> slice) {
 
-    MapIterator<MultiKey<? extends Integer>, Triplet> iterator = slice.mapIterator();
+    Iterator<Triplet> iterator = slice.iterator();
     List<ContinuousWaveletTransform.DataPoint> listOfDataPoint =
         new ArrayList<ContinuousWaveletTransform.DataPoint>();
 
     while (iterator.hasNext()) {
       ContinuousWaveletTransform.DataPoint dataPoint = new ContinuousWaveletTransform.DataPoint();
-      iterator.next();
-      MultiKey<Integer> sliceKey = (MultiKey<Integer>) iterator.getKey();
-      Triplet triplet = (Triplet) slice.get(sliceKey);
-      if (triplet != null) {
-        dataPoint.rt = triplet.rt / 60;
+      Triplet triplet = (Triplet) iterator.next();
+      if (triplet.intensity != 0 && triplet.removed == 0) {
+        dataPoint.rt = rtMap.get(triplet.scanNumber) / 60;
         dataPoint.intensity = triplet.intensity;
         listOfDataPoint.add(dataPoint);
       } else {
-        MsScan scan = listOfScans.get((int) sliceKey.getKey(0));
-        dataPoint.rt = scan.getRetentionTime() / 60;
+        dataPoint.rt = rtMap.get(triplet.scanNumber) / 60;
         dataPoint.intensity = 0.0;
         listOfDataPoint.add(dataPoint);
       }
@@ -386,16 +465,50 @@ public class SliceSparseMatrix {
    * @return tripletMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This is
    *         whole sparse matrix.
    */
-  public MultiKeyMap<Integer, Triplet> removeDataPoints(double mz, int lowerScanBound,
-      int upperScanBound) {
-    int roundedmz = roundMZ(mz);
+  public List<Triplet> removeDataPoints(int roundedmz, int lowerScanBound, int upperScanBound) {
+
+    Triplet searchTriplet = new Triplet();
+
     for (int i = lowerScanBound; i <= upperScanBound; i++) {
-      if (tripletMap.containsKey(new Integer(i), new Integer(roundedmz))) {
-        Triplet triplet = (Triplet) tripletMap.get(new Integer(i), new Integer(roundedmz));
-        triplet.removed = true;
+
+      searchTriplet.mz = roundedmz;
+      searchTriplet.scanNumber = i;
+      int index = Collections.binarySearch(filterListOfTriplet, searchTriplet, compareScanMz);
+      if (index >= 0) {
+        Triplet triplet = filterListOfTriplet.get(index);
+        triplet.removed = 1;
       }
     }
-    return tripletMap;
+    return filterListOfTriplet;
+  }
+
+  /**
+   * <p>
+   * This method restores data points from whole data set for given mz,lowerscanbound and
+   * upperscanbound
+   * </p>
+   * 
+   * @param mz a {@link java.lang.Double} object.This takes original m/z value from raw file.
+   * @param lowerScanBound a {@link java.lang.Integer} object.This is lowest scan number.
+   * @param upperScanBound a {@link java.lang.Integer} object.This is highest scan number.
+   * @return tripletMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This is
+   *         whole sparse matrix.
+   */
+  public List<Triplet> restoreDataPoints(int roundedmz, int lowerScanBound, int upperScanBound) {
+
+    Triplet searchTriplet = new Triplet();
+
+    for (int i = lowerScanBound; i <= upperScanBound; i++) {
+
+      searchTriplet.mz = roundedmz;
+      searchTriplet.scanNumber = i;
+      int index = Collections.binarySearch(filterListOfTriplet, searchTriplet, compareScanMz);
+      if (index >= 0) {
+        Triplet triplet = filterListOfTriplet.get(index);
+        triplet.removed = 0;
+      }
+    }
+    return filterListOfTriplet;
   }
 
   /**
@@ -424,13 +537,58 @@ public class SliceSparseMatrix {
   /**
    * <p>
    * This method returns size of raw data file in terms of total scans.
-   * 
+   * </p>
    * @return size a {@link java.lang.Integer} object. This is total number of scans in raw file.
-   *         </p>
    */
   public int getSizeOfRawDataFile() {
     int size = listOfScans.size();
     return size;
   }
 
+  /**
+   * <p>
+   * This method returns retention time array for given upper and lower scan bounds.
+   * </p>
+   * @return retentionTime a {@link java.lang.Float} array.
+   */
+  public float[] getRetentionTimeArray(int lowerScanBound, int upperScanbound) {
+
+    float[] retentionTime = new float[upperScanbound - lowerScanBound + 1];
+
+    for (int i = 0; i < upperScanbound - lowerScanBound + 1; i++) {
+      retentionTime[i] = (float) getRetentionTime(i + lowerScanBound);
+    }
+    return retentionTime;
+  }
+
+  /**
+   * <p>
+   * This method returns intensity array for detected peak
+   * </p>
+   * @return intensities a {@link java.lang.Float} array.
+   */
+  public float[] getIntensities(GoodPeakInfo peak) {
+
+    float[] intensities = new float[peak.upperScanBound - peak.lowerScanBound + 1];
+
+    for (int i = 0; i < peak.upperScanBound - peak.lowerScanBound + 1; i++) {
+      Triplet searchTriplet = new Triplet();
+      searchTriplet.scanNumber = i + peak.lowerScanBound;
+      searchTriplet.mz = roundMZ(peak.mz);
+
+      int index = Collections.binarySearch(filterListOfTriplet, searchTriplet, compareScanMz);
+      if (index >= 0) {
+        intensities[i] = filterListOfTriplet.get(index).intensity;
+      } else {
+        intensities[i] = 0;
+      }
+    }
+
+    return intensities;
+  }
+  
+  
+  public double getRetentionTime(int scanNumber){
+    return rtMap.get(scanNumber);
+  }
 }

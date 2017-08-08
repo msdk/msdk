@@ -30,10 +30,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 
-import org.apache.commons.collections4.map.MultiKeyMap;
-
-
-
 public class SliceSparseMatrixTest {
 
   private static RawDataFile rawFile;
@@ -66,19 +62,14 @@ public class SliceSparseMatrixTest {
 
   @Test
   public void getHorizontalSlice() throws MSDKException, IOException {
-    MultiKeyMap<Integer, Triplet> slice =
-        objSliceSparseMatrix.getHorizontalSlice(301.15106201171875, 0, 208);
-    int size = slice.size();
-    for (int i = 0; i < size; i++) {
-      Assert.assertTrue(slice.containsKey(new Integer(i), new Integer(3011511)));
-    }
-    Assert.assertEquals(209, size);
+    List<Triplet> slice = objSliceSparseMatrix.getHorizontalSlice(301.15106201171875, 0, 208);
+    Assert.assertEquals(209, slice.size());
   }
 
   @Test
   public void getVerticalSlice() throws MSDKException, IOException {
     List<SliceSparseMatrix.VerticalSliceDataPoint> slice = objSliceSparseMatrix.getVerticalSlice(5);
-    Assert.assertEquals(46004, slice.size());
+    Assert.assertEquals(369, slice.size());
   }
 
   @Test
@@ -92,8 +83,7 @@ public class SliceSparseMatrixTest {
 
   @Test
   public void testGetRetentionTimeGetIntensity() throws MSDKException, IOException {
-    MultiKeyMap<Integer, Triplet> slice =
-        objSliceSparseMatrix.getHorizontalSlice(301.15106201171875, 0, 208);
+    List<Triplet> slice = objSliceSparseMatrix.getHorizontalSlice(301.15106201171875, 0, 208);
     List<ContinuousWaveletTransform.DataPoint> listOfDataPoint =
         objSliceSparseMatrix.getCWTDataPoint(slice);
     Assert.assertNotNull(listOfDataPoint);
@@ -101,13 +91,13 @@ public class SliceSparseMatrixTest {
 
   @Test
   public void testRemoveDataPoints() throws MSDKException, IOException {
-    MultiKeyMap<Integer, Triplet> updatedTripletMap =
-        objSliceSparseMatrix.removeDataPoints(301.15106201171875, 0, 10);
-    for (int i = 0; i < 11; i++) {
-      SliceSparseMatrix.Triplet triplet =
-          (SliceSparseMatrix.Triplet) updatedTripletMap.get(new Integer(i), new Integer(3011511));
-      if (triplet != null)
-        Assert.assertTrue(triplet.removed);
+    List<Triplet> updatedTripletList = objSliceSparseMatrix.removeDataPoints(3011511, 0, 26);
+    for (int i = 0; i < updatedTripletList.size(); i++) {
+      SliceSparseMatrix.Triplet triplet = updatedTripletList.get(i);
+      if (triplet.removed == 1) {
+        Assert.assertEquals(0, triplet.scanNumber);
+        break;
+      }
     }
   }
 }

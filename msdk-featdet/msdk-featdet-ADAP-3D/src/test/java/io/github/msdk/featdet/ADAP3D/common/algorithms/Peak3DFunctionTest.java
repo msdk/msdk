@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
+import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 
 public class Peak3DFunctionTest {
 
@@ -46,29 +46,28 @@ public class Peak3DFunctionTest {
   public static void loadData() throws MSDKException {
 
     // Import the file
-    String file = "test_output.cdf";
+    String file = "small.mzXML";
     Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
-    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile);
+    MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile);
     rawFile = importer.execute();
     objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
     objCurveTool = new CurveTool(objSliceSparseMatrix);
     Assert.assertNotNull(rawFile);
-    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
   }
 
   @Test
   public void testPeakSimilarityFunction() throws MSDKException {
 
-    double fwhm = objCurveTool.estimateFwhmMs(20);
+    int fwhm = objSliceSparseMatrix.roundMZ(objCurveTool.estimateFwhmMs());
 
     Peak3DTest objPeak3DTest = new Peak3DTest(objSliceSparseMatrix, fwhm);
 
-    Peak3DTest.Result objResult = objPeak3DTest.execute(140.1037, 1, 23);
-    Assert.assertEquals(4, objResult.similarityValues.size());
-    Assert.assertEquals(1401028, objResult.lowerMzBound);
-    Assert.assertEquals(1401047, objResult.upperMzBound);
+    Peak3DTest.Result objResult = objPeak3DTest.execute(1700358, 214, 224,0.0021);
+    Assert.assertEquals(7, objResult.similarityValues.size());
+    Assert.assertEquals(1700316, objResult.lowerMzBound);
+    Assert.assertEquals(1700399, objResult.upperMzBound);
   }
 
 }

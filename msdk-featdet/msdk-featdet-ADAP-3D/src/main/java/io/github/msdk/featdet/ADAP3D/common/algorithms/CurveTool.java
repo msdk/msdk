@@ -12,11 +12,11 @@
  */
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 import java.lang.Math;
 
-import org.apache.commons.collections4.map.MultiKeyMap;
 import org.apache.commons.math3.exception.MathIllegalArgumentException;
 import org.apache.commons.math3.fitting.GaussianCurveFitter;
 import org.apache.commons.math3.fitting.WeightedObservedPoints;
@@ -29,11 +29,11 @@ import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet
  * </p>
  */
 public class CurveTool {
-  
+
+  public static final double FWHM_CONSTANT = 2.35482;
   private static final double EXPONENT_FACTOR = 0.2;
   private static final double EXPONENT_SHIFT = Math.exp(-1 / EXPONENT_FACTOR);
   private static final double EXPONENT_HEIGHT = 1.0 / (1.0 - EXPONENT_SHIFT);
-  private static final double FWHM_CONSTANT = 2.35482;
   private SliceSparseMatrix objSliceSparseMatrix;
 
   /**
@@ -55,31 +55,22 @@ public class CurveTool {
    * @return fwhm a {@link java.lang.Double} object.This is Full width half maximum.
    *         </p>
    */
-  public double estimateFwhmMs(int numberOfScansForFWHMCalc) {
+  public double estimateFwhmMs() {
 
     double sigma = 0;
     int countProperIteration = 0;
-    int countTotalIteration = 0;
+    int size = objSliceSparseMatrix.getSizeOfRawDataFile();
+    // int countTotalIteration = 0;int numberOfScansForFWHMCalc
 
-    while (countProperIteration < numberOfScansForFWHMCalc) {
-      countTotalIteration++;
-
-
-      if (countTotalIteration > objSliceSparseMatrix.getSizeOfRawDataFile()) {
-        System.out.println(countTotalIteration);
-        throw new IllegalArgumentException("Cannot calculate FWHM.");
-      }
-
-      Random generator = new Random();
-      int randInt = generator.nextInt(objSliceSparseMatrix.getSizeOfRawDataFile());
+    while (countProperIteration < size) {
+     
       List<SliceSparseMatrix.VerticalSliceDataPoint> verticalSlice =
-          objSliceSparseMatrix.getVerticalSlice(randInt);
+          objSliceSparseMatrix.getVerticalSlice(countProperIteration);
 
       if (verticalSlice == null)
         continue;
 
       WeightedObservedPoints obs = new WeightedObservedPoints();
-
       for (SliceSparseMatrix.VerticalSliceDataPoint datapoint : verticalSlice) {
         obs.add(datapoint.mz, datapoint.intensity);
       }
@@ -93,11 +84,11 @@ public class CurveTool {
       }
       countProperIteration++;
     }
-    double fwhm = sigma / numberOfScansForFWHMCalc;
+    double fwhm = sigma / size;
     return fwhm;
   }
 
-  
+
   public static double similarityValue(double[] referenceEIC, double[] gaussianValues,
       int leftBound, int rightBound) {
     double diffArea = 0.0;
@@ -130,15 +121,37 @@ public class CurveTool {
    * @return area a {@link java.lang.Double} object. This is area of normalize intensity points.
    *         </p>
    */
-  public static double normalize(MultiKeyMap<Integer, Triplet> slice, int leftBound, int rightBound,
-      int roundedMz, double[] referenceEIC) {
+  public static double normalize(List<Triplet> slice, int leftBound, int rightBound, int roundedMz,
+      double[] referenceEIC) {
 
+    Comparator<Triplet> compare = new Comparator<Triplet>() {
+
+      @Override
+      public int compare(Triplet o1, Triplet o2) {
+        int scan1 = o1.scanNumber;
+        int scan2 = o2.scanNumber;
+        int scanCompare = Integer.compare(scan1, scan2);
+
+        if (scanCompare != 0) {
+          return scanCompare;
+        } else {
+          int mz1 = o1.mz;
+          int mz2 = o2.mz;
+          return Integer.compare(mz1, mz2);
+        }
+      }
+    };
+    Collections.sort(slice, compare);
     double[] intensityValues = new double[rightBound - leftBound + 1];
 
     // Here area has been calculated for normalizing the intensities.
     for (int i = 0; i < rightBound - leftBound + 1; i++) {
-      SliceSparseMatrix.Triplet obj = slice.get(i + leftBound, roundedMz);
-      intensityValues[i] = obj == null ? 0.0 : obj.intensity;
+      Triplet searchTriplet = new Triplet();
+      searchTriplet.mz = roundedMz;
+      searchTriplet.scanNumber = i + leftBound;
+      SliceSparseMatrix.Triplet obj =
+          slice.get(Collections.binarySearch(slice, searchTriplet, compare));
+      intensityValues[i] = obj.intensity;
     }
 
     return normalize(intensityValues, referenceEIC);
@@ -146,8 +159,8 @@ public class CurveTool {
 
   /**
    * <p>
-   * normalize method is used for normalizing values by calculating its area and dividing each
-   * value by the area.
+   * normalize method is used for normalizing values by calculating its area and dividing each value
+   * by the area.
    * </p>
    * 
    * @param values a {@link java.lang.Double} array. This array will have values to be normalized.
@@ -167,6 +180,16 @@ public class CurveTool {
       normValues[i] = values[i] / area;
     }
 
+    return area;
+  }
+
+  public static float normalize(float[] values) {
+
+    float area = 0;
+    // Here area has been calculated for normalizing the intensities.
+    for (int i = 0; i < values.length - 1; i++) {
+      area += 0.5 * (values[i] + values[i + 1]);
+    }
     return area;
   }
 }

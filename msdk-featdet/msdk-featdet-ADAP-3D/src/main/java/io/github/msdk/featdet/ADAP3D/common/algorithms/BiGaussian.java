@@ -14,13 +14,13 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
 
 import java.lang.Math;
-
-import org.apache.commons.collections4.MapIterator;
-import org.apache.commons.collections4.map.MultiKeyMap;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
 
-import org.apache.commons.collections4.keyvalue.MultiKey;
 
 /**
  * <p>
@@ -56,22 +56,21 @@ public class BiGaussian {
    * SigmaLeft and SigmaRight.
    * </p>
    * 
-   * @param horizontalSlice a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This
+   * @param horizontalSlice a {@link java.util.List} object. This
    *        is horizontal slice from the sparse matrix.
-   * @param mz a {@link java.lang.Double} object. This is m/z value from the raw file.
+   * @param roundedmz a {@link java.lang.Double} object. It's rounded m/z value. Original m/z value
+   *        multiplied by 10000.
    * @param leftBound a {@link java.lang.Integer} object. This is minimum scan number.
    * @param rightBound a {@link java.lang.Integer} object. This is maximum scan number.
    */
-  BiGaussian(MultiKeyMap<Integer, Triplet> horizontalSlice, double mz, int leftBound,
-      int rightBound) {
+  BiGaussian(List<Triplet> horizontalSlice, int roundedmz, int leftBound, int rightBound) {
 
     // This is max height for BiGaussian fit. It's in terms of intensities.
-    maxHeight = horizontalSlice.values().stream().map(x -> x != null ? x.intensity : 0.0)
+    maxHeight = horizontalSlice.stream().map(x -> x != null ? x.intensity : 0.0)
         .max(Double::compareTo).orElse(0.0);
 
     // Below logic is for finding BiGaussian parameters.
     mu = getScanNumber(horizontalSlice, maxHeight);
-    int roundedmz = (int) Math.round(mz * 10000);
     double halfHeight = (double) maxHeight / 2;
 
 
@@ -104,32 +103,66 @@ public class BiGaussian {
    * @param direction a {@link Enum} object. This decides for which half we want to calculate X
    *        value.
    */
-  private double InterpolationX(MultiKeyMap<Integer, Triplet> horizontalSlice, int mu,
-      double halfHeight, int leftBound, int rightBound, int roundedmz, Direction direction) {
+  private double InterpolationX(List<Triplet> horizontalSlice, int mu, double halfHeight,
+      int leftBound, int rightBound, int roundedmz, Direction direction) {
 
     int i = mu;
-    double Y1 = 0;
-    double Y2 = 0;
+    double Y1 = Double.NaN;
+    double Y2 = Double.NaN;
     int step = direction == Direction.RIGHT ? 1 : -1;
+
+    Comparator<Triplet> compareScanMz = new Comparator<Triplet>() {
+
+      @Override
+      public int compare(Triplet o1, Triplet o2) {
+
+        int scan1 = o1.scanNumber;
+        int scan2 = o2.scanNumber;
+        int scanCompare = Integer.compare(scan1, scan2);
+
+        if (scanCompare != 0) {
+          return scanCompare;
+        } else {
+          int mz1 = o1.mz;
+          int mz2 = o2.mz;
+          return Integer.compare(mz1, mz2);
+        }
+      }
+    };
+
+
+    Collections.sort(horizontalSlice, compareScanMz);
 
     while (leftBound <= i && i <= rightBound) {
 
       i += step;
-      SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(i, roundedmz);
+      Triplet searchTriplet1 = new Triplet();
+      searchTriplet1.mz = roundedmz;
+      searchTriplet1.scanNumber = i;
+      int index1 = Collections.binarySearch(horizontalSlice, searchTriplet1, compareScanMz);
+      if (index1 >= 0) {
+        SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1);
 
-      if (triplet1 != null && triplet1.intensity < halfHeight) {
-        Y1 = triplet1.intensity;
-        SliceSparseMatrix.Triplet triplet2 = horizontalSlice.get(i - step, roundedmz);
-        if (triplet2 != null) {
-          Y2 = triplet2.intensity;
-          break;
+        if (triplet1.intensity != 0 && triplet1.intensity < halfHeight) {
+          Triplet searchTriplet2 = new Triplet();
+          searchTriplet2.mz = roundedmz;
+          searchTriplet2.scanNumber = i - step;
+          Y1 = (double) triplet1.intensity;
+          int index2 = Collections.binarySearch(horizontalSlice, searchTriplet2, compareScanMz);
+          if (index2 >= 0) {
+            SliceSparseMatrix.Triplet triplet2 = horizontalSlice.get(index2);
+            if (triplet2.intensity != 0) {
+              Y2 = (double) triplet2.intensity;
+              break;
+            }
+          }
         }
       }
 
 
-
     }
-
+    if (Y1 == Double.NaN || Y2 == Double.NaN)
+      throw new IllegalArgumentException("Cannot find BiGaussian.");
     /*
      * I've used the formula of line passing through points (x1,y1) and (x2,y2) in interpolationX.
      * Those are the points which are exactly above and below of halfHeight(halfMaxIntensity). I've
@@ -149,18 +182,14 @@ public class BiGaussian {
    * @param height a {@link java.lang.Double} object. This is intensity value from the horizontal
    *        slice from sparse matrix.
    */
-  private int getScanNumber(MultiKeyMap<Integer, Triplet> horizontalSlice, double height) {
+  private int getScanNumber(List<Triplet> horizontalSlice, double height) {
     int mu = 0;
-    MapIterator<MultiKey<? extends Integer>, Triplet> iterator = horizontalSlice.mapIterator();
+    Iterator<Triplet> iterator = horizontalSlice.iterator();
 
     while (iterator.hasNext()) {
-      iterator.next();
-
-      MultiKey<? extends Integer> mk = (MultiKey<? extends Integer>) iterator.getKey();
-      double intensity = iterator.getValue() != null ? (iterator.getValue()).intensity : 0;
-
-      if (intensity == height) {
-        mu = (int) mk.getKey(0);
+      Triplet triplet = iterator.next();
+      if (triplet.intensity == height) {
+        mu = triplet.scanNumber;
         break;
       }
     }

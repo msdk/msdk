@@ -18,15 +18,15 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.apache.commons.collections4.map.MultiKeyMap;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.List;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
-import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
+import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 
 public class BiGaussianSimilarityFunctionTest {
   private static RawDataFile rawFile;
@@ -44,24 +44,22 @@ public class BiGaussianSimilarityFunctionTest {
   @BeforeClass
   public static void loadData() throws MSDKException {
     // Import the file
-    String file = "test_output.cdf";
+    String file = "small.mzXML";
     Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
-    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile);
+    MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile);
     rawFile = importer.execute();
     objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
     Assert.assertNotNull(rawFile);
-    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
   }
 
 
   @Test
   public void testgetBiGaussianValue() throws MSDKException {
-    MultiKeyMap<Integer, Triplet> horizontalSlice =
-        objSliceSparseMatrix.getHorizontalSlice(140.1037, 1, 9);
+    List<Triplet> horizontalSlice = objSliceSparseMatrix.getHorizontalSlice(1700358, 214, 224);
     BiGaussianSimilarityTest objBiGaussian = new BiGaussianSimilarityTest();
-    boolean goodPeak = objBiGaussian.execute(horizontalSlice, 1, 9, 140.1037);
+    boolean goodPeak = objBiGaussian.execute(horizontalSlice, 214, 224, 1700358, 0.25);
     Assert.assertTrue(goodPeak);
   }
 }

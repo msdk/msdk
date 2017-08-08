@@ -235,11 +235,10 @@ public class FeatureTools {
 
 
 
-  // This returns the angle calculated between the two "means" of the slopes on each side of the
-  // peak
   /**
    * <p>
-   * sharpnessAngleAvgSlopes.
+   * sharpnessAngleAvgSlopes.This returns the angle calculated between the two "means" of the slopes
+   * on each side of the peak
    * </p>
    *
    * @param rt an array of double.
@@ -474,11 +473,11 @@ public class FeatureTools {
     }
   }
 
-  // This returns the angle calculated between the two "means" of the slopes on each side of the
-  // peak
+  //
   /**
    * <p>
-   * sharpnessAngleAvgAngles.
+   * sharpnessAngleAvgAngles. This returns the angle calculated between the two "means" of the
+   * slopes on each side of the peak.
    * </p>
    *
    * @param rt an array of double.

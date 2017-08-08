@@ -18,15 +18,15 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.apache.commons.collections4.map.MultiKeyMap;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.List;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
-import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
+import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 
 public class BiGaussianTest {
 
@@ -45,24 +45,22 @@ public class BiGaussianTest {
   @BeforeClass
   public static void loadData() throws MSDKException {
     // Import the file
-    String file = "test_output.cdf";
+    String file = "small.mzXML";
     Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
-    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile);
+    MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile);
     rawFile = importer.execute();
     objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
     Assert.assertNotNull(rawFile);
-    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
   }
 
 
   @Test
   public void testgetBiGaussianValue() throws MSDKException {
-    MultiKeyMap<Integer, Triplet> horizontalSlice =
-        objSliceSparseMatrix.getHorizontalSlice(140.1037, 1, 23);
-    BiGaussian objBiGaussian = new BiGaussian(horizontalSlice, 140.1037, 1, 23);
-    double biGaussianValue = objBiGaussian.getValue(6);
-    Assert.assertEquals(23438, biGaussianValue, 1);
+    List<Triplet> horizontalSlice = objSliceSparseMatrix.getHorizontalSlice(1700358, 214, 224);
+    BiGaussian objBiGaussian = new BiGaussian(horizontalSlice, 1700358, 214, 224);
+    double biGaussianValue = objBiGaussian.getValue(220);
+    Assert.assertEquals(24608, biGaussianValue, 1);
   }
 }
