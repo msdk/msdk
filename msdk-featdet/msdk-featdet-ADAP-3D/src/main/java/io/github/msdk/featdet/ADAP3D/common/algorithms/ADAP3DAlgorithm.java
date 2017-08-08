@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.impl.SimpleChromatogram;
 import io.github.msdk.datamodel.impl.SimpleFeature;
 
@@ -28,11 +29,15 @@ import io.github.msdk.datamodel.impl.SimpleFeature;
  * </p>
  *
  */
-public class ADAP3DAlgorithm {
+public class ADAP3DAlgorithm implements MSDKMethod<List<SimpleFeature>>{
 
   private SliceSparseMatrix objSliceSparseMatrix;
 
   private static final double LOW_BOUND_PEAK_WIDTH_PERCENT = 0.75;
+  
+  private List<SimpleFeature> finalFeatureList;
+  
+  private boolean canceled = false;
 
   ADAP3DAlgorithm(SliceSparseMatrix sliceSparseMatrix) {
     objSliceSparseMatrix = sliceSparseMatrix;
@@ -93,11 +98,14 @@ public class ADAP3DAlgorithm {
 
     List<PeakDetection.GoodPeakInfo> newGoodPeakList =
         objPeakDetection.execute(objParameters, roundedFWHM);
-    List<SimpleFeature> newFeatureList = new ArrayList<SimpleFeature>();
-    newFeatureList.addAll(featureList);
-    newFeatureList.addAll(getFeature(newGoodPeakList));
+    finalFeatureList = new ArrayList<SimpleFeature>();
+    finalFeatureList.addAll(featureList);
+    finalFeatureList.addAll(getFeature(newGoodPeakList));
+    
+    if(canceled)
+      return null;
 
-    return newFeatureList;
+    return finalFeatureList;
   }
 
 
@@ -148,5 +156,23 @@ public class ADAP3DAlgorithm {
 
     return featureList;
 
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Float getFinishedPercentage() {
+    return (float) (finalFeatureList.size() == 0?0:1);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public List<SimpleFeature> getResult() {
+    return finalFeatureList;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void cancel() {
+    this.canceled = true;    
   }
 }
