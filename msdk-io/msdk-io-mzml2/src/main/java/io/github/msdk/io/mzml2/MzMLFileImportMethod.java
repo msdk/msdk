@@ -58,8 +58,8 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
   private Float progress;
   private int lastLoggedProgress;
   private Logger logger;
-  private Predicate<MsScan> msScanPredicate;
-  private Predicate<Chromatogram> chromatogramPredicate;
+  private Predicate<MsScan> msScanPredicate = s -> true;
+  private Predicate<Chromatogram> chromatogramPredicate = c -> true;
 
   /**
    * <p>
@@ -70,7 +70,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    *        MzML File.
    */
   public MzMLFileImportMethod(String mzMLFilePath) {
-    this(new File(mzMLFilePath), null, null);
+    this(new File(mzMLFilePath), s -> true, c -> true);
   }
 
   /**
@@ -103,7 +103,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    *        MzML File.
    */
   public MzMLFileImportMethod(Path mzMLFilePath) {
-    this(mzMLFilePath.toFile(), null, null);
+    this(mzMLFilePath.toFile(), s -> true, c -> true);
   }
 
   /**
@@ -135,7 +135,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    * @param mzMLFile a {@link java.io.File File} object instance of the MzML File.
    */
   public MzMLFileImportMethod(File mzMLFile) {
-    this(mzMLFile, null, null, null);
+    this(mzMLFile, null, s -> true, c -> true);
   }
 
   /**
@@ -168,7 +168,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    *        format.
    */
   public MzMLFileImportMethod(InputStream inputStream) {
-    this(null, inputStream, null, null);
+    this(null, inputStream, s -> true, c -> true);
   }
 
   /**
@@ -205,8 +205,8 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
     this.progress = 0f;
     this.lastLoggedProgress = 0;
     this.logger = LoggerFactory.getLogger(this.getClass());
-    this.msScanPredicate = msScanPredicate != null ? msScanPredicate : s -> true;
-    this.chromatogramPredicate = chromatogramPredicate != null ? chromatogramPredicate : c -> true;
+    this.msScanPredicate = this.msScanPredicate.and(msScanPredicate);
+    this.chromatogramPredicate = this.chromatogramPredicate.and(chromatogramPredicate);
   }
 
   /**
