@@ -18,14 +18,13 @@ import java.io.IOException;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Variable;
 
-public class NetCDFMsScan extends SimpleMsScan implements MsScan {
+public class NetCDFMsScan extends SimpleMsScan {
 
   private int[] scanStartPositions;
   private float[] scanRetentionTimes;
@@ -54,24 +53,36 @@ public class NetCDFMsScan extends SimpleMsScan implements MsScan {
   @Override
   public float[] getIntensityValues(float[] intensityValues) {
     if (this.intensityValues == null)
-      throw new MSDKRuntimeException(
-          "Scan not loaded. Make sure the scan passes the predicate (if specified) to parse the scan");
+      try {
+        parseScan(null, null);
+      } catch (IOException | InvalidRangeException e) {
+        throw new MSDKRuntimeException(e);
+      }
+
     return this.intensityValues;
   }
 
   @Override
   public double[] getMzValues(double[] array) {
     if (this.mzValues == null)
-      throw new MSDKRuntimeException(
-          "Scan not loaded. Make sure the scan passes the predicate (if specified) to parse the scan");
+      try {
+        parseScan(null, null);
+      } catch (IOException | InvalidRangeException e) {
+        throw new MSDKRuntimeException(e);
+      }
+
     return this.mzValues;
   }
 
   @Override
   public Integer getNumberOfDataPoints() {
     if (numOfDataPoints == null)
-      throw new MSDKRuntimeException(
-          "Scan not loaded. Make sure the scan passes the predicate (if specified) to parse the scan");
+      try {
+        parseScan(null, null);
+      } catch (IOException | InvalidRangeException e) {
+        throw new MSDKRuntimeException(e);
+      }
+
     return numOfDataPoints;
   }
 

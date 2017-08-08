@@ -27,16 +27,11 @@ import org.slf4j.LoggerFactory;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.impl.SimpleRawDataFile;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
 import ucar.ma2.Array;
-import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
-import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
@@ -65,16 +60,12 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
   private Variable massValueVariable, intensityValueVariable;
 
-  private Predicate<MsScan> msScanPredicate;
+  private Predicate<MsScan> msScanPredicate = s -> true;
 
   // Some software produces netcdf files with a scale factor such as 0.05
   // TODO: need junit test for this
   private double massValueScaleFactor = 1;
   private double intensityValueScaleFactor = 1;
-
-  private double mzValues[] = new double[10000];
-  private float intensityValues[] = new float[10000];
-  private int numOfDataPoints;
 
   /**
    * <p>
@@ -85,12 +76,12 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public NetCDFFileImportMethod(@Nonnull File sourceFile) {
-    this(sourceFile, null);
+    this(sourceFile, s -> true);
   }
 
   public NetCDFFileImportMethod(@Nonnull File sourceFile, Predicate<MsScan> msScanPredicate) {
     this.sourceFile = sourceFile;
-    this.msScanPredicate = msScanPredicate != null ? msScanPredicate : s -> true;
+    this.msScanPredicate = this.msScanPredicate.and(msScanPredicate);
   }
 
   /** {@inheritDoc} */
@@ -134,9 +125,6 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
         parsedScans++;
 
       }
-
-      // Close file
-      inputFile.close();
 
     } catch (Exception e) {
       throw new MSDKException(e);
@@ -344,6 +332,14 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
   @Override
   public void cancel() {
     this.canceled = true;
+  }
+
+  public void terminate() throws MSDKException {
+    try {
+      inputFile.close();
+    } catch (IOException e) {
+      throw new MSDKException(e);
+    }
   }
 
 }

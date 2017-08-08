@@ -23,8 +23,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -79,6 +77,7 @@ public class NetCDFFileImportMethodTest {
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan1278.getNumberOfDataPoints());
     Assert.assertEquals(4.0E3f, scan1278maxInt, 1E2f);
 
+    importer.terminate();
     rawFile.dispose();
 
   }
@@ -132,22 +131,20 @@ public class NetCDFFileImportMethodTest {
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan1278.getNumberOfDataPoints());
     Assert.assertEquals(4.0E3f, scan1278maxInt, 1E2f);
 
+    importer.terminate();
     rawFile.dispose();
 
   }
 
-  @Test(expected = MSDKRuntimeException.class)
+  @Test
   public void testWT15UnparsedScan() throws MSDKException {
 
-    // Set up Predicate<MsScan>
-    List<Integer> scansToParse = new ArrayList<>();
-    scansToParse.addAll(Arrays.asList(18));
-    Predicate<MsScan> msScanPredicate = getMsScanPredicate(scansToParse);
+    float intensityBuffer[];
 
     // Import the file
     File inputFile = new File(TEST_DATA_PATH + "wt15.CDF");
     Assert.assertTrue(inputFile.canRead());
-    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile, msScanPredicate);
+    NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile, s -> false);
     RawDataFile rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
     Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
@@ -160,10 +157,17 @@ public class NetCDFFileImportMethodTest {
     // 3rd scan, #3
     MsScan scan3 = scans.get(2);
     Assert.assertEquals(new Integer(3), scan3.getScanNumber());
-
-    // Throw an exception, scan was not loaded because it doesn't pass the predicate
     Assert.assertEquals(MsSpectrumType.CENTROIDED, scan3.getSpectrumType());
+    Assert.assertEquals(new Integer(1), scan3.getMsLevel());
+    Assert.assertEquals(2504.508f, scan3.getRetentionTime(), 0.01f);
+    scan3.getMzValues();
+    intensityBuffer = scan3.getIntensityValues();
+    Assert.assertEquals(420, (int) scan3.getNumberOfDataPoints());
+    Float scan3maxInt =
+        MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan3.getNumberOfDataPoints());
+    Assert.assertEquals(4.5E4f, scan3maxInt, 1E3f);
 
+    importer.terminate();
     rawFile.dispose();
 
   }
