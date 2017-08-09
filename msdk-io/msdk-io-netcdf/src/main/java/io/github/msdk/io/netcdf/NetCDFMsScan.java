@@ -35,6 +35,7 @@ public class NetCDFMsScan extends SimpleMsScan {
   private double[] mzValues;
   private float[] intensityValues;
   private Integer numOfDataPoints;
+  private MsSpectrumType spectrumType;
 
   public NetCDFMsScan(Integer scanNumber, int[] scanStartPositions, float[] scanRetentionTimes,
       Variable massValueVariable, Variable intensityValueVariable, double massValueScaleFactor,
@@ -48,98 +49,106 @@ public class NetCDFMsScan extends SimpleMsScan {
     this.intensityValueScaleFactor = intensityValueScaleFactor;
     this.mzValues = null;
     this.intensityValues = null;
+    this.spectrumType = null;
   }
 
   @Override
   public float[] getIntensityValues(float[] intensityValues) {
-    if (this.intensityValues == null)
-      try {
-        parseScan(null, null);
-      } catch (IOException | InvalidRangeException e) {
-        throw new MSDKRuntimeException(e);
-      }
+    final Integer scanIndex = getScanIndex();
+    numOfDataPoints = getNumberOfDataPoints();
+    try {
+      final int scanStartPosition[] = {scanStartPositions[scanIndex]};
+      final int scanLength[] = {scanStartPositions[scanIndex + 1] - scanStartPositions[scanIndex]};
+      final Array intensityValueArray = intensityValueVariable.read(scanStartPosition, scanLength);
+      final Index intensityValuesIndex = intensityValueArray.getIndex();
 
-    return this.intensityValues;
+      if (intensityValues == null || intensityValues.length < numOfDataPoints)
+        intensityValues = new float[numOfDataPoints];
+
+      // Load the data points
+      for (int i = 0; i < numOfDataPoints; i++) {
+        final Index intensityIndex0 = intensityValuesIndex.set0(i);
+        intensityValues[i] =
+            (float) (intensityValueArray.getDouble(intensityIndex0) * intensityValueScaleFactor);
+      }
+    } catch (IOException | InvalidRangeException e) {
+      throw new MSDKRuntimeException(e);
+    }
+
+    return intensityValues;
   }
 
   @Override
-  public double[] getMzValues(double[] array) {
-    if (this.mzValues == null)
-      try {
-        parseScan(null, null);
-      } catch (IOException | InvalidRangeException e) {
-        throw new MSDKRuntimeException(e);
+  public double[] getMzValues(double[] mzValues) {
+    final Integer scanIndex = getScanIndex();
+    numOfDataPoints = getNumberOfDataPoints();
+    try {
+      final int scanStartPosition[] = {scanStartPositions[scanIndex]};
+      final int scanLength[] = {scanStartPositions[scanIndex + 1] - scanStartPositions[scanIndex]};
+      final Array massValueArray = massValueVariable.read(scanStartPosition, scanLength);
+      final Index massValuesIndex = massValueArray.getIndex();
+
+      if (mzValues == null || mzValues.length < numOfDataPoints)
+        mzValues = new double[numOfDataPoints];
+
+      // Load the data points
+      for (int i = 0; i < numOfDataPoints; i++) {
+        final Index massIndex0 = massValuesIndex.set0(i);
+        mzValues[i] = massValueArray.getDouble(massIndex0) * massValueScaleFactor;
       }
 
-    return this.mzValues;
+    } catch (IOException | InvalidRangeException e) {
+      throw new MSDKRuntimeException(e);
+    }
+
+    return mzValues;
   }
 
   @Override
   public Integer getNumberOfDataPoints() {
-    if (numOfDataPoints == null)
+    if (numOfDataPoints == null) {
+      final Integer scanIndex = getScanIndex();
       try {
-        parseScan(null, null);
+        final int scanStartPosition[] = {scanStartPositions[scanIndex]};
+        final int scanLength[] =
+            {scanStartPositions[scanIndex + 1] - scanStartPositions[scanIndex]};
+        final Array massValueArray = massValueVariable.read(scanStartPosition, scanLength);
+        numOfDataPoints = massValueArray.getShape()[0];
       } catch (IOException | InvalidRangeException e) {
         throw new MSDKRuntimeException(e);
       }
+    }
 
     return numOfDataPoints;
   }
 
   @Override
   public Float getRetentionTime() {
-    if (mzValues == null || intensityValues == null)
-      getNumberOfDataPoints();
-    return super.getRetentionTime();
+    return scanRetentionTimes[getScanIndex()];
   }
 
   @Override
   public MsSpectrumType getSpectrumType() {
-    if (mzValues == null || intensityValues == null)
-      getNumberOfDataPoints();
+    if (spectrumType == null)
+      spectrumType = SpectrumTypeDetectionAlgorithm.detectSpectrumType(getMzValues(),
+          getIntensityValues(), getNumberOfDataPoints());
 
-    return super.getSpectrumType();
+    return spectrumType;
   }
 
-  void parseScan(double[] mzValues, float[] intensityValues)
-      throws IOException, InvalidRangeException {
+  public Integer getScanIndex() {
+    return getScanNumber() - 1;
+  }
 
-    final Integer scanIndex = getScanNumber() - 1;
-
-    // Find the Index of mass and intensity values
-    final int scanStartPosition[] = {scanStartPositions[scanIndex]};
-    final int scanLength[] = {scanStartPositions[scanIndex + 1] - scanStartPositions[scanIndex]};
-    final Array massValueArray = massValueVariable.read(scanStartPosition, scanLength);
-    final Array intensityValueArray = intensityValueVariable.read(scanStartPosition, scanLength);
-    final Index massValuesIndex = massValueArray.getIndex();
-    final Index intensityValuesIndex = intensityValueArray.getIndex();
-
-    // Get number of data points
-    numOfDataPoints = massValueArray.getShape()[0];
-
-    // Allocate space
-    if (mzValues == null || mzValues.length < numOfDataPoints)
-      mzValues = new double[numOfDataPoints];
-    if (intensityValues == null || intensityValues.length < numOfDataPoints)
-      intensityValues = new float[numOfDataPoints];
-
-    this.mzValues = mzValues;
-    this.intensityValues = intensityValues;
-
-    // Load the data points
-    for (int i = 0; i < numOfDataPoints; i++) {
-      final Index massIndex0 = massValuesIndex.set0(i);
-      final Index intensityIndex0 = intensityValuesIndex.set0(i);
-      mzValues[i] = massValueArray.getDouble(massIndex0) * massValueScaleFactor;
-      intensityValues[i] =
-          (float) (intensityValueArray.getDouble(intensityIndex0) * intensityValueScaleFactor);
-    }
+  public void parseScan() throws IOException, InvalidRangeException {
+    // Load values to this scan instance itself, this method is called only when the scan passes the
+    // predicate
+    mzValues = getMzValues();
+    intensityValues = getIntensityValues();
+    numOfDataPoints = getNumberOfDataPoints();
 
     setDataPoints(mzValues, intensityValues, numOfDataPoints);
-    MsSpectrumType spectrumType = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mzValues,
-        intensityValues, numOfDataPoints);
-    setSpectrumType(spectrumType);
-    setRetentionTime(scanRetentionTimes[scanIndex]);
-
+    spectrumType = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mzValues, intensityValues,
+        numOfDataPoints);
   }
 }

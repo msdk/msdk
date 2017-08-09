@@ -119,7 +119,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
             intensityValueScaleFactor);
 
         if (msScanPredicate.test(buildingScan))
-          buildingScan.parseScan(null, null);
+          buildingScan.parseScan();
 
         newRawFile.addScan(buildingScan);
         parsedScans++;
