@@ -32,8 +32,8 @@ public class NetCDFMsScan extends SimpleMsScan {
   private Variable intensityValueVariable;
   private double massValueScaleFactor;
   private double intensityValueScaleFactor;
-  private double[] mzValues;
-  private float[] intensityValues;
+  private double[] preLoadedMzValues;
+  private float[] preLoadedIntensityValues;
   private Integer numOfDataPoints;
   private MsSpectrumType spectrumType;
 
@@ -47,14 +47,14 @@ public class NetCDFMsScan extends SimpleMsScan {
     this.intensityValueVariable = intensityValueVariable;
     this.massValueScaleFactor = massValueScaleFactor;
     this.intensityValueScaleFactor = intensityValueScaleFactor;
-    this.mzValues = null;
-    this.intensityValues = null;
+    this.preLoadedMzValues = null;
+    this.preLoadedIntensityValues = null;
     this.spectrumType = null;
   }
 
   @Override
   public float[] getIntensityValues(float[] intensityValues) {
-    if (this.intensityValues == null) {
+    if (preLoadedIntensityValues == null) {
       final Integer scanIndex = getScanIndex();
       numOfDataPoints = getNumberOfDataPoints();
       try {
@@ -81,8 +81,8 @@ public class NetCDFMsScan extends SimpleMsScan {
       if (intensityValues == null || intensityValues.length < numOfDataPoints)
         intensityValues = new float[numOfDataPoints];
 
-      for (int i = 0; i < this.intensityValues.length; i++)
-        intensityValues[i] = this.intensityValues[i];
+      for (int i = 0; i < preLoadedIntensityValues.length; i++)
+        intensityValues[i] = preLoadedIntensityValues[i];
     }
 
     return intensityValues;
@@ -90,7 +90,7 @@ public class NetCDFMsScan extends SimpleMsScan {
 
   @Override
   public double[] getMzValues(double[] mzValues) {
-    if (mzValues == null) {
+    if (preLoadedMzValues == null) {
       final Integer scanIndex = getScanIndex();
       numOfDataPoints = getNumberOfDataPoints();
       try {
@@ -116,8 +116,8 @@ public class NetCDFMsScan extends SimpleMsScan {
       if (mzValues == null || mzValues.length < numOfDataPoints)
         mzValues = new double[numOfDataPoints];
 
-      for (int i = 0; i < this.mzValues.length; i++)
-        mzValues[i] = this.mzValues[i];
+      for (int i = 0; i < preLoadedMzValues.length; i++)
+        mzValues[i] = preLoadedMzValues[i];
     }
 
     return mzValues;
@@ -162,12 +162,12 @@ public class NetCDFMsScan extends SimpleMsScan {
   public void parseScan() throws IOException, InvalidRangeException {
     // Load values to this scan instance itself, this method is called only when the scan passes the
     // predicate
-    mzValues = getMzValues();
-    intensityValues = getIntensityValues();
+    preLoadedMzValues = getMzValues();
+    preLoadedIntensityValues = getIntensityValues();
     numOfDataPoints = getNumberOfDataPoints();
 
-    setDataPoints(mzValues, intensityValues, numOfDataPoints);
-    spectrumType = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mzValues, intensityValues,
+    setDataPoints(preLoadedMzValues, preLoadedIntensityValues, numOfDataPoints);
+    spectrumType = SpectrumTypeDetectionAlgorithm.detectSpectrumType(preLoadedMzValues, preLoadedIntensityValues,
         numOfDataPoints);
   }
 }
