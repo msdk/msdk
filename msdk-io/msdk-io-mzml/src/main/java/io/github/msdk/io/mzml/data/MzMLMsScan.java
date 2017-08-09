@@ -153,8 +153,7 @@ public class MzMLMsScan implements MsScan {
    * Setter for the field <code>intensityBinaryDataInfo</code>.
    * </p>
    *
-   * @param intensityBinaryDataInfo a {@link io.github.msdk.io.mzml.data.MzMLBinaryDataInfo}
-   *        object.
+   * @param intensityBinaryDataInfo a {@link io.github.msdk.io.mzml.data.MzMLBinaryDataInfo} object.
    */
   public void setIntensityBinaryDataInfo(MzMLBinaryDataInfo intensityBinaryDataInfo) {
     this.intensityBinaryDataInfo = intensityBinaryDataInfo;
@@ -295,19 +294,14 @@ public class MzMLMsScan implements MsScan {
   /** {@inheritDoc} */
   @Override
   public Float getTIC() {
-    if (tic == null) {
-      Optional<String> cvv = getCVValue(MzMLCV.cvTIC);
-      if (!cvv.isPresent()) {
-        tic = MsSpectrumUtil.getTIC(getIntensityValues(), getMzBinaryDataInfo().getArrayLength());
-        return tic;
-      }
+    if (tic == null)
       try {
-        tic = Float.valueOf(cvv.get());
+        tic = MsSpectrumUtil.getTIC(getIntensityValues(), getMzBinaryDataInfo().getArrayLength());
       } catch (NumberFormatException e) {
         throw (new MSDKRuntimeException(
             "Could not convert TIC value in mzML file to a float\n" + e));
       }
-    }
+
     return tic;
   }
 
