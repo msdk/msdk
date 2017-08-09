@@ -54,25 +54,35 @@ public class NetCDFMsScan extends SimpleMsScan {
 
   @Override
   public float[] getIntensityValues(float[] intensityValues) {
-    final Integer scanIndex = getScanIndex();
-    numOfDataPoints = getNumberOfDataPoints();
-    try {
-      final int scanStartPosition[] = {scanStartPositions[scanIndex]};
-      final int scanLength[] = {scanStartPositions[scanIndex + 1] - scanStartPositions[scanIndex]};
-      final Array intensityValueArray = intensityValueVariable.read(scanStartPosition, scanLength);
-      final Index intensityValuesIndex = intensityValueArray.getIndex();
+    if (this.intensityValues == null) {
+      final Integer scanIndex = getScanIndex();
+      numOfDataPoints = getNumberOfDataPoints();
+      try {
+        final int scanStartPosition[] = {scanStartPositions[scanIndex]};
+        final int scanLength[] =
+            {scanStartPositions[scanIndex + 1] - scanStartPositions[scanIndex]};
+        final Array intensityValueArray =
+            intensityValueVariable.read(scanStartPosition, scanLength);
+        final Index intensityValuesIndex = intensityValueArray.getIndex();
 
+        if (intensityValues == null || intensityValues.length < numOfDataPoints)
+          intensityValues = new float[numOfDataPoints];
+
+        // Load the data points
+        for (int i = 0; i < numOfDataPoints; i++) {
+          final Index intensityIndex0 = intensityValuesIndex.set0(i);
+          intensityValues[i] =
+              (float) (intensityValueArray.getDouble(intensityIndex0) * intensityValueScaleFactor);
+        }
+      } catch (IOException | InvalidRangeException e) {
+        throw new MSDKRuntimeException(e);
+      }
+    } else {
       if (intensityValues == null || intensityValues.length < numOfDataPoints)
         intensityValues = new float[numOfDataPoints];
 
-      // Load the data points
-      for (int i = 0; i < numOfDataPoints; i++) {
-        final Index intensityIndex0 = intensityValuesIndex.set0(i);
-        intensityValues[i] =
-            (float) (intensityValueArray.getDouble(intensityIndex0) * intensityValueScaleFactor);
-      }
-    } catch (IOException | InvalidRangeException e) {
-      throw new MSDKRuntimeException(e);
+      for (int i = 0; i < this.intensityValues.length; i++)
+        intensityValues[i] = this.intensityValues[i];
     }
 
     return intensityValues;
@@ -80,25 +90,34 @@ public class NetCDFMsScan extends SimpleMsScan {
 
   @Override
   public double[] getMzValues(double[] mzValues) {
-    final Integer scanIndex = getScanIndex();
-    numOfDataPoints = getNumberOfDataPoints();
-    try {
-      final int scanStartPosition[] = {scanStartPositions[scanIndex]};
-      final int scanLength[] = {scanStartPositions[scanIndex + 1] - scanStartPositions[scanIndex]};
-      final Array massValueArray = massValueVariable.read(scanStartPosition, scanLength);
-      final Index massValuesIndex = massValueArray.getIndex();
+    if (mzValues == null) {
+      final Integer scanIndex = getScanIndex();
+      numOfDataPoints = getNumberOfDataPoints();
+      try {
+        final int scanStartPosition[] = {scanStartPositions[scanIndex]};
+        final int scanLength[] =
+            {scanStartPositions[scanIndex + 1] - scanStartPositions[scanIndex]};
+        final Array massValueArray = massValueVariable.read(scanStartPosition, scanLength);
+        final Index massValuesIndex = massValueArray.getIndex();
 
+        if (mzValues == null || mzValues.length < numOfDataPoints)
+          mzValues = new double[numOfDataPoints];
+
+        // Load the data points
+        for (int i = 0; i < numOfDataPoints; i++) {
+          final Index massIndex0 = massValuesIndex.set0(i);
+          mzValues[i] = massValueArray.getDouble(massIndex0) * massValueScaleFactor;
+        }
+
+      } catch (IOException | InvalidRangeException e) {
+        throw new MSDKRuntimeException(e);
+      }
+    } else {
       if (mzValues == null || mzValues.length < numOfDataPoints)
         mzValues = new double[numOfDataPoints];
 
-      // Load the data points
-      for (int i = 0; i < numOfDataPoints; i++) {
-        final Index massIndex0 = massValuesIndex.set0(i);
-        mzValues[i] = massValueArray.getDouble(massIndex0) * massValueScaleFactor;
-      }
-
-    } catch (IOException | InvalidRangeException e) {
-      throw new MSDKRuntimeException(e);
+      for (int i = 0; i < this.mzValues.length; i++)
+        mzValues[i] = this.mzValues[i];
     }
 
     return mzValues;
