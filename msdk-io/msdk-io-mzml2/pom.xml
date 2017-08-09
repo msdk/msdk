@@ -6,7 +6,7 @@
 		<artifactId>msdk-io</artifactId>
 		<version>0.0.9-SNAPSHOT</version>
 	</parent>
-	<artifactId>msdk-io-mzml2</artifactId>
+	<artifactId>msdk-io-mzml</artifactId>
 
 	<repositories>
 		<repository>
@@ -49,13 +49,6 @@
 			<version>6.11.8</version>
 		</dependency>
 
-		<dependency>
-			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-rawdata-centroiding</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-		
 	</dependencies>
 
 </project>

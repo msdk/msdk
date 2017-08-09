@@ -6,7 +6,7 @@
 		<artifactId>msdk-io</artifactId>
 		<version>0.0.9-SNAPSHOT</version>
 	</parent>
-	<artifactId>msdk-io-mzml</artifactId>
+	<artifactId>msdk-io-mzml-old</artifactId>
 
 	<repositories>
         <repository>
