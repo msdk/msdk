@@ -35,7 +35,6 @@ import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 public class ADAP3DFeatureDetectionMethodTest {
 
   private static RawDataFile rawFile;
-  private static SliceSparseMatrix objSliceSparseMatrix;
 
   private static Path getResourcePath(String resource) throws MSDKException {
     final URL url = ADAP3DFeatureDetectionMethodTest.class.getClassLoader().getResource(resource);
@@ -57,7 +56,6 @@ public class ADAP3DFeatureDetectionMethodTest {
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
     MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile);
     rawFile = importer.execute();
-    objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
     Assert.assertNotNull(rawFile);
   }
 

@@ -37,8 +37,7 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  */
 public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>>{
 
-  private RawDataFile rawFile;
-  
+    
   private SliceSparseMatrix objSliceSparseMatrix;
 
   private static final double LOW_BOUND_PEAK_WIDTH_PERCENT = 0.75;
