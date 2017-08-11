@@ -33,13 +33,13 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix;
 import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 
-public class PeakDetectionTest {
+public class ADAP3DFeatureDetectionMethodTest {
 
   private static RawDataFile rawFile;
   private static SliceSparseMatrix objSliceSparseMatrix;
 
   private static Path getResourcePath(String resource) throws MSDKException {
-    final URL url = PeakDetectionTest.class.getClassLoader().getResource(resource);
+    final URL url = ADAP3DFeatureDetectionMethodTest.class.getClassLoader().getResource(resource);
     try {
       return Paths.get(url.toURI()).toAbsolutePath();
     } catch (URISyntaxException e) {
