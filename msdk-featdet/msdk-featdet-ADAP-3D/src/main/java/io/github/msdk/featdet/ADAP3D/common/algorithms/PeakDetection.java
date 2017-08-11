@@ -26,12 +26,12 @@ public class PeakDetection {
    * </p>
    */
   public static class GoodPeakInfo {
-    double mz;
-    int upperScanBound;
-    int lowerScanBound;
-    float maxHeight;
-    int maxHeightScanNumber;
-    Result objResult;
+    public double mz;
+    public int upperScanBound;
+    public int lowerScanBound;
+    public float maxHeight;
+    public int maxHeightScanNumber;
+    public Result objResult;
   }
 
   private SliceSparseMatrix objSliceSparseMatrix;
@@ -45,7 +45,7 @@ public class PeakDetection {
    * @param objSliceSparseMatrix is sparse matrix created from raw data file.
    * @param objParameter contains all the necessary parameters to find the peak.
    */
-  PeakDetection(SliceSparseMatrix objSliceSparseMatrix) {
+  public PeakDetection(SliceSparseMatrix objSliceSparseMatrix) {
     this.objSliceSparseMatrix = objSliceSparseMatrix;
     // this.objParameters = objParameter;
   }

@@ -10,7 +10,7 @@
  *
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
-package io.github.msdk.featdet.ADAP3D.common.algorithms;
+package io.github.msdk.featdet.ADAP3D;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +22,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.impl.SimpleChromatogram;
 import io.github.msdk.datamodel.impl.SimpleFeature;
+import io.github.msdk.featdet.ADAP3D.common.algorithms.CurveTool;
+import io.github.msdk.featdet.ADAP3D.common.algorithms.Parameters;
+import io.github.msdk.featdet.ADAP3D.common.algorithms.PeakDetection;
+import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix;
 
 /**
  * <p>

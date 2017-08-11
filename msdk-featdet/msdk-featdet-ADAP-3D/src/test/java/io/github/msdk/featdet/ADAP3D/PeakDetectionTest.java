@@ -10,7 +10,7 @@
  *
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
-package io.github.msdk.featdet.ADAP3D.common.algorithms;
+package io.github.msdk.featdet.ADAP3D;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -26,6 +26,7 @@ import org.junit.Test;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.impl.SimpleFeature;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix;
 import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 
 public class PeakDetectionTest {
