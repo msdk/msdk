@@ -29,7 +29,7 @@ import io.github.msdk.datamodel.impl.SimpleFeature;
  * </p>
  *
  */
-public class ADAP3DAlgorithm implements MSDKMethod<List<SimpleFeature>>{
+public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<SimpleFeature>>{
 
   private SliceSparseMatrix objSliceSparseMatrix;
 
@@ -39,7 +39,7 @@ public class ADAP3DAlgorithm implements MSDKMethod<List<SimpleFeature>>{
   
   private boolean canceled = false;
 
-  ADAP3DAlgorithm(SliceSparseMatrix sliceSparseMatrix) {
+  ADAP3DFeatureDetectionMethod(SliceSparseMatrix sliceSparseMatrix) {
     objSliceSparseMatrix = sliceSparseMatrix;
   }
 

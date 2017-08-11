@@ -60,7 +60,7 @@ public class PeakDetectionTest {
   @Test
   public void testPeakDetection() {
 
-    ADAP3DAlgorithm ob = new ADAP3DAlgorithm(objSliceSparseMatrix);
+    ADAP3DFeatureDetectionMethod ob = new ADAP3DFeatureDetectionMethod(objSliceSparseMatrix);
     List<SimpleFeature> featureList = ob.execute();   
     Assert.assertNotNull(featureList);
   }
