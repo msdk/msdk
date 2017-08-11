@@ -30,7 +30,7 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.datamodel.Result;
-import io.github.msdk.io.mzml.MzMLFileImportMethod;
+import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 
 
 public class ContinuousWaveletTransformTest {
@@ -50,14 +50,13 @@ public class ContinuousWaveletTransformTest {
   public static void loadData() throws MSDKException {
 
     // Import the file
-    String file = "orbitrap_300-600mz.mzML";
+    String file = "tiny.mzXML";
     Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
-    MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+    MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile);
     rawFile = importer.execute();
     Assert.assertNotNull(rawFile);
-    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
   }
 
   @Test
@@ -76,7 +75,7 @@ public class ContinuousWaveletTransformTest {
       mzBuffer = scan.getMzValues();
       intensityBuffer = scan.getIntensityValues();
       for (int k = 0; k < mzBuffer.length; k++) {
-        if (mzBuffer[k] >= 387.1273 && mzBuffer[k] <= 387.1405) {
+        if (mzBuffer[k] >= 181.0596 && mzBuffer[k] <= 181.0700) {
           totalIntensity += intensityBuffer[k];
         }
       }
@@ -107,12 +106,11 @@ public class ContinuousWaveletTransformTest {
 
 
     for (int j = 0; j < peakList.size(); j++) {
-      if (peakList.get(j).curLeftBound == 113 && peakList.get(j).curRightBound == 130) {
+      if (peakList.get(j).curLeftBound == 50 && peakList.get(j).curRightBound == 77) {
         peakAssertion = true;
+        break;
       }
     }
     Assert.assertEquals(true, peakAssertion);
-
   }
-
 }
