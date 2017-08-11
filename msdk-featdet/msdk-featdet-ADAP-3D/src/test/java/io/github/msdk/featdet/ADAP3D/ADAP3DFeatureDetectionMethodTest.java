@@ -27,7 +27,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.impl.SimpleFeature;
+import io.github.msdk.datamodel.features.Feature;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix;
 import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
@@ -64,8 +64,8 @@ public class ADAP3DFeatureDetectionMethodTest {
   @Test
   public void testPeakDetection() throws MSDKException, IOException {
 
-    ADAP3DFeatureDetectionMethod ob = new ADAP3DFeatureDetectionMethod(objSliceSparseMatrix);
-    List<SimpleFeature> featureList = ob.execute();
+    ADAP3DFeatureDetectionMethod ob = new ADAP3DFeatureDetectionMethod(rawFile);
+    List<Feature> featureList = ob.execute();
     Assert.assertNotNull(featureList);
 
     Path path = getResourcePath("output.csv");

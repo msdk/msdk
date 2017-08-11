@@ -20,12 +20,14 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 
 import io.github.msdk.MSDKMethod;
+import io.github.msdk.datamodel.features.Feature;
 import io.github.msdk.datamodel.impl.SimpleChromatogram;
 import io.github.msdk.datamodel.impl.SimpleFeature;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.CurveTool;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.Parameters;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.PeakDetection;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
  * <p>
@@ -33,18 +35,20 @@ import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix;
  * </p>
  *
  */
-public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<SimpleFeature>>{
+public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>>{
 
+  private RawDataFile rawFile;
+  
   private SliceSparseMatrix objSliceSparseMatrix;
 
   private static final double LOW_BOUND_PEAK_WIDTH_PERCENT = 0.75;
   
-  private List<SimpleFeature> finalFeatureList;
+  private List<Feature> finalFeatureList;
   
   private boolean canceled = false;
 
-  ADAP3DFeatureDetectionMethod(SliceSparseMatrix sliceSparseMatrix) {
-    objSliceSparseMatrix = sliceSparseMatrix;
+  ADAP3DFeatureDetectionMethod(RawDataFile rawFile) {
+    objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
   }
 
   /**
@@ -54,10 +58,10 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<SimpleFeatu
    * includes chromatogram.
    * </p>
    * 
-   * @return newFeatureList a list of {@link io.github.msdk.datamodel.impl.SimpleFeature}
+   * @return newFeatureList a list of {@link io.github.msdk.datamodel.features.Feature}
    * 
    */
-  public List<SimpleFeature> execute() {
+  public List<Feature> execute() {
 
     CurveTool objCurveTool = new CurveTool(objSliceSparseMatrix);
     double fwhm = objCurveTool.estimateFwhmMs();
@@ -68,7 +72,8 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<SimpleFeatu
     PeakDetection objPeakDetection = new PeakDetection(objSliceSparseMatrix);
     List<PeakDetection.GoodPeakInfo> goodPeakList =
         objPeakDetection.execute(1000, objParameters, roundedFWHM);
-    List<SimpleFeature> featureList = getFeature(goodPeakList);
+    finalFeatureList = new ArrayList<Feature>();
+    finalFeatureList = getFeature(goodPeakList,finalFeatureList);
 
     double[] peakWidth = new double[goodPeakList.size()];
     double avgCoefOverArea = 0.0;
@@ -102,9 +107,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<SimpleFeatu
 
     List<PeakDetection.GoodPeakInfo> newGoodPeakList =
         objPeakDetection.execute(objParameters, roundedFWHM);
-    finalFeatureList = new ArrayList<SimpleFeature>();
-    finalFeatureList.addAll(featureList);
-    finalFeatureList.addAll(getFeature(newGoodPeakList));
+    finalFeatureList = getFeature(newGoodPeakList,finalFeatureList);
     
     if(canceled)
       return null;
@@ -120,11 +123,10 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<SimpleFeatu
    * builds Chromatogram for each good peak.
    * </p>
    * 
-   * @return featureList a list of {@link io.github.msdk.datamodel.impl.SimpleFeature}
+   * @return featureList a list of {@link io.github.msdk.datamodel.features.Feature}
    */
-  private List<SimpleFeature> getFeature(List<PeakDetection.GoodPeakInfo> goodPeakList) {
+  private List<Feature> getFeature(List<PeakDetection.GoodPeakInfo> goodPeakList,List<Feature> featureList) {
 
-    List<SimpleFeature> featureList = new ArrayList<SimpleFeature>();
     int lowerScanBound;
     int upperScanBound;
 
@@ -170,7 +172,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<SimpleFeatu
 
   /** {@inheritDoc} */
   @Override
-  public List<SimpleFeature> getResult() {
+  public List<Feature> getResult() {
     return finalFeatureList;
   }
 
