@@ -77,7 +77,10 @@ public class ADAP3DFeatureDetectionMethodTest {
 
     while ((line = reader.readLine()) != null) {
       String[] values = line.split(",");
+      float[] retentionTimeArray = featureList.get(index).getChromatogram().getRetentionTimes();
       Assert.assertEquals((double)Double.parseDouble(values[0]), (double)featureList.get(index).getMz(),0.1);
+      Assert.assertEquals((double)Double.parseDouble(values[1]), (double)retentionTimeArray[0],0.1);
+      Assert.assertEquals((double)Double.parseDouble(values[2]), (double)retentionTimeArray[retentionTimeArray.length-1],0.1);
       Assert.assertEquals((double)Double.parseDouble(values[3]), (double)featureList.get(index).getHeight(),0.1);
       Assert.assertEquals((double)Double.parseDouble(values[4]), (double)featureList.get(index).getRetentionTime(),0.1);
       index++;
