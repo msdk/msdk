@@ -12,7 +12,11 @@
  */
 package io.github.msdk.featdet.ADAP3D;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -48,7 +52,7 @@ public class PeakDetectionTest {
   public static void loadData() throws MSDKException {
 
     // Import the file
-    String file = "small.mzXML";
+    String file = "tiny.mzXML";
     Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
@@ -59,11 +63,26 @@ public class PeakDetectionTest {
   }
 
   @Test
-  public void testPeakDetection() {
+  public void testPeakDetection() throws MSDKException, IOException {
 
     ADAP3DFeatureDetectionMethod ob = new ADAP3DFeatureDetectionMethod(objSliceSparseMatrix);
-    List<SimpleFeature> featureList = ob.execute();   
+    List<SimpleFeature> featureList = ob.execute();
     Assert.assertNotNull(featureList);
+
+    Path path = getResourcePath("output.csv");
+    File inputFile = path.toFile();
+    BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+    String line = null;
+    int index = 0;
+
+    while ((line = reader.readLine()) != null) {
+      String[] values = line.split(",");
+      Assert.assertEquals((double)Double.parseDouble(values[0]), (double)featureList.get(index).getMz(),0.1);
+      Assert.assertEquals((double)Double.parseDouble(values[3]), (double)featureList.get(index).getHeight(),0.1);
+      Assert.assertEquals((double)Double.parseDouble(values[4]), (double)featureList.get(index).getRetentionTime(),0.1);
+      index++;
+    }
+    reader.close();
   }
 
 }
