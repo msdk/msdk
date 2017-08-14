@@ -526,9 +526,9 @@ public class MzMLFileImportMethodTest {
     Assert.assertEquals(1306, (int) scan4.getNumberOfDataPoints());
     Float scan2maxInt =
         MsSpectrumUtil.getMaxIntensity(scan4.getIntensityValues(), scan4.getNumberOfDataPoints());
-    // Assert.assertEquals(8746.9599f, scan2maxInt, 0.1f);
+    Assert.assertEquals(8746.9599f, scan2maxInt, 0.1f);
     Assert.assertEquals(8746.96f, scan2maxInt, 0.1f);
-    // Assert.assertEquals(58989.76953125f, scan4.getTIC(), 0.1);
+    Assert.assertEquals(58989.76953125f, scan4.getTIC(), 0.1);
     Assert.assertEquals(58989.77f, scan4.getTIC(), 0.1);
     Assert.assertEquals(100.317253112793, scan4.getMzRange().lowerEndpoint(), 0.000001);
     Assert.assertEquals(999.715515136719, scan4.getMzRange().upperEndpoint(), 0.000001);

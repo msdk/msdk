@@ -248,8 +248,13 @@ public class MzMLMsScan implements MsScan {
       }
     }
 
-    return mzValues;
+    if (array == null || array.length < getNumberOfDataPoints()) {
+      array = new double[getNumberOfDataPoints()];
 
+      System.arraycopy(mzValues, 0, array, 0, numOfDataPoints);
+    }
+
+    return array;
   }
 
   /** {@inheritDoc} */
@@ -269,7 +274,14 @@ public class MzMLMsScan implements MsScan {
         throw (new MSDKRuntimeException(e));
       }
     }
-    return intensityValues;
+
+    if (array == null || array.length < numOfDataPoints) {
+      array = new float[numOfDataPoints];
+
+      System.arraycopy(intensityValues, 0, array, 0, numOfDataPoints);
+    }
+
+    return array;
   }
 
   /** {@inheritDoc} */
@@ -296,7 +308,7 @@ public class MzMLMsScan implements MsScan {
   public Float getTIC() {
     if (tic == null)
       try {
-        tic = MsSpectrumUtil.getTIC(getIntensityValues(), getMzBinaryDataInfo().getArrayLength());
+        tic = MsSpectrumUtil.getTIC(getIntensityValues(), getNumberOfDataPoints());
       } catch (NumberFormatException e) {
         throw (new MSDKRuntimeException(
             "Could not convert TIC value in mzML file to a float\n" + e));

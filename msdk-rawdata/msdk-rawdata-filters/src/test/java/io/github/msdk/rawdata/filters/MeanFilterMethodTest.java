@@ -119,7 +119,7 @@ public class MeanFilterMethodTest {
       float intensityAverage = inputScan.getTIC() / inputScan.getNumberOfDataPoints();
 
       for (float intValue : intensityValues) {
-        Assert.assertEquals(intensityAverage, intValue, 0.4);
+        Assert.assertEquals(intensityAverage, intValue, 0.0001);
       }
     }
   }
