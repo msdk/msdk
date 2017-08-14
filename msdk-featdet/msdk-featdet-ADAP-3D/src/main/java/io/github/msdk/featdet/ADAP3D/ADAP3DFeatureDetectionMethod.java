@@ -35,17 +35,25 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * </p>
  *
  */
-public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>>{
+public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
 
-    
+
   private SliceSparseMatrix objSliceSparseMatrix;
 
   private static final double LOW_BOUND_PEAK_WIDTH_PERCENT = 0.75;
-  
-  private List<Feature> finalFeatureList;
-  
-  private boolean canceled = false;
 
+  private List<Feature> finalFeatureList;
+
+  private PeakDetection objPeakDetection;
+
+
+  /**
+   * <p>
+   * Constructor
+   * </p>
+   * 
+   * @param rawFile {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   */
   ADAP3DFeatureDetectionMethod(RawDataFile rawFile) {
     objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
   }
@@ -62,22 +70,32 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>>{
    */
   public List<Feature> execute() {
 
+    // Here fwhm for this rawdata file has been determined.
     CurveTool objCurveTool = new CurveTool(objSliceSparseMatrix);
     double fwhm = objCurveTool.estimateFwhmMs();
     int roundedFWHM = objSliceSparseMatrix.roundMZ(fwhm);
 
     Parameters objParameters = new Parameters();
 
-    PeakDetection objPeakDetection = new PeakDetection(objSliceSparseMatrix);
+    // Here first 20 peaks are found to estimate the parameters to determine remaining peaks.
+    objPeakDetection = new PeakDetection(objSliceSparseMatrix);
     List<PeakDetection.GoodPeakInfo> goodPeakList =
         objPeakDetection.execute(1000, objParameters, roundedFWHM);
-    finalFeatureList = new ArrayList<Feature>();
-    finalFeatureList = getFeature(goodPeakList,finalFeatureList);
 
+    // If the algorithm has been stopped execution method of PeakdDtection class will return null.
+    if (goodPeakList == null)
+      return null;
+
+    // Here we're making feature for first 20 peaks and add it into the list of feature.
+    finalFeatureList = new ArrayList<Feature>();
+    finalFeatureList = getFeature(goodPeakList, finalFeatureList);
+
+    // Estimation of parameters.
     double[] peakWidth = new double[goodPeakList.size()];
     double avgCoefOverArea = 0.0;
     double avgPeakWidth = 0.0;
 
+    //Average peak width has been determined in terms of retention time.
     for (int i = 0; i < goodPeakList.size(); i++) {
       peakWidth[i] = objSliceSparseMatrix.getRetentionTime(goodPeakList.get(i).upperScanBound) / 60
           - objSliceSparseMatrix.getRetentionTime(goodPeakList.get(i).lowerScanBound) / 60;
@@ -98,18 +116,22 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>>{
     double peakDurationUpperBound =
         Collections.max(peakWidthList) + LOW_BOUND_PEAK_WIDTH_PERCENT * avgPeakWidth;
 
+    // set the estimated parameters.
     objParameters.setLargeScaleIn(highestWaveletScale);
     objParameters.setMinPeakWidth(peakDurationLowerBound);
     objParameters.setMaxPeakWidth(peakDurationUpperBound);
     objParameters.setCoefAreaRatioTolerance(coefOverAreaThreshold);
 
-
+    // run the algorithm with new parameters to find the remaining peaks.
     List<PeakDetection.GoodPeakInfo> newGoodPeakList =
         objPeakDetection.execute(objParameters, roundedFWHM);
-    finalFeatureList = getFeature(newGoodPeakList,finalFeatureList);
-    
-    if(canceled)
+
+    // If the algorithm has been stopped execution method of PeakdDtection class will return null.
+    if (newGoodPeakList == null)
       return null;
+
+    // Here we're making feature for remaining peaks and add it into the list of feature.
+    finalFeatureList = getFeature(newGoodPeakList, finalFeatureList);
 
     return finalFeatureList;
   }
@@ -124,7 +146,8 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>>{
    * 
    * @return featureList a list of {@link io.github.msdk.datamodel.features.Feature}
    */
-  private List<Feature> getFeature(List<PeakDetection.GoodPeakInfo> goodPeakList,List<Feature> featureList) {
+  private List<Feature> getFeature(List<PeakDetection.GoodPeakInfo> goodPeakList,
+      List<Feature> featureList) {
 
     int lowerScanBound;
     int upperScanBound;
@@ -152,7 +175,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>>{
 
       int maxHeightScanNumber = goodPeakInfo.maxHeightScanNumber;
       float retentionTime = (float) objSliceSparseMatrix.getRetentionTime(maxHeightScanNumber);
-      
+
       feature.setRetentionTime(retentionTime);
       feature.setMz(mz);
       feature.setChromatogram(chromatogram);
@@ -166,7 +189,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>>{
   /** {@inheritDoc} */
   @Override
   public Float getFinishedPercentage() {
-    return (float) (finalFeatureList.size() == 0?0:1);
+    return objPeakDetection.getFinishedPercent();
   }
 
   /** {@inheritDoc} */
@@ -178,6 +201,6 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>>{
   /** {@inheritDoc} */
   @Override
   public void cancel() {
-    this.canceled = true;    
+    objPeakDetection.cancel();
   }
 }

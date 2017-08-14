@@ -35,7 +35,13 @@ public class PeakDetection {
   }
 
   private SliceSparseMatrix objSliceSparseMatrix;
-  // private Parameters objParameters;
+  
+  /**
+   * Flag for stopping the adap3d algorithm execution.
+   */
+  private boolean canceled = false;
+  
+  private float progressPercent;
 
   /**
    * <p>
@@ -47,7 +53,6 @@ public class PeakDetection {
    */
   public PeakDetection(SliceSparseMatrix objSliceSparseMatrix) {
     this.objSliceSparseMatrix = objSliceSparseMatrix;
-    // this.objParameters = objParameter;
   }
 
   /**
@@ -64,6 +69,7 @@ public class PeakDetection {
     int maxCount = 0;
     Triplet maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
     List<GoodPeakInfo> peakList = new ArrayList<GoodPeakInfo>();
+    
 
     while (maxCount < maxIteration) {
       if (peakList.size() == 20)
@@ -71,8 +77,12 @@ public class PeakDetection {
       GoodPeakInfo goodPeak = iteration(maxIntensityTriplet, roundedFWHM, objParameters);
       if (goodPeak != null)
         peakList.add(goodPeak);
+      
+      
+      if(canceled)
+        return null;
 
-
+      progressPercent = objSliceSparseMatrix.getFinishedPercent(maxIntensityTriplet);
       maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
       maxCount++;
     }
@@ -98,6 +108,9 @@ public class PeakDetection {
       GoodPeakInfo goodPeak = iteration(maxIntensityTriplet, roundedFWHM, objParameters);
       if (goodPeak != null)
         peakList.add(goodPeak);
+      
+      if(canceled)
+        return null;
 
       maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
     }
@@ -260,5 +273,23 @@ public class PeakDetection {
     for (int i = lowerMZ; i <= upperMZ; i++) {
       objSliceSparseMatrix.restoreDataPoints(i, lowerScanBound, upperScanBound);
     }
+  }
+  
+  /**
+   * <p>
+   * This method is used to stop adap3d algorithm.
+   * </p>
+   */
+  public void cancel(){
+    this.canceled = true;
+  }
+  
+  /**
+   * <p>
+   * This method tracks progress of algorithm
+   * </p>
+   */
+  public float getFinishedPercent(){
+    return progressPercent;
   }
 }

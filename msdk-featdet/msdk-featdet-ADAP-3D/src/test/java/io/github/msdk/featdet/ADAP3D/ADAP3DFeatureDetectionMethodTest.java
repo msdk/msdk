@@ -29,7 +29,6 @@ import org.junit.Test;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.features.Feature;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix;
 import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 
 public class ADAP3DFeatureDetectionMethodTest {

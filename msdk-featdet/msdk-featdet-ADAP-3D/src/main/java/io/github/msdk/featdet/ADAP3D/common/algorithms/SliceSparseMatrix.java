@@ -538,6 +538,7 @@ public class SliceSparseMatrix {
    * <p>
    * This method returns size of raw data file in terms of total scans.
    * </p>
+   * 
    * @return size a {@link java.lang.Integer} object. This is total number of scans in raw file.
    */
   public int getSizeOfRawDataFile() {
@@ -549,6 +550,7 @@ public class SliceSparseMatrix {
    * <p>
    * This method returns retention time array for given upper and lower scan bounds.
    * </p>
+   * 
    * @return retentionTime a {@link java.lang.Float} array.
    */
   public float[] getRetentionTimeArray(int lowerScanBound, int upperScanbound) {
@@ -565,6 +567,7 @@ public class SliceSparseMatrix {
    * <p>
    * This method returns intensity array for detected peak
    * </p>
+   * 
    * @return intensities a {@link java.lang.Float} array.
    */
   public float[] getIntensities(GoodPeakInfo peak) {
@@ -586,9 +589,31 @@ public class SliceSparseMatrix {
 
     return intensities;
   }
-  
-  
-  public double getRetentionTime(int scanNumber){
+
+  /**
+   * <p>
+   * This method returns retention time for given scan number.
+   * </p>
+   * 
+   * @return {@link java.lang.Double} object.
+   */
+  public double getRetentionTime(int scanNumber) {
     return rtMap.get(scanNumber);
+  }
+
+  /**
+   * <p>
+   * This method tracks progress of algorithm
+   * </p>
+   * 
+   * @return progress a {@link java.lang.Float} object.
+   */
+  public float getFinishedPercent(Triplet maxIntensityTriplet) {
+
+    int index = Collections.binarySearch(sortListAccordingToIntensity, maxIntensityTriplet,
+        compareIntensity);
+    float progress = index / sortListAccordingToIntensity.size();
+    return progress;
+
   }
 }
