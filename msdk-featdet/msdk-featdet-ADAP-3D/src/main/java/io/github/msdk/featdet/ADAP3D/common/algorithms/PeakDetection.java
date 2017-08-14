@@ -35,12 +35,12 @@ public class PeakDetection {
   }
 
   private SliceSparseMatrix objSliceSparseMatrix;
-  
+
   /**
    * Flag for stopping the adap3d algorithm execution.
    */
   private boolean canceled = false;
-  
+
   private float progressPercent;
 
   /**
@@ -57,34 +57,36 @@ public class PeakDetection {
 
   /**
    * <p>
-   * This method executes the iteration method to find good peaks.
+   * This method determines the number of good peaks provided by the user.
    * </p>
    * 
-   * @param maxIteration a {@link java.lang.Integer} object. This is the maximum number of times
-   *        iteration method will be executed.
+   * @param numOfPeaks a {@link java.lang.Integer} object. This is the maximum number of good peaks
+   *        method will determine.
    * @return peakList a list of {@link GoodPeakInfo} object type. This contains information of good
    *         peaks.
    */
-  public List<GoodPeakInfo> execute(int maxIteration, Parameters objParameters, int roundedFWHM) {
+  public List<GoodPeakInfo> execute(int numOfPeaks, Parameters objParameters, int roundedFWHM) {
     int maxCount = 0;
     Triplet maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
     List<GoodPeakInfo> peakList = new ArrayList<GoodPeakInfo>();
-    
 
-    while (maxCount < maxIteration) {
-      if (peakList.size() == 20)
+
+    while (maxCount < numOfPeaks) {
+      if (maxCount == 20)
         break;
       GoodPeakInfo goodPeak = iteration(maxIntensityTriplet, roundedFWHM, objParameters);
-      if (goodPeak != null)
+      if (goodPeak != null) {
+        maxCount++;
         peakList.add(goodPeak);
-      
-      
-      if(canceled)
+      }
+
+
+      if (canceled)
         return null;
 
       progressPercent = objSliceSparseMatrix.getFinishedPercent(maxIntensityTriplet);
       maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
-      maxCount++;
+
     }
     return peakList;
   }
@@ -108,8 +110,8 @@ public class PeakDetection {
       GoodPeakInfo goodPeak = iteration(maxIntensityTriplet, roundedFWHM, objParameters);
       if (goodPeak != null)
         peakList.add(goodPeak);
-      
-      if(canceled)
+
+      if (canceled)
         return null;
 
       maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
@@ -274,22 +276,22 @@ public class PeakDetection {
       objSliceSparseMatrix.restoreDataPoints(i, lowerScanBound, upperScanBound);
     }
   }
-  
+
   /**
    * <p>
    * This method is used to stop adap3d algorithm.
    * </p>
    */
-  public void cancel(){
+  public void cancel() {
     this.canceled = true;
   }
-  
+
   /**
    * <p>
    * This method tracks progress of algorithm
    * </p>
    */
-  public float getFinishedPercent(){
+  public float getFinishedPercent() {
     return progressPercent;
   }
 }
