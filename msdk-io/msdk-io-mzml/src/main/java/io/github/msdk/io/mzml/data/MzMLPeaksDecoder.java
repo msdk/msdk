@@ -147,20 +147,16 @@ public class MzMLPeaksDecoder {
     try {
       switch (precision) {
         case (32): {
-          int asInt;
-
+          
           for (int i = 0; i < numPoints; i++) {
-            asInt = dis.readInt();
-            data[i] = Float.intBitsToFloat(asInt);
+            data[i] = dis.readFloat();
           }
           break;
         }
         case (64): {
-          long asLong;
 
           for (int i = 0; i < numPoints; i++) {
-            asLong = dis.readLong();
-            data[i] = (float) Double.longBitsToDouble(asLong);
+            data[i] = (float) dis.readDouble();
           }
           break;
         }

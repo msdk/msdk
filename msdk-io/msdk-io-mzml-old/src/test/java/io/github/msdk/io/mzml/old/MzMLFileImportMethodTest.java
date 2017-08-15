@@ -56,7 +56,7 @@ public class MzMLFileImportMethodTest {
 
     String fileName = "5peptideFT.mzML";
     File inputFile = getResourcePath(fileName).toFile();
-    //File inputFile = new File(TEST_DATA_PATH + fileName);
+    // File inputFile = new File(TEST_DATA_PATH + fileName);
     Assert.assertTrue(inputFile.canRead());
     MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();

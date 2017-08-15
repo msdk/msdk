@@ -156,8 +156,7 @@ class MzMLChromatogram implements Chromatogram {
    * Setter for the field <code>intensityBinaryDataInfo</code>.
    * </p>
    *
-   * @param intensityBinaryDataInfo a {@link io.github.msdk.io.mzml.data.MzMLBinaryDataInfo}
-   *        object.
+   * @param intensityBinaryDataInfo a {@link io.github.msdk.io.mzml.data.MzMLBinaryDataInfo} object.
    */
   public void setIntensityBinaryDataInfo(MzMLBinaryDataInfo intensityBinaryDataInfo) {
     this.intensityBinaryDataInfo = intensityBinaryDataInfo;
@@ -393,7 +392,13 @@ class MzMLChromatogram implements Chromatogram {
       }
     }
 
-    return rtValues;
+    if (array == null || array.length < numOfDataPoints) {
+      array = new float[numOfDataPoints];
+
+      System.arraycopy(rtValues, 0, array, 0, numOfDataPoints);
+    }
+
+    return array;
   }
 
   /** {@inheritDoc} */
@@ -415,8 +420,13 @@ class MzMLChromatogram implements Chromatogram {
       }
     }
 
-    return intensityValues;
+    if (array == null || array.length < numOfDataPoints) {
+      array = new float[numOfDataPoints];
 
+      System.arraycopy(intensityValues, 0, array, 0, numOfDataPoints);
+    }
+
+    return array;
   }
 
   /** {@inheritDoc} */

@@ -6,15 +6,15 @@
 		<artifactId>msdk-io</artifactId>
 		<version>0.0.9-SNAPSHOT</version>
 	</parent>
-	<artifactId>msdk-io-mzml-old</artifactId>
+	<artifactId>msdk-io-mzml</artifactId>
 
 	<repositories>
-        <repository>
-            <!-- EBI repository -->
+		<repository>
+			<!-- EBI repository -->
 			<id>nexus-ebi-release-repo</id>
 			<name>The EBI Maven repository</name>
 			<url>http://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
-        </repository>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -24,7 +24,7 @@
 			<artifactId>msdk-datamodel</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-spectra-spectrumtypedetection</artifactId>
@@ -32,17 +32,23 @@
 		</dependency>
 
 		<dependency>
-			<groupId>uk.ac.ebi.jmzml</groupId>
-			<artifactId>jmzml</artifactId>
-			<version>1.7.9</version>
-			<exclusions>
-				<exclusion>
-					<groupId>uk.ac.ebi.pride.architectural</groupId>
-					<artifactId>pride-logging</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+			<version>2.4.2</version>
+		</dependency>
+
+		<!--<dependency> -->
+		<!--<groupId>org.javolution</groupId> -->
+		<!--<artifactId>javolution-core-java</artifactId> -->
+		<!--<version>6.0.0</version> -->
+		<!--</dependency> -->
+
+		<dependency>
+			<groupId>com.github.chhh</groupId>
+			<artifactId>javolution-core-java-msftbx</artifactId>
+			<version>6.11.8</version>
 		</dependency>
 
 	</dependencies>
-	
+
 </project>
