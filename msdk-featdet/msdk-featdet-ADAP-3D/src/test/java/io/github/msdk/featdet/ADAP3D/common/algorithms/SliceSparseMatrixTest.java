@@ -90,7 +90,7 @@ public class SliceSparseMatrixTest {
     for (int i = 0; i < updatedTripletList.size(); i++) {
       SliceSparseMatrix.Triplet triplet = updatedTripletList.get(i);
       if (triplet.removed == 1) {
-        Assert.assertEquals(51, triplet.scanNumber);
+        Assert.assertEquals(51, triplet.scanListIndex);
         break;
       }
     }

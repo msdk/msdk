@@ -18,7 +18,7 @@ import java.util.List;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
 import io.github.msdk.featdet.ADAP3D.datamodel.Result;
 
-public class PeakDetection {
+public class ADAP3DPeakDetectionAlgorithm {
 
   /**
    * <p>
@@ -51,7 +51,7 @@ public class PeakDetection {
    * @param objSliceSparseMatrix is sparse matrix created from raw data file.
    * @param objParameter contains all the necessary parameters to find the peak.
    */
-  public PeakDetection(SliceSparseMatrix objSliceSparseMatrix) {
+  public ADAP3DPeakDetectionAlgorithm(SliceSparseMatrix objSliceSparseMatrix) {
     this.objSliceSparseMatrix = objSliceSparseMatrix;
   }
 
@@ -136,12 +136,12 @@ public class PeakDetection {
   private GoodPeakInfo iteration(Triplet triplet, int fwhm, Parameters objParameters) {
 
     GoodPeakInfo objPeakInfo = null;
-    int lowerScanBound = triplet.scanNumber - objParameters.getDelta() < 0 ? 0
-        : triplet.scanNumber - objParameters.getDelta();
+    int lowerScanBound = triplet.scanListIndex - objParameters.getDelta() < 0 ? 0
+        : triplet.scanListIndex - objParameters.getDelta();
     int upperScanBound =
-        triplet.scanNumber + objParameters.getDelta() >= objSliceSparseMatrix.getSizeOfRawDataFile()
+        triplet.scanListIndex + objParameters.getDelta() >= objSliceSparseMatrix.getSizeOfRawDataFile()
             ? objSliceSparseMatrix.getSizeOfRawDataFile() - 1
-            : triplet.scanNumber + objParameters.getDelta();
+            : triplet.scanListIndex + objParameters.getDelta();
 
     // Here we're getting horizontal slice.
     List<Triplet> slice =
@@ -185,11 +185,11 @@ public class PeakDetection {
         double sliceMaxIntensity = curSlice.stream().map(x -> x != null ? x.intensity : 0.0)
             .max(Double::compareTo).orElse(0.0);
         int scanNumber = curSlice.stream()
-            .map(x -> x != null && x.intensity == sliceMaxIntensity ? x.scanNumber : 0)
+            .map(x -> x != null && x.intensity == sliceMaxIntensity ? x.scanListIndex : 0)
             .max(Integer::compareTo).orElse(0);
 
         // If there's no peak at apex.
-        if (scanNumber != triplet.scanNumber) {
+        if (scanNumber != triplet.scanListIndex) {
           if (remove) {
             removeDataPoints(triplet.mz - fwhm, triplet.mz + fwhm, lowerScanBound, upperScanBound);
             remove = false;
@@ -220,7 +220,7 @@ public class PeakDetection {
             objPeakInfo.lowerScanBound = peakList.get(i).curLeftBound + lowerScanBound;
             objPeakInfo.upperScanBound = peakList.get(i).curRightBound + lowerScanBound;
             objPeakInfo.maxHeight = triplet.intensity;
-            objPeakInfo.maxHeightScanNumber = triplet.scanNumber;
+            objPeakInfo.maxHeightScanNumber = triplet.scanListIndex;
             objPeakInfo.objResult = peakList.get(i);
           } else {
             removeDataPoints(peak.lowerMzBound, peak.upperMzBound,

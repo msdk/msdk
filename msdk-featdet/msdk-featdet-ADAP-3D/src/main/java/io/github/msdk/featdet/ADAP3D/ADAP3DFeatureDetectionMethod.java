@@ -25,7 +25,7 @@ import io.github.msdk.datamodel.impl.SimpleChromatogram;
 import io.github.msdk.datamodel.impl.SimpleFeature;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.CurveTool;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.Parameters;
-import io.github.msdk.featdet.ADAP3D.common.algorithms.PeakDetection;
+import io.github.msdk.featdet.ADAP3D.common.algorithms.ADAP3DPeakDetectionAlgorithm;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
@@ -46,7 +46,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
 
   private List<Feature> finalFeatureList;
 
-  private PeakDetection objPeakDetection;
+  private ADAP3DPeakDetectionAlgorithm objPeakDetection;
 
   private boolean canceled = false;
 
@@ -65,9 +65,9 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
   /**
    * <p>
    * This method performs 3 steps:<br>
-   * Step 1. Run PeakDetection.execute with the default parameters and detect 20 highest peaks. <br>
-   * Step 2. Estimate new parameters for PeakDetection from those 20 peaks. <br>
-   * Step 3. Run PeakDetection.execute with the new parameters and detect all other peaks.
+   * Step 1. Run ADAP3DPeakDetectionAlgorithm.execute with the default parameters and detect 20 highest peaks. <br>
+   * Step 2. Estimate new parameters for ADAP3DPeakDetectionAlgorithm from those 20 peaks. <br>
+   * Step 3. Run ADAP3DPeakDetectionAlgorithm.execute with the new parameters and detect all other peaks.
    * </p>
    * 
    * @return newFeatureList a list of {@link io.github.msdk.datamodel.features.Feature}
@@ -83,8 +83,8 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
     Parameters objParameters = new Parameters();
 
     // Here first 20 peaks are determined to estimate the parameters to determine remaining peaks.
-    objPeakDetection = new PeakDetection(objSliceSparseMatrix);
-    List<PeakDetection.GoodPeakInfo> goodPeakList =
+    objPeakDetection = new ADAP3DPeakDetectionAlgorithm(objSliceSparseMatrix);
+    List<ADAP3DPeakDetectionAlgorithm.GoodPeakInfo> goodPeakList =
         objPeakDetection.execute(20, objParameters, roundedFWHM);
 
     // If the algorithm's execution is stopped, execute method of PeakdDtection class will return
@@ -94,7 +94,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
 
     // Here we're making features for first 20 peaks and add it into the list of feature.
     finalFeatureList = new ArrayList<Feature>();
-    getFeature(goodPeakList, finalFeatureList);
+    getADAP3DPeakFeature(goodPeakList, finalFeatureList);
 
     // Estimation of parameters.
     double[] peakWidth = new double[goodPeakList.size()];
@@ -129,7 +129,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
     objParameters.setCoefAreaRatioTolerance(coefOverAreaThreshold);
 
     // run the algorithm with new parameters to determine the remaining peaks.
-    List<PeakDetection.GoodPeakInfo> newGoodPeakList =
+    List<ADAP3DPeakDetectionAlgorithm.GoodPeakInfo> newGoodPeakList =
         objPeakDetection.execute(objParameters, roundedFWHM);
 
     // If the algorithm's execution is stopped, execute method of PeakdDtection class will return
@@ -138,7 +138,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
       return null;
 
     // Here we're making features for remaining peaks and add it into the list of feature.
-    getFeature(newGoodPeakList, finalFeatureList);
+    getADAP3DPeakFeature(newGoodPeakList, finalFeatureList);
 
     return finalFeatureList;
   }
@@ -151,13 +151,13 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    * builds Chromatogram for each good peak.
    * </p>
    */
-  private void getFeature(List<PeakDetection.GoodPeakInfo> goodPeakList,
+  private void getADAP3DPeakFeature(List<ADAP3DPeakDetectionAlgorithm.GoodPeakInfo> goodPeakList,
       List<Feature> featureList) {
 
     int lowerScanBound;
     int upperScanBound;
 
-    for (PeakDetection.GoodPeakInfo goodPeakInfo : goodPeakList) {
+    for (ADAP3DPeakDetectionAlgorithm.GoodPeakInfo goodPeakInfo : goodPeakList) {
 
       lowerScanBound = goodPeakInfo.lowerScanBound;
       upperScanBound = goodPeakInfo.upperScanBound;

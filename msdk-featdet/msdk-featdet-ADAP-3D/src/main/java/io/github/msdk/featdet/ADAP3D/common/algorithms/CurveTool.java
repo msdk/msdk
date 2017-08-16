@@ -128,8 +128,8 @@ public class CurveTool {
 
       @Override
       public int compare(Triplet o1, Triplet o2) {
-        int scan1 = o1.scanNumber;
-        int scan2 = o2.scanNumber;
+        int scan1 = o1.scanListIndex;
+        int scan2 = o2.scanListIndex;
         int scanCompare = Integer.compare(scan1, scan2);
 
         if (scanCompare != 0) {
@@ -148,7 +148,7 @@ public class CurveTool {
     for (int i = 0; i < rightBound - leftBound + 1; i++) {
       Triplet searchTriplet = new Triplet();
       searchTriplet.mz = roundedMz;
-      searchTriplet.scanNumber = i + leftBound;
+      searchTriplet.scanListIndex = i + leftBound;
       SliceSparseMatrix.Triplet obj =
           slice.get(Collections.binarySearch(slice, searchTriplet, compare));
       intensityValues[i] = obj.intensity;
