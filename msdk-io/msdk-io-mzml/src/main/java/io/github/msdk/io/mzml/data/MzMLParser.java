@@ -33,8 +33,8 @@ import javolution.xml.stream.XMLStreamReader;
 
 /**
  * <p>
- * Used to parse mzML meta-data and initialize
- * {@link io.github.msdk.io.mzml.data.MzMLBinaryDataInfo MzMLBinaryDataInfo}
+ * Used to parse mzML meta-data and initialize {@link io.github.msdk.io.mzml.data.MzMLBinaryDataInfo
+ * MzMLBinaryDataInfo}
  * </p>
  *
  */
@@ -126,7 +126,11 @@ public class MzMLParser {
             && !tracker.inside(MzMLTags.TAG_PRECURSOR_LIST)
             && !tracker.inside(MzMLTags.TAG_SCAN_LIST) && vars.spectrum != null) {
           MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
-          vars.spectrum.getCVParams().addCVParam(cvParam);;
+
+          // do not import the tic from the mzml file, we can calculate it on demand later
+          if (!cvParam.getAccession().equals(MzMLCV.cvTIC))
+            vars.spectrum.getCVParams().addCVParam(cvParam);
+
         } else if (tracker.inside(MzMLTags.TAG_SCAN_LIST)) {
           MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
           if (!tracker.inside(MzMLTags.TAG_SCAN_WINDOW))
