@@ -20,6 +20,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.lang.Math;
 
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -56,6 +58,7 @@ public class SliceSparseMatrix {
   Comparator<Triplet> compareIntensity;
   Comparator<Triplet> compareScanMz;
   Comparator<Triplet> compareScan;
+
 
   /**
    * <p>
@@ -124,7 +127,23 @@ public class SliceSparseMatrix {
    *        file object by which we can pass raw file.
    */
   public SliceSparseMatrix(RawDataFile rawFile) {
-    listOfScans = rawFile.getScans();
+    this(rawFile, s -> true);
+  }
+
+  /**
+   * <p>
+   * This constructor takes raw data file and create the triplet map which contains information such
+   * as mz,intensity,rt,scan number
+   * </p>
+   * 
+   * @param rawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object. This is raw data
+   *        file object by which we can pass raw file.
+   * @param msScanPredicate a {@link java.util.function.Predicate} object. Only MsScan which pass
+   *        this predicate will be processed.
+   */
+  public SliceSparseMatrix(RawDataFile rawFile, Predicate<MsScan> msScanPredicate) {
+    listOfScans =
+        rawFile.getScans().stream().filter(msScanPredicate).collect(Collectors.<MsScan>toList());
     List<Triplet> listOfTriplet = new ArrayList<Triplet>();
     rtMap = new HashMap<Integer, Float>();
 

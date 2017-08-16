@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -27,6 +28,7 @@ import io.github.msdk.featdet.ADAP3D.common.algorithms.CurveTool;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.Parameters;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.ADAP3DPeakDetectionAlgorithm;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix;
+import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
@@ -59,15 +61,30 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    * @param rawFile {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    */
   ADAP3DFeatureDetectionMethod(RawDataFile rawFile) {
-    objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
+    this(rawFile, s -> true);
+  }
+
+  /**
+   * <p>
+   * Constructor
+   * </p>
+   * 
+   * @param rawFile {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param msScanPredicate a {@link java.util.function.Predicate} object. Only MsScan which pass
+   *        this predicate will be processed.
+   */
+  ADAP3DFeatureDetectionMethod(RawDataFile rawFile, Predicate<MsScan> msScanPredicate) {
+    objSliceSparseMatrix = new SliceSparseMatrix(rawFile, msScanPredicate);
   }
 
   /**
    * <p>
    * This method performs 3 steps:<br>
-   * Step 1. Run ADAP3DPeakDetectionAlgorithm.execute with the default parameters and detect 20 highest peaks. <br>
+   * Step 1. Run ADAP3DPeakDetectionAlgorithm.execute with the default parameters and detect 20
+   * highest peaks. <br>
    * Step 2. Estimate new parameters for ADAP3DPeakDetectionAlgorithm from those 20 peaks. <br>
-   * Step 3. Run ADAP3DPeakDetectionAlgorithm.execute with the new parameters and detect all other peaks.
+   * Step 3. Run ADAP3DPeakDetectionAlgorithm.execute with the new parameters and detect all other
+   * peaks.
    * </p>
    * 
    * @return newFeatureList a list of {@link io.github.msdk.datamodel.features.Feature}
