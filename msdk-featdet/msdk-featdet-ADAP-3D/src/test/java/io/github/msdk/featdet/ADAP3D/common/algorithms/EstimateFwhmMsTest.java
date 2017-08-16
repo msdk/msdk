@@ -45,7 +45,7 @@ public class EstimateFwhmMsTest {
   public static void loadData() throws MSDKException {
 
     // Import the file
-    String file = "small.mzXML";
+    String file = "tiny.mzXML";
     Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
@@ -59,6 +59,6 @@ public class EstimateFwhmMsTest {
   @Test
   public void testestimateFwhmMs() throws MSDKException {
     double fwhm = objCurveTool.estimateFwhmMs();
-    Assert.assertEquals(0.002, fwhm, 0.0005);
+    Assert.assertEquals(0.0027, fwhm, 0.00005);
   }
 }

@@ -200,7 +200,7 @@ public class Peak3DTest {
     final int arrayCount = rightBound - leftBound + 1;
 
     Integer curMZ = null;
-    Integer mzBound = null;
+    Integer lastGoodMZ = null;
 
 
     int curMzIndex = 0;
@@ -220,7 +220,7 @@ public class Peak3DTest {
       // This condition checks whether we've mz values above or below given mz value.
 
       curMZ = objsliceSparseMatrix.mzValues.get(curMzIndex);
-      mzBound = objsliceSparseMatrix.mzValues.get(curMzIndex - multiplier);
+//      mzBound = objsliceSparseMatrix.mzValues.get(curMzIndex - multiplier);
 
       if (curMZ == null || Math.abs(curMZ - roundedMz) >= 2 * roundedFWHM)
         break;
@@ -243,11 +243,13 @@ public class Peak3DTest {
       // Here similarity value is calculated.
       curSimilarity = CurveTool.similarityValue(referenceEIC, curEIC, leftBound, rightBound);
 
-      if (curSimilarity > peakSimilarityThreshold)
+      if (curSimilarity > peakSimilarityThreshold) {
         similarityValues.add(curSimilarity);
+        lastGoodMZ = curMZ;
+      }
     }
 
-    mzBound = mzBound == null ? roundedMz : mzBound;
-    return mzBound;
+    lastGoodMZ = lastGoodMZ == null ? roundedMz : lastGoodMZ;
+    return lastGoodMZ;
   }
 }

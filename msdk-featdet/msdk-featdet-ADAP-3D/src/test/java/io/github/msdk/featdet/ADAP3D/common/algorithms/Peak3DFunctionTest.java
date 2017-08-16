@@ -46,7 +46,7 @@ public class Peak3DFunctionTest {
   public static void loadData() throws MSDKException {
 
     // Import the file
-    String file = "small.mzXML";
+    String file = "tiny.mzXML";
     Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
@@ -64,10 +64,11 @@ public class Peak3DFunctionTest {
 
     Peak3DTest objPeak3DTest = new Peak3DTest(objSliceSparseMatrix, fwhm);
 
-    Peak3DTest.Result objResult = objPeak3DTest.execute(1700358, 214, 224,0.0021);
-    Assert.assertEquals(7, objResult.similarityValues.size());
-    Assert.assertEquals(1700316, objResult.lowerMzBound);
-    Assert.assertEquals(1700399, objResult.upperMzBound);
+    Peak3DTest.Result objResult = objPeak3DTest.execute(1810596, 50, 77,0.5);
+    Assert.assertEquals(6, objResult.similarityValues.size());
+    Assert.assertEquals(1810582, objResult.lowerMzBound);
+    Assert.assertEquals(1810610, objResult.upperMzBound);
+    Assert.assertTrue(objResult.goodPeak);
   }
 
 }

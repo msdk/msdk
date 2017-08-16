@@ -20,11 +20,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.lang.Math;
 
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.featdet.ADAP3D.common.algorithms.PeakDetection.GoodPeakInfo;
+import io.github.msdk.featdet.ADAP3D.common.algorithms.ADAP3DPeakDetectionAlgorithm.GoodPeakInfo;
 
 
 
@@ -56,6 +58,7 @@ public class SliceSparseMatrix {
   Comparator<Triplet> compareIntensity;
   Comparator<Triplet> compareScanMz;
   Comparator<Triplet> compareScan;
+
 
   /**
    * <p>
@@ -99,7 +102,7 @@ public class SliceSparseMatrix {
    */
   public static class Triplet {
     public int mz;
-    public int scanNumber;
+    public int scanListIndex;
     public float intensity;
     public byte removed;
   }
@@ -124,7 +127,23 @@ public class SliceSparseMatrix {
    *        file object by which we can pass raw file.
    */
   public SliceSparseMatrix(RawDataFile rawFile) {
-    listOfScans = rawFile.getScans();
+    this(rawFile, s -> true);
+  }
+
+  /**
+   * <p>
+   * This constructor takes raw data file and create the triplet map which contains information such
+   * as mz,intensity,rt,scan number
+   * </p>
+   * 
+   * @param rawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object. This is raw data
+   *        file object by which we can pass raw file.
+   * @param msScanPredicate a {@link java.util.function.Predicate} object. Only MsScan which pass
+   *        this predicate will be processed.
+   */
+  public SliceSparseMatrix(RawDataFile rawFile, Predicate<MsScan> msScanPredicate) {
+    listOfScans =
+        rawFile.getScans().stream().filter(msScanPredicate).collect(Collectors.<MsScan>toList());
     List<Triplet> listOfTriplet = new ArrayList<Triplet>();
     rtMap = new HashMap<Integer, Float>();
 
@@ -149,7 +168,7 @@ public class SliceSparseMatrix {
         Triplet triplet = new Triplet();
         triplet.intensity = intensityBuffer[j];
         triplet.mz = roundMZ(mzBuffer[j]);
-        triplet.scanNumber = i;
+        triplet.scanListIndex = i;
         triplet.removed = 0;
         listOfTriplet.add(triplet);
       }
@@ -162,8 +181,8 @@ public class SliceSparseMatrix {
       @Override
       public int compare(Triplet o1, Triplet o2) {
 
-        int scan1 = o1.scanNumber;
-        int scan2 = o2.scanNumber;
+        int scan1 = o1.scanListIndex;
+        int scan2 = o2.scanListIndex;
         int scanCompare = Integer.compare(scan1, scan2);
 
         if (scanCompare != 0) {
@@ -193,7 +212,7 @@ public class SliceSparseMatrix {
       lastFilterTriplet = filterListOfTriplet.get(index);
       if (currTriplet.intensity > 1000) {
         if (currTriplet.mz == lastFilterTriplet.mz
-            && currTriplet.scanNumber == lastFilterTriplet.scanNumber) {
+            && currTriplet.scanListIndex == lastFilterTriplet.scanListIndex) {
           lastFilterTriplet.intensity += currTriplet.intensity;
         } else {
           filterListOfTriplet.add(currTriplet);
@@ -210,8 +229,8 @@ public class SliceSparseMatrix {
       @Override
       public int compare(Triplet o1, Triplet o2) {
 
-        int scan1 = o1.scanNumber;
-        int scan2 = o2.scanNumber;
+        int scan1 = o1.scanListIndex;
+        int scan2 = o2.scanListIndex;
         int scanCompare = Integer.compare(scan1, scan2);
         return scanCompare;
       }
@@ -249,8 +268,8 @@ public class SliceSparseMatrix {
         if (scanCompare != 0) {
           return scanCompare;
         } else {
-          int scan1 = o1.scanNumber;
-          int scan2 = o2.scanNumber;
+          int scan1 = o1.scanListIndex;
+          int scan2 = o2.scanListIndex;
           return Integer.compare(scan1, scan2);
         }
       }
@@ -281,7 +300,7 @@ public class SliceSparseMatrix {
     for (int i = lowerScanBound; i <= upperScanBound; i++) {
       Triplet searchTriplet = new Triplet();
       searchTriplet.mz = roundedmz;
-      searchTriplet.scanNumber = i;
+      searchTriplet.scanListIndex = i;
       int index = Collections.binarySearch(sortListAccordingToMzScan, searchTriplet, compareMzScan);
       if (index >= 0) {
         Triplet triplet = sortListAccordingToMzScan.get(index);
@@ -321,7 +340,7 @@ public class SliceSparseMatrix {
    * This method returns the List of type VerticalSliceDataPoint for given Scan Number.
    * </p>
    * 
-   * @param scanNumber a {@link java.lang.Integer} object. This is scan number for which we get
+   * @param scanListIndex a {@link java.lang.Integer} object. This is scan number for which we get
    *        vertical slice from sparse matrix.
    * @return datapointList a
    *         {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.VerticalSliceDataPoint}
@@ -333,14 +352,14 @@ public class SliceSparseMatrix {
     List<VerticalSliceDataPoint> datapointList = new ArrayList<VerticalSliceDataPoint>();
 
     Triplet searchTriplet = new Triplet();
-    searchTriplet.scanNumber = scanNumber;
+    searchTriplet.scanListIndex = scanNumber;
     int index1 = Collections.binarySearch(sortListAccordingToScan, searchTriplet, compareScan);
     int index2 = index1;
     oneScanTriplet.add(sortListAccordingToScan.get(index1));
 
     while (index1 >= 0) {
       index1--;
-      if (index1 < 0 || sortListAccordingToScan.get(index1).scanNumber != scanNumber) {
+      if (index1 < 0 || sortListAccordingToScan.get(index1).scanListIndex != scanNumber) {
         break;
       }
       oneScanTriplet.add(sortListAccordingToScan.get(index1));
@@ -349,7 +368,7 @@ public class SliceSparseMatrix {
     while (index2 >= 0) {
       index2++;
       if (index2 > filterListOfTriplet.size() - 1
-          || filterListOfTriplet.get(index2).scanNumber != scanNumber) {
+          || filterListOfTriplet.get(index2).scanListIndex != scanNumber) {
         break;
       }
       oneScanTriplet.add(filterListOfTriplet.get(index2));
@@ -364,7 +383,7 @@ public class SliceSparseMatrix {
       VerticalSliceDataPoint datapoint = new VerticalSliceDataPoint();
 
       searchMz.mz = roundedMZ;
-      searchMz.scanNumber = scanNumber;
+      searchMz.scanListIndex = scanNumber;
       if (roundedMZ >= (maxIntensityMZ - roundMzFactor)
           && roundedMZ <= (maxIntensityMZ + roundMzFactor)) {
         int mzInex = Collections.binarySearch(oneScanTriplet, searchMz, compareScanMz);
@@ -427,11 +446,11 @@ public class SliceSparseMatrix {
       ContinuousWaveletTransform.DataPoint dataPoint = new ContinuousWaveletTransform.DataPoint();
       Triplet triplet = (Triplet) iterator.next();
       if (triplet.intensity != 0 && triplet.removed == 0) {
-        dataPoint.rt = rtMap.get(triplet.scanNumber) / 60;
+        dataPoint.rt = rtMap.get(triplet.scanListIndex) / 60;
         dataPoint.intensity = triplet.intensity;
         listOfDataPoint.add(dataPoint);
       } else {
-        dataPoint.rt = rtMap.get(triplet.scanNumber) / 60;
+        dataPoint.rt = rtMap.get(triplet.scanListIndex) / 60;
         dataPoint.intensity = 0.0;
         listOfDataPoint.add(dataPoint);
       }
@@ -472,7 +491,7 @@ public class SliceSparseMatrix {
     for (int i = lowerScanBound; i <= upperScanBound; i++) {
 
       searchTriplet.mz = roundedmz;
-      searchTriplet.scanNumber = i;
+      searchTriplet.scanListIndex = i;
       int index = Collections.binarySearch(filterListOfTriplet, searchTriplet, compareScanMz);
       if (index >= 0) {
         Triplet triplet = filterListOfTriplet.get(index);
@@ -501,7 +520,7 @@ public class SliceSparseMatrix {
     for (int i = lowerScanBound; i <= upperScanBound; i++) {
 
       searchTriplet.mz = roundedmz;
-      searchTriplet.scanNumber = i;
+      searchTriplet.scanListIndex = i;
       int index = Collections.binarySearch(filterListOfTriplet, searchTriplet, compareScanMz);
       if (index >= 0) {
         Triplet triplet = filterListOfTriplet.get(index);
@@ -538,6 +557,7 @@ public class SliceSparseMatrix {
    * <p>
    * This method returns size of raw data file in terms of total scans.
    * </p>
+   * 
    * @return size a {@link java.lang.Integer} object. This is total number of scans in raw file.
    */
   public int getSizeOfRawDataFile() {
@@ -549,6 +569,7 @@ public class SliceSparseMatrix {
    * <p>
    * This method returns retention time array for given upper and lower scan bounds.
    * </p>
+   * 
    * @return retentionTime a {@link java.lang.Float} array.
    */
   public float[] getRetentionTimeArray(int lowerScanBound, int upperScanbound) {
@@ -565,6 +586,7 @@ public class SliceSparseMatrix {
    * <p>
    * This method returns intensity array for detected peak
    * </p>
+   * 
    * @return intensities a {@link java.lang.Float} array.
    */
   public float[] getIntensities(GoodPeakInfo peak) {
@@ -573,7 +595,7 @@ public class SliceSparseMatrix {
 
     for (int i = 0; i < peak.upperScanBound - peak.lowerScanBound + 1; i++) {
       Triplet searchTriplet = new Triplet();
-      searchTriplet.scanNumber = i + peak.lowerScanBound;
+      searchTriplet.scanListIndex = i + peak.lowerScanBound;
       searchTriplet.mz = roundMZ(peak.mz);
 
       int index = Collections.binarySearch(filterListOfTriplet, searchTriplet, compareScanMz);
@@ -586,9 +608,31 @@ public class SliceSparseMatrix {
 
     return intensities;
   }
-  
-  
-  public double getRetentionTime(int scanNumber){
+
+  /**
+   * <p>
+   * This method returns retention time for given scan number.
+   * </p>
+   * 
+   * @return {@link java.lang.Double} object.
+   */
+  public double getRetentionTime(int scanNumber) {
     return rtMap.get(scanNumber);
+  }
+
+  /**
+   * <p>
+   * This method tracks progress of algorithm
+   * </p>
+   * 
+   * @return progress a {@link java.lang.Float} object.
+   */
+  public float getFinishedPercent(Triplet maxIntensityTriplet) {
+
+    int index = Collections.binarySearch(sortListAccordingToIntensity, maxIntensityTriplet,
+        compareIntensity);
+    float progress = index / sortListAccordingToIntensity.size();
+    return progress;
+
   }
 }

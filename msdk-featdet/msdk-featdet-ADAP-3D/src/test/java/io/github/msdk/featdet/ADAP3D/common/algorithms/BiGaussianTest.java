@@ -45,7 +45,7 @@ public class BiGaussianTest {
   @BeforeClass
   public static void loadData() throws MSDKException {
     // Import the file
-    String file = "small.mzXML";
+    String file = "tiny.mzXML";
     Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
@@ -58,9 +58,9 @@ public class BiGaussianTest {
 
   @Test
   public void testgetBiGaussianValue() throws MSDKException {
-    List<Triplet> horizontalSlice = objSliceSparseMatrix.getHorizontalSlice(1700358, 214, 224);
-    BiGaussian objBiGaussian = new BiGaussian(horizontalSlice, 1700358, 214, 224);
-    double biGaussianValue = objBiGaussian.getValue(220);
-    Assert.assertEquals(24608, biGaussianValue, 1);
+    List<Triplet> horizontalSlice = objSliceSparseMatrix.getHorizontalSlice(1810596, 50, 77);
+    BiGaussian objBiGaussian = new BiGaussian(horizontalSlice, 1810596, 50, 77);
+    double biGaussianValue = objBiGaussian.getValue(55);
+    Assert.assertEquals(916711, biGaussianValue, 1);
   }
 }

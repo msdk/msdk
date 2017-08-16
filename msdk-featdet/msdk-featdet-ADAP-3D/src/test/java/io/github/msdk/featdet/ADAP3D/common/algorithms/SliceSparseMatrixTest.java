@@ -28,7 +28,7 @@ import org.junit.Test;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
-import io.github.msdk.io.mzml.MzMLFileImportMethod;
+import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 
 public class SliceSparseMatrixTest {
 
@@ -48,42 +48,37 @@ public class SliceSparseMatrixTest {
   public static void loadData() throws MSDKException {
 
     // Import the file
-    String file = "orbitrap_300-600mz.mzML";
+    String file = "tiny.mzXML";
     Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
-    MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+    MzXMLFileImportMethod importer = new MzXMLFileImportMethod(inputFile);
     rawFile = importer.execute();
     objSliceSparseMatrix = new SliceSparseMatrix(rawFile);
     Assert.assertNotNull(rawFile);
-    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
   }
 
 
   @Test
   public void getHorizontalSlice() throws MSDKException, IOException {
-    List<Triplet> slice = objSliceSparseMatrix.getHorizontalSlice(301.15106201171875, 0, 208);
-    Assert.assertEquals(209, slice.size());
+    List<Triplet> slice = objSliceSparseMatrix.getHorizontalSlice(181.0596, 50, 77);
+    Assert.assertEquals(28, slice.size());
   }
 
   @Test
   public void getVerticalSlice() throws MSDKException, IOException {
     List<SliceSparseMatrix.VerticalSliceDataPoint> slice = objSliceSparseMatrix.getVerticalSlice(5);
-    Assert.assertEquals(369, slice.size());
+    Assert.assertEquals(5389, slice.size());
   }
 
   @Test
   public void testFindNextMaxIntensity() throws MSDKException, IOException {
-    double intensityValues[] = {8538462.0, 8521695.0, 8365356.0};
-    for (int i = 0; i < 3; i++) {
-      Assert.assertEquals(intensityValues[i], objSliceSparseMatrix.findNextMaxIntensity().intensity,
-          0);
-    }
+    Assert.assertEquals(9695762.0, objSliceSparseMatrix.findNextMaxIntensity().intensity, 0);
   }
 
   @Test
   public void testGetRetentionTimeGetIntensity() throws MSDKException, IOException {
-    List<Triplet> slice = objSliceSparseMatrix.getHorizontalSlice(301.15106201171875, 0, 208);
+    List<Triplet> slice = objSliceSparseMatrix.getHorizontalSlice(181.0596, 50, 77);
     List<ContinuousWaveletTransform.DataPoint> listOfDataPoint =
         objSliceSparseMatrix.getCWTDataPoint(slice);
     Assert.assertNotNull(listOfDataPoint);
@@ -91,11 +86,11 @@ public class SliceSparseMatrixTest {
 
   @Test
   public void testRemoveDataPoints() throws MSDKException, IOException {
-    List<Triplet> updatedTripletList = objSliceSparseMatrix.removeDataPoints(3011511, 0, 26);
+    List<Triplet> updatedTripletList = objSliceSparseMatrix.removeDataPoints(1810596, 50, 77);
     for (int i = 0; i < updatedTripletList.size(); i++) {
       SliceSparseMatrix.Triplet triplet = updatedTripletList.get(i);
       if (triplet.removed == 1) {
-        Assert.assertEquals(0, triplet.scanNumber);
+        Assert.assertEquals(51, triplet.scanListIndex);
         break;
       }
     }

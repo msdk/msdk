@@ -44,7 +44,7 @@ public class BiGaussianSimilarityFunctionTest {
   @BeforeClass
   public static void loadData() throws MSDKException {
     // Import the file
-    String file = "small.mzXML";
+    String file = "tiny.mzXML";
     Path path = getResourcePath(file);
     File inputFile = path.toFile();
     Assert.assertTrue("Cannot read test data", inputFile.canRead());
@@ -57,9 +57,9 @@ public class BiGaussianSimilarityFunctionTest {
 
   @Test
   public void testgetBiGaussianValue() throws MSDKException {
-    List<Triplet> horizontalSlice = objSliceSparseMatrix.getHorizontalSlice(1700358, 214, 224);
+    List<Triplet> horizontalSlice = objSliceSparseMatrix.getHorizontalSlice(1810596, 50, 77);
     BiGaussianSimilarityTest objBiGaussian = new BiGaussianSimilarityTest();
-    boolean goodPeak = objBiGaussian.execute(horizontalSlice, 214, 224, 1700358, 0.25);
+    boolean goodPeak = objBiGaussian.execute(horizontalSlice, 50, 77, 1810596, 0.25);
     Assert.assertTrue(goodPeak);
   }
 }

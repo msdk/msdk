@@ -116,8 +116,8 @@ public class BiGaussian {
       @Override
       public int compare(Triplet o1, Triplet o2) {
 
-        int scan1 = o1.scanNumber;
-        int scan2 = o2.scanNumber;
+        int scan1 = o1.scanListIndex;
+        int scan2 = o2.scanListIndex;
         int scanCompare = Integer.compare(scan1, scan2);
 
         if (scanCompare != 0) {
@@ -138,7 +138,7 @@ public class BiGaussian {
       i += step;
       Triplet searchTriplet1 = new Triplet();
       searchTriplet1.mz = roundedmz;
-      searchTriplet1.scanNumber = i;
+      searchTriplet1.scanListIndex = i;
       int index1 = Collections.binarySearch(horizontalSlice, searchTriplet1, compareScanMz);
       if (index1 >= 0) {
         SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1);
@@ -146,7 +146,7 @@ public class BiGaussian {
         if (triplet1.intensity != 0 && triplet1.intensity < halfHeight) {
           Triplet searchTriplet2 = new Triplet();
           searchTriplet2.mz = roundedmz;
-          searchTriplet2.scanNumber = i - step;
+          searchTriplet2.scanListIndex = i - step;
           Y1 = (double) triplet1.intensity;
           int index2 = Collections.binarySearch(horizontalSlice, searchTriplet2, compareScanMz);
           if (index2 >= 0) {
@@ -189,7 +189,7 @@ public class BiGaussian {
     while (iterator.hasNext()) {
       Triplet triplet = iterator.next();
       if (triplet.intensity == height) {
-        mu = triplet.scanNumber;
+        mu = triplet.scanListIndex;
         break;
       }
     }
