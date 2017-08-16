@@ -94,7 +94,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
 
     // Here we're making features for first 20 peaks and add it into the list of feature.
     finalFeatureList = new ArrayList<Feature>();
-    getADAP3DPeakFeature(goodPeakList, finalFeatureList);
+    convertPeaksToFeatures(goodPeakList, finalFeatureList);
 
     // Estimation of parameters.
     double[] peakWidth = new double[goodPeakList.size()];
@@ -138,7 +138,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
       return null;
 
     // Here we're making features for remaining peaks and add it into the list of feature.
-    getADAP3DPeakFeature(newGoodPeakList, finalFeatureList);
+    convertPeaksToFeatures(newGoodPeakList, finalFeatureList);
 
     return finalFeatureList;
   }
@@ -151,7 +151,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    * builds Chromatogram for each good peak.
    * </p>
    */
-  private void getADAP3DPeakFeature(List<ADAP3DPeakDetectionAlgorithm.GoodPeakInfo> goodPeakList,
+  private void convertPeaksToFeatures(List<ADAP3DPeakDetectionAlgorithm.GoodPeakInfo> goodPeakList,
       List<Feature> featureList) {
 
     int lowerScanBound;
