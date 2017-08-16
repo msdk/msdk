@@ -40,11 +40,15 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
 
   private SliceSparseMatrix objSliceSparseMatrix;
 
+  // percent of average peak width (found from initial high intensity peaks)
+  // used for determining allowance of peak widths lower bound.
   private static final double LOW_BOUND_PEAK_WIDTH_PERCENT = 0.75;
 
   private List<Feature> finalFeatureList;
 
   private PeakDetection objPeakDetection;
+
+  private boolean canceled = false;
 
 
   /**
@@ -71,7 +75,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    */
   public List<Feature> execute() {
 
-    // Here fwhm is determined.
+    // Here fwhm across all the scans of raw data file is determined.
     CurveTool objCurveTool = new CurveTool(objSliceSparseMatrix);
     double fwhm = objCurveTool.estimateFwhmMs();
     int roundedFWHM = objSliceSparseMatrix.roundMZ(fwhm);
@@ -84,13 +88,13 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
         objPeakDetection.execute(20, objParameters, roundedFWHM);
 
     // If the algorithm's execution is stopped, execute method of PeakdDtection class will return
-    // null.
-    if (goodPeakList == null)
+    // null. Hence execute method of this class will also return null.
+    if (canceled)
       return null;
 
     // Here we're making features for first 20 peaks and add it into the list of feature.
     finalFeatureList = new ArrayList<Feature>();
-    finalFeatureList = getFeature(goodPeakList, finalFeatureList);
+    getFeature(goodPeakList, finalFeatureList);
 
     // Estimation of parameters.
     double[] peakWidth = new double[goodPeakList.size()];
@@ -129,12 +133,12 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
         objPeakDetection.execute(objParameters, roundedFWHM);
 
     // If the algorithm's execution is stopped, execute method of PeakdDtection class will return
-    // null.
-    if (newGoodPeakList == null)
+    // null. Hence execute method of this class will also return null.
+    if (canceled)
       return null;
 
     // Here we're making features for remaining peaks and add it into the list of feature.
-    finalFeatureList = getFeature(newGoodPeakList, finalFeatureList);
+    getFeature(newGoodPeakList, finalFeatureList);
 
     return finalFeatureList;
   }
@@ -146,10 +150,8 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    * This method takes list of GoodPeakInfo and returns list of type SimpleFeature. This method also
    * builds Chromatogram for each good peak.
    * </p>
-   * 
-   * @return featureList a list of {@link io.github.msdk.datamodel.features.Feature}
    */
-  private List<Feature> getFeature(List<PeakDetection.GoodPeakInfo> goodPeakList,
+  private void getFeature(List<PeakDetection.GoodPeakInfo> goodPeakList,
       List<Feature> featureList) {
 
     int lowerScanBound;
@@ -184,15 +186,15 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
       feature.setChromatogram(chromatogram);
       featureList.add(feature);
     }
-
-    return featureList;
-
   }
 
   /** {@inheritDoc} */
   @Override
   public Float getFinishedPercentage() {
-    return objPeakDetection.getFinishedPercent();
+    if (objPeakDetection != null)
+      return objPeakDetection.getFinishedPercent();
+    else
+      return (float) 0;
   }
 
   /** {@inheritDoc} */
@@ -204,6 +206,9 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
   /** {@inheritDoc} */
   @Override
   public void cancel() {
-    objPeakDetection.cancel();
+    if (objPeakDetection != null) {
+      objPeakDetection.cancel();
+      canceled = true;
+    }
   }
 }
