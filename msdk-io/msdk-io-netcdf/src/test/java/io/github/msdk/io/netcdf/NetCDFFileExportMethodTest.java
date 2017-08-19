@@ -1,24 +1,46 @@
+/*
+ * (C) Copyright 2015-2017 by MSDK Development Team
+ *
+ * This software is dual-licensed under either
+ *
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
+ *
+ * or (per the licensee's choosing)
+ *
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
+ */
+
 package io.github.msdk.io.netcdf;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.mzml.MzMLFileExportMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
-import io.github.msdk.io.mzml.data.MzMLCompressionType;
 import io.github.msdk.util.MsSpectrumUtil;
 
 public class NetCDFFileExportMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
+  private Path getResourcePath(String resource) throws MSDKException {
+    final URL url = NetCDFFileExportMethod.class.getClassLoader().getResource(resource);
+    try {
+      return Paths.get(url.toURI()).toAbsolutePath();
+    } catch (URISyntaxException e) {
+      throw new MSDKException(e);
+    }
+  }
 
   @Test
   public void testWT15() throws MSDKException, IOException {
@@ -26,7 +48,7 @@ public class NetCDFFileExportMethodTest {
     float intensityBuffer[];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "wt15.CDF");
+    File inputFile = getResourcePath("wt15.CDF").toFile();
     Assert.assertTrue(inputFile.canRead());
     NetCDFFileImportMethod importer = new NetCDFFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
@@ -77,7 +99,6 @@ public class NetCDFFileExportMethodTest {
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan1278.getNumberOfDataPoints());
     Assert.assertEquals(4.0E3f, scan1278maxInt, 1E2f);
 
-    importer.terminate();
     newRawFile.dispose();
     rawFile.dispose();
 
@@ -89,7 +110,7 @@ public class NetCDFFileExportMethodTest {
     float intensityBuffer[];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "5peptideFT.mzML");
+    File inputFile = getResourcePath("5peptideFT.mzML").toFile();
     Assert.assertTrue(inputFile.canRead());
     MzMLFileImportMethod parser = new MzMLFileImportMethod(inputFile);
     RawDataFile rawFile = parser.execute();
@@ -147,7 +168,6 @@ public class NetCDFFileExportMethodTest {
     Assert.assertEquals(8.6E3f, scan5maxInt, 1E2f);
 
     // Cleanup
-    importer.terminate();
     rawFile.dispose();
     newRawFile.dispose();
   }

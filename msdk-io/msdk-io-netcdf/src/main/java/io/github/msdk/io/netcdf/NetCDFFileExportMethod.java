@@ -1,3 +1,16 @@
+/*
+ * (C) Copyright 2015-2017 by MSDK Development Team
+ *
+ * This software is dual-licensed under either
+ *
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
+ *
+ * or (per the licensee's choosing)
+ *
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
+ */
+
 package io.github.msdk.io.netcdf;
 
 import java.io.File;
@@ -34,6 +47,10 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
   private boolean canceled = false;
   private int totalScans = 0;
   private float progress = 0f;
+  private int lastLoggedProgress = 0;
+  private List<MsScan> scans;
+  private int[] scanStartPositions;
+  private NetcdfFileWriter writer;
 
   public NetCDFFileExportMethod(@Nonnull RawDataFile rawDataFile, @Nonnull File target) {
     this(rawDataFile, target, 1, 1);
@@ -52,112 +69,64 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
 
     logger.info("Started export of " + rawDataFile.getName() + " to " + target);
 
-    List<MsScan> scans = rawDataFile.getScans();
+    scans = rawDataFile.getScans();
     totalScans = scans.size();
-    int scanStartPositions[] = new int[totalScans + 1];
+    scanStartPositions = new int[totalScans + 1];
 
     try {
-      NetcdfFileWriter writer =
-          NetcdfFileWriter.createNew(Version.netcdf3, target.getAbsolutePath());
 
-      // Populate the scan indices
-      Array scanIndexArray = Array.factory(int.class, new int[] {totalScans});
-      int idx = 0;
-      for (MsScan scan : scans) {
-        if (canceled) {
-          writer.close();
-          return null;
-        }
+      writer = NetcdfFileWriter.createNew(Version.netcdf3, target.getAbsolutePath());
 
-        scanStartPositions[idx + 1] = scanStartPositions[idx] + scan.getNumberOfDataPoints();
-        idx++;
-
-      }
-
-      for (int i = 0; i < scanStartPositions.length - 1; i++)
-        scanIndexArray.setInt(i, scanStartPositions[i]);
-
-      if (canceled) {
-        writer.close();
+      Array scanIndexArray = getScanIndexArray();
+      Array scanTimeArray = getScanTimeArray();
+      if (scanIndexArray == null)
         return null;
-      }
 
-      // Write the scan indices
-      Dimension scanNumberDim = writer.addDimension(null, "scan_number", totalScans);
-      List<Dimension> scanIndexDims = new ArrayList<>();
-      scanIndexDims.add(scanNumberDim);
-
-      // Create scan index varaible
+      List<Dimension> scanIndexDims = getScanIndexDims();
       Variable scanIndexVariable =
           writer.addVariable(null, "scan_index", DataType.INT, scanIndexDims);
-
-      progress = 0.25f;
-
-      // data values storage dimension
-      Dimension pointNumDim =
-          writer.addDimension(null, "point_number", scanStartPositions[totalScans]);
-      List<Dimension> pointNumValDims = new ArrayList<>();
-      pointNumValDims.add(pointNumDim);
-
-      // populate the mass values
-      Array massValueArray =
-          Array.factory(double.class, new int[] {scanStartPositions[totalScans]});
-      idx = 0;
-      for (MsScan scan : scans) {
-        double mzValues[] = scan.getMzValues();
-        if (canceled) {
-          writer.close();
-          return null;
-        }
-
-        for (int i = 0; i < mzValues.length; i++)
-          massValueArray.setDouble(idx++, mzValues[i]);
-      }
-
-      // Write the mass values
-      Variable massValueVariable =
-          writer.addVariable(null, "mass_values", DataType.FLOAT, pointNumValDims);
-      massValueVariable.addAttribute(new Attribute("units", "M/Z"));
-      massValueVariable.addAttribute(new Attribute("scale_factor", massValueScaleFactor));
-
-      progress = 0.5f;
-
-      // populate the intensity values
-      Array intensityValueArray =
-          Array.factory(double.class, new int[] {scanStartPositions[totalScans]});
-      idx = 0;
-      for (MsScan scan : scans) {
-        if (canceled) {
-          writer.close();
-          return null;
-        }
-        float intensityValues[] = scan.getIntensityValues();
-        for (int i = 0; i < intensityValues.length; i++)
-          intensityValueArray.setDouble(idx++, intensityValues[i]);
-      }
-
-      // Write the intensity values
-      Variable intensityValueVariable =
-          writer.addVariable(null, "intensity_values", DataType.FLOAT, pointNumValDims);
-      intensityValueVariable.addAttribute(new Attribute("units", "Arbitrary Intensity Units"));
-      intensityValueVariable.addAttribute(new Attribute("scale_factor", intensityValueScaleFactor));
-
-      progress = 0.75f;
-
-      // Populate scan times
-      Array scanTimeArray = Array.factory(float.class, new int[] {totalScans});
-      idx = 0;
-      for (MsScan scan : scans)
-        scanTimeArray.setFloat(idx++, scan.getRetentionTime());
-
-      if (canceled) {
-        writer.close();
-        return null;
-      }
-
-      // Create the scan times variable
       Variable scanTimeVariable =
           writer.addVariable(null, "scan_acquisition_time", DataType.FLOAT, scanIndexDims);
+
+      progress = 0.2f;
+
+      // data values storage dimension
+      // Dimension to store the data arrays of various scans
+      List<Dimension> pointNumValDims = getPointValDims();
+      Variable massValueVariable = getMassValueVariable(pointNumValDims);
+      Variable intensityValueVariable = getIntensityValueVariable(pointNumValDims);
+
+      // populate the mass and the intensity values
+      Array massValueArray =
+          Array.factory(double.class, new int[] {scanStartPositions[totalScans]});
+      Array intensityValueArray =
+          Array.factory(double.class, new int[] {scanStartPositions[totalScans]});
+
+      int idx = 0;
+      double mzValues[] = new double[10000];
+      float intensityValues[] = new float[10000];
+      for (MsScan scan : scans) {
+        mzValues = scan.getMzValues(mzValues);
+        intensityValues = scan.getIntensityValues(intensityValues);
+
+        if (canceled) {
+          writer.close();
+          return null;
+        }
+
+        for (int i = 0; i < scan.getNumberOfDataPoints(); i++) {
+          massValueArray.setDouble(idx, mzValues[i]);
+          intensityValueArray.setDouble(idx, intensityValues[i]);
+          idx++;
+        }
+
+        progress = 0.2f + 0.6f * ((float) idx / scanStartPositions[totalScans]);
+        if ((int) (progress * 100) >= lastLoggedProgress + 10) {
+          lastLoggedProgress = (int) (progress * 10) * 10;
+          logger.debug("Exporting in progress... " + lastLoggedProgress + "% completed");
+        }
+
+      }
 
       // Create the netCDF-3 file
       writer.create();
@@ -178,6 +147,80 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
     }
 
     return null;
+  }
+
+  private Array getScanIndexArray() throws IOException {
+    // Populate the scan indices
+    // Create a simple 1D array of type int, element i of the shape array contains the length of
+    // the (i+1)th dimension of the array
+    Array scanIndexArray = Array.factory(int.class, new int[] {totalScans});
+    int idx = 0;
+    for (MsScan scan : scans) {
+
+      if (canceled) {
+        writer.close();
+        return null;
+      }
+
+      scanStartPositions[idx + 1] = scanStartPositions[idx] + scan.getNumberOfDataPoints();
+      idx++;
+
+    }
+
+    for (int i = 0; i < scanStartPositions.length - 1; i++)
+      scanIndexArray.setInt(i, scanStartPositions[i]);
+
+    return scanIndexArray;
+  }
+
+  private List<Dimension> getScanIndexDims() {
+    // Write the scan indices
+    // Create a variable and set the dimension scan_number=totalScans to it
+    Dimension scanNumberDim = writer.addDimension(null, "scan_number", totalScans);
+    List<Dimension> scanIndexDims = new ArrayList<>();
+    scanIndexDims.add(scanNumberDim);
+
+    return scanIndexDims;
+  }
+
+  private List<Dimension> getPointValDims() {
+    // data values storage dimension
+    // Dimension to store the data arrays of various scans
+    Dimension pointNumDim =
+        writer.addDimension(null, "point_number", scanStartPositions[totalScans]);
+    List<Dimension> pointNumValDims = new ArrayList<>();
+    pointNumValDims.add(pointNumDim);
+    return pointNumValDims;
+  }
+
+  private Array getScanTimeArray() {
+    // Populate scan times
+    Array scanTimeArray = Array.factory(float.class, new int[] {totalScans});
+    int idx = 0;
+    for (MsScan scan : scans)
+      scanTimeArray.setFloat(idx++, scan.getRetentionTime());
+
+    return scanTimeArray;
+  }
+
+  private Variable getMassValueVariable(List<Dimension> pointNumValDims) {
+    // Create mass values variable and add its attributes
+    Variable massValueVariable =
+        writer.addVariable(null, "mass_values", DataType.FLOAT, pointNumValDims);
+    massValueVariable.addAttribute(new Attribute("units", "M/Z"));
+    massValueVariable.addAttribute(new Attribute("scale_factor", massValueScaleFactor));
+
+    return massValueVariable;
+  }
+
+  private Variable getIntensityValueVariable(List<Dimension> pointNumValDims) {
+    // Create intensity values variable and add its attributes
+    Variable intensityValueVariable =
+        writer.addVariable(null, "intensity_values", DataType.FLOAT, pointNumValDims);
+    intensityValueVariable.addAttribute(new Attribute("units", "Arbitrary Intensity Units"));
+    intensityValueVariable.addAttribute(new Attribute("scale_factor", intensityValueScaleFactor));
+
+    return intensityValueVariable;
   }
 
   @Override
