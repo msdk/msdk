@@ -46,7 +46,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private NetcdfFile inputFile;
+  private final NetcdfFile inputFile;
 
   private int parsedScans, totalScans = 0;
 
@@ -74,14 +74,17 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
    *
    * @param sourceFile a {@link java.io.File} object.
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
+   * @throws IOException
    */
-  public NetCDFFileImportMethod(@Nonnull File sourceFile) {
+  public NetCDFFileImportMethod(@Nonnull File sourceFile) throws IOException {
     this(sourceFile, s -> true);
   }
 
-  public NetCDFFileImportMethod(@Nonnull File sourceFile, Predicate<MsScan> msScanPredicate) {
+  public NetCDFFileImportMethod(@Nonnull File sourceFile, Predicate<MsScan> msScanPredicate)
+      throws IOException {
     this.sourceFile = sourceFile;
     this.msScanPredicate = this.msScanPredicate.and(msScanPredicate);
+    this.inputFile = NetcdfFile.open(sourceFile.getPath());
   }
 
   /** {@inheritDoc} */
@@ -95,13 +98,12 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
       throw new MSDKException("Cannot read file " + sourceFile);
     }
 
-    String fileName = sourceFile.getName();
-    newRawFile = new SimpleRawDataFile(fileName, Optional.of(sourceFile), FileType.NETCDF);
-
     try {
 
-      // Open NetCDF-file
-      inputFile = NetcdfFile.open(sourceFile.getPath());
+      // Instantiate the raw file
+      String fileName = sourceFile.getName();
+      newRawFile =
+          new NetCDFRawDataFile(fileName, Optional.of(sourceFile), FileType.NETCDF, inputFile);
 
       // Read NetCDF variables
       readVariables();
@@ -332,14 +334,6 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
   @Override
   public void cancel() {
     this.canceled = true;
-  }
-
-  public void terminate() throws MSDKException {
-    try {
-      inputFile.close();
-    } catch (IOException e) {
-      throw new MSDKException(e);
-    }
   }
 
 }

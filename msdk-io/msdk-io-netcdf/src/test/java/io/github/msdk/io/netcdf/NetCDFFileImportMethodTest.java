@@ -14,6 +14,7 @@
 package io.github.msdk.io.netcdf;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +35,7 @@ public class NetCDFFileImportMethodTest {
 
 
   @Test
-  public void testWT15() throws MSDKException {
+  public void testWT15() throws MSDKException, IOException {
 
     float intensityBuffer[];
 
@@ -77,13 +78,12 @@ public class NetCDFFileImportMethodTest {
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan1278.getNumberOfDataPoints());
     Assert.assertEquals(4.0E3f, scan1278maxInt, 1E2f);
 
-    importer.terminate();
     rawFile.dispose();
 
   }
 
   @Test
-  public void testWT15Random() throws MSDKException {
+  public void testWT15Random() throws MSDKException, IOException {
 
     // Set up Predicate<MsScan>
     List<Integer> scansToParse = new ArrayList<>();
@@ -131,13 +131,12 @@ public class NetCDFFileImportMethodTest {
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan1278.getNumberOfDataPoints());
     Assert.assertEquals(4.0E3f, scan1278maxInt, 1E2f);
 
-    importer.terminate();
     rawFile.dispose();
 
   }
 
   @Test
-  public void testWT15UnparsedScan() throws MSDKException {
+  public void testWT15UnparsedScan() throws MSDKException, IOException {
 
     float intensityBuffer[];
 
@@ -167,7 +166,6 @@ public class NetCDFFileImportMethodTest {
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan3.getNumberOfDataPoints());
     Assert.assertEquals(4.5E4f, scan3maxInt, 1E3f);
 
-    importer.terminate();
     rawFile.dispose();
 
   }
