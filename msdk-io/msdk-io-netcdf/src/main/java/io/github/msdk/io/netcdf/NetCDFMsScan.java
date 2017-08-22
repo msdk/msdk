@@ -127,15 +127,7 @@ public class NetCDFMsScan extends SimpleMsScan {
   public Integer getNumberOfDataPoints() {
     if (numOfDataPoints == null) {
       final Integer scanIndex = getScanIndex();
-      try {
-        final int scanStartPosition[] = {scanStartPositions[scanIndex]};
-        final int scanLength[] =
-            {scanStartPositions[scanIndex + 1] - scanStartPositions[scanIndex]};
-        final Array massValueArray = massValueVariable.read(scanStartPosition, scanLength);
-        numOfDataPoints = massValueArray.getShape()[0];
-      } catch (IOException | InvalidRangeException e) {
-        throw new MSDKRuntimeException(e);
-      }
+      numOfDataPoints = scanStartPositions[scanIndex + 1] - scanStartPositions[scanIndex];
     }
 
     return numOfDataPoints;
@@ -167,7 +159,7 @@ public class NetCDFMsScan extends SimpleMsScan {
     numOfDataPoints = getNumberOfDataPoints();
 
     setDataPoints(preLoadedMzValues, preLoadedIntensityValues, numOfDataPoints);
-    spectrumType = SpectrumTypeDetectionAlgorithm.detectSpectrumType(preLoadedMzValues, preLoadedIntensityValues,
-        numOfDataPoints);
+    spectrumType = SpectrumTypeDetectionAlgorithm.detectSpectrumType(preLoadedMzValues,
+        preLoadedIntensityValues, numOfDataPoints);
   }
 }
