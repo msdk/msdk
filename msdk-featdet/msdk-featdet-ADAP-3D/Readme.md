@@ -2,7 +2,7 @@
 
 ## Introduction
 
-*This algorithm is developed by Du-Lab research team ([http://www.du-lab.org/](http://du-lab.org)) to process Mass Spectrometry Metabolomic data in python. This algorithm is rewritten by Dharak Shah in java to make it part of MSDK library as **Google Summer of Code 2017** project.*
+*This algorithm is developed by Du-Lab research team ([http://www.du-lab.org](http://du-lab.org)) to process Mass Spectrometry Metabolomic data in python. This algorithm is rewritten by Dharak Shah in java to make it part of MSDK library as **Google Summer of Code 2017** project.*
 
 ## Description
 
