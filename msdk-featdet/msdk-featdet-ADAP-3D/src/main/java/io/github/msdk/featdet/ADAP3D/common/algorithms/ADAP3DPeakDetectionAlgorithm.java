@@ -49,7 +49,6 @@ public class ADAP3DPeakDetectionAlgorithm {
    * </p>
    * 
    * @param objSliceSparseMatrix is sparse matrix created from raw data file.
-   * @param objParameter contains all the necessary parameters to find the peak.
    */
   public ADAP3DPeakDetectionAlgorithm(SliceSparseMatrix objSliceSparseMatrix) {
     this.objSliceSparseMatrix = objSliceSparseMatrix;
@@ -62,6 +61,8 @@ public class ADAP3DPeakDetectionAlgorithm {
    * 
    * @param numOfPeaks a {@link java.lang.Integer} object. This is the maximum number of good peaks
    *        method will determine.
+   * @param objParameter contains all the necessary parameters to find the peak.
+   * @param roundedFWHM is full width half max of whole raw data file.
    * @return peakList a list of {@link GoodPeakInfo} object type. This contains information of good
    *         peaks.
    */
@@ -97,6 +98,8 @@ public class ADAP3DPeakDetectionAlgorithm {
    * This method executes the iteration method to find good peaks.
    * </p>
    * 
+   * @param objParameter contains all the necessary parameters to find the peak.
+   * @param roundedFWHM is full width half max of whole raw data file.
    * @return peakList a list of {@link GoodPeakInfo} object type. This contains information of good
    *         peaks.
    */
@@ -138,9 +141,8 @@ public class ADAP3DPeakDetectionAlgorithm {
     GoodPeakInfo objPeakInfo = null;
     int lowerScanBound = triplet.scanListIndex - objParameters.getDelta() < 0 ? 0
         : triplet.scanListIndex - objParameters.getDelta();
-    int upperScanBound =
-        triplet.scanListIndex + objParameters.getDelta() >= objSliceSparseMatrix.getSizeOfRawDataFile()
-            ? objSliceSparseMatrix.getSizeOfRawDataFile() - 1
+    int upperScanBound = triplet.scanListIndex + objParameters.getDelta() >= objSliceSparseMatrix
+        .getSizeOfRawDataFile() ? objSliceSparseMatrix.getSizeOfRawDataFile() - 1
             : triplet.scanListIndex + objParameters.getDelta();
 
     // Here we're getting horizontal slice.

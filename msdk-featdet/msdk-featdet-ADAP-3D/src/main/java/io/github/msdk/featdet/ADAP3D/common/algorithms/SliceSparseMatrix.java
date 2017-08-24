@@ -253,7 +253,6 @@ public class SliceSparseMatrix {
       }
     };
     Collections.sort(sortListAccordingToIntensity, compareIntensity);
-    // Collections.sort(filterListOfTriplet, compareIntensity);
 
     sortListAccordingToMzScan = new ArrayList<>(filterListOfTriplet);
     compareMzScan = new Comparator<Triplet>() {
