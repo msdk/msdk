@@ -1,12 +1,12 @@
-# Intelligent LC/MS Feature Detection (ADAP3D Algorithm)
+# ADAP-3D: An Adaptive Algorithm for Peak Detection from Mass Spectrometry-Based Metabolomics Data
 
 ## Introduction
 
-*This algorithm is developed by Du-Lab research team ([http://www.du-lab.org](http://du-lab.org)) to process Mass Spectrometry Metabolomic data in python. This algorithm is rewritten by Dharak Shah in java to make it part of MSDK library as **Google Summer of Code 2017** project.*
+*ADAP-3D was originally developed by the Du-Lab research team ([http://www.du-lab.org](http://du-lab.org)) for detecting analyte-relevant peaks from raw Mass Spectrometry Metabolomic data. ADAP-3D takes advantage of the 3D nature of raw LC/MS or GC/MS data wherein mass spectra are stored in profile rather than centroid mode. The algorithm was first prototyped by the Du-Lab research team in python. Dharak Shah re-wrote the algorithm in java to speed up the computation and also make it part of the MSDK library as a **Google Summer of Code 2017** project.*
 
 ## Description
 
-*The algorithm is designed to detect 3-D peaks in raw data.The 3 dimensions are M/z(mass to charge ratio), Retention Time and Intensity. Continuous Wavelet transform is used to determine peak boundaries. This algorithm can process different file formats with the help of readers available in MSDK library. This algorithm primarily uses two tests to determine intensity peaks in from the data file. Peak3D test and BiGaussian Test. First it determines N higehst peaks with default parameters and estimates the parameters again from those peaks. After that it determines rest of the peaks with newly estimated parameters. So this algorithm has ability to adapt parameters. This algorithm also creates the features like chromatogram for each peak.*
+*The three dimensions of LC/MS or GC/MS data are m/z(mass to charge ratio), retention time and intensity. To detect peaks, ADAP-3D uses Continuous Wavelet transform and ridgeline detection. In addition, ADAP-3D estimates key preprocessing parameters from the data itself, making the algorithm self adaptive to the data being analyzed. ADAP-3D can accept raw data files in multiple formats including mzXML, CDF, mzML, et el. by using the existing capabilities of MSDK to import raw data.*
 
 ## Useful Link
 
