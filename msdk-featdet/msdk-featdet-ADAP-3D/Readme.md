@@ -2,7 +2,7 @@
 
 ## Introduction
 
-ADAP-3D was originally developed by the Du-Lab research team ([http://www.du-lab.org](http://du-lab.org)) for detecting analyte-relevant peaks from raw Mass Spectrometry Metabolomic data. ADAP-3D takes advantage of the 3D nature of raw LC/MS or GC/MS data wherein mass spectra are stored in profile rather than centroid mode. The algorithm was first prototyped by the Du-Lab research team in python. Dharak Shah re-wrote the algorithm in java to speed up the computation and also make it part of the MSDK library as a **Google Summer of Code 2017** project.
+ADAP-3D was originally developed by the Du-Lab research team ([http://www.du-lab.org](http://du-lab.org)) for detecting analyte-relevant peaks from raw Mass Spectrometry Metabolomic data. ADAP-3D takes advantage of the 3D nature of raw LC/MS or GC/MS data wherein mass spectra are stored in profile rather than centroid mode. The algorithm was first prototyped by the Du-Lab research team in Python. Dharak Shah re-wrote the algorithm in Java to speed up the computation and also make it part of the MSDK library as a **Google Summer of Code 2017** project.
 
 ## Description
 
@@ -27,6 +27,8 @@ The three dimensions of LC/MS or GC/MS data are m/z(mass to charge ratio), reten
 2. To implement a method for detecting isotopes.
 3. To resample raw profile mass spectra to achieve consistent sampling across all scans.
 
-## Conclusion
+## Notes from Dharak
 
-*For implementing this algorithm in java I developed my own class for sparse matrix and developed my own methods for different matrix operations. In addition to that I also developed my own classes for implementing BiGaussian and Gaussian which helped me to improve my coding skills. Working with Open Chemistry was my first experience with open source software development and I really enjoyed it. I learned a new framework of java, new coding standard, how to code efficiently in terms of time and memory both, applied many concepts studied in college. I got to work with many distinguish people of the field. It was a very enriching experience, which I intend to continue participating. Thanks to all the mentors who helped me to achieve the desired results.*
+"For implementing ADAP-3D in Java I developed a class for sparse matrix and associated methods for different matrix operations. In addition, I developed classes for BiGaussian and Gaussian fitting. All of these developments helped me improve my coding skills. I learned a new framework of Java, new coding standard, how to code efficiently in terms of time and memory, and applied many concepts I studied in college. 
+
+Working with Open Chemistry was my first experience with open source software development and I really enjoyed it. I got to work with many distinguished people of the field. It was a very enriching experience, which I intend to continue participating. Thanks to all the mentors who helped me to achieve the desired results."
