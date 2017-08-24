@@ -2,11 +2,11 @@
 
 ## Introduction
 
-*ADAP-3D was originally developed by the Du-Lab research team ([http://www.du-lab.org](http://du-lab.org)) for detecting analyte-relevant peaks from raw Mass Spectrometry Metabolomic data. ADAP-3D takes advantage of the 3D nature of raw LC/MS or GC/MS data wherein mass spectra are stored in profile rather than centroid mode. The algorithm was first prototyped by the Du-Lab research team in python. Dharak Shah re-wrote the algorithm in java to speed up the computation and also make it part of the MSDK library as a **Google Summer of Code 2017** project.*
+ADAP-3D was originally developed by the Du-Lab research team ([http://www.du-lab.org](http://du-lab.org)) for detecting analyte-relevant peaks from raw Mass Spectrometry Metabolomic data. ADAP-3D takes advantage of the 3D nature of raw LC/MS or GC/MS data wherein mass spectra are stored in profile rather than centroid mode. The algorithm was first prototyped by the Du-Lab research team in python. Dharak Shah re-wrote the algorithm in java to speed up the computation and also make it part of the MSDK library as a **Google Summer of Code 2017** project.
 
 ## Description
 
-*The three dimensions of LC/MS or GC/MS data are m/z(mass to charge ratio), retention time and intensity. To detect peaks, ADAP-3D uses Continuous Wavelet transform and ridgeline detection. In addition, ADAP-3D estimates key preprocessing parameters from the data itself, making the algorithm self adaptive to the data being analyzed. ADAP-3D can accept raw data files in multiple formats including mzXML, CDF, mzML, et el. by using the existing capabilities of MSDK to import raw data.*
+The three dimensions of LC/MS or GC/MS data are m/z(mass to charge ratio), retention time and intensity. To detect peaks, ADAP-3D uses Continuous Wavelet transform and ridgeline detection. In addition, ADAP-3D estimates key preprocessing parameters from the data itself, making the algorithm self adaptive to the data being analyzed. ADAP-3D can accept raw data files in multiple formats including mzXML, CDF, mzML, et el. by using the existing capabilities of MSDK to import raw data.
 
 ## Useful Link
 
