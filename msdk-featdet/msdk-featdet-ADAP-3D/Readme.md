@@ -27,7 +27,7 @@ The three dimensions of LC/MS or GC/MS data are m/z(mass to charge ratio), reten
 2. To implement a method for detecting isotopes.
 3. To resample raw profile mass spectra to achieve consistent sampling across all scans.
 
-## Notes from Dharak
+## Notes and Comments from Dharak Shah
 
 "For implementing ADAP-3D in Java I developed a class for sparse matrix and associated methods for different matrix operations. In addition, I developed classes for BiGaussian and Gaussian fitting. All of these developments helped me improve my coding skills. I learned a new framework of Java, new coding standard, how to code efficiently in terms of time and memory, and applied many concepts I studied in college. 
 
