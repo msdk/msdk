@@ -19,12 +19,13 @@
 ## Major Challenges
 
 1. Implementation of Sparse Matrix and it's operations.
-2. Implementation of Guassian and BiGaussian.
+2. Implementation of Guassian and BiGaussian fitting.
 
 ## Future Work
 
-1. Make algorithm more memory efficient - Currently algorithm is able to process raw data file as big as 310 mb with java heap size of 1 GB. It should be able to process file as big as 3 GB.
-2. To be able to read different types of metabolomics data this algorithm should be able to resample the data and it also should be able to determine isoptopes.
+1. To make ADAP-3D more memory-efficient - Currently it is able to preprocess raw data file as big as 310 MB with Java heap size of 1 GB. It is hoped that more memory-efficient methods can enable ADAP-3D to preprocess files of 3+ GB in size.
+2. To implement a method for detecting isotopes.
+3. To resample raw profile mass spectra to achieve consistent sampling across all scans.
 
 ## Conclusion
 
