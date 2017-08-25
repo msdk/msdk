@@ -103,7 +103,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    *        MzML File.
    */
   public MzMLFileImportMethod(Path mzMLFilePath) {
-    this(mzMLFilePath.toFile(), s -> true, c -> true);
+    this(mzMLFilePath.toFile(), s -> false, c -> false);
   }
 
   /**
@@ -135,7 +135,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    * @param mzMLFile a {@link java.io.File File} object instance of the MzML File.
    */
   public MzMLFileImportMethod(File mzMLFile) {
-    this(mzMLFile, null, s -> true, c -> true);
+    this(mzMLFile, null, s -> false, c -> false);
   }
 
   /**
