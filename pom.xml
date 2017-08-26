@@ -178,6 +178,7 @@
 						<version>2.10.4</version>
 						<configuration>
 							<excludePackageNames>io.github.msdk.db.mona.pojo</excludePackageNames>
+							<additionalparam>-Xdoclint:none</additionalparam>
 						</configuration>
 						<executions>
 							<execution>
