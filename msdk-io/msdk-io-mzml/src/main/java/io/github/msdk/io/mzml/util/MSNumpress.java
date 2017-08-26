@@ -43,47 +43,6 @@ public class MSNumpress {
    * @param cvAccession The PSI-MS obo CV accession of the encoded data.
    * @param data array of double to be encoded
    * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
    * @return The decoded doubles
    */
   public static double[] decode(String cvAccession, byte[] data, int dataSize) {
