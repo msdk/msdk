@@ -240,7 +240,7 @@
 								${project.artifactId}:${project.version}</checkinComment>
 							<content>${project.reporting.outputDirectory}/apidocs</content>
 							<skipDeletedFiles>false</skipDeletedFiles>
-							<pubScmUrl>scm:git:git@github.com:msdk/api.git</pubScmUrl>
+							<pubScmUrl>scm:git:https://github.com/msdk/api.git</pubScmUrl>
 							<scmBranch>gh-pages</scmBranch>
 						</configuration>
 					</plugin>
