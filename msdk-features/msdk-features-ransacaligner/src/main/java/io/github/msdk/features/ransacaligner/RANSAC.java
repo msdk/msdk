@@ -42,6 +42,13 @@ public class RANSAC {
     private final boolean Linear;
     private final double dataPointsRate;
 
+    /**
+     * <p>Constructor for RANSAC.</p>
+     *
+     * @param t a double.
+     * @param linear a boolean.
+     * @param dataPointsRate a double.
+     */
     public RANSAC(double t, boolean linear, double dataPointsRate) {
 
         this.t = t;

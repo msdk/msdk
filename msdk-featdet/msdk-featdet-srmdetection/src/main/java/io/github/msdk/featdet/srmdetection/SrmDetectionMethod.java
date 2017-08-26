@@ -42,7 +42,6 @@ import io.github.msdk.util.ChromatogramUtil;
 
 /**
  * This class creates a feature table based on the SRM chromatograms from a raw data file.
- *
  */
 public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 

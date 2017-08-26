@@ -23,7 +23,7 @@ import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 public class SimpleMsSpectrum extends AbstractMsSpectrum {
 
   /**
-   * 
+   * <p>Constructor for SimpleMsSpectrum.</p>
    */
   public SimpleMsSpectrum() {}
 

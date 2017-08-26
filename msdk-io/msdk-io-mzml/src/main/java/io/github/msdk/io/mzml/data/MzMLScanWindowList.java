@@ -15,17 +15,34 @@ package io.github.msdk.io.mzml.data;
 
 import java.util.ArrayList;
 
+/**
+ * <p>MzMLScanWindowList class.</p>
+ *
+ */
 public class MzMLScanWindowList {
   private ArrayList<MzMLScanWindow> scanWindows;
 
+  /**
+   * <p>Constructor for MzMLScanWindowList.</p>
+   */
   public MzMLScanWindowList() {
     this.scanWindows = new ArrayList<>();
   }
 
+  /**
+   * <p>Getter for the field <code>scanWindows</code>.</p>
+   *
+   * @return a {@link java.util.ArrayList} object.
+   */
   public ArrayList<MzMLScanWindow> getScanWindows() {
     return scanWindows;
   }
 
+  /**
+   * <p>addScanWindow.</p>
+   *
+   * @param scanWindow a {@link io.github.msdk.io.mzml.data.MzMLScanWindow} object.
+   */
   public void addScanWindow(MzMLScanWindow scanWindow) {
     scanWindows.add(scanWindow);
   }

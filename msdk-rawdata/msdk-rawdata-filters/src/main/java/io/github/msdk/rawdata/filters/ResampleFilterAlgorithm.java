@@ -25,7 +25,6 @@ import io.github.msdk.util.MsScanUtil;
  * <p>
  * ResampleFilterAlgorithm class.
  * </p>
- *
  */
 public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
 
@@ -42,7 +41,6 @@ public class ResampleFilterAlgorithm implements MSDKFilteringAlgorithm {
    * </p>
    *
    * @param binSize a double.
-   * @param store a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public ResampleFilterAlgorithm(double binSize) {
     if (binSize <= 0.0)

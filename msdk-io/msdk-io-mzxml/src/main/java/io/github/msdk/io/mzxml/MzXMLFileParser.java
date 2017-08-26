@@ -33,6 +33,10 @@ import javolution.xml.internal.stream.XMLStreamReaderImpl;
 import javolution.xml.stream.XMLStreamConstants;
 import javolution.xml.stream.XMLStreamReader;
 
+/**
+ * <p>MzXMLFileParser class.</p>
+ *
+ */
 public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
 
   private final @Nonnull File mzXMLFile;
@@ -50,6 +54,11 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
   final static String TAG_PEAKS = "peaks";
   final static String TAG_PRECURSOR_MZ = "precursorMz";
 
+  /**
+   * <p>Constructor for MzXMLFileParser.</p>
+   *
+   * @param mzXMLFile a {@link java.io.File} object.
+   */
   public MzXMLFileParser(File mzXMLFile) {
     this.mzXMLFile = mzXMLFile;
     this.canceled = false;
@@ -58,14 +67,30 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
     this.logger = LoggerFactory.getLogger(this.getClass());
   }
 
+  /**
+   * <p>Constructor for MzXMLFileParser.</p>
+   *
+   * @param mzXMLFileName a {@link java.lang.String} object.
+   */
   public MzXMLFileParser(String mzXMLFileName) {
     this(new File(mzXMLFileName));
   }
 
+  /**
+   * <p>Constructor for MzXMLFileParser.</p>
+   *
+   * @param mzXMLFilePath a {@link java.nio.file.Path} object.
+   */
   public MzXMLFileParser(Path mzXMLFilePath) {
     this(mzXMLFilePath.toFile());
   }
 
+  /**
+   * <p>execute.</p>
+   *
+   * @return a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @throws io.github.msdk.MSDKException if any.
+   */
   public RawDataFile execute() throws MSDKException {
 
     try {
@@ -263,9 +288,9 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
    * found
    * </p>
    *
-   * @param XMLStreamReader instance used to parse
-   * @param Attribute's value to be found
    * @return a CharArray containing the value of the attribute.
+   * @param xmlStreamReader a {@link javolution.xml.stream.XMLStreamReader} object.
+   * @param attr a {@link java.lang.String} object.
    */
   public CharArray getRequiredAttribute(XMLStreamReader xmlStreamReader, String attr) {
     CharArray attrValue = xmlStreamReader.getAttributeValue(null, attr);
@@ -275,16 +300,19 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
     return attrValue;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Float getFinishedPercentage() {
     return progress;
   }
 
+  /** {@inheritDoc} */
   @Override
   public RawDataFile getResult() {
     return newRawFile;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void cancel() {
     this.canceled = true;

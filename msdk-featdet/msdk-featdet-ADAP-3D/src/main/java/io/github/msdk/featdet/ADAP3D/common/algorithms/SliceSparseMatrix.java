@@ -41,7 +41,6 @@ import io.github.msdk.featdet.ADAP3D.common.algorithms.ADAP3DPeakDetectionAlgori
  * value is still in matrix or not.
  * </p>
  */
-
 public class SliceSparseMatrix {
 
   /**
@@ -122,7 +121,7 @@ public class SliceSparseMatrix {
    * This constructor takes raw data file and create the triplet map which contains information such
    * as mz,intensity,rt,scan number
    * </p>
-   * 
+   *
    * @param rawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object. This is raw data
    *        file object by which we can pass raw file.
    */
@@ -135,7 +134,7 @@ public class SliceSparseMatrix {
    * This constructor takes raw data file and create the triplet map which contains information such
    * as mz,intensity,rt,scan number
    * </p>
-   * 
+   *
    * @param rawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object. This is raw data
    *        file object by which we can pass raw file.
    * @param msScanPredicate a {@link java.util.function.Predicate} object. Only MsScan which pass
@@ -280,13 +279,12 @@ public class SliceSparseMatrix {
    * <p>
    * This method returns the MultiKeyMap slice of data for given mz,lowerScanBound,upperScanBound
    * </p>
-   * 
+   *
    * @param mz a {@link java.lang.Double} object. This is original m/z value from raw file.
    * @param lowerScanBound a {@link java.lang.Integer} object. This is lowest scan number in the
    *        horizontal matrix slice.
    * @param upperScanBound a {@link java.lang.Integer} object. This is highest scan number in the
    *        horizontal matrix slice.
-   * 
    * @return sliceMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This object
    *         contains horizontal slice with single m/z value,different scan numbers and different
    *         intensities along with retention time.
@@ -318,14 +316,13 @@ public class SliceSparseMatrix {
    * <p>
    * This method returns the MultiKeyMap slice of data for rounded mz,lowerScanBound,upperScanBound
    * </p>
-   * 
+   *
    * @param roundedMZ a {@link java.lang.Double} object. This is rounded m/z value which is already
    *        multiplied by 10000.
    * @param lowerScanBound a {@link java.lang.Integer} object. This is lowest scan number in the
    *        horizontal matrix slice.
    * @param upperScanBound a {@link java.lang.Integer} object. This is highest scan number in the
    *        horizontal matrix slice.
-   * 
    * @return sliceMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This object
    *         contains horizontal slice with single m/z value,different scan numbers and different
    *         intensities along with retention time.
@@ -338,12 +335,11 @@ public class SliceSparseMatrix {
    * <p>
    * This method returns the List of type VerticalSliceDataPoint for given Scan Number.
    * </p>
-   * 
-   * @param scanListIndex a {@link java.lang.Integer} object. This is scan number for which we get
-   *        vertical slice from sparse matrix.
+   *
    * @return datapointList a
    *         {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.VerticalSliceDataPoint}
    *         list. This is list containing m/z and intensities for one scan number.
+   * @param scanNumber a int.
    */
   public List<VerticalSliceDataPoint> getVerticalSlice(int scanNumber) {
 
@@ -406,8 +402,8 @@ public class SliceSparseMatrix {
    * <p>
    * This method finds next maximum intensity from filterListOfTriplet
    * </p>
-   * 
-   * @return tripletObject a {@link Triplet} object. This is element of sparse matrix.
+   *
+   * @return tripletObject a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet} object. This is element of sparse matrix.
    */
   public Triplet findNextMaxIntensity() {
 
@@ -429,10 +425,10 @@ public class SliceSparseMatrix {
    * This method returns sorted list of ContinuousWaveletTransform.DataPoint object.Object contain
    * retention time and intensity values.
    * </p>
-   * 
+   *
    * @param slice a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This is
    *        horizontal slice from sparse matrix.
-   * @return listOfDataPoint a {@link Triplet} list. This returns list of retention time and
+   * @return listOfDataPoint a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet} list. This returns list of retention time and
    *         intensities.
    */
   public List<ContinuousWaveletTransform.DataPoint> getCWTDataPoint(List<Triplet> slice) {
@@ -476,12 +472,12 @@ public class SliceSparseMatrix {
    * This method removes data points from whole data set for given mz,lowerscanbound and
    * upperscanbound
    * </p>
-   * 
-   * @param mz a {@link java.lang.Double} object.This takes original m/z value from raw file.
+   *
    * @param lowerScanBound a {@link java.lang.Integer} object.This is lowest scan number.
    * @param upperScanBound a {@link java.lang.Integer} object.This is highest scan number.
    * @return tripletMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This is
    *         whole sparse matrix.
+   * @param roundedmz a int.
    */
   public List<Triplet> removeDataPoints(int roundedmz, int lowerScanBound, int upperScanBound) {
 
@@ -505,12 +501,12 @@ public class SliceSparseMatrix {
    * This method restores data points from whole data set for given mz,lowerscanbound and
    * upperscanbound
    * </p>
-   * 
-   * @param mz a {@link java.lang.Double} object.This takes original m/z value from raw file.
+   *
    * @param lowerScanBound a {@link java.lang.Integer} object.This is lowest scan number.
    * @param upperScanBound a {@link java.lang.Integer} object.This is highest scan number.
    * @return tripletMap a {@link org.apache.commons.collections4.map.MultiKeyMap} object. This is
    *         whole sparse matrix.
+   * @param roundedmz a int.
    */
   public List<Triplet> restoreDataPoints(int roundedmz, int lowerScanBound, int upperScanBound) {
 
@@ -533,7 +529,7 @@ public class SliceSparseMatrix {
    * <p>
    * This method rounds mz value based on roundMz variable
    * </p>
-   * 
+   *
    * @param mz a {@link java.lang.Double} object. This takes original m/z value from raw file.
    * @return roundedmz a {@link java.lang.Integer} object. This value is rounded by multiplying
    *         10000.
@@ -556,7 +552,7 @@ public class SliceSparseMatrix {
    * <p>
    * This method returns size of raw data file in terms of total scans.
    * </p>
-   * 
+   *
    * @return size a {@link java.lang.Integer} object. This is total number of scans in raw file.
    */
   public int getSizeOfRawDataFile() {
@@ -568,8 +564,10 @@ public class SliceSparseMatrix {
    * <p>
    * This method returns retention time array for given upper and lower scan bounds.
    * </p>
-   * 
+   *
    * @return retentionTime a {@link java.lang.Float} array.
+   * @param lowerScanBound a int.
+   * @param upperScanbound a int.
    */
   public float[] getRetentionTimeArray(int lowerScanBound, int upperScanbound) {
 
@@ -585,8 +583,9 @@ public class SliceSparseMatrix {
    * <p>
    * This method returns intensity array for detected peak
    * </p>
-   * 
+   *
    * @return intensities a {@link java.lang.Float} array.
+   * @param peak a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.ADAP3DPeakDetectionAlgorithm.GoodPeakInfo} object.
    */
   public float[] getIntensities(GoodPeakInfo peak) {
 
@@ -612,8 +611,9 @@ public class SliceSparseMatrix {
    * <p>
    * This method returns retention time for given scan number.
    * </p>
-   * 
+   *
    * @return {@link java.lang.Double} object.
+   * @param scanNumber a int.
    */
   public double getRetentionTime(int scanNumber) {
     return rtMap.get(scanNumber);
@@ -623,8 +623,9 @@ public class SliceSparseMatrix {
    * <p>
    * This method tracks progress of algorithm
    * </p>
-   * 
+   *
    * @return progress a {@link java.lang.Float} object.
+   * @param maxIntensityTriplet a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet} object.
    */
   public float getFinishedPercent(Triplet maxIntensityTriplet) {
 

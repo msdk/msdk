@@ -27,7 +27,6 @@ import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
  * Simple implementation of the MsSpectrum interface
- *
  */
 public abstract class AbstractMsSpectrum implements MsSpectrum {
 
@@ -47,12 +46,7 @@ public abstract class AbstractMsSpectrum implements MsSpectrum {
     return numOfDataPoints;
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   * @param array an array of float.
-   * @return an array of float.
-   */
+  /** {@inheritDoc} */
   @Override
   public @Nonnull double[] getMzValues(@Nullable double[] array) {
     if ((array == null) || (array.length < numOfDataPoints))

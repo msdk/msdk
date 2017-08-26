@@ -46,6 +46,7 @@ public class Peak3DTest {
     UP, DOWN
   }
 
+  /** Constant <code>EPSILON=1E-8</code> */
   public static final double EPSILON = 1E-8;
 
   /* Instance of SliceSparseMatrix containing the profile data */
@@ -54,11 +55,20 @@ public class Peak3DTest {
   /* Full-Width Half-Max of m/z-profiles */
   private final int roundedFWHM;
 
+  /**
+   * <p>Constructor for Peak3DTest.</p>
+   *
+   * @param objsliceSparseMatrix a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix} object.
+   * @param fwhm a int.
+   */
   public Peak3DTest(SliceSparseMatrix objsliceSparseMatrix, int fwhm) {
     this.objsliceSparseMatrix = objsliceSparseMatrix;
     this.roundedFWHM = fwhm;
   }
 
+  /**
+   * <p>Constructor for Peak3DTest.</p>
+   */
   public Peak3DTest() {
     super();
     this.objsliceSparseMatrix = null;
@@ -92,17 +102,16 @@ public class Peak3DTest {
    * mzValues[index] - lowerMZbound, upperMZbound - lowerMZbound exceed certain thresholds, which
    * depend on FWHM-value.
    *
-   *
    * @param roundedMz a {@link java.lang.Double} object. It's rounded m/z value. Original m/z value
    *        multiplied by 10000.
    * @param leftBound a {@link java.lang.Integer} object. This is lowest scan number from which peak
    *        determining starts.
    * @param rightBound a {@link java.lang.Integer} object. This is highest scan number on which peak
    *        determining ends.
-   * 
-   * @return a {@link Result} object. Result object contains similarity values, lower and upper mz
+   * @return a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.Peak3DTest.Result} object. Result object contains similarity values, lower and upper mz
    *         boundaries for adjacent similar peaks.
    *         </p>
+   * @param peakSimilarityThreshold a double.
    */
   public Result execute(int roundedMz, int leftBound, int rightBound,
       double peakSimilarityThreshold) {

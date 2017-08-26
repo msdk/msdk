@@ -70,8 +70,6 @@ public class RansacAlignerMethod implements MSDKMethod<FeatureTable> {
    * @param featureTables a {@link java.util.List} object.
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    * @param mzTolerance a {@link io.github.msdk.util.MZTolerance} object.
-   * @param requireSameCharge a {@link java.lang.Boolean} object.
-   * @param requireSameAnnotation a {@link java.lang.Boolean} object.
    * @param featureTableName a {@link java.lang.String} object.
    * @param rtTolerance a {@link io.github.msdk.util.RTTolerance} object.
    * @param t a threshold value for determining when a data point fits a mode

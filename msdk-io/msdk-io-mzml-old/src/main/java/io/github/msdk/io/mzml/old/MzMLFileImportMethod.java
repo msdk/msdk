@@ -45,7 +45,6 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 /**
  * This class reads mzML data format using the jmzml library. It generates a RawDataFile object.
- *
  */
 
 @Deprecated

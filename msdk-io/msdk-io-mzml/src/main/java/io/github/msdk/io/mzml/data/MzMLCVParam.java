@@ -18,7 +18,6 @@ import java.util.Optional;
 /**
  * A CV Parameter object which contains the CV Parameter's accession and value, name & unitAccession
  * if available
- *
  */
 public class MzMLCVParam {
 
@@ -55,6 +54,7 @@ public class MzMLCVParam {
   }
 
   /**
+   * <p>Getter for the field <code>accession</code>.</p>
    *
    * @return the CV Parameter accession as {@link java.lang.String String}
    */
@@ -64,6 +64,7 @@ public class MzMLCVParam {
 
 
   /**
+   * <p>Getter for the field <code>value</code>.</p>
    *
    * @return the CV Parameter value as {@link java.util.Optional Optional<String>}
    */
@@ -72,7 +73,8 @@ public class MzMLCVParam {
   }
 
   /**
-   * 
+   * <p>Getter for the field <code>name</code>.</p>
+   *
    * @return the CV Parameter name as {@link java.util.Optional Optional<String>}
    */
   public Optional<String> getName() {
@@ -80,6 +82,7 @@ public class MzMLCVParam {
   }
 
   /**
+   * <p>Getter for the field <code>unitAccession</code>.</p>
    *
    * @return the CV Parameter unit accession as {@link java.util.Optional Optional<String>}
    */

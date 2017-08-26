@@ -24,6 +24,10 @@ import ucar.ma2.Index;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Variable;
 
+/**
+ * <p>NetCDFMsScan class.</p>
+ *
+ */
 public class NetCDFMsScan extends SimpleMsScan {
 
   private int[] scanStartPositions;
@@ -37,6 +41,17 @@ public class NetCDFMsScan extends SimpleMsScan {
   private Integer numOfDataPoints;
   private MsSpectrumType spectrumType;
 
+  /**
+   * <p>Constructor for NetCDFMsScan.</p>
+   *
+   * @param scanNumber a {@link java.lang.Integer} object.
+   * @param scanStartPositions an array of int.
+   * @param scanRetentionTimes an array of float.
+   * @param massValueVariable a {@link ucar.nc2.Variable} object.
+   * @param intensityValueVariable a {@link ucar.nc2.Variable} object.
+   * @param massValueScaleFactor a double.
+   * @param intensityValueScaleFactor a double.
+   */
   public NetCDFMsScan(Integer scanNumber, int[] scanStartPositions, float[] scanRetentionTimes,
       Variable massValueVariable, Variable intensityValueVariable, double massValueScaleFactor,
       double intensityValueScaleFactor) {
@@ -52,6 +67,7 @@ public class NetCDFMsScan extends SimpleMsScan {
     this.spectrumType = null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public float[] getIntensityValues(float[] intensityValues) {
     if (preLoadedIntensityValues == null) {
@@ -88,6 +104,7 @@ public class NetCDFMsScan extends SimpleMsScan {
     return intensityValues;
   }
 
+  /** {@inheritDoc} */
   @Override
   public double[] getMzValues(double[] mzValues) {
     if (preLoadedMzValues == null) {
@@ -123,6 +140,7 @@ public class NetCDFMsScan extends SimpleMsScan {
     return mzValues;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer getNumberOfDataPoints() {
     if (numOfDataPoints == null) {
@@ -133,11 +151,13 @@ public class NetCDFMsScan extends SimpleMsScan {
     return numOfDataPoints;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Float getRetentionTime() {
     return scanRetentionTimes[getScanIndex()];
   }
 
+  /** {@inheritDoc} */
   @Override
   public MsSpectrumType getSpectrumType() {
     if (spectrumType == null)
@@ -147,10 +167,21 @@ public class NetCDFMsScan extends SimpleMsScan {
     return spectrumType;
   }
 
+  /**
+   * <p>getScanIndex.</p>
+   *
+   * @return a {@link java.lang.Integer} object.
+   */
   public Integer getScanIndex() {
     return getScanNumber() - 1;
   }
 
+  /**
+   * <p>parseScan.</p>
+   *
+   * @throws java.io.IOException if any.
+   * @throws ucar.ma2.InvalidRangeException if any.
+   */
   public void parseScan() throws IOException, InvalidRangeException {
     // Load values to this scan instance itself, this method is called only when the scan passes the
     // predicate

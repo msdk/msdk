@@ -15,7 +15,6 @@ package io.github.msdk.io.mzml.data;
 
 /**
  * Enumeration of different types of arrays which are parsed by the MzML Parser
- *
  */
 public enum MzMLArrayType {
   MZ("MS:1000514"), // m/z values array
@@ -29,7 +28,8 @@ public enum MzMLArrayType {
   }
 
   /**
-   * 
+   * <p>Getter for the field <code>accession</code>.</p>
+   *
    * @return the CV Parameter accession of the binary data array type as {@link java.lang.String
    *         String}
    */

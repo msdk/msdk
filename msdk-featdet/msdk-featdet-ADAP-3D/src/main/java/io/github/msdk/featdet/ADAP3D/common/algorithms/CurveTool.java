@@ -30,6 +30,7 @@ import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet
  */
 public class CurveTool {
 
+  /** Constant <code>FWHM_CONSTANT=2.35482</code> */
   public static final double FWHM_CONSTANT = 2.35482;
   private static final double EXPONENT_FACTOR = 0.2;
   private static final double EXPONENT_SHIFT = Math.exp(-1 / EXPONENT_FACTOR);
@@ -40,6 +41,8 @@ public class CurveTool {
    * <p>
    * CurveTool constructor takes object of SliceSparseMatrix class.
    * </p>
+   *
+   * @param sliceSparseMatrix a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix} object.
    */
   public CurveTool(SliceSparseMatrix sliceSparseMatrix) {
     objSliceSparseMatrix = sliceSparseMatrix;
@@ -48,10 +51,7 @@ public class CurveTool {
   /**
    * <p>
    * estimateFwhmMs method estimates the FWHM for given number of random scans.
-   * 
-   * @param numberOfScansForFWHMCalc a {@link java.lang.Integer} object. This is number scans
-   *        required for estimation of fwhm.
-   * 
+   *
    * @return fwhm a {@link java.lang.Double} object.This is Full width half maximum.
    *         </p>
    */
@@ -89,6 +89,15 @@ public class CurveTool {
   }
 
 
+  /**
+   * <p>similarityValue.</p>
+   *
+   * @param referenceEIC an array of double.
+   * @param gaussianValues an array of double.
+   * @param leftBound a int.
+   * @param rightBound a int.
+   * @return a double.
+   */
   public static double similarityValue(double[] referenceEIC, double[] gaussianValues,
       int leftBound, int rightBound) {
     double diffArea = 0.0;
@@ -108,7 +117,7 @@ public class CurveTool {
    * <p>
    * normalize method is used for normalizing EIC by calculating its area and dividing each
    * intensity by the area.
-   * 
+   *
    * @param roundedMz a {@link java.lang.Integer} object.This is m/z value which is multiplied by
    *        10000 because of it's use in sparse matrix.
    * @param leftBound a {@link java.lang.Integer} object. This is lowest scan number from which peak
@@ -117,9 +126,9 @@ public class CurveTool {
    *        determining ends.
    * @param referenceEIC a {@link java.lang.Double} array. This array contains normalize intensities
    *        for given m/z value.(Intensities/area)
-   * 
    * @return area a {@link java.lang.Double} object. This is area of normalize intensity points.
    *         </p>
+   * @param slice a {@link java.util.List} object.
    */
   public static double normalize(List<Triplet> slice, int leftBound, int rightBound, int roundedMz,
       double[] referenceEIC) {
@@ -162,10 +171,9 @@ public class CurveTool {
    * normalize method is used for normalizing values by calculating its area and dividing each value
    * by the area.
    * </p>
-   * 
+   *
    * @param values a {@link java.lang.Double} array. This array will have values to be normalized.
    * @param normValues a {@link java.lang.Double} array. This array will have normalized values.
-   * 
    * @return area a {@link java.lang.Double} object. This is area of normalize intensity points.
    */
   public static double normalize(double[] values, double[] normValues) {
@@ -183,6 +191,12 @@ public class CurveTool {
     return area;
   }
 
+  /**
+   * <p>normalize.</p>
+   *
+   * @param values an array of float.
+   * @return a float.
+   */
   public static float normalize(float[] values) {
 
     float area = 0;

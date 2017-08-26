@@ -48,7 +48,6 @@ import io.github.msdk.util.ArrayUtil;
  * a SimpleMsSpectrum object if no error bars are present. Otherwise, it returns a
  * {@link io.github.msdk.rawdata.peakinvestigator.PeakInvestigatorMsSpectrum}, which decorates a
  * SimpleMsSpectrum.
- *
  */
 public class PeakInvestigatorScanExtractingMethod implements MSDKMethod<List<MsSpectrum>> {
 

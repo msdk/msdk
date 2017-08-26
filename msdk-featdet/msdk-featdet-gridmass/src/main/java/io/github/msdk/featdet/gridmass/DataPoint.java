@@ -28,6 +28,8 @@ class DataPoint {
 
   /**
    * Constructor which copies the data from another DataPoint
+   *
+   * @param dp a {@link io.github.msdk.featdet.gridmass.DataPoint} object.
    */
   public DataPoint(DataPoint dp) {
     this.mz = dp.getMZ();
@@ -35,22 +37,35 @@ class DataPoint {
   }
 
   /**
-   * @param mz
-   * @param intensity
+   * <p>Constructor for DataPoint.</p>
+   *
+   * @param mz a double.
+   * @param intensity a double.
    */
   public DataPoint(double mz, double intensity) {
     this.mz = mz;
     this.intensity = intensity;
   }
 
+  /**
+   * <p>Getter for the field <code>intensity</code>.</p>
+   *
+   * @return a double.
+   */
   public double getIntensity() {
     return intensity;
   }
 
+  /**
+   * <p>getMZ.</p>
+   *
+   * @return a double.
+   */
   public double getMZ() {
     return mz;
   }
 
+  /** {@inheritDoc} */
   @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof DataPoint))
@@ -59,6 +74,7 @@ class DataPoint {
     return (this.mz == dp.getMZ()) && (this.intensity == dp.getIntensity());
   }
 
+  /** {@inheritDoc} */
   @Override
   public int hashCode() {
     return (int) (this.mz + this.intensity);

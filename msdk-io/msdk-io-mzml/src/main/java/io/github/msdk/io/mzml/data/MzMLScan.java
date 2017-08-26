@@ -15,18 +15,35 @@ package io.github.msdk.io.mzml.data;
 
 import java.util.Optional;
 
+/**
+ * <p>MzMLScan class.</p>
+ *
+ */
 public class MzMLScan extends MzMLCVGroup {
 
   Optional<MzMLScanWindowList> scanWindowList;
 
+  /**
+   * <p>Constructor for MzMLScan.</p>
+   */
   public MzMLScan() {
     this.scanWindowList = Optional.ofNullable(null);
   }
 
+  /**
+   * <p>Getter for the field <code>scanWindowList</code>.</p>
+   *
+   * @return a {@link java.util.Optional} object.
+   */
   public Optional<MzMLScanWindowList> getScanWindowList() {
     return scanWindowList;
   }
 
+  /**
+   * <p>Setter for the field <code>scanWindowList</code>.</p>
+   *
+   * @param scanWindowList a {@link io.github.msdk.io.mzml.data.MzMLScanWindowList} object.
+   */
   public void setScanWindowList(MzMLScanWindowList scanWindowList) {
     this.scanWindowList = Optional.ofNullable(scanWindowList);
   }

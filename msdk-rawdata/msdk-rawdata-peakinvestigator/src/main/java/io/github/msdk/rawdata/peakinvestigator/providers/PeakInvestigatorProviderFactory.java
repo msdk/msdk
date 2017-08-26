@@ -20,7 +20,6 @@ import com.veritomyx.actions.PiVersionsAction;
  * <p>
  * PeakInvestigatorProviderFactory interface.
  * </p>
- *
  */
 public interface PeakInvestigatorProviderFactory {
   /**

@@ -13,6 +13,10 @@
 
 package io.github.msdk.io.mzml.data;
 
+/**
+ * <p>MzMLPrecursorActivation class.</p>
+ *
+ */
 public class MzMLPrecursorActivation extends MzMLCVGroup {
 
 }

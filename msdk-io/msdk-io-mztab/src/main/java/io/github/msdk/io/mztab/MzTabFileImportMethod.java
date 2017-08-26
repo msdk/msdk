@@ -48,7 +48,6 @@ import uk.ac.ebi.pride.jmztab.utils.MZTabFileParser;
  * <p>
  * MzTabFileImportMethod class.
  * </p>
- *
  */
 public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
 
@@ -69,7 +68,6 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
    * </p>
    *
    * @param sourceFile a {@link java.io.File} object.
-   * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public MzTabFileImportMethod(@Nonnull File sourceFile) {
     this.sourceFile = sourceFile;

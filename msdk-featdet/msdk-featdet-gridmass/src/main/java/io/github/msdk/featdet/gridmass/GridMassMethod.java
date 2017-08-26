@@ -85,6 +85,17 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
    * </p>
    *
    * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param scans a {@link java.util.List} object.
+   * @param mzTol a {@link io.github.msdk.util.tolerances.MzTolerance} object.
+   * @param intensitySimilarity a {@link java.lang.Double} object.
+   * @param minimumTimeSpan a {@link java.lang.Double} object.
+   * @param maximumTimeSpan a {@link java.lang.Double} object.
+   * @param smoothTimeSpan a {@link java.lang.Double} object.
+   * @param smoothTimeMZ a {@link java.lang.Double} object.
+   * @param smoothMZ a {@link java.lang.Double} object.
+   * @param additionTimeMaxPeaksPerScan a {@link java.lang.Double} object.
+   * @param minimumHeight a {@link java.lang.Double} object.
+   * @param rtPerScan a {@link java.lang.Double} object.
    */
   public GridMassMethod(@Nonnull RawDataFile rawDataFile, @Nonnull List<MsScan> scans,
       @Nonnull MzTolerance mzTol, @Nonnull Double intensitySimilarity,

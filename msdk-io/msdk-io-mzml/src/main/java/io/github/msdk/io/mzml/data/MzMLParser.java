@@ -36,7 +36,6 @@ import javolution.xml.stream.XMLStreamReader;
  * Used to parse mzML meta-data and initialize {@link io.github.msdk.io.mzml.data.MzMLBinaryDataInfo
  * MzMLBinaryDataInfo}
  * </p>
- *
  */
 public class MzMLParser {
 
@@ -49,7 +48,7 @@ public class MzMLParser {
    * <p>
    * Constructor for {@link io.github.msdk.io.mzml.data.MzMLParser MzMLParser}
    * </p>
-   * 
+   *
    * @param importer an instance of an initialized
    *        {@link io.github.msdk.io.mzml.MzMLFileImportMethod MzMLFileImportMethod}
    */
@@ -67,7 +66,7 @@ public class MzMLParser {
    * {@link javolution.xml.internal.stream.XMLStreamReaderImpl XMLStreamReaderImpl} enters the given
    * tag
    * </p>
-   * 
+   *
    * @param xmlStreamReader an instance of {@link javolution.xml.internal.stream.XMLStreamReaderImpl
    * XMLStreamReaderImpl
    * @param is {@link java.io.InputStream InputStream} of the mzML data
@@ -366,10 +365,10 @@ public class MzMLParser {
    * {@link javolution.xml.internal.stream.XMLStreamReaderImpl XMLStreamReaderImpl} exits the given
    * tag
    * </p>
-   * 
+   *
    * @param xmlStreamReader an instance of {@link javolution.xml.internal.stream.XMLStreamReaderImpl
    * XMLStreamReaderImpl
-   * @param openingTagName The tag <code>xmlStreamReader</code> exited
+   * @param closingTagName a {@link javolution.text.CharArray} object.
    */
   public void processClosingTag(XMLStreamReaderImpl xmlStreamReader, CharArray closingTagName) {
     tracker.exit(closingTagName);
@@ -443,9 +442,9 @@ public class MzMLParser {
    * <p>
    * Carry out the required parsing of the mzML data when the
    * {@link javolution.xml.internal.stream.XMLStreamReaderImpl XMLStreamReaderImpl} when
-   * {@link XMLStreamConstants#CHARACTERS CHARACTERS} are found
+   * {@link javolution.xml.stream.XMLStreamConstants#CHARACTERS CHARACTERS} are found
    * </p>
-   * 
+   *
    * @param xmlStreamReader an instance of {@link javolution.xml.internal.stream.XMLStreamReaderImpl
    *        XMLStreamReaderImpl
    */
@@ -553,6 +552,12 @@ public class MzMLParser {
     return attrValue;
   }
 
+  /**
+   * <p>manageCompression.</p>
+   *
+   * @param binaryInfo a {@link io.github.msdk.io.mzml.data.MzMLBinaryDataInfo} object.
+   * @param accession a {@link java.lang.String} object.
+   */
   public void manageCompression(MzMLBinaryDataInfo binaryInfo, String accession) {
     if (binaryInfo.getCompressionType() == MzMLCompressionType.NO_COMPRESSION)
       binaryInfo.setCompressionType(accession);
@@ -590,7 +595,8 @@ public class MzMLParser {
   }
 
   /**
-   * 
+   * <p>getMzMLRawFile.</p>
+   *
    * @return a {@link io.github.msdk.io.mzml.data.MzMLRawDataFile MzMLRawDataFile} containing the
    *         parsed data
    */

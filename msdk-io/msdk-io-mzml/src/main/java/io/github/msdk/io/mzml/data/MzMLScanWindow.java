@@ -13,6 +13,10 @@
 
 package io.github.msdk.io.mzml.data;
 
+/**
+ * <p>MzMLScanWindow class.</p>
+ *
+ */
 public class MzMLScanWindow extends MzMLCVGroup {
 
 }

@@ -23,7 +23,6 @@ import io.github.msdk.util.MsScanUtil;
  * <p>
  * ExactMassCentroidingAlgorithm class.
  * </p>
- *
  */
 public class ExactMassCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 

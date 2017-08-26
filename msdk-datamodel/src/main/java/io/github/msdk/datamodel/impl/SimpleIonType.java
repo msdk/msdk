@@ -22,7 +22,6 @@ import io.github.msdk.datamodel.rawdata.PolarityType;
 
 /**
  * Implementation of IonType
- *
  */
 public class SimpleIonType implements IonType {
 

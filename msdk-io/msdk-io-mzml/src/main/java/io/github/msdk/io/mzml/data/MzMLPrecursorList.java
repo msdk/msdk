@@ -16,18 +16,35 @@ package io.github.msdk.io.mzml.data;
 import java.util.ArrayList;
 
 
+/**
+ * <p>MzMLPrecursorList class.</p>
+ *
+ */
 public class MzMLPrecursorList {
 
   private ArrayList<MzMLPrecursorElement> precursorElements;
 
+  /**
+   * <p>Constructor for MzMLPrecursorList.</p>
+   */
   public MzMLPrecursorList() {
     this.precursorElements = new ArrayList<>();
   }
 
+  /**
+   * <p>Getter for the field <code>precursorElements</code>.</p>
+   *
+   * @return a {@link java.util.ArrayList} object.
+   */
   public ArrayList<MzMLPrecursorElement> getPrecursorElements() {
     return precursorElements;
   }
 
+  /**
+   * <p>addPrecursor.</p>
+   *
+   * @param precursor a {@link io.github.msdk.io.mzml.data.MzMLPrecursorElement} object.
+   */
   public void addPrecursor(MzMLPrecursorElement precursor) {
     precursorElements.add(precursor);
   }

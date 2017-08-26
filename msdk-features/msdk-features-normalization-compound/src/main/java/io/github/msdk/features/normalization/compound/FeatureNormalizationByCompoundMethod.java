@@ -26,7 +26,6 @@ import io.github.msdk.datamodel.impl.SimpleFeatureTable;
 
 /**
  * This class normalized a list of feature table columns based on a set of features.
- *
  */
 public class FeatureNormalizationByCompoundMethod implements MSDKMethod<FeatureTable> {
 
@@ -47,15 +46,11 @@ public class FeatureNormalizationByCompoundMethod implements MSDKMethod<FeatureT
    * </p>
    *
    * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
-   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    * @param normalizationType a
    *        {@link io.github.msdk.features.normalization.compound.NormalizationType} object.
-   * @param columnsToNormalize a {@link java.util.List} object of
-   *        {@link io.github.msdk.datamodel.featuretables.FeatureTableColumn} .
    * @param internalStandardRows a {@link java.util.List} object of
    *        {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} .
    * @param mzRtWeight a {@link java.lang.Integer} object.
-   * @param nameSuffix a {@link java.lang.String} object.
    */
   public FeatureNormalizationByCompoundMethod(@Nonnull FeatureTable featureTable,
       @Nonnull NormalizationType normalizationType,

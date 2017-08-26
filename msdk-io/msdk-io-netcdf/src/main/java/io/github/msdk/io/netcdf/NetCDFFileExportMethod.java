@@ -36,6 +36,10 @@ import ucar.nc2.NetcdfFileWriter;
 import ucar.nc2.NetcdfFileWriter.Version;
 import ucar.nc2.Variable;
 
+/**
+ * <p>NetCDFFileExportMethod class.</p>
+ *
+ */
 public class NetCDFFileExportMethod implements MSDKMethod<Void> {
 
   private final @Nonnull RawDataFile rawDataFile;
@@ -52,10 +56,24 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
   private int[] scanStartPositions;
   private NetcdfFileWriter writer;
 
+  /**
+   * <p>Constructor for NetCDFFileExportMethod.</p>
+   *
+   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param target a {@link java.io.File} object.
+   */
   public NetCDFFileExportMethod(@Nonnull RawDataFile rawDataFile, @Nonnull File target) {
     this(rawDataFile, target, 1, 1);
   }
 
+  /**
+   * <p>Constructor for NetCDFFileExportMethod.</p>
+   *
+   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param target a {@link java.io.File} object.
+   * @param massValueScaleFactor a double.
+   * @param intensityValueScaleFactor a double.
+   */
   public NetCDFFileExportMethod(@Nonnull RawDataFile rawDataFile, @Nonnull File target,
       double massValueScaleFactor, double intensityValueScaleFactor) {
     this.rawDataFile = rawDataFile;
@@ -64,6 +82,7 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
     this.intensityValueScaleFactor = intensityValueScaleFactor;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Void execute() throws MSDKException {
 
@@ -223,16 +242,19 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
     return intensityValueVariable;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Float getFinishedPercentage() {
     return progress;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Void getResult() {
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void cancel() {
     this.canceled = true;

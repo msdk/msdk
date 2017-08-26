@@ -33,7 +33,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 /**
  * This class reads mzData files. Note: we don't use the jmzreader library, because it completely
  * fails to read retention time values from mzData.
- *
  */
 public class MzDataFileImportMethod implements MSDKMethod<RawDataFile> {
 
@@ -52,7 +51,6 @@ public class MzDataFileImportMethod implements MSDKMethod<RawDataFile> {
    * </p>
    *
    * @param sourceFile a {@link java.io.File} object.
-   * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public MzDataFileImportMethod(@Nonnull File sourceFile) {
     this.sourceFile = sourceFile;

@@ -40,6 +40,12 @@ class DatumExpand implements Comparable<DatumExpand> {
 	minIntensity = dato.intensity;
     }
 
+    /**
+     * <p>compareTo.</p>
+     *
+     * @param other a {@link io.github.msdk.featdet.gridmass.DatumExpand} object.
+     * @return a int.
+     */
     public int compareTo(DatumExpand other) {
 	if (dato.scan < other.dato.scan)
 	    return -1;

@@ -18,6 +18,10 @@ import java.util.List;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
 import io.github.msdk.featdet.ADAP3D.datamodel.Result;
 
+/**
+ * <p>ADAP3DPeakDetectionAlgorithm class.</p>
+ *
+ */
 public class ADAP3DPeakDetectionAlgorithm {
 
   /**
@@ -47,7 +51,7 @@ public class ADAP3DPeakDetectionAlgorithm {
    * <p>
    * Constructor
    * </p>
-   * 
+   *
    * @param objSliceSparseMatrix is sparse matrix created from raw data file.
    */
   public ADAP3DPeakDetectionAlgorithm(SliceSparseMatrix objSliceSparseMatrix) {
@@ -58,13 +62,13 @@ public class ADAP3DPeakDetectionAlgorithm {
    * <p>
    * This method determines the number of good peaks provided by the user.
    * </p>
-   * 
+   *
    * @param numOfPeaks a {@link java.lang.Integer} object. This is the maximum number of good peaks
    *        method will determine.
-   * @param objParameter contains all the necessary parameters to find the peak.
    * @param roundedFWHM is full width half max of whole raw data file.
-   * @return peakList a list of {@link GoodPeakInfo} object type. This contains information of good
+   * @return peakList a list of {@link io.github.msdk.featdet.ADAP3D.common.algorithms.ADAP3DPeakDetectionAlgorithm.GoodPeakInfo} object type. This contains information of good
    *         peaks.
+   * @param objParameters a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.Parameters} object.
    */
   public List<GoodPeakInfo> execute(int numOfPeaks, Parameters objParameters, int roundedFWHM) {
     int maxCount = 0;
@@ -97,11 +101,11 @@ public class ADAP3DPeakDetectionAlgorithm {
    * <p>
    * This method executes the iteration method to find good peaks.
    * </p>
-   * 
-   * @param objParameter contains all the necessary parameters to find the peak.
+   *
    * @param roundedFWHM is full width half max of whole raw data file.
-   * @return peakList a list of {@link GoodPeakInfo} object type. This contains information of good
+   * @return peakList a list of {@link io.github.msdk.featdet.ADAP3D.common.algorithms.ADAP3DPeakDetectionAlgorithm.GoodPeakInfo} object type. This contains information of good
    *         peaks.
+   * @param objParameters a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.Parameters} object.
    */
   public List<GoodPeakInfo> execute(Parameters objParameters, int roundedFWHM) {
 
@@ -292,6 +296,8 @@ public class ADAP3DPeakDetectionAlgorithm {
    * <p>
    * This method tracks progress of algorithm
    * </p>
+   *
+   * @return a float.
    */
   public float getFinishedPercent() {
     return progressPercent;

@@ -30,6 +30,7 @@ import io.github.msdk.featdet.ADAP3D.datamodel.Ridgeline;
 
 
 /**
+ * <p>ContinuousWaveletTransform class.</p>
  *
  * @author owen myers Modified by Dharak Shah to include in MSDK
  */
@@ -64,10 +65,22 @@ public class ContinuousWaveletTransform {
   // estimated compact support
   int scaleCoefHowFarOut = 5;
 
+  /**
+   * <p>returnAllCoefficients.</p>
+   *
+   * @return an array of double.
+   */
   public double[][] returnAllCoefficients() {
     return allCoefficients;
   }
 
+  /**
+   * <p>Constructor for ContinuousWaveletTransform.</p>
+   *
+   * @param smallScaleIn a double.
+   * @param largeScaleIn a double.
+   * @param incrementScaleIn a double.
+   */
   public ContinuousWaveletTransform(double smallScaleIn, double largeScaleIn,
       double incrementScaleIn) {
     smallScale = smallScaleIn;
@@ -83,15 +96,31 @@ public class ContinuousWaveletTransform {
   }
 
   // setting peak width by taking input from user
+  /**
+   * <p>Setter for the field <code>peakWidth</code>.</p>
+   *
+   * @param lowerbound a double.
+   * @param upperbound a double.
+   */
   public void setPeakWidth(double lowerbound, double upperbound) {
     peakWidth = Range.closed(lowerbound, upperbound);
   }
 
   // setting peak width by taking input from user
+  /**
+   * <p>Setter for the field <code>peakWidth</code>.</p>
+   *
+   * @param peakWidthObject a {@link com.google.common.collect.Range} object.
+   */
   public void setPeakWidth(Range<Double> peakWidthObject) {
     peakWidth = peakWidthObject;
   }
 
+  /**
+   * <p>Setter for the field <code>coefAreaRatioTolerance</code>.</p>
+   *
+   * @param userInputCoefAreaRatioTolerance a double.
+   */
   public void setcoefAreaRatioTolerance(double userInputCoefAreaRatioTolerance) {
     coefAreaRatioTolerance = userInputCoefAreaRatioTolerance;
   }
@@ -105,6 +134,13 @@ public class ContinuousWaveletTransform {
   // CWT finds a peak with only a single point in it but it thinks the bounds are a couple
   // of points to the left and right then it would pass the above if statement. To make
   // sure we get rid of these points we need to do one more check which is below.
+  /**
+   * <p>croppedPeakWidth.</p>
+   *
+   * @param peakLeft a int.
+   * @param peakRight a int.
+   * @return an array of int.
+   */
   public int[] croppedPeakWidth(int peakLeft, int peakRight) {
     int croppedPeakLeft = -1;
     int croppedPeakRight = -1;
@@ -167,6 +203,13 @@ public class ContinuousWaveletTransform {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // ALSO lest make sure the total number of non-zero points is greater than the number of 0.0
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// points
+  /**
+   * <p>numberOfZeros.</p>
+   *
+   * @param peakLeft a int.
+   * @param peakRight a int.
+   * @return a boolean.
+   */
   public boolean numberOfZeros(int peakLeft, int peakRight) {
     int numZeros = 0;
     int numNotZero = 0;
@@ -190,6 +233,13 @@ public class ContinuousWaveletTransform {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /////////////////////////// Area/////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /**
+   * <p>findArea.</p>
+   *
+   * @param peakLeft a int.
+   * @param peakRight a int.
+   * @return a double.
+   */
   public double findArea(int peakLeft, int peakRight) {
     double curArea = FeatureTools.trapazoidAreaUnderCurve(signal, x, peakLeft, peakRight);
     return curArea;
@@ -199,6 +249,11 @@ public class ContinuousWaveletTransform {
 
   // returns the list of objects of type result which has the variables
   // lower bounds of the peaks, upper bounds of the peaks and best coefficient.
+  /**
+   * <p>findPeaks.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<Result> findPeaks() {
     // Calling the functions to build ridge lines and filtering the ridge lines.
     buildRidgelines();
@@ -271,6 +326,9 @@ public class ContinuousWaveletTransform {
     return resultList;
   }
 
+  /**
+   * <p>filterRidgelines.</p>
+   */
   public void filterRidgelines() {
     ArrayList<Ridgeline> filteredRidgelines = new ArrayList<Ridgeline>();
 
@@ -293,6 +351,9 @@ public class ContinuousWaveletTransform {
 
   }
 
+  /**
+   * <p>buildRidgelines.</p>
+   */
   public void buildRidgelines() {
     getCoefficientsForAllScales();
 
@@ -334,6 +395,12 @@ public class ContinuousWaveletTransform {
   }
 
   // returns the indecies of the location of the maxima
+  /**
+   * <p>findMaximaForThisScale.</p>
+   *
+   * @param waveletScale a double.
+   * @return an array of {@link java.lang.Integer} objects.
+   */
   public Integer[] findMaximaForThisScale(double waveletScale) {
     // when we are removing points adjacent to the current maxima this is the number of points to go
     // in either direction before stopping.
@@ -381,6 +448,9 @@ public class ContinuousWaveletTransform {
 
   }
 
+  /**
+   * <p>getCoefficientsForAllScales.</p>
+   */
   public void getCoefficientsForAllScales() {
     int NScales = arrScales.size();
     allCoefficients = new double[NScales][];
@@ -392,6 +462,12 @@ public class ContinuousWaveletTransform {
     // writeAllCoeffs();
   }
 
+  /**
+   * <p>getCoefficientsForThisScale.</p>
+   *
+   * @param waveletScale a double.
+   * @return an array of double.
+   */
   public double[] getCoefficientsForThisScale(double waveletScale) {
     double[] coefficientsForThisScale = new double[x.length];
     for (int i = 0; i < x.length; i++) {
@@ -408,6 +484,13 @@ public class ContinuousWaveletTransform {
   // were it needs to either pad or pretend to pad values below off the boundry. 2) The location
   // of the wavelet has to be set correctly.
   // Note: waveletScale is in units of indecies NOT rt or anything else
+  /**
+   * <p>signalWaveletInnerProductOnePoint.</p>
+   *
+   * @param xIndexOfWaveletMax a int.
+   * @param waveletScale a double.
+   * @return a double.
+   */
   public double signalWaveletInnerProductOnePoint(int xIndexOfWaveletMax, double waveletScale) {
 
     int leftBoundIntegrate =
@@ -436,6 +519,13 @@ public class ContinuousWaveletTransform {
   }
 
   // This just takes an x value and the parameters of the wavelet and retuns the y value for that x
+  /**
+   * <p>rickerWavelet.</p>
+   *
+   * @param x a double.
+   * @param scalParam a double.
+   * @return a double.
+   */
   public double rickerWavelet(double x, double scalParam) {
     scalParam = scalParam * avgXSpace;
     double A = 2.0 / Math.sqrt(3.0 * scalParam * Math.sqrt(Math.PI))
@@ -443,6 +533,11 @@ public class ContinuousWaveletTransform {
     return Math.exp(-Math.pow(x, 2.0) / (2.0 * Math.pow(scalParam, 2))) * A;
   }
 
+  /**
+   * <p>Setter for the field <code>signal</code>.</p>
+   *
+   * @param listOfDataPoint a {@link java.util.List} object.
+   */
   public void setSignal(List<DataPoint> listOfDataPoint) {
     signal = new double[listOfDataPoint.size()];
     for (int i = 0; i < listOfDataPoint.size(); i++) {
@@ -450,6 +545,11 @@ public class ContinuousWaveletTransform {
     }
   }
 
+  /**
+   * <p>Setter for the field <code>x</code>.</p>
+   *
+   * @param listOfDataPoint a {@link java.util.List} object.
+   */
   public void setX(List<DataPoint> listOfDataPoint) {
     x = new double[listOfDataPoint.size()];
     for (int i = 0; i < listOfDataPoint.size(); i++) {
@@ -463,6 +563,12 @@ public class ContinuousWaveletTransform {
     avgXSpace = curSumSpacing / ((double) (listOfDataPoint.size() - 1));
   }
 
+  /**
+   * <p>doubleTheNumberOfPtsX.</p>
+   *
+   * @param xIn an array of double.
+   * @return an array of double.
+   */
   public double[] doubleTheNumberOfPtsX(double[] xIn) {
     double[] xOut = new double[xIn.length * 2 - 1];
     for (int i = 1; i < xIn.length - 1; i++) {
@@ -473,6 +579,12 @@ public class ContinuousWaveletTransform {
     return xOut;
   }
 
+  /**
+   * <p>doubleTheNumberOfPtsDataY.</p>
+   *
+   * @param yIn an array of double.
+   * @return an array of double.
+   */
   public double[] doubleTheNumberOfPtsDataY(double[] yIn) {
     double[] yOut = new double[yIn.length * 2 - 1];
     for (int i = 1; i < yIn.length - 1; i++) {

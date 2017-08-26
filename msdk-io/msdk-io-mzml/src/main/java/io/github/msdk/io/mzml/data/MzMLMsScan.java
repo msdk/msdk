@@ -44,7 +44,6 @@ import io.github.msdk.util.tolerances.MzTolerance;
  * <p>
  * MzMLSpectrum class.
  * </p>
- *
  */
 public class MzMLMsScan implements MsScan {
   private final @Nonnull MzMLRawDataFile dataFile;
@@ -73,7 +72,7 @@ public class MzMLMsScan implements MsScan {
    * <p>
    * Constructor for {@link io.github.msdk.io.mzml.data.MzMLMsScan MzMLMsScan}
    * </p>
-   * 
+   *
    * @param dataFile a {@link io.github.msdk.io.mzml.data.MzMLRawDataFile MzMLRawDataFile} object
    *        the parser stores the data in
    * @param is an {@link java.io.InputStream InputStream} of the MzML format data
@@ -558,7 +557,7 @@ public class MzMLMsScan implements MsScan {
    * Search for the CV Parameter value for the given accession in the
    * {@link io.github.msdk.datamodel.rawdata.MsScan MsScan}'s CV Parameters
    * </p>
-   * 
+   *
    * @param accession the CV Parameter accession as {@link java.lang.String String}
    * @return an {@link java.util.Optional Optional<String>} containing the CV Parameter value for
    *         the given accession, if present <br>

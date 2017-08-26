@@ -32,7 +32,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * Abstract AbstractReadOnlyMsScan class.
  * </p>
- *
  */
 public abstract class AbstractReadOnlyMsScan implements MsScan {
 
@@ -71,6 +70,7 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
    * @param isolations a {@link java.util.List} object.
    * @param numOfDataPoints a {@link java.lang.Integer} object.
    * @param rt a {@link java.lang.Float} object.
+   * @param msLevel a {@link java.lang.Integer} object.
    */
   public AbstractReadOnlyMsScan(@Nonnull RawDataFile dataFile, @Nonnull MsSpectrumType spectrumType,
       @Nonnull String msFunction, Integer msLevel, @Nullable Float rt, @Nonnull MsScanType scanType,
@@ -95,6 +95,11 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
     this.numOfDataPoints = numOfDataPoints;
   }
 
+  /**
+   * <p>Getter for the field <code>msLevel</code>.</p>
+   *
+   * @return a {@link java.lang.Integer} object.
+   */
   public Integer getMsLevel() {
     return msLevel;
   }

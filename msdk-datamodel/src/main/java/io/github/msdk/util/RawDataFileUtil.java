@@ -28,7 +28,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * RawDataFileUtil class.
  * </p>
- *
  */
 public class RawDataFileUtil {
 

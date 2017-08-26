@@ -17,7 +17,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Array utilities
- *
  */
 public class ArrayUtil {
 

@@ -15,7 +15,6 @@ package io.github.msdk.io.mzml.data;
 
 /**
  * Enumeration of different types of precision bit lengths which are parsed by the MzML Parser
- *
  */
 public enum MzMLBitLength {
   THIRTY_TWO_BIT_INTEGER("MS:1000519"), // 32-bit integer
@@ -31,7 +30,8 @@ public enum MzMLBitLength {
   }
 
   /**
-   * 
+   * <p>getValue.</p>
+   *
    * @return the CV Parameter accession of the precision bit length as {@link java.lang.String
    *         String}
    */

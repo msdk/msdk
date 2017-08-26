@@ -23,7 +23,6 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 
 /**
  * Annotation of a detected feature with a chemical structure, formula, or textual description.
- *
  */
 public interface IonAnnotation {
 
@@ -79,8 +78,9 @@ public interface IonAnnotation {
   Float getExpectedRetentionTime();
 
   /**
-   * 
-   * @return
+   * <p>getAnnotationId.</p>
+   *
+   * @return a {@link java.lang.String} object.
    */
   String getAnnotationId();
 

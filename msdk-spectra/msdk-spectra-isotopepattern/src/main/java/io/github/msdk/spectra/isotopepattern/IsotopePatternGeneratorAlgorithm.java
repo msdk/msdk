@@ -35,7 +35,6 @@ import io.github.msdk.util.MsSpectrumUtil;
 
 /**
  * Generates isotope patterns for chemical formulas
- *
  */
 public class IsotopePatternGeneratorAlgorithm {
 

@@ -28,7 +28,7 @@ import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet
  * Gaussian with different standard deviations. It depends on 4 parameters (height, mu, sigmaLeft,
  * sigmaRight) and computed by the formula
  * </p>
- * 
+ *
  * <p>
  * f(x) = height * exp(-(x-mu)^2 / (2 * sigmaRight^2)) if x > mu
  * </p>
@@ -200,8 +200,9 @@ public class BiGaussian {
    * <p>
    * This method is used calculating BiGaussian values for EIC.
    * </p>
-   * 
+   *
    * @param x a {@link java.lang.Integer} object. This is scan number.
+   * @return a double.
    */
   public double getValue(int x) {
 

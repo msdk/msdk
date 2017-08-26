@@ -40,7 +40,6 @@ import ucar.nc2.Variable;
  * <p>
  * NetCDFFileImportMethod class.
  * </p>
- *
  */
 public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
@@ -72,13 +71,18 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
    * </p>
    *
    * @param sourceFile a {@link java.io.File} object.
-   * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
-   * @throws IOException
+   * @throws IOException if any.
    */
   public NetCDFFileImportMethod(@Nonnull File sourceFile) {
     this(sourceFile, s -> true);
   }
 
+  /**
+   * <p>Constructor for NetCDFFileImportMethod.</p>
+   *
+   * @param sourceFile a {@link java.io.File} object.
+   * @param msScanPredicate a {@link java.util.function.Predicate} object.
+   */
   public NetCDFFileImportMethod(@Nonnull File sourceFile, Predicate<MsScan> msScanPredicate) {
     this.sourceFile = sourceFile;
     this.msScanPredicate = msScanPredicate;

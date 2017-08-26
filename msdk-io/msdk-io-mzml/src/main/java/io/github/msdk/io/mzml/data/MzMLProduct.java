@@ -15,17 +15,34 @@ package io.github.msdk.io.mzml.data;
 
 import java.util.Optional;
 
+/**
+ * <p>MzMLProduct class.</p>
+ *
+ */
 public class MzMLProduct {
   private Optional<MzMLIsolationWindow> isolationWindow;
 
+  /**
+   * <p>Constructor for MzMLProduct.</p>
+   */
   public MzMLProduct() {
     this.isolationWindow = Optional.ofNullable(null);
   }
 
+  /**
+   * <p>Getter for the field <code>isolationWindow</code>.</p>
+   *
+   * @return a {@link java.util.Optional} object.
+   */
   public Optional<MzMLIsolationWindow> getIsolationWindow() {
     return isolationWindow;
   }
 
+  /**
+   * <p>Setter for the field <code>isolationWindow</code>.</p>
+   *
+   * @param isolationWindow a {@link io.github.msdk.io.mzml.data.MzMLIsolationWindow} object.
+   */
   public void setIsolationWindow(MzMLIsolationWindow isolationWindow) {
     this.isolationWindow = Optional.ofNullable(isolationWindow);
   }

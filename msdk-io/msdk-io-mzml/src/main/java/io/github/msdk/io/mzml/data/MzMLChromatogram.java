@@ -452,7 +452,7 @@ class MzMLChromatogram implements Chromatogram {
    * Search for the CV Parameter value for the given accession in the
    * {@link io.github.msdk.datamodel.chromatograms.Chromatogram Chromatogram}'s CV Parameters
    * </p>
-   * 
+   *
    * @param accession the CV Parameter accession as {@link java.lang.String String}
    * @return an {@link java.util.Optional Optional<String>} containing the CV Parameter value for
    *         the given accession, if present <br>

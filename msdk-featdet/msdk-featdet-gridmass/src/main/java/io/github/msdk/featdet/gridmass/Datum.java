@@ -38,6 +38,12 @@ class Datum implements Comparable<Datum> {
 	intensityOriginal = dpOriginal.getIntensity();
     }
 
+    /**
+     * <p>compareTo.</p>
+     *
+     * @param other a {@link io.github.msdk.featdet.gridmass.Datum} object.
+     * @return a int.
+     */
     public int compareTo(Datum other) {
 	if (this.intensity > other.intensity)
 	    return -1;
@@ -54,6 +60,11 @@ class Datum implements Comparable<Datum> {
 	return 0;
     }
 
+    /**
+     * <p>toString.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String toString() {
 	return "MZ=" + Math.round(mz * 10000) / 10000 + " | Int=" + intensity
 		+ " | Scan=" + scan + " | spotId=" + spotId;

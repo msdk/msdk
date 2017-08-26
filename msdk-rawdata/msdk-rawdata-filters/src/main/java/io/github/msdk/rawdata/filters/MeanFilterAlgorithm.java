@@ -26,7 +26,6 @@ import io.github.msdk.util.MsScanUtil;
  * <p>
  * MeanFilterAlgorithm class.
  * </p>
- *
  */
 public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
 
@@ -43,7 +42,6 @@ public class MeanFilterAlgorithm implements MSDKFilteringAlgorithm {
    * </p>
    *
    * @param windowLength a double.
-   * @param store a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public MeanFilterAlgorithm(double windowLength) {
     this.windowLength = windowLength;

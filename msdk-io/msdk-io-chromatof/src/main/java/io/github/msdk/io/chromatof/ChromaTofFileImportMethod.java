@@ -46,7 +46,6 @@ import io.github.msdk.io.chromatof.ChromaTofParser.TableColumn;
  * <p>
  * ChromaTofFileImportMethod class.
  * </p>
- *
  */
 public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
 
@@ -69,7 +68,6 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
    * </p>
    *
    * @param sourceFile a {@link java.io.File} object.
-   * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    * @param locale the locale and corresponding decimal point format to use for number parsing.
    * @param fieldSeparator the field separator between fields on one line.
    * @param quotationCharacter the quotation character for a field.
@@ -90,7 +88,6 @@ public class ChromaTofFileImportMethod implements MSDKMethod<FeatureTable> {
    * </p>
    *
    * @param sourceFile a {@link java.io.File} object.
-   * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public ChromaTofFileImportMethod(@Nonnull File sourceFile) {
     this(sourceFile, Locale.US, null, null);

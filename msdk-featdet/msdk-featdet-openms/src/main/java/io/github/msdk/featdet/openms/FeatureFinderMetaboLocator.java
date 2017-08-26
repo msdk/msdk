@@ -22,7 +22,6 @@ import io.github.msdk.MSDKException;
 
 /**
  * <p>FeatureFinderMetaboLocator class.</p>
- *
  */
 public class FeatureFinderMetaboLocator {
 

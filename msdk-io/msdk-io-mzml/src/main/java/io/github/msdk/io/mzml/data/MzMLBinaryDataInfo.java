@@ -15,6 +15,10 @@ package io.github.msdk.io.mzml.data;
 
 import javax.annotation.Nonnull;
 
+/**
+ * <p>MzMLBinaryDataInfo class.</p>
+ *
+ */
 public class MzMLBinaryDataInfo {
 
   private final int encodedLength;
@@ -39,10 +43,10 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
+   * <p>Getter for the field <code>bitLength</code>.</p>
    *
    * @return a {@link io.github.msdk.io.mzml.data.MzMLBitLength MzMLBitLength} corresponding to the
    *         bit length of the binary data array
-   * 
    */
   public MzMLBitLength getBitLength() {
     return bitLength;
@@ -86,7 +90,7 @@ public class MzMLBinaryDataInfo {
    * <p>
    * Gets the bit length for the given accession
    * </p>
-   * 
+   *
    * @param accession The CV Parameter accession as {@link java.lang.String String}
    * @return a {@link io.github.msdk.io.mzml.data.MzMLBitLength MzMLBitLength} enum constant if the
    *         accession corresponds to a valid bit length, null otherwise
@@ -100,6 +104,7 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
+   * <p>Getter for the field <code>compressionType</code>.</p>
    *
    * @return a {@link io.github.msdk.io.mzml.data.MzMLCompressionType MzMLCompressionType}
    *         corresponding to the compression of the binary data array
@@ -146,7 +151,7 @@ public class MzMLBinaryDataInfo {
    * <p>
    * Gets the compression type for the given accession
    * </p>
-   * 
+   *
    * @param accession The CV Parameter accession as {@link java.lang.String String}
    * @return a {@link io.github.msdk.io.mzml.data.MzMLCompressionType MzMLCompressionType} enum
    *         constant if the accession corresponds to a valid compression type, null otherwise
@@ -160,6 +165,7 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
+   * <p>Getter for the field <code>arrayType</code>.</p>
    *
    * @return a {@link io.github.msdk.io.mzml.data.MzMLArrayType MzMLArrayType} enum constant
    *         corresponding to the the array type of the binary data array
@@ -207,7 +213,7 @@ public class MzMLBinaryDataInfo {
    * <p>
    * Gets the binary data array type for the given accession
    * </p>
-   * 
+   *
    * @param accession The CV Parameter accession as {@link java.lang.String String}
    * @return a {@link io.github.msdk.io.mzml.data.MzMLArrayType MzMLArrayType} enum constant if the
    *         accession corresponds to a valid binary data array type, null otherwise
@@ -221,6 +227,7 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
+   * <p>Getter for the field <code>position</code>.</p>
    *
    * @return The position of the binary array in the {@link java.io.InputStream InputStream}
    *         corresponding to the MzML format data
@@ -243,6 +250,7 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
+   * <p>Getter for the field <code>encodedLength</code>.</p>
    *
    * @return the length of the base64 encoded data (number of bytes)
    */
@@ -251,6 +259,7 @@ public class MzMLBinaryDataInfo {
   }
 
   /**
+   * <p>Getter for the field <code>arrayLength</code>.</p>
    *
    * @return the of data points in the decoded data array
    */

@@ -13,18 +13,37 @@
 
 package io.github.msdk.io.mzml.data;
 
+/**
+ * <p>MzMLReferenceableParamGroup class.</p>
+ *
+ */
 public class MzMLReferenceableParamGroup extends MzMLCVGroup {
 
   private String paramGroupName;
 
+  /**
+   * <p>Constructor for MzMLReferenceableParamGroup.</p>
+   *
+   * @param paramGroupName a {@link java.lang.String} object.
+   */
   public MzMLReferenceableParamGroup(String paramGroupName) {
     this.paramGroupName = paramGroupName;
   }
 
+  /**
+   * <p>Getter for the field <code>paramGroupName</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String getParamGroupName() {
     return paramGroupName;
   }
 
+  /**
+   * <p>Setter for the field <code>paramGroupName</code>.</p>
+   *
+   * @param paramGroupName a {@link java.lang.String} object.
+   */
   public void setParamGroupName(String paramGroupName) {
     this.paramGroupName = paramGroupName;
   }
