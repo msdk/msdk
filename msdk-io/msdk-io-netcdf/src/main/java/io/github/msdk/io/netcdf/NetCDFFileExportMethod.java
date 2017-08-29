@@ -83,7 +83,7 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
    * @param massValueScaleFactor double value by which the mass values have to be scaled by
    * @param intensityValueScaleFactor double value by which the intensity values have to be scaled
    *        by
-   * 
+
    */
   public NetCDFFileExportMethod(@Nonnull RawDataFile rawDataFile, @Nonnull File target,
       double massValueScaleFactor, double intensityValueScaleFactor) {

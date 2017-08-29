@@ -17,7 +17,6 @@ package io.github.msdk.io.mgf;
  * <p>
  * MgfImportAlgorithm class.
  * </p>
- *
  */
 public class MgfImportAlgorithm {
 

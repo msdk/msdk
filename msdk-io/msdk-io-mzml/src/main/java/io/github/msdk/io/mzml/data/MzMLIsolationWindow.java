@@ -13,6 +13,10 @@
 
 package io.github.msdk.io.mzml.data;
 
+/**
+ * <p>MzMLIsolationWindow class.</p>
+ *
+ */
 public class MzMLIsolationWindow extends MzMLCVGroup {
 
 }

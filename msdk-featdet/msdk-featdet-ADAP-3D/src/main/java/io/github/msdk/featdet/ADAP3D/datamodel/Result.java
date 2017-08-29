@@ -20,7 +20,6 @@
 
 
 package io.github.msdk.featdet.ADAP3D.datamodel;
-
 public class Result {
   public int curLeftBound;
   public int curRightBound;

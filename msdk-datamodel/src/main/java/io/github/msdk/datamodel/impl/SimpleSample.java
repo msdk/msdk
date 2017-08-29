@@ -25,7 +25,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
  * Implementation of Sample
- *
  */
 public class SimpleSample implements Sample {
 
@@ -60,7 +59,11 @@ public class SimpleSample implements Sample {
     return name;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param name a {@link java.lang.String} object.
+   */
   public void setName(@Nonnull String name) {
     Preconditions.checkNotNull(name);
     this.name = name;
@@ -72,7 +75,11 @@ public class SimpleSample implements Sample {
     return rawDataFile;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   */
   public void setRawDataFile(@Nullable RawDataFile rawDataFile) {
     this.rawDataFile = rawDataFile;
   }
@@ -83,7 +90,11 @@ public class SimpleSample implements Sample {
     return originalFile;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param originalFile a {@link java.io.File} object.
+   */
   public void setOriginalFile(@Nullable File originalFile) {
     this.originalFile = originalFile;
   }

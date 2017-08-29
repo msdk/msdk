@@ -19,17 +19,20 @@ import java.util.ArrayList;
  * <p>
  * A group (or list) of {@link io.github.msdk.io.mzml.data.MzMLCVParam CV Parameter}s
  * </p>
- * 
  */
 public class MzMLCVGroup {
   private ArrayList<MzMLCVParam> cvParams;
 
+  /**
+   * <p>Constructor for MzMLCVGroup.</p>
+   */
   public MzMLCVGroup() {
     this.cvParams = new ArrayList<>();
   }
 
   /**
-   * 
+   * <p>getCVParamsList.</p>
+   *
    * @return an {@link java.util.ArrayList ArrayList<MzMLCVParam>} of
    *         {@link io.github.msdk.io.mzml.data.MzMLCVParam CV Parameter}s
    */
@@ -42,7 +45,7 @@ public class MzMLCVGroup {
    * Adds a {@link io.github.msdk.io.mzml.data.MzMLCVParam CV Parameter} to the
    * {@link io.github.msdk.io.mzml.data.MzMLCVGroup MzMLCVGroup}
    * </p>
-   * 
+   *
    * @param cvParam the {@link io.github.msdk.io.mzml.data.MzMLCVParam CV Parameter} to be added to
    *        the {@link io.github.msdk.io.mzml.data.MzMLCVGroup MzMLCVGroup}
    */

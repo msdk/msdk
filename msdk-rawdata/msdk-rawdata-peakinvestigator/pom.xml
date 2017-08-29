@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.github.msdk</groupId>
         <artifactId>msdk-rawdata</artifactId>
-        <version>0.0.9-SNAPSHOT</version>
+        <version>0.0.10-SNAPSHOT</version>
     </parent>
     <artifactId>msdk-rawdata-peakinvestigator</artifactId>
     <description>Package for PeakInvestigator centroiding algorithm</description>

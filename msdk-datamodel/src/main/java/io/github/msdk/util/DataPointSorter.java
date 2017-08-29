@@ -23,7 +23,6 @@ import java.util.List;
  * <p>
  * DataPointSorter class.
  * </p>
- *
  */
 public class DataPointSorter {
 

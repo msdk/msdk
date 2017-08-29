@@ -25,7 +25,6 @@ import io.github.msdk.util.MsScanUtil;
  * <p>
  * CropFilterAlgorithm class.
  * </p>
- *
  */
 public class CropFilterAlgorithm implements MSDKFilteringAlgorithm {
 
@@ -44,7 +43,6 @@ public class CropFilterAlgorithm implements MSDKFilteringAlgorithm {
    *
    * @param mzRange a {@link com.google.common.collect.Range} object.
    * @param rtRange a {@link com.google.common.collect.Range} object.
-   * @param store a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public CropFilterAlgorithm(@Nonnull Range<Double> mzRange, @Nonnull Range<Float> rtRange) {
     this.mzRange = mzRange;

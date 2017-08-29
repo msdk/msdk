@@ -54,6 +54,12 @@ class SpotByProbes implements Comparable<SpotByProbes> {
     return probes.size();
   }
 
+  /**
+   * <p>compareTo.</p>
+   *
+   * @param other a {@link io.github.msdk.featdet.gridmass.SpotByProbes} object.
+   * @return a int.
+   */
   public int compareTo(SpotByProbes other) {
     if (other == null || other.center == null)
       return -1;
@@ -125,6 +131,11 @@ class SpotByProbes implements Comparable<SpotByProbes> {
     maxIntensity = Double.NEGATIVE_INFINITY;
   }
 
+  /**
+   * <p>toString.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
   public String toString() {
     return spotId + " : "
         + (center != null
@@ -135,6 +146,12 @@ class SpotByProbes implements Comparable<SpotByProbes> {
         + "~" + Math.round(maxMZ * 10000) / 10000.0 + "]";
   }
 
+  /**
+   * <p>toString.</p>
+   *
+   * @param rettimes an array of double.
+   * @return a {@link java.lang.String} object.
+   */
   public String toString(double[] rettimes) {
     return spotId + " : "
         + (center != null ? "MZ=" + Math.round(center.mzCenter * 10000) / 10000.0 + ", Time="
@@ -145,6 +162,9 @@ class SpotByProbes implements Comparable<SpotByProbes> {
         + Math.round(minMZ * 10000) / 10000.0 + "~" + Math.round(maxMZ * 10000) / 10000.0 + "]";
   }
 
+  /**
+   * <p>printDebugInfo.</p>
+   */
   public void printDebugInfo() {
     logger.debug("*** SpotId : " + spotId + " ***");
     for (Probe p : probes) {

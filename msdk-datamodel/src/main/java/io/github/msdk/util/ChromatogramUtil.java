@@ -24,7 +24,6 @@ import com.google.common.collect.Range;
  * <p>
  * ChromatogramUtil class.
  * </p>
- *
  */
 public class ChromatogramUtil {
 
@@ -32,6 +31,9 @@ public class ChromatogramUtil {
   /**
    * Returns median m/z value of the chromatogram
    *
+   * @param mzValues an array of double.
+   * @param size a {@link java.lang.Integer} object.
+   * @return a {@link java.lang.Double} object.
    */
   @Nullable
   public static Double getMedianMz(@Nonnull double mzValues[], @Nonnull Integer size) {
@@ -53,6 +55,8 @@ public class ChromatogramUtil {
    * Returns the RT range
    *
    * @return a {@link com.google.common.collect.Range} object.
+   * @param rtValues an array of float.
+   * @param size a {@link java.lang.Integer} object.
    */
   @Nullable
   public static Range<Float> getRtRange(@Nonnull float rtValues[], @Nonnull Integer size) {

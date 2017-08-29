@@ -23,7 +23,6 @@ import java.nio.channels.FileChannel;
  * Used to load a {@link java.io.File File} onto a
  * {@link io.github.msdk.io.mzml.util.ByteBufferInputStream ByteBufferInputStream}
  * </p>
- *
  */
 public abstract class FileMemoryMapper {
 

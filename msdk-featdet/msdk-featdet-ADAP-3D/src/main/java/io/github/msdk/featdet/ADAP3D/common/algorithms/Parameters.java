@@ -12,6 +12,10 @@
  */
 package io.github.msdk.featdet.ADAP3D.common.algorithms;
 
+/**
+ * <p>Parameters class.</p>
+ *
+ */
 public class Parameters {
 
   private double peakSimilarityThreshold = 0.5;
@@ -22,60 +26,130 @@ public class Parameters {
   private double minPeakWidth = 0.0;
   private double maxPeakWidth = 10.0;
 
+  /**
+   * <p>Setter for the field <code>peakSimilarityThreshold</code>.</p>
+   *
+   * @param thresholdValue a double.
+   */
   public void setPeakSimilarityThreshold(double thresholdValue) {
     peakSimilarityThreshold = thresholdValue;
   }
 
+  /**
+   * <p>Getter for the field <code>peakSimilarityThreshold</code>.</p>
+   *
+   * @return a double.
+   */
   public double getPeakSimilarityThreshold() {
     return peakSimilarityThreshold;
   }
 
+  /**
+   * <p>Setter for the field <code>biGaussianSimilarityThreshold</code>.</p>
+   *
+   * @param thresholdValue a double.
+   */
   public void setBiGaussianSimilarityThreshold(double thresholdValue) {
     biGaussianSimilarityThreshold = thresholdValue;
   }
 
+  /**
+   * <p>Getter for the field <code>biGaussianSimilarityThreshold</code>.</p>
+   *
+   * @return a double.
+   */
   public double getBiGaussianSimilarityThreshold() {
     return biGaussianSimilarityThreshold;
   }
 
+  /**
+   * <p>Setter for the field <code>delta</code>.</p>
+   *
+   * @param scale a int.
+   */
   public void setDelta(int scale) {
     largeScaleIn = scale;
     delta = largeScaleIn * 5;
 
   }
 
+  /**
+   * <p>Getter for the field <code>delta</code>.</p>
+   *
+   * @return a int.
+   */
   public int getDelta() {
     return delta;
   }
 
+  /**
+   * <p>Setter for the field <code>largeScaleIn</code>.</p>
+   *
+   * @param largeScale a int.
+   */
   public void setLargeScaleIn(int largeScale) {
     largeScaleIn = largeScale;
   }
 
+  /**
+   * <p>Getter for the field <code>largeScaleIn</code>.</p>
+   *
+   * @return a int.
+   */
   public int getLargeScaleIn() {
     return largeScaleIn;
   }
 
+  /**
+   * <p>Setter for the field <code>coefAreaRatioTolerance</code>.</p>
+   *
+   * @param coefOverAreaThreshold a double.
+   */
   public void setCoefAreaRatioTolerance(double coefOverAreaThreshold) {
     coefAreaRatioTolerance = coefOverAreaThreshold;
   }
 
+  /**
+   * <p>Getter for the field <code>coefAreaRatioTolerance</code>.</p>
+   *
+   * @return a double.
+   */
   public double getCoefAreaRatioTolerance() {
     return coefAreaRatioTolerance;
   }
 
+  /**
+   * <p>Setter for the field <code>minPeakWidth</code>.</p>
+   *
+   * @param peakWidth a double.
+   */
   public void setMinPeakWidth(double peakWidth) {
     minPeakWidth = peakWidth;
   }
 
+  /**
+   * <p>Getter for the field <code>minPeakWidth</code>.</p>
+   *
+   * @return a double.
+   */
   public double getMinPeakWidth() {
     return minPeakWidth;
   }
 
+  /**
+   * <p>Setter for the field <code>maxPeakWidth</code>.</p>
+   *
+   * @param peakWidth a double.
+   */
   public void setMaxPeakWidth(double peakWidth) {
     maxPeakWidth = peakWidth;
   }
 
+  /**
+   * <p>Getter for the field <code>maxPeakWidth</code>.</p>
+   *
+   * @return a double.
+   */
   public double getMaxPeakWidth() {
     return maxPeakWidth;
   }

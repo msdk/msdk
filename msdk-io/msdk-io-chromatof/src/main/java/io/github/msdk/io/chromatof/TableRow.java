@@ -19,7 +19,6 @@ import java.util.LinkedHashMap;
  * <p>
  * TableRow class.
  * </p>
- *
  */
 public class TableRow extends LinkedHashMap<ChromaTofParser.TableColumn, String> {
 

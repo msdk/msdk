@@ -15,6 +15,10 @@ package io.github.msdk.io.mzml.data;
 
 import java.util.Optional;
 
+/**
+ * <p>MzMLPrecursorElement class.</p>
+ *
+ */
 public class MzMLPrecursorElement {
 
   private final Optional<String> spectrumRef;
@@ -23,36 +27,76 @@ public class MzMLPrecursorElement {
   private MzMLPrecursorActivation activation;
 
 
+  /**
+   * <p>Constructor for MzMLPrecursorElement.</p>
+   *
+   * @param spectrumRef a {@link java.lang.String} object.
+   */
   public MzMLPrecursorElement(String spectrumRef) {
     this.spectrumRef = Optional.ofNullable(spectrumRef);
     this.isolationWindow = Optional.ofNullable(null);
     this.selectedIonList = Optional.ofNullable(null);
   }
 
+  /**
+   * <p>Getter for the field <code>spectrumRef</code>.</p>
+   *
+   * @return a {@link java.util.Optional} object.
+   */
   public Optional<String> getSpectrumRef() {
     return spectrumRef;
   }
 
+  /**
+   * <p>Getter for the field <code>isolationWindow</code>.</p>
+   *
+   * @return a {@link java.util.Optional} object.
+   */
   public Optional<MzMLIsolationWindow> getIsolationWindow() {
     return isolationWindow;
   }
 
+  /**
+   * <p>Getter for the field <code>selectedIonList</code>.</p>
+   *
+   * @return a {@link java.util.Optional} object.
+   */
   public Optional<MzMLPrecursorSelectedIonList> getSelectedIonList() {
     return selectedIonList;
   }
 
+  /**
+   * <p>Getter for the field <code>activation</code>.</p>
+   *
+   * @return a {@link io.github.msdk.io.mzml.data.MzMLPrecursorActivation} object.
+   */
   public MzMLPrecursorActivation getActivation() {
     return activation;
   }
 
+  /**
+   * <p>Setter for the field <code>isolationWindow</code>.</p>
+   *
+   * @param isolationWindow a {@link io.github.msdk.io.mzml.data.MzMLIsolationWindow} object.
+   */
   public void setIsolationWindow(MzMLIsolationWindow isolationWindow) {
     this.isolationWindow = Optional.ofNullable(isolationWindow);
   }
 
+  /**
+   * <p>Setter for the field <code>selectedIonList</code>.</p>
+   *
+   * @param selectedIonList a {@link io.github.msdk.io.mzml.data.MzMLPrecursorSelectedIonList} object.
+   */
   public void setSelectedIonList(MzMLPrecursorSelectedIonList selectedIonList) {
     this.selectedIonList = Optional.ofNullable(selectedIonList);
   }
 
+  /**
+   * <p>Setter for the field <code>activation</code>.</p>
+   *
+   * @param activation a {@link io.github.msdk.io.mzml.data.MzMLPrecursorActivation} object.
+   */
   public void setActivation(MzMLPrecursorActivation activation) {
     this.activation = activation;
   }

@@ -23,8 +23,20 @@ import org.apache.commons.codec.binary.Base64;
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml.util.MSNumpress;
 
+/**
+ * <p>Abstract MzMLPeaksEncoder class.</p>
+ *
+ */
 public abstract class MzMLPeaksEncoder {
 
+  /**
+   * <p>encodeDouble.</p>
+   *
+   * @param data an array of double.
+   * @param compression a {@link io.github.msdk.io.mzml.data.MzMLCompressionType} object.
+   * @return an array of byte.
+   * @throws io.github.msdk.MSDKException if any.
+   */
   public static byte[] encodeDouble(double[] data, MzMLCompressionType compression)
       throws MSDKException {
 
@@ -84,6 +96,14 @@ public abstract class MzMLPeaksEncoder {
 
   }
 
+  /**
+   * <p>encodeFloat.</p>
+   *
+   * @param data an array of float.
+   * @param compression a {@link io.github.msdk.io.mzml.data.MzMLCompressionType} object.
+   * @return an array of byte.
+   * @throws io.github.msdk.MSDKException if any.
+   */
   public static byte[] encodeFloat(float[] data, MzMLCompressionType compression)
       throws MSDKException {
 

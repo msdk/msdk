@@ -21,7 +21,6 @@ import com.google.common.collect.Range;
  * <p>
  * ConstantDaTolerance class.
  * </p>
- *
  */
 public class ConstantDaTolerance implements MzTolerance {
 

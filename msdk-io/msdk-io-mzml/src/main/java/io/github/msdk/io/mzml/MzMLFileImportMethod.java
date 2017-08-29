@@ -48,7 +48,6 @@ import javolution.xml.stream.XMLStreamException;
  * if the source is a {@link java.io.File File}, whereas, they will be dropped if the source is an
  * {@link java.io.InputStream InputStream}
  * </p>
- *
  */
 public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
   private final File mzMLFile;
@@ -103,7 +102,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    *        MzML File.
    */
   public MzMLFileImportMethod(Path mzMLFilePath) {
-    this(mzMLFilePath.toFile(), s -> true, c -> true);
+    this(mzMLFilePath.toFile(), s -> false, c -> false);
   }
 
   /**
@@ -135,7 +134,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    * @param mzMLFile a {@link java.io.File File} object instance of the MzML File.
    */
   public MzMLFileImportMethod(File mzMLFile) {
-    this(mzMLFile, null, s -> true, c -> true);
+    this(mzMLFile, null, s -> false, c -> false);
   }
 
   /**
@@ -144,7 +143,6 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    * </p>
    *
    * @param mzMLFile a {@link java.io.File File} object instance of the MzML File.
-   * 
    * @param msScanPredicate Only {@link io.github.msdk.datamodel.rawdata.MsScan MsScan}s which pass
    *        this predicate will be parsed by the parser and added to the
    *        {@link io.github.msdk.io.mzml.data.MzMLRawDataFile RawDataFile} returned by the
@@ -210,12 +208,11 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * <p>
    * Parse the MzML data and return the parsed data
    * </p>
-   *
-   * @return a {@link io.github.msdk.io.mzml.data.MzMLRawDataFile MzMLRawDataFile} object
-   *         containing the parsed data
    */
   @Override
   public MzMLRawDataFile execute() throws MSDKException {
@@ -317,6 +314,8 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
   }
 
   /**
+   * <p>Getter for the field <code>msScanPredicate</code>.</p>
+   *
    * @return {@link java.util.function.Predicate Predicate} specified for
    *         {@link io.github.msdk.datamodel.rawdata.MsScan MsScan}s <br>
    *         The {@link java.util.function.Predicate Predicate} evaluates to true always, if it
@@ -327,6 +326,8 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
   }
 
   /**
+   * <p>Getter for the field <code>chromatogramPredicate</code>.</p>
+   *
    * @return {@link java.util.function.Predicate Predicate} specified for
    *         {@link io.github.msdk.datamodel.chromatograms.Chromatogram Chromatogram}s <br>
    *         The {@link java.util.function.Predicate Predicate} evaluates to true always, if it
@@ -337,7 +338,8 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
   }
 
   /**
-   * 
+   * <p>Getter for the field <code>mzMLFile</code>.</p>
+   *
    * @return a {@link java.io.File File} instance of the MzML source if being read from a file <br>
    *         null if the MzML source is an {@link java.io.InputStream InputStream}
    */

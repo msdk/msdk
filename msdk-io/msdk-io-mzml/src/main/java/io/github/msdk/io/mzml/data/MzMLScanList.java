@@ -15,17 +15,34 @@ package io.github.msdk.io.mzml.data;
 
 import java.util.ArrayList;
 
+/**
+ * <p>MzMLScanList class.</p>
+ *
+ */
 public class MzMLScanList extends MzMLCVGroup {
   private ArrayList<MzMLScan> scans;
 
+  /**
+   * <p>Constructor for MzMLScanList.</p>
+   */
   public MzMLScanList() {
     this.scans = new ArrayList<>();
   }
 
+  /**
+   * <p>Getter for the field <code>scans</code>.</p>
+   *
+   * @return a {@link java.util.ArrayList} object.
+   */
   public ArrayList<MzMLScan> getScans() {
     return scans;
   }
 
+  /**
+   * <p>addScan.</p>
+   *
+   * @param scan a {@link io.github.msdk.io.mzml.data.MzMLScan} object.
+   */
   public void addScan(MzMLScan scan) {
     scans.add(scan);
   }

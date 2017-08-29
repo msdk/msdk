@@ -35,7 +35,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * This class is used to run the whole ADAP3D algorithm and get peaks.
  * </p>
- *
  */
 public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
 
@@ -57,10 +56,10 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    * <p>
    * Constructor
    * </p>
-   * 
+   *
    * @param rawFile {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    */
-  ADAP3DFeatureDetectionMethod(RawDataFile rawFile) {
+  public ADAP3DFeatureDetectionMethod(RawDataFile rawFile) {
     this(rawFile, s -> true);
   }
 
@@ -68,12 +67,12 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    * <p>
    * Constructor
    * </p>
-   * 
+   *
    * @param rawFile {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    * @param msScanPredicate a {@link java.util.function.Predicate} object. Only MsScan which pass
    *        this predicate will be processed.
    */
-  ADAP3DFeatureDetectionMethod(RawDataFile rawFile, Predicate<MsScan> msScanPredicate) {
+  public ADAP3DFeatureDetectionMethod(RawDataFile rawFile, Predicate<MsScan> msScanPredicate) {
     objSliceSparseMatrix = new SliceSparseMatrix(rawFile, msScanPredicate);
   }
 
@@ -86,9 +85,8 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    * Step 3. Run ADAP3DPeakDetectionAlgorithm.execute with the new parameters and detect all other
    * peaks.
    * </p>
-   * 
+   *
    * @return newFeatureList a list of {@link io.github.msdk.datamodel.features.Feature}
-   * 
    */
   public List<Feature> execute() {
 

@@ -29,7 +29,6 @@ import io.github.msdk.datamodel.msspectra.MsSpectrum;
 
 /**
  * the reference implementation of the Spectral Hash Key
- *
  */
 public class SplashCalculationAlgorithm {
 

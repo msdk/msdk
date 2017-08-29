@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.msdk</groupId>
 	<artifactId>msdk</artifactId>
-	<version>0.0.9-SNAPSHOT</version>
+	<version>0.0.10-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>MSDK - Mass Spectrometry Development Kit</name>
@@ -178,6 +178,7 @@
 						<version>2.10.4</version>
 						<configuration>
 							<excludePackageNames>io.github.msdk.db.mona.pojo</excludePackageNames>
+							<additionalparam>-Xdoclint:none</additionalparam>
 						</configuration>
 						<executions>
 							<execution>
@@ -235,11 +236,10 @@
 						<version>1.1</version>
 						<configuration>
 							<checkoutDirectory>${project.build.directory}/apirepo</checkoutDirectory>
-							<checkinComment>Publishing javadoc for
-								${project.artifactId}:${project.version}</checkinComment>
+							<checkinComment>Publishing javadoc for msdk:${project.version}</checkinComment>
 							<content>${project.reporting.outputDirectory}/apidocs</content>
 							<skipDeletedFiles>false</skipDeletedFiles>
-							<pubScmUrl>scm:git:git@github.com:msdk/api.git</pubScmUrl>
+							<pubScmUrl>scm:git:https://github.com/msdk/api.git</pubScmUrl>
 							<scmBranch>gh-pages</scmBranch>
 						</configuration>
 					</plugin>

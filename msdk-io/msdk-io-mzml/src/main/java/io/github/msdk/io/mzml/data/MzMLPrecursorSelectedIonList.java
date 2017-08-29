@@ -15,17 +15,34 @@ package io.github.msdk.io.mzml.data;
 
 import java.util.ArrayList;
 
+/**
+ * <p>MzMLPrecursorSelectedIonList class.</p>
+ *
+ */
 public class MzMLPrecursorSelectedIonList {
   private ArrayList<MzMLPrecursorSelectedIon> selectedIonList;
 
+  /**
+   * <p>Constructor for MzMLPrecursorSelectedIonList.</p>
+   */
   public MzMLPrecursorSelectedIonList() {
     this.selectedIonList = new ArrayList<>();
   }
 
+  /**
+   * <p>Getter for the field <code>selectedIonList</code>.</p>
+   *
+   * @return a {@link java.util.ArrayList} object.
+   */
   public ArrayList<MzMLPrecursorSelectedIon> getSelectedIonList() {
     return selectedIonList;
   }
 
+  /**
+   * <p>addSelectedIon.</p>
+   *
+   * @param e a {@link io.github.msdk.io.mzml.data.MzMLPrecursorSelectedIon} object.
+   */
   public void addSelectedIon(MzMLPrecursorSelectedIon e) {
     selectedIonList.add(e);
   }

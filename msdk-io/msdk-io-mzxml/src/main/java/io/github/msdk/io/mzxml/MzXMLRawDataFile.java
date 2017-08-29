@@ -15,6 +15,10 @@ import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
+/**
+ * <p>MzXMLRawDataFile class.</p>
+ *
+ */
 public class MzXMLRawDataFile implements RawDataFile {
 
   private static final @Nonnull FileType fileType = FileType.MZXML;
@@ -32,9 +36,6 @@ public class MzXMLRawDataFile implements RawDataFile {
    * </p>
    *
    * @param sourceFile a {@link java.io.File} object.
-   * @param msFunctions a {@link java.util.List} object.
-   * @param msScans a {@link java.util.List} object.
-   * @param chromatograms a {@link java.util.List} object.
    */
   public MzXMLRawDataFile(@Nonnull File sourceFile) {
     this.sourceFile = sourceFile;

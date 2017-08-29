@@ -40,13 +40,10 @@ import ucar.nc2.Variable;
  * <p>
  * NetCDFFileImportMethod class.
  * </p>
- *
  */
 public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-  private NetcdfFile inputFile;
 
   private int parsedScans, totalScans = 0;
 
@@ -54,13 +51,13 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
   private float scanRetentionTimes[];
 
   private final @Nonnull File sourceFile;
-
+  private NetcdfFile inputNetcdfFile;
   private SimpleRawDataFile newRawFile;
   private boolean canceled = false;
 
   private Variable massValueVariable, intensityValueVariable;
 
-  private Predicate<MsScan> msScanPredicate = s -> false;
+  private Predicate<MsScan> msScanPredicate;
 
   // Some software produces netcdf files with a scale factor such as 0.05
   // TODO: need junit test for this
@@ -73,16 +70,21 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
    * </p>
    *
    * @param sourceFile a {@link java.io.File} object.
-   * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
-   * @throws IOException
+   * @throws IOException if any.
    */
   public NetCDFFileImportMethod(@Nonnull File sourceFile) {
     this(sourceFile, s -> true);
   }
 
+  /**
+   * <p>Constructor for NetCDFFileImportMethod.</p>
+   *
+   * @param sourceFile a {@link java.io.File} object.
+   * @param msScanPredicate a {@link java.util.function.Predicate} object.
+   */
   public NetCDFFileImportMethod(@Nonnull File sourceFile, Predicate<MsScan> msScanPredicate) {
     this.sourceFile = sourceFile;
-    this.msScanPredicate = this.msScanPredicate.and(msScanPredicate);
+    this.msScanPredicate = msScanPredicate;
   }
 
   /** {@inheritDoc} */
@@ -98,12 +100,12 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
     try {
 
-      this.inputFile = NetcdfFile.open(sourceFile.getPath());
+      this.inputNetcdfFile = NetcdfFile.open(sourceFile.getPath());
 
       // Instantiate the raw file
       String fileName = sourceFile.getName();
       newRawFile =
-          new NetCDFRawDataFile(fileName, Optional.of(sourceFile), FileType.NETCDF, inputFile);
+          new NetCDFRawDataFile(fileName, Optional.of(sourceFile), FileType.NETCDF, inputNetcdfFile);
 
       // Read NetCDF variables
       readVariables();
@@ -146,7 +148,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
      */
 
     // Find mass_values and intensity_values variables
-    massValueVariable = inputFile.findVariable("mass_values");
+    massValueVariable = inputNetcdfFile.findVariable("mass_values");
     if (massValueVariable == null) {
       logger.error("Could not find variable mass_values");
       throw (new MSDKException("Could not find variable mass_values"));
@@ -158,7 +160,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
       massValueScaleFactor = massScaleFacAttr.getNumericValue().doubleValue();
     }
 
-    intensityValueVariable = inputFile.findVariable("intensity_values");
+    intensityValueVariable = inputNetcdfFile.findVariable("intensity_values");
     if (intensityValueVariable == null) {
       logger.error("Could not find variable intensity_values");
       throw (new MSDKException("Could not find variable intensity_values"));
@@ -171,7 +173,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     }
 
     // Read number of scans
-    Variable scanIndexVariable = inputFile.findVariable("scan_index");
+    Variable scanIndexVariable = inputNetcdfFile.findVariable("scan_index");
     if (scanIndexVariable == null) {
       throw (new MSDKException("Could not find variable scan_index"));
     }
@@ -197,7 +199,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
     // Start scan RT
     scanRetentionTimes = new float[totalScans];
-    Variable scanTimeVariable = inputFile.findVariable("scan_acquisition_time");
+    Variable scanTimeVariable = inputNetcdfFile.findVariable("scan_acquisition_time");
     if (scanTimeVariable == null) {
       throw (new IOException(
           "Could not find variable scan_acquisition_time from file " + sourceFile));

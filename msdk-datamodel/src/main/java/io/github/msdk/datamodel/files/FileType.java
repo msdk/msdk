@@ -15,7 +15,6 @@ package io.github.msdk.datamodel.files;
 
 /**
  * Enum of supported raw data file formats
- *
  */
 public enum FileType {
 

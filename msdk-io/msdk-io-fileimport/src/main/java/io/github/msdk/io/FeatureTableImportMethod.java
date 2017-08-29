@@ -29,7 +29,6 @@ import io.github.msdk.io.mztab.MzTabFileImportMethod;
 /**
  * This class detects the type of the given data file using the FileTypeDetectionAlgorithm and then
  * imports the feature table using the right import algorithm.
- *
  */
 public class FeatureTableImportMethod implements MSDKMethod<FeatureTable> {
 

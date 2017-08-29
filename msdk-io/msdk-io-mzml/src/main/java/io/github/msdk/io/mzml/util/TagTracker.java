@@ -26,6 +26,7 @@ public class TagTracker {
 
   private ArrayDeque<CharArray> stack;
   private ArrayDeque<CharArray> pool;
+  /** Constant <code>DEFAULT_CHAR_ARR_SIZE=64</code> */
   protected final static int DEFAULT_CHAR_ARR_SIZE = 64;
 
   /**
@@ -33,8 +34,14 @@ public class TagTracker {
    * in such a case.
    */
   private int maxDepth;
+  /** Constant <code>DEFAULT_MAX_DEPTH=128</code> */
   protected static final int DEFAULT_MAX_DEPTH = 128;
 
+  /**
+   * <p>Constructor for TagTracker.</p>
+   *
+   * @param maxDepth a int.
+   */
   public TagTracker(int maxDepth) {
     this.maxDepth = maxDepth;
     stack = new ArrayDeque<>();
@@ -48,6 +55,11 @@ public class TagTracker {
     this(DEFAULT_MAX_DEPTH);
   }
 
+  /**
+   * <p>enter.</p>
+   *
+   * @param tag a {@link javolution.text.CharArray} object.
+   */
   public void enter(CharArray tag) {
     final CharArray arr = borrowArr(tag.length());
     copyContent(tag, arr);
@@ -56,6 +68,11 @@ public class TagTracker {
       throw new IllegalStateException("Max stack depth [" + maxDepth + "] exceeded");
   }
 
+  /**
+   * <p>exit.</p>
+   *
+   * @param tag a {@link javolution.text.CharArray} object.
+   */
   public void exit(CharArray tag) {
     final CharArray top = stack.peek();
     if (top == null) {
@@ -68,6 +85,12 @@ public class TagTracker {
     returnArr(stack.pop());
   }
 
+  /**
+   * <p>inside.</p>
+   *
+   * @param tag a {@link java.lang.CharSequence} object.
+   * @return a boolean.
+   */
   public boolean inside(CharSequence tag) {
     if (tag == null)
       return false;
@@ -79,6 +102,11 @@ public class TagTracker {
     return false;
   }
 
+  /**
+   * <p>current.</p>
+   *
+   * @return a {@link javolution.text.CharArray} object.
+   */
   public CharArray current() {
     final CharArray top = stack.peek();
     if (top == null)

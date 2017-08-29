@@ -92,10 +92,20 @@ public class SimpleFeature implements Feature {
   }
 
 
+  /**
+   * <p>Setter for the field <code>mz</code>.</p>
+   *
+   * @param mz a {@link java.lang.Double} object.
+   */
   public void setMz(Double mz) {
     this.mz = mz;
   }
 
+  /**
+   * <p>Setter for the field <code>retentionTime</code>.</p>
+   *
+   * @param retentionTime a {@link java.lang.Float} object.
+   */
   public void setRetentionTime(Float retentionTime) {
     this.retentionTime = retentionTime;
   }

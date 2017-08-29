@@ -23,7 +23,6 @@ import io.github.msdk.util.MsScanUtil;
  * <p>
  * BinningCentroidingAlgorithm class.
  * </p>
- *
  */
 public class BinningCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
@@ -41,7 +40,6 @@ public class BinningCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
    * Constructor for BinningCentroidingMethod.
    * </p>
    *
-   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    * @param binSize a {@link java.lang.Double} object.
    */
   public BinningCentroidingAlgorithm(@Nonnull Double binSize) {

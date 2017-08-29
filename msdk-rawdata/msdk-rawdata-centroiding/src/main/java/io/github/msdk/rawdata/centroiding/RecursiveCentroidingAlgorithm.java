@@ -25,7 +25,6 @@ import io.github.msdk.util.MsScanUtil;
  * <p>
  * RecursiveCentroidingAlgorithm class.
  * </p>
- *
  */
 public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
 
@@ -45,7 +44,6 @@ public class RecursiveCentroidingAlgorithm implements MSDKCentroidingAlgorithm {
    * Constructor for RecursiveCentroidingMethod.
    * </p>
    *
-   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    * @param mzPeakWidthRange a {@link com.google.common.collect.Range} object.
    */
   public RecursiveCentroidingAlgorithm(@Nonnull Range<Double> mzPeakWidthRange) {

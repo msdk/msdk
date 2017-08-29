@@ -23,8 +23,12 @@ import javax.annotation.Nonnull;
 public class MathUtils {
 
   /**
-   * Calculates q-quantile value of values. q=0.5 => median
-   * 
+   * Calculates q-quantile value of values. q=0.5 =&gt; median
+   *
+   * @param values an array of double.
+   * @param size a {@link java.lang.Integer} object.
+   * @param q a double.
+   * @return a double.
    */
   public static double calcQuantile(double[] values, @Nonnull Integer size, double q) {
 

@@ -23,7 +23,6 @@ import io.github.msdk.datamodel.rawdata.ActivationType;
 
 /**
  * Implementation of FragmentationInfo
- *
  */
 public class SimpleActivationInfo implements ActivationInfo {
 

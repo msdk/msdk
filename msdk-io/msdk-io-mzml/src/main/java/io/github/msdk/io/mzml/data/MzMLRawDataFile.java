@@ -26,6 +26,10 @@ import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
+/**
+ * <p>MzMLRawDataFile class.</p>
+ *
+ */
 public class MzMLRawDataFile implements RawDataFile {
 
   private static final @Nonnull FileType fileType = FileType.MZML;

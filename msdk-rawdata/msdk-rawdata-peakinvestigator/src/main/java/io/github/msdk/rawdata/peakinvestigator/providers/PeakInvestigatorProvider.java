@@ -15,7 +15,6 @@ package io.github.msdk.rawdata.peakinvestigator.providers;
 
 /**
  * Base interface of all providers used to present information or query for user input.
- *
  */
 public interface PeakInvestigatorProvider {
 

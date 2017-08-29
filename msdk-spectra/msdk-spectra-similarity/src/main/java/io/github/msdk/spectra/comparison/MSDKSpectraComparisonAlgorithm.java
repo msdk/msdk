@@ -19,7 +19,6 @@ import javax.annotation.Nonnull;
  * <p>
  * MSDKSpectraComparisonAlgorithm interface.
  * </p>
- *
  */
 public interface MSDKSpectraComparisonAlgorithm {
 

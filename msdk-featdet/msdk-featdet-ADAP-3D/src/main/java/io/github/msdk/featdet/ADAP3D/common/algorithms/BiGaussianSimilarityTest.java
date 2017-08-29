@@ -33,7 +33,7 @@ public class BiGaussianSimilarityTest {
    * bounds (variables leftBound and rightBound). Peak is tested by comparing BiGaussian values with
    * intensity values from slice of sparse matrix.
    * </p>
-   * 
+   *
    * @param slice a {@link java.util.List} object. This is
    *        horizontal slice from sparse matrix of given m/z value.
    * @param leftBound a {@link java.lang.Integer} object. This is lowest scan number from which peak
@@ -42,10 +42,10 @@ public class BiGaussianSimilarityTest {
    *        determining ends.
    * @param roundedMZ a {@link java.lang.Double} object. It's rounded m/z value. Original m/z value
    *        multiplied by 10000.
-   * 
-   * @return a {@link Result} object. Result object contains similarity values, lower and upper mz
+   * @return a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.Peak3DTest.Result} object. Result object contains similarity values, lower and upper mz
    *         boundaries for adjacent similar peaks.
    *         </p>
+   * @param biGaussianSimilarityThreshold a double.
    */
   public boolean execute(List<Triplet> slice, int leftBound, int rightBound,
       int roundedMZ, double biGaussianSimilarityThreshold) {

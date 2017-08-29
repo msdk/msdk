@@ -45,6 +45,7 @@ class MzTabFeature implements Feature, IonAnnotation {
     this.sampleAssay = sampleAssay;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Double getMz() {
     String sampleMzString = smallMolecule.getOptionColumnValue(sampleAssay, "mz");
@@ -54,11 +55,13 @@ class MzTabFeature implements Feature, IonAnnotation {
       return Double.parseDouble(sampleMzString);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Float getRetentionTime() {
     return (float) DoubleMath.mean(smallMolecule.getRetentionTime());
   }
 
+  /** {@inheritDoc} */
   @Override
   public Float getArea() {
     Double abundance = smallMolecule.getAbundanceColumnValue(sampleAssay);
@@ -68,36 +71,43 @@ class MzTabFeature implements Feature, IonAnnotation {
       return abundance.floatValue();
   }
 
+  /** {@inheritDoc} */
   @Override
   public Float getHeight() {
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Float getSNRatio() {
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Float getScore() {
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Chromatogram getChromatogram() {
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<MsScan> getMSMSSpectra() {
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public IonAnnotation getIonAnnotation() {
     return this;
   }
 
+  /** {@inheritDoc} */
   @Override
   public IAtomContainer getChemicalStructure() {
     try {
@@ -111,6 +121,7 @@ class MzTabFeature implements Feature, IonAnnotation {
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public IMolecularFormula getFormula() {
     String formula = smallMolecule.getChemicalFormula();
@@ -119,16 +130,19 @@ class MzTabFeature implements Feature, IonAnnotation {
     return cdkFormula;
   }
 
+  /** {@inheritDoc} */
   @Override
   public IonType getIonType() {
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Double getExpectedMz() {
     return smallMolecule.getCalcMassToCharge();
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getDescription() {
     if (smallMolecule.getIdentifier() != null) {
@@ -139,12 +153,14 @@ class MzTabFeature implements Feature, IonAnnotation {
     return smallMolecule.getDescription();
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getIdentificationMethod() {
     return null;
   }
 
 
+  /** {@inheritDoc} */
   @Override
   public URL getAccessionURL() {
     try {
@@ -155,27 +171,32 @@ class MzTabFeature implements Feature, IonAnnotation {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Float getExpectedRetentionTime() {
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getInchiKey() {
     return smallMolecule.getInchiKey().toString();
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getDatabase() {
     return smallMolecule.getDatabase();
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getSpectraRef() {
     return null;
   }
 
 
+  /** {@inheritDoc} */
   @Override
   public Integer getReliability() {
     if (smallMolecule.getReliability() == null)
@@ -184,6 +205,7 @@ class MzTabFeature implements Feature, IonAnnotation {
       return smallMolecule.getReliability().getLevel();
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getAnnotationId() {
     return smallMolecule.getIdentifier().toString();

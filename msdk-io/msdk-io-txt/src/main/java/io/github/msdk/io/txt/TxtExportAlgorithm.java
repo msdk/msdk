@@ -31,7 +31,6 @@ import io.github.msdk.datamodel.msspectra.MsSpectrum;
  * A class containing methods to export {@link io.github.msdk.datamodel.msspectra.MsSpectrum}
  * objects to string representations or files.
  * </p>
- *
  */
 public class TxtExportAlgorithm {
 

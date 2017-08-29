@@ -33,7 +33,6 @@ import io.github.msdk.util.tolerances.MzTolerance;
  * <p>
  * ChromatogramBuilderMethod class.
  * </p>
- *
  */
 public class ChromatogramBuilderMethod implements MSDKMethod<List<Chromatogram>> {
 
@@ -55,7 +54,6 @@ public class ChromatogramBuilderMethod implements MSDKMethod<List<Chromatogram>>
    * scan that does not provide its own MzTolerance.
    * </p>
    *
-   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    * @param inputFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    * @param minimumTimeSpan a {@link java.lang.Double} object.
    * @param minimumHeight a {@link java.lang.Double} object.
@@ -73,7 +71,6 @@ public class ChromatogramBuilderMethod implements MSDKMethod<List<Chromatogram>>
    * scan that does not provide its own MzTolerance.
    * </p>
    *
-   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    * @param inputFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    * @param inputScans a {@link java.util.List} object.
    * @param minimumTimeSpan a {@link java.lang.Double} object.

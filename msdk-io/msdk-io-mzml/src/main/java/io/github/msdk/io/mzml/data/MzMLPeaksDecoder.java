@@ -32,7 +32,6 @@ import io.github.msdk.io.mzml.util.MSNumpress;
  * <p>
  * MzMLIntensityPeaksDecoder class.
  * </p>
- *
  */
 public class MzMLPeaksDecoder {
 
@@ -40,13 +39,13 @@ public class MzMLPeaksDecoder {
    * Converts a base64 encoded mz or intensity string used in mzML files to an array of floats. If
    * the original precision was 64 bit, you still get floats as output.
    *
-   * @param mappedByteBufferInputStream decoded from a base64 encoded string<br>
-   *        E.g. like: eNoNxltIkwEYBuAOREZFhrCudGFbbraTU+Zmue...
    * @param binaryDataInfo meta-info about the compressed data
    * @throws java.util.zip.DataFormatException if any.
    * @throws java.io.IOException if any.
    * @return a float array containing the decoded values
    * @throws io.github.msdk.MSDKException if any.
+   * @param inputStream a {@link java.io.InputStream} object.
+   * @param data an array of float.
    */
   public static float[] decodeToFloat(InputStream inputStream, MzMLBinaryDataInfo binaryDataInfo,
       float[] data) throws DataFormatException, IOException, MSDKException {
@@ -182,13 +181,13 @@ public class MzMLPeaksDecoder {
    * Converts a base64 encoded mz or intensity string used in mzML files to an array of doubles. If
    * the original precision was 32 bit, you still get doubles as output.
    *
-   * @param mappedByteBufferInputStream decoded from a base64 encoded string<br>
-   *        E.g. like: eNoNxltIkwEYBuAOREZFhrCudGFbbraTU+Zmue...
    * @param binaryDataInfo meta-info about encoded data
    * @throws java.util.zip.DataFormatException if any.
    * @throws java.io.IOException if any.
    * @return a double array containing the decoded values
    * @throws io.github.msdk.MSDKException if any.
+   * @param inputStream a {@link java.io.InputStream} object.
+   * @param data an array of double.
    */
   public static double[] decodeToDouble(InputStream inputStream, MzMLBinaryDataInfo binaryDataInfo,
       double[] data) throws DataFormatException, IOException, MSDKException {

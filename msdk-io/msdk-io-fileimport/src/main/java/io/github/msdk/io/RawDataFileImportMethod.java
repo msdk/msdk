@@ -34,7 +34,6 @@ import io.github.msdk.io.netcdf.NetCDFFileImportMethod;
 /**
  * This class detects the type of the given data file using the FileTypeDetectionAlgorithm and then
  * imports the raw data by performing the right import algorithm.
- *
  */
 public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
 
@@ -50,7 +49,6 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
    * </p>
    *
    * @param sourceFile a {@link java.io.File} object.
-   * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public RawDataFileImportMethod(@Nonnull File sourceFile) {
     this.sourceFile = sourceFile;

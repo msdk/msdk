@@ -13,6 +13,10 @@
 
 package io.github.msdk.io.mzml.data;
 
+/**
+ * <p>MzMLPrecursorSelectedIon class.</p>
+ *
+ */
 public class MzMLPrecursorSelectedIon extends MzMLCVGroup {
 
 }

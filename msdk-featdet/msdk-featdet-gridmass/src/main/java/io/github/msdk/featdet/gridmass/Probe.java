@@ -31,6 +31,12 @@ class Probe implements Comparable<Probe> {
 	this.scan = this.scanCenter = scan;
     }
 
+    /**
+     * <p>compareTo.</p>
+     *
+     * @param other a {@link io.github.msdk.featdet.gridmass.Probe} object.
+     * @return a int.
+     */
     public int compareTo(Probe other) {
 	if (other == null)
 	    return -1;

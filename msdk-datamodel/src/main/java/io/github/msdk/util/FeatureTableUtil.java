@@ -26,10 +26,17 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
  * <p>
  * FeatureTableUtil class.
  * </p>
- *
  */
 public class FeatureTableUtil {
 
+  /**
+   * <p>getRowsInsideRange.</p>
+   *
+   * @param table a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+   * @param rtRange a {@link com.google.common.collect.Range} object.
+   * @param mzRange a {@link com.google.common.collect.Range} object.
+   * @return a {@link java.util.List} object.
+   */
   public static @Nonnull List<FeatureTableRow> getRowsInsideRange(@Nonnull FeatureTable table,
       @Nonnull Range<Float> rtRange, @Nonnull Range<Double> mzRange) {
     List<FeatureTableRow> featureTableRows = table.getRows();

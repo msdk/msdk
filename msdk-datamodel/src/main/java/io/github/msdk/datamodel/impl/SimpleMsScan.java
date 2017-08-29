@@ -33,7 +33,6 @@ import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
  * Simple implementation of the Scan interface.
- *
  */
 public class SimpleMsScan extends AbstractMsSpectrum implements MsScan {
 
@@ -56,9 +55,7 @@ public class SimpleMsScan extends AbstractMsSpectrum implements MsScan {
    * Constructor for SimpleMsScan.
    * </p>
    *
-   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    * @param scanNumber a {@link java.lang.Integer} object.
-   * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
    */
   public SimpleMsScan(@Nonnull Integer scanNumber) {
     this(scanNumber, null);
@@ -69,7 +66,6 @@ public class SimpleMsScan extends AbstractMsSpectrum implements MsScan {
    * Constructor for SimpleMsScan.
    * </p>
    *
-   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    * @param scanNumber a {@link java.lang.Integer} object.
    * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
    */
@@ -155,7 +151,11 @@ public class SimpleMsScan extends AbstractMsSpectrum implements MsScan {
     return msLevel;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param msLevel a {@link java.lang.Integer} object.
+   */
   public void setMsLevel(@Nonnull Integer msLevel) {
     this.msLevel = msLevel;
   }
@@ -217,11 +217,11 @@ public class SimpleMsScan extends AbstractMsSpectrum implements MsScan {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * <p>
    * Setter for the field <code>mzTolerance</code>.
    * </p>
-   *
-   * @param mzTolerance a {@link io.github.msdk.util.tolerances.MzTolerance} object.
    */
   public void setMzTolerance(MzTolerance mzTolerance) {
     this.mzTolerance = mzTolerance;

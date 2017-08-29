@@ -24,7 +24,6 @@ import io.github.msdk.util.tolerances.MzTolerance;
 /**
  * This class is used provide m/z-dependent mass tolerances from PeakInvestigator by decorating an
  * existing instance of MsSpectrum.
- *
  */
 public class PeakInvestigatorMsSpectrum implements MsSpectrum {
 

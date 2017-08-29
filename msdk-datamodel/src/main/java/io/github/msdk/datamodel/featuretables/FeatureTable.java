@@ -27,13 +27,13 @@ public interface FeatureTable {
   /**
    * Returns an immutable list of rows
    *
-   * @return a list of {@link FeatureTableRow}s.
+   * @return a list of {@link io.github.msdk.datamodel.featuretables.FeatureTableRow}s.
    */
   @Nonnull
   List<FeatureTableRow> getRows();
 
   /**
-   * Shortcut to return an immutable list of {@link Sample}s found in this feature table.
+   * Shortcut to return an immutable list of {@link io.github.msdk.datamodel.featuretables.Sample}s found in this feature table.
    *
    * @return the list of samples.
    */

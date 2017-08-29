@@ -59,13 +59,7 @@ public class JoinAlignerMethod implements MSDKMethod<FeatureTable> {
    * </p>
    *
    * @param featureTables a {@link java.util.List} object.
-   * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    * @param mzTolerance an objectt
-   * @param mzWeight a {@link java.lang.Integer} object.
-   * @param rtWeight a {@link java.lang.Integer} object.
-   * @param requireSameCharge a {@link java.lang.Boolean} object.
-   * @param requireSameAnnotation a {@link java.lang.Boolean} object.
-   * @param featureTableName a {@link java.lang.String} object.
    * @param rtTolerance a {@link io.github.msdk.util.tolerances.RTTolerance} object.
    */
   public JoinAlignerMethod(@Nonnull List<FeatureTable> featureTables,

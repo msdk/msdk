@@ -30,7 +30,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * MSDKFilteringMethod class.
  * </p>
- *
  */
 public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
 
@@ -51,7 +50,6 @@ public class MSDKFilteringMethod implements MSDKMethod<RawDataFile> {
    * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    * @param filteringAlgorithm a {@link io.github.msdk.rawdata.filters.MSDKFilteringAlgorithm}
    *        object.
-   * @param store a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public MSDKFilteringMethod(@Nonnull RawDataFile rawDataFile,
       @Nonnull MSDKFilteringAlgorithm filteringAlgorithm) {

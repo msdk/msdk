@@ -62,7 +62,6 @@ class MzDataSaxHandler extends DefaultHandler {
    * </p>
    *
    * @param newRawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-   * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public MzDataSaxHandler(SimpleRawDataFile newRawFile) {
     this.newRawFile = newRawFile;

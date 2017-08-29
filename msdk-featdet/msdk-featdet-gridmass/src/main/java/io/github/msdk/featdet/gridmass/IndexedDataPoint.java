@@ -23,6 +23,12 @@ class IndexedDataPoint {
     DataPoint datapoint;
     int index;
 
+    /**
+     * <p>Constructor for IndexedDataPoint.</p>
+     *
+     * @param index a int.
+     * @param dp a {@link io.github.msdk.featdet.gridmass.DataPoint} object.
+     */
     public IndexedDataPoint(int index, DataPoint dp) {
 	this.datapoint = dp;
 	this.index = index;

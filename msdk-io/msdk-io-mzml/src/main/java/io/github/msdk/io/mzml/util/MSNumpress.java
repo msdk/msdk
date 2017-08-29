@@ -19,7 +19,6 @@ package io.github.msdk.io.mzml.util;
  * <p>
  * MSNumpressDouble class.
  * </p>
- *
  */
 public class MSNumpress {
 
@@ -43,11 +42,6 @@ public class MSNumpress {
    *
    * @param cvAccession The PSI-MS obo CV accession of the encoded data.
    * @param data array of double to be encoded
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
-   * @param dataSize number of doubles from data to encode
    * @param dataSize number of doubles from data to encode
    * @return The decoded doubles
    */
@@ -95,6 +89,42 @@ public class MSNumpress {
    *
    * @param x the int to be encoded
    * @param res the byte array were halfbytes are stored
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
+   * @param resOffset position in res were halfbytes are written
    * @param resOffset position in res were halfbytes are written
    * @param resOffset position in res were halfbytes are written
    * @param resOffset position in res were halfbytes are written
@@ -194,6 +224,10 @@ public class MSNumpress {
    * @param data an array of double.
    * @param dataSize a int.
    * @param dataSize a int.
+   * @param dataSize a int.
+   * @param dataSize a int.
+   * @param dataSize a int.
+   * @param dataSize a int.
    * @return a double.
    */
   public static double optimalLinearFixedPoint(double[] data, int dataSize) {
@@ -225,6 +259,42 @@ public class MSNumpress {
    * encoding was empirically show to be accurate to at least 0.002 ppm.
    *
    * @param data array of doubles to be encoded
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
    * @param dataSize number of doubles from data to encode
    * @param dataSize number of doubles from data to encode
    * @param dataSize number of doubles from data to encode
@@ -305,6 +375,42 @@ public class MSNumpress {
    * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
    * @param result array were resulting doubles should be stored
    * @return the number of decoded doubles, or -1 if dataSize &lt; 4 or 4 &lt; dataSize &lt; 8
    */
@@ -367,6 +473,42 @@ public class MSNumpress {
    * halfbyte.
    *
    * @param data array of bytes to be decoded
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
@@ -441,6 +583,42 @@ public class MSNumpress {
    * @param dataSize number of doubles from data to encode
    * @param dataSize number of doubles from data to encode
    * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
    * @param result array were resulting bytes should be stored
    * @return the number of encoded bytes
    */
@@ -491,6 +669,42 @@ public class MSNumpress {
    * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
    * @param result array were resulting doubles should be stored
    * @return the number of decoded doubles
    */
@@ -521,6 +735,42 @@ public class MSNumpress {
    * halfbyte.
    *
    * @param data array of bytes to be decoded (need memorycont. repr.)
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
@@ -559,6 +809,42 @@ public class MSNumpress {
    * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
    * @param result array were resulting floats should be stored
    * @return the number of decoded floats
    */
@@ -589,6 +875,10 @@ public class MSNumpress {
    * </p>
    *
    * @param data an array of double.
+   * @param dataSize a int.
+   * @param dataSize a int.
+   * @param dataSize a int.
+   * @param dataSize a int.
    * @param dataSize a int.
    * @param dataSize a int.
    * @return a double.
@@ -626,6 +916,42 @@ public class MSNumpress {
    * @param dataSize number of doubles from data to encode
    * @param dataSize number of doubles from data to encode
    * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
+   * @param dataSize number of doubles from data to encode
    * @param result array were resulting bytes should be stored
    * @param fixedPoint the scaling factor used for getting the fixed point repr. This is stored in
    *        the binary and automatically extracted on decoding.
@@ -654,6 +980,42 @@ public class MSNumpress {
    * or -1 is there is a problem decoding.
    *
    * @param data array of bytes to be decoded (need memorycont. repr.)
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
+   * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode
    * @param dataSize number of bytes from data to decode

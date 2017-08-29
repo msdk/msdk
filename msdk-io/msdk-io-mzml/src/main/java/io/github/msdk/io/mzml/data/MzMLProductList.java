@@ -15,18 +15,35 @@ package io.github.msdk.io.mzml.data;
 
 import java.util.ArrayList;
 
+/**
+ * <p>MzMLProductList class.</p>
+ *
+ */
 public class MzMLProductList {
 
   private ArrayList<MzMLProduct> products;
 
+  /**
+   * <p>Constructor for MzMLProductList.</p>
+   */
   public MzMLProductList() {
     this.products = new ArrayList<>();
   }
 
+  /**
+   * <p>Getter for the field <code>products</code>.</p>
+   *
+   * @return a {@link java.util.ArrayList} object.
+   */
   public ArrayList<MzMLProduct> getProducts() {
     return products;
   }
 
+  /**
+   * <p>addProduct.</p>
+   *
+   * @param product a {@link io.github.msdk.io.mzml.data.MzMLProduct} object.
+   */
   public void addProduct(MzMLProduct product) {
     products.add(product);
   }
