@@ -383,8 +383,6 @@ public class MzMLParser {
       if (tracker.inside(MzMLTags.TAG_PRECURSOR)) {
         vars.precursor.setIsolationWindow(vars.isolationWindow);
       } else if (tracker.inside(MzMLTags.TAG_PRODUCT)) {
-        if (vars.product == null)
-          System.out.println(xmlStreamReader.getLocation().getLineNumber());
         vars.product.setIsolationWindow(vars.isolationWindow);
       }
 
