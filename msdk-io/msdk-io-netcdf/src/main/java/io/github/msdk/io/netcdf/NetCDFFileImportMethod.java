@@ -45,7 +45,6 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
   private int parsedScans, totalScans = 0;
 
   private int scanStartPositions[];
@@ -262,6 +261,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
           }
         }
       }
+
       double avgDelta = sumDelta / (double) n;
       // - fill missing scan times using nearest good scan and avgDelta
       for (int i = 0; i < totalScans; i++) {

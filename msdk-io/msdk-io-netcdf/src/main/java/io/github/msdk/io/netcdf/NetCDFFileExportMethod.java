@@ -37,7 +37,10 @@ import ucar.nc2.NetcdfFileWriter.Version;
 import ucar.nc2.Variable;
 
 /**
- * <p>NetCDFFileExportMethod class.</p>
+ * <p>
+ * This class contains methods which can be used to write data contained in a
+ * {@link o.github.msdk.datamodel.rawdata.RawDataFile RawDataFile} to a file, in netCDF-3 format
+ * </p>
  *
  */
 public class NetCDFFileExportMethod implements MSDKMethod<Void> {
@@ -57,22 +60,30 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
   private NetcdfFileWriter writer;
 
   /**
-   * <p>Constructor for NetCDFFileExportMethod.</p>
-   *
-   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-   * @param target a {@link java.io.File} object.
+   * <p>
+   * Constructor for NetCDFFileExportMethod.
+   * </p>
+   * 
+   * @param rawDataFile the input {@link o.github.msdk.datamodel.rawdata.RawDataFile RawDataFile}
+   *        which contains the data to be exported
+   * @param target the target {@link java.io.File File} to write the data, in netCDF format
    */
   public NetCDFFileExportMethod(@Nonnull RawDataFile rawDataFile, @Nonnull File target) {
     this(rawDataFile, target, 1, 1);
   }
 
   /**
-   * <p>Constructor for NetCDFFileExportMethod.</p>
-   *
-   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-   * @param target a {@link java.io.File} object.
-   * @param massValueScaleFactor a double.
-   * @param intensityValueScaleFactor a double.
+   * <p>
+   * Constructor for NetCDFFileExportMethod.
+   * </p>
+   * 
+   * @param rawDataFile the input {@link o.github.msdk.datamodel.rawdata.RawDataFile RawDataFile}
+   *        which contains the data to be exported
+   * @param target the target {@link java.io.File File} to write the data, in netCDF format
+   * @param massValueScaleFactor double value by which the mass values have to be scaled by
+   * @param intensityValueScaleFactor double value by which the intensity values have to be scaled
+   *        by
+
    */
   public NetCDFFileExportMethod(@Nonnull RawDataFile rawDataFile, @Nonnull File target,
       double massValueScaleFactor, double intensityValueScaleFactor) {
@@ -82,7 +93,15 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
     this.intensityValueScaleFactor = intensityValueScaleFactor;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * <p>
+   * Execute the process of writing the data from the the input
+   * {@link o.github.msdk.datamodel.rawdata.RawDataFile RawDataFile} to the target
+   * {@link java.io.File File}
+   * </p>
+   * 
+   * @return nothing, a void method
+   */
   @Override
   public Void execute() throws MSDKException {
 
@@ -168,6 +187,11 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
     return null;
   }
 
+  /**
+   * 
+   * @return scanIndexArray an {@link ucar.ma2.Array Array} containing scan indices of all scans
+   * @throws IOException
+   */
   private Array getScanIndexArray() throws IOException {
     // Populate the scan indices
     // Create a simple 1D array of type int, element i of the shape array contains the length of
@@ -192,6 +216,11 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
     return scanIndexArray;
   }
 
+  /**
+   * 
+   * @return scanIndexDims a {@link java.util.List List} containing all dimension definitions for
+   *         the Scan Index Variable
+   */
   private List<Dimension> getScanIndexDims() {
     // Write the scan indices
     // Create a variable and set the dimension scan_number=totalScans to it
@@ -202,6 +231,11 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
     return scanIndexDims;
   }
 
+  /**
+   * 
+   * @return pointValDims a {@link java.util.List List} containing all dimension definitions for the
+   *         mass and intensity value variables
+   */
   private List<Dimension> getPointValDims() {
     // data values storage dimension
     // Dimension to store the data arrays of various scans
@@ -212,6 +246,11 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
     return pointNumValDims;
   }
 
+  /**
+   * 
+   * @return scanTimeArray an {@link ucar.ma2.Array Array} containing scan retention times for all
+   *         scans
+   */
   private Array getScanTimeArray() {
     // Populate scan times
     Array scanTimeArray = Array.factory(float.class, new int[] {totalScans});
@@ -222,6 +261,15 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
     return scanTimeArray;
   }
 
+  /**
+   * Create mass values variable add its attributes and give it its dimension, short hand name and
+   * data type
+   * 
+   * @param pointNumValDims a {@link java.util.List List} containing all dimension definitions for
+   *        the mass and intensity value variables
+   * @return massValueVariable {@link ucar.nc2.Variable Variable} containing the m/z data of the
+   *         scans
+   */
   private Variable getMassValueVariable(List<Dimension> pointNumValDims) {
     // Create mass values variable and add its attributes
     Variable massValueVariable =
@@ -232,6 +280,15 @@ public class NetCDFFileExportMethod implements MSDKMethod<Void> {
     return massValueVariable;
   }
 
+  /**
+   * Create intensity values variable add its attributes and give it its dimension, short hand name
+   * and data type
+   * 
+   * @param pointNumValDims a {@link java.util.List List} containing all dimension definitions for
+   *        the mass and intensity value variables
+   * @return intensityValueVariable {@link ucar.nc2.Variable Variable} containing the intensity data
+   *         of the scans
+   */
   private Variable getIntensityValueVariable(List<Dimension> pointNumValDims) {
     // Create intensity values variable and add its attributes
     Variable intensityValueVariable =

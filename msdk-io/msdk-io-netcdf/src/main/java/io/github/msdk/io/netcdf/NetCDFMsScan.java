@@ -25,7 +25,9 @@ import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Variable;
 
 /**
- * <p>NetCDFMsScan class.</p>
+ * <p>
+ * NetCDFMsScan class.
+ * </p>
  *
  */
 public class NetCDFMsScan extends SimpleMsScan {
@@ -42,15 +44,22 @@ public class NetCDFMsScan extends SimpleMsScan {
   private MsSpectrumType spectrumType;
 
   /**
-   * <p>Constructor for NetCDFMsScan.</p>
-   *
-   * @param scanNumber a {@link java.lang.Integer} object.
-   * @param scanStartPositions an array of int.
-   * @param scanRetentionTimes an array of float.
-   * @param massValueVariable a {@link ucar.nc2.Variable} object.
-   * @param intensityValueVariable a {@link ucar.nc2.Variable} object.
-   * @param massValueScaleFactor a double.
-   * @param intensityValueScaleFactor a double.
+   * <p>
+   * Constructor for {@link io.github.msdk.io.netcdf.NetCDFMsScan NetCDFMsScan}
+   * </p>
+   * 
+   * @param scanNumber the Scan Number
+   * @param id the Scan ID
+   * @param scanStartPositions an int[] containing start positions of all scans, and an extra
+   *        element containing the stop position of the last scan
+   * @param scanRetentionTimes a float[] containing retention times of all scans
+   * @param massValueVariable {@link ucar.nc2.Variable Variable} containing the m/z data of the
+   *        scans
+   * @param intensityValueVariable {@link ucar.nc2.Variable Variable} containing the intensity data
+   *        of the scans
+   * @param massValueScaleFactor double value by which the mass values have been scaled by to
+   * @param intensityValueScaleFactor double value by which the intensity values have been scaled by
+   *        to
    */
   public NetCDFMsScan(Integer scanNumber, int[] scanStartPositions, float[] scanRetentionTimes,
       Variable massValueVariable, Variable intensityValueVariable, double massValueScaleFactor,
@@ -74,7 +83,12 @@ public class NetCDFMsScan extends SimpleMsScan {
       final Integer scanIndex = getScanIndex();
       numOfDataPoints = getNumberOfDataPoints();
       try {
+        // int[] which defines the origin
+        // Since intensity value is stored in a 1D array, there is only one element
         final int scanStartPosition[] = {scanStartPositions[scanIndex]};
+        // int[] which defines the shape
+        // shape is the length of each dimension to be considered from the origin
+        // So, shape is an int[] containing only one element - 'size'
         final int scanLength[] =
             {scanStartPositions[scanIndex + 1] - scanStartPositions[scanIndex]};
         final Array intensityValueArray =
@@ -86,7 +100,9 @@ public class NetCDFMsScan extends SimpleMsScan {
 
         // Load the data points
         for (int i = 0; i < numOfDataPoints; i++) {
+          // Change the Index according to i
           final Index intensityIndex0 = intensityValuesIndex.set0(i);
+          // get the intensity value after multiplying with the scale factor
           intensityValues[i] =
               (float) (intensityValueArray.getDouble(intensityIndex0) * intensityValueScaleFactor);
         }
@@ -97,6 +113,7 @@ public class NetCDFMsScan extends SimpleMsScan {
       if (intensityValues == null || intensityValues.length < numOfDataPoints)
         intensityValues = new float[numOfDataPoints];
 
+      // Copy values to a different array if needed
       for (int i = 0; i < preLoadedIntensityValues.length; i++)
         intensityValues[i] = preLoadedIntensityValues[i];
     }
@@ -111,7 +128,12 @@ public class NetCDFMsScan extends SimpleMsScan {
       final Integer scanIndex = getScanIndex();
       numOfDataPoints = getNumberOfDataPoints();
       try {
+        // int[] which defines the origin
+        // Since mass value is stored in a 1D array, there is only one element
         final int scanStartPosition[] = {scanStartPositions[scanIndex]};
+        // int[] which defines the shape
+        // shape is the length of each dimension to be considered from the origin
+        // So, shape is an int[] containing only one element - 'size'
         final int scanLength[] =
             {scanStartPositions[scanIndex + 1] - scanStartPositions[scanIndex]};
         final Array massValueArray = massValueVariable.read(scanStartPosition, scanLength);
@@ -122,7 +144,9 @@ public class NetCDFMsScan extends SimpleMsScan {
 
         // Load the data points
         for (int i = 0; i < numOfDataPoints; i++) {
+          // Change the Index according to i
           final Index massIndex0 = massValuesIndex.set0(i);
+          // get the mass value after multiplying with the scale factor
           mzValues[i] = massValueArray.getDouble(massIndex0) * massValueScaleFactor;
         }
 
@@ -133,6 +157,7 @@ public class NetCDFMsScan extends SimpleMsScan {
       if (mzValues == null || mzValues.length < numOfDataPoints)
         mzValues = new double[numOfDataPoints];
 
+      // Copy values to a different array if needed
       for (int i = 0; i < preLoadedMzValues.length; i++)
         mzValues[i] = preLoadedMzValues[i];
     }
@@ -168,19 +193,19 @@ public class NetCDFMsScan extends SimpleMsScan {
   }
 
   /**
-   * <p>getScanIndex.</p>
-   *
-   * @return a {@link java.lang.Integer} object.
+   * The Scan Index is the inde of the scan in the array
+   * 
+   * @return the scan index of the scan
    */
   public Integer getScanIndex() {
     return getScanNumber() - 1;
   }
 
   /**
-   * <p>parseScan.</p>
-   *
-   * @throws java.io.IOException if any.
-   * @throws ucar.ma2.InvalidRangeException if any.
+   * The mass and intensity arrays are loaded once this method is called
+   * 
+   * @throws IOException
+   * @throws InvalidRangeException
    */
   public void parseScan() throws IOException, InvalidRangeException {
     // Load values to this scan instance itself, this method is called only when the scan passes the
