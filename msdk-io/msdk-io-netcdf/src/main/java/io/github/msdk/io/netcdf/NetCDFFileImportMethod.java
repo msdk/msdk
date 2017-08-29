@@ -46,7 +46,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private final NetcdfFile inputFile;
+  private NetcdfFile inputFile;
 
   private int parsedScans, totalScans = 0;
 
@@ -60,7 +60,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
   private Variable massValueVariable, intensityValueVariable;
 
-  private Predicate<MsScan> msScanPredicate = s -> true;
+  private Predicate<MsScan> msScanPredicate = s -> false;
 
   // Some software produces netcdf files with a scale factor such as 0.05
   // TODO: need junit test for this
@@ -76,15 +76,13 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
    * @param dataStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    * @throws IOException
    */
-  public NetCDFFileImportMethod(@Nonnull File sourceFile) throws IOException {
+  public NetCDFFileImportMethod(@Nonnull File sourceFile) {
     this(sourceFile, s -> true);
   }
 
-  public NetCDFFileImportMethod(@Nonnull File sourceFile, Predicate<MsScan> msScanPredicate)
-      throws IOException {
+  public NetCDFFileImportMethod(@Nonnull File sourceFile, Predicate<MsScan> msScanPredicate) {
     this.sourceFile = sourceFile;
     this.msScanPredicate = this.msScanPredicate.and(msScanPredicate);
-    this.inputFile = NetcdfFile.open(sourceFile.getPath());
   }
 
   /** {@inheritDoc} */
@@ -99,6 +97,8 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     }
 
     try {
+
+      this.inputFile = NetcdfFile.open(sourceFile.getPath());
 
       // Instantiate the raw file
       String fileName = sourceFile.getName();
@@ -259,6 +259,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
           }
         }
       }
+
       double avgDelta = sumDelta / (double) n;
       // - fill missing scan times using nearest good scan and avgDelta
       for (int i = 0; i < totalScans; i++) {
