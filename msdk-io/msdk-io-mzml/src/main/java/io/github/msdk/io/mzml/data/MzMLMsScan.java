@@ -42,7 +42,7 @@ import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
  * <p>
- * MzMLSpectrum class.
+ * MzMLMsScan class.
  * </p>
  */
 public class MzMLMsScan implements MsScan {

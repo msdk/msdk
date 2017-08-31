@@ -182,6 +182,8 @@ public class MzMLParser {
           }
         }
 
+      } else if (openingTagName.contentEquals(MzMLTags.TAG_PRODUCT)) {
+        vars.product = new MzMLProduct();
       }
 
       if (tracker.inside(MzMLTags.TAG_PRECURSOR_LIST)) {
