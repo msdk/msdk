@@ -10,15 +10,46 @@
 	<description>A java library for the development of mass spectrometry-related algorithms.</description>
 	<url>https://msdk.github.io</url>
 	<modules>
+		<module>msdk-alignment-joinaligner</module>
+		<module>msdk-alignment-ransac</module>
 		<module>msdk-all</module>
 		<module>msdk-datamodel</module>
-		<module>msdk-io</module>
-		<module>msdk-rawdata</module>
-		<module>msdk-featdet</module>
-		<module>msdk-id</module>
-		<module>msdk-features</module>
-		<module>msdk-spectra</module>
-		<module>msdk-db</module>
+		<module>msdk-db-gnps</module>
+		<module>msdk-db-kegg</module>
+		<module>msdk-db-mona</module>
+		<module>msdk-featuredetection-chromatogrambuilder</module>
+		<module>msdk-featuredetection-targeted</module>
+		<module>msdk-featuredetection-gridmass</module>
+		<module>msdk-featuredetection-msms</module>
+		<module>msdk-featuredetection-srm</module>
+		<module>msdk-featuredetection-openms</module>
+		<module>msdk-featuredetection-adap3d</module>
+		<module>msdk-normalization-stdcompound</module>
+		<module>msdk-id-localdatabase</module>
+		<module>msdk-id-metfrag</module>
+		<module>msdk-id-sirius</module>
+		<module>msdk-io-filetypedetection</module>
+		<module>msdk-io-mzml</module>
+		<module>msdk-io-mzml-old</module>
+		<module>msdk-io-mztab</module>
+		<module>msdk-io-netcdf</module>
+		<module>msdk-io-mzxml</module>
+		<module>msdk-io-mzdata</module>
+		<module>msdk-io-nativeformats</module>
+		<module>msdk-io-fileimport</module>
+		<module>msdk-io-chromatof</module>
+		<module>msdk-io-txt</module>
+		<module>msdk-io-msp</module>
+		<module>msdk-io-mgf</module>
+		<module>msdk-isotopes-isotopegrouper</module>
+		<module>msdk-rawdata-filters</module>
+		<module>msdk-rawdata-baselinecorrection</module>
+		<module>msdk-spectra-peakinvestigator</module>
+		<module>msdk-spectra-centroidprofiledetection</module>
+		<module>msdk-spectra-centroiding</module>
+		<module>msdk-spectra-splash</module>
+		<module>msdk-spectra-similarity</module>
+		<module>msdk-isotopes-isotopepattern</module>
 	</modules>
 
 	<properties>
@@ -48,16 +79,6 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-
-	<mailingLists>
-		<mailingList>
-			<name>msdk-devel</name>
-			<subscribe>msdk-devel+subscribe@googlegroups.com</subscribe>
-			<unsubscribe>msdk-devel+unsubscribe@googlegroups.com</unsubscribe>
-			<post>msdk-devel@googlegroups.com</post>
-			<archive>https://groups.google.com/forum/#!forum/msdk-devel</archive>
-		</mailingList>
-	</mailingLists>
 
 	<scm>
 		<url>https://github.com/msdk/msdk</url>
