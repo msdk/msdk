@@ -234,7 +234,7 @@ class MzDataSaxHandler extends DefaultHandler {
       if (mzBuffer.length < peaksCount)
         mzBuffer = new double[peaksCount * 2];
 
-      byte[] peakBytes = Base64.getDecoder().decode(charBuffer.toString().getBytes());
+      byte[] peakBytes = Base64.getMimeDecoder().decode(charBuffer.toString());
 
       ByteBuffer currentMzBytes = ByteBuffer.wrap(peakBytes);
 
@@ -262,7 +262,7 @@ class MzDataSaxHandler extends DefaultHandler {
       if (intensityBuffer.length < peaksCount)
         intensityBuffer = new float[peaksCount * 2];
 
-      byte[] peakBytes = Base64.getDecoder().decode(charBuffer.toString().getBytes());
+      byte[] peakBytes = Base64.getMimeDecoder().decode(charBuffer.toString());
 
       ByteBuffer currentIntensityBytes = ByteBuffer.wrap(peakBytes);
 
