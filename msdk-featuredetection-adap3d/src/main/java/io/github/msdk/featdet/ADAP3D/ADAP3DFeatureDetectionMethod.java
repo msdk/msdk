@@ -46,6 +46,8 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private final @Nonnull RawDataFile rawFile;
+  private final @Nullable Predicate<MsScan> msScanPredicate;
+  
   private SliceSparseMatrix objSliceSparseMatrix;
 
   /**
@@ -82,8 +84,8 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    *        this predicate will be processed.
    */
   public ADAP3DFeatureDetectionMethod(@Nonnull RawDataFile rawFile, @Nullable Predicate<MsScan> msScanPredicate) {
-    this.rawFile=rawFile;
-    this.objSliceSparseMatrix = new SliceSparseMatrix(rawFile, msScanPredicate);
+    this.rawFile = rawFile;
+    this.msScanPredicate = msScanPredicate;
   }
 
   /**
@@ -101,6 +103,10 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
   public List<Feature> execute() {
 
     logger.info("Starting ADAP3D feature detection on file " + rawFile.getName());
+    
+    // Create SliceSparseMatrix
+    logger.debug("Loading the raw data into SliceSparceMatrix");
+    this.objSliceSparseMatrix = new SliceSparseMatrix(rawFile, msScanPredicate);
     
     // Here fwhm across all the scans of raw data file is determined.
     logger.debug("Estimating FWHM values across all scans");
