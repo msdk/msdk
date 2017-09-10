@@ -18,18 +18,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
-import org.apache.commons.lang3.ArrayUtils;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.features.Feature;
 import io.github.msdk.datamodel.impl.SimpleChromatogram;
 import io.github.msdk.datamodel.impl.SimpleFeature;
-import io.github.msdk.featdet.ADAP3D.common.algorithms.CurveTool;
-import io.github.msdk.featdet.ADAP3D.common.algorithms.Parameters;
-import io.github.msdk.featdet.ADAP3D.common.algorithms.ADAP3DPeakDetectionAlgorithm;
-import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.featdet.ADAP3D.common.algorithms.ADAP3DPeakDetectionAlgorithm;
+import io.github.msdk.featdet.ADAP3D.common.algorithms.CurveTool;
+import io.github.msdk.featdet.ADAP3D.common.algorithms.Parameters;
+import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix;
 
 /**
  * <p>
@@ -38,11 +43,15 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  */
 public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
 
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+  private final @Nonnull RawDataFile rawFile;
   private SliceSparseMatrix objSliceSparseMatrix;
 
-  // percent of average peak width (found from initial high intensity peaks)
-  // used for determining allowance of peak widths lower bound.
+  /**
+   *  percent of average peak width (found from initial high intensity peaks)
+   *  used for determining allowance of peak widths lower bound.
+   */
   private static final double LOW_BOUND_PEAK_WIDTH_PERCENT = 0.75;
 
   private List<Feature> finalFeatureList;
@@ -59,7 +68,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    *
    * @param rawFile {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    */
-  public ADAP3DFeatureDetectionMethod(RawDataFile rawFile) {
+  public ADAP3DFeatureDetectionMethod(@Nonnull RawDataFile rawFile) {
     this(rawFile, s -> true);
   }
 
@@ -72,8 +81,9 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    * @param msScanPredicate a {@link java.util.function.Predicate} object. Only MsScan which pass
    *        this predicate will be processed.
    */
-  public ADAP3DFeatureDetectionMethod(RawDataFile rawFile, Predicate<MsScan> msScanPredicate) {
-    objSliceSparseMatrix = new SliceSparseMatrix(rawFile, msScanPredicate);
+  public ADAP3DFeatureDetectionMethod(@Nonnull RawDataFile rawFile, @Nullable Predicate<MsScan> msScanPredicate) {
+    this.rawFile=rawFile;
+    this.objSliceSparseMatrix = new SliceSparseMatrix(rawFile, msScanPredicate);
   }
 
   /**
@@ -90,7 +100,10 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    */
   public List<Feature> execute() {
 
+    logger.info("Starting ADAP3D feature detection on file " + rawFile.getName());
+    
     // Here fwhm across all the scans of raw data file is determined.
+    logger.debug("Estimating FWHM values across all scans");
     CurveTool objCurveTool = new CurveTool(objSliceSparseMatrix);
     double fwhm = objCurveTool.estimateFwhmMs();
     int roundedFWHM = objSliceSparseMatrix.roundMZ(fwhm);
@@ -98,6 +111,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
     Parameters objParameters = new Parameters();
 
     // Here first 20 peaks are determined to estimate the parameters to determine remaining peaks.
+    logger.debug("Detecting 20 highest peaks to determine optimal parameters");
     objPeakDetection = new ADAP3DPeakDetectionAlgorithm(objSliceSparseMatrix);
     List<ADAP3DPeakDetectionAlgorithm.GoodPeakInfo> goodPeakList =
         objPeakDetection.execute(20, objParameters, roundedFWHM);
@@ -108,10 +122,12 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
       return null;
 
     // Here we're making features for first 20 peaks and add it into the list of feature.
+    logger.debug("Converting 20 highest peaks to MSDK features");
     finalFeatureList = new ArrayList<Feature>();
     convertPeaksToFeatures(goodPeakList, finalFeatureList);
 
     // Estimation of parameters.
+    logger.debug("Estimating optimal parameters");
     double[] peakWidth = new double[goodPeakList.size()];
     double avgCoefOverArea = 0.0;
     double avgPeakWidth = 0.0;
@@ -144,17 +160,21 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
     objParameters.setCoefAreaRatioTolerance(coefOverAreaThreshold);
 
     // run the algorithm with new parameters to determine the remaining peaks.
+    logger.debug("Running ADAP3D using optimized parameters");
     List<ADAP3DPeakDetectionAlgorithm.GoodPeakInfo> newGoodPeakList =
         objPeakDetection.execute(objParameters, roundedFWHM);
 
-    // If the algorithm's execution is stopped, execute method of PeakdDtection class will return
+    // If the algorithm's execution is stopped, execute method of PeakDtection class will return
     // null. Hence execute method of this class will also return null.
     if (canceled)
       return null;
 
     // Here we're making features for remaining peaks and add it into the list of feature.
+    logger.debug("Converting all peaks to MSDK features");
     convertPeaksToFeatures(newGoodPeakList, finalFeatureList);
 
+    logger.info("Finished ADAP3D feature detection on file " + rawFile.getName());
+    
     return finalFeatureList;
   }
 
@@ -221,9 +241,10 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
   /** {@inheritDoc} */
   @Override
   public void cancel() {
+    logger.info("Cancelling ADAP3D feature detection on file " + rawFile.getName());
+    canceled = true;
     if (objPeakDetection != null) {
       objPeakDetection.cancel();
-      canceled = true;
     }
   }
 }
