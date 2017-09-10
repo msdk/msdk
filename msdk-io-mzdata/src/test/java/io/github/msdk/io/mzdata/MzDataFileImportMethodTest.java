@@ -118,7 +118,7 @@ public class MzDataFileImportMethodTest {
     float intensityBuffer[] = new float[10000];
 
     // Import the file
-    File inputFile = new File(this.getClass().getClassLoader().getResource("MSMSpos_Challenge0.mzdata").toURI());
+    File inputFile = new File(this.getClass().getClassLoader().getResource("MSMSpos_Challenge0.mzData").toURI());
     Assert.assertTrue(inputFile.canRead());
     MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
