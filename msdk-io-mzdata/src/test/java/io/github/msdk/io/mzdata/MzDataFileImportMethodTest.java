@@ -19,7 +19,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
@@ -28,14 +27,11 @@ import io.github.msdk.util.MsSpectrumUtil;
 
 public class MzDataFileImportMethodTest {
 
-  private static final String TEST_DATA_PATH = "src/test/resources/";
-
-
   @Test
-  public void testMzDataFile() throws MSDKException {
+  public void testMzDataFile() throws Exception {
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "test.mzData");
+    File inputFile = new File(this.getClass().getClassLoader().getResource("test.mzData").toURI());
     Assert.assertTrue(inputFile.canRead());
     MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
@@ -62,14 +58,14 @@ public class MzDataFileImportMethodTest {
 
 
   @Test
-  public void testMM14() throws MSDKException {
+  public void testMM14() throws Exception {
 
     // Create the data structures
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "MM14.mzdata");
+    File inputFile = new File(this.getClass().getClassLoader().getResource("MM14.mzdata").toURI());
     Assert.assertTrue(inputFile.canRead());
     MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
@@ -115,14 +111,14 @@ public class MzDataFileImportMethodTest {
 
 
   @Test
-  public void testMSMSposChallenge0() throws MSDKException {
+  public void testMSMSposChallenge0() throws Exception {
 
     // Create the data structures
     double mzBuffer[] = new double[10000];
     float intensityBuffer[] = new float[10000];
 
     // Import the file
-    File inputFile = new File(TEST_DATA_PATH + "MSMSpos_Challenge0.mzData");
+    File inputFile = new File(this.getClass().getClassLoader().getResource("MSMSpos_Challenge0.mzdata").toURI());
     Assert.assertTrue(inputFile.canRead());
     MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
