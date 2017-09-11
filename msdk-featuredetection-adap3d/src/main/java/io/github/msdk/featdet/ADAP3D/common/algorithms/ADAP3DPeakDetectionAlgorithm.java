@@ -15,6 +15,9 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
 import io.github.msdk.featdet.ADAP3D.datamodel.Result;
 
@@ -38,7 +41,9 @@ public class ADAP3DPeakDetectionAlgorithm {
     public Result objResult;
   }
 
-  private SliceSparseMatrix objSliceSparseMatrix;
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  
+  private final SliceSparseMatrix objSliceSparseMatrix;
 
   /**
    * Flag for stopping the adap3d algorithm execution.
@@ -71,6 +76,9 @@ public class ADAP3DPeakDetectionAlgorithm {
    * @param objParameters a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.Parameters} object.
    */
   public List<GoodPeakInfo> execute(int numOfPeaks, Parameters objParameters, int roundedFWHM) {
+    
+    logger.debug("Starting ADAP3D algorithm for " + numOfPeaks + " peaks");
+    
     int maxCount = 0;
     Triplet maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
     List<GoodPeakInfo> peakList = new ArrayList<GoodPeakInfo>();
@@ -93,6 +101,9 @@ public class ADAP3DPeakDetectionAlgorithm {
       maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
 
     }
+    
+    logger.debug("Finished ADAP3D algorithm for " + numOfPeaks + " peaks");
+
     return peakList;
   }
 
@@ -109,20 +120,27 @@ public class ADAP3DPeakDetectionAlgorithm {
    */
   public List<GoodPeakInfo> execute(Parameters objParameters, int roundedFWHM) {
 
+    logger.debug("Starting ADAP3D algorithm for all good peaks");
+
     Triplet maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
     List<GoodPeakInfo> peakList = new ArrayList<GoodPeakInfo>();
-
+    
 
     while (maxIntensityTriplet != null) {
+      
+      if (canceled)
+        return null;
+
+      //logger.debug("Running iteration on triplet " + maxIntensityTriplet);
       GoodPeakInfo goodPeak = iteration(maxIntensityTriplet, roundedFWHM, objParameters);
       if (goodPeak != null)
         peakList.add(goodPeak);
 
-      if (canceled)
-        return null;
 
       maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
     }
+
+    logger.debug("Finished ADAP3D algorithm for all good peaks");
 
     return peakList;
   }
