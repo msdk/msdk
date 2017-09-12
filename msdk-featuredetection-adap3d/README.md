@@ -6,15 +6,15 @@ ADAP-3D was originally developed by the Du-Lab research team ([http://www.du-lab
 
 ## Description
 
-The three dimensions of LC/MS or GC/MS data are m/z(mass to charge ratio), retention time and intensity. To detect peaks, ADAP-3D uses Continuous Wavelet transform and ridgeline detection. In addition, ADAP-3D estimates key preprocessing parameters from the data itself, making the algorithm self adaptive to the data being analyzed. ADAP-3D can accept raw data files in multiple formats including mzXML, CDF, mzML, et el. by using the existing capabilities of MSDK to import raw data.
+The three dimensions of LC/MS or GC/MS data are m/z(mass to charge ratio), retention time and intensity. To detect peaks, ADAP-3D uses Continuous Wavelet transform and ridgeline detection. In addition, ADAP-3D estimates key preprocessing parameters from the data itself, making the algorithm self adaptive to the data being analyzed. ADAP-3D can accept raw data files in multiple formats including mzXML, CDF, mzML, et el. by using existing capabilities of MSDK to import raw data.
 
 ## Useful Link
 
 1. [Link to Commits](https://github.com/msdk/msdk/commits?author=dharak029)
 2. [Link to Pull Requests](https://github.com/msdk/msdk/pulls?q=is%3Apr+is%3Aclosed+no%3Aassignee+author%3Adharak029)
-3. [Link to Code](https://github.com/msdk/msdk/tree/master/msdk-featuredetection-adap3d/src/main/java/io/github/msdk/featdet/ADAP3D)
-4. [Link to TestCases](https://github.com/msdk/msdk/tree/master/msdk-featuredetection-adap3d/src/test)
-5. [Link to Detailed Project Report](https://github.com/msdk/msdk/blob/master/msdk-featuredetection-adap3d/ADAP3D%20Project%20Report.docx)
+3. [Link to Code](https://github.com/msdk/msdk/tree/master/msdk-featdet/msdk-featdet-ADAP-3D/src/main/java/io/github/msdk/featdet/ADAP3D)
+4. [Link to TestCases](https://github.com/msdk/msdk/tree/master/msdk-featdet/msdk-featdet-ADAP-3D/src/test/java/io/github/msdk/featdet/ADAP3D)
+5. [Link to Detailed Project Report](https://github.com/msdk/msdk/blob/master/msdk-featdet/msdk-featdet-ADAP-3D/ADAP3D%20Project%20Report.docx)
 
 ## Major Challenges
 
@@ -31,4 +31,4 @@ The three dimensions of LC/MS or GC/MS data are m/z(mass to charge ratio), reten
 
 "For implementing ADAP-3D in Java I developed a class for sparse matrix and associated methods for different matrix operations. In addition, I developed classes for BiGaussian and Gaussian fitting. All of these developments helped me improve my coding skills. I learned a new framework of Java, new coding standard, how to code efficiently in terms of time and memory, and applied many concepts I studied in college. 
 
-Working with Open Chemistry was my first experience with open source software development and I really enjoyed it. I got to work with many distinguished people of the field. It was a very enriching experience, which I intend to continue participating. Thanks to all the mentors (Aleksandr Smirnov, Owen Myers, Tomas Pluskal, Adam Tenderholt, Dmitriy Avtonomov, Xiuxia Du) who helped me achieve the desired results."
+Working with Open Chemistry was my first experience with open source software development and I really enjoyed it. I got to work with many distinguished people of the field. It was a very enriching experience, which I intend to continue participating. Thanks to all the mentors (Drs. Aleksandr Smirnov, Owen Myers, Tomas Pluskal, Adam Tenderholt, Dmitriy Avtonomov, Xiuxia Du) who helped me achieve the desired results."
