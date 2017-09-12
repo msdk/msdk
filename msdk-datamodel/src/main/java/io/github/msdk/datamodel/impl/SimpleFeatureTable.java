@@ -33,11 +33,17 @@ public class SimpleFeatureTable implements FeatureTable {
   private final @Nonnull ArrayList<FeatureTableRow> featureTableRows = new ArrayList<>();
   private final @Nonnull ArrayList<Sample> featureTableSamples = new ArrayList<>();
 
+  /** {@inheritDoc} */
   @Override
   public @Nonnull List<FeatureTableRow> getRows() {
     return ImmutableList.copyOf(featureTableRows);
   }
 
+  /**
+   * <p>addRow.</p>
+   *
+   * @param row a {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} object.
+   */
   public void addRow(@Nonnull FeatureTableRow row) {
     Preconditions.checkNotNull(row);
     synchronized (featureTableRows) {
@@ -45,6 +51,11 @@ public class SimpleFeatureTable implements FeatureTable {
     }
   }
 
+  /**
+   * <p>removeRow.</p>
+   *
+   * @param row a {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} object.
+   */
   public void removeRow(@Nonnull FeatureTableRow row) {
     Preconditions.checkNotNull(row);
     synchronized (featureTableRows) {
@@ -59,7 +70,11 @@ public class SimpleFeatureTable implements FeatureTable {
     return ImmutableList.copyOf(featureTableSamples);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param samples a {@link java.util.List} object.
+   */
   public @Nonnull void setSamples(List<Sample> samples) {
     this.featureTableSamples.clear();
     this.featureTableSamples.addAll(samples);

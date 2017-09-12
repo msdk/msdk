@@ -71,7 +71,11 @@ public class SimpleChromatogram implements Chromatogram {
     return chromatogramNumber;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param chromatogramNumber a {@link java.lang.Integer} object.
+   */
   public void setChromatogramNumber(@Nonnull Integer chromatogramNumber) {
     Preconditions.checkNotNull(chromatogramNumber);
     this.chromatogramNumber = chromatogramNumber;
@@ -262,6 +266,10 @@ public class SimpleChromatogram implements Chromatogram {
 
   /**
    * Adds a data point to the end of the chromatogram
+   *
+   * @param rt a {@link java.lang.Float} object.
+   * @param mz a {@link java.lang.Double} object.
+   * @param intensity a {@link java.lang.Float} object.
    */
   public synchronized void addDataPoint(@Nonnull Float rt, @Nullable Double mz,
       @Nonnull Float intensity) {

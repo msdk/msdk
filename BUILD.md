@@ -43,9 +43,6 @@ mvn clean
 # Update version number of all modules (change X.Y.Z to new version number)
 mvn versions:set -DnewVersion=X.Y.Z versions:commit
 
-# Optional - fix missing JavaDoc comments
-mvn -DfixTags=param,return,throws -Dforce javadoc:fix
-
 # Build the whole project
 mvn -Pmsdk-release package
 

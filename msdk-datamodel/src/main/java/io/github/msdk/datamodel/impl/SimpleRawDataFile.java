@@ -31,7 +31,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
  * Implementation of the RawDataFile interface.
- *
  */
 public class SimpleRawDataFile implements RawDataFile {
 
@@ -49,7 +48,6 @@ public class SimpleRawDataFile implements RawDataFile {
    * @param rawDataFileName a {@link java.lang.String} object.
    * @param originalRawDataFile a {@link java.util.Optional} object.
    * @param rawDataFileType a {@link io.github.msdk.datamodel.files.FileType} object.
-   * @param dataPointStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    */
   public SimpleRawDataFile(@Nonnull String rawDataFileName,
       @Nonnull Optional<File> originalRawDataFile, @Nonnull FileType rawDataFileType) {

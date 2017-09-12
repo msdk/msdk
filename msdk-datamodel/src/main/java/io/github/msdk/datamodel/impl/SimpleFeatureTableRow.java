@@ -38,6 +38,11 @@ public class SimpleFeatureTableRow implements FeatureTableRow {
   private final @Nonnull Map<Sample, Feature> features = new HashMap<>();
   private @Nullable Integer charge;
 
+  /**
+   * <p>Constructor for SimpleFeatureTableRow.</p>
+   *
+   * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+   */
   public SimpleFeatureTableRow(@Nonnull FeatureTable featureTable) {
     Preconditions.checkNotNull(featureTable);
     this.featureTable = featureTable;
@@ -49,6 +54,7 @@ public class SimpleFeatureTableRow implements FeatureTableRow {
     return featureTable;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Double getMz() {
     Collection<Feature> allFeatures = features.values();
@@ -56,6 +62,7 @@ public class SimpleFeatureTableRow implements FeatureTableRow {
     return averageMz;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Float getRT() {
     synchronized (features) {
@@ -66,15 +73,22 @@ public class SimpleFeatureTableRow implements FeatureTableRow {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Integer getCharge() {
     return charge;
   }
 
+  /**
+   * <p>Setter for the field <code>charge</code>.</p>
+   *
+   * @param charge a {@link java.lang.Integer} object.
+   */
   public void setCharge(@Nullable Integer charge) {
     this.charge = charge;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Feature getFeature(Sample sample) {
     synchronized (features) {
@@ -82,6 +96,7 @@ public class SimpleFeatureTableRow implements FeatureTableRow {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Feature getFeature(Integer index) {
     assert featureTable != null;
@@ -91,6 +106,12 @@ public class SimpleFeatureTableRow implements FeatureTableRow {
     }
   }
 
+  /**
+   * <p>setFeature.</p>
+   *
+   * @param sample a {@link io.github.msdk.datamodel.featuretables.Sample} object.
+   * @param feature a {@link io.github.msdk.datamodel.features.Feature} object.
+   */
   public void setFeature(@Nonnull Sample sample, @Nonnull Feature feature) {
     synchronized (features) {
       if (featureTable != null) {

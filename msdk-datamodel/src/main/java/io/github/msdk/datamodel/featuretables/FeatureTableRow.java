@@ -60,6 +60,8 @@ public interface FeatureTableRow {
   /**
    * Return feature assigned to this row
    *
+   * @param sample a {@link io.github.msdk.datamodel.featuretables.Sample} object.
+   * @return a {@link io.github.msdk.datamodel.features.Feature} object.
    */
   @Nullable
   Feature getFeature(@Nonnull Sample sample);
@@ -67,6 +69,8 @@ public interface FeatureTableRow {
   /**
    * Return feature assigned to this row
    *
+   * @param index a {@link java.lang.Integer} object.
+   * @return a {@link io.github.msdk.datamodel.features.Feature} object.
    */
   @Nullable
   Feature getFeature(@Nonnull Integer index);

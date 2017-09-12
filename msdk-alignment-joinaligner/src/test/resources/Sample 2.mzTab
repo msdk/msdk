@@ -1,0 +1,22 @@
+MTD	mzTab-version	1.0
+MTD	mzTab-mode	Summary
+MTD	mzTab-type	Quantification
+MTD	description	Aligned peak list gap-filled
+MTD	software[1]	[MS, MS:1002342, MZmine, 2.18.1]
+MTD	smallmolecule_search_engine_score[1]	[MS, MS:1001153, search engine specific score, ]
+MTD	fixed_mod[1]	[MS, MS:1002453, No fixed modifications searched, ]
+MTD	variable_mod[1]	[MS, MS:1002454, No variable modifications searched, ]
+MTD	small_molecule-quantification_unit	[PRIDE, PRIDE:0000330, Arbitrary quantification unit, ]
+MTD	ms_run[1]-location	file:/Sample 2
+MTD	assay[1]-ms_run_ref	ms_run[1]
+MTD	study_variable[1]-description	Sample 2
+
+SMH	identifier	chemical_formula	smiles	inchi_key	description	exp_mass_to_charge	calc_mass_to_charge	charge	retention_time	taxid	species	database	database_version	uri	spectra_ref	search_engine	best_search_engine_score[1]	modifications	smallmolecule_abundance_assay[1]	opt_assay[1]_mz	opt_assay[1]_rt	opt_assay[1]_height	smallmolecule_abundance_study_variable[1]	smallmolecule_abundance_stdev_study_variable[1]	smallmolecule_abundance_std_error_study_variable[1]
+SML	1	C39H78NO8P	null	null	1. PE(17:0/17:0)	720.553018	null	1	7.88485	null	null	null	null	null	null	null	null	null	241187.5313	720.5528501	7.8807	46352.44141	null	null	null
+SML	2	C40H81N2O6P	null	null	SM(d18:1/17:0)	717.5899159	null	1	7.180866667	null	null	null	null	null	null	null	null	null	717770.875	717.5902266	7.185	131917.8594	null	null	null
+SML	null	null	null	null	null	552.5354641	null	1	7.56185	null	null	null	null	null	null	null	null	null	673247.5	552.5351255	7.5577	176429.8438	null	null	null
+SML	4	C42H84NO8P	null	null	PC(17:0/17:0)	762.6007273	null	1	7.752333	null	null	null	null	null	null	null	null	null	1730929.25	762.6014528	7.748183333	360750.4375	null	null	null
+SML	5	C25H52NO7P	null	null	LPC(17:0)	510.3551964	null	1	4.273884	null	null	null	null	null	null	null	null	null	1332939.25	510.355503	4.278	283817.7188	null	null	null
+SML	7	C4813C3H98O6	null	null	TG(16:0/16:0/16:0)-13C3	827.7796283	null	1	10.07958267	null	null	null	null	null	null	null	null	null	2577941	827.7800518	10.08371667	591203.625	null	null	null
+SML	9	C42H51NO8PD31	null	null	PC(16:0/d31/18:1)	791.7772038	null	1	7.255416667	null	null	null	null	null	null	null	null	null	516819.1563	791.7775157	7.251266667	110540.9688	null	null	null
+SML	10	C42H51NO8PD30	null	null	PC(16:0/d30/18:1)	790.7721318	null	1	7.255416667	null	null	null	null	null	null	null	null	null	614450.25	790.7720386	7.251266667	132049.4063	null	null	null

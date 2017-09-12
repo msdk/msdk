@@ -20,7 +20,6 @@ import javax.annotation.Nonnull;
 
 /**
  * MSDK version
- *
  */
 public class MSDKVersion {
 

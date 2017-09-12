@@ -25,7 +25,6 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  * <p>
  * MsScanUtil class.
  * </p>
- *
  */
 public class MsScanUtil {
 
@@ -34,7 +33,6 @@ public class MsScanUtil {
    * clone.
    * </p>
    *
-   * @param newStore a {@link io.github.msdk.datamodel.datastore.DataPointStore} object.
    * @param scan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
    * @param copyDataPoints a {@link java.lang.Boolean} object.
    * @return a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
@@ -64,7 +62,12 @@ public class MsScanUtil {
     return newScan;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @param scan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+   * @return a {@link java.lang.String} object.
+   */
   public String msScanToString(@Nonnull MsScan scan) {
     StringBuilder buf = new StringBuilder();
     buf.append("Scan ");
