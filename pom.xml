@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.msdk</groupId>
 	<artifactId>msdk</artifactId>
-	<version>0.0.10-SNAPSHOT</version>
+	<version>0.0.11-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>MSDK - Mass Spectrometry Development Kit</name>
@@ -86,6 +86,18 @@
 		<developerConnection>scm:git:github.com/msdk/msdk.git</developerConnection>
 	</scm>
 
+	<!-- This element is required for the maven deploy plugin -->
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+
 	<developers>
 		<developer>
 			<name>Tomáš Pluskal</name>
@@ -106,6 +118,14 @@
 		<developer>
 			<name>Thomas F. Dyrlund</name>
 			<email>thomas@dyrlund.dk</email>
+		</developer>
+		<developer>
+			<name>Adam Tenderholt</name>
+			<email>adam.tenderholt@veritomyx.com</email>
+		</developer>
+		<developer>
+			<name>Dmitry Avtonomov</name>
+			<email>dmitriy.avtonomov@gmail.com</email>
 		</developer>
 	</developers>
 	<build>
