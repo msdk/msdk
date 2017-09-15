@@ -52,7 +52,7 @@ public class BiGaussian {
 
   /**
    * <p>
-   * Inside BiGaussian Constructor we're determining 4 BiGaussian Parameters. MaxHeight, Mu,
+   * Inside BiGaussian Constructor we're determining 4 BiGaussian ADAP3DFeatureDetectionParameters. MaxHeight, Mu,
    * SigmaLeft and SigmaRight.
    * </p>
    * 

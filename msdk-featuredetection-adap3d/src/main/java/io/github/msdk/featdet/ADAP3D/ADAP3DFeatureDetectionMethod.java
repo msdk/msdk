@@ -33,7 +33,6 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.ADAP3DPeakDetectionAlgorithm;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.CurveTool;
-import io.github.msdk.featdet.ADAP3D.common.algorithms.Parameters;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix;
 
 /**
@@ -47,6 +46,8 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
 
   private final @Nonnull RawDataFile rawFile;
   private final @Nullable Predicate<MsScan> msScanPredicate;
+  private final @Nonnull ADAP3DFeatureDetectionParameters parameters;
+
   
   private SliceSparseMatrix objSliceSparseMatrix;
 
@@ -70,8 +71,9 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    *
    * @param rawFile {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
    */
-  public ADAP3DFeatureDetectionMethod(@Nonnull RawDataFile rawFile) {
-    this(rawFile, s -> true);
+  public ADAP3DFeatureDetectionMethod(@Nonnull RawDataFile rawFile,
+                                      @Nonnull ADAP3DFeatureDetectionParameters params) {
+    this(rawFile, s -> true, params);
   }
 
   /**
@@ -83,9 +85,12 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    * @param msScanPredicate a {@link java.util.function.Predicate} object. Only MsScan which pass
    *        this predicate will be processed.
    */
-  public ADAP3DFeatureDetectionMethod(@Nonnull RawDataFile rawFile, @Nullable Predicate<MsScan> msScanPredicate) {
+  public ADAP3DFeatureDetectionMethod(@Nonnull RawDataFile rawFile,
+                                      @Nullable Predicate<MsScan> msScanPredicate,
+                                      @Nonnull ADAP3DFeatureDetectionParameters parameters) {
     this.rawFile = rawFile;
     this.msScanPredicate = msScanPredicate;
+    this.parameters = parameters;
   }
 
   /**
@@ -114,13 +119,13 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
     double fwhm = objCurveTool.estimateFwhmMs();
     int roundedFWHM = objSliceSparseMatrix.roundMZ(fwhm);
 
-    Parameters objParameters = new Parameters();
+//    ADAP3DFeatureDetectionParameters objParameters = new ADAP3DFeatureDetectionParameters();
 
     // Here first 20 peaks are determined to estimate the parameters to determine remaining peaks.
     logger.debug("Detecting 20 highest peaks to determine optimal parameters");
     objPeakDetection = new ADAP3DPeakDetectionAlgorithm(objSliceSparseMatrix);
     List<ADAP3DPeakDetectionAlgorithm.GoodPeakInfo> goodPeakList =
-        objPeakDetection.execute(20, objParameters, roundedFWHM);
+        objPeakDetection.execute(20, parameters, roundedFWHM);
 
     // If the algorithm's execution is stopped, execute method of PeakdDtection class will return
     // null. Hence execute method of this class will also return null.
@@ -160,15 +165,15 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
         Collections.max(peakWidthList) + LOW_BOUND_PEAK_WIDTH_PERCENT * avgPeakWidth;
 
     // set the estimated parameters.
-    objParameters.setLargeScaleIn(highestWaveletScale);
-    objParameters.setMinPeakWidth(peakDurationLowerBound);
-    objParameters.setMaxPeakWidth(peakDurationUpperBound);
-    objParameters.setCoefAreaRatioTolerance(coefOverAreaThreshold);
+    parameters.setLargeScaleIn(highestWaveletScale);
+    parameters.setMinPeakWidth(peakDurationLowerBound);
+    parameters.setMaxPeakWidth(peakDurationUpperBound);
+    parameters.setCoefAreaRatioTolerance(coefOverAreaThreshold);
 
     // run the algorithm with new parameters to determine the remaining peaks.
     logger.debug("Running ADAP3D using optimized parameters");
     List<ADAP3DPeakDetectionAlgorithm.GoodPeakInfo> newGoodPeakList =
-        objPeakDetection.execute(objParameters, roundedFWHM);
+        objPeakDetection.execute(parameters, roundedFWHM);
 
     // If the algorithm's execution is stopped, execute method of PeakDtection class will return
     // null. Hence execute method of this class will also return null.

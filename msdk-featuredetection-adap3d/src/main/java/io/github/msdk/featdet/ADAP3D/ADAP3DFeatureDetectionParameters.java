@@ -10,13 +10,13 @@
  *
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
-package io.github.msdk.featdet.ADAP3D.common.algorithms;
+package io.github.msdk.featdet.ADAP3D;
 
 /**
- * <p>Parameters class.</p>
+ * <p>ADAP3DFeatureDetectionParameters class.</p>
  *
  */
-public class Parameters {
+public class ADAP3DFeatureDetectionParameters {
 
   private double peakSimilarityThreshold = 0.5;
   private double biGaussianSimilarityThreshold = 0.5;

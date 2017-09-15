@@ -61,7 +61,7 @@ public class ADAP3DFeatureDetectionMethodTest {
   @Test
   public void testPeakDetection() throws MSDKException, IOException {
 
-    ADAP3DFeatureDetectionMethod ob = new ADAP3DFeatureDetectionMethod(rawFile);
+    ADAP3DFeatureDetectionMethod ob = new ADAP3DFeatureDetectionMethod(rawFile, new ADAP3DFeatureDetectionParameters());
     List<Feature> featureList = ob.execute();
     Assert.assertNotNull(featureList);
 
