@@ -59,11 +59,15 @@ public class CurveTool {
 
     double sigma = 0;
     int countProperIteration = 0;
+    int countTotalIteration = 0;
     int size = objSliceSparseMatrix.getSizeOfRawDataFile();
+
     // int countTotalIteration = 0;int numberOfScansForFWHMCalc
 
-    while (countProperIteration < size) {
-     
+    while (countProperIteration < size && countTotalIteration < objSliceSparseMatrix.numOfScans()) {
+
+      countTotalIteration++;
+
       List<SliceSparseMatrix.VerticalSliceDataPoint> verticalSlice =
           objSliceSparseMatrix.getVerticalSlice(countProperIteration);
 

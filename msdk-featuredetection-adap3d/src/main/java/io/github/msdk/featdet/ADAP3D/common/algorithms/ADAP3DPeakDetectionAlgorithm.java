@@ -15,6 +15,7 @@ package io.github.msdk.featdet.ADAP3D.common.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.msdk.featdet.ADAP3D.ADAP3DFeatureDetectionParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,9 +74,9 @@ public class ADAP3DPeakDetectionAlgorithm {
    * @param roundedFWHM is full width half max of whole raw data file.
    * @return peakList a list of {@link io.github.msdk.featdet.ADAP3D.common.algorithms.ADAP3DPeakDetectionAlgorithm.GoodPeakInfo} object type. This contains information of good
    *         peaks.
-   * @param objParameters a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.Parameters} object.
+   * @param objParameters a {@link ADAP3DFeatureDetectionParameters} object.
    */
-  public List<GoodPeakInfo> execute(int numOfPeaks, Parameters objParameters, int roundedFWHM) {
+  public List<GoodPeakInfo> execute(int numOfPeaks, ADAP3DFeatureDetectionParameters objParameters, int roundedFWHM) {
     
     logger.debug("Starting ADAP3D algorithm for " + numOfPeaks + " peaks");
     
@@ -95,7 +96,7 @@ public class ADAP3DPeakDetectionAlgorithm {
 
 
       if (canceled)
-        return null;
+        return peakList;
 
       progressPercent = objSliceSparseMatrix.getFinishedPercent(maxIntensityTriplet);
       maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
@@ -116,9 +117,9 @@ public class ADAP3DPeakDetectionAlgorithm {
    * @param roundedFWHM is full width half max of whole raw data file.
    * @return peakList a list of {@link io.github.msdk.featdet.ADAP3D.common.algorithms.ADAP3DPeakDetectionAlgorithm.GoodPeakInfo} object type. This contains information of good
    *         peaks.
-   * @param objParameters a {@link io.github.msdk.featdet.ADAP3D.common.algorithms.Parameters} object.
+   * @param objParameters a {@link ADAP3DFeatureDetectionParameters} object.
    */
-  public List<GoodPeakInfo> execute(Parameters objParameters, int roundedFWHM) {
+  public List<GoodPeakInfo> execute(ADAP3DFeatureDetectionParameters objParameters, int roundedFWHM) {
 
     logger.debug("Starting ADAP3D algorithm for all good peaks");
 
@@ -158,7 +159,7 @@ public class ADAP3DPeakDetectionAlgorithm {
    * @return objPeakInfo a {@link GoodPeakInfo} object. This contains information of good peak. If
    *         there's no good peak it'll return null.
    */
-  private GoodPeakInfo iteration(Triplet triplet, int fwhm, Parameters objParameters) {
+  private GoodPeakInfo iteration(Triplet triplet, int fwhm, ADAP3DFeatureDetectionParameters objParameters) {
 
     GoodPeakInfo objPeakInfo = null;
     int lowerScanBound = triplet.scanListIndex - objParameters.getDelta() < 0 ? 0
