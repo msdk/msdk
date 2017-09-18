@@ -635,4 +635,6 @@ public class SliceSparseMatrix {
     return progress;
 
   }
+
+  public double numOfScans() {return listOfScans.size();}
 }

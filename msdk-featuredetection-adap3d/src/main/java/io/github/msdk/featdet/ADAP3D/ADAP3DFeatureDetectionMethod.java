@@ -48,7 +48,6 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
   private final @Nullable Predicate<MsScan> msScanPredicate;
   private final @Nonnull ADAP3DFeatureDetectionParameters parameters;
 
-  
   private SliceSparseMatrix objSliceSparseMatrix;
 
   /**
@@ -57,7 +56,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    */
   private static final double LOW_BOUND_PEAK_WIDTH_PERCENT = 0.75;
 
-  private List<Feature> finalFeatureList;
+  private final List<Feature> finalFeatureList;
 
   private ADAP3DPeakDetectionAlgorithm objPeakDetection;
 
@@ -91,6 +90,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
     this.rawFile = rawFile;
     this.msScanPredicate = msScanPredicate;
     this.parameters = parameters;
+    this.finalFeatureList = new ArrayList<>();
   }
 
   /**
@@ -127,14 +127,14 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
     List<ADAP3DPeakDetectionAlgorithm.GoodPeakInfo> goodPeakList =
         objPeakDetection.execute(20, parameters, roundedFWHM);
 
-    // If the algorithm's execution is stopped, execute method of PeakdDtection class will return
-    // null. Hence execute method of this class will also return null.
+    // If the algorithm's execution is stopped, execute method of PeakDetection class will return
+    // zero peaks.
     if (canceled)
-      return null;
+      return finalFeatureList;
 
     // Here we're making features for first 20 peaks and add it into the list of feature.
     logger.debug("Converting 20 highest peaks to MSDK features");
-    finalFeatureList = new ArrayList<Feature>();
+
     convertPeaksToFeatures(goodPeakList, finalFeatureList);
 
     // Estimation of parameters.

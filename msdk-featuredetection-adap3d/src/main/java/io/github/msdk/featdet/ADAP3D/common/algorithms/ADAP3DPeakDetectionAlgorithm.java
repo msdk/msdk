@@ -96,7 +96,7 @@ public class ADAP3DPeakDetectionAlgorithm {
 
 
       if (canceled)
-        return null;
+        return peakList;
 
       progressPercent = objSliceSparseMatrix.getFinishedPercent(maxIntensityTriplet);
       maxIntensityTriplet = objSliceSparseMatrix.findNextMaxIntensity();
