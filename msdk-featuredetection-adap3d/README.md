@@ -12,9 +12,9 @@ The three dimensions of LC/MS or GC/MS data are m/z(mass to charge ratio), reten
 
 1. [Link to Commits](https://github.com/msdk/msdk/commits?author=dharak029)
 2. [Link to Pull Requests](https://github.com/msdk/msdk/pulls?q=is%3Apr+is%3Aclosed+no%3Aassignee+author%3Adharak029)
-3. [Link to Code](https://github.com/msdk/msdk/tree/master/msdk-featdet/msdk-featdet-ADAP-3D/src/main/java/io/github/msdk/featdet/ADAP3D)
-4. [Link to TestCases](https://github.com/msdk/msdk/tree/master/msdk-featdet/msdk-featdet-ADAP-3D/src/test/java/io/github/msdk/featdet/ADAP3D)
-5. [Link to Detailed Project Report](https://github.com/msdk/msdk/blob/master/msdk-featdet/msdk-featdet-ADAP-3D/ADAP3D%20Project%20Report.docx)
+3. [Link to Code](https://github.com/msdk/msdk/tree/master/msdk-featuredetection-adap3d/src/main/java/io/github/msdk/featdet/ADAP3D)
+4. [Link to TestCases](https://github.com/msdk/msdk/tree/master/msdk-featuredetection-adap3d/src/test)
+5. [Link to Detailed Project Report](https://github.com/msdk/msdk/blob/master/msdk-featuredetection-adap3d/ADAP3D%20Project%20Report.docx)
 
 ## Major Challenges
 
