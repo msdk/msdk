@@ -32,13 +32,13 @@ import com.google.common.collect.Lists;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.impl.SimpleFeature;
-import io.github.msdk.datamodel.impl.SimpleFeatureTable;
-import io.github.msdk.datamodel.impl.SimpleFeatureTableRow;
-import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
-import io.github.msdk.datamodel.impl.SimpleSample;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.Sample;
+import io.github.msdk.datamodel.SimpleFeature;
+import io.github.msdk.datamodel.SimpleFeatureTable;
+import io.github.msdk.datamodel.SimpleFeatureTableRow;
+import io.github.msdk.datamodel.SimpleIonAnnotation;
+import io.github.msdk.datamodel.SimpleSample;
 import io.github.msdk.io.chromatof.ChromaTofParser.Mode;
 import io.github.msdk.io.chromatof.ChromaTofParser.TableColumn;
 

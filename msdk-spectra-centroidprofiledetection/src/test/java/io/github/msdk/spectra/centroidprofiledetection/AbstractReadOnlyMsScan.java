@@ -20,13 +20,13 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ActivationInfo;
-import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.MsScanType;
-import io.github.msdk.datamodel.rawdata.PolarityType;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.ActivationInfo;
+import io.github.msdk.datamodel.IsolationInfo;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.MsScanType;
+import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.PolarityType;
+import io.github.msdk.datamodel.RawDataFile;
 
 /**
  * <p>
@@ -56,17 +56,17 @@ public abstract class AbstractReadOnlyMsScan implements MsScan {
    * Constructor for AbstractReadOnlyMsScan.
    * </p>
    *
-   * @param dataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-   * @param spectrumType a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType} object.
+   * @param dataFile a {@link io.github.msdk.datamodel.RawDataFile} object.
+   * @param spectrumType a {@link io.github.msdk.datamodel.MsSpectrumType} object.
    * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
-   * @param scanType a {@link io.github.msdk.datamodel.rawdata.MsScanType} object.
+   * @param scanType a {@link io.github.msdk.datamodel.MsScanType} object.
    * @param mzRange a {@link com.google.common.collect.Range} object.
    * @param scanningRange a {@link com.google.common.collect.Range} object.
    * @param scanNumber a {@link java.lang.Integer} object.
    * @param scanDefinition a {@link java.lang.String} object.
    * @param tic a {@link java.lang.Float} object.
-   * @param polarity a {@link io.github.msdk.datamodel.rawdata.PolarityType} object.
-   * @param sourceFragmentation a {@link io.github.msdk.datamodel.rawdata.ActivationInfo} object.
+   * @param polarity a {@link io.github.msdk.datamodel.PolarityType} object.
+   * @param sourceFragmentation a {@link io.github.msdk.datamodel.ActivationInfo} object.
    * @param isolations a {@link java.util.List} object.
    * @param numOfDataPoints a {@link java.lang.Integer} object.
    * @param rt a {@link java.lang.Float} object.

@@ -25,11 +25,11 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.impl.SimpleFeatureTable;
-import io.github.msdk.datamodel.impl.SimpleFeatureTableRow;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.FeatureTableRow;
+import io.github.msdk.datamodel.Sample;
+import io.github.msdk.datamodel.SimpleFeatureTable;
+import io.github.msdk.datamodel.SimpleFeatureTableRow;
 import io.github.msdk.util.FeatureTableUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;

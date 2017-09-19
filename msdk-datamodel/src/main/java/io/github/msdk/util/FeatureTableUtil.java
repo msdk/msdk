@@ -19,8 +19,8 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.FeatureTableRow;
 
 /**
  * <p>
@@ -32,7 +32,7 @@ public class FeatureTableUtil {
   /**
    * <p>getRowsInsideRange.</p>
    *
-   * @param table a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+   * @param table a {@link io.github.msdk.datamodel.FeatureTable} object.
    * @param rtRange a {@link com.google.common.collect.Range} object.
    * @param mzRange a {@link com.google.common.collect.Range} object.
    * @return a {@link java.util.List} object.

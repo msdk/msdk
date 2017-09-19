@@ -23,11 +23,11 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.IonAnnotation;
+import io.github.msdk.datamodel.IsolationInfo;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SimpleIonAnnotation;
 import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
 
@@ -54,8 +54,8 @@ public class MsMsDetectionMethod implements MSDKMethod<List<IonAnnotation>> {
    * Constructor for MsMsDetectionMethod.
    * </p>
    *
-   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
-   * @param msScans a list of {@link io.github.msdk.datamodel.rawdata.MsScan} objects.
+   * @param rawDataFile a {@link io.github.msdk.datamodel.RawDataFile} object.
+   * @param msScans a list of {@link io.github.msdk.datamodel.MsScan} objects.
    * @param mzTolerance a {@link io.github.msdk.util.tolerances.MzTolerance} object.
    * @param rtTolerance a {@link io.github.msdk.util.tolerances.RTTolerance} object.
    * @param intensityTolerance a {@link java.lang.Double} object.

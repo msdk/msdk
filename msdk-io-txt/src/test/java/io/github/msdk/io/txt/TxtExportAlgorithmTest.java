@@ -21,7 +21,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrum;
 
 public class TxtExportAlgorithmTest {
 

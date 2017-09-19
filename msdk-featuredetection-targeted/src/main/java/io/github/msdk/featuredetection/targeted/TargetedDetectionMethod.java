@@ -23,11 +23,11 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.impl.SimpleChromatogram;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.IonAnnotation;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SimpleChromatogram;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.msdk.util.ChromatogramUtil.CalculationMethod;
 import io.github.msdk.util.MsSpectrumUtil;
@@ -62,7 +62,7 @@ public class TargetedDetectionMethod implements MSDKMethod<List<Chromatogram>> {
    * </p>
    *
    * @param ionAnnotations a {@link java.util.List} object.
-   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param rawDataFile a {@link io.github.msdk.datamodel.RawDataFile} object.
    * @param mzTolerance an object
    * @param rtTolerance a {@link io.github.msdk.util.tolerances.RTTolerance} object.
    * @param intensityTolerance a {@link java.lang.Double} object.

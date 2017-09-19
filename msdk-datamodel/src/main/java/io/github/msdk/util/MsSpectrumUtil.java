@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrum;
 
 /**
  * <p>
@@ -231,7 +231,7 @@ public class MsSpectrumUtil {
    * msSpectrumToString.
    * </p>
    *
-   * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+   * @param spectrum a {@link io.github.msdk.datamodel.MsSpectrum} object.
    * @return a {@link java.lang.String} object.
    */
   public static @Nonnull String msSpectrumToString(MsSpectrum spectrum) {

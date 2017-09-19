@@ -15,7 +15,7 @@ package io.github.msdk.spectra.centroiding;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.MsScan;
 
 /**
  * <p>
@@ -29,8 +29,8 @@ public interface MSDKCentroidingAlgorithm {
    * centroidScan.
    * </p>
    *
-   * @param input a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
-   * @return a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+   * @param input a {@link io.github.msdk.datamodel.MsScan} object.
+   * @return a {@link io.github.msdk.datamodel.MsScan} object.
    */
   @Nonnull
   MsScan centroidScan(@Nonnull MsScan input);

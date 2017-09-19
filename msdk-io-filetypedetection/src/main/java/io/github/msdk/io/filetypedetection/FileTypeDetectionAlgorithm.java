@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
-import io.github.msdk.datamodel.files.FileType;
+import io.github.msdk.datamodel.FileType;
 
 /**
  * Detector of raw data file format
@@ -78,7 +78,7 @@ public class FileTypeDetectionAlgorithm {
    * </p>
    *
    * @param fileName a {@link java.io.File} object.
-   * @return a {@link io.github.msdk.datamodel.files.FileType} object.
+   * @return a {@link io.github.msdk.datamodel.FileType} object.
    * @throws java.io.IOException if any.
    */
   public static @Nullable FileType detectDataFileType(@Nonnull File fileName) throws IOException {

@@ -15,8 +15,8 @@ package io.github.msdk.spectra.centroidprofiledetection;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrumType;
 
 /**
  * Auto-detection of spectrum type from data points. Determines if the spectrum represented by given
@@ -32,8 +32,8 @@ public class SpectrumTypeDetectionAlgorithm {
    * detectSpectrumType.
    * </p>
    *
-   * @param msSpectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
-   * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType} object.
+   * @param msSpectrum a {@link io.github.msdk.datamodel.MsSpectrum} object.
+   * @return a {@link io.github.msdk.datamodel.MsSpectrumType} object.
    */
   public static MsSpectrumType detectSpectrumType(@Nonnull MsSpectrum msSpectrum) {
     double mzValues[] = msSpectrum.getMzValues();
@@ -47,7 +47,7 @@ public class SpectrumTypeDetectionAlgorithm {
    * detectSpectrumType.
    * </p>
    *
-   * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrumType} object.
+   * @return a {@link io.github.msdk.datamodel.MsSpectrumType} object.
    * @param mzValues an array of double.
    * @param intensityValues an array of float.
    * @param size a {@link java.lang.Integer} object.

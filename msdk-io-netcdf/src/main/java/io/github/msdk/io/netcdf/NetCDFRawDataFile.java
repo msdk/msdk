@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.Optional;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.impl.SimpleRawDataFile;
+import io.github.msdk.datamodel.FileType;
+import io.github.msdk.datamodel.SimpleRawDataFile;
 import ucar.nc2.NetcdfFile;
 
 /**
@@ -22,7 +22,7 @@ public class NetCDFRawDataFile extends SimpleRawDataFile {
    *
    * @param rawDataFileName a {@link java.lang.String} object.
    * @param originalRawDataFile a {@link java.util.Optional} object.
-   * @param rawDataFileType a {@link io.github.msdk.datamodel.files.FileType} object.
+   * @param rawDataFileType a {@link io.github.msdk.datamodel.FileType} object.
    * @param inputFile a {@link ucar.nc2.NetcdfFile} object.
    */
   public NetCDFRawDataFile(String rawDataFileName, Optional<File> originalRawDataFile,

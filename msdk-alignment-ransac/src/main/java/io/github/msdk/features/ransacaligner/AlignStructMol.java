@@ -15,7 +15,7 @@ package io.github.msdk.features.ransacaligner;
 
 import java.util.Comparator;
 
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
+import io.github.msdk.datamodel.FeatureTableRow;
 
 /**
  * <p>AlignStructMol class.</p>
@@ -32,8 +32,8 @@ public class AlignStructMol implements Comparator<AlignStructMol> {
     /**
      * <p>Constructor for AlignStructMol.</p>
      *
-     * @param row1 a {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} object.
-     * @param row2 a {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} object.
+     * @param row1 a {@link io.github.msdk.datamodel.FeatureTableRow} object.
+     * @param row2 a {@link io.github.msdk.datamodel.FeatureTableRow} object.
      */
     public AlignStructMol(FeatureTableRow row1, FeatureTableRow row2) {
 	this.row1 = row1;

@@ -21,8 +21,8 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.FileType;
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.io.filetypedetection.FileTypeDetectionAlgorithm;
 import io.github.msdk.io.mzdata.MzDataFileImportMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;

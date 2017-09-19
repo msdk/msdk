@@ -31,12 +31,11 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.impl.SimpleFeatureTable;
-import io.github.msdk.datamodel.impl.SimpleFeatureTableRow;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.FeatureTableRow;
+import io.github.msdk.datamodel.Sample;
+import io.github.msdk.datamodel.SimpleFeatureTable;
+import io.github.msdk.datamodel.SimpleFeatureTableRow;
 import io.github.msdk.util.FeatureTableUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
@@ -50,7 +49,6 @@ public class RansacAlignerMethod implements MSDKMethod<FeatureTable> {
   private final @Nonnull RTTolerance rtTolerance;
   private final @Nonnull RTTolerance rtToleranceAfterCorrection;
   private final @Nonnull String featureTableName;
-  private final @Nonnull DataPointStore dataStore;
   private final @Nonnull List<FeatureTable> featureTables;
   private final @Nonnull SimpleFeatureTable result;
   private boolean canceled = false;
@@ -78,12 +76,10 @@ public class RansacAlignerMethod implements MSDKMethod<FeatureTable> {
    *        to data. If it is 0, the variable will be set as 0.1
    */
   public RansacAlignerMethod(@Nonnull List<FeatureTable> featureTables,
-      @Nonnull DataPointStore dataStore, @Nonnull MzTolerance mzTolerance,
-      @Nonnull RTTolerance rtTolerance,
+      @Nonnull MzTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
       @Nonnull String featureTableName, @Nonnull double t, @Nonnull boolean linear,
       @Nonnull double dataPointsRate) {
     this.featureTables = featureTables;
-    this.dataStore = dataStore;
     this.mzTolerance = mzTolerance;
     this.rtToleranceAfterCorrection = rtTolerance;
     this.rtTolerance = new RTTolerance(rtToleranceAfterCorrection.getTolerance() * 2, false);
@@ -128,8 +124,7 @@ public class RansacAlignerMethod implements MSDKMethod<FeatureTable> {
         Range<Double> mzRange = mzTolerance.getToleranceRange(mz);
 
         // Calculate the RT range limit for the current row
-        Range<Float> rtRange =
-            rtTolerance.getToleranceRange(row.getRT());
+        Range<Float> rtRange = rtTolerance.getToleranceRange(row.getRT());
 
 
 
@@ -232,11 +227,11 @@ public class RansacAlignerMethod implements MSDKMethod<FeatureTable> {
 
       // Get all rows of the aligned feature table within the m/z and
       // RT limits
-      List<FeatureTableRow> candidateRows = FeatureTableUtil.getRowsInsideRange(result, rtRange, mzRange);
+      List<FeatureTableRow> candidateRows =
+          FeatureTableUtil.getRowsInsideRange(result, rtRange, mzRange);
 
       for (FeatureTableRow candidateRow : candidateRows) {
         RowVsRowScore score;
-
 
 
 

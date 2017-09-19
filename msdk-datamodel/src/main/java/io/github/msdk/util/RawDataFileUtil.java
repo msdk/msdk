@@ -20,9 +20,9 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
 
 /**
  * <p>
@@ -36,7 +36,7 @@ public class RawDataFileUtil {
    * getScans.
    * </p>
    *
-   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param rawDataFile a {@link io.github.msdk.datamodel.RawDataFile} object.
    * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
    * @return a {@link java.util.List} object.
    */
@@ -61,7 +61,7 @@ public class RawDataFileUtil {
    * getScans.
    * </p>
    *
-   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param rawDataFile a {@link io.github.msdk.datamodel.RawDataFile} object.
    * @param rtRange a {@link com.google.common.collect.Range} object.
    * @return a {@link java.util.List} object.
    */
@@ -86,7 +86,7 @@ public class RawDataFileUtil {
    * getScans.
    * </p>
    *
-   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param rawDataFile a {@link io.github.msdk.datamodel.RawDataFile} object.
    * @param msFunction a {@link io.github.msdk.datamodel.rawdata.MsFunction} object.
    * @param rtRange a {@link com.google.common.collect.Range} object.
    * @return a {@link java.util.List} object.
@@ -114,7 +114,7 @@ public class RawDataFileUtil {
    * getNextChromatogramNumber.
    * </p>
    *
-   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param rawDataFile a {@link io.github.msdk.datamodel.RawDataFile} object.
    * @return a {@link java.lang.Integer} object.
    */
   @Nonnull

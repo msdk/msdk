@@ -27,15 +27,15 @@ import javax.annotation.Nullable;
 import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.impl.SimpleActivationInfo;
-import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
-import io.github.msdk.datamodel.rawdata.ActivationInfo;
-import io.github.msdk.datamodel.rawdata.ActivationType;
-import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsScanType;
-import io.github.msdk.datamodel.rawdata.PolarityType;
-import io.github.msdk.datamodel.rawdata.SeparationType;
+import io.github.msdk.datamodel.ActivationInfo;
+import io.github.msdk.datamodel.ActivationType;
+import io.github.msdk.datamodel.ChromatogramType;
+import io.github.msdk.datamodel.IsolationInfo;
+import io.github.msdk.datamodel.MsScanType;
+import io.github.msdk.datamodel.PolarityType;
+import io.github.msdk.datamodel.SeparationType;
+import io.github.msdk.datamodel.SimpleActivationInfo;
+import io.github.msdk.datamodel.SimpleIsolationInfo;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArrayList;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
@@ -300,7 +300,7 @@ class MzMLConverter {
    * </p>
    *
    * @param chromatogram a {@link uk.ac.ebi.jmzml.model.mzml.Chromatogram} object.
-   * @return a {@link io.github.msdk.datamodel.rawdata.SeparationType} object.
+   * @return a {@link io.github.msdk.datamodel.SeparationType} object.
    */
   @Nonnull
   public SeparationType extractSeparationType(
@@ -314,7 +314,7 @@ class MzMLConverter {
    * </p>
    *
    * @param chromatogram a {@link uk.ac.ebi.jmzml.model.mzml.Chromatogram} object.
-   * @return a {@link io.github.msdk.datamodel.chromatograms.ChromatogramType} object.
+   * @return a {@link io.github.msdk.datamodel.ChromatogramType} object.
    */
   @Nonnull
   public ChromatogramType extractChromatogramType(

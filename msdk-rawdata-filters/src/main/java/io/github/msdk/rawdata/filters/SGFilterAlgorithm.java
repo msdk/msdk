@@ -17,8 +17,8 @@ import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.impl.SimpleMsScan;
-import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.SimpleMsScan;
 import io.github.msdk.util.MsScanUtil;
 
 /**

@@ -31,13 +31,13 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.impl.SimpleChromatogram;
-import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
-import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.ChromatogramType;
+import io.github.msdk.datamodel.IsolationInfo;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SimpleChromatogram;
+import io.github.msdk.datamodel.SimpleIsolationInfo;
 import io.github.msdk.util.ChromatogramUtil;
 
 /**
@@ -58,7 +58,7 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
    * Constructor for SrmDetectionMethod.
    * </p>
    *
-   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param rawDataFile a {@link io.github.msdk.datamodel.RawDataFile} object.
    */
   public SrmDetectionMethod(@Nonnull RawDataFile rawDataFile) {
     this.rawDataFile = rawDataFile;

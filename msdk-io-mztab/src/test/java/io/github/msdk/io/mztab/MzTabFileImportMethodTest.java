@@ -22,10 +22,10 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.FeatureTableRow;
+import io.github.msdk.datamodel.IonAnnotation;
+import io.github.msdk.datamodel.Sample;
 
 public class MzTabFileImportMethodTest {
 

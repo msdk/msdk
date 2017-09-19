@@ -28,9 +28,9 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.impl.SimpleRawDataFile;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.FileType;
+import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SimpleRawDataFile;
 
 /**
  * <p>

@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
@@ -54,7 +54,7 @@ public class ChromatogramBuilderMethod implements MSDKMethod<List<Chromatogram>>
    * scan that does not provide its own MzTolerance.
    * </p>
    *
-   * @param inputFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param inputFile a {@link io.github.msdk.datamodel.RawDataFile} object.
    * @param minimumTimeSpan a {@link java.lang.Double} object.
    * @param minimumHeight a {@link java.lang.Double} object.
    * @param mzTolerance an object that implements the MZTolerance interface.
@@ -71,7 +71,7 @@ public class ChromatogramBuilderMethod implements MSDKMethod<List<Chromatogram>>
    * scan that does not provide its own MzTolerance.
    * </p>
    *
-   * @param inputFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param inputFile a {@link io.github.msdk.datamodel.RawDataFile} object.
    * @param inputScans a {@link java.util.List} object.
    * @param minimumTimeSpan a {@link java.lang.Double} object.
    * @param minimumHeight a {@link java.lang.Double} object.

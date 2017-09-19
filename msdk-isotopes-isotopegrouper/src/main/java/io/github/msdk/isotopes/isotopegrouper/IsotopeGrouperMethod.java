@@ -18,9 +18,9 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.impl.SimpleFeatureTable;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.FeatureTableRow;
+import io.github.msdk.datamodel.SimpleFeatureTable;
 import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
 
@@ -53,7 +53,7 @@ public class IsotopeGrouperMethod implements MSDKMethod<FeatureTable> {
    * Constructor for IsotopeGrouperMethod.
    * </p>
    *
-   * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+   * @param featureTable a {@link io.github.msdk.datamodel.FeatureTable} object.
    * @param featureTableName a {@link java.lang.String} object.
    * @param mzTolerance a {@link io.github.msdk.util.tolerances.MzTolerance} object.
    * @param rtTolerance a {@link io.github.msdk.util.tolerances.RTTolerance} object.

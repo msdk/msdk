@@ -16,8 +16,8 @@ package io.github.msdk.io.netcdf;
 import java.io.IOException;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.impl.SimpleMsScan;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.SimpleMsScan;
 import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import ucar.ma2.Array;
 import ucar.ma2.Index;

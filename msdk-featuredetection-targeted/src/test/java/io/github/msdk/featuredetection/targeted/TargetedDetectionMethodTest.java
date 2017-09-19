@@ -20,10 +20,10 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.IonAnnotation;
+import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SimpleIonAnnotation;
 import io.github.msdk.featuredetection.targeted.TargetedDetectionMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.util.ChromatogramUtil;

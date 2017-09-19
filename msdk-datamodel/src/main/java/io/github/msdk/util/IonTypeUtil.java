@@ -23,9 +23,9 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Strings;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.impl.SimpleIonType;
-import io.github.msdk.datamodel.ionannotations.IonType;
-import io.github.msdk.datamodel.rawdata.PolarityType;
+import io.github.msdk.datamodel.IonType;
+import io.github.msdk.datamodel.PolarityType;
+import io.github.msdk.datamodel.SimpleIonType;
 
 /**
  * IonType utilities
@@ -42,7 +42,7 @@ public class IonTypeUtil {
   /**
    * Creates an IonType from a string. The expected string format is [M+2H]2+.
    *
-   * @return a {@link io.github.msdk.datamodel.ionannotations.IonType} object.
+   * @return a {@link io.github.msdk.datamodel.IonType} object.
    * @param adduct a {@link java.lang.String} object.
    */
   public static @Nonnull IonType createIonType(final @Nonnull String adduct) {

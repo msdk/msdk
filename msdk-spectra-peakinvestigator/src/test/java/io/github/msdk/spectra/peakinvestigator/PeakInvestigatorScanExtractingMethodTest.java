@@ -26,7 +26,7 @@ import org.junit.Test;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrum;
 import io.github.msdk.spectra.peakinvestigator.PeakInvestigatorMsSpectrum;
 import io.github.msdk.spectra.peakinvestigator.PeakInvestigatorScanExtractingMethod;
 

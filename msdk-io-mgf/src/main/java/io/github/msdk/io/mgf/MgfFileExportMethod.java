@@ -28,9 +28,9 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.IsolationInfo;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.MsSpectrum;
 
 /**
  * <p>
@@ -53,7 +53,7 @@ public class MgfFileExportMethod implements MSDKMethod<Void> {
    * Constructor for MgfFileExportMethod.
    * </p>
    *
-   * @param spectra a collection of {@link io.github.msdk.datamodel.msspectra.MsSpectrum} objects.
+   * @param spectra a collection of {@link io.github.msdk.datamodel.MsSpectrum} objects.
    * @param target a {@link java.io.File} object.
    */
   public MgfFileExportMethod(@Nonnull Collection<MsSpectrum> spectra, @Nonnull File target) {
@@ -67,7 +67,7 @@ public class MgfFileExportMethod implements MSDKMethod<Void> {
    * </p>
    *
    * @param target a {@link java.io.File} object.
-   * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+   * @param spectrum a {@link io.github.msdk.datamodel.MsSpectrum} object.
    */
   public MgfFileExportMethod(@Nonnull MsSpectrum spectrum, @Nonnull File target) {
     this.spectra = Collections.singleton(spectrum);

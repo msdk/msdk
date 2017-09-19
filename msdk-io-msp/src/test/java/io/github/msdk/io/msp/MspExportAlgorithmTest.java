@@ -22,9 +22,9 @@ import org.junit.Test;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.impl.SimpleMsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.SimpleMsSpectrum;
 import io.github.msdk.util.MsSpectrumUtil;
 
 public class MspExportAlgorithmTest {

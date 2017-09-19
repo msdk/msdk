@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Strings;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrum;
 
 /**
  * <p>
@@ -40,7 +40,7 @@ public class MspExportAlgorithm {
    * </p>
    *
    * @param exportFile a {@link java.io.File} object.
-   * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+   * @param spectrum a {@link io.github.msdk.datamodel.MsSpectrum} object.
    * @throws java.io.IOException if any.
    * @throws io.github.msdk.MSDKException if any.
    */

@@ -23,7 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 
 public class Peak3DFunctionTest {

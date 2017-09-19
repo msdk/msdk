@@ -23,10 +23,10 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.impl.SimpleIonAnnotation;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.FeatureTableRow;
+import io.github.msdk.datamodel.IonAnnotation;
+import io.github.msdk.datamodel.SimpleIonAnnotation;
 import io.github.msdk.util.tolerances.MzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
 
@@ -49,9 +49,9 @@ public class LocalDatabaseSearchMethod implements MSDKMethod<Void> {
    * Constructor for LocalDatabaseSearchMethod.
    * </p>
    *
-   * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+   * @param featureTable a {@link io.github.msdk.datamodel.FeatureTable} object.
    * @param ionAnnotations a {@link java.util.List} of
-   *        {@link io.github.msdk.datamodel.ionannotations.IonAnnotation} objects.
+   *        {@link io.github.msdk.datamodel.IonAnnotation} objects.
    * @param mzTolerance an object
    * @param rtTolerance a {@link io.github.msdk.util.tolerances.RTTolerance} object.
    */

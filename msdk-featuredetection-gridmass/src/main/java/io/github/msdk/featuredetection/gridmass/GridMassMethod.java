@@ -26,14 +26,14 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.impl.SimpleChromatogram;
-import io.github.msdk.datamodel.impl.SimpleFeature;
-import io.github.msdk.datamodel.impl.SimpleFeatureTable;
-import io.github.msdk.datamodel.impl.SimpleFeatureTableRow;
-import io.github.msdk.datamodel.impl.SimpleSample;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SimpleChromatogram;
+import io.github.msdk.datamodel.SimpleFeature;
+import io.github.msdk.datamodel.SimpleFeatureTable;
+import io.github.msdk.datamodel.SimpleFeatureTableRow;
+import io.github.msdk.datamodel.SimpleSample;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.msdk.util.tolerances.MzTolerance;
 
@@ -84,7 +84,7 @@ public class GridMassMethod implements MSDKMethod<FeatureTable> {
    * Constructor for GridMassMethod.
    * </p>
    *
-   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param rawDataFile a {@link io.github.msdk.datamodel.RawDataFile} object.
    * @param scans a {@link java.util.List} object.
    * @param mzTol a {@link io.github.msdk.util.tolerances.MzTolerance} object.
    * @param intensitySimilarity a {@link java.lang.Double} object.

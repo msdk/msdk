@@ -19,7 +19,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.FeatureTable;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 
 public class LocalDatabaseSearchMethodTest {

@@ -21,11 +21,11 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ActivationInfo;
-import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsScanType;
-import io.github.msdk.datamodel.rawdata.PolarityType;
+import io.github.msdk.datamodel.ActivationInfo;
+import io.github.msdk.datamodel.IsolationInfo;
+import io.github.msdk.datamodel.MsScanType;
+import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.PolarityType;
 import io.github.msdk.util.tolerances.MzTolerance;
 import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;

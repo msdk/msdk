@@ -38,9 +38,9 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.impl.SimpleMsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.SimpleMsSpectrum;
 import io.github.msdk.util.ArrayUtil;
 
 /**
@@ -141,7 +141,7 @@ public class PeakInvestigatorScanExtractingMethod implements MSDKMethod<List<MsS
    * using the {@link io.github.msdk.spectra.peakinvestigator.PeakInvestigatorMsSpectrum}.
    *
    * @param reader a {@link java.io.BufferedReader} object.
-   * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+   * @return a {@link io.github.msdk.datamodel.MsSpectrum} object.
    * @throws java.io.IOException if any.
    */
   protected MsSpectrum parseMsSpectrum(BufferedReader reader) throws IOException {

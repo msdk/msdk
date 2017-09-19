@@ -21,8 +21,8 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.files.FileType;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.FileType;
 import io.github.msdk.io.filetypedetection.FileTypeDetectionAlgorithm;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 

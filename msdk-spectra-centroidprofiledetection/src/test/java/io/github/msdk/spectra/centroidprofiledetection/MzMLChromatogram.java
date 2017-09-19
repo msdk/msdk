@@ -21,12 +21,12 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.ChromatogramType;
+import io.github.msdk.datamodel.IonAnnotation;
+import io.github.msdk.datamodel.IsolationInfo;
+import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SeparationType;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 

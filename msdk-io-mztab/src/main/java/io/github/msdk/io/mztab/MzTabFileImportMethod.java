@@ -33,11 +33,11 @@ import com.google.common.io.ByteStreams;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.impl.SimpleFeatureTable;
-import io.github.msdk.datamodel.impl.SimpleFeatureTableRow;
-import io.github.msdk.datamodel.impl.SimpleSample;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.Sample;
+import io.github.msdk.datamodel.SimpleFeatureTable;
+import io.github.msdk.datamodel.SimpleFeatureTableRow;
+import io.github.msdk.datamodel.SimpleSample;
 import uk.ac.ebi.pride.jmztab.model.Assay;
 import uk.ac.ebi.pride.jmztab.model.MZTabFile;
 import uk.ac.ebi.pride.jmztab.model.MsRun;

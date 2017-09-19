@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import java.util.List;
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix.Triplet;
 import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 

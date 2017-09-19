@@ -24,8 +24,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.lang.Math;
 
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.ADAP3DPeakDetectionAlgorithm.GoodPeakInfo;
 
 
@@ -122,7 +122,7 @@ public class SliceSparseMatrix {
    * as mz,intensity,rt,scan number
    * </p>
    *
-   * @param rawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object. This is raw data
+   * @param rawFile a {@link io.github.msdk.datamodel.RawDataFile} object. This is raw data
    *        file object by which we can pass raw file.
    */
   public SliceSparseMatrix(RawDataFile rawFile) {
@@ -135,7 +135,7 @@ public class SliceSparseMatrix {
    * as mz,intensity,rt,scan number
    * </p>
    *
-   * @param rawFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object. This is raw data
+   * @param rawFile a {@link io.github.msdk.datamodel.RawDataFile} object. This is raw data
    *        file object by which we can pass raw file.
    * @param msScanPredicate a {@link java.util.function.Predicate} object. Only MsScan which pass
    *        this predicate will be processed.

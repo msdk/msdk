@@ -35,11 +35,11 @@ import com.google.common.base.Strings;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKVersion;
-import io.github.msdk.datamodel.features.Feature;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.Feature;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.FeatureTableRow;
+import io.github.msdk.datamodel.IonAnnotation;
+import io.github.msdk.datamodel.Sample;
 import uk.ac.ebi.pride.jmztab.model.Assay;
 import uk.ac.ebi.pride.jmztab.model.CVParam;
 import uk.ac.ebi.pride.jmztab.model.MZTabColumnFactory;
@@ -75,7 +75,7 @@ public class MzTabFileExportMethod implements MSDKMethod<File> {
    * Constructor for MzTabFileExportMethod.
    * </p>
    *
-   * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+   * @param featureTable a {@link io.github.msdk.datamodel.FeatureTable} object.
    * @param mzTabFile a {@link java.io.File} object.
    * @param exportAllFeatures a {@link java.lang.Boolean} object.
    */

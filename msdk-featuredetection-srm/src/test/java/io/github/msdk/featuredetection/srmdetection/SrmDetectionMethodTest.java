@@ -21,8 +21,8 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.featuredetection.srmdetection.SrmDetectionMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.io.nativeformats.ThermoRawImportMethod;

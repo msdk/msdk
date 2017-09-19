@@ -24,9 +24,9 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.impl.SimpleMsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.SimpleMsSpectrum;
 import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.ArrayUtil;
 import io.github.msdk.util.DataPointSorter;
@@ -47,7 +47,7 @@ public class TxtImportAlgorithm {
    * Parse a MsSpectrum object from the given string that has input data in two columns.
    * 
    * @param scanner An open {@link java.util.Scanner} object.
-   * @return A {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object containing the parsed
+   * @return A {@link io.github.msdk.datamodel.MsSpectrum} object containing the parsed
    *         data.
    */
   private static @Nonnull MsSpectrum parseMsSpectrum(@Nonnull Scanner scanner) {
@@ -92,7 +92,7 @@ public class TxtImportAlgorithm {
    * Parse a MsSpectrum object from the given string that has input data in two columns.
    *
    * @param spectrumText A String containing the input text.
-   * @return A {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object containing the parsed
+   * @return A {@link io.github.msdk.datamodel.MsSpectrum} object containing the parsed
    *         data.
    */
   public static MsSpectrum parseMsSpectrum(@Nonnull String spectrumText) {
@@ -111,7 +111,7 @@ public class TxtImportAlgorithm {
    * returns.
    *
    * @param reader An open @{java.io.Reader} object that provides the data in two columns.
-   * @return A {@link java.util.Collection} of {@link io.github.msdk.datamodel.msspectra.MsSpectrum}
+   * @return A {@link java.util.Collection} of {@link io.github.msdk.datamodel.MsSpectrum}
    *         objects containing the parsed data.
    */
   public static @Nonnull Collection<MsSpectrum> parseMsSpectra(@Nonnull Reader reader) {
@@ -135,7 +135,7 @@ public class TxtImportAlgorithm {
    * closed when this method returns.
    *
    * @param reader An open @{java.io.Reader} object that provides the data in two columns.
-   * @return A {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object containing the parsed
+   * @return A {@link io.github.msdk.datamodel.MsSpectrum} object containing the parsed
    *         data, or null if the data could not be parsed.
    */
   public static MsSpectrum parseMsSpectrum(@Nonnull Reader reader) {

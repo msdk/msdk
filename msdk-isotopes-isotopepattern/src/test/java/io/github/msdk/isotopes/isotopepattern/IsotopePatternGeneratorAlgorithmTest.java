@@ -18,7 +18,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrum;
 import io.github.msdk.isotopes.isotopepattern.IsotopePatternGeneratorAlgorithm;
 
 public class IsotopePatternGeneratorAlgorithmTest {

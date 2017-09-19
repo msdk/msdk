@@ -25,7 +25,7 @@ import edu.ucdavis.fiehnlab.spectra.hash.core.SplashFactory;
 import edu.ucdavis.fiehnlab.spectra.hash.core.types.Ion;
 import edu.ucdavis.fiehnlab.spectra.hash.core.types.SpectraType;
 import edu.ucdavis.fiehnlab.spectra.hash.core.types.SpectrumImpl;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrum;
 
 /**
  * the reference implementation of the Spectral Hash Key
@@ -37,7 +37,7 @@ public class SplashCalculationAlgorithm {
   /**
    * calculates our spectral hash
    *
-   * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+   * @param spectrum a {@link io.github.msdk.datamodel.MsSpectrum} object.
    * @return a {@link java.lang.String} object.
    */
   public static @Nonnull String calculateSplash(@Nonnull MsSpectrum spectrum) {

@@ -10,10 +10,10 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.FileType;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
 
 /**
  * <p>MzXMLRawDataFile class.</p>
@@ -74,7 +74,7 @@ public class MzXMLRawDataFile implements RawDataFile {
   /**
    * {@inheritDoc}
    *
-   * @param scan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+   * @param scan a {@link io.github.msdk.datamodel.MsScan} object.
    */
   public void addScan(@Nonnull MsScan scan) {
     Preconditions.checkNotNull(scan);
@@ -86,7 +86,7 @@ public class MzXMLRawDataFile implements RawDataFile {
   /**
    * {@inheritDoc}
    *
-   * @param scan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+   * @param scan a {@link io.github.msdk.datamodel.MsScan} object.
    */
   public void removeScan(@Nonnull MsScan scan) {
     Preconditions.checkNotNull(scan);

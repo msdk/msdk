@@ -24,11 +24,11 @@ import java.util.Collections;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrum;
 
 /**
  * <p>
- * A class containing methods to export {@link io.github.msdk.datamodel.msspectra.MsSpectrum}
+ * A class containing methods to export {@link io.github.msdk.datamodel.MsSpectrum}
  * objects to string representations or files.
  * </p>
  */
@@ -40,7 +40,7 @@ public class TxtExportAlgorithm {
    * </p>
    *
    * @param exportFile a {@link java.io.File} object.
-   * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+   * @param spectrum a {@link io.github.msdk.datamodel.MsSpectrum} object.
    * @throws java.io.IOException if any.
    */
   public static void exportSpectrum(@Nonnull File exportFile, @Nonnull MsSpectrum spectrum)
@@ -93,7 +93,7 @@ public class TxtExportAlgorithm {
    * Export a spectrum to a writer. A single space is used as the delimiter.
    * </p>
    *
-   * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+   * @param spectrum a {@link io.github.msdk.datamodel.MsSpectrum} object.
    * @param writer a {@link java.io.Writer} object.
    * @throws java.io.IOException if any.
    */
@@ -107,7 +107,7 @@ public class TxtExportAlgorithm {
    * Export a spectrum to a writer.
    * </p>
    *
-   * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+   * @param spectrum a {@link io.github.msdk.datamodel.MsSpectrum} object.
    * @param writer a {@link java.io.Writer} object.
    * @param delimiter a {@link java.lang.String object}.
    * @throws java.io.IOException if any.
@@ -133,7 +133,7 @@ public class TxtExportAlgorithm {
    * </p>
    * A single space is used as the delimiter.
    *
-   * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+   * @param spectrum a {@link io.github.msdk.datamodel.MsSpectrum} object.
    * @return a {@link java.lang.String} object.
    */
   public static @Nonnull String spectrumToString(@Nonnull MsSpectrum spectrum) {
@@ -145,7 +145,7 @@ public class TxtExportAlgorithm {
    * Export a spectrum to a string. Uses a {@link java.io.StringWriter} object.
    * </p>
    *
-   * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+   * @param spectrum a {@link io.github.msdk.datamodel.MsSpectrum} object.
    * @param delimiter a {@link java.lang.String} object.
    * @return a {@link java.lang.String} object.
    */

@@ -28,18 +28,16 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrum;
 import io.github.msdk.db.mona.pojo.Result;
 import io.github.msdk.db.mona.pojo.SimilaritySearchQuery;
 import io.github.msdk.db.mona.pojo.SimilaritySearchResult;
-import io.github.msdk.id.Search;
 
 /**
  * MoNA specific implementation of the Search Interface
  */
-public class MonaSearch implements Search, MonaConfiguration {
+public class MonaSearch implements MonaConfiguration {
   /** {@inheritDoc} */
-  @Override
   public MsSpectrum findSpectrumById(long id) throws IOException {
     return  null; // new MonaSpectrum(id);
   }
@@ -49,7 +47,6 @@ public class MonaSearch implements Search, MonaConfiguration {
    *
    * returns a mass spectra by it's property name
    */
-  @Override
   public @Nonnull Iterator<MsSpectrum> findSpectrumByProperty(String propertyName,
       Serializable propertyValue) throws IOException {
     return getMsSpectrumIterator(null);
@@ -73,7 +70,6 @@ public class MonaSearch implements Search, MonaConfiguration {
    *
    * searches for similar spectra, based on the provided Spectrum
    */
-  @Override
   public @Nonnull Iterator<MsSpectrum> findSimilarSpectra(MsSpectrum compare, Integer minSimilarity)
       throws IOException {
     SimilaritySearchQuery query = buildQuery(compare, minSimilarity);

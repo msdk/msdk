@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.io.mzml.data.MzMLParser;
 import io.github.msdk.io.mzml.data.MzMLRawDataFile;
 import io.github.msdk.io.mzml.util.ByteBufferInputStream;
@@ -40,11 +40,11 @@ import javolution.xml.stream.XMLStreamException;
  * <p>
  * This class contains methods which parse data in MzML format from {@link java.io.File File},
  * {@link java.nio.file.Path Path} or {@link java.io.InputStream InputStream} <br>
- * {@link io.github.msdk.datamodel.rawdata.MsScan Scan}s and
- * {@link io.github.msdk.datamodel.chromatograms.Chromatogram Chromatogram}s will be parsed, and the
+ * {@link io.github.msdk.datamodel.MsScan Scan}s and
+ * {@link io.github.msdk.datamodel.Chromatogram Chromatogram}s will be parsed, and the
  * values pre-loaded when the {@link java.util.function.Predicate Predicate} is passed. Other
- * {@link io.github.msdk.datamodel.rawdata.MsScan Scan}s and
- * {@link io.github.msdk.datamodel.chromatograms.Chromatogram Chromatogram}s can be loaded on demand
+ * {@link io.github.msdk.datamodel.MsScan Scan}s and
+ * {@link io.github.msdk.datamodel.Chromatogram Chromatogram}s can be loaded on demand
  * if the source is a {@link java.io.File File}, whereas, they will be dropped if the source is an
  * {@link java.io.InputStream InputStream}
  * </p>
@@ -79,11 +79,11 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    *
    * @param mzMLFilePath a {@link java.lang.String String} which contains the absolute path to the
    *        MzML File.
-   * @param msScanPredicate Only {@link io.github.msdk.datamodel.rawdata.MsScan MsScan}s which pass
+   * @param msScanPredicate Only {@link io.github.msdk.datamodel.MsScan MsScan}s which pass
    *        this predicate will be parsed by the parser and added to the
    *        {@link io.github.msdk.io.mzml.data.MzMLRawDataFile RawDataFile} returned by the
    *        {@link #getResult() getResult()} method.
-   * @param chromatogramPredicate Only {@link io.github.msdk.datamodel.chromatograms.Chromatogram
+   * @param chromatogramPredicate Only {@link io.github.msdk.datamodel.Chromatogram
    *        Chromatogram}s which pass this predicate will be parsed by the parser and added to the
    *        {@link io.github.msdk.io.mzml.data.MzMLRawDataFile RawDataFile} returned by the
    *        {@link #getResult() getResult()} method.
@@ -112,11 +112,11 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    *
    * @param mzMLFilePath a {@link java.nio.file.Path Path} object which contains the path to the
    *        MzML File.
-   * @param msScanPredicate Only {@link io.github.msdk.datamodel.rawdata.MsScan MsScan}s which pass
+   * @param msScanPredicate Only {@link io.github.msdk.datamodel.MsScan MsScan}s which pass
    *        this predicate will be parsed by the parser and added to the
    *        {@link io.github.msdk.io.mzml.data.MzMLRawDataFile RawDataFile} returned by the
    *        {@link #getResult() getResult()} method.
-   * @param chromatogramPredicate Only {@link io.github.msdk.datamodel.chromatograms.Chromatogram
+   * @param chromatogramPredicate Only {@link io.github.msdk.datamodel.Chromatogram
    *        Chromatogram}s which pass this predicate will be parsed by the parser and added to the
    *        {@link io.github.msdk.io.mzml.data.MzMLRawDataFile RawDataFile} returned by the
    *        {@link #getResult() getResult()} method.
@@ -143,11 +143,11 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    * </p>
    *
    * @param mzMLFile a {@link java.io.File File} object instance of the MzML File.
-   * @param msScanPredicate Only {@link io.github.msdk.datamodel.rawdata.MsScan MsScan}s which pass
+   * @param msScanPredicate Only {@link io.github.msdk.datamodel.MsScan MsScan}s which pass
    *        this predicate will be parsed by the parser and added to the
    *        {@link io.github.msdk.io.mzml.data.MzMLRawDataFile RawDataFile} returned by the
    *        {@link #getResult() getResult()} method.
-   * @param chromatogramPredicate Only {@link io.github.msdk.datamodel.chromatograms.Chromatogram
+   * @param chromatogramPredicate Only {@link io.github.msdk.datamodel.Chromatogram
    *        Chromatogram}s which pass this predicate will be parsed by the parser and added to the
    *        {@link io.github.msdk.io.mzml.data.MzMLRawDataFile RawDataFile} returned by the
    *        {@link #getResult() getResult()} method.
@@ -176,11 +176,11 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    *
    * @param inputStream an {@link java.io.InputStream InputStream} which contains data in MzML
    *        format.
-   * @param msScanPredicate Only {@link io.github.msdk.datamodel.rawdata.MsScan MsScan}s which pass
+   * @param msScanPredicate Only {@link io.github.msdk.datamodel.MsScan MsScan}s which pass
    *        this predicate will be parsed by the parser and added to the
    *        {@link io.github.msdk.io.mzml.data.MzMLRawDataFile RawDataFile} returned by the
    *        {@link #getResult() getResult()} method.
-   * @param chromatogramPredicate Only {@link io.github.msdk.datamodel.chromatograms.Chromatogram
+   * @param chromatogramPredicate Only {@link io.github.msdk.datamodel.Chromatogram
    *        Chromatogram}s which pass this predicate will be parsed by the parser and added to the
    *        {@link io.github.msdk.io.mzml.data.MzMLRawDataFile RawDataFile} returned by the
    *        {@link #getResult() getResult()} method.
@@ -322,7 +322,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    * </p>
    *
    * @return {@link java.util.function.Predicate Predicate} specified for
-   *         {@link io.github.msdk.datamodel.rawdata.MsScan MsScan}s <br>
+   *         {@link io.github.msdk.datamodel.MsScan MsScan}s <br>
    *         The {@link java.util.function.Predicate Predicate} evaluates to true always, if it
    *         wasn't specified on initialization
    */
@@ -336,7 +336,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
    * </p>
    *
    * @return {@link java.util.function.Predicate Predicate} specified for
-   *         {@link io.github.msdk.datamodel.chromatograms.Chromatogram Chromatogram}s <br>
+   *         {@link io.github.msdk.datamodel.Chromatogram Chromatogram}s <br>
    *         The {@link java.util.function.Predicate Predicate} evaluates to true always, if it
    *         wasn't specified on initialization
    */

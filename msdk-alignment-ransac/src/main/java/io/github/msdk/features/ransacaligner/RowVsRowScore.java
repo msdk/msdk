@@ -14,7 +14,7 @@
 
 package io.github.msdk.features.ransacaligner;
 
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
+import io.github.msdk.datamodel.FeatureTableRow;
 
 /**
  * This class represents a score between a feature table row and an aligned

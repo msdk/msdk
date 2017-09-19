@@ -20,10 +20,10 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.PolarityType;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.PolarityType;
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.util.MsSpectrumUtil;
 
 public class ThermoRawImportMethodTest {

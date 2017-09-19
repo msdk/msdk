@@ -21,8 +21,7 @@ import java.util.Iterator;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.id.Search;
+import io.github.msdk.datamodel.MsSpectrum;
 
 /**
  */
@@ -37,7 +36,7 @@ public class MonaSearchTest {
   @Test
   public void testFindSpectrumById() throws Exception {
 
-    Search search = new MonaSearch();
+    MonaSearch search = new MonaSearch();
 
     MsSpectrum result = search.findSpectrumById(TEST_ID);
 
@@ -55,7 +54,7 @@ public class MonaSearchTest {
   @Test
   public void testFindSimilarSpectra() throws Exception {
 
-    Search search = new MonaSearch();
+    MonaSearch search = new MonaSearch();
 
   }
 

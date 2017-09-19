@@ -26,11 +26,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.features.Feature;
-import io.github.msdk.datamodel.impl.SimpleChromatogram;
-import io.github.msdk.datamodel.impl.SimpleFeature;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.Feature;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SimpleChromatogram;
+import io.github.msdk.datamodel.SimpleFeature;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.ADAP3DPeakDetectionAlgorithm;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.CurveTool;
 import io.github.msdk.featdet.ADAP3D.common.algorithms.SliceSparseMatrix;
@@ -68,7 +68,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    * Constructor
    * </p>
    *
-   * @param rawFile {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param rawFile {@link io.github.msdk.datamodel.RawDataFile} object.
    */
   public ADAP3DFeatureDetectionMethod(@Nonnull RawDataFile rawFile,
                                       @Nonnull ADAP3DFeatureDetectionParameters params) {
@@ -80,7 +80,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    * Constructor
    * </p>
    *
-   * @param rawFile {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param rawFile {@link io.github.msdk.datamodel.RawDataFile} object.
    * @param msScanPredicate a {@link java.util.function.Predicate} object. Only MsScan which pass
    *        this predicate will be processed.
    */
@@ -103,7 +103,7 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    * peaks.
    * </p>
    *
-   * @return newFeatureList a list of {@link io.github.msdk.datamodel.features.Feature}
+   * @return newFeatureList a list of {@link io.github.msdk.datamodel.Feature}
    */
   public List<Feature> execute() {
 

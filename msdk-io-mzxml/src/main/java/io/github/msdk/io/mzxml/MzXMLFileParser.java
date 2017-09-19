@@ -19,13 +19,13 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
-import io.github.msdk.datamodel.impl.SimpleMsScan;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsScanType;
-import io.github.msdk.datamodel.rawdata.PolarityType;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.IsolationInfo;
+import io.github.msdk.datamodel.MsScanType;
+import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.PolarityType;
+import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SimpleIsolationInfo;
+import io.github.msdk.datamodel.SimpleMsScan;
 import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import it.unimi.dsi.io.ByteBufferInputStream;
 import javolution.text.CharArray;
@@ -88,7 +88,7 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
   /**
    * <p>execute.</p>
    *
-   * @return a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @return a {@link io.github.msdk.datamodel.RawDataFile} object.
    * @throws io.github.msdk.MSDKException if any.
    */
   public RawDataFile execute() throws MSDKException {

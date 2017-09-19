@@ -27,11 +27,11 @@ import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import com.google.common.base.Strings;
 import com.google.common.math.DoubleMath;
 
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.features.Feature;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.ionannotations.IonType;
-import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.Feature;
+import io.github.msdk.datamodel.IonAnnotation;
+import io.github.msdk.datamodel.IonType;
+import io.github.msdk.datamodel.MsScan;
 import uk.ac.ebi.pride.jmztab.model.Assay;
 import uk.ac.ebi.pride.jmztab.model.SmallMolecule;
 

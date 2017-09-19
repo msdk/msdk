@@ -17,9 +17,9 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
 
-import io.github.msdk.datamodel.impl.SimpleMsScan;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SimpleMsScan;
 
 /**
  * <p>
@@ -33,9 +33,9 @@ public class MsScanUtil {
    * clone.
    * </p>
    *
-   * @param scan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+   * @param scan a {@link io.github.msdk.datamodel.MsScan} object.
    * @param copyDataPoints a {@link java.lang.Boolean} object.
-   * @return a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+   * @return a {@link io.github.msdk.datamodel.MsScan} object.
    */
   @Nonnull
   static public SimpleMsScan clone(@Nonnull MsScan scan, @Nonnull Boolean copyDataPoints) {
@@ -65,7 +65,7 @@ public class MsScanUtil {
   /**
    * {@inheritDoc}
    *
-   * @param scan a {@link io.github.msdk.datamodel.rawdata.MsScan} object.
+   * @param scan a {@link io.github.msdk.datamodel.MsScan} object.
    * @return a {@link java.lang.String} object.
    */
   public String msScanToString(@Nonnull MsScan scan) {

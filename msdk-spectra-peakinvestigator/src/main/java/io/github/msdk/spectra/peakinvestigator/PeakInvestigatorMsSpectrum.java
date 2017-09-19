@@ -17,8 +17,8 @@ import java.util.TreeMap;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrumType;
 import io.github.msdk.util.tolerances.MzTolerance;
 
 /**
@@ -36,7 +36,7 @@ public class PeakInvestigatorMsSpectrum implements MsSpectrum {
    * Constructor for PeakInvestigatorMsSpectrum.
    * </p>
    *
-   * @param spectrum a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+   * @param spectrum a {@link io.github.msdk.datamodel.MsSpectrum} object.
    * @param errors a {@link java.util.TreeMap} object.
    */
   public PeakInvestigatorMsSpectrum(MsSpectrum spectrum, TreeMap<Double, Error> errors) {

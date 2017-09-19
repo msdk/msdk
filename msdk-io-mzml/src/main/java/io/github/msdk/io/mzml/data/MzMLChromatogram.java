@@ -28,16 +28,16 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.chromatograms.ChromatogramType;
-import io.github.msdk.datamodel.impl.SimpleActivationInfo;
-import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ActivationInfo;
-import io.github.msdk.datamodel.rawdata.ActivationType;
-import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
+import io.github.msdk.datamodel.ActivationInfo;
+import io.github.msdk.datamodel.ActivationType;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.ChromatogramType;
+import io.github.msdk.datamodel.IonAnnotation;
+import io.github.msdk.datamodel.IsolationInfo;
+import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SeparationType;
+import io.github.msdk.datamodel.SimpleActivationInfo;
+import io.github.msdk.datamodel.SimpleIsolationInfo;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 
 class MzMLChromatogram implements Chromatogram {
@@ -450,7 +450,7 @@ class MzMLChromatogram implements Chromatogram {
   /**
    * <p>
    * Search for the CV Parameter value for the given accession in the
-   * {@link io.github.msdk.datamodel.chromatograms.Chromatogram Chromatogram}'s CV Parameters
+   * {@link io.github.msdk.datamodel.Chromatogram Chromatogram}'s CV Parameters
    * </p>
    *
    * @param accession the CV Parameter accession as {@link java.lang.String String}

@@ -26,10 +26,10 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.impl.SimpleChromatogram;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SimpleChromatogram;
 import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.DataPointSorter.SortingDirection;
 import io.github.msdk.util.DataPointSorter.SortingProperty;

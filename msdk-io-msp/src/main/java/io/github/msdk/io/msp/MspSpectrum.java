@@ -18,7 +18,7 @@ import java.util.Hashtable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import io.github.msdk.datamodel.impl.AbstractMsSpectrum;
+import io.github.msdk.datamodel.AbstractMsSpectrum;
 
 /**
  * <p>

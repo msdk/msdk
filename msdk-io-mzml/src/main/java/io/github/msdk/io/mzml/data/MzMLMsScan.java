@@ -27,14 +27,14 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.impl.SimpleIsolationInfo;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ActivationInfo;
-import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.MsScanType;
-import io.github.msdk.datamodel.rawdata.PolarityType;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.ActivationInfo;
+import io.github.msdk.datamodel.IsolationInfo;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.MsScanType;
+import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.PolarityType;
+import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SimpleIsolationInfo;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.MsSpectrumUtil;
@@ -555,7 +555,7 @@ public class MzMLMsScan implements MsScan {
   /**
    * <p>
    * Search for the CV Parameter value for the given accession in the
-   * {@link io.github.msdk.datamodel.rawdata.MsScan MsScan}'s CV Parameters
+   * {@link io.github.msdk.datamodel.MsScan MsScan}'s CV Parameters
    * </p>
    *
    * @param accession the CV Parameter accession as {@link java.lang.String String}

@@ -20,9 +20,9 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.IonAnnotation;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.featuredetection.msmsdetection.MsMsDetectionMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.util.tolerances.MaximumMzTolerance;

@@ -22,8 +22,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.MsScan;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.io.mzml.util.TagTracker;
 import javolution.text.CharArray;

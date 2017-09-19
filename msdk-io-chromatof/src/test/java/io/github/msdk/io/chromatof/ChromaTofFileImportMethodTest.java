@@ -20,8 +20,8 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.Sample;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.Sample;
 
 /**
  * Test for the {@link ChromaTofFileImportMethod}.

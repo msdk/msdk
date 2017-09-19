@@ -34,10 +34,8 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
-
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.io.txt.TxtExportAlgorithm;
 
 /**
@@ -62,7 +60,7 @@ public class PeakInvestigatorScanBundlingMethod implements MSDKMethod<File> {
    * deleted on JVM exit.
    * </p>
    *
-   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param rawDataFile a {@link io.github.msdk.datamodel.RawDataFile} object.
    * @throws java.io.IOException if any.
    */
   public PeakInvestigatorScanBundlingMethod(@Nonnull RawDataFile rawDataFile) throws IOException {
@@ -76,7 +74,7 @@ public class PeakInvestigatorScanBundlingMethod implements MSDKMethod<File> {
    * Constructor for PeakInvestigatorScanBundlingMethod.
    * </p>
    *
-   * @param rawDataFile a {@link io.github.msdk.datamodel.rawdata.RawDataFile} object.
+   * @param rawDataFile a {@link io.github.msdk.datamodel.RawDataFile} object.
    * @param file a {@link java.io.File} object.
    */
   public PeakInvestigatorScanBundlingMethod(@Nonnull RawDataFile rawDataFile, @Nonnull File file) {

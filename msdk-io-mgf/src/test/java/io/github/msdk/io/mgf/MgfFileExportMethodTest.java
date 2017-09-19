@@ -19,9 +19,9 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.IsolationInfo;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.MsSpectrum;
 
 public class MgfFileExportMethodTest {
 

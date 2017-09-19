@@ -21,11 +21,9 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import io.github.msdk.datamodel.datastore.DataPointStore;
-import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.FeatureTableRow;
+import io.github.msdk.datamodel.IonAnnotation;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.msdk.util.tolerances.MzTolerance;
@@ -36,9 +34,6 @@ public class RansacAlignerMethodTest {
   @Test
   @Ignore("unfinished")
   public void testMzTab_Samples() throws Exception {
-
-    // Create the data structures
-    DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataStore();
 
     // Import file 1
     File inputFile =
@@ -66,8 +61,8 @@ public class RansacAlignerMethodTest {
     String featureTableName = "Aligned Feature Table";
 
     // 1. Test alignment based on m/z and RT only and linear model
-    RansacAlignerMethod method = new RansacAlignerMethod(featureTables, dataStore, mzTolerance,
-        rtTolerance, featureTableName, 0.4, true, 0);
+    RansacAlignerMethod method = new RansacAlignerMethod(featureTables, mzTolerance, rtTolerance,
+        featureTableName, 0.4, true, 0);
 
     FeatureTable featureTable = method.execute();
     Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
@@ -78,8 +73,8 @@ public class RansacAlignerMethodTest {
     Assert.assertEquals("PE(17:0/17:0)", ionAnnotation.getDescription());
 
     // 2. Test alignment based on m/z and RT only and non-linear model
-    method = new RansacAlignerMethod(featureTables, dataStore, mzTolerance, rtTolerance,
-        featureTableName, 0.4, false, 0);
+    method = new RansacAlignerMethod(featureTables, mzTolerance, rtTolerance, featureTableName, 0.4,
+        false, 0);
 
     featureTable = method.execute();
     Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);
@@ -94,8 +89,8 @@ public class RansacAlignerMethodTest {
     // Add file 1 again
     featureTables.add(featureTable1);
 
-    method = new RansacAlignerMethod(featureTables, dataStore, mzTolerance, rtTolerance,
-        featureTableName, 0.4, true, 0);
+    method = new RansacAlignerMethod(featureTables, mzTolerance, rtTolerance, featureTableName, 0.4,
+        true, 0);
 
     featureTable = method.execute();
     Assert.assertEquals(1.0, method.getFinishedPercentage(), 0.0001);

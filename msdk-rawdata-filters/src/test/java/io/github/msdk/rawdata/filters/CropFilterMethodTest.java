@@ -21,8 +21,8 @@ import org.junit.Test;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 
 public class CropFilterMethodTest {

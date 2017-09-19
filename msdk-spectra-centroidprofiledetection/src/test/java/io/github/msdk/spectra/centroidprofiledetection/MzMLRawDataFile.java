@@ -22,10 +22,10 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.FileType;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 class MzMLRawDataFile implements RawDataFile {

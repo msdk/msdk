@@ -27,8 +27,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.featdet.ADAP3D.datamodel.Result;
 import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 

@@ -13,8 +13,8 @@
 
 package io.github.msdk.features.joinaligner;
 
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.impl.SimpleFeatureTableRow;
+import io.github.msdk.datamodel.FeatureTableRow;
+import io.github.msdk.datamodel.SimpleFeatureTableRow;
 
 /**
  * This class represents a score between a feature table row and an aligned feature table row

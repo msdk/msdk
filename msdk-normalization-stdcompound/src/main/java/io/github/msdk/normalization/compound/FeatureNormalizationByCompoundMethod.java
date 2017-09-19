@@ -20,9 +20,9 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.impl.SimpleFeatureTable;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.FeatureTableRow;
+import io.github.msdk.datamodel.SimpleFeatureTable;
 
 /**
  * This class normalized a list of feature table columns based on a set of features.
@@ -45,11 +45,11 @@ public class FeatureNormalizationByCompoundMethod implements MSDKMethod<FeatureT
    * Constructor for FeatureNormalizationByCompoundMethod.
    * </p>
    *
-   * @param featureTable a {@link io.github.msdk.datamodel.featuretables.FeatureTable} object.
+   * @param featureTable a {@link io.github.msdk.datamodel.FeatureTable} object.
    * @param normalizationType a
    *        {@link io.github.msdk.normalization.compound.NormalizationType} object.
    * @param internalStandardRows a {@link java.util.List} object of
-   *        {@link io.github.msdk.datamodel.featuretables.FeatureTableRow} .
+   *        {@link io.github.msdk.datamodel.FeatureTableRow} .
    * @param mzRtWeight a {@link java.lang.Integer} object.
    */
   public FeatureNormalizationByCompoundMethod(@Nonnull FeatureTable featureTable,

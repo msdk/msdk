@@ -20,7 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.files.FileType;
+import io.github.msdk.datamodel.FileType;
 
 public class FileTypeDetectionAlgorithmTest {
 

@@ -26,7 +26,7 @@ import com.google.common.base.Strings;
 import com.google.common.io.Files;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.MsSpectrumType;
 import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.ArrayUtil;
 import io.github.msdk.util.DataPointSorter;

@@ -28,9 +28,9 @@ import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import com.google.common.base.Strings;
 
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.impl.SimpleMsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.SimpleMsSpectrum;
 import io.github.msdk.util.MsSpectrumUtil;
 
 /**
@@ -52,7 +52,7 @@ public class IsotopePatternGeneratorAlgorithm {
    * @param minAbundance a {@link java.lang.Double} object.
    * @param intensityScale a {@link java.lang.Float} object.
    * @param mzTolerance a {@link java.lang.Double} object.
-   * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+   * @return a {@link io.github.msdk.datamodel.MsSpectrum} object.
    */
   public static @Nonnull MsSpectrum generateIsotopes(@Nonnull String chemicalFormula,
       @Nonnull Double minAbundance, @Nonnull Float intensityScale, @Nonnull Double mzTolerance) {
@@ -99,7 +99,7 @@ public class IsotopePatternGeneratorAlgorithm {
    * @param minAbundance a {@link java.lang.Double} object.
    * @param intensityScale a {@link java.lang.Float} object.
    * @param mzTolerance a {@link java.lang.Double} object.
-   * @return a {@link io.github.msdk.datamodel.msspectra.MsSpectrum} object.
+   * @return a {@link io.github.msdk.datamodel.MsSpectrum} object.
    */
   public static @Nonnull MsSpectrum generateIsotopes(@Nonnull IMolecularFormula cdkFormula,
       @Nonnull Integer charge, @Nonnull Double minAbundance, @Nonnull Float intensityScale,
