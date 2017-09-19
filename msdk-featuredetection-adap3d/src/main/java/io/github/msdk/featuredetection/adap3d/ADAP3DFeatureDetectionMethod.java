@@ -80,6 +80,20 @@ public class ADAP3DFeatureDetectionMethod implements MSDKMethod<List<Feature>> {
    * </p>
    *
    * @param rawFile {@link io.github.msdk.datamodel.RawDataFile} object.
+   * @param msScanPredicate a {@link java.util.function.Predicate} object. Only MsScan which pass
+   *        this predicate will be processed.
+   */
+  public ADAP3DFeatureDetectionMethod(@Nonnull RawDataFile rawFile,
+                                      @Nullable Predicate<MsScan> msScanPredicate) {
+    this(rawFile, msScanPredicate, new ADAP3DFeatureDetectionParameters());
+  }
+  
+  /**
+   * <p>
+   * Constructor
+   * </p>
+   *
+   * @param rawFile {@link io.github.msdk.datamodel.RawDataFile} object.
    */
   public ADAP3DFeatureDetectionMethod(@Nonnull RawDataFile rawFile,
                                       @Nonnull ADAP3DFeatureDetectionParameters params) {
