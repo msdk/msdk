@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-package io.github.msdk.features.ransacaligner;
+package io.github.msdk.alignment.ransac;
 
 import java.util.Comparator;
 
@@ -45,8 +45,8 @@ public class RTs implements Comparator<RTs> {
     /**
      * <p>compare.</p>
      *
-     * @param arg0 a {@link io.github.msdk.features.ransacaligner.RTs} object.
-     * @param arg1 a {@link io.github.msdk.features.ransacaligner.RTs} object.
+     * @param arg0 a {@link io.github.msdk.alignment.ransac.RTs} object.
+     * @param arg1 a {@link io.github.msdk.alignment.ransac.RTs} object.
      * @return a int.
      */
     public int compare(RTs arg0, RTs arg1) {

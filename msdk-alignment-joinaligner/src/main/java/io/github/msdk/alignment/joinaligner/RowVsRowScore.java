@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.features.joinaligner;
+package io.github.msdk.alignment.joinaligner;
 
 import io.github.msdk.datamodel.FeatureTableRow;
 import io.github.msdk.datamodel.SimpleFeatureTableRow;
@@ -79,7 +79,7 @@ class RowVsRowScore implements Comparable<RowVsRowScore> {
    * </p>
    *
    * @see java.lang.Comparable#compareTo(java.lang.Object)
-   * @param object a {@link io.github.msdk.features.joinaligner.RowVsRowScore} object.
+   * @param object a {@link io.github.msdk.alignment.joinaligner.RowVsRowScore} object.
    * @return an int.
    */
   public int compareTo(RowVsRowScore object) {

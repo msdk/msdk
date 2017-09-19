@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.features.ransacaligner;
+package io.github.msdk.alignment.ransac;
 
 import io.github.msdk.datamodel.FeatureTableRow;
 

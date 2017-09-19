@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-package io.github.msdk.features.ransacaligner;
+package io.github.msdk.alignment.ransac;
 
 import java.util.Comparator;
 
@@ -66,8 +66,8 @@ public class AlignStructMol implements Comparator<AlignStructMol> {
     /**
      * <p>compare.</p>
      *
-     * @param arg0 a {@link io.github.msdk.features.ransacaligner.AlignStructMol} object.
-     * @param arg1 a {@link io.github.msdk.features.ransacaligner.AlignStructMol} object.
+     * @param arg0 a {@link io.github.msdk.alignment.ransac.AlignStructMol} object.
+     * @param arg1 a {@link io.github.msdk.alignment.ransac.AlignStructMol} object.
      * @return a int.
      */
     public int compare(AlignStructMol arg0, AlignStructMol arg1) {

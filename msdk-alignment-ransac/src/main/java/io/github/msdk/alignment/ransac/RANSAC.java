@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-package io.github.msdk.features.ransacaligner;
+package io.github.msdk.alignment.ransac;
 
 import com.google.common.collect.Range;
 import java.util.ArrayList;

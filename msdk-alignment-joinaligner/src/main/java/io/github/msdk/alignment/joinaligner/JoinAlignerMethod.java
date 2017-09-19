@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.features.joinaligner;
+package io.github.msdk.alignment.joinaligner;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
