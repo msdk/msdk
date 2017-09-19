@@ -11,7 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-package io.github.msdk.featuredetection.srmdetection;
+package io.github.msdk.featuredetection.srm;
 
 import java.io.File;
 import java.net.URL;
@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import io.github.msdk.datamodel.Chromatogram;
 import io.github.msdk.datamodel.RawDataFile;
-import io.github.msdk.featuredetection.srmdetection.SrmDetectionMethod;
+import io.github.msdk.featuredetection.srm.SrmDetectionMethod;
 import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.io.nativeformats.ThermoRawImportMethod;
 
