@@ -42,12 +42,6 @@
 
 		<dependency>
 			<groupId>io.github.msdk</groupId>
-			<artifactId>msdk-io-mzml-old</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-io-mztab</artifactId>
 			<version>${project.version}</version>
 		</dependency>
