@@ -31,7 +31,7 @@ import io.github.msdk.datamodel.impl.SimpleRawDataFile;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.PolarityType;
-import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
+import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 
 class RawDumpParser {
 

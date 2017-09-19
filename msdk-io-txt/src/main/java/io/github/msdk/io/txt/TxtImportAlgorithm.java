@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import io.github.msdk.datamodel.impl.SimpleMsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
+import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.ArrayUtil;
 import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.DataPointSorter.SortingDirection;

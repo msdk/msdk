@@ -18,7 +18,7 @@ import java.io.IOException;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.impl.SimpleMsScan;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.spectra.spectrumtypedetection.SpectrumTypeDetectionAlgorithm;
+import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.InvalidRangeException;

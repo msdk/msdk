@@ -23,7 +23,7 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.io.filetypedetection.FileTypeDetectionMethod;
+import io.github.msdk.io.filetypedetection.FileTypeDetectionAlgorithm;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 
 /**
@@ -55,7 +55,7 @@ public class FeatureTableImportMethod implements MSDKMethod<FeatureTable> {
 
     FileType fileType;
     try {
-      fileType = FileTypeDetectionMethod.detectDataFileType(sourceFile);
+      fileType = FileTypeDetectionAlgorithm.detectDataFileType(sourceFile);
     } catch (IOException e) {
       throw new MSDKException(e);
     }
