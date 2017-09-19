@@ -57,13 +57,13 @@
 		<java.version>1.8</java.version>
 		<cdk.version>2.0</cdk.version>
 		<junit.version>4.12</junit.version>
-		<mockito.version>2.2.0</mockito.version>
+		<mockito.version>2.10.0</mockito.version>
 		<hamcrest.version>1.3</hamcrest.version>
 		<system-rules.version>1.16.1</system-rules.version>
-		<guava.version>21.0</guava.version>
+		<guava.version>23.0</guava.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<jacoco.version>0.7.6.201602180812</jacoco.version>
-		<findbugs.version>3.0.1</findbugs.version>
+		<jacoco.version>0.7.9</jacoco.version>
+		<findbugs.version>3.0.2</findbugs.version>
 	</properties>
 
 	<licenses>
@@ -127,13 +127,14 @@
 			<email>dmitriy.avtonomov@gmail.com</email>
 		</developer>
 	</developers>
+	
 	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.6.0</version>
+					<version>3.7.0</version>
 					<configuration>
 						<source>${java.version}</source>
 						<target>${java.version}</target>
@@ -143,7 +144,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.19.1</version>
+					<version>2.20.1</version>
 					<configuration>
 						<argLine>-Xmx1024m</argLine>
 					</configuration>
