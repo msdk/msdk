@@ -162,11 +162,11 @@ public class ADAP3DPeakDetectionAlgorithm {
   private GoodPeakInfo iteration(Triplet triplet, int fwhm, ADAP3DFeatureDetectionParameters objParameters) {
 
     GoodPeakInfo objPeakInfo = null;
-    int lowerScanBound = triplet.scanListIndex - objParameters.getDelta() < 0 ? 0
-        : triplet.scanListIndex - objParameters.getDelta();
-    int upperScanBound = triplet.scanListIndex + objParameters.getDelta() >= objSliceSparseMatrix
+    int lowerScanBound = triplet.scanListIndex - objParameters.getLargeScaleIn() < 0 ? 0
+        : triplet.scanListIndex - objParameters.getLargeScaleIn();
+    int upperScanBound = triplet.scanListIndex + objParameters.getLargeScaleIn() >= objSliceSparseMatrix
         .getSizeOfRawDataFile() ? objSliceSparseMatrix.getSizeOfRawDataFile() - 1
-            : triplet.scanListIndex + objParameters.getDelta();
+            : triplet.scanListIndex + objParameters.getLargeScaleIn();
 
     // Here we're getting horizontal slice.
     List<Triplet> slice =

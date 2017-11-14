@@ -13,7 +13,9 @@
 package io.github.msdk.featuredetection.adap3d;
 
 /**
- * <p>ADAP3DFeatureDetectionParameters class.</p>
+ * <p>
+ * ADAP3DFeatureDetectionParameters class.
+ * </p>
  *
  */
 public class ADAP3DFeatureDetectionParameters {
@@ -21,13 +23,14 @@ public class ADAP3DFeatureDetectionParameters {
   private double peakSimilarityThreshold = 0.5;
   private double biGaussianSimilarityThreshold = 0.5;
   private int largeScaleIn = 10;
-  private int delta = largeScaleIn;
   private double coefAreaRatioTolerance = 100;
   private double minPeakWidth = 0.0;
   private double maxPeakWidth = 10.0;
 
   /**
-   * <p>Setter for the field <code>peakSimilarityThreshold</code>.</p>
+   * <p>
+   * Setter for the field <code>peakSimilarityThreshold</code>.
+   * </p>
    *
    * @param thresholdValue a double.
    */
@@ -36,7 +39,9 @@ public class ADAP3DFeatureDetectionParameters {
   }
 
   /**
-   * <p>Getter for the field <code>peakSimilarityThreshold</code>.</p>
+   * <p>
+   * Getter for the field <code>peakSimilarityThreshold</code>.
+   * </p>
    *
    * @return a double.
    */
@@ -45,7 +50,9 @@ public class ADAP3DFeatureDetectionParameters {
   }
 
   /**
-   * <p>Setter for the field <code>biGaussianSimilarityThreshold</code>.</p>
+   * <p>
+   * Setter for the field <code>biGaussianSimilarityThreshold</code>.
+   * </p>
    *
    * @param thresholdValue a double.
    */
@@ -54,7 +61,9 @@ public class ADAP3DFeatureDetectionParameters {
   }
 
   /**
-   * <p>Getter for the field <code>biGaussianSimilarityThreshold</code>.</p>
+   * <p>
+   * Getter for the field <code>biGaussianSimilarityThreshold</code>.
+   * </p>
    *
    * @return a double.
    */
@@ -63,27 +72,9 @@ public class ADAP3DFeatureDetectionParameters {
   }
 
   /**
-   * <p>Setter for the field <code>delta</code>.</p>
-   *
-   * @param scale a int.
-   */
-  public void setDelta(int scale) {
-    largeScaleIn = scale;
-    delta = largeScaleIn * 5;
-
-  }
-
-  /**
-   * <p>Getter for the field <code>delta</code>.</p>
-   *
-   * @return a int.
-   */
-  public int getDelta() {
-    return delta;
-  }
-
-  /**
-   * <p>Setter for the field <code>largeScaleIn</code>.</p>
+   * <p>
+   * Setter for the field <code>largeScaleIn</code>.
+   * </p>
    *
    * @param largeScale a int.
    */
@@ -92,7 +83,9 @@ public class ADAP3DFeatureDetectionParameters {
   }
 
   /**
-   * <p>Getter for the field <code>largeScaleIn</code>.</p>
+   * <p>
+   * Getter for the field <code>largeScaleIn</code>.
+   * </p>
    *
    * @return a int.
    */
@@ -101,7 +94,9 @@ public class ADAP3DFeatureDetectionParameters {
   }
 
   /**
-   * <p>Setter for the field <code>coefAreaRatioTolerance</code>.</p>
+   * <p>
+   * Setter for the field <code>coefAreaRatioTolerance</code>.
+   * </p>
    *
    * @param coefOverAreaThreshold a double.
    */
@@ -110,7 +105,9 @@ public class ADAP3DFeatureDetectionParameters {
   }
 
   /**
-   * <p>Getter for the field <code>coefAreaRatioTolerance</code>.</p>
+   * <p>
+   * Getter for the field <code>coefAreaRatioTolerance</code>.
+   * </p>
    *
    * @return a double.
    */
@@ -119,7 +116,9 @@ public class ADAP3DFeatureDetectionParameters {
   }
 
   /**
-   * <p>Setter for the field <code>minPeakWidth</code>.</p>
+   * <p>
+   * Setter for the field <code>minPeakWidth</code>.
+   * </p>
    *
    * @param peakWidth a double.
    */
@@ -128,7 +127,9 @@ public class ADAP3DFeatureDetectionParameters {
   }
 
   /**
-   * <p>Getter for the field <code>minPeakWidth</code>.</p>
+   * <p>
+   * Getter for the field <code>minPeakWidth</code>.
+   * </p>
    *
    * @return a double.
    */
@@ -137,7 +138,9 @@ public class ADAP3DFeatureDetectionParameters {
   }
 
   /**
-   * <p>Setter for the field <code>maxPeakWidth</code>.</p>
+   * <p>
+   * Setter for the field <code>maxPeakWidth</code>.
+   * </p>
    *
    * @param peakWidth a double.
    */
@@ -146,7 +149,9 @@ public class ADAP3DFeatureDetectionParameters {
   }
 
   /**
-   * <p>Getter for the field <code>maxPeakWidth</code>.</p>
+   * <p>
+   * Getter for the field <code>maxPeakWidth</code>.
+   * </p>
    *
    * @return a double.
    */
