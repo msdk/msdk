@@ -21,7 +21,7 @@ public class ADAP3DFeatureDetectionParameters {
   private double peakSimilarityThreshold = 0.5;
   private double biGaussianSimilarityThreshold = 0.5;
   private int largeScaleIn = 10;
-  private int delta = largeScaleIn * 5;
+  private int delta = largeScaleIn;
   private double coefAreaRatioTolerance = 100;
   private double minPeakWidth = 0.0;
   private double maxPeakWidth = 10.0;

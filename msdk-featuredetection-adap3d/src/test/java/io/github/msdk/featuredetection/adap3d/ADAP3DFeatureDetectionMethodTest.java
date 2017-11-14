@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -63,7 +64,8 @@ public class ADAP3DFeatureDetectionMethodTest {
   @Test
   public void testPeakDetection() throws MSDKException, IOException {
 
-    ADAP3DFeatureDetectionMethod ob = new ADAP3DFeatureDetectionMethod(rawFile, new ADAP3DFeatureDetectionParameters());
+    ADAP3DFeatureDetectionMethod ob =
+        new ADAP3DFeatureDetectionMethod(rawFile, new ADAP3DFeatureDetectionParameters());
     List<Feature> featureList = ob.execute();
     Assert.assertNotNull(featureList);
 
@@ -75,12 +77,17 @@ public class ADAP3DFeatureDetectionMethodTest {
 
     while ((line = reader.readLine()) != null) {
       String[] values = line.split(",");
-      float[] retentionTimeArray = featureList.get(index).getChromatogram().getRetentionTimes();
-      Assert.assertEquals((double)Double.parseDouble(values[0]), (double)featureList.get(index).getMz(),0.1);
-      Assert.assertEquals((double)Double.parseDouble(values[1]), (double)retentionTimeArray[0],0.1);
-      Assert.assertEquals((double)Double.parseDouble(values[2]), (double)retentionTimeArray[retentionTimeArray.length-1],0.1);
-      Assert.assertEquals((double)Double.parseDouble(values[3]), (double)featureList.get(index).getHeight(),0.1);
-      Assert.assertEquals((double)Double.parseDouble(values[4]), (double)featureList.get(index).getRetentionTime(),0.1);
+      Feature feature = featureList.get(index);
+      float[] retentionTimeArray = feature.getChromatogram().getRetentionTimes();
+      Assert.assertEquals((double) Double.parseDouble(values[0]), (double) feature.getMz(), 0.1);
+      Assert.assertEquals((double) Double.parseDouble(values[1]), (double) retentionTimeArray[0],
+          0.1);
+      Assert.assertEquals((double) Double.parseDouble(values[2]),
+          (double) retentionTimeArray[retentionTimeArray.length - 1], 0.1);
+      Assert.assertEquals((double) Double.parseDouble(values[3]), (double) feature.getHeight(),
+          0.1);
+      Assert.assertEquals((double) Double.parseDouble(values[4]),
+          (double) feature.getRetentionTime(), 0.1);
       index++;
     }
     reader.close();
