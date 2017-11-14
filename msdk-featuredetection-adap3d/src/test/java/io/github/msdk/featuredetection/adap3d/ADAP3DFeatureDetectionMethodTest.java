@@ -68,10 +68,7 @@ public class ADAP3DFeatureDetectionMethodTest {
         new ADAP3DFeatureDetectionMethod(rawFile, new ADAP3DFeatureDetectionParameters());
     List<Feature> featureList = ob.execute();
     Assert.assertNotNull(featureList);
-    
-    PrintWriter pw = new PrintWriter(new File("test.csv"));
-    StringBuilder sb = new StringBuilder();
-    
+        
     Path path = getResourcePath("output.csv");
     File inputFile = path.toFile();
     BufferedReader reader = new BufferedReader(new FileReader(inputFile));
