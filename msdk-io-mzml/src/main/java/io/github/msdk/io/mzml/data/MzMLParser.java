@@ -125,8 +125,10 @@ public class MzMLParser {
             && !tracker.inside(MzMLTags.TAG_SCAN_LIST) && vars.spectrum != null) {
           MzMLCVParam cvParam = createMzMLCVParam(xmlStreamReader);
 
-          // do not import the tic from the mzml file, we can calculate it on demand later
-          if (!cvParam.getAccession().equals(MzMLCV.cvTIC))
+          // Some vendors report a different TIC CV param value from the one obtained
+          // from integrating from the scan's intensities.
+          // Retain the MzMLCV.cvTIC so it can be retrieved from the MzMLMsScan object.
+          // if (!cvParam.getAccession().equals(MzMLCV.cvTIC))
             vars.spectrum.getCVParams().addCVParam(cvParam);
 
         } else if (tracker.inside(MzMLTags.TAG_SCAN_LIST)) {
