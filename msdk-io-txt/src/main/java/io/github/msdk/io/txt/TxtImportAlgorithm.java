@@ -50,7 +50,7 @@ public class TxtImportAlgorithm {
    * @return A {@link io.github.msdk.datamodel.MsSpectrum} object containing the parsed
    *         data.
    */
-  private static @Nonnull MsSpectrum parseMsSpectrum(@Nonnull Scanner scanner) {
+  private static @Nonnull SimpleMsSpectrum parseMsSpectrum(@Nonnull Scanner scanner) {
 
     double mzValues[] = new double[16];
     float intensityValues[] = new float[16];
@@ -83,7 +83,7 @@ public class TxtImportAlgorithm {
 
     MsSpectrumType specType =
         SpectrumTypeDetectionAlgorithm.detectSpectrumType(mzValues, intensityValues, size);
-    MsSpectrum result = new SimpleMsSpectrum(mzValues, intensityValues, size, specType);
+    SimpleMsSpectrum result = new SimpleMsSpectrum(mzValues, intensityValues, size, specType);
 
     return result;
   }
