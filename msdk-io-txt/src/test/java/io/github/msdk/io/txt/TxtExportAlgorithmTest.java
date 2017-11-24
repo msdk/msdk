@@ -1,7 +1,12 @@
 package io.github.msdk.io.txt;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.isEmptyString;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileReader;
@@ -13,15 +18,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.hamcrest.Matchers.arrayContaining;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.isEmptyString;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.datamodel.SimpleMsSpectrum;
 
 public class TxtExportAlgorithmTest {
 
@@ -67,11 +69,11 @@ public class TxtExportAlgorithmTest {
     List<String> lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
     assertThat(lines.toArray(new String[lines.size()]), arrayContaining(expectedTwoSpectra));
 
-    Collection<MsSpectrum> importedSpectra =
+    Collection<SimpleMsSpectrum> importedSpectra =
         TxtImportAlgorithm.parseMsSpectra(new FileReader(file));
     assertThat(importedSpectra.size(), equalTo(2));
 
-    Iterator<MsSpectrum> iterator = importedSpectra.iterator();
+    Iterator<SimpleMsSpectrum> iterator = importedSpectra.iterator();
 
     MsSpectrum spectrum = iterator.next();
     assertThat(spectrum.getMzValues()[0], equalTo(mzValues1[0]));
