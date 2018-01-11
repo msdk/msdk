@@ -36,6 +36,12 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>msdk-io-mz5</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>msdk-io-mzml</artifactId>
 			<version>${project.version}</version>
 		</dependency>
