@@ -83,96 +83,143 @@ public class BiGaussian {
 
     double interpolationRightSideX = InterpolationX(horizontalSlice, mu, halfHeight, leftBound,
         rightBound, roundedmz, Direction.RIGHT);
-    // This is sigma right for BiGaussian.
-    sigmaRight = ((interpolationRightSideX - mu)) / Math.sqrt(2 * Math.log(2));
-  }
+	    // This is sigma right for BiGaussian.
+	    sigmaRight = ((interpolationRightSideX - mu)) / Math.sqrt(2 * Math.log(2));
+	  }
 
 
-  /**
-   * <p>
-   * InterpolationX is used to calculate X value of Halfwidth-halfheight point of either left or
-   * right half of BiGaussian.
-   * </p>
-   * 
-   * @param mu a {@link java.lang.Integer} object. This is X value for maximum height in terms of
-   *        scan number.
-   * @param halfHeight a {@link java.lang.Double} object. This is m/z value from the raw file.
-   * @param leftBound a {@link java.lang.Integer} object. This is minimum scan number.
-   * @param rightBound a {@link java.lang.Integer} object. This is maximum scan number.
-   * @param roundedmz a {@link java.lang.Integer} object. This is rounded m/z value.
-   * @param direction a {@link Enum} object. This decides for which half we want to calculate X
-   *        value.
-   */
-  private double InterpolationX(List<Triplet> horizontalSlice, int mu, double halfHeight,
-      int leftBound, int rightBound, int roundedmz, Direction direction) {
+	  /**
+	   * <p>
+	   * InterpolationX is used to calculate X value of Halfwidth-halfheight point of either left or
+	   * right half of BiGaussian.
+	   * </p>
+	   * 
+	   * @param mu a {@link java.lang.Integer} object. This is X value for maximum height in terms of
+	   *        scan number.
+	   * @param halfHeight a {@link java.lang.Double} object. This is m/z value from the raw file.
+	   * @param leftBound a {@link java.lang.Integer} object. This is minimum scan number.
+	   * @param rightBound a {@link java.lang.Integer} object. This is maximum scan number.
+	   * @param roundedmz a {@link java.lang.Integer} object. This is rounded m/z value.
+	   * @param direction a {@link Enum} object. This decides for which half we want to calculate X
+	   *        value.
+	   */
+	  private double InterpolationX(List<Triplet> horizontalSlice, int mu, double halfHeight,
+	      int leftBound, int rightBound, int roundedmz, Direction direction) {
 
-    int i = mu;
-    double Y1 = Double.NaN;
-    double Y2 = Double.NaN;
-    int step = direction == Direction.RIGHT ? 1 : -1;
+		int i = mu;
+		double Y1 = Double.NaN;
+		double Y2 = Double.NaN;
+		int step = direction == Direction.RIGHT ? 1 : -1;
+		int index1 = -1;
+		int firstMzValue = 0;
+		int prevScanNumber;
 
-    Comparator<Triplet> compareScanMz = new Comparator<Triplet>() {
+		Comparator<Triplet> compareScanMz = new Comparator<Triplet>() {
 
-      @Override
-      public int compare(Triplet o1, Triplet o2) {
+			@Override
+			public int compare(Triplet o1, Triplet o2) {
 
-        int scan1 = o1.scanListIndex;
-        int scan2 = o2.scanListIndex;
-        int scanCompare = Integer.compare(scan1, scan2);
+				int scan1 = o1.scanListIndex;
+				int scan2 = o2.scanListIndex;
+				int scanCompare = Integer.compare(scan1, scan2);
 
-        if (scanCompare != 0) {
-          return scanCompare;
-        } else {
-          int mz1 = o1.mz;
-          int mz2 = o2.mz;
-          return Integer.compare(mz1, mz2);
-        }
-      }
-    };
+				if (scanCompare != 0) {
+					return scanCompare;
+				} 
+				else {
+					int mz1 = o1.mz;
+					int mz2 = o2.mz;
+					return Integer.compare(mz1, mz2);
+				}
+			}
+		};
 
+		Comparator<Triplet> compareMzScan = new Comparator<Triplet>() {
 
-    Collections.sort(horizontalSlice, compareScanMz);
+			@Override
+			public int compare(Triplet o1, Triplet o2){
+				int scan1 = o1.mz;
+				int scan2 = o2.mz;
+				if(scan1 == scan2)
+					return Integer.compare(o1.scanListIndex, o2.scanListIndex);
+				else
+					return Integer.compare(scan1, scan2);
+			}
+		};
 
-    while (leftBound <= i && i <= rightBound) {
+		//Sort horizontalSlice according to mz values and SLI.
+		Collections.sort(horizontalSlice, compareMzScan);
+	    
+	    while (leftBound <= i && i <= rightBound) {
+			i += step;
+			Triplet searchTriplet1 = new Triplet();
+			searchTriplet1.mz = roundedmz;
+			searchTriplet1.scanListIndex = i;
+	      
+			index1 = Collections.binarySearch(horizontalSlice, searchTriplet1, compareMzScan);
+			if (index1 >= 0) {
+				//firstMzValue is used as a flag here.
+				firstMzValue = 1;
+				break;
+			}
+		}
 
-      i += step;
-      Triplet searchTriplet1 = new Triplet();
-      searchTriplet1.mz = roundedmz;
-      searchTriplet1.scanListIndex = i;
-      int index1 = Collections.binarySearch(horizontalSlice, searchTriplet1, compareScanMz);
-      if (index1 >= 0) {
-        SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1);
+		//If we found the entry with mz value = roundedmz
+		if(firstMzValue == 1) {
 
-        if (triplet1.intensity != 0 && triplet1.intensity < halfHeight) {
-          Triplet searchTriplet2 = new Triplet();
-          searchTriplet2.mz = roundedmz;
-          searchTriplet2.scanListIndex = i - step;
-          Y1 = (double) triplet1.intensity;
-          int index2 = Collections.binarySearch(horizontalSlice, searchTriplet2, compareScanMz);
-          if (index2 >= 0) {
-            SliceSparseMatrix.Triplet triplet2 = horizontalSlice.get(index2);
-            if (triplet2.intensity != 0) {
-              Y2 = (double) triplet2.intensity;
-              break;
-            }
-          }
-        }
-      }
+			//Initializing variables
+			SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1);
+			prevScanNumber = triplet1.scanListIndex;
 
+			for(int tempFlag=0 ; leftBound <= i && i <= rightBound ; i += step, tempFlag++, index1 += step) {
+				if(tempFlag != 0) {
+					triplet1 = horizontalSlice.get(index1);
+					if(triplet1.mz != roundedmz) {
+						break;
+					}
+					else if(triplet1.scanListIndex - step != prevScanNumber) {
+						continue;
+					}	
+				}
+				prevScanNumber = triplet1.scanListIndex;
+				if (triplet1.intensity != 0 && triplet1.intensity < halfHeight) {
+					if((index1 == 0 && step < 0) || (index1 == horizontalSlice.size()-1 && step > 0)) {
+						//beginning or end of horizontalSlice reached, then break, because index cannot be less than 0 or greater than size of list.
+						break;
+					}
+					Triplet triplet2 = horizontalSlice.get(index1 - step);
+					if(triplet2.scanListIndex != i-step) {
+						//triplet2.scanListIndex is not i-step
+						//This part of the condition is quite redundant, as the values of scanListIndex would be in a sequence.
+						continue;
+					}
+					else if(triplet2.mz != roundedmz) {
+						//triplet2.mz is not equal to roundedmz. The set of mz values, equal to roundedmz is over.
+						break;
+					}
+					Y1 = (double) triplet1.intensity;
+					if (triplet2.intensity != 0) {
+						Y2 = (double) triplet2.intensity;
+						break;
+					}
+				}
+			}
+		}
+	
 
-    }
-    if (Y1 == Double.NaN || Y2 == Double.NaN)
-      throw new IllegalArgumentException("Cannot find BiGaussian.");
-    /*
-     * I've used the formula of line passing through points (x1,y1) and (x2,y2) in interpolationX.
-     * Those are the points which are exactly above and below of halfHeight(halfMaxIntensity). I've
-     * to find exact point between those two points. I've y-value for that point as halfHeight but I
-     * don't have x-value. X-value is scan number and Y-value is intensity.
-     */
+	       
+		if (Y1 == Double.NaN || Y2 == Double.NaN)
+			throw new IllegalArgumentException("Cannot find BiGaussian.");
+		/*
+		* I've used the formula of line passing through points (x1,y1) and (x2,y2) in interpolationX.
+		* Those are the points which are exactly above and below of halfHeight(halfMaxIntensity). I've
+		* to find exact point between those two points. I've y-value for that point as halfHeight but I
+		* don't have x-value. X-value is scan number and Y-value is intensity.
+		*/
 
-    double X = ((halfHeight - Y1) * ((i - step) - i) / (Y2 - Y1)) + i;
-    return X;
-  }
+		double X = ((halfHeight - Y1) * ((i - step) - i) / (Y2 - Y1)) + i;
+		return X;
+	}
 
   /**
    * <p>

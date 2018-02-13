@@ -13,6 +13,10 @@
 
 package io.github.msdk.io.txt;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -25,12 +29,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import static org.junit.Assert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
-
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.datamodel.SimpleMsSpectrum;
 
 public class TxtImportAlgorithmTest {
 
@@ -74,11 +75,11 @@ public class TxtImportAlgorithmTest {
   @Test
   public void testTwoSpetra() {
 
-    Collection<MsSpectrum> spectra =
+    Collection<SimpleMsSpectrum> spectra =
         TxtImportAlgorithm.parseMsSpectra(new StringReader(spectraText));
     assertThat(spectra.size(), equalTo(2));
 
-    Iterator<MsSpectrum> iterator = spectra.iterator();
+    Iterator<SimpleMsSpectrum> iterator = spectra.iterator();
 
     MsSpectrum spectrum = iterator.next();
     assertThat(spectrum.getMzValues()[0], equalTo(10.0));
@@ -100,11 +101,11 @@ public class TxtImportAlgorithmTest {
     builder.append("header line 2\n");
     builder.append(spectrumText);
 
-    Collection<MsSpectrum> spectra =
+    Collection<SimpleMsSpectrum> spectra =
         TxtImportAlgorithm.parseMsSpectra(new StringReader(builder.toString()));
     assertThat(spectra.size(), equalTo(1));
 
-    Iterator<MsSpectrum> iterator = spectra.iterator();
+    Iterator<SimpleMsSpectrum> iterator = spectra.iterator();
 
     MsSpectrum spectrum = iterator.next();
     assertThat(spectrum.getMzValues()[0], equalTo(10.0));
@@ -120,11 +121,11 @@ public class TxtImportAlgorithmTest {
     builder.append("# footer line 1\n");
     builder.append("footer line 2\n");
 
-    Collection<MsSpectrum> spectra =
+    Collection<SimpleMsSpectrum> spectra =
         TxtImportAlgorithm.parseMsSpectra(new StringReader(builder.toString()));
     assertThat(spectra.size(), equalTo(1));
 
-    Iterator<MsSpectrum> iterator = spectra.iterator();
+    Iterator<SimpleMsSpectrum> iterator = spectra.iterator();
 
     MsSpectrum spectrum = iterator.next();
     assertThat(spectrum.getMzValues()[0], equalTo(10.0));
