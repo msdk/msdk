@@ -112,6 +112,7 @@ public class BiGaussian {
 		int step = direction == Direction.RIGHT ? 1 : -1;
 		int index1 = -1;
 		int firstMzValue = 0;
+		int prevScanNumber;
 
 		Comparator<Triplet> compareScanMz = new Comparator<Triplet>() {
 
@@ -157,27 +158,50 @@ public class BiGaussian {
 	      
 			index1 = Collections.binarySearch(horizontalSlice, searchTriplet1, compareScanMz);
 			if (index1 >= 0) {
-				SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1);
+				//firstMzValue is used as a flag here.
+				firstMzValue = 1;
+				break;
+			}
+		}
+
+		//If we found the entry with mz value = roundedmz
+		if(firstMzValue == 1) {
+			for(int tempFlag=0 ; leftBound <= i && i <= rightBound ; i += step, tempFlag++) {
+				if(tempFlag == 0) {
+					SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1);
+				}
+				else {
+					SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1+step);
+					if(triplet1.mz != roundedmz || triplet1.scanListIndex - step != prevScanNumber) {
+						continue;
+					}	
+				}
+				prevScanNumber = triplet1.scanListIndex;
 				if (triplet1.intensity != 0 && triplet1.intensity < halfHeight) {
-					Triplet triplet2 = new Triplet();
 					if((index1 == 0 && step < 0) || (index1 == horizontalSlice.size()-1 && step > 0)) {
-						//end or beginning of horizontalSlice reached, break. 
+						//beginning or end of horizontalSlice reached, then break. 
 						break;
 					}
-					triplet2 = horizontalSlice.get(index1 + step);
-					if(triplet2.scanListIndex != i-step || triplet2.mz != roundedmz) {
-						//Either triplet2.scanListIndex is not i-step, or triplet2.mz != roundedmz
-						//The first part of the condition is quite redundant, as the values of scanListIndex would be in a sequence.
+					Triplet triplet2 = horizontalSlice.get(index1 - step);
+					if(triplet2.scanListIndex != i-step) {
+						//triplet2.scanListIndex is not i-step
+						//This part of the condition is quite redundant, as the values of scanListIndex would be in a sequence.
 						continue;
+					}
+					else if(triplet2.mz != roundedmz) {
+						//triplet2.mz is not equal to roundedmz
+						break;
 					}
 					Y1 = (double) triplet1.intensity;
 					if (triplet2.intensity != 0) {
 						Y2 = (double) triplet2.intensity;
 						break;
 					}
-				}     
+				}
 			}
-	    }
+		}
+	
+
 	       
 		if (Y1 == Double.NaN || Y2 == Double.NaN)
 			throw new IllegalArgumentException("Cannot find BiGaussian.");
