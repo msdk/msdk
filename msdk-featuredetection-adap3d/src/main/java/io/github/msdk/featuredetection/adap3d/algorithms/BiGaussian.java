@@ -134,7 +134,7 @@ public class BiGaussian {
 			}
 		};
 
-		Comparator<Triplet> compareMzOnly = new Comparator<Triplet>() {
+		Comparator<Triplet> compareMzScan = new Comparator<Triplet>() {
 
 			@Override
 			public int compare(Triplet o1, Triplet o2){
@@ -148,7 +148,7 @@ public class BiGaussian {
 		};
 
 		//Sort horizontalSlice according to mz values and SLI.
-		Collections.sort(horizontalSlice, compareMzOnly);
+		Collections.sort(horizontalSlice, compareMzScan);
 	    
 	    while (leftBound <= i && i <= rightBound) {
 			i += step;
@@ -156,7 +156,7 @@ public class BiGaussian {
 			searchTriplet1.mz = roundedmz;
 			searchTriplet1.scanListIndex = i;
 	      
-			index1 = Collections.binarySearch(horizontalSlice, searchTriplet1, compareScanMz);
+			index1 = Collections.binarySearch(horizontalSlice, searchTriplet1, compareMzScan);
 			if (index1 >= 0) {
 				//firstMzValue is used as a flag here.
 				firstMzValue = 1;
@@ -166,20 +166,25 @@ public class BiGaussian {
 
 		//If we found the entry with mz value = roundedmz
 		if(firstMzValue == 1) {
-			for(int tempFlag=0 ; leftBound <= i && i <= rightBound ; i += step, tempFlag++) {
-				if(tempFlag == 0) {
-					SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1);
-				}
-				else {
-					SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1+step);
-					if(triplet1.mz != roundedmz || triplet1.scanListIndex - step != prevScanNumber) {
+
+			//Initializing variables
+			SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1);
+			prevScanNumber = triplet1.scanListIndex;
+
+			for(int tempFlag=0 ; leftBound <= i && i <= rightBound ; i += step, tempFlag++, index1 += step) {
+				if(tempFlag != 0) {
+					triplet1 = horizontalSlice.get(index1);
+					if(triplet1.mz != roundedmz) {
+						break;
+					}
+					else if(triplet1.scanListIndex - step != prevScanNumber) {
 						continue;
 					}	
 				}
 				prevScanNumber = triplet1.scanListIndex;
 				if (triplet1.intensity != 0 && triplet1.intensity < halfHeight) {
 					if((index1 == 0 && step < 0) || (index1 == horizontalSlice.size()-1 && step > 0)) {
-						//beginning or end of horizontalSlice reached, then break. 
+						//beginning or end of horizontalSlice reached, then break, because index cannot be less than 0 or greater than size of list.
 						break;
 					}
 					Triplet triplet2 = horizontalSlice.get(index1 - step);
@@ -189,7 +194,7 @@ public class BiGaussian {
 						continue;
 					}
 					else if(triplet2.mz != roundedmz) {
-						//triplet2.mz is not equal to roundedmz
+						//triplet2.mz is not equal to roundedmz. The set of mz values, equal to roundedmz is over.
 						break;
 					}
 					Y1 = (double) triplet1.intensity;
