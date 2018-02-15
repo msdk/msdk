@@ -140,15 +140,17 @@ public class BiGaussian {
         //Initializing variables
         SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1);
         prevScanNumber = triplet1.scanListIndex;
+        index1 += step;
+        i += step;
+        triplet1 = horizontalSlice.get(index1);
 
-        for (int tempFlag = 0; leftBound <= i && i <= rightBound; i += step, tempFlag++, index1 += step) {
-            if (tempFlag != 0) {
-                triplet1 = horizontalSlice.get(index1);
-                if (triplet1.mz != roundedmz) {
-                    break;
-                } else if (triplet1.scanListIndex - step != prevScanNumber) {
-                    continue;
-                }
+        for ( ; leftBound <= i && i <= rightBound; i += step, index1 += step) {
+        	
+            triplet1 = horizontalSlice.get(index1);
+            if (triplet1.mz != roundedmz) {
+                break;
+            } else if (triplet1.scanListIndex - step != prevScanNumber) {
+                continue;
             }
             prevScanNumber = triplet1.scanListIndex;
             if (triplet1.intensity != 0 && triplet1.intensity < halfHeight) {
