@@ -110,7 +110,6 @@ public class BiGaussian {
         double Y2 = Double.NaN;
         int step = direction == Direction.RIGHT ? 1 : -1;
         int index1 = -1;
-        int firstMzValue = 0;
         int prevScanNumber;
 
         Comparator<Triplet> compareMzScan = (t1, t2) -> (t1.mz != t2.mz)
@@ -128,14 +127,13 @@ public class BiGaussian {
 
             index1 = Collections.binarySearch(horizontalSlice, searchTriplet1, compareMzScan);
             if (index1 >= 0) {
-                //firstMzValue is used as a flag here.
-                firstMzValue = 1;
+                //index1 can be used as a flag here.
                 break;
             }
         }
 
         //If we found the entry with mz value = roundedmz
-        if (firstMzValue == 1) {
+        if (index1 >= 0) {
 
             //Initializing variables
             SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1);
