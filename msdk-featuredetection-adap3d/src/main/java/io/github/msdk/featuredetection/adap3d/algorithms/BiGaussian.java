@@ -133,41 +133,42 @@ public class BiGaussian {
         }
 
         //If we found the entry with mz value = roundedmz
-        if (index1 >= 0) {
+        if (index1 < 0) {
+        	throw new IllegalArgumentException("Cannot find peak apex.");
+        }
 
-            //Initializing variables
-            SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1);
-            prevScanNumber = triplet1.scanListIndex;
+        //Initializing variables
+        SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1);
+        prevScanNumber = triplet1.scanListIndex;
 
-            for (int tempFlag = 0; leftBound <= i && i <= rightBound; i += step, tempFlag++, index1 += step) {
-                if (tempFlag != 0) {
-                    triplet1 = horizontalSlice.get(index1);
-                    if (triplet1.mz != roundedmz) {
-                        break;
-                    } else if (triplet1.scanListIndex - step != prevScanNumber) {
-                        continue;
-                    }
+        for (int tempFlag = 0; leftBound <= i && i <= rightBound; i += step, tempFlag++, index1 += step) {
+            if (tempFlag != 0) {
+                triplet1 = horizontalSlice.get(index1);
+                if (triplet1.mz != roundedmz) {
+                    break;
+                } else if (triplet1.scanListIndex - step != prevScanNumber) {
+                    continue;
                 }
-                prevScanNumber = triplet1.scanListIndex;
-                if (triplet1.intensity != 0 && triplet1.intensity < halfHeight) {
-                    if ((index1 == 0 && step < 0) || (index1 == horizontalSlice.size() - 1 && step > 0)) {
-                        //beginning or end of horizontalSlice reached, then break, because index cannot be less than 0 or greater than size of list.
-                        break;
-                    }
-                    Triplet triplet2 = horizontalSlice.get(index1 - step);
-                    if (triplet2.scanListIndex != i - step) {
-                        //triplet2.scanListIndex is not i-step
-                        //This part of the condition is quite redundant, as the values of scanListIndex would be in a sequence.
-                        continue;
-                    } else if (triplet2.mz != roundedmz) {
-                        //triplet2.mz is not equal to roundedmz. The set of mz values, equal to roundedmz is over.
-                        break;
-                    }
-                    Y1 = (double) triplet1.intensity;
-                    if (triplet2.intensity != 0) {
-                        Y2 = (double) triplet2.intensity;
-                        break;
-                    }
+            }
+            prevScanNumber = triplet1.scanListIndex;
+            if (triplet1.intensity != 0 && triplet1.intensity < halfHeight) {
+                if ((index1 == 0 && step < 0) || (index1 == horizontalSlice.size() - 1 && step > 0)) {
+                    //beginning or end of horizontalSlice reached, then break, because index cannot be less than 0 or greater than size of list.
+                    break;
+                }
+                Triplet triplet2 = horizontalSlice.get(index1 - step);
+                if (triplet2.scanListIndex != i - step) {
+                    //triplet2.scanListIndex is not i-step
+                    //This part of the condition is quite redundant, as the values of scanListIndex would be in a sequence.
+                    continue;
+                } else if (triplet2.mz != roundedmz) {
+                    //triplet2.mz is not equal to roundedmz. The set of mz values, equal to roundedmz is over.
+                    break;
+                }
+                Y1 = (double) triplet1.intensity;
+                if (triplet2.intensity != 0) {
+                    Y2 = (double) triplet2.intensity;
+                    break;
                 }
             }
         }
