@@ -142,7 +142,6 @@ public class BiGaussian {
         prevScanNumber = triplet1.scanListIndex;
         index1 += step;
         i += step;
-        triplet1 = horizontalSlice.get(index1);
 
         for ( ; leftBound <= i && i <= rightBound; i += step, index1 += step) {
         	
