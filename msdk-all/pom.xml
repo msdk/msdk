@@ -231,7 +231,7 @@
 			<artifactId>msdk-featuredetection-openms</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
+    
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>msdk-featuredetection-adap3d</artifactId>
