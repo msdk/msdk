@@ -1,4 +1,4 @@
-/*
+	/*
  * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
@@ -143,7 +143,7 @@ public class BiGaussian {
         index1 += step;
         i += step;
 
-        for ( ; leftBound <= i && i <= rightBound; i += step, index1 += step) {
+        for ( ; leftBound <= i && i <= rightBound && index1 >= 0 && index1 < horizontalSlice.size() ; i += step, index1 += step) {
         	
             triplet1 = horizontalSlice.get(index1);
             if (triplet1.mz != roundedmz) {
@@ -153,14 +153,9 @@ public class BiGaussian {
             }
             prevScanNumber = triplet1.scanListIndex;
             if (triplet1.intensity != 0 && triplet1.intensity < halfHeight) {
-                if ((index1 == 0 && step < 0) || (index1 == horizontalSlice.size() - 1 && step > 0)) {
-                    //beginning or end of horizontalSlice reached, then break, because index cannot be less than 0 or greater than size of list.
-                    break;
-                }
                 Triplet triplet2 = horizontalSlice.get(index1 - step);
                 if (triplet2.scanListIndex != i - step) {
                     //triplet2.scanListIndex is not i-step
-                    //This part of the condition is quite redundant, as the values of scanListIndex would be in a sequence.
                     continue;
                 } else if (triplet2.mz != roundedmz) {
                     //triplet2.mz is not equal to roundedmz. The set of mz values, equal to roundedmz is over.
