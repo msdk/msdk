@@ -1,4 +1,4 @@
-/*
+	/*
  * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
@@ -110,8 +110,6 @@ public class BiGaussian {
         double Y2 = Double.NaN;
         int step = direction == Direction.RIGHT ? 1 : -1;
         int index1 = -1;
-        int firstMzValue = 0;
-        int prevScanNumber;
 
         Comparator<Triplet> compareMzScan = (t1, t2) -> (t1.mz != t2.mz)
                 ? Integer.compare(t1.mz, t2.mz)
@@ -125,51 +123,36 @@ public class BiGaussian {
             Triplet searchTriplet1 = new Triplet();
             searchTriplet1.mz = roundedmz;
             searchTriplet1.scanListIndex = i;
-
             index1 = Collections.binarySearch(horizontalSlice, searchTriplet1, compareMzScan);
             if (index1 >= 0) {
-                //firstMzValue is used as a flag here.
-                firstMzValue = 1;
+                //index1 can be used as a flag here.
                 break;
             }
         }
 
-        //If we found the entry with mz value = roundedmz
-        if (firstMzValue == 1) {
+        if (index1 < 0) {
+        	throw new IllegalArgumentException("Cannot find peak apex.");
+        }
 
-            //Initializing variables
-            SliceSparseMatrix.Triplet triplet1 = horizontalSlice.get(index1);
-            prevScanNumber = triplet1.scanListIndex;
-
-            for (int tempFlag = 0; leftBound <= i && i <= rightBound; i += step, tempFlag++, index1 += step) {
-                if (tempFlag != 0) {
-                    triplet1 = horizontalSlice.get(index1);
-                    if (triplet1.mz != roundedmz) {
-                        break;
-                    } else if (triplet1.scanListIndex - step != prevScanNumber) {
-                        continue;
-                    }
+        for ( ; index1 >= 0 && index1 < horizontalSlice.size() ; index1 += step) {
+        	
+	        Triplet triplet1 = horizontalSlice.get(index1);
+            if (triplet1.mz != roundedmz) {
+                break;
+            }
+            if (triplet1.intensity != 0 && triplet1.intensity < halfHeight) {
+                Triplet triplet2 = horizontalSlice.get(index1 - step);
+                if (triplet2.mz != roundedmz) {
+                    //triplet2.mz is not equal to roundedmz. The set of mz values, equal to roundedmz is over.
+                    break;
+                } else if (triplet2.scanListIndex != triplet1.scanListIndex - step) {
+                    //triplet2.scanListIndex is not triplet1.scanListIndex-step
+                    continue;
                 }
-                prevScanNumber = triplet1.scanListIndex;
-                if (triplet1.intensity != 0 && triplet1.intensity < halfHeight) {
-                    if ((index1 == 0 && step < 0) || (index1 == horizontalSlice.size() - 1 && step > 0)) {
-                        //beginning or end of horizontalSlice reached, then break, because index cannot be less than 0 or greater than size of list.
-                        break;
-                    }
-                    Triplet triplet2 = horizontalSlice.get(index1 - step);
-                    if (triplet2.scanListIndex != i - step) {
-                        //triplet2.scanListIndex is not i-step
-                        //This part of the condition is quite redundant, as the values of scanListIndex would be in a sequence.
-                        continue;
-                    } else if (triplet2.mz != roundedmz) {
-                        //triplet2.mz is not equal to roundedmz. The set of mz values, equal to roundedmz is over.
-                        break;
-                    }
-                    Y1 = (double) triplet1.intensity;
-                    if (triplet2.intensity != 0) {
-                        Y2 = (double) triplet2.intensity;
-                        break;
-                    }
+                Y1 = (double) triplet1.intensity;
+                if (triplet2.intensity != 0) {
+                    Y2 = (double) triplet2.intensity;
+                    break;
                 }
             }
         }
