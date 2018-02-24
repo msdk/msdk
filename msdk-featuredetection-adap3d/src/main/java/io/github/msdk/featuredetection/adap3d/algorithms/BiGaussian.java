@@ -134,7 +134,7 @@ public class BiGaussian {
         	throw new IllegalArgumentException("Cannot find peak apex.");
         }
 
-        for ( ; index1 >= 0 && index1 < horizontalSlice.size() ; index1 += step) {
+        for ( ; index1 >= 0 && index1 < horizontalSlice.size() ; index1 += step, i += step) {
         	
 	        Triplet triplet1 = horizontalSlice.get(index1);
             if (triplet1.mz != roundedmz) {
