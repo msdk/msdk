@@ -134,7 +134,7 @@ public class BiGaussian {
         	throw new IllegalArgumentException("Cannot find peak apex.");
         }
 
-        for ( ; index1 >= 0 && index1 < horizontalSlice.size() ; index1 += step, i += step) {
+        for ( ; index1 >= 0 && index1 < horizontalSlice.size() ; index1 += step) {
         	
 	        Triplet triplet1 = horizontalSlice.get(index1);
             if (triplet1.mz != roundedmz) {
@@ -145,9 +145,6 @@ public class BiGaussian {
                 if (triplet2.mz != roundedmz) {
                     //triplet2.mz is not equal to roundedmz. The set of mz values, equal to roundedmz is over.
                     break;
-                } else if (triplet2.scanListIndex != triplet1.scanListIndex - step) {
-                    //triplet2.scanListIndex is not triplet1.scanListIndex-step
-                    continue;
                 }
                 Y1 = (double) triplet1.intensity;
                 if (triplet2.intensity != 0) {
@@ -167,7 +164,7 @@ public class BiGaussian {
          * don't have x-value. X-value is scan number and Y-value is intensity.
          */
 
-        double X = ((halfHeight - Y1) * ((i - step) - i) / (Y2 - Y1)) + i;
+        double X = ((halfHeight - Y1) * (-step) / (Y2 - Y1)) + horizontalSlice.get(index1).scanListIndex;
         return X;
     }
 
