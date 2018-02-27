@@ -13,30 +13,145 @@
 
 package io.github.msdk.io.mzdb;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.StreamCorruptedException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import com.almworks.sqlite4java.SQLiteException;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.MsScan;
 import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SimpleMsScan;
+import io.github.msdk.io.mzdb.MzDBRawDataFile;
+import fr.profi.mzdb.*;
+import fr.profi.mzdb.model.Spectrum;
+import fr.profi.mzdb.model.SpectrumData;
+import fr.profi.mzdb.model.SpectrumHeader;
 
+/**
+ * <p>
+ * This class contains methods which parse data in MzDB format from {@link java.io.File File}. 
+ * </p>
+ */
 public class MzDBFileImportMethod implements MSDKMethod<RawDataFile> {
+  private final File mzDBFile;
+  // final InputStream inputStream;
+  private MzDBRawDataFile newRawFile;
+  private volatile boolean canceled;
+  private boolean cacheEntities;
+  private Float progress;
+  // private int lastLoggedProgress;
+  // private Logger logger;
+  // private Predicate<MsScan> msScanPredicate = s -> true;
+  // private Predicate<Chromatogram> chromatogramPredicate = c -> true;
 
-    public Float getFinishedPercentage() {
-        // TODO Auto-generated method stub
-        return null;
+  /**
+   * <p>
+   * Constructor for MzDBFileImportMethod.
+   * </p>
+   *
+   * @param mzDBFilePath a {@link java.lang.String String} which contains the absolute path to the
+   *        MzDB File.
+   * @param cacheEntities
+   */
+  public MzDBFileImportMethod(String mzDBFilePath, boolean cacheEntities) {
+    this.mzDBFile = new File(mzDBFilePath);
+    this.cacheEntities = cacheEntities;
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>
+   * Parse the MzDB data and return the parsed data
+   * </p>
+   *
+   * @return a {@link io.github.msdk.io.mzdb.MzDBRawDataFile MzDBRawDataFile} object containing
+   *         the parsed data
+   * @throws MSDKException
+   */
+  @Override
+  public MzDBRawDataFile execute() throws MSDKException {
+    Iterator<Spectrum> spectrumIterator;
+    Spectrum eachSpectrum;
+    SpectrumHeader eachSpectrumHeader;
+    List<MsScan> msScanList = new ArrayList<>();
+    //List<Chromatogram> chromatograms = new ArrayList<>();
+    SpectrumData eachSpectrumData;
+    int scanNumber = 1;
+
+
+    try {
+      MzDbReader currentFile = new MzDbReader(mzDBFile, cacheEntities);
+
+      try {
+        spectrumIterator = currentFile.getSpectrumIterator();
+
+        while (spectrumIterator.hasNext()) {
+          eachSpectrum = spectrumIterator.next();
+          eachSpectrumHeader = eachSpectrum.getHeader();
+          eachSpectrumData = eachSpectrum.getData();
+          double mzList[] = eachSpectrumData.getMzList();
+          float intensityList[] = eachSpectrumData.getIntensityList();
+
+          SimpleMsScan eachSimpleMsScan = new SimpleMsScan(scanNumber);
+          eachSimpleMsScan.setDataPoints(mzList, intensityList, mzList.length);
+
+          msScanList.add(eachSimpleMsScan);
+          scanNumber++;
+
+        }
+
+      } catch (StreamCorruptedException e) {
+        throw new MSDKException("Stream corrupted, detected by mzDB");
+      }
+
+    } catch (ClassNotFoundException e) {
+      throw new MSDKException("Class can't be found by mzDB");
+    } catch (FileNotFoundException e) {
+      throw new MSDKException("File Not Found / File present but inaccessible by mzDB");
+    } catch (SQLiteException e) {
+      throw new MSDKException("SQLite Exception in mzDB");
     }
 
-    public RawDataFile execute() throws MSDKException {
-        // TODO Auto-generated method stub
-        return null;
-    }
+    return newRawFile;
+  }
 
-    public RawDataFile getResult() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
-    public void cancel() {
-        // TODO Auto-generated method stub
-        
-    }
+  /** {@inheritDoc} */
+  @Override
+  public Float getFinishedPercentage() {
+    return progress;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public RawDataFile getResult() {
+    return newRawFile;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void cancel() {
+    this.canceled = true;
+  }
+
+
+  /**
+   * <p>
+   * Getter for the field <code>mzDBFile</code>.
+   * </p>
+   *
+   * @return a {@link java.io.File File} instance of the MzDB source if being read from a file <br>
+   *         null if the MzDB source is an {@link java.io.InputStream InputStream}
+   */
+  public File getmzDBFile() {
+    return mzDBFile;
+  }
 
 }
