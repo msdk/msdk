@@ -33,7 +33,13 @@
 			<artifactId>msdk-io-mzdata</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
+    
+        <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>msdk-io-mzdb</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+    
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>msdk-io-mzml</artifactId>
