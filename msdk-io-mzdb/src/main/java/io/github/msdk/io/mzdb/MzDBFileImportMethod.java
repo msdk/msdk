@@ -81,7 +81,8 @@ public class MzDBFileImportMethod implements MSDKMethod<RawDataFile> {
     Spectrum eachSpectrum;
     SpectrumHeader eachSpectrumHeader;
     List<MsScan> msScanList = new ArrayList<>();
-    //List<Chromatogram> chromatograms = new ArrayList<>();
+    List<String> msFunctions = new ArrayList<>(); //TODO
+    List<Chromatogram> chromatograms = new ArrayList<>(); //TODO
     SpectrumData eachSpectrumData;
     int scanNumber = 1;
 
@@ -118,7 +119,10 @@ public class MzDBFileImportMethod implements MSDKMethod<RawDataFile> {
     } catch (SQLiteException e) {
       throw new MSDKException("SQLite Exception in mzDB");
     }
-
+    
+    msFunctions.add("ms");
+    MzDBRawDataFile newRawFile = new MzDBRawDataFile(mzDBFile, msFunctions, msScanList, chromatograms); //returning dummy msFunctions and Chromatograms
+    
     return newRawFile;
   }
 
