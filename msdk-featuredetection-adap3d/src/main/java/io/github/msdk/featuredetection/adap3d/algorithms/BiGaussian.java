@@ -163,8 +163,10 @@ public class BiGaussian {
          * to find exact point between those two points. I've y-value for that point as halfHeight but I
          * don't have x-value. X-value is scan number and Y-value is intensity.
          */
-
-        double X = ((halfHeight - Y1) * (-step) / (Y2 - Y1)) + horizontalSlice.get(index1).scanListIndex;
+        
+        //horizontalSlice.get(index1) is Triplet1
+        //horizontalSlice.get(index1-step) is Triplet2
+        double X = ((halfHeight - Y2)*(horizontalSlice.get(index1-step).scanListIndex - horizontalSlice.get(index1).scanListIndex))/(Y2-Y1) + horizontalSlice.get(index1-step).scanListIndex;
         return X;
     }
 
