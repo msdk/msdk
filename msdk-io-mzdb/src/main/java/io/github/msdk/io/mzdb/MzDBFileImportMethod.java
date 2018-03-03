@@ -26,6 +26,7 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.Chromatogram;
 import io.github.msdk.datamodel.MsScan;
 import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.SimpleChromatogram;
 import io.github.msdk.datamodel.SimpleMsScan;
 import io.github.msdk.io.mzdb.MzDBRawDataFile;
 import fr.profi.mzdb.*;
@@ -35,7 +36,7 @@ import fr.profi.mzdb.model.SpectrumHeader;
 
 /**
  * <p>
- * This class contains methods which parse data in MzDB format from {@link java.io.File File}. 
+ * This class contains methods which parse data in MzDB format from {@link java.io.File File}.
  * </p>
  */
 public class MzDBFileImportMethod implements MSDKMethod<RawDataFile> {
@@ -71,8 +72,8 @@ public class MzDBFileImportMethod implements MSDKMethod<RawDataFile> {
    * Parse the MzDB data and return the parsed data
    * </p>
    *
-   * @return a {@link io.github.msdk.io.mzdb.MzDBRawDataFile MzDBRawDataFile} object containing
-   *         the parsed data
+   * @return a {@link io.github.msdk.io.mzdb.MzDBRawDataFile MzDBRawDataFile} object containing the
+   *         parsed data
    * @throws MSDKException
    */
   @Override
@@ -81,10 +82,11 @@ public class MzDBFileImportMethod implements MSDKMethod<RawDataFile> {
     Spectrum eachSpectrum;
     SpectrumHeader eachSpectrumHeader;
     List<MsScan> msScanList = new ArrayList<>();
-    List<String> msFunctions = new ArrayList<>(); //TODO
-    List<Chromatogram> chromatograms = new ArrayList<>(); //TODO
+    List<String> msFunctions = new ArrayList<>(); // TODO
+    List<Chromatogram> chromatograms = new ArrayList<>(); // TODO
     SpectrumData eachSpectrumData;
     int scanNumber = 1;
+    float eachSpectrumTime;
 
 
     try {
@@ -106,6 +108,10 @@ public class MzDBFileImportMethod implements MSDKMethod<RawDataFile> {
           msScanList.add(eachSimpleMsScan);
           scanNumber++;
 
+          // Chromatograms
+         // eachSpectrumTime = eachSpectrumHeader.getTime();
+         // SimpleChromatogram eachChromatogram = new SimpleChromatogram();
+          // eachChromatogram.setDataPoints(rtValues, mzList, intensityList, mzList.length);
         }
 
       } catch (StreamCorruptedException e) {
@@ -119,10 +125,13 @@ public class MzDBFileImportMethod implements MSDKMethod<RawDataFile> {
     } catch (SQLiteException e) {
       throw new MSDKException("SQLite Exception in mzDB");
     }
-    
+
     msFunctions.add("ms");
-    MzDBRawDataFile newRawFile = new MzDBRawDataFile(mzDBFile, msFunctions, msScanList, chromatograms); //returning dummy msFunctions and Chromatograms
-    
+    MzDBRawDataFile newRawFile =
+        new MzDBRawDataFile(mzDBFile, msFunctions, msScanList, chromatograms); // returning dummy
+                                                                               // msFunctions and
+                                                                               // Chromatograms
+
     return newRawFile;
   }
 
