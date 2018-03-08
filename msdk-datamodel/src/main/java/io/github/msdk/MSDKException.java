@@ -41,5 +41,16 @@ public class MSDKException extends Exception {
   public MSDKException(Throwable exception) {
     super(exception);
   }
+  
+  /**
+   * <p>
+   * Constructor for MSDKException.
+   * </p>
+   *
+   * @param exception a {@link java.lang.Throwable} object.
+   */
+  public MSDKException(String msg, Throwable exception) {
+    super(msg, exception);
+  }
 
 }
