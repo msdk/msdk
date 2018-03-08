@@ -87,7 +87,7 @@ public class BiGaussianTest {
         triplets.get(4).scanListIndex = 7;
         triplets.get(4).intensity = 100;
 
-        BiGaussian biGaussian = new BiGaussian(triplets, 40, 0, 4);
+        BiGaussian biGaussian = new BiGaussian(triplets, 40, 1, 7);
 
         Assert.assertEquals(1.6986436005760381, biGaussian.sigmaLeft, 1e-12);
         Assert.assertEquals(1.6986436005760381, biGaussian.sigmaRight, 1e-12);

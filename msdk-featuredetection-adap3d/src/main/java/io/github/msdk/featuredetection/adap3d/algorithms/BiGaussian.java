@@ -105,11 +105,7 @@ public class BiGaussian {
     private double InterpolationX(List<Triplet> horizontalSlice, int mu, double halfHeight,
                                   int leftBound, int rightBound, int roundedmz, Direction direction) {
 
-        int i = mu;
-        double Y1 = Double.NaN;
-        double Y2 = Double.NaN;
         int step = direction == Direction.RIGHT ? 1 : -1;
-        int index1 = -1;
 
         Comparator<Triplet> compareMzScan = (t1, t2) -> (t1.mz != t2.mz)
                 ? Integer.compare(t1.mz, t2.mz)
@@ -118,44 +114,43 @@ public class BiGaussian {
         //Sort horizontalSlice according to mz values and SLI.
         Collections.sort(horizontalSlice, compareMzScan);
 
-        while (leftBound <= i && i <= rightBound) {
-            i += step;
-            Triplet searchTriplet1 = new Triplet();
-            searchTriplet1.mz = roundedmz;
-            searchTriplet1.scanListIndex = i;
-            index1 = Collections.binarySearch(horizontalSlice, searchTriplet1, compareMzScan);
-            if (index1 >= 0) {
-                //index1 can be used as a flag here.
-                break;
-            }
-        }
+        // Find triplet next to the apex
+        Triplet searchTriplet1 = new Triplet();
+        searchTriplet1.mz = roundedmz;
+        searchTriplet1.scanListIndex = mu + step;
+        int index1 = Collections.binarySearch(horizontalSlice, searchTriplet1, compareMzScan);
 
         if (index1 < 0) {
         	throw new IllegalArgumentException("Cannot find peak apex.");
         }
 
+        double Y1 = Double.NaN;
+        double Y2 = Double.NaN;
         for ( ; index1 >= 0 && index1 < horizontalSlice.size() ; index1 += step) {
         	
 	        Triplet triplet1 = horizontalSlice.get(index1);
-            if (triplet1.mz != roundedmz) {
+            if (triplet1.mz != roundedmz
+                    || triplet1.scanListIndex < leftBound
+                    || triplet1.scanListIndex > rightBound) {
                 break;
             }
             if (triplet1.intensity != 0 && triplet1.intensity < halfHeight) {
                 Triplet triplet2 = horizontalSlice.get(index1 - step);
-                if (triplet2.mz != roundedmz) {
+                if (triplet2.mz != roundedmz
+                        || triplet1.scanListIndex < leftBound
+                        || triplet1.scanListIndex > rightBound) {
                     //triplet2.mz is not equal to roundedmz. The set of mz values, equal to roundedmz is over.
                     break;
                 }
-                Y1 = (double) triplet1.intensity;
+                Y1 = triplet1.intensity;
                 if (triplet2.intensity != 0) {
-                    Y2 = (double) triplet2.intensity;
+                    Y2 = triplet2.intensity;
                     break;
                 }
             }
         }
 
-
-        if (Y1 == Double.NaN || Y2 == Double.NaN)
+        if (Double.isNaN(Y1) || Double.isNaN(Y2))
             throw new IllegalArgumentException("Cannot find BiGaussian.");
         /*
          * I've used the formula of line passing through points (x1,y1) and (x2,y2) in interpolationX.
@@ -163,11 +158,11 @@ public class BiGaussian {
          * to find exact point between those two points. I've y-value for that point as halfHeight but I
          * don't have x-value. X-value is scan number and Y-value is intensity.
          */
-        
-        //horizontalSlice.get(index1) is Triplet1
-        //horizontalSlice.get(index1-step) is Triplet2
-        double X = ((halfHeight - Y2)*(horizontalSlice.get(index1-step).scanListIndex - horizontalSlice.get(index1).scanListIndex))/(Y2-Y1) + horizontalSlice.get(index1-step).scanListIndex;
-        return X;
+
+        return ((halfHeight - Y2)
+                * (horizontalSlice.get(index1 - step).scanListIndex - horizontalSlice.get(index1).scanListIndex))
+                / (Y2 - Y1)
+                + horizontalSlice.get(index1 - step).scanListIndex;
     }
 
     /**
