@@ -115,15 +115,15 @@ public class MzDBFileImportMethod implements MSDKMethod<RawDataFile> {
         }
 
       } catch (StreamCorruptedException e) {
-        throw new MSDKException("Stream corrupted, detected by mzDB");
+        throw new MSDKException("Stream corrupted, detected by mzDB", e);
       }
 
     } catch (ClassNotFoundException e) {
-      throw new MSDKException("Class can't be found by mzDB");
+      throw new MSDKException("Class can't be found by mzDB", e);
     } catch (FileNotFoundException e) {
-      throw new MSDKException("File Not Found / File present but inaccessible by mzDB");
+      throw new MSDKException("File Not Found / File present but inaccessible by mzDB", e);
     } catch (SQLiteException e) {
-      throw new MSDKException("SQLite Exception in mzDB");
+      throw new MSDKException("SQLite Exception in mzDB", e);
     }
 
     msFunctions.add("ms");
