@@ -89,7 +89,7 @@ public class BiGaussianTest {
 
         BiGaussian biGaussian = new BiGaussian(triplets, 40, 0, 4);
 
-        Assert.assertEquals(2.0, biGaussian.sigmaLeft, 1e-12);
-        Assert.assertEquals(6.0, biGaussian.sigmaRight, 1e-12);
+        Assert.assertEquals(1.6986436005760381, biGaussian.sigmaLeft, 1e-12);
+        Assert.assertEquals(1.6986436005760381, biGaussian.sigmaRight, 1e-12);
     }
 }

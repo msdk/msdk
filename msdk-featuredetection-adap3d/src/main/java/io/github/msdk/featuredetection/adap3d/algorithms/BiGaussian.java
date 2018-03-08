@@ -145,9 +145,6 @@ public class BiGaussian {
                 if (triplet2.mz != roundedmz) {
                     //triplet2.mz is not equal to roundedmz. The set of mz values, equal to roundedmz is over.
                     break;
-                } else if (triplet2.scanListIndex != triplet1.scanListIndex - step) {
-                    //triplet2.scanListIndex is not triplet1.scanListIndex-step
-                    continue;
                 }
                 Y1 = (double) triplet1.intensity;
                 if (triplet2.intensity != 0) {
@@ -166,8 +163,10 @@ public class BiGaussian {
          * to find exact point between those two points. I've y-value for that point as halfHeight but I
          * don't have x-value. X-value is scan number and Y-value is intensity.
          */
-
-        double X = ((halfHeight - Y1) * ((i - step) - i) / (Y2 - Y1)) + i;
+        
+        //horizontalSlice.get(index1) is Triplet1
+        //horizontalSlice.get(index1-step) is Triplet2
+        double X = ((halfHeight - Y2)*(horizontalSlice.get(index1-step).scanListIndex - horizontalSlice.get(index1).scanListIndex))/(Y2-Y1) + horizontalSlice.get(index1-step).scanListIndex;
         return X;
     }
 
