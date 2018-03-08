@@ -109,8 +109,8 @@ public class MzDBFileImportMethod implements MSDKMethod<RawDataFile> {
           scanNumber++;
 
           // Chromatograms
-         // eachSpectrumTime = eachSpectrumHeader.getTime();
-         // SimpleChromatogram eachChromatogram = new SimpleChromatogram();
+          // eachSpectrumTime = eachSpectrumHeader.getTime();
+          // SimpleChromatogram eachChromatogram = new SimpleChromatogram();
           // eachChromatogram.setDataPoints(rtValues, mzList, intensityList, mzList.length);
         }
 
