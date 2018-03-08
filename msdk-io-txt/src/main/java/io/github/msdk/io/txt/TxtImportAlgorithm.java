@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
-import io.github.msdk.datamodel.MsSpectrum;
 import io.github.msdk.datamodel.MsSpectrumType;
 import io.github.msdk.datamodel.SimpleMsSpectrum;
 import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
@@ -47,10 +46,9 @@ public class TxtImportAlgorithm {
    * Parse a MsSpectrum object from the given string that has input data in two columns.
    * 
    * @param scanner An open {@link java.util.Scanner} object.
-   * @return A {@link io.github.msdk.datamodel.MsSpectrum} object containing the parsed
-   *         data.
+   * @return A {@link io.github.msdk.datamodel.MsSpectrum} object containing the parsed data.
    */
-  private static @Nonnull MsSpectrum parseMsSpectrum(@Nonnull Scanner scanner) {
+  private static @Nonnull SimpleMsSpectrum parseMsSpectrum(@Nonnull Scanner scanner) {
 
     double mzValues[] = new double[16];
     float intensityValues[] = new float[16];
@@ -83,7 +81,7 @@ public class TxtImportAlgorithm {
 
     MsSpectrumType specType =
         SpectrumTypeDetectionAlgorithm.detectSpectrumType(mzValues, intensityValues, size);
-    MsSpectrum result = new SimpleMsSpectrum(mzValues, intensityValues, size, specType);
+    SimpleMsSpectrum result = new SimpleMsSpectrum(mzValues, intensityValues, size, specType);
 
     return result;
   }
@@ -92,17 +90,16 @@ public class TxtImportAlgorithm {
    * Parse a MsSpectrum object from the given string that has input data in two columns.
    *
    * @param spectrumText A String containing the input text.
-   * @return A {@link io.github.msdk.datamodel.MsSpectrum} object containing the parsed
-   *         data.
+   * @return A {@link io.github.msdk.datamodel.MsSpectrum} object containing the parsed data.
    */
-  public static MsSpectrum parseMsSpectrum(@Nonnull String spectrumText) {
+  public static SimpleMsSpectrum parseMsSpectrum(@Nonnull String spectrumText) {
 
-    Collection<MsSpectrum> result = parseMsSpectra(new StringReader(spectrumText));
+    Collection<SimpleMsSpectrum> result = parseMsSpectra(new StringReader(spectrumText));
     if (result.size() == 0) {
       return null;
     }
 
-    Iterator<MsSpectrum> iterator = result.iterator();
+    Iterator<SimpleMsSpectrum> iterator = result.iterator();
     return iterator.next();
   }
 
@@ -111,16 +108,16 @@ public class TxtImportAlgorithm {
    * returns.
    *
    * @param reader An open @{java.io.Reader} object that provides the data in two columns.
-   * @return A {@link java.util.Collection} of {@link io.github.msdk.datamodel.MsSpectrum}
-   *         objects containing the parsed data.
+   * @return A {@link java.util.Collection} of {@link io.github.msdk.datamodel.MsSpectrum} objects
+   *         containing the parsed data.
    */
-  public static @Nonnull Collection<MsSpectrum> parseMsSpectra(@Nonnull Reader reader) {
+  public static @Nonnull Collection<SimpleMsSpectrum> parseMsSpectra(@Nonnull Reader reader) {
 
-    Collection<MsSpectrum> result = new ArrayList<>();
+    Collection<SimpleMsSpectrum> result = new ArrayList<>();
     Scanner scanner = new Scanner(reader);
 
     while (scanner.hasNextLine()) {
-      MsSpectrum spectrum = parseMsSpectrum(scanner);
+      SimpleMsSpectrum spectrum = parseMsSpectrum(scanner);
       if (spectrum != null) {
         result.add(spectrum);
       }
@@ -135,17 +132,17 @@ public class TxtImportAlgorithm {
    * closed when this method returns.
    *
    * @param reader An open @{java.io.Reader} object that provides the data in two columns.
-   * @return A {@link io.github.msdk.datamodel.MsSpectrum} object containing the parsed
-   *         data, or null if the data could not be parsed.
+   * @return A {@link io.github.msdk.datamodel.MsSpectrum} object containing the parsed data, or
+   *         null if the data could not be parsed.
    */
-  public static MsSpectrum parseMsSpectrum(@Nonnull Reader reader) {
+  public static SimpleMsSpectrum parseMsSpectrum(@Nonnull Reader reader) {
 
-    Collection<MsSpectrum> result = parseMsSpectra(reader);
+    Collection<SimpleMsSpectrum> result = parseMsSpectra(reader);
     if (result.size() == 0) {
       return null;
     }
 
-    Iterator<MsSpectrum> iterator = result.iterator();
+    Iterator<SimpleMsSpectrum> iterator = result.iterator();
     return iterator.next();
   }
 }

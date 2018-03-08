@@ -36,10 +36,9 @@ import io.github.msdk.datamodel.MsScan;
 import io.github.msdk.datamodel.MsSpectrumType;
 import io.github.msdk.datamodel.PolarityType;
 import io.github.msdk.datamodel.RawDataFile;
-import io.github.msdk.io.mzml.MzMLFileExportMethod;
-import io.github.msdk.io.mzml.MzMLFileImportMethod;
 import io.github.msdk.io.mzml.data.MzMLCompressionType;
 import io.github.msdk.io.mzml.data.MzMLMsScan;
+import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 import io.github.msdk.util.MsSpectrumUtil;
 
 public class MzMLFileExportMethodTest {
@@ -487,6 +486,68 @@ public class MzMLFileExportMethodTest {
     newMzMLFile.dispose();
   }
 
+  @Test
+  public void testExportFromMzXML() throws Exception {
+
+    float intensityBuffer[];
+
+    // Import the file
+    String file = "tiny.pwiz.mzXML";
+    File inputFile = getResourcePath(file).toFile();
+    Assert.assertTrue(inputFile.canRead());
+    MzXMLFileImportMethod parser =
+        new MzXMLFileImportMethod(inputFile);
+    RawDataFile rawFile = parser.execute();
+    Assert.assertNotNull(rawFile);
+    Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
+
+    // Export the file to a new mzML
+    File tempFile = File.createTempFile("msdk", ".mzML");
+    tempFile.deleteOnExit();
+    MzMLFileExportMethod exporter = new MzMLFileExportMethod(rawFile, tempFile,
+        MzMLCompressionType.NO_COMPRESSION, MzMLCompressionType.NO_COMPRESSION);
+    exporter.execute();
+    Assert.assertEquals(1.0, exporter.getFinishedPercentage(), 0.0001);
+
+    // Import the new mzML
+    MzMLFileImportMethod parser2 = new MzMLFileImportMethod(tempFile);
+    RawDataFile newMzMLFile = parser2.execute();
+    Assert.assertNotNull(newMzMLFile);
+    Assert.assertEquals(1.0, parser2.getFinishedPercentage(), 0.0001);
+
+    // The file has 4 scans, 1 scan in RawFile
+    List<MsScan> scans = newMzMLFile.getScans();
+    Assert.assertNotNull(scans);
+    Assert.assertEquals(4, scans.size());
+
+    // 2nd scan, #20
+    MsScan scan2 = scans.get(1);
+    Assert.assertEquals(Integer.valueOf(20), scan2.getScanNumber());
+    Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
+    Assert.assertEquals(Integer.valueOf(2), scan2.getMsLevel());
+    Assert.assertEquals(359.43f, scan2.getRetentionTime(), 0.01f);
+    Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
+    Assert.assertEquals(16.0, scan2.getMzValues()[8], 0.00001);
+    intensityBuffer = scan2.getIntensityValues();
+    Assert.assertEquals(10, (int) scan2.getNumberOfDataPoints());
+    Float scan2maxInt =
+        MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan2.getNumberOfDataPoints());
+    Assert.assertEquals(20f, scan2maxInt, 0.001f);
+
+    List<IsolationInfo> scan2Isolations = scan2.getIsolations();
+    Assert.assertNotNull(scan2Isolations);
+    Assert.assertEquals(1, scan2Isolations.size());
+
+    IsolationInfo scan2Isolation = scan2Isolations.get(0);
+    Assert.assertEquals(445.34, scan2Isolation.getPrecursorMz(), 0.001);
+    Assert.assertEquals(Integer.valueOf(2), scan2Isolation.getPrecursorCharge());
+
+    // Cleanup
+    rawFile.dispose();
+    newMzMLFile.dispose();
+
+  }
+  
   private Predicate<MsScan> getMsScanPredicate(List<Integer> scansToParse) {
     return s -> scansToParse.contains(s.getScanNumber());
   }
