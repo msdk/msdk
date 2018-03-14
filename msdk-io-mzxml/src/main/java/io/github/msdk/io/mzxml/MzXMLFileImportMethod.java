@@ -68,7 +68,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
   private final MzXMLHandler handler = new MzXMLHandler();
 
   private String precision;
-  private Integer precursorCharge;
+  private Integer precursorCharge, precursorScanNumber;
 
   // Buffers
   private final StringBuilder charBuffer = new StringBuilder(1 << 18);
@@ -237,6 +237,10 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
         String precursorChargeAttr = attrs.getValue("precursorCharge");
         if (precursorChargeAttr != null)
           precursorCharge = Integer.parseInt(precursorChargeAttr);
+
+        String precursorScanNumberAttr = attrs.getValue("precursorScanNum");
+        if (precursorScanNumberAttr != null)
+          precursorScanNumber = Integer.parseInt(precursorScanNumberAttr);
       }
 
     }
@@ -262,7 +266,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
         if (!textContent.isEmpty())
           precursorMz = Double.parseDouble(textContent);
         IsolationInfo newIsolation = new SimpleIsolationInfo(Range.singleton(precursorMz), null,
-            precursorMz, precursorCharge, null);
+            precursorMz, precursorCharge, null, precursorScanNumber);
         buildingScan.getIsolations().add(newIsolation);
 
         return;

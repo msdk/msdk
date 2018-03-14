@@ -89,7 +89,7 @@ public class SimpleChromatogramTest {
     // Change isolation info
     final @Nonnull List<IsolationInfo> newIsolations = chromatogram1.getIsolations();
     newIsolations.add(new SimpleIsolationInfo(Range.closed(1.2, 8.9)));
-    newIsolations.add(new SimpleIsolationInfo(Range.closed(0.0, 10.0), 0.5f, 500.123, 1, null));
+    newIsolations.add(new SimpleIsolationInfo(Range.closed(0.0, 10.0), 0.5f, 500.123, 1, null, null));
 
     // Verify isolation info
     Assert.assertEquals(Range.closed(0.0, 10.0), newIsolations.get(1).getIsolationMzRange());

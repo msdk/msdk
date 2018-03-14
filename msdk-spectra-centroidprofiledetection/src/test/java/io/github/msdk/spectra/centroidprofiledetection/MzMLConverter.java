@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -234,6 +235,7 @@ class MzMLConverter {
       Double isolationWindowLower = null;
       Double isolationWindowUpper = null;
       Integer precursorCharge = null;
+      Optional<Integer> precursorScanNumber = getScanNumber(parent.getSpectrumRef());
 
       SelectedIonList selectedIonListElement = parent.getSelectedIonList();
       if ((selectedIonListElement == null) || (selectedIonListElement.getCount().equals(0)))
@@ -271,6 +273,9 @@ class MzMLConverter {
       if (!Strings.isNullOrEmpty(cvVal))
         isolationWindowTarget = Double.parseDouble(cvVal);
 
+      Integer precursorScanNumberInt =
+          precursorScanNumber.isPresent() ? Integer.valueOf(precursorScanNumber.get()) : null;
+
       if (precursorMz != null) {
         if (isolationWindowTarget == null)
           isolationWindowTarget = precursorMz;
@@ -280,8 +285,8 @@ class MzMLConverter {
           isolationWindowUpper = 0.5;
         Range<Double> isolationRange = Range.closed(isolationWindowTarget - isolationWindowLower,
             isolationWindowTarget + isolationWindowUpper);
-        IsolationInfo isolation = new SimpleIsolationInfo(isolationRange, null,
-            precursorMz, precursorCharge, null);
+        IsolationInfo isolation = new SimpleIsolationInfo(isolationRange, null, precursorMz,
+            precursorCharge, null, precursorScanNumberInt);
         isolations.add(isolation);
       }
     }
@@ -369,6 +374,9 @@ class MzMLConverter {
       if (!Strings.isNullOrEmpty(cvVal))
         precursorActivationEnergy = Double.parseDouble(cvVal);
 
+      Optional<Integer> precursorScanNumber =
+          getScanNumber(chromatogram.getPrecursor().getSpectrumRef());
+
       // Product isolation window
       cvVal = extractCVValue(chromatogram.getProduct().getIsolationWindow().getCvParam(),
           MzMLCV.cvIsolationWindowTarget);
@@ -376,22 +384,24 @@ class MzMLConverter {
         productIsolationMz = Double.parseDouble(cvVal);
 
       if (precursorActivationEnergy != null) {
-        activationInfo =
-            new SimpleActivationInfo(precursorActivationEnergy, precursorActivation);
+        activationInfo = new SimpleActivationInfo(precursorActivationEnergy, precursorActivation);
       }
 
       List<IsolationInfo> isolations = new ArrayList<>();
       IsolationInfo isolationInfo = null;
 
+      Integer precursorScanNumberInt =
+          precursorScanNumber.isPresent() ? Integer.valueOf(precursorScanNumber.get()) : null;
+
       if (precursorIsolationMz != null) {
-        isolationInfo = new SimpleIsolationInfo(Range.singleton(precursorIsolationMz),
-            null, precursorIsolationMz, null, activationInfo);
+        isolationInfo = new SimpleIsolationInfo(Range.singleton(precursorIsolationMz), null,
+            precursorIsolationMz, null, activationInfo, precursorScanNumberInt);
         isolations.add(isolationInfo);
       }
 
       if (productIsolationMz != null) {
-        isolationInfo = new SimpleIsolationInfo(Range.singleton(productIsolationMz),
-            null, productIsolationMz, null, null);
+        isolationInfo = new SimpleIsolationInfo(Range.singleton(productIsolationMz), null,
+            productIsolationMz, null, null, null);
         isolations.add(isolationInfo);
       }
 
@@ -449,8 +459,7 @@ class MzMLConverter {
 
   }
 
-  static @Nonnull float[] extractRtValues(
-      uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram,
+  static @Nonnull float[] extractRtValues(uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram,
       @Nullable float[] array) {
 
     BinaryDataArrayList dataList = jmzChromatogram.getBinaryDataArrayList();
@@ -539,6 +548,31 @@ class MzMLConverter {
       }
     }
     return null;
+  }
+
+  /**
+   * <p>
+   * getScanNumber.
+   * </p>
+   *
+   * @param spectrumId a {@link java.lang.String} object.
+   * @return a {@link java.lang.Integer} object.
+   */
+  public Optional<Integer> getScanNumber(String spectrumId) {
+    final Pattern pattern = Pattern.compile("scan=([0-9]+)");
+    final Matcher matcher = pattern.matcher(spectrumId);
+    boolean scanNumberFound = matcher.find();
+
+    // Some vendors include scan=XX in the ID, some don't, such as
+    // mzML converted from WIFF files. See the definition of nativeID in
+    // http://psidev.cvs.sourceforge.net/viewvc/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo
+    // So, get the value of the index tag if the scanNumber is not present in the ID
+    if (scanNumberFound) {
+      Integer scanNumber = Integer.parseInt(matcher.group(1));
+      return Optional.ofNullable(scanNumber);
+    }
+
+    return Optional.ofNullable(null);
   }
 
 }

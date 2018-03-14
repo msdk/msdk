@@ -29,9 +29,12 @@ public class SimpleIsolationInfo implements IsolationInfo {
   private @Nullable Double precursorMz;
   private @Nullable Integer precursorCharge;
   private @Nullable ActivationInfo activationInfo;
+  private @Nullable Integer precursorScanNumber;
 
   /**
-   * <p>Constructor for SimpleIsolationInfo.</p>
+   * <p>
+   * Constructor for SimpleIsolationInfo.
+   * </p>
    *
    * @param isolationMzRange a {@link com.google.common.collect.Range} object.
    */
@@ -42,10 +45,13 @@ public class SimpleIsolationInfo implements IsolationInfo {
     precursorMz = null;
     precursorCharge = null;
     activationInfo = null;
+    precursorScanNumber = null;
   }
 
   /**
-   * <p>Constructor for SimpleIsolationInfo.</p>
+   * <p>
+   * Constructor for SimpleIsolationInfo.
+   * </p>
    *
    * @param isolationMzRange a {@link com.google.common.collect.Range} object.
    * @param ionInjectTime a {@link java.lang.Float} object.
@@ -55,13 +61,14 @@ public class SimpleIsolationInfo implements IsolationInfo {
    */
   public SimpleIsolationInfo(@Nonnull Range<Double> isolationMzRange, @Nullable Float ionInjectTime,
       @Nullable Double precursorMz, @Nullable Integer precursorCharge,
-      @Nullable ActivationInfo activationInfo) {
+      @Nullable ActivationInfo activationInfo, @Nullable Integer precursorScanNumber) {
     Preconditions.checkNotNull(isolationMzRange);
     this.isolationMzRange = isolationMzRange;
     this.ionInjectTime = ionInjectTime;
     this.precursorMz = precursorMz;
     this.precursorCharge = precursorCharge;
     this.activationInfo = activationInfo;
+    this.precursorScanNumber = precursorScanNumber;
   }
 
   /** {@inheritDoc} */
@@ -90,6 +97,13 @@ public class SimpleIsolationInfo implements IsolationInfo {
   @Nullable
   public Integer getPrecursorCharge() {
     return precursorCharge;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @Nullable
+  public Integer getPrecursorScanNumber() {
+    return precursorScanNumber;
   }
 
   /** {@inheritDoc} */

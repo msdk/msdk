@@ -29,7 +29,6 @@
 		<module>msdk-id-metfrag</module>
 		<module>msdk-id-sirius</module>
 		<module>msdk-io-filetypedetection</module>
-		<module>msdk-io-mz5</module>
 		<module>msdk-io-mzml</module>
         <module>msdk-io-mzdb</module>
 		<module>msdk-io-mztab</module>

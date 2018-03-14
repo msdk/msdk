@@ -125,5 +125,16 @@ public abstract class MzMLTags {
   public static final String ATTR_ID_REF = "idRef";
   /** Constant <code>ATTR_SPECTRUM_REF="spectrumRef"</code> */
   public static final String ATTR_SPECTRUM_REF = "spectrumRef";
+  /**
+   * Constant
+   * <code>ATTR_DEFAULT_INSTRUMENT_CONFIGURATION_REF="defaultInstrumentConfigurationRef"</code>
+   */
+  public static final String ATTR_DEFAULT_INSTRUMENT_CONFIGURATION_REF =
+      "defaultInstrumentConfigurationRef";
+  /**
+   * Constant
+   * <code>ATTR_DEFAULT_INSTRUMENT_CONFIGURATION_REF="defaultInstrumentConfigurationRef"</code>
+   */
+  public static final String ATTR_DEFAULT_DATA_PROCESSING_REF = "defaultDataProcessingRef";
 
 }

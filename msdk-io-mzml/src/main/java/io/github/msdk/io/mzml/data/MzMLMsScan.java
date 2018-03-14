@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
@@ -447,6 +449,7 @@ public class MzMLMsScan implements MsScan {
     for (MzMLPrecursorElement precursor : precursorList.getPrecursorElements()) {
       Optional<String> precursorMz = Optional.empty();
       Optional<String> precursorCharge = Optional.empty();
+      Optional<Integer> precursorScanNumber = getScanNumber(precursor.getSpectrumRef().orElse(""));
       Optional<String> isolationWindowTarget = Optional.empty();
       Optional<String> isolationWindowLower = Optional.empty();
       Optional<String> isolationWindowUpper = Optional.empty();
@@ -483,8 +486,10 @@ public class MzMLMsScan implements MsScan {
                 + Double.valueOf(isolationWindowLower.get()));
         Integer precursorChargeInt =
             precursorCharge.isPresent() ? Integer.valueOf(precursorCharge.get()) : null;
+        Integer precursorScanNumberInt =
+            precursorScanNumber.isPresent() ? Integer.valueOf(precursorScanNumber.get()) : null;
         IsolationInfo isolation = new SimpleIsolationInfo(isolationRange, null,
-            Double.valueOf(precursorMz.get()), precursorChargeInt, null);
+            Double.valueOf(precursorMz.get()), precursorChargeInt, null, precursorScanNumberInt);
         isolations.add(isolation);
 
       }
@@ -590,6 +595,31 @@ public class MzMLMsScan implements MsScan {
       }
     }
     return Optional.empty();
+  }
+
+  /**
+   * <p>
+   * getScanNumber.
+   * </p>
+   *
+   * @param spectrumId a {@link java.lang.String} object.
+   * @return a {@link java.lang.Integer} object.
+   */
+  public Optional<Integer> getScanNumber(String spectrumId) {
+    final Pattern pattern = Pattern.compile("scan=([0-9]+)");
+    final Matcher matcher = pattern.matcher(spectrumId);
+    boolean scanNumberFound = matcher.find();
+
+    // Some vendors include scan=XX in the ID, some don't, such as
+    // mzML converted from WIFF files. See the definition of nativeID in
+    // http://psidev.cvs.sourceforge.net/viewvc/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo
+    // So, get the value of the index tag if the scanNumber is not present in the ID
+    if (scanNumberFound) {
+      Integer scanNumber = Integer.parseInt(matcher.group(1));
+      return Optional.ofNullable(scanNumber);
+    }
+
+    return Optional.ofNullable(null);
   }
 
 }

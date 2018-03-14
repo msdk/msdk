@@ -97,7 +97,7 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
 
       // Add the SRM chromatogram to the list
       result.add(chromatogram);
- 
+
       parsed++;
     }
 
@@ -170,10 +170,12 @@ public class SrmDetectionMethod implements MSDKMethod<List<Chromatogram>> {
       double q1 = Double.parseDouble(strs[0]);
       double q3 = Double.parseDouble(strs[1]);
       List<IsolationInfo> isolations = chromatogram.getIsolations();
+      // TODO Also add precursor scan number
       IsolationInfo isolationInfo =
-          new SimpleIsolationInfo(q1IsolationMzRangeMap.get(q1), null, q1, null, null);
+          new SimpleIsolationInfo(q1IsolationMzRangeMap.get(q1), null, q1, null, null, null);
       isolations.add(isolationInfo);
-      isolationInfo = new SimpleIsolationInfo(q3IsolationMzRangeMap.get(q3), null, q3, null, null);
+      isolationInfo =
+          new SimpleIsolationInfo(q3IsolationMzRangeMap.get(q3), null, q3, null, null, null);
       isolations.add(isolationInfo);
 
       if ((chromatogram.getMz() == null) && (chromatogram.getMzValues() != null)) {
