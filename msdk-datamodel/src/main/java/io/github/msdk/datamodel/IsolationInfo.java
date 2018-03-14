@@ -66,6 +66,14 @@ public interface IsolationInfo {
   Integer getPrecursorCharge();
 
   /**
+   * Returns the precursor scan number. Null is returned if the precursor is unknown.
+   *
+   * @return Precursor scan number (positive integer), or null.
+   */
+  @Nullable
+  Integer getPrecursorScanNumber();
+
+  /**
    * Returns the details about the fragmentation that followed this isolation. Null is returned if
    * no fragmentation occurred or if the details are unknown.
    *

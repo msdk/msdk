@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -318,6 +320,7 @@ class MzMLChromatogram implements Chromatogram {
           getCVValue(precursorIsolationWindow.get(), MzMLCV.cvIsolationWindowTarget);
       Optional<String> precursorActivationEnergy =
           getCVValue(getPrecursor().getActivation(), MzMLCV.cvActivationEnergy);
+      Optional<Integer> precursorScanNumber = getScanNumber(precursor.getSpectrumRef().orElse(""));
       Optional<String> productIsolationMz =
           getCVValue(productIsolationWindow.get(), MzMLCV.cvIsolationWindowTarget);
       ActivationType precursorActivation = ActivationType.UNKNOWN;
@@ -334,17 +337,21 @@ class MzMLChromatogram implements Chromatogram {
       List<IsolationInfo> isolations = new ArrayList<>();
       IsolationInfo isolationInfo = null;
 
+      Integer precursorScanNumberInt =
+          precursorScanNumber.isPresent() ? Integer.valueOf(precursorScanNumber.get()) : null;
+
       if (precursorIsolationMz.isPresent()) {
         isolationInfo =
             new SimpleIsolationInfo(Range.singleton(Double.valueOf(precursorIsolationMz.get())),
-                null, Double.valueOf(precursorIsolationMz.get()), null, activationInfo);
+                null, Double.valueOf(precursorIsolationMz.get()), null, activationInfo,
+                precursorScanNumberInt);
         isolations.add(isolationInfo);
       }
 
       if (productIsolationMz.isPresent()) {
         isolationInfo =
             new SimpleIsolationInfo(Range.singleton(Double.valueOf(productIsolationMz.get())), null,
-                Double.valueOf(productIsolationMz.get()), null, null);
+                Double.valueOf(productIsolationMz.get()), null, null, null);
         isolations.add(isolationInfo);
       }
 
@@ -485,6 +492,31 @@ class MzMLChromatogram implements Chromatogram {
       }
     }
     return Optional.empty();
+  }
+
+  /**
+   * <p>
+   * getScanNumber.
+   * </p>
+   *
+   * @param spectrumId a {@link java.lang.String} object.
+   * @return a {@link java.lang.Integer} object.
+   */
+  public Optional<Integer> getScanNumber(String spectrumId) {
+    final Pattern pattern = Pattern.compile("scan=([0-9]+)");
+    final Matcher matcher = pattern.matcher(spectrumId);
+    boolean scanNumberFound = matcher.find();
+
+    // Some vendors include scan=XX in the ID, some don't, such as
+    // mzML converted from WIFF files. See the definition of nativeID in
+    // http://psidev.cvs.sourceforge.net/viewvc/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo
+    // So, get the value of the index tag if the scanNumber is not present in the ID
+    if (scanNumberFound) {
+      Integer scanNumber = Integer.parseInt(matcher.group(1));
+      return Optional.ofNullable(scanNumber);
+    }
+
+    return Optional.ofNullable(null);
   }
 
 }

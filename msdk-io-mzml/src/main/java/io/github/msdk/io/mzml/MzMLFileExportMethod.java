@@ -186,10 +186,18 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
       // <run>
       xmlStreamWriter.writeStartElement(MzMLTags.TAG_RUN);
       xmlStreamWriter.writeAttribute(MzMLTags.ATTR_ID, rawDataFile.getName());
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_DEFAULT_INSTRUMENT_CONFIGURATION_REF,
+          rawDataFile instanceof MzMLRawDataFile
+              ? ((MzMLRawDataFile) rawDataFile).getDefaultInstrumentConfiguration()
+              : "unknown");
 
       // <spectrumList>
       xmlStreamWriter.writeStartElement(MzMLTags.TAG_SPECTRUM_LIST);
       xmlStreamWriter.writeAttribute(MzMLTags.ATTR_COUNT, String.valueOf(scans.size()));
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_DEFAULT_DATA_PROCESSING_REF,
+          rawDataFile instanceof MzMLRawDataFile
+              ? ((MzMLRawDataFile) rawDataFile).getDefaultDataProcessingScan()
+              : "unknown");
 
       byte[] mzBuffer = null;
       byte[] intensityBuffer = null;
@@ -348,7 +356,6 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
               xmlStreamWriter.writeEndElement(); // </selectedIonList>
 
             }
-            xmlStreamWriter.writeEndElement(); // </precursor>
 
             if (precursor.getIsolationWindow().isPresent()) {
 
@@ -362,6 +369,8 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
             xmlStreamWriter.writeStartElement(MzMLTags.TAG_ACTIVATION);
             writeCVGroup(xmlStreamWriter, precursor.getActivation());
             xmlStreamWriter.writeEndElement(); // </activation>
+
+            xmlStreamWriter.writeEndElement(); // </precursor>
 
           }
 
@@ -390,6 +399,23 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
             xmlStreamWriter.writeEndElement(); // </productList>
           }
         }
+
+        // TODO Once changes to IsolationWindow have been merged, we can start working on exporting
+        // the precursor data for non-mzML data since we have all the required data
+
+        // else if (scan.getIsolations().size() > 0) {
+        // // <precursorList>
+        // xmlStreamWriter.writeStartElement(MzMLTags.TAG_PRECURSOR_LIST);
+        // xmlStreamWriter.writeAttribute(MzMLTags.ATTR_COUNT, "1");
+        //
+        // // <precursor>
+        // xmlStreamWriter.writeStartElement(MzMLTags.TAG_PRECURSOR);
+        // xmlStreamWriter.writeAttribute(MzMLTags.ATTR_SPECTRUM_REF, "scan=" + scan.get);
+        //
+        // // <isolationWindow>
+        // xmlStreamWriter.writeStartElement(MzMLTags.TAG_ISOLATION_WINDOW);
+        //
+        // }
 
         // <binaryDataArrayList>
         xmlStreamWriter.writeStartElement(MzMLTags.TAG_BINARY_DATA_ARRAY_LIST);
@@ -459,6 +485,10 @@ public class MzMLFileExportMethod implements MSDKMethod<Void> {
       // <chromatogramList>
       xmlStreamWriter.writeStartElement(MzMLTags.TAG_CHROMATOGRAM_LIST);
       xmlStreamWriter.writeAttribute(MzMLTags.ATTR_COUNT, String.valueOf(chromatograms.size()));
+      xmlStreamWriter.writeAttribute(MzMLTags.ATTR_DEFAULT_DATA_PROCESSING_REF,
+          rawDataFile instanceof MzMLRawDataFile
+              ? ((MzMLRawDataFile) rawDataFile).getDefaultDataProcessingChromatogram()
+              : "unknown");
 
       byte[] rtBuffer = null;
       byte[] intensityBuffer2 = null;

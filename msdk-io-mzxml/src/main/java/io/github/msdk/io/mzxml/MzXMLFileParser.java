@@ -34,7 +34,9 @@ import javolution.xml.stream.XMLStreamConstants;
 import javolution.xml.stream.XMLStreamReader;
 
 /**
- * <p>MzXMLFileParser class.</p>
+ * <p>
+ * MzXMLFileParser class.
+ * </p>
  *
  */
 public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
@@ -55,7 +57,9 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
   final static String TAG_PRECURSOR_MZ = "precursorMz";
 
   /**
-   * <p>Constructor for MzXMLFileParser.</p>
+   * <p>
+   * Constructor for MzXMLFileParser.
+   * </p>
    *
    * @param mzXMLFile a {@link java.io.File} object.
    */
@@ -68,7 +72,9 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
   }
 
   /**
-   * <p>Constructor for MzXMLFileParser.</p>
+   * <p>
+   * Constructor for MzXMLFileParser.
+   * </p>
    *
    * @param mzXMLFileName a {@link java.lang.String} object.
    */
@@ -77,7 +83,9 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
   }
 
   /**
-   * <p>Constructor for MzXMLFileParser.</p>
+   * <p>
+   * Constructor for MzXMLFileParser.
+   * </p>
    *
    * @param mzXMLFilePath a {@link java.nio.file.Path} object.
    */
@@ -86,7 +94,9 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
   }
 
   /**
-   * <p>execute.</p>
+   * <p>
+   * execute.
+   * </p>
    *
    * @return a {@link io.github.msdk.datamodel.RawDataFile} object.
    * @throws io.github.msdk.MSDKException if any.
@@ -197,6 +207,10 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
                 if (precursorCharge != null)
                   vars.precursorCharge = precursorCharge.toInt();
 
+                CharArray precursorScanNumber =
+                    xmlStreamReader.getAttributeValue(null, "precursorScanNum");
+                if (precursorScanNumber != null)
+                  vars.precursorScanNumber = precursorScanNumber.toInt();
               }
 
               break;
@@ -260,7 +274,7 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
                   case TAG_PRECURSOR_MZ:
                     IsolationInfo newIsolation = new SimpleIsolationInfo(
                         Range.singleton(xmlStreamReader.getText().toDouble()), null,
-                        xmlStreamReader.getText().toDouble(), vars.precursorCharge, null);
+                        xmlStreamReader.getText().toDouble(), vars.precursorCharge, null, vars.precursorScanNumber);
                     buildingScan.getIsolations().add(newIsolation);
                     break;
                 }
@@ -325,6 +339,7 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
 class Vars {
   String precision;
   Integer precursorCharge;
+  Integer precursorScanNumber;
   int peaksCount;
   boolean compressionFlag;
   CharArray currentTag;
@@ -334,6 +349,7 @@ class Vars {
   Vars() {
     precision = null;
     precursorCharge = null;
+    precursorScanNumber = null;
     peaksCount = 0;
     compressionFlag = false;
     currentTag = null;

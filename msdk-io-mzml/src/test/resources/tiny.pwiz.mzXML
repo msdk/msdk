@@ -25,7 +25,7 @@
       <processingOperation name="Conversion to mzML"/>
     </dataProcessing>
     <dataProcessing>
-      <software type="conversion" name="ProteoWizard software" version="3.0.10444"/>
+      <software type="conversion" name="ProteoWizard software" version="3.0.11841"/>
       <processingOperation name="Conversion to mzML"/>
     </dataProcessing>
     <scan num="19"
@@ -33,7 +33,7 @@
           centroided="1"
           msLevel="1"
           peaksCount="15"
-          retentionTime="PT353.43S"
+		  retentionTime="PT353.43S"
           lowMz="400.38999999999999"
           highMz="1795.5599999999999"
           basePeakMz="445.34699999999998"
@@ -51,7 +51,8 @@
           centroided="1"
           msLevel="2"
           peaksCount="10"
-          retentionTime="PT359.43S"
+		  polarity="+"
+		  retentionTime="PT359.43S"
           collisionEnergy="35"
           lowMz="320.38999999999999"
           highMz="1003.5599999999999"
@@ -86,7 +87,8 @@
           centroided="1"
           msLevel="1"
           peaksCount="15"
-          retentionTime="PT42.05S"
+		  polarity="+"
+		  retentionTime="PT42.05S"
           lowMz="142.38999999999999"
           highMz="942.55999999999995"
           basePeakMz="422.42000000000002"
@@ -107,5 +109,5 @@
     <offset id="22">3625</offset>
   </index>
   <indexOffset>4287</indexOffset>
-  <sha1>f256da38ab168aac8ae659118a8949cb878d725a</sha1>
+  <sha1>b2996ac60a2877d5cce862d9a64d354a753c742e</sha1>
 </mzXML>

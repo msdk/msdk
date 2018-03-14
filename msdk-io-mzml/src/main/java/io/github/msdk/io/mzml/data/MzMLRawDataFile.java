@@ -27,7 +27,9 @@ import io.github.msdk.datamodel.MsScan;
 import io.github.msdk.datamodel.RawDataFile;
 
 /**
- * <p>MzMLRawDataFile class.</p>
+ * <p>
+ * MzMLRawDataFile class.
+ * </p>
  *
  */
 public class MzMLRawDataFile implements RawDataFile {
@@ -39,6 +41,10 @@ public class MzMLRawDataFile implements RawDataFile {
   private final @Nonnull List<String> msFunctions;
   private final @Nonnull List<MsScan> msScans;
   private final @Nonnull List<Chromatogram> chromatograms;
+
+  private @Nonnull String defaultInstrumentConfiguration;
+  private @Nonnull String defaultDataProcessingScan;
+  private @Nonnull String defaultDataProcessingChromatogram;
 
   private @Nonnull String name;
 
@@ -60,6 +66,9 @@ public class MzMLRawDataFile implements RawDataFile {
     this.msFunctions = msFunctions;
     this.msScans = msScans;
     this.chromatograms = chromatograms;
+    this.defaultInstrumentConfiguration = "unknown";
+    this.defaultDataProcessingScan = "unknown";
+    this.defaultDataProcessingChromatogram = "unknown";
   }
 
   /** {@inheritDoc} */
@@ -104,6 +113,30 @@ public class MzMLRawDataFile implements RawDataFile {
   @Nonnull
   public List<Chromatogram> getChromatograms() {
     return ImmutableList.copyOf(chromatograms);
+  }
+
+  public String getDefaultInstrumentConfiguration() {
+    return defaultInstrumentConfiguration;
+  }
+
+  public void setDefaultInstrumentConfiguration(String defaultInstrumentConfiguration) {
+    this.defaultInstrumentConfiguration = defaultInstrumentConfiguration;
+  }
+
+  public String getDefaultDataProcessingScan() {
+    return defaultDataProcessingScan;
+  }
+
+  public void setDefaultDataProcessingScan(String defaultDataProcessingScan) {
+    this.defaultDataProcessingScan = defaultDataProcessingScan;
+  }
+
+  public String getDefaultDataProcessingChromatogram() {
+    return defaultDataProcessingChromatogram;
+  }
+
+  public void setDefaultDataProcessingChromatogram(String defaultDataProcessingChromatogram) {
+    this.defaultDataProcessingChromatogram = defaultDataProcessingChromatogram;
   }
 
   /** {@inheritDoc} */

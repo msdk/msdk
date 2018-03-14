@@ -214,8 +214,9 @@ class MzDataSaxHandler extends DefaultHandler {
       }
 
       if (precursorMz != null) {
+        // TODO Also parse precursor scan number
         IsolationInfo isolation = new SimpleIsolationInfo(Range.singleton(precursorMz),
-            null, precursorMz, precursorCharge, null);
+            null, precursorMz, precursorCharge, null, null);
         newScan.getIsolations().add(isolation);
       }
 

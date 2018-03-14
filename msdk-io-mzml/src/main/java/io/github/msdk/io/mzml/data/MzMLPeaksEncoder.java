@@ -23,13 +23,17 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.io.mzml.util.MSNumpress;
 
 /**
- * <p>Abstract MzMLPeaksEncoder class.</p>
+ * <p>
+ * Abstract MzMLPeaksEncoder class.
+ * </p>
  *
  */
 public abstract class MzMLPeaksEncoder {
 
   /**
-   * <p>encodeDouble.</p>
+   * <p>
+   * encodeDouble.
+   * </p>
    *
    * @param data an array of double.
    * @param compression a {@link io.github.msdk.io.mzml.data.MzMLCompressionType} object.
@@ -96,7 +100,9 @@ public abstract class MzMLPeaksEncoder {
   }
 
   /**
-   * <p>encodeFloat.</p>
+   * <p>
+   * encodeFloat.
+   * </p>
    *
    * @param data an array of float.
    * @param compression a {@link io.github.msdk.io.mzml.data.MzMLCompressionType} object.
@@ -118,7 +124,7 @@ public abstract class MzMLPeaksEncoder {
       case NUMPRESS_SHLOGF_ZLIB:
         throw new MSDKException("MSNumpress compression not supported for float values");
       default:
-        ByteBuffer buffer = ByteBuffer.allocate(data.length * 8);
+        ByteBuffer buffer = ByteBuffer.allocate(data.length * 4);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         for (float f : data) {
           buffer.putFloat(f);

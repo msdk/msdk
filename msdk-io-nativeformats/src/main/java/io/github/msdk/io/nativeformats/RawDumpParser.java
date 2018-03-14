@@ -271,8 +271,9 @@ class RawDumpParser {
       newScan.setScanDefinition(scanId);
 
       if (precursorMz != null) {
+        // TODO Also parse precursor scan number
         IsolationInfo isolation = new SimpleIsolationInfo(Range.singleton(precursorMz), null,
-            precursorMz, precursorCharge, null);
+            precursorMz, precursorCharge, null, null);
         newScan.getIsolations().add(isolation);
       }
 
