@@ -31,6 +31,7 @@
 		<module>msdk-io-filetypedetection</module>
 		<module>msdk-io-mz5</module>
 		<module>msdk-io-mzml</module>
+        <module>msdk-io-mzdb</module>
 		<module>msdk-io-mztab</module>
 		<module>msdk-io-netcdf</module>
 		<module>msdk-io-mzxml</module>

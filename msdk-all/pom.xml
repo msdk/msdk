@@ -1,248 +1,248 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>io.github.msdk</groupId>
-		<artifactId>msdk</artifactId>
-		<version>0.0.12-SNAPSHOT</version>
-	</parent>
-	<artifactId>msdk-all</artifactId>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.github.msdk</groupId>
+    <artifactId>msdk</artifactId>
+    <version>0.0.12-SNAPSHOT</version>
+  </parent>
+  <artifactId>msdk-all</artifactId>
 
-	<dependencies>
+  <dependencies>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-datamodel</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-datamodel</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-io-fileimport</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-io-fileimport</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-io-filetypedetection</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-io-filetypedetection</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-io-mzdata</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-io-mzdata</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-io-mz5</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-io-mzdb</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-io-mzml</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-io-mzml</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-io-mztab</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-io-mztab</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-io-mzxml</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-io-mzxml</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-io-nativeformats</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-io-nativeformats</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-io-netcdf</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-io-netcdf</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-io-txt</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-io-txt</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-io-chromatof</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-io-chromatof</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-io-mgf</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-io-mgf</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-io-msp</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-io-msp</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-rawdata-filters</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-rawdata-filters</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-rawdata-baselinecorrection</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-rawdata-baselinecorrection</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-spectra-centroiding</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-spectra-centroiding</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-spectra-peakinvestigator</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-spectra-peakinvestigator</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-spectra-centroidprofiledetection</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-spectra-centroidprofiledetection</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-spectra-splash</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-spectra-splash</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-db-mona</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-db-mona</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-db-kegg</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-db-kegg</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-db-gnps</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-db-gnps</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-id-sirius</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-id-sirius</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-id-metfrag</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-id-metfrag</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-id-localdatabase</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-id-localdatabase</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-alignment-joinaligner</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-alignment-joinaligner</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-alignment-ransac</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-alignment-ransac</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-normalization-stdcompound</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-normalization-stdcompound</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-isotopes-isotopegrouper</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-isotopes-isotopegrouper</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-isotopes-isotopepattern</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-isotopes-isotopepattern</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-spectra-similarity</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-spectra-similarity</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-featuredetection-chromatogrambuilder</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-featuredetection-chromatogrambuilder</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-featuredetection-targeted</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-featuredetection-targeted</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-featuredetection-gridmass</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-featuredetection-gridmass</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-featuredetection-msms</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-featuredetection-msms</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-featuredetection-srm</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-featuredetection-srm</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-featuredetection-openms</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-featuredetection-openms</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>msdk-featuredetection-adap3d</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>msdk-featuredetection-adap3d</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-	</dependencies>
+  </dependencies>
 </project>
