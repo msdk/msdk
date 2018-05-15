@@ -43,7 +43,7 @@ public class ISirius {
     return new Pair<>(mz, intensive);
   }
 
-  public static List<IdentificationResult> identifyMs2Spectrum(String path)
+  public static List<IdentificationResult> identifyMs2Spectrum(double[] mz, double[] intensive, double parentMass)
       throws MSDKException, IOException {
     final Sirius sirius = new Sirius();
 
@@ -54,22 +54,15 @@ public class ISirius {
      *
      **/
 
-    /* TODO: remove fixed value */
-    double parentMass = 231.065;
-    double mz[], intensive[];
-
     /*
       Pair<double[], double[]> content = readCustomMsFile(path);
       mz = content.getValue0();
       intensive = content.getValue1();
     */
 
-    // Problem arises with Accept by string & does not appear with Accept by file
-    File inputFile = new File(path);
-    MspSpectrum mspSpectrum = MspImportAlgorithm.parseMspFromFile(inputFile);
 
-    mz = mspSpectrum.getMzValues();
-    intensive = LocalArrayUtil.convertToDoubles(mspSpectrum.getIntensityValues());
+
+
     Spectrum<Peak> ms2 = sirius.wrapSpectrum(mz, intensive);
 
     /**
@@ -79,8 +72,6 @@ public class ISirius {
     Ionization ion = sirius.getIonization("[M+H]+");
     PrecursorIonType precursor = sirius.getPrecursorIonType("[M+H]+");
     Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, null, ms2);
-
-//    sirius.getMs2Experiment()
 
 //        Compilation failures as no ms1 spectrum, right now do not understand how not to set it.
 //        Error on request for GurobiJni60 library
