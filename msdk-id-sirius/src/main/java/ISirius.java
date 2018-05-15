@@ -20,6 +20,7 @@ import org.javatuples.Pair;
 
 public class ISirius {
 
+  /* This function is left here for non-msp files */
   private static Pair<double[], double[]> readCustomMsFile(String path) throws IOException {
     Scanner sc = new Scanner(new File(path));
     ArrayList<String> strings = new ArrayList<>();
@@ -51,24 +52,29 @@ public class ISirius {
      * sirius_api:4.0 (as well as sirius:4.0) does not have those classes
      *
      **/
-    Ms2Experiment ms2Experiment;
 
-    double mz[] = null, intensive[] = null;
+    double mz[], intensive[];
+    double parentMass = 155.0603;
 //    Pair<double[], double[]> content = readCustomMsFile(path);
 //    mz = content.getValue0();
 //    intensive = content.getValue1();
 
-    MspSpectrum mspSpectrum = MspImportAlgorithm.parseMspFromString(path);
+    // Problem arises with Accept by string & does not appear with Accept by file
+    File inputFile = new File(path);
+    MspSpectrum mspSpectrum = MspImportAlgorithm.parseMspFromFile(inputFile);
+
+    /* TODO: remove fixed value */
     mz = mspSpectrum.getMzValues();
-    intensive = ArrayUtil.convertToDoubles(mspSpectrum.getIntensityValues());
+    intensive = LocalArrayUtil.convertToDoubles(mspSpectrum.getIntensityValues());
     Spectrum<Peak> ms2 = sirius.wrapSpectrum(mz, intensive);
 
     /* TODO: explore non-deprecated methods */
     Ionization ion = sirius.getIonization("[M+H]+");
-    Ms2Experiment experiment = sirius.getMs2Experiment(231.07d, ion, ms2, ms2);
+    Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, ion, null, ms2);
+
 //        Compilation failures as no ms1 spectrum, right now do not understand how not to set it.
 //        Error on request for GurobiJni60 library
-
+    /* Runtime failure on fragmentation tree construction (assertion error) */
     List<IdentificationResult> results = sirius.identify(experiment);
     return results;
   }

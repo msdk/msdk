@@ -12,7 +12,7 @@ public class SiriusMs2Test {
 
   @Test
   public void testCreateMs2Experiment() throws MSDKException, IOException {
-    String ms2Path = "target/test-classes/query.txt";
+    String ms2Path = "target/test-classes/sample.msp";
     List<IdentificationResult> list = ISirius.identifyMs2Spectrum(ms2Path);
     for (IdentificationResult r : list) {
       System.out.println(r.toString());
