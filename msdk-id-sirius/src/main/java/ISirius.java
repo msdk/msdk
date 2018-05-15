@@ -4,7 +4,9 @@ import de.unijena.bioinf.ChemistryBase.ms.Peak;
 import de.unijena.bioinf.ChemistryBase.ms.Spectrum;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import de.unijena.bioinf.sirius.Sirius;
-import javafx.util.Pair;
+import io.github.msdk.MSDKException;
+import io.github.msdk.io.msp.MspImportAlgorithm;
+import io.github.msdk.io.msp.MspSpectrum;
 
 
 import java.io.File;
@@ -20,54 +22,23 @@ import java.util.stream.Stream;
 
 public class ISirius {
 
-    public static Pair<double[], double[]> readMsFile(String path) throws FileNotFoundException {
-        List<Double> mz, intensive;
-        mz = new ArrayList<>();
-        intensive = new ArrayList<>();
-        Scanner sc = new Scanner(new File(path));
-        String words[];
+  public List<IdentificationResult> identifyMs2Spectrum(String path) throws MSDKException {
+    final Sirius sirius = new Sirius();
+    MspSpectrum mspSpectrum = MspImportAlgorithm.parseMspFromString(path);
+    double mz[] = mspSpectrum.getMzValues();
+    double intensive[] = mspSpectrum.getIntensityValues();
 
-        while (sc.hasNext()) {
-//            words = sc.nextLine().split(" ")
-            mz.add(sc.nextDouble());
-            intensive.add(sc.nextDouble());
-        }
+    Spectrum<Peak> ms1 = null;
+    Spectrum<Peak> ms2 = sirius.wrapSpectrum(mz, intensive);
 
-        sc.close();
-
-        Pair<double[], double[]> pair;
-        Double mzArray[] = mz.toArray(new Double[mz.size()]);
-        Double intensiveArray[] = intensive.toArray(new Double[intensive.size()]);
-
-        double[] mzPrimitive = Stream.of(mzArray).mapToDouble(Double::doubleValue).toArray();
-        double[] intensivePrimitive = Stream.of(intensiveArray).mapToDouble(Double::doubleValue).toArray();
-
-        return new Pair<>(mzPrimitive, intensivePrimitive);
-    }
-
-    public static void main(String[] args) {
-        final Sirius sirius = new Sirius();
-        Pair<double[], double[]> fileContent = null;
-        try {
-            fileContent = readMsFile("query.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        double mz[] = fileContent.getKey();
-        double intensive[] = fileContent.getValue();
-
-        Spectrum<Peak> ms1 = null;
-        Spectrum<Peak> ms2 = sirius.wrapSpectrum(mz, intensive);
-
-        /* TODO: explore non-deprecated methods */
-        Ionization ion = sirius.getIonization("[M+H]+");
-        Ms2Experiment experiment = sirius.getMs2Experiment(231.07d, ion, ms1, ms2);
+    /* TODO: explore non-deprecated methods */
+    Ionization ion = sirius.getIonization("[M+H]+");
+    Ms2Experiment experiment = sirius.getMs2Experiment(231.07d, ion, ms1, ms2);
 //        Not tested
 //        Compilation failures as no ms1 spectrum, right now do not understand how not to set it.
 //        Error on request for GurobiJni60 library
 
-
-        List<IdentificationResult> results = sirius.identify(experiment);
-        System.out.println(results.toString());
-    }
+    List<IdentificationResult> results = sirius.identify(experiment);
+    return results;
+  }
 }

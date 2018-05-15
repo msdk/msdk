@@ -27,6 +27,21 @@
       <artifactId>SiriusCLI</artifactId>
       <version>3.1.3</version>
     </dependency>
+    <dependency>
+      <groupId>io.github.msdk</groupId>
+      <artifactId>msdk-io-msp</artifactId>
+      <version>0.0.12-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.msdk</groupId>
+      <artifactId>msdk-io-msp</artifactId>
+      <version>0.0.12-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.msdk</groupId>
+      <artifactId>msdk-io-msp</artifactId>
+      <version>0.0.12-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
 
