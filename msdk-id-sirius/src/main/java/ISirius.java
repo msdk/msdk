@@ -5,6 +5,8 @@ import de.unijena.bioinf.ChemistryBase.ms.Spectrum;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import de.unijena.bioinf.sirius.Sirius;
 import io.github.msdk.MSDKException;
+import io.github.msdk.io.msp.MspImportAlgorithm;
+import io.github.msdk.io.msp.MspSpectrum;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,22 +45,27 @@ public class ISirius {
       throws MSDKException, IOException {
     final Sirius sirius = new Sirius();
 
-//    Temporarly added dependancy back to the 3.1.3 as 4.0 sirius_api does not have those classes
+    /**
+     *
+     * TODO: Temporary added dependency back to the 3.1.3
+     * sirius_api:4.0 (as well as sirius:4.0) does not have those classes
+     *
+     **/
     Ms2Experiment ms2Experiment;
 
     double mz[] = null, intensive[] = null;
-    Pair<double[], double[]> content = readCustomMsFile(path);
-//    MspSpectrum mspSpectrum = MspImportAlgorithm.parseMspFromString(path);
-    mz = content.getValue0();
-    intensive = content.getValue1();
+//    Pair<double[], double[]> content = readCustomMsFile(path);
+//    mz = content.getValue0();
+//    intensive = content.getValue1();
 
-    Spectrum<Peak> ms1 = null;
+    MspSpectrum mspSpectrum = MspImportAlgorithm.parseMspFromString(path);
+    mz = mspSpectrum.getMzValues();
+    intensive = ArrayUtil.convertToDoubles(mspSpectrum.getIntensityValues());
     Spectrum<Peak> ms2 = sirius.wrapSpectrum(mz, intensive);
 
     /* TODO: explore non-deprecated methods */
     Ionization ion = sirius.getIonization("[M+H]+");
     Ms2Experiment experiment = sirius.getMs2Experiment(231.07d, ion, ms2, ms2);
-//        Not tested
 //        Compilation failures as no ms1 spectrum, right now do not understand how not to set it.
 //        Error on request for GurobiJni60 library
 
