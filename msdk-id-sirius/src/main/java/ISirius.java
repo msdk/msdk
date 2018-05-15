@@ -1,4 +1,5 @@
 import de.unijena.bioinf.ChemistryBase.chem.Ionization;
+import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
 import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.Peak;
 import de.unijena.bioinf.ChemistryBase.ms.Spectrum;
@@ -53,12 +54,15 @@ public class ISirius {
      *
      **/
 
-    double mz[], intensive[];
     /* TODO: remove fixed value */
-    double parentMass = 155.0603;
-//    Pair<double[], double[]> content = readCustomMsFile(path);
-//    mz = content.getValue0();
-//    intensive = content.getValue1();
+    double parentMass = 231.065;
+    double mz[], intensive[];
+
+    /*
+      Pair<double[], double[]> content = readCustomMsFile(path);
+      mz = content.getValue0();
+      intensive = content.getValue1();
+    */
 
     // Problem arises with Accept by string & does not appear with Accept by file
     File inputFile = new File(path);
@@ -68,13 +72,21 @@ public class ISirius {
     intensive = LocalArrayUtil.convertToDoubles(mspSpectrum.getIntensityValues());
     Spectrum<Peak> ms2 = sirius.wrapSpectrum(mz, intensive);
 
-    /* TODO: explore non-deprecated methods */
+    /**
+     *  TODO: explore non-deprecated methods
+     *
+     **/
     Ionization ion = sirius.getIonization("[M+H]+");
-    Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, ion, null, ms2);
+    PrecursorIonType precursor = sirius.getPrecursorIonType("[M+H]+");
+    Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, null, ms2);
+
+//    sirius.getMs2Experiment()
 
 //        Compilation failures as no ms1 spectrum, right now do not understand how not to set it.
 //        Error on request for GurobiJni60 library
-    /* Runtime failure on fragmentation tree construction (assertion error) */
+    /* Runtime failure on fragmentation tree construction (NullPointer) - if used on MSMS provided by Tomas earlier */
+    /* Runtime failure on fragmentation tree construction (assertion error) - if used on data from .msp */
+
     List<IdentificationResult> results = sirius.identify(experiment);
     return results;
   }
