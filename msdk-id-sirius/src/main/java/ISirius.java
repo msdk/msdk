@@ -1,4 +1,3 @@
-import de.unijena.bioinf.ChemistryBase.chem.Ionization;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
 import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.Peak;
@@ -6,23 +5,20 @@ import de.unijena.bioinf.ChemistryBase.ms.Spectrum;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import de.unijena.bioinf.sirius.Sirius;
 import io.github.msdk.MSDKException;
-import io.github.msdk.io.msp.MspImportAlgorithm;
-import io.github.msdk.io.msp.MspSpectrum;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import org.javatuples.Pair;
+import javax.annotation.Nullable;
 
 /**
  * Created by evger on 14-May-18.
  */
 
 public class ISirius {
-
   /* This function is left here for non-msp files */
-  private static Pair<double[], double[]> readCustomMsFile(String path) throws IOException {
+  public static Pair<double[], double[]> readCustomMsFile(String path) throws IOException {
     Scanner sc = new Scanner(new File(path));
     ArrayList<String> strings = new ArrayList<>();
     while (sc.hasNext()) {
@@ -43,10 +39,12 @@ public class ISirius {
     return new Pair<>(mz, intensive);
   }
 
-  public static List<IdentificationResult> identifyMs2Spectrum(double[] mz, double[] intensive, double parentMass)
-      throws MSDKException, IOException {
-    final Sirius sirius = new Sirius();
+  public static List<IdentificationResult> identifyMs2Spectrum(
+      @Nullable Pair<double[], double[]> ms1pair, Pair<double[], double[]> ms2pair,
+      double parentMass, String ion) throws MSDKException, IOException {
 
+    final Sirius sirius = new Sirius();
+    Spectrum<Peak> ms1 = null, ms2 = null;
     /**
      *
      * TODO: Temporary added dependency back to the 3.1.3
@@ -54,31 +52,21 @@ public class ISirius {
      *
      **/
 
-    /*
-      Pair<double[], double[]> content = readCustomMsFile(path);
-      mz = content.getValue0();
-      intensive = content.getValue1();
-    */
 
+    ms2 = sirius.wrapSpectrum(ms2pair.getKey(), ms2pair.getVal());
+    if (ms1pair != null) {
+      ms1 = sirius.wrapSpectrum(ms1pair.getKey(), ms1pair.getVal());
+    }
 
-
-
-    Spectrum<Peak> ms2 = sirius.wrapSpectrum(mz, intensive);
-
-    /**
-     *  TODO: explore non-deprecated methods
-     *
-     **/
-    Ionization ion = sirius.getIonization("[M+H]+");
-    PrecursorIonType precursor = sirius.getPrecursorIonType("[M+H]+");
-    Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, null, ms2);
+    PrecursorIonType precursor = sirius.getPrecursorIonType(ion);
+    Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, ms1, ms2);
 
 //        Compilation failures as no ms1 spectrum, right now do not understand how not to set it.
 //        Error on request for GurobiJni60 library
     /* Runtime failure on fragmentation tree construction (NullPointer) - if used on MSMS provided by Tomas earlier */
     /* Runtime failure on fragmentation tree construction (assertion error) - if used on data from .msp */
 
-    List<IdentificationResult> results = sirius.identify(experiment);
+    List<IdentificationResult> results = sirius.identify(experiment, 5, true, null);
     return results;
   }
 }
