@@ -107,6 +107,11 @@
       <artifactId>msdk-io-msp</artifactId>
       <version>0.0.12-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>cplex</groupId>
+      <artifactId>cplex</artifactId>
+      <version>12.8</version>
+    </dependency>
 
   </dependencies>
 
