@@ -11,15 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import javax.annotation.Nullable;
-import com.sun.istack.NotNull;
-import org.javatuples.Pair;
 
 /**
  * Created by evger on 14-May-18.
  */
 
 public class ISirius {
-
   /* This function is left here for non-msp files */
   public static Pair<double[], double[]> readCustomMsFile(String path) throws IOException {
     Scanner sc = new Scanner(new File(path));
@@ -43,12 +40,11 @@ public class ISirius {
   }
 
   public static List<IdentificationResult> identifyMs2Spectrum(
-      @Nullable Pair<double[], double[]> ms1pair, @NotNull Pair<double[], double[]> ms2pair,
+      @Nullable Pair<double[], double[]> ms1pair, Pair<double[], double[]> ms2pair,
       double parentMass, String ion) throws MSDKException, IOException {
 
     final Sirius sirius = new Sirius();
     Spectrum<Peak> ms1 = null, ms2 = null;
-
     /**
      *
      * TODO: Temporary added dependency back to the 3.1.3
@@ -57,9 +53,9 @@ public class ISirius {
      **/
 
 
-    ms2 = sirius.wrapSpectrum(ms2pair.getValue0(), ms2pair.getValue1());
+    ms2 = sirius.wrapSpectrum(ms2pair.getKey(), ms2pair.getVal());
     if (ms1pair != null) {
-      ms1 = sirius.wrapSpectrum(ms1pair.getValue0(), ms1pair.getValue1());
+      ms1 = sirius.wrapSpectrum(ms1pair.getKey(), ms1pair.getVal());
     }
 
     PrecursorIonType precursor = sirius.getPrecursorIonType(ion);
@@ -70,9 +66,7 @@ public class ISirius {
     /* Runtime failure on fragmentation tree construction (NullPointer) - if used on MSMS provided by Tomas earlier */
     /* Runtime failure on fragmentation tree construction (assertion error) - if used on data from .msp */
 
-//    List<IdentificationResult> results = sirius.identify(experiment);
-    List<IdentificationResult> results = sirius.identify(experiment, 100, true, null);
-
+    List<IdentificationResult> results = sirius.identify(experiment, 5, true, null);
     return results;
   }
 }

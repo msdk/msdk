@@ -9,40 +9,123 @@
 
 
   <repositories>
-    <!--<repository>-->
-      <!--<id>bioinf-jena</id>-->
-      <!--<name>bioinf-jena-release</name>-->
-      <!--<url>http://bio.informatik.uni-jena.de/repository/libs-release-local</url>-->
-    <!--</repository>-->
+    <repository>
+      <id>bioinf-jena-main</id>
+      <name>bioinf-jena-release</name>
+      <url>https://bio.informatik.uni-jena.de/repository/libs-release-local</url>
+    </repository>
+    <repository>
+      <id>bioinf-jena</id>
+      <name>bioinf-jena-release</name>
+      <url>https://bio.informatik.uni-jena.de/repository/local</url>
+    </repository>
+    <repository>
+      <id>ebi</id>
+      <name>ebi.co.uk</name>
+      <url>http://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
+    </repository>
 
     <repository>
-      <id>bioinf-jena-sirirusCli</id>
-      <name>bioinf-jena-release</name>
-      <url>http://bio.informatik.uni-jena.de/artifactory/libs-releases-local</url>
+      <id>glpk</id>
+      <name>GLPK</name>
+      <url>https://www.xypron.de/repository</url>
     </repository>
+
   </repositories>
 
   <dependencies>
     <dependency>
-      <groupId>de.unijena.bioinf</groupId>
-      <artifactId>SiriusCLI</artifactId>
-      <version>3.1.3</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-math3</artifactId>
+      <version>3.6.1</version>
     </dependency>
-    <!--<dependency>-->
-      <!--<groupId>de.unijena.bioinf.ms</groupId>-->
-      <!--<artifactId>sirius_api</artifactId>-->
-      <!--<version>4.0</version>-->
-    <!--</dependency>-->
+
     <!--<dependency>-->
       <!--<groupId>de.unijena.bioinf.ms</groupId>-->
       <!--<artifactId>sirius</artifactId>-->
-      <!--<version>4.0</version>-->
+      <!--<version>4</version>-->
     <!--</dependency>-->
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>chemistry_base</artifactId>
+      <version>4</version>
+    </dependency>
+
+    <!--<dependency>-->
+      <!--<groupId>de.unijena.bioinf.ms</groupId>-->
+      <!--<artifactId>fragmentation_tree</artifactId>-->
+      <!--<version>4</version>-->
+    <!--</dependency>-->
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>gibbs_sampling</artifactId>
+      <version>4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>io</artifactId>
+      <version>4</version>
+    </dependency>
+
+    <!--<dependency>-->
+      <!--<groupId>de.unijena.bioinf.ms</groupId>-->
+      <!--<artifactId>isotope_pattern</artifactId>-->
+      <!--<version>4</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+      <!--<groupId>de.unijena.bioinf.ms</groupId>-->
+      <!--<artifactId>mass_decomposition</artifactId>-->
+      <!--<version>4</version>-->
+    <!--</dependency>-->
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>mass_decomposer</artifactId>
+      <version>4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>sirius_api</artifactId>
+      <version>4</version>
+    </dependency>
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>fragmentation_tree_construction</artifactId>
+      <version>4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>isogen_cli</artifactId>
+      <version>4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>isotope_pattern_analysis</artifactId>
+      <version>4</version>
+    </dependency>
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>decomp_cli</artifactId>
+      <version>4</version>
+    </dependency>
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>mass_decomposer</artifactId>
+      <version>4</version>
+    </dependency>
     <dependency>
       <groupId>io.github.msdk</groupId>
       <artifactId>msdk-io-msp</artifactId>
       <version>0.0.12-SNAPSHOT</version>
     </dependency>
+
+
   </dependencies>
 
 

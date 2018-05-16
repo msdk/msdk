@@ -1,4 +1,3 @@
-
 import de.unijena.bioinf.sirius.IdentificationResult;
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.msp.MspImportAlgorithm;
@@ -6,7 +5,6 @@ import io.github.msdk.io.msp.MspSpectrum;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import org.javatuples.Pair;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -41,7 +39,7 @@ public class SiriusMs2Test {
   public void testCreateExperimentMs1Ms2Custom() throws MSDKException, IOException {
     String ms1Path = "target/test-classes/bisnoryangonin_MS1.txt";
     String ms2Path = "target/test-classes/bisnoryangonin_MS1.txt";
-    final double precursorMass = 461.1223;
+    final double precursorMass = 231.0647;
     final String ionName = "[M+H]+";
 
     Pair<double[], double[]> ms1Spectrum = ISirius.readCustomMsFile(ms1Path);
@@ -51,12 +49,14 @@ public class SiriusMs2Test {
                                                                   ms2Spectrum,
                                                                   precursorMass,
                                                                   ionName);
+
+    File temp = new File("temp.txt");
     for (IdentificationResult r : list) {
-      System.out.println(r.getMolecularFormula().toString());
-
+      String s = String.format("%s :: %f", r.getMolecularFormula().toString(), r.getIsotopeScore());
+      System.out.println(s);
+      r.writeTreeToFile(temp);
     }
-    System.out.println(list.get(0).getJSONTree());
-
+//    System.out.println(list.get(0).getJSONTree());
     /* Temporary solution  */
     Assert.assertEquals(true, true);
   }
