@@ -25,8 +25,10 @@ public class SiriusMs2Test {
     double mz[] = mspSpectrum.getMzValues();
     double intensive[] = LocalArrayUtil.convertToDoubles(mspSpectrum.getIntensityValues());
     Pair<double[], double[]> ms2pair = new Pair<>(mz, intensive);
+    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod();
 
-    List<IdentificationResult> list = ISirius.identifyMs2Spectrum(null, ms2pair, parentMass, ionName);
+    List<IdentificationResult> list = siriusMethod
+        .identifyMs2Spectrum(null, ms2pair, parentMass, ionName);
     for (IdentificationResult r : list) {
       System.out.println(r.toString());
     }
@@ -42,19 +44,19 @@ public class SiriusMs2Test {
     final double precursorMass = 231.0647;
     final String ionName = "[M+H]+";
 
-    Pair<double[], double[]> ms1Spectrum = ISirius.readCustomMsFile(ms1Path);
-    Pair<double[], double[]> ms2Spectrum = ISirius.readCustomMsFile(ms2Path);
+    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod();
 
-    List<IdentificationResult> list = ISirius.identifyMs2Spectrum(ms1Spectrum,
+    Pair<double[], double[]> ms1Spectrum = siriusMethod.readCustomMsFile(ms1Path);
+    Pair<double[], double[]> ms2Spectrum = siriusMethod.readCustomMsFile(ms2Path);
+
+    List<IdentificationResult> list = siriusMethod.identifyMs2Spectrum(ms1Spectrum,
                                                                   ms2Spectrum,
                                                                   precursorMass,
                                                                   ionName);
 
-    File temp = new File("temp.txt");
     for (IdentificationResult r : list) {
       String s = String.format("%s :: %f", r.getMolecularFormula().toString(), r.getIsotopeScore());
       System.out.println(s);
-      r.writeTreeToFile(temp);
     }
 //    System.out.println(list.get(0).getJSONTree());
     /* Temporary solution  */

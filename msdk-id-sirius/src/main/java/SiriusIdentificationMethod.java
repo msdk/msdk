@@ -5,6 +5,8 @@ import de.unijena.bioinf.ChemistryBase.ms.Spectrum;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import de.unijena.bioinf.sirius.Sirius;
 import io.github.msdk.MSDKException;
+import io.github.msdk.MSDKMethod;
+import io.github.msdk.datamodel.IonAnnotation;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,9 +18,15 @@ import javax.annotation.Nullable;
  * Created by evger on 14-May-18.
  */
 
-public class ISirius {
+public class SiriusIdentificationMethod implements MSDKMethod<IonAnnotation> {
+  Sirius sirius;
+
+  SiriusIdentificationMethod() {
+    sirius = new Sirius();
+  }
+
   /* This function is left here for non-msp files */
-  public static Pair<double[], double[]> readCustomMsFile(String path) throws IOException {
+  public Pair<double[], double[]> readCustomMsFile(String path) throws IOException {
     Scanner sc = new Scanner(new File(path));
     ArrayList<String> strings = new ArrayList<>();
     while (sc.hasNext()) {
@@ -39,20 +47,12 @@ public class ISirius {
     return new Pair<>(mz, intensive);
   }
 
-  public static List<IdentificationResult> identifyMs2Spectrum(
+  public List<IdentificationResult> identifyMs2Spectrum(
       @Nullable Pair<double[], double[]> ms1pair, Pair<double[], double[]> ms2pair,
       double parentMass, String ion) throws MSDKException, IOException {
 
     final Sirius sirius = new Sirius();
     Spectrum<Peak> ms1 = null, ms2 = null;
-    /**
-     *
-     * TODO: Temporary added dependency back to the 3.1.3
-     * sirius_api:4.0 (as well as sirius:4.0) does not have those classes
-     *
-     **/
-
-
     ms2 = sirius.wrapSpectrum(ms2pair.getKey(), ms2pair.getVal());
     if (ms1pair != null) {
       ms1 = sirius.wrapSpectrum(ms1pair.getKey(), ms1pair.getVal());
@@ -61,12 +61,32 @@ public class ISirius {
     PrecursorIonType precursor = sirius.getPrecursorIonType(ion);
     Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, ms1, ms2);
 
-//        Compilation failures as no ms1 spectrum, right now do not understand how not to set it.
-//        Error on request for GurobiJni60 library
-    /* Runtime failure on fragmentation tree construction (NullPointer) - if used on MSMS provided by Tomas earlier */
-    /* Runtime failure on fragmentation tree construction (assertion error) - if used on data from .msp */
+//        Error on request for GurobiJni60 library, Cplex missed java path.
 
     List<IdentificationResult> results = sirius.identify(experiment, 5, true, null);
     return results;
+  }
+
+  @Nullable
+  @Override
+  public Float getFinishedPercentage() {
+    return null;
+  }
+
+  @Nullable
+  @Override
+  public IonAnnotation execute() throws MSDKException {
+    return null;
+  }
+
+  @Nullable
+  @Override
+  public IonAnnotation getResult() {
+    return null;
+  }
+
+  @Override
+  public void cancel() {
+
   }
 }
