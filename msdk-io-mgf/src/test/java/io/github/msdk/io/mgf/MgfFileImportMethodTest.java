@@ -4,8 +4,6 @@ import io.github.msdk.MSDKException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -30,6 +28,48 @@ public class MgfFileImportMethodTest {
     Assert.assertEquals(expectedTitle, spectrum.getTitle());
     Assert.assertEquals(Long.valueOf(expectedNumberDatapoints), Long.valueOf(spectrum.getNumberOfDataPoints()));
     Assert.assertEquals(expectedCharge, spectrum.getPrecursorCharge());
+  }
+
+  @Test
+  public void testMultipleMgfImportTest() throws IOException, MSDKException {
+    final int expectedSize = 10;
+    final String expectedTitles[] = {
+        "PRIDE_Exp_mzData_Ac_9266.xml_id_1",
+        "PRIDE_Exp_mzData_Ac_9266.xml_id_2",
+        "PRIDE_Exp_mzData_Ac_9266.xml_id_3",
+        "PRIDE_Exp_mzData_Ac_9266.xml_id_4",
+        "PRIDE_Exp_mzData_Ac_9266.xml_id_5",
+        "PRIDE_Exp_mzData_Ac_9266.xml_id_6",
+        "PRIDE_Exp_mzData_Ac_9266.xml_id_7",
+        "PRIDE_Exp_mzData_Ac_9266.xml_id_8",
+        "PRIDE_Exp_mzData_Ac_9266.xml_id_9",
+        "PRIDE_Exp_mzData_Ac_9266.xml_id_10"
+    };
+    final long expectedNumberDatapoints[] = {53, 66, 13, 16, 9, 9, 9, 14, 18, 13};
+    final int expectedCharges[] = {2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
+
+    File file = new File("target/test-classes/F001257.mgf");
+    MgfFileImportMethod importMethod = new MgfFileImportMethod(file);
+    Collection<MgfMsSpectrum> spectrums = importMethod.execute();
+
+    int size = spectrums.size();
+    Assert.assertEquals(expectedSize, size);
+
+    MgfMsSpectrum mgfSpectrum;
+    Object[] objSpectrums = spectrums.toArray();
+    String titles[] = new String[size];
+    long dataPoints[] = new long[size];
+    int charges[] = new int[size];
+    for (int i = 0; i < size; i++) {
+      mgfSpectrum = (MgfMsSpectrum)objSpectrums[i];
+      titles[i] = mgfSpectrum.getTitle();
+      dataPoints[i] = mgfSpectrum.getNumberOfDataPoints();
+      charges[i] = mgfSpectrum.getPrecursorCharge();
+    }
+
+    Assert.assertArrayEquals(expectedTitles, titles);
+    Assert.assertArrayEquals(expectedNumberDatapoints, dataPoints);
+    Assert.assertArrayEquals(expectedCharges, charges);
   }
 
 }
