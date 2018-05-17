@@ -9,6 +9,8 @@ public class MgfPairComparator implements Comparator<Pair> {
 
   @Override
   public int compare(Pair o1, Pair o2) {
-    return (Double)o1.getKey() - (Double)o2.getKey() > 0 ? 1: 0;
+    double k1 = (Double)o1.getKey();
+    double k2 = (Double)o2.getKey();
+    return k1 < k2 ? -1 : k1 == k2 ? 0 : 1;
   }
 }

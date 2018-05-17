@@ -1,3 +1,16 @@
+/*
+ * (C) Copyright 2015-2018 by MSDK Development Team
+ *
+ * This software is dual-licensed under either
+ *
+ * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
+ * Software Foundation
+ *
+ * or (per the licensee's choosing)
+ *
+ * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
+ */
+
 package io.github.msdk.io.mgf;
 
 import io.github.msdk.MSDKException;
@@ -11,6 +24,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
@@ -18,18 +32,7 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/*
- * (C) Copyright 2015-2018 by MSDK Development Team
- *
- * This software is dual-licensed under either
- *
- * (a) the terms of the GNU Lesser General Public License version 2.1 as published by the Free
- * Software Foundation
- *
- * or (per the licensee's choosing)
- *
- * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
- */
+
 public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>> {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -38,15 +41,13 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
   private boolean canceled = false;
   private long processedSpectra = 0;
   private Hashtable<String, Pattern> patterns;
+  PriorityQueue<Pair<Double, Float>> mzIntensivePQ;
 
   @Nullable
   @Override
   public Collection<MgfMsSpectrum> execute() throws MSDKException {
     logger.info("Started MGF import from {} file", target);
 
-    double mzValues[] = null;
-    float intensityValues[] = null;
-    int numOfDataPoints;
     try (final BufferedReader reader = new BufferedReader(new FileReader(target))) {
       String line;
       while ((line = reader.readLine()) != null) {
@@ -57,11 +58,9 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
             break;
         }
       }
-
       reader.close();
     } catch (IOException e) {
-//      TODO: Eliminate catching of this exception
-      System.out.println("Well");
+      throw new MSDKException(e);
     }
 
     return spectra;
@@ -69,18 +68,20 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
 
   private MgfMsSpectrum processSpectrum(BufferedReader reader) throws IOException {
     String line;
-
     String title = "";
     int precursorCharge = 0;
     double precursorMass = 0;
     Matcher matcher = null;
-    double mz[] = new double[16];
-    float intensive[] = new float[16];
-    int index = 0;
+
     int matcherId = -1;
     String groupped;
 
-    while (!(line = reader.readLine()).equals("END IONS")) {
+    while (true) {
+
+      line = reader.readLine();
+      if (line == null || line.equals("END IONS"))
+        break;
+
       if (line.contains("PEPMASS") || line.contains("TITLE") || line.contains("CHARGE")) {
         if (line.contains("PEPMASS")) {
           matcher = patterns.get("PEPMASS").matcher(line);
@@ -115,10 +116,24 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
         }
       } else {
         String[] floats = line.split(" ");
-        mz = ArrayUtil.addToArray(mz, Double.parseDouble(floats[0]), index);
-        intensive = ArrayUtil.addToArray(intensive, Float.parseFloat(floats[1]), index);
-        index++;
+        double mzValue = Double.parseDouble(floats[0]);
+        float intensiveValue = Float.parseFloat(floats[1]);
+        mzIntensivePQ.add(new Pair<Double, Float>(mzValue, intensiveValue));
       }
+    }
+
+
+    /* AbstractMsSpectrum requires sorted sequence of mz, PQ sorts values */
+    int index = 0;
+    double mz[] = new double[16];
+    float intensive[] = new float[16];
+    while (!mzIntensivePQ.isEmpty()){
+      Pair<Double, Float> pair = mzIntensivePQ.remove();
+      double mzValue = pair.getKey();
+      float intensiveValue = pair.getValue();
+      mz = ArrayUtil.addToArray(mz, mzValue, index);
+      intensive = ArrayUtil.addToArray(intensive, intensiveValue, index);
+      index++;
     }
 
     /*
@@ -158,6 +173,9 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
   }
 
   public MgfFileImportMethod(File target) {
+    MgfPairComparator comparator = new MgfPairComparator();
+    mzIntensivePQ = new PriorityQueue<>(10, comparator);
+
     this.target = target;
     spectra = new LinkedList<>();
     patterns = new Hashtable<>();
