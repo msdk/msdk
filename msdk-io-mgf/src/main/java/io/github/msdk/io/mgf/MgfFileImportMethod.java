@@ -5,8 +5,11 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.MsScan;
 import io.github.msdk.datamodel.MsSpectrum;
 import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.SimpleIsolationInfo;
+import io.github.msdk.datamodel.SimpleMsScan;
 import io.github.msdk.datamodel.SimpleMsSpectrum;
 import io.github.msdk.util.ArrayUtil;
+import io.github.msdk.util.MsScanUtil;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -27,10 +30,10 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by evger on 17-May-18.
  */
-public class MgfFileImportMethod implements MSDKMethod<Collection<MsSpectrum>> {
+public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>> {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private Collection<MsSpectrum> spectra;
+  private Collection<MgfMsSpectrum> spectra;
   private final @Nonnull File target;
   private boolean canceled = false;
   private long processedSpectra = 0;
@@ -38,7 +41,7 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MsSpectrum>> {
 
   @Nullable
   @Override
-  public Collection<MsSpectrum> execute() throws MSDKException {
+  public Collection<MgfMsSpectrum> execute() throws MSDKException {
     logger.info("Started MGF import from {} file", target);
 
     double mzValues[] = null;
@@ -61,15 +64,15 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MsSpectrum>> {
       System.out.println("Well");
     }
 
-      return spectra;
+    return spectra;
   }
 
-  private MsSpectrum processSpectrum(BufferedReader reader) throws IOException {
+  private MgfMsSpectrum processSpectrum(BufferedReader reader) throws IOException {
     String line;
 
-    String title;
-    int precursorCharge;
-    double precursorMass;
+    String title = "";
+    int precursorCharge = 0;
+    double precursorMass = 0;
     Matcher matcher;
     double mz[] = new double[16];
     float intensive[] = new float[16];
@@ -106,13 +109,10 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MsSpectrum>> {
         index++;
       }
     }
-//    MsSpectrum spectrum = new SimpleMsSpectrum();
-//    MsScan ms = (MsScan) spectrum;
-//    ms.
-//    spectrum.
 
-//    Do not know the difference between types
-    return new SimpleMsSpectrum(mz, intensive, index - 1, MsSpectrumType.PROFILE);
+    MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensive, index - 1, title, precursorCharge, precursorMass, MsSpectrumType.CENTROIDED);
+
+    return spectrum;
   }
 
   /** {@inheritDoc} */
@@ -125,7 +125,7 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MsSpectrum>> {
   /** {@inheritDoc} */
   @Override
   @Nullable
-  public Collection<MsSpectrum> getResult() {
+  public Collection<MgfMsSpectrum> getResult() {
     return null;
   }
 
@@ -142,8 +142,5 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MsSpectrum>> {
     patterns.put("PEPMASS", Pattern.compile("(?<=PEPMASS=)(\\d+\\.\\d+)"));
     patterns.put("CHARGE", Pattern.compile("(?<=CHARGE=)(\\d+)\\+|-"));
     patterns.put("TITLE", Pattern.compile("(?<=TITLE=).*"));
-//    patterns.put("USEREMAIL", Pattern.compile("TITLE=[0-9A-Za-z\\.]+"));
-//    patterns.put("USERNAME", Pattern.compile("TITLE=[0-9A-Za-z\\.]+"));
-//    patterns.put("TOLU", Pattern.compile("TITLE=[0-9A-Za-z\\.]+"));
   }
 }
