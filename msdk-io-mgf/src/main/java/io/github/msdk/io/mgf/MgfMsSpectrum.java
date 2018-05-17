@@ -13,12 +13,8 @@
 
 package io.github.msdk.io.mgf;
 
-import com.google.common.collect.Range;
 import io.github.msdk.datamodel.AbstractMsSpectrum;
 import io.github.msdk.datamodel.MsSpectrumType;
-import io.github.msdk.util.tolerances.MzTolerance;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class MgfMsSpectrum extends AbstractMsSpectrum {
 

@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,54 +70,31 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
     String title = "";
     int precursorCharge = 0;
     double precursorMass = 0;
-    Matcher matcher = null;
-
-    int matcherId = -1;
     String groupped;
 
     while (true) {
-
       line = reader.readLine();
       if (line == null || line.equals("END IONS"))
         break;
 
-      if (line.contains("PEPMASS") || line.contains("TITLE") || line.contains("CHARGE")) {
-        if (line.contains("PEPMASS")) {
-          matcher = patterns.get("PEPMASS").matcher(line);
-          matcherId = 1;
-        } else if (line.contains("TITLE")) {
-          matcher = patterns.get("TITLE").matcher(line);
-          matcherId = 2;
-        } else if (line.contains("CHARGE")) {
-          matcher = patterns.get("CHARGE").matcher(line);
-          matcherId = 3;
-        }
-        /* Do not like this code */
-        if (matcher.find()) {
-          groupped = matcher.group();
-          switch (matcherId) {
-            case 1:
-              precursorMass = Double.parseDouble(groupped);
-              break;
-            case 2:
-              title = groupped;
-              break;
-            case 3:
-              String trimmed = groupped.substring(0, groupped.length() - 1);
-              precursorCharge = Integer.parseInt(trimmed);
-              if (groupped.charAt(groupped.length() - 1) == '-') {
-                precursorCharge *= -1;
-              }
-              break;
-            default:
-              break;
-          }
+      if (line.contains("PEPMASS")) {
+        groupped = patterns.get("PEPMASS").matcher(line).group();
+        precursorMass = Double.parseDouble(groupped);
+      } else if (line.contains("TITLE")) {
+        groupped = patterns.get("TITLE").matcher(line).group();
+        title = groupped;
+      } else if (line.contains("CHARGE")) {
+        groupped =  patterns.get("CHARGE").matcher(line).group();
+        String trimmed = groupped.substring(0, groupped.length() - 1);
+        precursorCharge = Integer.parseInt(trimmed);
+        if (groupped.charAt(groupped.length() - 1) == '-') {
+          precursorCharge *= -1;
         }
       } else {
         String[] floats = line.split(" ");
         double mzValue = Double.parseDouble(floats[0]);
         float intensiveValue = Float.parseFloat(floats[1]);
-        mzIntensivePQ.add(new Pair<Double, Float>(mzValue, intensiveValue));
+        mzIntensivePQ.add(new Pair<>(mzValue, intensiveValue));
       }
     }
 
@@ -137,7 +113,7 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
     }
 
     /*
-     Do not like this code too
+     Do not like this code
      May be implement a Builder pattern for this?
     */
     MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensive, index - 1, title, precursorCharge,
