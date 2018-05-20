@@ -4,6 +4,7 @@ import io.github.msdk.MSDKException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ public class MgfFileImportMethodTest {
 
     File file = new File("target/test-classes/test_query.mgf");
     MgfFileImportMethod importMethod = new MgfFileImportMethod(file);
-    Collection<MgfMsSpectrum> spectrums = importMethod.execute();
+    List<MgfMsSpectrum> spectrums = importMethod.execute();
     int size = spectrums.size();
     MgfMsSpectrum spectrum = (MgfMsSpectrum)spectrums.toArray()[0];
 
@@ -50,7 +51,7 @@ public class MgfFileImportMethodTest {
 
     File file = new File("target/test-classes/F001257.mgf");
     MgfFileImportMethod importMethod = new MgfFileImportMethod(file);
-    Collection<MgfMsSpectrum> spectrums = importMethod.execute();
+    List<MgfMsSpectrum> spectrums = importMethod.execute();
 
     int size = spectrums.size();
     Assert.assertEquals(expectedSize, size);

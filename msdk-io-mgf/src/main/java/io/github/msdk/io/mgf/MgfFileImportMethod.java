@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,9 +56,9 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
           case "BEGIN IONS":
             spectra.add(processSpectrum(reader));
             break;
-          case "END IONS":
-            throw MSDKException("Нихуясебе, не тот порядок, парень");
-            break;
+//          case "END IONS":
+//            throw MSDKException("Нихуясебе, не тот порядок, парень");
+//            break;
         }
       }
       reader.close();
@@ -84,14 +85,23 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
         break;
       }
 
+      /*
+      * Code duplication (Matcher)
+      * TODO: Find a solution for it.
+      * */
       if (line.contains("PEPMASS")) {
-        groupped = patterns.get("PEPMASS").matcher(line).group();
+        Matcher m = patterns.get("PEPMASS").matcher(line);
+        m.find();
+        groupped = m.group();
         precursorMass = Double.parseDouble(groupped);
       } else if (line.contains("TITLE")) {
-        groupped = patterns.get("TITLE").matcher(line).group();
-        title = groupped;
+        Matcher m = patterns.get("TITLE").matcher(line);
+        m.find();
+        title = m.group();
       } else if (line.contains("CHARGE")) {
-        groupped = patterns.get("CHARGE").matcher(line).group();
+        Matcher m = patterns.get("CHARGE").matcher(line);
+        m.find();
+        groupped = m.group();
         String trimmed = groupped.substring(0, groupped.length() - 1);
         precursorCharge = Integer.parseInt(trimmed);
         if (groupped.charAt(groupped.length() - 1) == '-') {
@@ -107,14 +117,16 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
       }
     }
 
-    /*
-     Do not like this code
-     May be implement a Builder pattern for this?
-    */
+
     MsSpectrumType type = SpectrumTypeDetectionAlgorithm
         .detectSpectrumType(mz, intensity, index - 1);
     DataPointSorter
         .sortDataPoints(mz, intensity, index - 1, SortingProperty.MZ, SortingDirection.ASCENDING);
+
+    /*
+     Do not like this code
+     May be implement a Builder pattern for this?
+    */
     MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensity, index - 1, title, precursorCharge,
         precursorMass, type);
 
