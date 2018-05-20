@@ -18,15 +18,15 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.MsSpectrumType;
 import io.github.msdk.util.ArrayUtil;
 import io.github.msdk.util.DataPointSorter;
+import io.github.msdk.util.DataPointSorter.SortingDirection;
+import io.github.msdk.util.DataPointSorter.SortingProperty;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,7 +42,6 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   private boolean canceled = false;
   private long processedSpectra = 0;
   private Hashtable<String, Pattern> patterns;
-  PriorityQueue<Pair<Double, Float>> mzIntensityPQ;
 
   @Nullable
   @Override
@@ -68,12 +67,16 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   }
 
   private MgfMsSpectrum processSpectrum(BufferedReader reader) throws IOException {
-    String line;
     String title = "";
     int precursorCharge = 0;
     double precursorMass = 0;
-    String groupped;
+    double mz[] = new double[16];
+    float intensity[] = new float[16];
 
+
+    int index = 0;
+    String line;
+    String groupped;
     while (true) {
       line = reader.readLine();
       if (line == null || line.equals("END IONS"))
@@ -96,29 +99,18 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
         String[] floats = line.split(" ");
         double mzValue = Double.parseDouble(floats[0]);
         float intensityValue = Float.parseFloat(floats[1]);
-        mzIntensityPQ.add(new Pair<>(mzValue, intensityValue));
+        mz = ArrayUtil.addToArray(mz, mzValue, index);
+        intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
+        index++;
       }
-    }
-
-
-    /* AbstractMsSpectrum requires sorted sequence of mz, PQ sorts values */
-    int index = 0;
-    double mz[] = new double[16];
-    float intensity[] = new float[16];
-    while (!mzIntensityPQ.isEmpty()){
-      Pair<Double, Float> pair = mzIntensityPQ.remove();
-      DataPointSorter.sortDataPoints(mz, intensity);
-      double mzValue = pair.getKey();
-      float intensityValue = pair.getValue();
-      mz = ArrayUtil.addToArray(mz, mzValue, index);
-      intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
-      index++;
     }
 
     /*
      Do not like this code
      May be implement a Builder pattern for this?
     */
+
+    DataPointSorter.sortDataPoints(mz, intensity, index - 1, SortingProperty.MZ, SortingDirection.ASCENDING);
     MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensity, index - 1, title, precursorCharge,
         precursorMass, MsSpectrumType.CENTROIDED);
 
@@ -151,9 +143,6 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   }
 
   public MgfFileImportMethod(File target) {
-    MgfPairComparator comparator = new MgfPairComparator();
-    mzIntensityPQ = new PriorityQueue<>(10, comparator);
-
     this.target = target;
     spectra = new LinkedList<>();
     patterns = new Hashtable<>();
