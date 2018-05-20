@@ -16,6 +16,7 @@ package io.github.msdk.io.mgf;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.ArrayUtil;
 import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.DataPointSorter.SortingDirection;
@@ -37,10 +38,9 @@ import org.slf4j.LoggerFactory;
 public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private boolean cancelled;
   private List<MgfMsSpectrum> spectra;
   private final @Nonnull File target;
-  private boolean canceled = false;
-  private long processedSpectra = 0;
   private Hashtable<String, Pattern> patterns;
 
   @Nullable
@@ -54,7 +54,9 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
         switch (line) {
           case "BEGIN IONS":
             spectra.add(processSpectrum(reader));
-            processedSpectra++;
+            break;
+          case "END IONS":
+            throw MSDKException("Нихуясебе, не тот порядок, парень");
             break;
         }
       }
@@ -73,14 +75,14 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     double mz[] = new double[16];
     float intensity[] = new float[16];
 
-
     int index = 0;
     String line;
     String groupped;
     while (true) {
       line = reader.readLine();
-      if (line == null || line.equals("END IONS"))
+      if (line == null || line.equals("END IONS")) {
         break;
+      }
 
       if (line.contains("PEPMASS")) {
         groupped = patterns.get("PEPMASS").matcher(line).group();
@@ -89,7 +91,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
         groupped = patterns.get("TITLE").matcher(line).group();
         title = groupped;
       } else if (line.contains("CHARGE")) {
-        groupped =  patterns.get("CHARGE").matcher(line).group();
+        groupped = patterns.get("CHARGE").matcher(line).group();
         String trimmed = groupped.substring(0, groupped.length() - 1);
         precursorCharge = Integer.parseInt(trimmed);
         if (groupped.charAt(groupped.length() - 1) == '-') {
@@ -109,10 +111,12 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
      Do not like this code
      May be implement a Builder pattern for this?
     */
-
-    DataPointSorter.sortDataPoints(mz, intensity, index - 1, SortingProperty.MZ, SortingDirection.ASCENDING);
+    MsSpectrumType type = SpectrumTypeDetectionAlgorithm
+        .detectSpectrumType(mz, intensity, index - 1);
+    DataPointSorter
+        .sortDataPoints(mz, intensity, index - 1, SortingProperty.MZ, SortingDirection.ASCENDING);
     MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensity, index - 1, title, precursorCharge,
-        precursorMass, MsSpectrumType.CENTROIDED);
+        precursorMass, type);
 
     return spectrum;
   }
@@ -120,6 +124,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   /**
    * {@inheritDoc}
    */
+  @Nullable
   @Override
   public Float getFinishedPercentage() {
     return null;
@@ -135,11 +140,11 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   }
 
   /**
-   * {@inheritDoc}
+   * Does nothing
    */
   @Override
   public void cancel() {
-    this.canceled = true;
+    this.cancelled = true;
   }
 
   public MgfFileImportMethod(File target) {
