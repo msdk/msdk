@@ -17,6 +17,7 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.MsSpectrumType;
 import io.github.msdk.util.ArrayUtil;
+import io.github.msdk.util.DataPointSorter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
@@ -32,19 +34,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>> {
+public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private Collection<MgfMsSpectrum> spectra;
+  private List<MgfMsSpectrum> spectra;
   private final @Nonnull File target;
   private boolean canceled = false;
   private long processedSpectra = 0;
   private Hashtable<String, Pattern> patterns;
-  PriorityQueue<Pair<Double, Float>> mzIntensivePQ;
+  PriorityQueue<Pair<Double, Float>> mzIntensityPQ;
 
   @Nullable
   @Override
-  public Collection<MgfMsSpectrum> execute() throws MSDKException {
+  public List<MgfMsSpectrum> execute() throws MSDKException {
     logger.info("Started MGF import from {} file", target);
 
     try (final BufferedReader reader = new BufferedReader(new FileReader(target))) {
@@ -93,8 +95,8 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
       } else {
         String[] floats = line.split(" ");
         double mzValue = Double.parseDouble(floats[0]);
-        float intensiveValue = Float.parseFloat(floats[1]);
-        mzIntensivePQ.add(new Pair<>(mzValue, intensiveValue));
+        float intensityValue = Float.parseFloat(floats[1]);
+        mzIntensityPQ.add(new Pair<>(mzValue, intensityValue));
       }
     }
 
@@ -102,13 +104,14 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
     /* AbstractMsSpectrum requires sorted sequence of mz, PQ sorts values */
     int index = 0;
     double mz[] = new double[16];
-    float intensive[] = new float[16];
-    while (!mzIntensivePQ.isEmpty()){
-      Pair<Double, Float> pair = mzIntensivePQ.remove();
+    float intensity[] = new float[16];
+    while (!mzIntensityPQ.isEmpty()){
+      Pair<Double, Float> pair = mzIntensityPQ.remove();
+      DataPointSorter.sortDataPoints(mz, intensity);
       double mzValue = pair.getKey();
-      float intensiveValue = pair.getValue();
+      float intensityValue = pair.getValue();
       mz = ArrayUtil.addToArray(mz, mzValue, index);
-      intensive = ArrayUtil.addToArray(intensive, intensiveValue, index);
+      intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
       index++;
     }
 
@@ -116,7 +119,7 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
      Do not like this code
      May be implement a Builder pattern for this?
     */
-    MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensive, index - 1, title, precursorCharge,
+    MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensity, index - 1, title, precursorCharge,
         precursorMass, MsSpectrumType.CENTROIDED);
 
     return spectrum;
@@ -127,8 +130,7 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
    */
   @Override
   public Float getFinishedPercentage() {
-    int totalSpectra = spectra.size();
-    return totalSpectra == 0 ? null : (float) (processedSpectra / totalSpectra);
+    return null;
   }
 
   /**
@@ -136,7 +138,7 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
    */
   @Override
   @Nullable
-  public Collection<MgfMsSpectrum> getResult() {
+  public List<MgfMsSpectrum> getResult() {
     return null;
   }
 
@@ -150,7 +152,7 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
 
   public MgfFileImportMethod(File target) {
     MgfPairComparator comparator = new MgfPairComparator();
-    mzIntensivePQ = new PriorityQueue<>(10, comparator);
+    mzIntensityPQ = new PriorityQueue<>(10, comparator);
 
     this.target = target;
     spectra = new LinkedList<>();
