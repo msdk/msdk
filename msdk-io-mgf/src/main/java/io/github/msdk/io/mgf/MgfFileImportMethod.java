@@ -81,9 +81,11 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     String groupped;
     while (true) {
       line = reader.readLine();
-      if (line == null || line.equals("END IONS")) {
+      if (line == null || line.equals("END IONS") || cancelled) {
         break;
       }
+
+      // Not sure how to use cancelled variable
 
       /*
       * Code duplication (Matcher)

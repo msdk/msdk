@@ -13,7 +13,7 @@ import org.junit.Test;
  */
 public class MgfFileImportMethodTest {
   @Test
-  public void testMgfImport() throws IOException, MSDKException {
+  public void mgfImportTest() throws IOException, MSDKException {
     final int expectedSize = 1;
     final String expectedTitle = "example.9.9.2";
     final long expectedNumberDatapoints = 18;
@@ -32,7 +32,7 @@ public class MgfFileImportMethodTest {
   }
 
   @Test
-  public void testMultipleMgfImportTest() throws IOException, MSDKException {
+  public void multipleMgfImportTest() throws IOException, MSDKException {
     final int expectedSize = 10;
     final String expectedTitles[] = {
         "PRIDE_Exp_mzData_Ac_9266.xml_id_1",
@@ -71,6 +71,11 @@ public class MgfFileImportMethodTest {
     Assert.assertArrayEquals(expectedTitles, titles);
     Assert.assertArrayEquals(expectedNumberDatapoints, dataPoints);
     Assert.assertArrayEquals(expectedCharges, charges);
+  }
+
+  public void malformedInputRegexpTest() {
+
+
   }
 
 }
