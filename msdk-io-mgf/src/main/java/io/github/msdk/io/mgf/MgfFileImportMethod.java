@@ -69,7 +69,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     return spectra;
   }
 
-  private MgfMsSpectrum processSpectrum(BufferedReader reader) throws IOException {
+  private MgfMsSpectrum processSpectrum(BufferedReader reader) throws IOException, MSDKException {
     String title = "";
     int precursorCharge = 0;
     double precursorMass = 0;
@@ -89,31 +89,35 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
       * Code duplication (Matcher)
       * TODO: Find a solution for it.
       * */
-      if (line.contains("PEPMASS")) {
-        Matcher m = patterns.get("PEPMASS").matcher(line);
-        m.find();
-        groupped = m.group();
-        precursorMass = Double.parseDouble(groupped);
-      } else if (line.contains("TITLE")) {
-        Matcher m = patterns.get("TITLE").matcher(line);
-        m.find();
-        title = m.group();
-      } else if (line.contains("CHARGE")) {
-        Matcher m = patterns.get("CHARGE").matcher(line);
-        m.find();
-        groupped = m.group();
-        String trimmed = groupped.substring(0, groupped.length() - 1);
-        precursorCharge = Integer.parseInt(trimmed);
-        if (groupped.charAt(groupped.length() - 1) == '-') {
-          precursorCharge *= -1;
+      try {
+        if (line.contains("PEPMASS")) {
+          Matcher m = patterns.get("PEPMASS").matcher(line);
+          m.find();
+          groupped = m.group();
+          precursorMass = Double.parseDouble(groupped);
+        } else if (line.contains("TITLE")) {
+          Matcher m = patterns.get("TITLE").matcher(line);
+          m.find();
+          title = m.group();
+        } else if (line.contains("CHARGE")) {
+          Matcher m = patterns.get("CHARGE").matcher(line);
+          m.find();
+          groupped = m.group();
+          String trimmed = groupped.substring(0, groupped.length() - 1);
+          precursorCharge = Integer.parseInt(trimmed);
+          if (groupped.charAt(groupped.length() - 1) == '-') {
+            precursorCharge *= -1;
+          }
+        } else {
+          String[] floats = line.split(" ");
+          double mzValue = Double.parseDouble(floats[0]);
+          float intensityValue = Float.parseFloat(floats[1]);
+          mz = ArrayUtil.addToArray(mz, mzValue, index);
+          intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
+          index++;
         }
-      } else {
-        String[] floats = line.split(" ");
-        double mzValue = Double.parseDouble(floats[0]);
-        float intensityValue = Float.parseFloat(floats[1]);
-        mz = ArrayUtil.addToArray(mz, mzValue, index);
-        intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
-        index++;
+      } catch (IllegalStateException e) {
+        throw new MSDKException(e);
       }
     }
 
