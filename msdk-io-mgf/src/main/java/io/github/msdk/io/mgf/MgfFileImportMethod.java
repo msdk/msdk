@@ -56,9 +56,6 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
           case "BEGIN IONS":
             spectra.add(processSpectrum(reader));
             break;
-//          case "END IONS":
-//            throw MSDKException("Нихуясебе, не тот порядок, парень");
-//            break;
         }
       }
       reader.close();
