@@ -119,7 +119,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
           index++;
         }
       } catch (IllegalStateException e) {
-        throw new MSDKException(e);
+        throw new MSDKException("Incorrect data format", e);
       }
     }
 
