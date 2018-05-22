@@ -1,18 +1,27 @@
 package io.github.msdk.io.mgf;
 
+import static junit.framework.TestCase.fail;
+
 import io.github.msdk.MSDKException;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Created by evger on 17-May-18.
  */
+
+
 public class MgfFileImportMethodTest {
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
+
   @Test
-  public void testMgfImport() throws IOException, MSDKException {
+  public void mgfImportTest() throws IOException, MSDKException {
     final int expectedSize = 1;
     final String expectedTitle = "example.9.9.2";
     final long expectedNumberDatapoints = 18;
@@ -20,7 +29,7 @@ public class MgfFileImportMethodTest {
 
     File file = new File("target/test-classes/test_query.mgf");
     MgfFileImportMethod importMethod = new MgfFileImportMethod(file);
-    Collection<MgfMsSpectrum> spectrums = importMethod.execute();
+    List<MgfMsSpectrum> spectrums = importMethod.execute();
     int size = spectrums.size();
     MgfMsSpectrum spectrum = (MgfMsSpectrum)spectrums.toArray()[0];
 
@@ -31,7 +40,7 @@ public class MgfFileImportMethodTest {
   }
 
   @Test
-  public void testMultipleMgfImportTest() throws IOException, MSDKException {
+  public void multipleMgfImportTest() throws IOException, MSDKException {
     final int expectedSize = 10;
     final String expectedTitles[] = {
         "PRIDE_Exp_mzData_Ac_9266.xml_id_1",
@@ -50,7 +59,7 @@ public class MgfFileImportMethodTest {
 
     File file = new File("target/test-classes/F001257.mgf");
     MgfFileImportMethod importMethod = new MgfFileImportMethod(file);
-    Collection<MgfMsSpectrum> spectrums = importMethod.execute();
+    List<MgfMsSpectrum> spectrums = importMethod.execute();
 
     int size = spectrums.size();
     Assert.assertEquals(expectedSize, size);
@@ -70,6 +79,17 @@ public class MgfFileImportMethodTest {
     Assert.assertArrayEquals(expectedTitles, titles);
     Assert.assertArrayEquals(expectedNumberDatapoints, dataPoints);
     Assert.assertArrayEquals(expectedCharges, charges);
+  }
+
+  @Test
+  public void malformedInputRegexpTest() throws MSDKException {
+    File file = new File("target/test-classes/malformed_query.mgf");
+    MgfFileImportMethod importMethod = new MgfFileImportMethod(file);
+
+
+    thrown.expect(MSDKException.class);
+    thrown.expectMessage("Incorrect data format");
+    List<MgfMsSpectrum> spectrums = importMethod.execute();
   }
 
 }

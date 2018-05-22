@@ -16,15 +16,19 @@ package io.github.msdk.io.mgf;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.ArrayUtil;
+import io.github.msdk.util.DataPointSorter;
+import io.github.msdk.util.DataPointSorter.SortingDirection;
+import io.github.msdk.util.DataPointSorter.SortingProperty;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Hashtable;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
+import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,19 +36,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>> {
+public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private Collection<MgfMsSpectrum> spectra;
+  private boolean cancelled;
+  private List<MgfMsSpectrum> spectra;
   private final @Nonnull File target;
-  private boolean canceled = false;
-  private long processedSpectra = 0;
   private Hashtable<String, Pattern> patterns;
-  PriorityQueue<Pair<Double, Float>> mzIntensivePQ;
 
   @Nullable
   @Override
-  public Collection<MgfMsSpectrum> execute() throws MSDKException {
+  public List<MgfMsSpectrum> execute() throws MSDKException {
     logger.info("Started MGF import from {} file", target);
 
     try (final BufferedReader reader = new BufferedReader(new FileReader(target))) {
@@ -53,8 +55,10 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
         switch (line) {
           case "BEGIN IONS":
             spectra.add(processSpectrum(reader));
-            processedSpectra++;
             break;
+//          case "END IONS":
+//            throw MSDKException("Нихуясебе, не тот порядок, парень");
+//            break;
         }
       }
       reader.close();
@@ -65,59 +69,72 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
     return spectra;
   }
 
-  private MgfMsSpectrum processSpectrum(BufferedReader reader) throws IOException {
-    String line;
+  private MgfMsSpectrum processSpectrum(BufferedReader reader) throws IOException, MSDKException {
     String title = "";
     int precursorCharge = 0;
     double precursorMass = 0;
-    String groupped;
+    double mz[] = new double[16];
+    float intensity[] = new float[16];
 
+    int index = 0;
+    String line;
+    String groupped;
     while (true) {
       line = reader.readLine();
-      if (line == null || line.equals("END IONS"))
+      if (line == null || line.equals("END IONS") || cancelled) {
         break;
+      }
 
-      if (line.contains("PEPMASS")) {
-        groupped = patterns.get("PEPMASS").matcher(line).group();
-        precursorMass = Double.parseDouble(groupped);
-      } else if (line.contains("TITLE")) {
-        groupped = patterns.get("TITLE").matcher(line).group();
-        title = groupped;
-      } else if (line.contains("CHARGE")) {
-        groupped =  patterns.get("CHARGE").matcher(line).group();
-        String trimmed = groupped.substring(0, groupped.length() - 1);
-        precursorCharge = Integer.parseInt(trimmed);
-        if (groupped.charAt(groupped.length() - 1) == '-') {
-          precursorCharge *= -1;
+      // Not sure how to use cancelled variable
+
+      /*
+      * Code duplication (Matcher)
+      * TODO: Find a solution for it.
+      * */
+      try {
+        if (line.contains("PEPMASS")) {
+          Matcher m = patterns.get("PEPMASS").matcher(line);
+          m.find();
+          groupped = m.group();
+          precursorMass = Double.parseDouble(groupped);
+        } else if (line.contains("TITLE")) {
+          Matcher m = patterns.get("TITLE").matcher(line);
+          m.find();
+          title = m.group();
+        } else if (line.contains("CHARGE")) {
+          Matcher m = patterns.get("CHARGE").matcher(line);
+          m.find();
+          groupped = m.group();
+          String trimmed = groupped.substring(0, groupped.length() - 1);
+          precursorCharge = Integer.parseInt(trimmed);
+          if (groupped.charAt(groupped.length() - 1) == '-') {
+            precursorCharge *= -1;
+          }
+        } else {
+          String[] floats = line.split(" ");
+          double mzValue = Double.parseDouble(floats[0]);
+          float intensityValue = Float.parseFloat(floats[1]);
+          mz = ArrayUtil.addToArray(mz, mzValue, index);
+          intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
+          index++;
         }
-      } else {
-        String[] floats = line.split(" ");
-        double mzValue = Double.parseDouble(floats[0]);
-        float intensiveValue = Float.parseFloat(floats[1]);
-        mzIntensivePQ.add(new Pair<>(mzValue, intensiveValue));
+      } catch (IllegalStateException e) {
+        throw new MSDKException("Incorrect data format", e);
       }
     }
 
 
-    /* AbstractMsSpectrum requires sorted sequence of mz, PQ sorts values */
-    int index = 0;
-    double mz[] = new double[16];
-    float intensive[] = new float[16];
-    while (!mzIntensivePQ.isEmpty()){
-      Pair<Double, Float> pair = mzIntensivePQ.remove();
-      double mzValue = pair.getKey();
-      float intensiveValue = pair.getValue();
-      mz = ArrayUtil.addToArray(mz, mzValue, index);
-      intensive = ArrayUtil.addToArray(intensive, intensiveValue, index);
-      index++;
-    }
+    MsSpectrumType type = SpectrumTypeDetectionAlgorithm
+        .detectSpectrumType(mz, intensity, index - 1);
+    DataPointSorter
+        .sortDataPoints(mz, intensity, index - 1, SortingProperty.MZ, SortingDirection.ASCENDING);
 
     /*
      Do not like this code
      May be implement a Builder pattern for this?
     */
-    MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensive, index - 1, title, precursorCharge,
-        precursorMass, MsSpectrumType.CENTROIDED);
+    MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensity, index - 1, title, precursorCharge,
+        precursorMass, type);
 
     return spectrum;
   }
@@ -125,18 +142,9 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
   /**
    * {@inheritDoc}
    */
+  @Nullable
   @Override
   public Float getFinishedPercentage() {
-    int totalSpectra = spectra.size();
-    return totalSpectra == 0 ? null : (float) (processedSpectra / totalSpectra);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  @Nullable
-  public Collection<MgfMsSpectrum> getResult() {
     return null;
   }
 
@@ -144,14 +152,20 @@ public class MgfFileImportMethod implements MSDKMethod<Collection<MgfMsSpectrum>
    * {@inheritDoc}
    */
   @Override
+  @Nullable
+  public List<MgfMsSpectrum> getResult() {
+    return null;
+  }
+
+  /**
+   * Does nothing
+   */
+  @Override
   public void cancel() {
-    this.canceled = true;
+    this.cancelled = true;
   }
 
   public MgfFileImportMethod(File target) {
-    MgfPairComparator comparator = new MgfPairComparator();
-    mzIntensivePQ = new PriorityQueue<>(10, comparator);
-
     this.target = target;
     spectra = new LinkedList<>();
     patterns = new Hashtable<>();

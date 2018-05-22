@@ -22,10 +22,10 @@ public class MgfMsSpectrum extends AbstractMsSpectrum {
   private int precursorCharge;
   private double precursorMass;
 
-  public MgfMsSpectrum(double[] mz, float[] intensive, int size, String title, int precursorCharge,
+  public MgfMsSpectrum(double[] mz, float[] intensity, int size, String title, int precursorCharge,
       double precursorMass, MsSpectrumType type) {
     setSpectrumType(type);
-    setDataPoints(mz, intensive, size);
+    setDataPoints(mz, intensity, size);
     this.precursorMass = precursorMass;
     this.precursorCharge = precursorCharge;
     this.title = title;
