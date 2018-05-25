@@ -37,11 +37,16 @@
 Use the following sequence of commands to build and deploy a new MSDK release.
 
 ```
+
 # Cleanup 
 mvn clean
 
 # Update version number of all modules (change X.Y.Z to new version number)
 mvn versions:set -DnewVersion=X.Y.Z versions:commit
+
+# Create a tag in the git repo
+git tag vX.Y.Z
+git push origin --tags
 
 # Build the whole project
 mvn -Pmsdk-release package
