@@ -37,11 +37,14 @@ import org.slf4j.LoggerFactory;
 
 
 public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
+  private final Pattern PEPMASS_PATTERN = Pattern.compile("(?<=PEPMASS=)(\\d+\\.\\d+)");
+  private final Pattern CHARGE_PATTERN = Pattern.compile("(?<=TITLE=).*");
+  private final Pattern TITLE_PATTERN = Pattern.compile("(?<=PEPMASS=)(\\d+\\.\\d+)");
 
+  private final @Nonnull File target;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private boolean cancelled;
   private List<MgfMsSpectrum> spectra;
-  private final @Nonnull File target;
   private Hashtable<String, Pattern> patterns;
 
   @Nullable
@@ -62,6 +65,8 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     } catch (IOException e) {
       throw new MSDKException(e);
     }
+    logger.info("Finished MGF import from {} file with {} spectrums", target, spectra.size());
+
 
     return spectra;
   }
@@ -166,8 +171,8 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     this.target = target;
     spectra = new LinkedList<>();
     patterns = new Hashtable<>();
-    patterns.put("PEPMASS", Pattern.compile("(?<=PEPMASS=)(\\d+\\.\\d+)"));
-    patterns.put("CHARGE", Pattern.compile("(?<=CHARGE=)(\\d+)\\+|-"));
-    patterns.put("TITLE", Pattern.compile("(?<=TITLE=).*"));
+    patterns.put("PEPMASS", PEPMASS_PATTERN);
+    patterns.put("CHARGE", CHARGE_PATTERN);
+    patterns.put("TITLE", TITLE_PATTERN);
   }
 }
