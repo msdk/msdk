@@ -114,11 +114,13 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
           }
         } else {
           String[] floats = line.split(" ");
-          double mzValue = Double.parseDouble(floats[0]);
-          float intensityValue = Float.parseFloat(floats[1]);
-          mz = ArrayUtil.addToArray(mz, mzValue, index);
-          intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
-          index++;
+          if (floats.length == 2) {
+            double mzValue = Double.parseDouble(floats[0]);
+            float intensityValue = Float.parseFloat(floats[1]);
+            mz = ArrayUtil.addToArray(mz, mzValue, index);
+            intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
+            index++;
+          } else throw new IllegalStateException("Incorrect amount of columns in MsSpectrum file");
         }
       } catch (IllegalStateException e) {
         throw new MSDKException("Incorrect data format", e);
