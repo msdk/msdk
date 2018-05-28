@@ -3,9 +3,11 @@ import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.Peak;
 import de.unijena.bioinf.ChemistryBase.ms.Spectrum;
 import de.unijena.bioinf.sirius.IdentificationResult;
+import de.unijena.bioinf.sirius.IsotopePatternHandling;
 import de.unijena.bioinf.sirius.Sirius;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
+import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.IonAnnotation;
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +28,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<IonAnnotation> {
   }
 
   /* This function is left here for non-msp files */
-  public Pair<double[], double[]> readCustomMsFile(String path) throws IOException {
+  public Pair<double[], double[]> readCustomMsFile(String path, String delimeter) throws IOException, MSDKRuntimeException {
     Scanner sc = new Scanner(new File(path));
     ArrayList<String> strings = new ArrayList<>();
     while (sc.hasNext()) {
@@ -39,9 +41,11 @@ public class SiriusIdentificationMethod implements MSDKMethod<IonAnnotation> {
 
     int index = 0;
     for (String s : strings) {
-      String[] splitted = s.split("\t");
-      mz[index] = Double.parseDouble(splitted[0]);
-      intensive[index++] = Double.parseDouble(splitted[1]);
+      String[] splitted = s.split(delimeter);
+      if (splitted.length == 2) {
+        mz[index] = Double.parseDouble(splitted[0]);
+        intensive[index++] = Double.parseDouble(splitted[1]);
+      } else throw new MSDKRuntimeException("Incorrect spectrum structure");
     }
 
     return new Pair<>(mz, intensive);
@@ -61,9 +65,16 @@ public class SiriusIdentificationMethod implements MSDKMethod<IonAnnotation> {
     PrecursorIonType precursor = sirius.getPrecursorIonType(ion);
     Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, ms1, ms2);
 
-//        Error on request for GurobiJni60 library, Cplex missed java path.
+//        Error on request for GurobiJni60 library, Cplex .dll missed java path.
 
-    List<IdentificationResult> results = sirius.identify(experiment, 5, true, null);
+//    I do not know what pattern to use
+//    IsotopePatternHandling p = IsotopePatternHandling.omit;
+//    IsotopePatternHandling p = IsotopePatternHandling.both;
+    IsotopePatternHandling p = IsotopePatternHandling.filter;
+//    IsotopePatternHandling p = IsotopePatternHandling.score;
+//    IsotopePatternHandling p = (IsotopePatternHandling)null;
+
+    List<IdentificationResult> results = sirius.identify(experiment, 1, true, p);
     return results;
   }
 

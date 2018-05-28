@@ -1,4 +1,5 @@
 import de.unijena.bioinf.sirius.IdentificationResult;
+import de.unijena.bioinf.sirius.Sirius;
 import io.github.msdk.MSDKException;
 import io.github.msdk.io.msp.MspImportAlgorithm;
 import io.github.msdk.io.msp.MspSpectrum;
@@ -27,6 +28,7 @@ public class SiriusMs2Test {
     Pair<double[], double[]> ms2pair = new Pair<>(mz, intensive);
     SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod();
 
+
     List<IdentificationResult> list = siriusMethod
         .identifyMs2Spectrum(null, ms2pair, parentMass, ionName);
     for (IdentificationResult r : list) {
@@ -46,8 +48,8 @@ public class SiriusMs2Test {
 
     SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod();
 
-    Pair<double[], double[]> ms1Spectrum = siriusMethod.readCustomMsFile(ms1Path);
-    Pair<double[], double[]> ms2Spectrum = siriusMethod.readCustomMsFile(ms2Path);
+    Pair<double[], double[]> ms1Spectrum = siriusMethod.readCustomMsFile(ms1Path, "\t");
+    Pair<double[], double[]> ms2Spectrum = siriusMethod.readCustomMsFile(ms2Path, "\t");
 
     List<IdentificationResult> list = siriusMethod.identifyMs2Spectrum(ms1Spectrum,
                                                                   ms2Spectrum,
