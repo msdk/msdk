@@ -51,6 +51,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   @Override
   public List<MgfMsSpectrum> execute() throws MSDKException {
     logger.info("Started MGF import from {} file", target);
+    spectra = new LinkedList<>();
 
     try (final BufferedReader reader = new BufferedReader(new FileReader(target))) {
       String line;
@@ -154,7 +155,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   @Override
   @Nullable
   public List<MgfMsSpectrum> getResult() {
-    return null;
+    return spectra;
   }
 
   @Override
@@ -164,7 +165,6 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
 
   public MgfFileImportMethod(File target) {
     this.target = target;
-    spectra = new LinkedList<>();
     patterns = new Hashtable<>();
     patterns.put("PEPMASS", PEPMASS_PATTERN);
     patterns.put("CHARGE", CHARGE_PATTERN);
