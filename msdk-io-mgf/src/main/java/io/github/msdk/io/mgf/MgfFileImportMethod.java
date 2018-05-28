@@ -54,7 +54,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
 
     try (final BufferedReader reader = new BufferedReader(new FileReader(target))) {
       String line;
-      while ((line = reader.readLine()) != null) {
+      while ((line = reader.readLine()) != null || !cancelled) {
         switch (line) {
           case "BEGIN IONS":
             spectra.add(processSpectrum(reader));
@@ -66,7 +66,6 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
       throw new MSDKException(e);
     }
     logger.info("Finished MGF import from {} file with {} spectrums", target, spectra.size());
-
 
     return spectra;
   }
@@ -82,17 +81,14 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     String line;
     String groupped;
     while (true) {
+      if (cancelled)
+        return null;
       line = reader.readLine();
-      if (line == null || line.equals("END IONS") || cancelled) {
+
+      if (line == null || line.equals("END IONS")) {
         break;
       }
 
-      // Not sure how to use cancelled variable
-
-      /*
-      * Code duplication (Matcher)
-      * TODO: Find a solution for it.
-      * */
       try {
         if (line.contains("PEPMASS")) {
           Matcher m = patterns.get("PEPMASS").matcher(line);
@@ -161,9 +157,6 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     return null;
   }
 
-  /**
-   * Does nothing
-   */
   @Override
   public void cancel() {
     this.cancelled = true;
