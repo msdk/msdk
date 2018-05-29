@@ -11,6 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
 import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.Peak;
@@ -22,6 +23,10 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.IonAnnotation;
+import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.SimpleMsSpectrum;
+import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,15 +38,21 @@ import javax.annotation.Nullable;
  * Created by evger on 14-May-18.
  */
 
-public class SiriusIdentificationMethod implements MSDKMethod<IonAnnotation> {
-  Sirius sirius;
+public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation>> {
+  private final Sirius sirius;
+  private MsSpectrum ms1;
+  private MsSpectrum ms2;
+  private List<IonAnnotation> result;
 
-  SiriusIdentificationMethod() {
+  public SiriusIdentificationMethod() {
     sirius = new Sirius();
   }
 
-  /* This function is left here for non-msp files */
-  public Pair<double[], double[]> readCustomMsFile(String path, String delimeter) throws IOException, MSDKRuntimeException {
+  /**
+   * This function is left here for custom spectrum files (just columns of mz and intensity values)
+   * Does similar to mgf parser functionality
+   * */
+  public MsSpectrum readCustomMsFile(String path, String delimeter) throws IOException, MSDKRuntimeException {
     Scanner sc = new Scanner(new File(path));
     ArrayList<String> strings = new ArrayList<>();
     while (sc.hasNext()) {
@@ -49,37 +60,38 @@ public class SiriusIdentificationMethod implements MSDKMethod<IonAnnotation> {
     }
     sc.close();
 
-    double mz[] = new double[strings.size()];
-    double intensive[] = new double[strings.size()];
+    int size = strings.size();
+    double mz[] = new double[size];
+    float intensity[] = new float[size];
 
     int index = 0;
     for (String s : strings) {
       String[] splitted = s.split(delimeter);
       if (splitted.length == 2) {
         mz[index] = Double.parseDouble(splitted[0]);
-        intensive[index++] = Double.parseDouble(splitted[1]);
+        intensity[index++] = Float.parseFloat(splitted[1]);
       } else throw new MSDKRuntimeException("Incorrect spectrum structure");
     }
 
-    return new Pair<>(mz, intensive);
+    MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, size);
+    return new SimpleMsSpectrum(mz, intensity, size, type);
   }
 
-  public List<IdentificationResult> identifyMs2Spectrum(
-      @Nullable Pair<double[], double[]> ms1pair, Pair<double[], double[]> ms2pair,
-      double parentMass, String ion, int numberOfCanditates) throws MSDKException, IOException {
-    Spectrum<Peak> ms1 = null, ms2 = null;
-    ms2 = sirius.wrapSpectrum(ms2pair.getKey(), ms2pair.getVal());
-    if (ms1pair != null) {
-      ms1 = sirius.wrapSpectrum(ms1pair.getKey(), ms1pair.getVal());
+  private List<IdentificationResult> siriusProcessSpectrums(
+      @Nullable MsSpectrum inputMs1, MsSpectrum inputMs2, double parentMass,
+      String ion, int numberOfCandidates) throws MSDKException, IOException {
+
+    Spectrum<Peak> siriusMs1 = null, siriusMs2;
+    siriusMs2 = sirius.wrapSpectrum(inputMs2.getMzValues(), LocalArrayUtil.convertToDoubles(inputMs2.getIntensityValues()));
+    if (siriusMs1 != null) {
+      siriusMs1 = sirius.wrapSpectrum(inputMs1.getMzValues(), LocalArrayUtil.convertToDoubles(inputMs1.getIntensityValues()));
     }
 
     PrecursorIonType precursor = sirius.getPrecursorIonType(ion);
-    Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, ms1, ms2);
+    Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, siriusMs1, siriusMs2);
 
-//        Error on request for GurobiJni60 library, Cplex .dll missed java path.
-
-    List<IdentificationResult> results = sirius.identify(experiment, numberOfCanditates, true, IsotopePatternHandling.omit);
-    return results;
+    List<IdentificationResult> siriusResults = sirius.identify(experiment, numberOfCandidates, true, IsotopePatternHandling.omit);
+    return siriusResults;
   }
 
   @Nullable
@@ -90,14 +102,18 @@ public class SiriusIdentificationMethod implements MSDKMethod<IonAnnotation> {
 
   @Nullable
   @Override
-  public IonAnnotation execute() throws MSDKException {
-    return null;
+  public List<IonAnnotation> execute() throws MSDKException {
+    result = new ArrayList<>();
+
+    List<IdentificationResult> siriusSpectrums = siriusProcessSpectrums();
+
+    return result;
   }
 
   @Nullable
   @Override
-  public IonAnnotation getResult() {
-    return null;
+  public List<IonAnnotation> getResult() {
+    return result;
   }
 
   // TODO: implement
