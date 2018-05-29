@@ -13,8 +13,12 @@
 
 import de.unijena.bioinf.sirius.IdentificationResult;
 import io.github.msdk.MSDKException;
+import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.SimpleMsSpectrum;
 import io.github.msdk.io.msp.MspImportAlgorithm;
 import io.github.msdk.io.msp.MspSpectrum;
+import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -28,27 +32,27 @@ public class SiriusMs2Test {
 
   @Test
   public void testCreateMs2ExperimentMsp() throws MSDKException, IOException {
-    String ms2MspPath = "target/test-classes/sample.msp";
+    final String ms2MspPath = "target/test-classes/sample.msp";
     final double parentMass = 231.065;
     final String ionName = "[M+H]+";
-    final String[] expectedResults = {"C13H10O4", "C11H8N3O3", "C9H13NO4P", "C7H11N4O3P", "C6H10N6O2S"};
-
+    final String[] expectedResults = {"C13H10O4", "C11H8N3O3", "C9H13NO4P", "C7H11N4O3P",
+        "C6H10N6O2S"};
 
     File inputFile = new File(ms2MspPath);
     MspSpectrum mspSpectrum = MspImportAlgorithm.parseMspFromFile(inputFile);
     double mz[] = mspSpectrum.getMzValues();
-    double intensity[] = LocalArrayUtil.convertToDoubles(mspSpectrum.getIntensityValues());
-    Pair<double[], double[]> ms2pair = new Pair<>(mz, intensity);
-    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod();
+    float intensity[] = mspSpectrum.getIntensityValues();
+    int size = mz.length;
 
+    MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, size);
+    MsSpectrum ms2 = new SimpleMsSpectrum(mz, intensity, size, type);
+    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(null, ms2, parentMass,
+        ionName);
 
-    List<IdentificationResult> list = siriusMethod
-        .identifyMs2Spectrum(null, ms2pair, parentMass, ionName, 5);
-
+    List<IdentificationResult> list = siriusMethod.siriusProcessSpectrums();
 
     String[] results = new String[5];
     int i = 0;
-
 
     for (IdentificationResult r : list) {
       results[i++] = r.getMolecularFormula().toString();
@@ -64,20 +68,19 @@ public class SiriusMs2Test {
 
     String ms1Path = "target/test-classes/flavokavainA_MS1.txt";
     String ms2Path = "target/test-classes/flavokavainA_MS2.txt";
-    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod();
 
-    Pair<double[], double[]> ms1Spectrum = siriusMethod.readCustomMsFile(ms1Path, "\t");
-    Pair<double[], double[]> ms2Spectrum = siriusMethod.readCustomMsFile(ms2Path, "\t");
+    MsSpectrum ms1Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms1Path, "\t");
+    MsSpectrum ms2Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms2Path, "\t");
+    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1Spectrum,
+        ms2Spectrum,
+        precursorMass,
+        ionName);
+    siriusMethod.setNumberOfCandidates(2);
 
-    List<IdentificationResult> list = siriusMethod.identifyMs2Spectrum(ms1Spectrum,
-                                                                  ms2Spectrum,
-                                                                  precursorMass,
-                                                                  ionName,
-                                                                  2);
+    List<IdentificationResult> list = siriusMethod.siriusProcessSpectrums();
 
     String[] results = new String[2];
     int i = 0;
-
 
 // TODO: Fix the difference after second element
     for (IdentificationResult r : list) {
@@ -85,6 +88,5 @@ public class SiriusMs2Test {
     }
 
     Assert.assertArrayEquals(expectedResults, results);
-
   }
 }

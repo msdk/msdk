@@ -22,26 +22,87 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.IonAnnotation;
+import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.SimpleIonAnnotation;
+import io.github.msdk.datamodel.SimpleMsSpectrum;
+import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import javax.annotation.Nullable;
+import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.openscience.cdk.silent.SilentChemObjectBuilder;
+import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
-/**
- * Created by evger on 14-May-18.
- */
+public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation>> {
 
-public class SiriusIdentificationMethod implements MSDKMethod<IonAnnotation> {
-  Sirius sirius;
+  private final Sirius sirius;
+  private MsSpectrum ms1;
+  private MsSpectrum ms2;
+  private double parentMass;
+  private String ion;
+  private int numberOfCandidates;
+  private List<IonAnnotation> result;
 
-  SiriusIdentificationMethod() {
+  public SiriusIdentificationMethod(@Nullable MsSpectrum ms1, MsSpectrum ms2, double parentMass,
+      String ion) {
     sirius = new Sirius();
+    this.ms1 = ms1;
+    this.ms2 = ms2;
+    this.parentMass = parentMass;
+    this.ion = ion;
+    numberOfCandidates = 5;
   }
 
-  /* This function is left here for non-msp files */
-  public Pair<double[], double[]> readCustomMsFile(String path, String delimeter) throws IOException, MSDKRuntimeException {
+  public double getParentMass() {
+    return parentMass;
+  }
+
+  public void setParentMass(double mass) {
+    parentMass = mass;
+  }
+
+  public String getIonization() {
+    return ion;
+  }
+
+  public void setIonization(String ion) {
+    this.ion = ion;
+  }
+
+  public MsSpectrum getMsSpectrum() {
+    return ms1;
+  }
+
+  public void setMsSpectrum(MsSpectrum ms1) {
+    this.ms1 = ms1;
+  }
+
+  public MsSpectrum getMs2Spectrum() {
+    return ms2;
+  }
+
+  public void setMs2Spectrum(MsSpectrum ms2) {
+    this.ms2 = ms2;
+  }
+
+  public int getNumberOfCandidates() {
+    return numberOfCandidates;
+  }
+
+  public void setNumberOfCandidates(int number) {
+    numberOfCandidates = number;
+  }
+
+  /**
+   * This function is left here for custom spectrum files (just columns of mz and intensity values)
+   * Does similar to mgf parser functionality
+   */
+  public static MsSpectrum readCustomMsFile(String path, String delimeter)
+      throws IOException, MSDKRuntimeException {
     Scanner sc = new Scanner(new File(path));
     ArrayList<String> strings = new ArrayList<>();
     while (sc.hasNext()) {
@@ -49,37 +110,45 @@ public class SiriusIdentificationMethod implements MSDKMethod<IonAnnotation> {
     }
     sc.close();
 
-    double mz[] = new double[strings.size()];
-    double intensive[] = new double[strings.size()];
+    int size = strings.size();
+    double mz[] = new double[size];
+    float intensity[] = new float[size];
 
     int index = 0;
     for (String s : strings) {
       String[] splitted = s.split(delimeter);
       if (splitted.length == 2) {
         mz[index] = Double.parseDouble(splitted[0]);
-        intensive[index++] = Double.parseDouble(splitted[1]);
-      } else throw new MSDKRuntimeException("Incorrect spectrum structure");
+        intensity[index++] = Float.parseFloat(splitted[1]);
+      } else {
+        throw new MSDKRuntimeException("Incorrect spectrum structure");
+      }
     }
 
-    return new Pair<>(mz, intensive);
+    MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, size);
+    return new SimpleMsSpectrum(mz, intensity, size, type);
   }
 
-  public List<IdentificationResult> identifyMs2Spectrum(
-      @Nullable Pair<double[], double[]> ms1pair, Pair<double[], double[]> ms2pair,
-      double parentMass, String ion, int numberOfCanditates) throws MSDKException, IOException {
-    Spectrum<Peak> ms1 = null, ms2 = null;
-    ms2 = sirius.wrapSpectrum(ms2pair.getKey(), ms2pair.getVal());
-    if (ms1pair != null) {
-      ms1 = sirius.wrapSpectrum(ms1pair.getKey(), ms1pair.getVal());
+
+  /**
+   * Transformation of MSDK data structures into Sirius structures and processing by sirius
+   */
+  protected List<IdentificationResult> siriusProcessSpectrums() throws MSDKException {
+    Spectrum<Peak> siriusMs1 = null, siriusMs2;
+    siriusMs2 = sirius
+        .wrapSpectrum(ms2.getMzValues(), LocalArrayUtil.convertToDoubles(ms2.getIntensityValues()));
+    if (ms1 != null) {
+      siriusMs1 = sirius.wrapSpectrum(ms1.getMzValues(),
+          LocalArrayUtil.convertToDoubles(ms1.getIntensityValues()));
     }
 
     PrecursorIonType precursor = sirius.getPrecursorIonType(ion);
-    Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, ms1, ms2);
+    Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, siriusMs1, siriusMs2);
 
-//        Error on request for GurobiJni60 library, Cplex .dll missed java path.
-
-    List<IdentificationResult> results = sirius.identify(experiment, numberOfCanditates, true, IsotopePatternHandling.omit);
-    return results;
+//    TODO: think about IsotopePatternHandling type
+    List<IdentificationResult> siriusResults = sirius
+        .identify(experiment, numberOfCandidates, true, IsotopePatternHandling.omit);
+    return siriusResults;
   }
 
   @Nullable
@@ -90,14 +159,25 @@ public class SiriusIdentificationMethod implements MSDKMethod<IonAnnotation> {
 
   @Nullable
   @Override
-  public IonAnnotation execute() throws MSDKException {
-    return null;
+  public List<IonAnnotation> execute() throws MSDKException {
+    result = new ArrayList<>();
+    List<IdentificationResult> siriusSpectrums = siriusProcessSpectrums();
+
+    for (IdentificationResult r: siriusSpectrums) {
+      SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
+      IMolecularFormula formula = MolecularFormulaManipulator.getMolecularFormula(r.getMolecularFormula().toString(),
+          SilentChemObjectBuilder.getInstance());
+      ionAnnotation.setFormula(formula);
+      result.add(ionAnnotation);
+    }
+
+    return result;
   }
 
   @Nullable
   @Override
-  public IonAnnotation getResult() {
-    return null;
+  public List<IonAnnotation> getResult() {
+    return result;
   }
 
   // TODO: implement
