@@ -25,6 +25,7 @@ import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.IonAnnotation;
 import io.github.msdk.datamodel.MsSpectrum;
 import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.SimpleIonAnnotation;
 import io.github.msdk.datamodel.SimpleMsSpectrum;
 import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import java.io.File;
@@ -43,10 +44,11 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private final Sirius sirius;
   private MsSpectrum ms1;
   private MsSpectrum ms2;
-  private List<IonAnnotation> result;
   private double parentMass;
-  private String adduct;
+  private String ion;
   private int numberOfCandidates;
+
+  private List<IonAnnotation> result;
 
   public SiriusIdentificationMethod(@Nullable MsSpectrum ms1, MsSpectrum ms2, double parentMass,
       String ion) {
@@ -54,16 +56,48 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     this.ms1 = ms1;
     this.ms2 = ms2;
     this.parentMass = parentMass;
-    this.adduct = ion;
+    this.ion = ion;
     numberOfCandidates = 5;
   }
 
-  public void setNumberOfCandidates(int number) {
-    numberOfCandidates = number;
+  public double getParentMass() {
+    return parentMass;
+  }
+
+  public void setParentMass(double mass) {
+    parentMass = mass;
+  }
+
+  public String getIonization() {
+    return ion;
+  }
+
+  public void setIonization(String ion) {
+    this.ion = ion;
+  }
+
+  public MsSpectrum getMsSpectrum() {
+    return ms1;
+  }
+
+  public void setMsSpectrum(MsSpectrum ms1) {
+    this.ms1 = ms1;
+  }
+
+  public MsSpectrum getMs2Spectrum() {
+    return ms2;
+  }
+
+  public void setMs2Spectrum(MsSpectrum ms2) {
+    this.ms2 = ms2;
   }
 
   public int getNumberOfCandidates() {
     return numberOfCandidates;
+  }
+
+  public void setNumberOfCandidates(int number) {
+    numberOfCandidates = number;
   }
 
   /**
@@ -111,7 +145,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
           LocalArrayUtil.convertToDoubles(ms1.getIntensityValues()));
     }
 
-    PrecursorIonType precursor = sirius.getPrecursorIonType(adduct);
+    PrecursorIonType precursor = sirius.getPrecursorIonType(ion);
     Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, siriusMs1, siriusMs2);
 
 //    TODO: think about IsotopePatternHandling type
@@ -131,6 +165,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   public List<IonAnnotation> execute() throws MSDKException {
     result = new ArrayList<>();
     List<IdentificationResult> siriusSpectrums = siriusProcessSpectrums();
+    SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
 
     return result;
   }
