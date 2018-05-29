@@ -16,27 +16,35 @@ package io.github.msdk.io.mgf;
 import io.github.msdk.MSDKException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-/**
- * Created by evger on 17-May-18.
- */
-
 
 public class MgfFileImportMethodTest {
+  private Path getResourcePath(String resource) throws MSDKException {
+    final URL url = MgfFileImportMethodTest.class.getClassLoader().getResource(resource);
+    try {
+      return Paths.get(url.toURI()).toAbsolutePath();
+    } catch (URISyntaxException e) {
+      throw new MSDKException(e);
+    }
+  }
+
   @Test
   public void mgfImportTest() throws IOException, MSDKException {
     final int expectedSize = 1;
     final String expectedTitle = "example.9.9.2";
     final long expectedNumberDatapoints = 18;
     final int expectedCharge = 2;
+    final String file = "test_query.mgf";
 
-    File file = new File("target/test-classes/test_query.mgf");
-    MgfFileImportMethod importMethod = new MgfFileImportMethod(file);
+    File inputFile = getResourcePath(file).toFile();
+    MgfFileImportMethod importMethod = new MgfFileImportMethod(inputFile);
+
     List<MgfMsSpectrum> spectrums = importMethod.execute();
     int size = spectrums.size();
     MgfMsSpectrum spectrum = (MgfMsSpectrum)spectrums.toArray()[0];
@@ -65,8 +73,9 @@ public class MgfFileImportMethodTest {
     final long expectedNumberDatapoints[] = {53, 66, 13, 16, 9, 9, 9, 14, 18, 13};
     final int expectedCharges[] = {2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
 
-    File file = new File("target/test-classes/F001257.mgf");
-    MgfFileImportMethod importMethod = new MgfFileImportMethod(file);
+    final String file = "F001257.mgf";
+    File inputFile = getResourcePath(file).toFile();
+    MgfFileImportMethod importMethod = new MgfFileImportMethod(inputFile);
     List<MgfMsSpectrum> spectrums = importMethod.execute();
 
     int size = spectrums.size();
@@ -91,8 +100,9 @@ public class MgfFileImportMethodTest {
 
   @Test(expected = MSDKException.class)
   public void malformedInputRegexpTest() throws MSDKException {
-    File file = new File("target/test-classes/malformed_query.mgf");
-    MgfFileImportMethod importMethod = new MgfFileImportMethod(file);
+    final String file = "malformed_query.mgf";
+    File inputFile = getResourcePath(file).toFile();
+    MgfFileImportMethod importMethod = new MgfFileImportMethod(inputFile);
 
     List<MgfMsSpectrum> spectrums = importMethod.execute();
   }

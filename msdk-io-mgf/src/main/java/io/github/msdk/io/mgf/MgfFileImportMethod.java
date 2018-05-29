@@ -38,8 +38,8 @@ import org.slf4j.LoggerFactory;
 
 public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   private final Pattern PEPMASS_PATTERN = Pattern.compile("(?<=PEPMASS=)(\\d+\\.\\d+)");
-  private final Pattern CHARGE_PATTERN = Pattern.compile("(?<=TITLE=).*");
-  private final Pattern TITLE_PATTERN = Pattern.compile("(?<=PEPMASS=)(\\d+\\.\\d+)");
+  private final Pattern CHARGE_PATTERN = Pattern.compile("(?<=CHARGE=)(\\d+)\\+|-");
+  private final Pattern TITLE_PATTERN = Pattern.compile("(?<=TITLE=).*");
 
   private final @Nonnull File target;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -55,6 +55,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
 
     try (final BufferedReader reader = new BufferedReader(new FileReader(target))) {
       String line;
+//      TODO: Fix error with NULL, otherwise reads infinite amount of time
       while ((line = reader.readLine()) != null || !cancelled) {
         switch (line) {
           case "BEGIN IONS":
