@@ -53,9 +53,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<IonAnnotation> {
 
   public List<IdentificationResult> identifyMs2Spectrum(
       @Nullable Pair<double[], double[]> ms1pair, Pair<double[], double[]> ms2pair,
-      double parentMass, String ion) throws MSDKException, IOException {
-
-    final Sirius sirius = new Sirius();
+      double parentMass, String ion, int numberOfCanditates) throws MSDKException, IOException {
     Spectrum<Peak> ms1 = null, ms2 = null;
     ms2 = sirius.wrapSpectrum(ms2pair.getKey(), ms2pair.getVal());
     if (ms1pair != null) {
@@ -67,14 +65,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<IonAnnotation> {
 
 //        Error on request for GurobiJni60 library, Cplex .dll missed java path.
 
-//    I do not know what pattern to use
-//    IsotopePatternHandling p = IsotopePatternHandling.omit;
-//    IsotopePatternHandling p = IsotopePatternHandling.both;
-    IsotopePatternHandling p = IsotopePatternHandling.filter;
-//    IsotopePatternHandling p = IsotopePatternHandling.score;
-//    IsotopePatternHandling p = (IsotopePatternHandling)null;
-
-    List<IdentificationResult> results = sirius.identify(experiment, 1, true, p);
+    List<IdentificationResult> results = sirius.identify(experiment, numberOfCanditates, true, IsotopePatternHandling.omit);
     return results;
   }
 
@@ -96,6 +87,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<IonAnnotation> {
     return null;
   }
 
+  // TODO: implement
   @Override
   public void cancel() {
 
