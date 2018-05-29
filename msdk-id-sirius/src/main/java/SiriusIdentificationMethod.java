@@ -11,7 +11,6 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
 import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.Peak;
@@ -34,10 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import javax.annotation.Nullable;
-
-/**
- * Created by evger on 14-May-18.
- */
+import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.openscience.cdk.silent.SilentChemObjectBuilder;
+import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
 public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation>> {
 
@@ -47,7 +45,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private double parentMass;
   private String ion;
   private int numberOfCandidates;
-
   private List<IonAnnotation> result;
 
   public SiriusIdentificationMethod(@Nullable MsSpectrum ms1, MsSpectrum ms2, double parentMass,
@@ -134,9 +131,9 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
 
 
   /**
-   * Transformation of MSDK data structures into Sirius structures
+   * Transformation of MSDK data structures into Sirius structures and processing by sirius
    */
-  private List<IdentificationResult> siriusProcessSpectrums() throws MSDKException {
+  protected List<IdentificationResult> siriusProcessSpectrums() throws MSDKException {
     Spectrum<Peak> siriusMs1 = null, siriusMs2;
     siriusMs2 = sirius
         .wrapSpectrum(ms2.getMzValues(), LocalArrayUtil.convertToDoubles(ms2.getIntensityValues()));
@@ -165,7 +162,14 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   public List<IonAnnotation> execute() throws MSDKException {
     result = new ArrayList<>();
     List<IdentificationResult> siriusSpectrums = siriusProcessSpectrums();
-    SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
+
+    for (IdentificationResult r: siriusSpectrums) {
+      SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
+      IMolecularFormula formula = MolecularFormulaManipulator.getMolecularFormula(r.getMolecularFormula().toString(),
+          SilentChemObjectBuilder.getInstance());
+      ionAnnotation.setFormula(formula);
+      result.add(ionAnnotation);
+    }
 
     return result;
   }

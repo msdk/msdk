@@ -114,6 +114,12 @@
       <version>1.7.0</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-silent</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>
+
   </dependencies>
 
 
