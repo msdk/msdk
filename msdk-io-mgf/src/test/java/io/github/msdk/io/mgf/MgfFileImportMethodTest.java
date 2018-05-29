@@ -28,9 +28,6 @@ import org.junit.rules.ExpectedException;
 
 
 public class MgfFileImportMethodTest {
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
-
   @Test
   public void mgfImportTest() throws IOException, MSDKException {
     final int expectedSize = 1;
@@ -92,14 +89,11 @@ public class MgfFileImportMethodTest {
     Assert.assertArrayEquals(expectedCharges, charges);
   }
 
-  @Test
+  @Test(expected = MSDKException.class)
   public void malformedInputRegexpTest() throws MSDKException {
     File file = new File("target/test-classes/malformed_query.mgf");
     MgfFileImportMethod importMethod = new MgfFileImportMethod(file);
 
-
-    thrown.expect(MSDKException.class);
-    thrown.expectMessage("Incorrect data format");
     List<MgfMsSpectrum> spectrums = importMethod.execute();
   }
 
