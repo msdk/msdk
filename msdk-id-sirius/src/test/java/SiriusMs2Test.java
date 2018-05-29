@@ -21,6 +21,10 @@ import io.github.msdk.io.msp.MspSpectrum;
 import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,16 +33,24 @@ import org.junit.Test;
  * Created by evger on 15-May-18.
  */
 public class SiriusMs2Test {
+  private Path getResourcePath(String resource) throws MSDKException {
+    final URL url = SiriusMs2Test.class.getClassLoader().getResource(resource);
+    try {
+      return Paths.get(url.toURI()).toAbsolutePath();
+    } catch (URISyntaxException e) {
+      throw new MSDKException(e);
+    }
+  }
 
   @Test
   public void testCreateMs2ExperimentMsp() throws MSDKException, IOException {
-    final String ms2MspPath = "target/test-classes/sample.msp";
+    final String ms2Msp = "sample.msp";
     final double parentMass = 231.065;
     final String ionName = "[M+H]+";
     final String[] expectedResults = {"C13H10O4", "C11H8N3O3", "C9H13NO4P", "C7H11N4O3P",
         "C6H10N6O2S"};
 
-    File inputFile = new File(ms2MspPath);
+    File inputFile = getResourcePath(ms2Msp).toFile();
     MspSpectrum mspSpectrum = MspImportAlgorithm.parseMspFromFile(inputFile);
     double mz[] = mspSpectrum.getMzValues();
     float intensity[] = mspSpectrum.getIntensityValues();
@@ -65,12 +77,14 @@ public class SiriusMs2Test {
     final double precursorMass = 315.123;
     final String ionName = "[M+H]+";
     final String[] expectedResults = {"C18H18O5", "C12H19N4O4P"};
+    final String ms1Path = "flavokavainA_MS1.txt";
+    final String ms2Path = "flavokavainA_MS2.txt";
 
-    String ms1Path = "target/test-classes/flavokavainA_MS1.txt";
-    String ms2Path = "target/test-classes/flavokavainA_MS2.txt";
+    File ms1File = getResourcePath(ms1Path).toFile();
+    File ms2File = getResourcePath(ms2Path).toFile();
 
-    MsSpectrum ms1Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms1Path, "\t");
-    MsSpectrum ms2Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms2Path, "\t");
+    MsSpectrum ms1Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms1File, "\t");
+    MsSpectrum ms2Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms2File, "\t");
     SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1Spectrum,
         ms2Spectrum,
         precursorMass,

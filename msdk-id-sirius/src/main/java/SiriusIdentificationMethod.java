@@ -101,9 +101,9 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * This function is left here for custom spectrum files (just columns of mz and intensity values)
    * Does similar to mgf parser functionality
    */
-  public static MsSpectrum readCustomMsFile(String path, String delimeter)
+  public static MsSpectrum readCustomMsFile(File file, String delimeter)
       throws IOException, MSDKRuntimeException {
-    Scanner sc = new Scanner(new File(path));
+    Scanner sc = new Scanner(file);
     ArrayList<String> strings = new ArrayList<>();
     while (sc.hasNext()) {
       strings.add(sc.nextLine());
