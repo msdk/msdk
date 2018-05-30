@@ -16,6 +16,13 @@ package io.github.msdk.io.mgf;
 import io.github.msdk.datamodel.AbstractMsSpectrum;
 import io.github.msdk.datamodel.MsSpectrumType;
 
+/**
+ * <p>MgfMsSpectrum class.</p>
+ *
+ *         This class extends AbstractMsSpectrum and stores additional fields
+ *         title - name of the spectrum
+ *         precursor charge and mass
+ */
 public class MgfMsSpectrum extends AbstractMsSpectrum {
 
   private String title;

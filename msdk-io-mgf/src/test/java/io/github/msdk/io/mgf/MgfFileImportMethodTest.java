@@ -76,8 +76,8 @@ public class MgfFileImportMethodTest {
     final String file = "F001257.mgf";
     File inputFile = getResourcePath(file).toFile();
     MgfFileImportMethod importMethod = new MgfFileImportMethod(inputFile);
-    List<MgfMsSpectrum> spectrums = importMethod.execute();
 
+    List<MgfMsSpectrum> spectrums = importMethod.execute();
     int size = spectrums.size();
     Assert.assertEquals(expectedSize, size);
 
@@ -104,7 +104,7 @@ public class MgfFileImportMethodTest {
     File inputFile = getResourcePath(file).toFile();
     MgfFileImportMethod importMethod = new MgfFileImportMethod(inputFile);
 
-    List<MgfMsSpectrum> spectrums = importMethod.execute();
+    importMethod.execute();
   }
 
 }

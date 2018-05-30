@@ -35,7 +35,11 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * <p>MgfFileImportMethod class.</p>
+ *
+ *         This class parses a list of MgfMsSpectrums from .mgf file
+ */
 public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   private final Pattern PEPMASS_PATTERN = Pattern.compile("(?<=PEPMASS=)(\\d+\\.\\d+)");
   private final Pattern CHARGE_PATTERN = Pattern.compile("(?<=CHARGE=)(\\d+)\\+|-");
@@ -46,6 +50,13 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   private List<MgfMsSpectrum> spectra;
   private Hashtable<String, Pattern> patterns;
 
+
+  /**
+   * <p>
+   *   Overloaded method, processes the .mgf file (loaded in the costructor) and returns a list of MgfMsSpectrums
+   * </p>
+   * @throws MSDKException if any
+   */
   @Nullable
   @Override
   public List<MgfMsSpectrum> execute() throws MSDKException {
@@ -58,6 +69,8 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
         line = reader.readLine();
         if (line == null)
           break;
+
+        /* Switch is used here for future improvement, saving author-related fields */
         switch (line) {
           case "BEGIN IONS":
             spectra.add(processSpectrum(reader));
@@ -73,6 +86,13 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     return spectra;
   }
 
+  /**
+   * <p>Method for processing .mgf files from BEGIN IONS till END IONS</p>
+   * @param reader - the reader with already accepted .mgf file
+   * @return the new MgfMsSpectrum object
+   * @throws IOException if any
+   * @throws MSDKException if any
+   */
   private MgfMsSpectrum processSpectrum(BufferedReader reader) throws IOException, MSDKException {
     String title = "";
     int precursorCharge = 0;
@@ -113,6 +133,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
           }
         } else {
           String[] floats = line.split(" ");
+          // In case of more than 2 columns of data
           if (floats.length == 2) {
             double mzValue = Double.parseDouble(floats[0]);
             float intensityValue = Float.parseFloat(floats[1]);
@@ -127,15 +148,10 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     }
 
 
-    MsSpectrumType type = SpectrumTypeDetectionAlgorithm
-        .detectSpectrumType(mz, intensity, index - 1);
-    DataPointSorter
-        .sortDataPoints(mz, intensity, index - 1, SortingProperty.MZ, SortingDirection.ASCENDING);
+    // Auto specify the type of spectrum and sort mz values
+    MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, index - 1);
+    DataPointSorter.sortDataPoints(mz, intensity, index - 1, SortingProperty.MZ, SortingDirection.ASCENDING);
 
-    /*
-     Do not like this code
-     May be implement a Builder pattern for this?
-    */
     MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensity, index - 1, title, precursorCharge,
         precursorMass, type);
 
@@ -160,11 +176,23 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     return spectra;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void cancel() {
     this.cancelled = true;
   }
 
+  /**
+   *
+   * <p>
+   * Constructor for MgfFileImportMethod.
+   * </p>
+   *
+   * Initializes regex dictionary and loads file
+   * @param target .mgf file to be processed
+   */
   public MgfFileImportMethod(File target) {
     this.target = target;
     patterns = new Hashtable<>();
