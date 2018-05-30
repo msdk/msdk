@@ -40,7 +40,6 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   private final Pattern PEPMASS_PATTERN = Pattern.compile("(?<=PEPMASS=)(\\d+\\.\\d+)");
   private final Pattern CHARGE_PATTERN = Pattern.compile("(?<=CHARGE=)(\\d+)\\+|-");
   private final Pattern TITLE_PATTERN = Pattern.compile("(?<=TITLE=).*");
-
   private final @Nonnull File target;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private boolean cancelled;
@@ -53,10 +52,12 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     logger.info("Started MGF import from {} file", target);
     spectra = new LinkedList<>();
 
+    String line;
     try (final BufferedReader reader = new BufferedReader(new FileReader(target))) {
-      String line;
-//      TODO: Fix error with NULL, otherwise reads infinite amount of time
-      while ((line = reader.readLine()) != null || !cancelled) {
+      while (!cancelled) {
+        line = reader.readLine();
+        if (line == null)
+          break;
         switch (line) {
           case "BEGIN IONS":
             spectra.add(processSpectrum(reader));
