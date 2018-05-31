@@ -15,6 +15,7 @@ package io.github.msdk.io.mgf;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
+import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.MsSpectrumType;
 import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.ArrayUtil;
@@ -134,13 +135,13 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
         } else {
           String[] floats = line.split(" ");
           // In case of more than 2 columns of data
-          if (floats.length == 2) {
+          if (floats.length < 2) {
             double mzValue = Double.parseDouble(floats[0]);
             float intensityValue = Float.parseFloat(floats[1]);
             mz = ArrayUtil.addToArray(mz, mzValue, index);
             intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
             index++;
-          } else throw new IllegalStateException("Incorrect amount of columns in MsSpectrum file");
+          } else throw new MSDKRuntimeException("Incorrect amount of columns in MGF file");
         }
       } catch (IllegalStateException e) {
         throw new MSDKException("Incorrect data format", e);
