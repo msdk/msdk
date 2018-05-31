@@ -39,6 +39,22 @@ import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
 public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation>> {
 
+  static {
+    try {
+      System.load("glpk_4_60"); // used for tests. This library in classpath only
+      System.load("glpk_4_60_java"); // used for tests. This library in classpath only
+
+
+    } catch (UnsatisfiedLinkError e) {
+      try {
+        String[] libs = {"glpk_4_60", "glpk_4_60_java"};
+        NativeLibraryLoader.loadLibraryFromJar("glpk-4.60", libs);
+      } catch (Exception e1) {
+        throw new RuntimeException(e1);
+      }
+    }
+  }
+
   private final Sirius sirius;
   private MsSpectrum ms1;
   private MsSpectrum ms2;
