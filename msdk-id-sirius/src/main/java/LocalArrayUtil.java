@@ -18,6 +18,11 @@ import javax.annotation.Nonnull;
  */
 public class LocalArrayUtil {
 
+  /**
+   * Method for converting float arrays into doubles
+   * @param array
+   * @return
+   */
   public static @Nonnull double[] convertToDoubles(@Nonnull float[] array) {
     double doubles[] = new double[array.length];
     for (int i = 0; i < array.length; i++)

@@ -37,16 +37,24 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
+/**
+ * <p> SiriusIdentificationMethod class. </p>
+ *
+ *      This class wraps the Sirius module and transforms its results into MSDK data structures
+ *      Transformation of IdentificationResult (Sirius) into IonAnnatation (MSDK)
+ */
 public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation>> {
 
+  /**
+   * Dynamic loading of native libraries
+   */
   static {
     try {
-      System.load("glpk_4_60"); // used for tests. This library in classpath only
-      System.load("glpk_4_60_java"); // used for tests. This library in classpath only
-
-
+      System.load("glpk_4_60");
+      System.load("glpk_4_60_java");
     } catch (UnsatisfiedLinkError e) {
       try {
+        // GLPK requires two libraries
         String[] libs = {"glpk_4_60", "glpk_4_60_java"};
         NativeLibraryLoader.loadLibraryFromJar("glpk-4.60", libs);
       } catch (Exception e1) {
@@ -63,6 +71,13 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private int numberOfCandidates;
   private List<IonAnnotation> result;
 
+  /**
+   * <p> Constructor for SiriusIdentificationMethod class. </p>
+   * @param ms1 - can be null! MsSpectrum level 1
+   * @param ms2 - MsSpectrum level 2
+   * @param parentMass - Most intensive usually or specified
+   * @param ion - Ionization
+   */
   public SiriusIdentificationMethod(@Nullable MsSpectrum ms1, MsSpectrum ms2, double parentMass,
       String ion) {
     sirius = new Sirius();
@@ -147,7 +162,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
 
 
   /**
-   * Transformation of MSDK data structures into Sirius structures and processing by sirius
+   * Transformation of MSDK data structures into Sirius structures and processing by Sirius
+   * Method is left to be protected for test coverage
    */
   protected List<IdentificationResult> siriusProcessSpectrums() throws MSDKException {
     Spectrum<Peak> siriusMs1 = null, siriusMs2;

@@ -23,6 +23,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+/**
+ * <p> Class NativeLibraryLoader </p>
+ * This class allows to dynamically load native libraries from .jar files with updating java.library.path variable
+ */
 public class NativeLibraryLoader {
   private NativeLibraryLoader() {}
   private static Path getResourcePath(String resource) throws MSDKException {
@@ -34,6 +38,21 @@ public class NativeLibraryLoader {
     }
   }
 
+  /**
+   * Public method for external usage, loads specified `libs` in `folder`
+   * The folder structure is strict
+   *  folder
+   *    -w64
+   *      --lib1
+   *      --lib2
+   *    -w32
+   *    -x86_64-linux-gnu"
+   *
+   * @param folder - specify the name of the library to be loaded (example - glpk_4_60)
+   * @param libs - array of exact names of libraries (without extensions)
+   * @throws MSDKException if any
+   * @throws IOException if any
+   */
   public static void loadLibraryFromJar(String folder, String[] libs) throws MSDKException, IOException {
     String suffix = "", realPath;
     String arch = System.getProperty("os.arch").toLowerCase().endsWith("64") ? "w64" : "w32";
@@ -48,12 +67,21 @@ public class NativeLibraryLoader {
     // TODO: get resource folder
     realPath = getResourcePath(folder) + "/" + arch + "/";
 
+    // Make new java.library.path
     File temporaryDir = createLibraryPath();
+    // Load native libraries
     for (String libname: libs) {
       moveLibrary(temporaryDir, realPath, libname, suffix);
     }
   }
 
+  /**
+   * Method for updating the java.library.path with a new temp folder for native libraries
+   * System.setProperty(path) does not make any sense because JVM sets it during initialization
+   * Altering library path requires additional code
+   * @return temporary folder file
+   * @throws MSDKException if any
+   */
   private static File createLibraryPath() throws MSDKException {
     File tempDir = Files.createTempDir();
     tempDir.deleteOnExit();
@@ -76,7 +104,7 @@ public class NativeLibraryLoader {
    * Sets the java library path to the specified path
    * Unsets sys_paths first and reinitializes it a try of library load
    * @param path the new library path
-   * @throws Exception
+   * @throws Exception if any
    */
   private static void setLibraryPath(String path) throws NoSuchFieldException, IllegalAccessException {
     System.setProperty("java.library.path", path);
@@ -90,7 +118,7 @@ public class NativeLibraryLoader {
    * Adds the specified path to the java library path w/o reinitialization
    *
    * @param pathToAdd the path to add
-   * @throws Exception
+   * @throws Exception if any
    */
   private static void addLibraryPath(String pathToAdd) throws NoSuchFieldException, IllegalAccessException{
     final Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
