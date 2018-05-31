@@ -13,12 +13,15 @@
 
 import de.unijena.bioinf.sirius.IdentificationResult;
 import io.github.msdk.MSDKException;
+import io.github.msdk.datamodel.IonType;
 import io.github.msdk.datamodel.MsSpectrum;
 import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.SimpleIonType;
 import io.github.msdk.datamodel.SimpleMsSpectrum;
 import io.github.msdk.io.msp.MspImportAlgorithm;
 import io.github.msdk.io.msp.MspSpectrum;
 import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
+import io.github.msdk.util.IonTypeUtil;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -46,7 +49,7 @@ public class SiriusMs2Test {
   public void testCreateMs2ExperimentMsp() throws MSDKException, IOException {
     final String ms2Msp = "sample.msp";
     final double parentMass = 231.065;
-    final String ionName = "[M+H]+";
+    final IonType ion = IonTypeUtil.createIonType("[M+H]+");
     final String[] expectedResults = {"C13H10O4", "C11H8N3O3", "C9H13NO4P", "C7H11N4O3P",
         "C6H10N6O2S"};
 
@@ -59,9 +62,9 @@ public class SiriusMs2Test {
     MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, size);
     MsSpectrum ms2 = new SimpleMsSpectrum(mz, intensity, size, type);
     SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(null, ms2, parentMass,
-        ionName);
+        ion);
 
-    List<IdentificationResult> list = siriusMethod.siriusProcessSpectrums();
+    List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
 
     String[] results = new String[5];
     int i = 0;
@@ -75,10 +78,11 @@ public class SiriusMs2Test {
   @Test
   public void testCreateExperimentMs1Ms2Custom() throws MSDKException, IOException {
     final double precursorMass = 315.123;
-    final String ionName = "[M+H]+";
+    final IonType ion = IonTypeUtil.createIonType("[M+H]+");
     final String[] expectedResults = {"C18H18O5", "C12H19N4O4P"};
     final String ms1Path = "flavokavainA_MS1.txt";
     final String ms2Path = "flavokavainA_MS2.txt";
+    final int candidatesAmount = 2;
 
     File ms1File = getResourcePath(ms1Path).toFile();
     File ms2File = getResourcePath(ms2Path).toFile();
@@ -88,10 +92,10 @@ public class SiriusMs2Test {
     SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1Spectrum,
         ms2Spectrum,
         precursorMass,
-        ionName);
-    siriusMethod.setNumberOfCandidates(2);
+        ion,
+        candidatesAmount);
 
-    List<IdentificationResult> list = siriusMethod.siriusProcessSpectrums();
+    List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
 
     String[] results = new String[2];
     int i = 0;

@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015-2017 by MSDK Development Team
+ * (C) Copyright 2015-2018 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -22,6 +22,7 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.IonAnnotation;
+import io.github.msdk.datamodel.IonType;
 import io.github.msdk.datamodel.MsSpectrum;
 import io.github.msdk.datamodel.MsSpectrumType;
 import io.github.msdk.datamodel.SimpleIonAnnotation;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
@@ -40,8 +42,8 @@ import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 /**
  * <p> SiriusIdentificationMethod class. </p>
  *
- *      This class wraps the Sirius module and transforms its results into MSDK data structures
- *      Transformation of IdentificationResult (Sirius) into IonAnnatation (MSDK)
+ * This class wraps the Sirius module and transforms its results into MSDK data structures
+ * Transformation of IdentificationResult (Sirius) into IonAnnatation (MSDK)
  */
 public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation>> {
 
@@ -64,68 +66,52 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   }
 
   private final Sirius sirius;
-  private MsSpectrum ms1;
-  private MsSpectrum ms2;
-  private double parentMass;
-  private String ion;
-  private int numberOfCandidates;
+  private final MsSpectrum ms1;
+  private final MsSpectrum ms2;
+  private final Double parentMass;
+  private final IonType ion;
+  private final int numberOfCandidates;
   private List<IonAnnotation> result;
 
   /**
    * <p> Constructor for SiriusIdentificationMethod class. </p>
+   *
    * @param ms1 - can be null! MsSpectrum level 1
    * @param ms2 - MsSpectrum level 2
    * @param parentMass - Most intensive usually or specified
    * @param ion - Ionization
+   * @param numberOfCandidates - amount of IdentificationResults to be returned from Sirius
    */
-  public SiriusIdentificationMethod(@Nullable MsSpectrum ms1, MsSpectrum ms2, double parentMass,
-      String ion) {
+  public SiriusIdentificationMethod(@Nullable MsSpectrum ms1, @Nonnull MsSpectrum ms2, Double parentMass,
+      IonType ion, int numberOfCandidates) {
     sirius = new Sirius();
     this.ms1 = ms1;
     this.ms2 = ms2;
     this.parentMass = parentMass;
     this.ion = ion;
-    numberOfCandidates = 5;
+    this.numberOfCandidates = numberOfCandidates;
   }
 
+  public SiriusIdentificationMethod(@Nullable MsSpectrum ms1, @Nonnull MsSpectrum ms2, Double parentMass,
+      IonType ion) { this(ms1, ms2, parentMass, ion, 5); }
   public double getParentMass() {
     return parentMass;
   }
 
-  public void setParentMass(double mass) {
-    parentMass = mass;
-  }
-
-  public String getIonization() {
+  public IonType getIonization() {
     return ion;
-  }
-
-  public void setIonization(String ion) {
-    this.ion = ion;
   }
 
   public MsSpectrum getMsSpectrum() {
     return ms1;
   }
 
-  public void setMsSpectrum(MsSpectrum ms1) {
-    this.ms1 = ms1;
-  }
-
   public MsSpectrum getMs2Spectrum() {
     return ms2;
   }
 
-  public void setMs2Spectrum(MsSpectrum ms2) {
-    this.ms2 = ms2;
-  }
-
   public int getNumberOfCandidates() {
     return numberOfCandidates;
-  }
-
-  public void setNumberOfCandidates(int number) {
-    numberOfCandidates = number;
   }
 
   /**
@@ -165,7 +151,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * Transformation of MSDK data structures into Sirius structures and processing by Sirius
    * Method is left to be protected for test coverage
    */
-  protected List<IdentificationResult> siriusProcessSpectrums() throws MSDKException {
+  protected List<IdentificationResult> siriusProcessSpectra() throws MSDKException {
     Spectrum<Peak> siriusMs1 = null, siriusMs2;
     siriusMs2 = sirius
         .wrapSpectrum(ms2.getMzValues(), LocalArrayUtil.convertToDoubles(ms2.getIntensityValues()));
@@ -174,7 +160,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
           LocalArrayUtil.convertToDoubles(ms1.getIntensityValues()));
     }
 
-    PrecursorIonType precursor = sirius.getPrecursorIonType(ion);
+    String ionization = ion.getName();
+    PrecursorIonType precursor = sirius.getPrecursorIonType(ionization);
     Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, siriusMs1, siriusMs2);
 
 //    TODO: think about IsotopePatternHandling type
@@ -193,12 +180,13 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   @Override
   public List<IonAnnotation> execute() throws MSDKException {
     result = new ArrayList<>();
-    List<IdentificationResult> siriusSpectrums = siriusProcessSpectrums();
+    List<IdentificationResult> siriusSpectra = siriusProcessSpectra();
 
-    for (IdentificationResult r: siriusSpectrums) {
+    for (IdentificationResult r : siriusSpectra) {
       SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
-      IMolecularFormula formula = MolecularFormulaManipulator.getMolecularFormula(r.getMolecularFormula().toString(),
-          SilentChemObjectBuilder.getInstance());
+      IMolecularFormula formula = MolecularFormulaManipulator
+          .getMolecularFormula(r.getMolecularFormula().toString(),
+              SilentChemObjectBuilder.getInstance());
       ionAnnotation.setFormula(formula);
       result.add(ionAnnotation);
     }
