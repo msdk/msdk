@@ -24,11 +24,14 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 /**
- * <p> Class NativeLibraryLoader </p>
- * This class allows to dynamically load native libraries from .jar files with updating java.library.path variable
+ * <p> Class NativeLibraryLoader </p> This class allows to dynamically load native libraries from
+ * .jar files with updating java.library.path variable
  */
 public class NativeLibraryLoader {
-  private NativeLibraryLoader() {}
+
+  private NativeLibraryLoader() {
+  }
+
   private static Path getResourcePath(String resource) throws MSDKException {
     final URL url = NativeLibraryLoader.class.getClassLoader().getResource(resource);
     try {
@@ -41,44 +44,46 @@ public class NativeLibraryLoader {
   /**
    * Public method for external usage, loads specified `libs` in `folder`
    * The folder structure is strict
-   *  folder
-   *    -w64
-   *      --lib1
-   *      --lib2
-   *    -w32
-   *    -x86_64-linux-gnu"
+   * folder
+   * -w64
+   * --lib1
+   * --lib2
+   * -w32
+   * -x86_64-linux-gnu"
    *
    * @param folder - specify the name of the library to be loaded (example - glpk_4_60)
    * @param libs - array of exact names of libraries (without extensions)
    * @throws MSDKException if any
    * @throws IOException if any
    */
-  public static void loadLibraryFromJar(String folder, String[] libs) throws MSDKException, IOException {
-    String suffix = "", realPath;
-    String arch = System.getProperty("os.arch").toLowerCase().endsWith("64") ? "w64" : "w32";
+  public static void loadLibraryFromJar(String folder, String[] libs)
+      throws MSDKException, IOException {
+    String realPath;
+    String subfolder = System.getProperty("os.arch").toLowerCase().endsWith("64") ? "w64" : "w32";
+    String osname = System.getProperty("os.name").toLowerCase();
 
-    if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-      suffix = ".dll";
-    } else if (arch.contains("linux")) { // TODO: Not sure about MACs and what happens in case of linux
-      suffix = ".so";
-      arch = "x86_64-linux-gnu";
+    if (osname.contains("linux")) {
+      subfolder = "linux";
+    } else if (osname.contains("mac")) {
+      subfolder = "mac";
+    } else if (osname.contains("windows")) {
+      subfolder = System.getProperty("os.arch").toLowerCase().endsWith("64") ? "w64" : "w32";
     }
 
     // TODO: get resource folder
-    realPath = getResourcePath(folder) + "/" + arch + "/";
+    realPath = getResourcePath(folder) + "/" + subfolder + "/";
 
     // Make new java.library.path
     File temporaryDir = createLibraryPath();
     // Load native libraries
-    for (String libname: libs) {
-      moveLibrary(temporaryDir, realPath, libname, suffix);
-    }
+    moveLibraries(temporaryDir, realPath, libs);
   }
 
   /**
    * Method for updating the java.library.path with a new temp folder for native libraries
    * System.setProperty(path) does not make any sense because JVM sets it during initialization
    * Altering library path requires additional code
+   *
    * @return temporary folder file
    * @throws MSDKException if any
    */
@@ -103,10 +108,12 @@ public class NativeLibraryLoader {
   /**
    * Sets the java library path to the specified path
    * Unsets sys_paths first and reinitializes it a try of library load
+   *
    * @param path the new library path
    * @throws Exception if any
    */
-  private static void setLibraryPath(String path) throws NoSuchFieldException, IllegalAccessException {
+  private static void setLibraryPath(String path)
+      throws NoSuchFieldException, IllegalAccessException {
     System.setProperty("java.library.path", path);
 
     final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
@@ -120,23 +127,24 @@ public class NativeLibraryLoader {
    * @param pathToAdd the path to add
    * @throws Exception if any
    */
-  private static void addLibraryPath(String pathToAdd) throws NoSuchFieldException, IllegalAccessException{
+  private static void addLibraryPath(String pathToAdd)
+      throws NoSuchFieldException, IllegalAccessException {
     final Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
     usrPathsField.setAccessible(true);
 
     //get array of paths
-    final String[] paths = (String[])usrPathsField.get(null);
+    final String[] paths = (String[]) usrPathsField.get(null);
 
     //check if the path to add is already present
-    for(String path : paths) {
-      if(path.equals(pathToAdd)) {
+    for (String path : paths) {
+      if (path.equals(pathToAdd)) {
         return;
       }
     }
 
     //add the new path
     final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
-    newPaths[newPaths.length-1] = pathToAdd;
+    newPaths[newPaths.length - 1] = pathToAdd;
     usrPathsField.set(null, newPaths);
   }
 
@@ -144,25 +152,28 @@ public class NativeLibraryLoader {
   /**
    * Moves library from .jar to temporary folder and loads it
    * Temp folder previously should be added to java.library.path
+   *
    * @param tempDirectory - directory to store file at
    * @param realFolder - directory to copy file from
-   * @param name - name of the library
-   * @param suffix - file extension (.so, .dll, etc)
    * @throws IOException if any
    * @throws MSDKException if any
    */
-  private static void moveLibrary(File tempDirectory, String realFolder, String name, String suffix) throws IOException, MSDKException {
-    String path;
-    path = realFolder + "/" + name + suffix;
-    String fname = name + suffix;
-
-    File f = new File(tempDirectory, fname);
+  private static void moveLibraries(File tempDirectory, String realFolder, String[] libs)
+      throws IOException, MSDKException {
+    File[] files = (new File(realFolder)).listFiles();
+    File temp;
 
     if (!tempDirectory.exists()) {
       throw new FileNotFoundException("File " + tempDirectory.getAbsolutePath() + " does not exist");
     } else {
-        Files.copy(new File(path), f);
-        System.load(f.getAbsolutePath());
+      for (File f: files) {
+        if (!f.isDirectory()) {
+          temp = new File(tempDirectory, f.getName());
+          Files.copy(f, temp);
+        }
+      }
+      for (String lib: libs)
+        System.loadLibrary(lib);
     }
   }
 }
