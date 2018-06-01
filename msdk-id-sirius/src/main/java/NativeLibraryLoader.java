@@ -42,14 +42,22 @@ public class NativeLibraryLoader {
   }
 
   /**
-   * Public method for external usage, loads specified `libs` in `folder`
+   * Public method for external usage, copies all files from `folder`
+   * Loads libraries in order specified by `libs` array
+   *
    * The folder structure is strict
    * folder
-   * -w64
+   * -windows64
    * --lib1
    * --lib2
-   * -w32
-   * -x86_64-linux-gnu"
+   * -windows32
+   * -- lib
+   * -linux64
+   * -- lib1 ...
+   * -linux32"
+   * -- lib1 ...
+   * -mac64
+   * --lib1 ...
    *
    * @param folder - specify the name of the library to be loaded (example - glpk_4_60)
    * @param libs - array of exact names of libraries (without extensions)
@@ -58,20 +66,21 @@ public class NativeLibraryLoader {
    */
   public static void loadLibraryFromJar(String folder, String[] libs)
       throws MSDKException, IOException {
-    String realPath;
-    String subfolder = System.getProperty("os.arch").toLowerCase().endsWith("64") ? "w64" : "w32";
+    String realPath, subfolder = "";
+    String arch = System.getProperty("os.arch").toLowerCase().endsWith("64") ? "64" : "32";
     String osname = System.getProperty("os.name").toLowerCase();
 
     if (osname.contains("linux")) {
       subfolder = "linux";
     } else if (osname.contains("mac")) {
+      if (arch.equals("32"))
+        throw new MSDKException("There are no native libraries for x32 mac systems");
       subfolder = "mac";
     } else if (osname.contains("windows")) {
-      subfolder = System.getProperty("os.arch").toLowerCase().endsWith("64") ? "w64" : "w32";
+      subfolder = "windows";
     }
 
-    // TODO: get resource folder
-    realPath = getResourcePath(folder) + "/" + subfolder + "/";
+    realPath = getResourcePath(folder) + "/" + subfolder + arch + "/";
 
     // Make new java.library.path
     File temporaryDir = createLibraryPath();
