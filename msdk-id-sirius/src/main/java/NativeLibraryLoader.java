@@ -69,9 +69,17 @@ public class NativeLibraryLoader {
   public static void loadLibraryFromJar(String folder, String[] libs)
       throws MSDKException, IOException {
     logger.info("Started loading libraries from {} folder", folder);
+    
     String realPath, subfolder = "";
-    String arch = System.getProperty("os.arch").toLowerCase().endsWith("64") ? "64" : "32";
-    String osname = System.getProperty("os.name").toLowerCase();
+    String arch = System.getProperty("os.arch");
+    if (arch == null)
+      throw new MSDKException("Can not identify os.arch property");
+    arch = arch.toLowerCase().endsWith("64") ? "64" : "32";
+
+    String osname = System.getProperty("os.name");
+    if (osname == null)
+      throw new MSDKException("Can not identify os.name property");
+    osname = osname.toLowerCase();
 
     if (osname.contains("linux")) {
       subfolder = "linux";
