@@ -153,11 +153,14 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    */
   protected List<IdentificationResult> siriusProcessSpectra() throws MSDKException {
     Spectrum<Peak> siriusMs1 = null, siriusMs2;
-    siriusMs2 = sirius
-        .wrapSpectrum(ms2.getMzValues(), LocalArrayUtil.convertToDoubles(ms2.getIntensityValues()));
+    double mz[] = ms2.getMzValues();
+    double intensity[] = LocalArrayUtil.convertToDoubles(ms2.getIntensityValues());
+    siriusMs2 = sirius.wrapSpectrum(mz, intensity);
+
     if (ms1 != null) {
-      siriusMs1 = sirius.wrapSpectrum(ms1.getMzValues(),
-          LocalArrayUtil.convertToDoubles(ms1.getIntensityValues()));
+      mz = ms1.getMzValues();
+      intensity = LocalArrayUtil.convertToDoubles(ms1.getIntensityValues());
+      siriusMs1 = sirius.wrapSpectrum(mz, intensity);
     }
 
     String ionization = ion.getName();
