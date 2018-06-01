@@ -38,6 +38,8 @@ import javax.annotation.Nullable;
 import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p> SiriusIdentificationMethod class. </p>
@@ -65,13 +67,14 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     }
   }
 
+  private static final Logger logger = LoggerFactory.getLogger(SiriusIdentificationMethod.class);
   private final Sirius sirius;
   private final MsSpectrum ms1;
   private final MsSpectrum ms2;
   private final Double parentMass;
   private final IonType ion;
   private final int numberOfCandidates;
-  private static boolean cancelled = false;
+  private boolean cancelled = false;
   private List<IonAnnotation> result;
 
   /**
@@ -121,11 +124,11 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    */
   public static MsSpectrum readCustomMsFile(File file, String delimeter)
       throws IOException, MSDKRuntimeException {
+    logger.info("Started reading {}", file.getName());
+
     Scanner sc = new Scanner(file);
     ArrayList<String> strings = new ArrayList<>();
     while (sc.hasNext()) {
-      if (cancelled)
-        return null;
       strings.add(sc.nextLine());
     }
     sc.close();
@@ -136,8 +139,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
 
     int index = 0;
     for (String s : strings) {
-      if (cancelled)
-        return null;
       String[] splitted = s.split(delimeter);
       if (splitted.length == 2) {
         mz[index] = Double.parseDouble(splitted[0]);
@@ -148,6 +149,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     }
 
     MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, size);
+    logger.info("Finished reading {}", file.getName());
+
     return new SimpleMsSpectrum(mz, intensity, size, type);
   }
 
@@ -172,9 +175,12 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     PrecursorIonType precursor = sirius.getPrecursorIonType(ionization);
     Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, siriusMs1, siriusMs2);
 
+    logger.debug("Sirius starts processing MsSpectrums");
 //    TODO: think about IsotopePatternHandling type
     List<IdentificationResult> siriusResults = sirius
         .identify(experiment, numberOfCandidates, true, IsotopePatternHandling.omit);
+    logger.debug("Sirius finished processing and returned {} results", siriusResults.size());
+
     return siriusResults;
   }
 
@@ -187,6 +193,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   @Nullable
   @Override
   public List<IonAnnotation> execute() throws MSDKException {
+    logger.info("Started execution of SiriusIdentificationMethod");
+
     result = new ArrayList<>();
     List<IdentificationResult> siriusSpectra = siriusProcessSpectra();
 
@@ -201,6 +209,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
       result.add(ionAnnotation);
     }
 
+    logger.info("Finished execution of SiriusIdentificationMethod");
     return result;
   }
 
