@@ -22,13 +22,15 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p> Class NativeLibraryLoader </p> This class allows to dynamically load native libraries from
  * .jar files with updating java.library.path variable
  */
 public class NativeLibraryLoader {
-
+  private static final Logger logger = LoggerFactory.getLogger(NativeLibraryLoader.class);
   private NativeLibraryLoader() {
   }
 
@@ -66,6 +68,7 @@ public class NativeLibraryLoader {
    */
   public static void loadLibraryFromJar(String folder, String[] libs)
       throws MSDKException, IOException {
+    logger.info("Started loading libraries from {} folder", folder);
     String realPath, subfolder = "";
     String arch = System.getProperty("os.arch").toLowerCase().endsWith("64") ? "64" : "32";
     String osname = System.getProperty("os.name").toLowerCase();
@@ -79,6 +82,9 @@ public class NativeLibraryLoader {
     } else if (osname.contains("windows")) {
       subfolder = "windows";
     }
+
+    logger.info("OS type = {} and OS arch = {}", subfolder, arch);
+
 
     realPath = getResourcePath(folder) + "/" + subfolder + arch + "/";
 
@@ -107,6 +113,7 @@ public class NativeLibraryLoader {
     try {
 //    setLibraryPath(newPath);
       addLibraryPath(absPath);
+      logger.debug("Successfully added temp folder to java.library.path [{}]", absPath);
     } catch (Exception e) {
       throw new MSDKException(e);  //Catches NoSuchFieldException & IllegalAccessException
     }
@@ -181,8 +188,10 @@ public class NativeLibraryLoader {
           Files.copy(f, temp);
         }
       }
-      for (String lib: libs)
+      for (String lib: libs) {
         System.loadLibrary(lib);
+        logger.info("Successfully loaded {} library", lib);
+      }
     }
   }
 }
