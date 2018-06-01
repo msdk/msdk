@@ -71,6 +71,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private final Double parentMass;
   private final IonType ion;
   private final int numberOfCandidates;
+  private static boolean cancelled = false;
   private List<IonAnnotation> result;
 
   /**
@@ -123,6 +124,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     Scanner sc = new Scanner(file);
     ArrayList<String> strings = new ArrayList<>();
     while (sc.hasNext()) {
+      if (cancelled)
+        return null;
       strings.add(sc.nextLine());
     }
     sc.close();
@@ -133,6 +136,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
 
     int index = 0;
     for (String s : strings) {
+      if (cancelled)
+        return null;
       String[] splitted = s.split(delimeter);
       if (splitted.length == 2) {
         mz[index] = Double.parseDouble(splitted[0]);
@@ -186,6 +191,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     List<IdentificationResult> siriusSpectra = siriusProcessSpectra();
 
     for (IdentificationResult r : siriusSpectra) {
+      if (cancelled)
+        return null;
       SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
       IMolecularFormula formula = MolecularFormulaManipulator
           .getMolecularFormula(r.getMolecularFormula().toString(),
@@ -203,9 +210,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     return result;
   }
 
-  // TODO: implement
   @Override
   public void cancel() {
-
+    cancelled = true;
   }
 }
