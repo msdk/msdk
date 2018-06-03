@@ -102,7 +102,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
 
     int index = 0;
     String line;
-    String groupped;
+    String matched;
     /* Continue reading the file until END IONS string */
     while (true) {
       if (cancelled)
@@ -116,40 +116,36 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
       // Process the line according to the content
       try {
         if (line.contains("PEPMASS")) {
-          Matcher m = PEPMASS_PATTERN.matcher(line);
-          m.find();
-          groupped = m.group();
-          precursorMass = Double.parseDouble(groupped);
+          matched = matchPattern(line, PEPMASS_PATTERN);
+          precursorMass = Double.parseDouble(matched);
         } else if (line.contains("TITLE")) {
-          Matcher m = TITLE_PATTERN.matcher(line);
-          m.find();
-          title = m.group();
+          title = matchPattern(line, TITLE_PATTERN);
         } else if (line.contains("CHARGE")) {
-          Matcher m = CHARGE_PATTERN.matcher(line);
-          m.find();
-          groupped = m.group();
+          matched = matchPattern(line, CHARGE_PATTERN);
 
           // Remove + or - from the end of the string to get int value
-          String trimmed = groupped.substring(0, groupped.length() - 1);
-          precursorCharge = Integer.parseInt(trimmed);
+          String unsignedIntString = matched.substring(0, matched.length() - 1);
+          precursorCharge = Integer.parseInt(unsignedIntString);
 
           // Check if negative charge
-          if (groupped.charAt(groupped.length() - 1) == '-') {
+          char sign = matched.charAt(matched.length() - 1);
+          if (sign == '-') {
             precursorCharge *= -1;
           }
         } else {
           String[] floats = line.split(" ");
+
           // In case of more than 2 columns only first and second are used
-          if (floats.length >= 2) {
-            double mzValue = Double.parseDouble(floats[0]);
-            float intensityValue = Float.parseFloat(floats[1]);
-            mz = ArrayUtil.addToArray(mz, mzValue, index);
-            intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
-            index++;
-          } else {
+          if (floats.length < 2) {
             logger.debug("Failure on string :: {}", line);
             throw new MSDKRuntimeException("Incorrect amount of columns in MGF file");
           }
+
+          double mzValue = Double.parseDouble(floats[0]);
+          float intensityValue = Float.parseFloat(floats[1]);
+          mz = ArrayUtil.addToArray(mz, mzValue, index);
+          intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
+          index++;
         }
       } catch (IllegalStateException e) {
         logger.debug("Regex could not recognize the pattern :: {}", line);
@@ -158,7 +154,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     }
 
 
-    // Auto detect the type of spectrum and sort mz values
+  // Auto detect the type of spectrum and sort mz values
     MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, index - 1);
     DataPointSorter.sortDataPoints(mz, intensity, index - 1, SortingProperty.MZ, SortingDirection.ASCENDING);
 
@@ -166,6 +162,19 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
         precursorMass, type);
 
     return spectrum;
+  }
+
+  /**
+   * <p> Method for matching the string with required pattern </p>
+   * @param line - new line from reader object
+   * @param pattern - pattern to be found in a line
+   * @return - matched pattern
+   */
+  private String matchPattern(String line, Pattern pattern) {
+    Matcher m = pattern.matcher(line);
+    if (!m.find())
+      throw new IllegalStateException();
+    return m.group();
   }
 
   /**
