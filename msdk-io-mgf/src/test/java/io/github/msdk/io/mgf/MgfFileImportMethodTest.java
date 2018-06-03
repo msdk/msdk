@@ -82,8 +82,8 @@ public class MgfFileImportMethodTest {
     };
     final long expectedNumberDatapoints[] = {53, 66, 13, 16, 9, 9, 9, 14, 18, 13};
     final int expectedCharges[] = {2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
-
     final String file = "F001257.mgf";
+
     File inputFile = getResourcePath(file).toFile();
     MgfFileImportMethod importMethod = new MgfFileImportMethod(inputFile);
 
@@ -92,12 +92,12 @@ public class MgfFileImportMethodTest {
     Assert.assertEquals(expectedSize, size);
 
     MgfMsSpectrum mgfSpectrum;
-    Object[] objSpectrums = spectrums.toArray();
     String titles[] = new String[size];
     long dataPoints[] = new long[size];
     int charges[] = new int[size];
+
     for (int i = 0; i < size; i++) {
-      mgfSpectrum = (MgfMsSpectrum)objSpectrums[i];
+      mgfSpectrum = spectrums.get(i);
       titles[i] = mgfSpectrum.getTitle();
       dataPoints[i] = mgfSpectrum.getNumberOfDataPoints();
       charges[i] = mgfSpectrum.getPrecursorCharge();

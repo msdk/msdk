@@ -49,7 +49,6 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private boolean cancelled;
   private List<MgfMsSpectrum> spectra;
-  private Hashtable<String, Pattern> patterns;
 
 
   /**
@@ -104,6 +103,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     int index = 0;
     String line;
     String groupped;
+    /* Continue reading the file until END IONS string */
     while (true) {
       if (cancelled)
         return null;
@@ -116,16 +116,16 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
       // Process the line according to the content
       try {
         if (line.contains("PEPMASS")) {
-          Matcher m = patterns.get("PEPMASS").matcher(line);
+          Matcher m = PEPMASS_PATTERN.matcher(line);
           m.find();
           groupped = m.group();
           precursorMass = Double.parseDouble(groupped);
         } else if (line.contains("TITLE")) {
-          Matcher m = patterns.get("TITLE").matcher(line);
+          Matcher m = TITLE_PATTERN.matcher(line);
           m.find();
           title = m.group();
         } else if (line.contains("CHARGE")) {
-          Matcher m = patterns.get("CHARGE").matcher(line);
+          Matcher m = CHARGE_PATTERN.matcher(line);
           m.find();
           groupped = m.group();
 
@@ -139,22 +139,26 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
           }
         } else {
           String[] floats = line.split(" ");
-          // In case of more than 2 columns of data
+          // In case of more than 2 columns only first and second are used
           if (floats.length >= 2) {
             double mzValue = Double.parseDouble(floats[0]);
             float intensityValue = Float.parseFloat(floats[1]);
             mz = ArrayUtil.addToArray(mz, mzValue, index);
             intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
             index++;
-          } else throw new MSDKRuntimeException("Incorrect amount of columns in MGF file");
+          } else {
+            logger.debug("Failure on string :: {}", line);
+            throw new MSDKRuntimeException("Incorrect amount of columns in MGF file");
+          }
         }
       } catch (IllegalStateException e) {
+        logger.debug("Regex could not recognize the pattern :: {}", line);
         throw new MSDKException("Incorrect data format", e);
       }
     }
 
 
-    // Auto specify the type of spectrum and sort mz values
+    // Auto detect the type of spectrum and sort mz values
     MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, index - 1);
     DataPointSorter.sortDataPoints(mz, intensity, index - 1, SortingProperty.MZ, SortingDirection.ASCENDING);
 
@@ -201,9 +205,5 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
    */
   public MgfFileImportMethod(File target) {
     this.target = target;
-    patterns = new Hashtable<>();
-    patterns.put("PEPMASS", PEPMASS_PATTERN);
-    patterns.put("CHARGE", CHARGE_PATTERN);
-    patterns.put("TITLE", TITLE_PATTERN);
   }
 }

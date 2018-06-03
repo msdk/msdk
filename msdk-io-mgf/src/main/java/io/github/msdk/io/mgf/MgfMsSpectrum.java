@@ -21,14 +21,23 @@ import io.github.msdk.datamodel.MsSpectrumType;
  *
  *         This class extends AbstractMsSpectrum and stores additional fields
  *         title - name of the spectrum
- *         precursor charge and mass
+ *         precursor ion charge and mass
  */
 public class MgfMsSpectrum extends AbstractMsSpectrum {
-
   private String title;
   private int precursorCharge;
   private double precursorMass;
 
+  /**
+   *  <p> Constructor for MgfMsSpectrum class.</p>
+   * @param mz - array of mz values (length of `size`)
+   * @param intensity - array of intensity values (length of `size`)
+   * @param size - size of the arrays (specifies amount of data points)
+   * @param title - string title of the MsSpectrum
+   * @param precursorCharge - charge of the precursor ion
+   * @param precursorMass - mass of the precursor ion
+   * @param type - type of the MsSpectrum
+   */
   public MgfMsSpectrum(double[] mz, float[] intensity, int size, String title, int precursorCharge,
       double precursorMass, MsSpectrumType type) {
     setSpectrumType(type);
@@ -38,14 +47,26 @@ public class MgfMsSpectrum extends AbstractMsSpectrum {
     this.title = title;
   }
 
+  /**
+   * <p> Getter of the precursor ion mass </p>
+   * @return the mass of the precursor ion
+   */
   public double getPrecursorMass() {
     return precursorMass;
   }
 
+  /**
+   * <p> Getter of the precursor ion charge </p>
+   * @return charge of the precursor ion
+   */
   public int getPrecursorCharge() {
     return precursorCharge;
   }
 
+  /**
+   * <p> Getter of the MgfMsSpectrum title </p>
+   * @return the title of the MgfMsSpectrum
+   */
   public String getTitle() {
     return title;
   }
