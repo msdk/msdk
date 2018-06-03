@@ -30,10 +30,16 @@ import org.slf4j.LoggerFactory;
  * .jar files with updating java.library.path variable
  */
 public class NativeLibraryLoader {
-  private static final Logger logger = LoggerFactory.getLogger(NativeLibraryLoader.class);
-  private NativeLibraryLoader() {
-  }
 
+  private static final Logger logger = LoggerFactory.getLogger(NativeLibraryLoader.class);
+  private NativeLibraryLoader() {}
+
+  /**
+   * Returns path to requested resource
+   * @param resource - file to find Path to
+   * @return Path
+   * @throws MSDKException if any
+   */
   private static Path getResourcePath(String resource) throws MSDKException {
     final URL url = NativeLibraryLoader.class.getClassLoader().getResource(resource);
     try {
@@ -69,7 +75,7 @@ public class NativeLibraryLoader {
   public static void loadLibraryFromJar(String folder, String[] libs)
       throws MSDKException, IOException {
     logger.info("Started loading libraries from {} folder", folder);
-    
+
     String realPath, subfolder = "";
     String arch = System.getProperty("os.arch");
     if (arch == null)
