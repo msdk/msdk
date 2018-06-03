@@ -36,10 +36,10 @@ public class MgfFileImportMethodTest {
 
   @Test
   public void mgfImportTest() throws IOException, MSDKException {
-    final int expectedSize = 1;
-    final String expectedTitle = "example.9.9.2";
-    final long expectedNumberDatapoints = 18;
-    final int expectedCharge = 2;
+    final int expectedSize = 2;
+    final String expectedTitle[] = {"example.9.9.2", "negative_charge"};
+    final Integer expectedNumberDatapoints[] = {18, 15};
+    final int[] expectedCharges = {2, -3};
     final String file = "test_query.mgf";
 
     File inputFile = getResourcePath(file).toFile();
@@ -47,12 +47,22 @@ public class MgfFileImportMethodTest {
 
     List<MgfMsSpectrum> spectrums = importMethod.execute();
     int size = spectrums.size();
-    MgfMsSpectrum spectrum = (MgfMsSpectrum)spectrums.toArray()[0];
-
     Assert.assertEquals(expectedSize, size);
-    Assert.assertEquals(expectedTitle, spectrum.getTitle());
-    Assert.assertEquals(Long.valueOf(expectedNumberDatapoints), Long.valueOf(spectrum.getNumberOfDataPoints()));
-    Assert.assertEquals(expectedCharge, spectrum.getPrecursorCharge());
+
+    String titles[] = new String[expectedSize];
+    int charges[] = new int[expectedSize];
+    Integer dataPoints[] = new Integer[expectedSize];
+
+    for (int i = 0; i < spectrums.size(); i++) {
+      MgfMsSpectrum ms = spectrums.get(i);
+      titles[i] = ms.getTitle();
+      charges[i] = ms.getPrecursorCharge();
+      dataPoints[i] = ms.getNumberOfDataPoints();
+    }
+
+    Assert.assertArrayEquals(expectedTitle, titles);
+    Assert.assertArrayEquals(expectedNumberDatapoints, dataPoints);
+    Assert.assertArrayEquals(expectedCharges, charges);
   }
 
   @Test

@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   private final Pattern PEPMASS_PATTERN = Pattern.compile("(?<=PEPMASS=)(\\d+\\.\\d+)");
-  private final Pattern CHARGE_PATTERN = Pattern.compile("(?<=CHARGE=)(\\d+)\\+|-");
+  private final Pattern CHARGE_PATTERN = Pattern.compile("(?<=CHARGE=)(\\d+)\\+|(\\d+)-");
   private final Pattern TITLE_PATTERN = Pattern.compile("(?<=TITLE=).*");
   private final @Nonnull File target;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -61,7 +61,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   @Nullable
   @Override
   public List<MgfMsSpectrum> execute() throws MSDKException {
-    logger.info("Started MGF import from {} file", target);
+    logger.info("Started MGF import from {}", target);
     spectra = new LinkedList<>();
 
     String line;
@@ -82,7 +82,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     } catch (IOException e) {
       throw new MSDKException(e);
     }
-    logger.info("Finished MGF import from {} file with {} spectrums", target, spectra.size());
+    logger.info("Finished MGF import from {} with {} spectrums", target, spectra.size());
 
     return spectra;
   }
@@ -107,12 +107,13 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     while (true) {
       if (cancelled)
         return null;
-      line = reader.readLine();
 
+      line = reader.readLine();
       if (line == null || line.equals("END IONS")) {
         break;
       }
 
+      // Process the line according to the content
       try {
         if (line.contains("PEPMASS")) {
           Matcher m = patterns.get("PEPMASS").matcher(line);
@@ -127,15 +128,19 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
           Matcher m = patterns.get("CHARGE").matcher(line);
           m.find();
           groupped = m.group();
+
+          // Remove + or - from the end of the string to get int value
           String trimmed = groupped.substring(0, groupped.length() - 1);
           precursorCharge = Integer.parseInt(trimmed);
+
+          // Check if negative charge
           if (groupped.charAt(groupped.length() - 1) == '-') {
             precursorCharge *= -1;
           }
         } else {
           String[] floats = line.split(" ");
           // In case of more than 2 columns of data
-          if (floats.length < 2) {
+          if (floats.length >= 2) {
             double mzValue = Double.parseDouble(floats[0]);
             float intensityValue = Float.parseFloat(floats[1]);
             mz = ArrayUtil.addToArray(mz, mzValue, index);
