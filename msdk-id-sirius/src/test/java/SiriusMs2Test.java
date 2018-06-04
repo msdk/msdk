@@ -32,6 +32,10 @@ import java.nio.file.Paths;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
+import org.openscience.cdk.config.IsotopeFactory;
+import org.openscience.cdk.config.Isotopes;
+import org.openscience.cdk.formula.MolecularFormulaRange;
+import org.openscience.cdk.tools.manipulator.MolecularFormulaRangeManipulator;
 
 /**
  * Created by evger on 15-May-18.
@@ -79,13 +83,28 @@ public class SiriusMs2Test {
 
   @Test
   public void testCreateExperimentMs1Ms2Custom() throws MSDKException, IOException {
+
     final double precursorMass = 315.1230;
-    final FormulaConstraints constraints = null;
     final IonType ion = IonTypeUtil.createIonType("[M+H]+");
     final String[] expectedResults = {"C18H18O5", "C12H19N4O4P"};
     final String ms1Path = "flavokavainA_MS1.txt";
     final String ms2Path = "flavokavainA_MS2.txt";
     final int candidatesAmount = 5;
+
+    final SiriusIdentificationMethod.ConstraintsGenerator generator = new SiriusIdentificationMethod.ConstraintsGenerator();
+
+    MolecularFormulaRange range = new MolecularFormulaRange();
+    IsotopeFactory iFac = Isotopes.getInstance();
+    range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
+    range.addIsotope(iFac.getMajorIsotope("B"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Br"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Cl"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("F"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
+
+    final FormulaConstraints constraints = generator.generateConstraint(range);
+
 
     File ms1File = getResourcePath(ms1Path).toFile();
     File ms2File = getResourcePath(ms2Path).toFile();

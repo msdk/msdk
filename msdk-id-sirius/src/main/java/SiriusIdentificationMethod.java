@@ -14,9 +14,14 @@
 import de.unijena.bioinf.ChemistryBase.chem.ChemicalAlphabet;
 import de.unijena.bioinf.ChemistryBase.chem.Element;
 import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
+import de.unijena.bioinf.ChemistryBase.chem.FormulaFilter;
 import de.unijena.bioinf.ChemistryBase.chem.PeriodicTable;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
+import de.unijena.bioinf.ChemistryBase.chem.utils.FormulaFilterList;
+import de.unijena.bioinf.ChemistryBase.chem.utils.ValenceFilter;
+import de.unijena.bioinf.ChemistryBase.ms.Deviation;
 import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
+import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.Peak;
 import de.unijena.bioinf.ChemistryBase.ms.Spectrum;
 import de.unijena.bioinf.sirius.IdentificationResult;
@@ -37,10 +42,13 @@ import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgo
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.openscience.cdk.formula.MolecularFormulaRange;
+import org.openscience.cdk.interfaces.IIsotope;
 import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
@@ -59,8 +67,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * Dynamic loading of native libraries
    */
   static {
-
-
     try {
       System.load("glpk_4_60");
       System.load("glpk_4_60_java");
@@ -80,15 +86,40 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     private final String[] additionalElementSymbols = new String[]{"S", "B", "Br", "Cl", "F", "I", "Se"};
     private final Element[] defaultElements;
     private final PeriodicTable periodicTable = PeriodicTable.getInstance();
-
-    static {
-
-    }
+    private final int maxNumberOfOneElements = 20;
 
     public ConstraintsGenerator() {
       defaultElements = new Element[defaultElementSymbols.length];
       for (int i = 0; i < defaultElementSymbols.length; i++)
         defaultElements[i] = periodicTable.getByName(defaultElementSymbols[i]);
+    }
+
+    public FormulaConstraints generateConstraint(MolecularFormulaRange isotopes) {
+      int size = isotopes.getIsotopeCount();
+      Element elements[] = Arrays.copyOf(defaultElements, defaultElements.length + size);
+      int k = 0;
+
+      for (IIsotope isotope: isotopes.isotopes()) {
+        int atomicNumber = isotope.getAtomicNumber();
+        final Element element = periodicTable.get(atomicNumber);
+        elements[defaultElements.length + k++] = element;
+      }
+
+      FormulaConstraints constraints = new FormulaConstraints(new ChemicalAlphabet(elements));
+
+      for (IIsotope isotope: isotopes.isotopes()) {
+        int atomicNumber = isotope.getAtomicNumber();
+        final Element element = periodicTable.get(atomicNumber);
+        int min = isotopes.getIsotopeCountMin(isotope);
+        int max = isotopes.getIsotopeCountMax(isotope);
+
+        constraints.setLowerbound(element, min);
+        if (max!= maxNumberOfOneElements) constraints.setUpperbound(element, max);
+      }
+
+//      FormulaFilter f = new ValenceFilter(-0.5);
+//      constraints.addFilter(f);
+      return constraints;
     }
 
   }
@@ -102,7 +133,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private final Double parentMass;
   private final IonType ion;
   private final int numberOfCandidates;
-  private final FormulaConstraints constrains;
+  private final FormulaConstraints constraints;
   private boolean cancelled = false;
   private List<IonAnnotation> result;
 
@@ -123,7 +154,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     this.parentMass = parentMass;
     this.ion = ion;
     this.numberOfCandidates = numberOfCandidates;
-    this.constrains = constraints;
+    this.constraints = constraints;
   }
 
   public double getParentMass() {
@@ -198,14 +229,16 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
       siriusMs1 = sirius.wrapSpectrum(mz, intensity);
     }
 
+
     String ionization = ion.getName();
     PrecursorIonType precursor = sirius.getPrecursorIonType(ionization);
-    Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, siriusMs1, siriusMs2);
+    MutableMs2Experiment experiment = (MutableMs2Experiment) sirius.getMs2Experiment(parentMass, precursor, siriusMs1, siriusMs2);
+    sirius.setAllowedMassDeviation(experiment, new Deviation(10));
 
     logger.debug("Sirius starts processing MsSpectrums");
 //    TODO: think about IsotopePatternHandling type
 
-    List<IdentificationResult> siriusResults = sirius.identify(experiment, numberOfCandidates, false, IsotopePatternHandling.both, constraints);
+    List<IdentificationResult> siriusResults = sirius.identify(experiment, numberOfCandidates, true, IsotopePatternHandling.filter, constraints);
     logger.debug("Sirius finished processing and returned {} results", siriusResults.size());
 
     return siriusResults;
