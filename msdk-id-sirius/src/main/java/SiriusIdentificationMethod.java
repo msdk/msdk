@@ -11,6 +11,10 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
+import de.unijena.bioinf.ChemistryBase.chem.ChemicalAlphabet;
+import de.unijena.bioinf.ChemistryBase.chem.Element;
+import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
+import de.unijena.bioinf.ChemistryBase.chem.PeriodicTable;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
 import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.Peak;
@@ -18,6 +22,8 @@ import de.unijena.bioinf.ChemistryBase.ms.Spectrum;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import de.unijena.bioinf.sirius.IsotopePatternHandling;
 import de.unijena.bioinf.sirius.Sirius;
+import de.unijena.bioinf.sirius.projectspace.ExperimentResult;
+import de.unijena.bioinf.sirius.projectspace.ExperimentResultJJob;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKRuntimeException;
@@ -53,6 +59,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * Dynamic loading of native libraries
    */
   static {
+
+
     try {
       System.load("glpk_4_60");
       System.load("glpk_4_60_java");
@@ -67,6 +75,26 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     }
   }
 
+  public static class ConstraintsGenerator {
+    private final String[] defaultElementSymbols = new String[]{"C", "H", "N", "O", "P"};
+    private final String[] additionalElementSymbols = new String[]{"S", "B", "Br", "Cl", "F", "I", "Se"};
+    private final Element[] defaultElements;
+    private final PeriodicTable periodicTable = PeriodicTable.getInstance();
+
+    static {
+
+    }
+
+    public ConstraintsGenerator() {
+      defaultElements = new Element[defaultElementSymbols.length];
+      for (int i = 0; i < defaultElementSymbols.length; i++)
+        defaultElements[i] = periodicTable.getByName(defaultElementSymbols[i]);
+    }
+
+  }
+
+
+
   private static final Logger logger = LoggerFactory.getLogger(SiriusIdentificationMethod.class);
   private final Sirius sirius;
   private final MsSpectrum ms1;
@@ -74,6 +102,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private final Double parentMass;
   private final IonType ion;
   private final int numberOfCandidates;
+  private final FormulaConstraints constrains;
   private boolean cancelled = false;
   private List<IonAnnotation> result;
 
@@ -87,17 +116,16 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * @param numberOfCandidates - amount of IdentificationResults to be returned from Sirius
    */
   public SiriusIdentificationMethod(@Nullable MsSpectrum ms1, @Nonnull MsSpectrum ms2, Double parentMass,
-      IonType ion, int numberOfCandidates) {
+      IonType ion, int numberOfCandidates, FormulaConstraints constraints) {
     sirius = new Sirius();
     this.ms1 = ms1;
     this.ms2 = ms2;
     this.parentMass = parentMass;
     this.ion = ion;
     this.numberOfCandidates = numberOfCandidates;
+    this.constrains = constraints;
   }
 
-  public SiriusIdentificationMethod(@Nullable MsSpectrum ms1, @Nonnull MsSpectrum ms2, Double parentMass,
-      IonType ion) { this(ms1, ms2, parentMass, ion, 5); }
   public double getParentMass() {
     return parentMass;
   }
@@ -154,7 +182,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     return new SimpleMsSpectrum(mz, intensity, size, type);
   }
 
-
   /**
    * Transformation of MSDK data structures into Sirius structures and processing by Sirius
    * Method is left to be protected for test coverage
@@ -177,8 +204,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
 
     logger.debug("Sirius starts processing MsSpectrums");
 //    TODO: think about IsotopePatternHandling type
-    List<IdentificationResult> siriusResults = sirius
-        .identify(experiment, numberOfCandidates, true, IsotopePatternHandling.omit);
+
+    List<IdentificationResult> siriusResults = sirius.identify(experiment, numberOfCandidates, false, IsotopePatternHandling.both, constraints);
     logger.debug("Sirius finished processing and returned {} results", siriusResults.size());
 
     return siriusResults;

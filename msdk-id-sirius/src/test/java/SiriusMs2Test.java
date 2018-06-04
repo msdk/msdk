@@ -11,6 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
+import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.IonType;
@@ -48,6 +49,7 @@ public class SiriusMs2Test {
   @Test
   public void testCreateMs2ExperimentMsp() throws MSDKException, IOException {
     final String ms2Msp = "sample.msp";
+    final FormulaConstraints constraints = null;
     final double parentMass = 231.065;
     final IonType ion = IonTypeUtil.createIonType("[M+H]+");
     final String[] expectedResults = {"C13H10O4", "C11H8N3O3", "C9H13NO4P", "C7H11N4O3P",
@@ -62,7 +64,7 @@ public class SiriusMs2Test {
     MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, size);
     MsSpectrum ms2 = new SimpleMsSpectrum(mz, intensity, size, type);
     SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(null, ms2, parentMass,
-        ion);
+        ion, 5, constraints);
 
     List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
 
@@ -77,12 +79,13 @@ public class SiriusMs2Test {
 
   @Test
   public void testCreateExperimentMs1Ms2Custom() throws MSDKException, IOException {
-    final double precursorMass = 315.123;
+    final double precursorMass = 315.1230;
+    final FormulaConstraints constraints = null;
     final IonType ion = IonTypeUtil.createIonType("[M+H]+");
     final String[] expectedResults = {"C18H18O5", "C12H19N4O4P"};
     final String ms1Path = "flavokavainA_MS1.txt";
     final String ms2Path = "flavokavainA_MS2.txt";
-    final int candidatesAmount = 2;
+    final int candidatesAmount = 5;
 
     File ms1File = getResourcePath(ms1Path).toFile();
     File ms2File = getResourcePath(ms2Path).toFile();
@@ -93,7 +96,8 @@ public class SiriusMs2Test {
         ms2Spectrum,
         precursorMass,
         ion,
-        candidatesAmount);
+        candidatesAmount,
+        constraints);
 
     List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
 
