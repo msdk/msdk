@@ -86,10 +86,20 @@ public class SiriusMs2Test {
 
     final double precursorMass = 315.1230;
     final IonType ion = IonTypeUtil.createIonType("[M+H]+");
-    final String[] expectedResults = {"C18H18O5", "C12H19N4O4P"};
+    final String[] expectedResults = {"C18H18O5",
+        "C12H19N4O4P",
+        "C14H21NO5P",
+        "C16H16N3O4",
+        "C10H24N2O5P2",
+        "C14H14N6O3",
+        "C11H23O8P",
+        "C19H14N4O",
+        "C10H17N7O3P",
+        "C13H15N8P"
+    };
     final String ms1Path = "flavokavainA_MS1.txt";
     final String ms2Path = "flavokavainA_MS2.txt";
-    final int candidatesAmount = 5;
+    final int candidatesAmount = 10;
 
     final SiriusIdentificationMethod.ConstraintsGenerator generator = new SiriusIdentificationMethod.ConstraintsGenerator();
 
@@ -120,7 +130,7 @@ public class SiriusMs2Test {
 
     List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
 
-    String[] results = new String[2];
+    String[] results = new String[10];
     int i = 0;
 
 // TODO: Fix the difference after second element
