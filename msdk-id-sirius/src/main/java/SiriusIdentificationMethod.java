@@ -14,24 +14,17 @@
 import de.unijena.bioinf.ChemistryBase.chem.ChemicalAlphabet;
 import de.unijena.bioinf.ChemistryBase.chem.Element;
 import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
-import de.unijena.bioinf.ChemistryBase.chem.FormulaFilter;
 import de.unijena.bioinf.ChemistryBase.chem.PeriodicTable;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
-import de.unijena.bioinf.ChemistryBase.chem.utils.FormulaFilterList;
-import de.unijena.bioinf.ChemistryBase.chem.utils.ValenceFilter;
 import de.unijena.bioinf.ChemistryBase.ms.Deviation;
 import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
-import de.unijena.bioinf.ChemistryBase.ms.Ms2Spectrum;
 import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Experiment;
-import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Spectrum;
 import de.unijena.bioinf.ChemistryBase.ms.Peak;
 import de.unijena.bioinf.ChemistryBase.ms.Spectrum;
 import de.unijena.bioinf.ChemistryBase.ms.utils.SimpleSpectrum;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import de.unijena.bioinf.sirius.IsotopePatternHandling;
 import de.unijena.bioinf.sirius.Sirius;
-import de.unijena.bioinf.sirius.projectspace.ExperimentResult;
-import de.unijena.bioinf.sirius.projectspace.ExperimentResultJJob;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKRuntimeException;
@@ -63,6 +56,7 @@ import org.slf4j.LoggerFactory;
  *
  * This class wraps the Sirius module and transforms its results into MSDK data structures
  * Transformation of IdentificationResult (Sirius) into IonAnnatation (MSDK)
+ * Containts sub-class for generating FormulaConstraints for Sirius from MolecularFormulaRange object
  */
 public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation>> {
 
@@ -84,48 +78,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     }
   }
 
-  public static class ConstraintsGenerator {
-    private final String[] defaultElementSymbols = new String[]{"C", "H", "N", "O", "P"};
-    private final String[] additionalElementSymbols = new String[]{"S", "B", "Br", "Cl", "F", "I", "Se"};
-    private final Element[] defaultElements;
-    private final PeriodicTable periodicTable = PeriodicTable.getInstance();
-    private final int maxNumberOfOneElements = 20;
-
-    public ConstraintsGenerator() {
-      defaultElements = new Element[defaultElementSymbols.length];
-      for (int i = 0; i < defaultElementSymbols.length; i++)
-        defaultElements[i] = periodicTable.getByName(defaultElementSymbols[i]);
-    }
-
-    public FormulaConstraints generateConstraint(MolecularFormulaRange isotopes) {
-      int size = isotopes.getIsotopeCount();
-      Element elements[] = Arrays.copyOf(defaultElements, defaultElements.length + size);
-      int k = 0;
-
-      for (IIsotope isotope: isotopes.isotopes()) {
-        int atomicNumber = isotope.getAtomicNumber();
-        final Element element = periodicTable.get(atomicNumber);
-        elements[defaultElements.length + k++] = element;
-      }
-
-      FormulaConstraints constraints = new FormulaConstraints(new ChemicalAlphabet(elements));
-
-      for (IIsotope isotope: isotopes.isotopes()) {
-        int atomicNumber = isotope.getAtomicNumber();
-        final Element element = periodicTable.get(atomicNumber);
-        int min = isotopes.getIsotopeCountMin(isotope);
-        int max = isotopes.getIsotopeCountMax(isotope);
-
-        constraints.setLowerbound(element, min);
-        if (max!= maxNumberOfOneElements) constraints.setUpperbound(element, max);
-      }
-
-//      FormulaFilter f = new ValenceFilter(-0.5);
-//      constraints.addFilter(f);
-      return constraints;
-    }
-
-  }
 
 
 
@@ -148,9 +100,10 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * @param parentMass - Most intensive usually or specified
    * @param ion - Ionization
    * @param numberOfCandidates - amount of IdentificationResults to be returned from Sirius
+   * @param constraints - FormulaConstraints provided by the end user. Can be created using ConstraintsGenerator
    */
   public SiriusIdentificationMethod(@Nullable MsSpectrum ms1, @Nonnull MsSpectrum ms2, Double parentMass,
-      IonType ion, int numberOfCandidates, FormulaConstraints constraints) {
+      IonType ion, int numberOfCandidates, @Nullable FormulaConstraints constraints) {
     sirius = new Sirius();
     this.ms1 = ms1;
     this.ms2 = ms2;
@@ -158,6 +111,65 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     this.ion = ion;
     this.numberOfCandidates = numberOfCandidates;
     this.constraints = constraints;
+  }
+
+  /**
+   * <p> Class ConstraintsGenerator. </p>
+   * This class allows to construct a Sirius object FormulaConstraints using MolecularFormulaRange object
+    */
+  public static class ConstraintsGenerator {
+    private final String[] defaultElementSymbols = new String[]{"C", "H", "N", "O", "P"};
+    private final Element[] defaultElements;
+    private final PeriodicTable periodicTable = PeriodicTable.getInstance();
+    private final int maxNumberOfOneElements = 20;
+
+    /**
+     * <p>Constructor for ConstraintsGenerator class</p>
+     * Initializes array of Elements `defaultElements`
+     */
+    public ConstraintsGenerator() {
+      defaultElements = new Element[defaultElementSymbols.length];
+      for (int i = 0; i < defaultElementSymbols.length; i++)
+        defaultElements[i] = periodicTable.getByName(defaultElementSymbols[i]);
+    }
+
+    /**
+     * <p> Method for generating FormulaConstraints from user-defined search space</p>
+     * Parses isotopes from input parameter and transforms it into Element objects and sets their range value
+     * @param range - User defined search space of possible elements
+     * @return new Constraint to be used in Sirius
+     */
+    public FormulaConstraints generateConstraint(MolecularFormulaRange range) {
+      logger.debug("ConstraintsGenerator started procesing");
+      int size = range.getIsotopeCount();
+      Element elements[] = Arrays.copyOf(defaultElements, defaultElements.length + size);
+      int k = 0;
+
+      // Add items from `range` into array with default elements
+      for (IIsotope isotope: range.isotopes()) {
+        int atomicNumber = isotope.getAtomicNumber();
+        final Element element = periodicTable.get(atomicNumber);
+        elements[defaultElements.length + k++] = element;
+      }
+
+      // Generate initial constraint w/o concrete Element range
+      FormulaConstraints constraints = new FormulaConstraints(new ChemicalAlphabet(elements));
+
+      // Specify each Element range
+      for (IIsotope isotope: range.isotopes()) {
+        int atomicNumber = isotope.getAtomicNumber();
+        final Element element = periodicTable.get(atomicNumber);
+        int min = range.getIsotopeCountMin(isotope);
+        int max = range.getIsotopeCountMax(isotope);
+
+        constraints.setLowerbound(element, min);
+        if (max!= maxNumberOfOneElements) constraints.setUpperbound(element, max);
+      }
+
+      logger.debug("ConstraintsGenerator finished");
+      return constraints;
+    }
+
   }
 
   public double getParentMass() {
@@ -243,7 +255,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
       experiment.getMs1Spectra().add(new SimpleSpectrum(siriusMs1));
     }
 
-    /* Manual setting up parameters, because sirius.identify does not use some of the fields */
+    /* Manual setting up annotations, because sirius.identify does not use some of the fields */
     // TODO: think about deviation
     sirius.setAllowedMassDeviation(exp, new Deviation(10));
     sirius.enableRecalibration(exp, true);
