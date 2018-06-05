@@ -82,7 +82,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
 
 
   private static final Logger logger = LoggerFactory.getLogger(SiriusIdentificationMethod.class);
-  private Sirius sirius;
+  private final Sirius sirius;
   private final MsSpectrum ms1;
   private final MsSpectrum ms2;
   private final Double parentMass;
@@ -245,9 +245,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     PrecursorIonType precursor = sirius.getPrecursorIonType(ionization);
 
     /* MutableMs2Experiment allows to specify additional fields and it is exactly what comes from .getMs2Experiment */
-    Ms2Experiment experiment = sirius.getMs2Experiment(parentMass, precursor, siriusMs1, siriusMs2);
-//    MutableMs2Experiment experiment = (MutableMs2Experiment) sirius.getMs2Experiment(parentMass, precursor, siriusMs1, siriusMs2);
-    MutableMs2Experiment exp = (MutableMs2Experiment) experiment;
+    MutableMs2Experiment experiment = (MutableMs2Experiment) sirius.getMs2Experiment(parentMass, precursor, siriusMs1, siriusMs2);
 
     /* Method above does not use Ms1 spectrum anyway, I have to add it manually if exists */
     if (ms1 != null) {
@@ -260,11 +258,11 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
 
     /* Manual setting up annotations, because sirius.identify does not use some of the fields */
     // TODO: think about deviation
-    sirius.setAllowedMassDeviation(exp, deviation);
-    sirius.enableRecalibration(exp, true);
-    sirius.setIsotopeMode(exp, IsotopePatternHandling.both);
+    sirius.setAllowedMassDeviation(experiment, deviation);
+    sirius.enableRecalibration(experiment, true);
+    sirius.setIsotopeMode(experiment, IsotopePatternHandling.both);
     if (constraints != null)
-      sirius.setFormulaConstraints(exp, constraints);
+      sirius.setFormulaConstraints(experiment, constraints);
 
     logger.debug("Sirius starts processing MsSpectrums");
     List<IdentificationResult> siriusResults = siriusResults = sirius.identify(experiment,

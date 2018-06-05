@@ -108,7 +108,7 @@ public class SiriusMs2Test {
 
     final SiriusIdentificationMethod.ConstraintsGenerator generator = new SiriusIdentificationMethod.ConstraintsGenerator();
 
-    MolecularFormulaRange range = new MolecularFormulaRange();
+    final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
     range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
     range.addIsotope(iFac.getMajorIsotope("B"), 0, 0);
