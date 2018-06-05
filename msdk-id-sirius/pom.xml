@@ -43,36 +43,36 @@
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>chemistry_base</artifactId>
-      <version>4</version>
+      <version>4.0</version>
     </dependency>
 
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>gibbs_sampling</artifactId>
-      <version>4</version>
+      <version>4.0</version>
     </dependency>
 
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>io</artifactId>
-      <version>4</version>
+      <version>4.0</version>
     </dependency>
 
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>mass_decomposer</artifactId>
-      <version>4</version>
+      <version>4.0</version>
     </dependency>
 
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>sirius_api</artifactId>
-      <version>4</version>
+      <version>4.0</version>
     </dependency>
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>fragmentation_tree_construction</artifactId>
-      <version>4</version>
+      <version>4.0</version>
       <exclusions>
         <exclusion>
           <groupId>gurobi</groupId>
@@ -88,23 +88,23 @@
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>isogen_cli</artifactId>
-      <version>4</version>
+      <version>4.0</version>
     </dependency>
 
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>isotope_pattern_analysis</artifactId>
-      <version>4</version>
+      <version>4.0</version>
     </dependency>
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>decomp_cli</artifactId>
-      <version>4</version>
+      <version>4.0</version>
     </dependency>
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>mass_decomposer</artifactId>
-      <version>4</version>
+      <version>4.0</version>
     </dependency>
     <dependency>
       <groupId>io.github.msdk</groupId>
