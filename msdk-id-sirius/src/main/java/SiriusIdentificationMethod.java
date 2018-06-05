@@ -224,36 +224,31 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     Spectrum<Peak> siriusMs1 = null, siriusMs2;
     double mz[] = ms2.getMzValues();
     double intensity[] = LocalArrayUtil.convertToDoubles(ms2.getIntensityValues());
-    siriusMs2 = sirius.wrapSpectrum(mz, intensity);
 
+    siriusMs2 = sirius.wrapSpectrum(mz, intensity);
+    String ionization = ion.getName();
+    PrecursorIonType precursor = sirius.getPrecursorIonType(ionization);
+
+    /* MutableMs2Experiment allows to specify additional fields and it is exactly what comes from .getMs2Experiment */
+    MutableMs2Experiment experiment = (MutableMs2Experiment) sirius.getMs2Experiment(parentMass, precursor, siriusMs1, siriusMs2);
+
+    /* Method above does not use Ms1 spectrum anyway, I have to add it manually if exists */
     if (ms1 != null) {
       mz = ms1.getMzValues();
       intensity = LocalArrayUtil.convertToDoubles(ms1.getIntensityValues());
       siriusMs1 = sirius.wrapSpectrum(mz, intensity);
+      // MutableMs2Experiment does not accept Ms1 as a Spectrum<Peak>, so there is a new object
+      experiment.getMs1Spectra().add(new SimpleSpectrum(siriusMs1));
     }
 
-
-    String ionization = ion.getName();
-
-    PrecursorIonType precursor = sirius.getPrecursorIonType(ionization);
-    MutableMs2Experiment experiment = (MutableMs2Experiment) sirius.getMs2Experiment(parentMass, precursor, siriusMs1, siriusMs2);
-    MutableMs2Spectrum ms2test = new MutableMs2Spectrum(siriusMs2);
-    SimpleSpectrum ms1test = new SimpleSpectrum(siriusMs1);
-
-//    experiment.getMs2Spectra().clear();cc
-//    experiment.getMs2Spectra().add(ms2test);
-    experiment.getMs1Spectra().add(ms1test);
+    /* Manual setting up parameters, because sirius.identify does not use some of the fields */
+    // TODO: think about deviation
     sirius.setAllowedMassDeviation(experiment, new Deviation(10, 0.002));
     sirius.setFormulaConstraints(experiment, constraints);
     sirius.enableRecalibration(experiment, true);
     sirius.setIsotopeMode(experiment, IsotopePatternHandling.both);
 
     logger.debug("Sirius starts processing MsSpectrums");
-//    TODO: think about IsotopePatternHandling type
-
-//    constraints = null;
-    FormulaFilter f = new ValenceFilter(-0.5);
-    constraints.addFilter(f);
     List<IdentificationResult> siriusResults = sirius.identify(experiment, numberOfCandidates, true, IsotopePatternHandling.both, constraints);
     logger.debug("Sirius finished processing and returned {} results", siriusResults.size());
 
