@@ -17,7 +17,6 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.IonType;
 import io.github.msdk.datamodel.MsSpectrum;
 import io.github.msdk.datamodel.MsSpectrumType;
-import io.github.msdk.datamodel.SimpleIonType;
 import io.github.msdk.datamodel.SimpleMsSpectrum;
 import io.github.msdk.io.msp.MspImportAlgorithm;
 import io.github.msdk.io.msp.MspSpectrum;
@@ -35,7 +34,6 @@ import org.junit.Test;
 import org.openscience.cdk.config.IsotopeFactory;
 import org.openscience.cdk.config.Isotopes;
 import org.openscience.cdk.formula.MolecularFormulaRange;
-import org.openscience.cdk.tools.manipulator.MolecularFormulaRangeManipulator;
 
 /**
  * Created by evger on 15-May-18.
@@ -56,8 +54,10 @@ public class SiriusMs2Test {
     final FormulaConstraints constraints = null;
     final double parentMass = 231.065;
     final IonType ion = IonTypeUtil.createIonType("[M+H]+");
+    final double deviation = 10d;
     final String[] expectedResults = {"C13H10O4", "C11H8N3O3", "C9H13NO4P", "C7H11N4O3P",
         "C6H10N6O2S"};
+    final int amount = 5;
 
     File inputFile = getResourcePath(ms2Msp).toFile();
     MspSpectrum mspSpectrum = MspImportAlgorithm.parseMspFromFile(inputFile);
@@ -67,12 +67,17 @@ public class SiriusMs2Test {
 
     MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, size);
     MsSpectrum ms2 = new SimpleMsSpectrum(mz, intensity, size, type);
-    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(null, ms2, parentMass,
-        ion, 5, constraints);
+    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(null,
+        ms2,
+        parentMass,
+        ion,
+        amount,
+        constraints,
+        deviation);
 
     List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
 
-    String[] results = new String[5];
+    String[] results = new String[amount];
     int i = 0;
 
     for (IdentificationResult r : list) {
@@ -83,7 +88,7 @@ public class SiriusMs2Test {
 
   @Test
   public void testCreateExperimentMs1Ms2Custom() throws MSDKException, IOException {
-
+    final double deviation = 10d;
     final double precursorMass = 315.1230;
     final IonType ion = IonTypeUtil.createIonType("[M+H]+");
     final String[] expectedResults = {"C18H18O5",
@@ -126,7 +131,8 @@ public class SiriusMs2Test {
         precursorMass,
         ion,
         candidatesAmount,
-        constraints);
+        constraints,
+        deviation);
 
     List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
 

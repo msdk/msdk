@@ -89,6 +89,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private final IonType ion;
   private final int numberOfCandidates;
   private final FormulaConstraints constraints;
+  private final Deviation deviation;
   private boolean cancelled = false;
   private List<IonAnnotation> result;
 
@@ -101,9 +102,10 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * @param ion - Ionization
    * @param numberOfCandidates - amount of IdentificationResults to be returned from Sirius
    * @param constraints - FormulaConstraints provided by the end user. Can be created using ConstraintsGenerator
+   * @param deviation - float value of possible mass deviation
    */
   public SiriusIdentificationMethod(@Nullable MsSpectrum ms1, @Nonnull MsSpectrum ms2, Double parentMass,
-      IonType ion, int numberOfCandidates, @Nullable FormulaConstraints constraints) {
+      IonType ion, int numberOfCandidates, @Nullable FormulaConstraints constraints, Double deviation) {
     sirius = new Sirius();
     this.ms1 = ms1;
     this.ms2 = ms2;
@@ -111,6 +113,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     this.ion = ion;
     this.numberOfCandidates = numberOfCandidates;
     this.constraints = constraints;
+    this.deviation = new Deviation(deviation);
   }
 
   /**
@@ -257,7 +260,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
 
     /* Manual setting up annotations, because sirius.identify does not use some of the fields */
     // TODO: think about deviation
-    sirius.setAllowedMassDeviation(exp, new Deviation(10));
+    sirius.setAllowedMassDeviation(exp, deviation);
     sirius.enableRecalibration(exp, true);
     sirius.setIsotopeMode(exp, IsotopePatternHandling.both);
     if (constraints != null)
