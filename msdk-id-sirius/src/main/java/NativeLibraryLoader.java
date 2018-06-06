@@ -98,8 +98,6 @@ public class NativeLibraryLoader {
     }
 
     logger.info("OS type = {} and OS arch = {}", subfolder, arch);
-
-
     realPath = getResourcePath(folder) + "/" + subfolder + arch + "/";
 
     // Make new java.library.path
@@ -125,7 +123,6 @@ public class NativeLibraryLoader {
     String newPath = oldProperty + ";" + absPath;
 
     try {
-//    setLibraryPath(newPath);
       addLibraryPath(absPath);
       logger.debug("Successfully added temp folder to java.library.path [{}]", absPath);
     } catch (Exception e) {
@@ -133,22 +130,6 @@ public class NativeLibraryLoader {
     }
 
     return tempDir;
-  }
-
-  /**
-   * Sets the java library path to the specified path
-   * Unsets sys_paths first and reinitializes it a try of library load
-   *
-   * @param path the new library path
-   * @throws Exception if any
-   */
-  private static void setLibraryPath(String path)
-      throws NoSuchFieldException, IllegalAccessException {
-    System.setProperty("java.library.path", path);
-
-    final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
-    sysPathsField.setAccessible(true);
-    sysPathsField.set(null, null);
   }
 
   /**
@@ -196,6 +177,7 @@ public class NativeLibraryLoader {
     if (!tempDirectory.exists()) {
       throw new FileNotFoundException("File " + tempDirectory.getAbsolutePath() + " does not exist");
     } else {
+      // Copy files
       for (File f: files) {
         if (!f.isDirectory()) {
           temp = new File(tempDirectory, f.getName());
