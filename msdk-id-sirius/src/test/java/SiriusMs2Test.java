@@ -37,6 +37,11 @@ import org.openscience.cdk.config.Isotopes;
 import org.openscience.cdk.formula.MolecularFormulaRange;
 
 public class SiriusMs2Test {
+  public SiriusMs2Test() throws MSDKException {
+    String loggingProperties = getResourcePath("logging.properties").toString();
+    System.setProperty("java.util.logging.config.file", loggingProperties);
+  }
+
   private Path getResourcePath(String resource) throws MSDKException {
     final URL url = SiriusMs2Test.class.getClassLoader().getResource(resource);
     try {
@@ -77,6 +82,8 @@ public class SiriusMs2Test {
     final String[] expectedResults = {"C13H10O4", "C11H8N3O3", "C9H13NO4P", "C7H11N4O3P",
         "C6H10N6O2S"};
     final int amount = 5;
+
+
 
     File inputFile = getResourcePath(ms2Msp).toFile();
     MspSpectrum mspSpectrum = MspImportAlgorithm.parseMspFromFile(inputFile);

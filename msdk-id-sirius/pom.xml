@@ -88,6 +88,7 @@
           <groupId>cplex</groupId>
           <artifactId>cplex</artifactId>
         </exclusion>
+
       </exclusions>
     </dependency>
 
@@ -128,11 +129,6 @@
       <groupId>org.openscience.cdk</groupId>
       <artifactId>cdk-silent</artifactId>
       <version>${cdk.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>${slf4j.version}</version>
     </dependency>
   </dependencies>
 
