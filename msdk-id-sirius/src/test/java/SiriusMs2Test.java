@@ -36,9 +36,6 @@ import org.openscience.cdk.config.IsotopeFactory;
 import org.openscience.cdk.config.Isotopes;
 import org.openscience.cdk.formula.MolecularFormulaRange;
 
-/**
- * Created by evger on 15-May-18.
- */
 public class SiriusMs2Test {
   private Path getResourcePath(String resource) throws MSDKException {
     final URL url = SiriusMs2Test.class.getClassLoader().getResource(resource);

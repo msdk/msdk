@@ -13,9 +13,6 @@
 
 import javax.annotation.Nonnull;
 
-/**
- * Created by evger on 15-May-18.
- */
 public class LocalArrayUtil {
 
   /**
