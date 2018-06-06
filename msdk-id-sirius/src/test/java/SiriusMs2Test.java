@@ -118,7 +118,8 @@ public class SiriusMs2Test {
     range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
     range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
 
-    final FormulaConstraints constraints = generator.generateConstraint(range);
+//    final FormulaConstraints constraints = generator.generateConstraint(range);
+    final FormulaConstraints constraints = null;
 
 
     File ms1File = getResourcePath(ms1Path).toFile();

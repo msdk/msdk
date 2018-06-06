@@ -17,7 +17,6 @@ import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
 import de.unijena.bioinf.ChemistryBase.chem.PeriodicTable;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
 import de.unijena.bioinf.ChemistryBase.ms.Deviation;
-import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.Peak;
 import de.unijena.bioinf.ChemistryBase.ms.Spectrum;
@@ -257,7 +256,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     }
 
     /* Manual setting up annotations, because sirius.identify does not use some of the fields */
-    // TODO: think about deviation
     sirius.setAllowedMassDeviation(experiment, deviation);
     sirius.enableRecalibration(experiment, true);
     sirius.setIsotopeMode(experiment, IsotopePatternHandling.both);
@@ -265,7 +263,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
       sirius.setFormulaConstraints(experiment, constraints);
 
     logger.debug("Sirius starts processing MsSpectrums");
-    List<IdentificationResult> siriusResults = siriusResults = sirius.identify(experiment,
+    List<IdentificationResult> siriusResults  = sirius.identify(experiment,
         numberOfCandidates, true, IsotopePatternHandling.both, constraints);
     logger.debug("Sirius finished processing and returned {} results", siriusResults.size());
 
