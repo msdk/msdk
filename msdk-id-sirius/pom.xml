@@ -7,6 +7,12 @@
   </parent>
   <artifactId>msdk-id-sirius</artifactId>
 
+  <properties>
+    <sirius.version>4.0</sirius.version>
+    <slf4j.version>1.7.25</slf4j.version>
+    <glpk.version>1.7.0</glpk.version>
+  </properties>
+
 
   <repositories>
     <repository>
@@ -43,36 +49,36 @@
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>chemistry_base</artifactId>
-      <version>4.0</version>
+      <version>${sirius.version}</version>
     </dependency>
 
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>gibbs_sampling</artifactId>
-      <version>4.0</version>
+      <version>${sirius.version}</version>
     </dependency>
 
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>io</artifactId>
-      <version>4.0</version>
+      <version>${sirius.version}</version>
     </dependency>
 
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>mass_decomposer</artifactId>
-      <version>4.0</version>
+      <version>${sirius.version}</version>
     </dependency>
 
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>sirius_api</artifactId>
-      <version>4.0</version>
+      <version>${sirius.version}</version>
     </dependency>
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>fragmentation_tree_construction</artifactId>
-      <version>4.0</version>
+      <version>${sirius.version}</version>
       <exclusions>
         <exclusion>
           <groupId>gurobi</groupId>
@@ -88,23 +94,23 @@
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>isogen_cli</artifactId>
-      <version>4.0</version>
+      <version>${sirius.version}</version>
     </dependency>
 
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>isotope_pattern_analysis</artifactId>
-      <version>4.0</version>
+      <version>${sirius.version}</version>
     </dependency>
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>decomp_cli</artifactId>
-      <version>4.0</version>
+      <version>${sirius.version}</version>
     </dependency>
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>mass_decomposer</artifactId>
-      <version>4.0</version>
+      <version>${sirius.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.msdk</groupId>
@@ -115,7 +121,7 @@
     <dependency>
       <groupId>org.gnu.glpk</groupId>
       <artifactId>glpk-java</artifactId>
-      <version>1.7.0</version>
+      <version>${glpk.version}</version>
     </dependency>
 
     <dependency>
@@ -126,7 +132,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <version>1.7.25</version>
+      <version>${slf4j.version}</version>
     </dependency>
   </dependencies>
 
