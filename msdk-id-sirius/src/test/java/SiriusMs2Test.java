@@ -49,6 +49,12 @@ public class SiriusMs2Test {
   }
 
   @Test
+  public void testMsSpectrumReading() {
+
+  }
+
+
+  @Test
   public void testCreateMs2ExperimentMsp() throws MSDKException, IOException {
     final String ms2Msp = "sample.msp";
     final FormulaConstraints constraints = null;
@@ -118,8 +124,7 @@ public class SiriusMs2Test {
     range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
     range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
 
-//    final FormulaConstraints constraints = generator.generateConstraint(range);
-    final FormulaConstraints constraints = null;
+    final FormulaConstraints constraints = generator.generateConstraint(range);
 
 
     File ms1File = getResourcePath(ms1Path).toFile();
@@ -140,7 +145,65 @@ public class SiriusMs2Test {
     String[] results = new String[10];
     int i = 0;
 
-// TODO: Fix the difference after second element
+    for (IdentificationResult r : list) {
+      results[i++] = r.getMolecularFormula().toString();
+    }
+
+    Assert.assertArrayEquals(expectedResults, results);
+  }
+
+
+  @Test
+  public void testBisnoryagoninDataSet() throws MSDKException, IOException {
+    final double deviation = 14d;
+    final double precursorMass = 231.0647;
+    final IonType ion = IonTypeUtil.createIonType("[M+H]+");
+    final String[] expectedResults = {
+        "C13H10O4",
+        "C10H11FO5",
+        "C8H9FN3O4",
+        "C11H8N3O3",
+        "C9H13NO4P",
+        "C6H7FN6O3",
+        "C11H9F3O2"
+    };
+    final String ms1Path = "bisnoryangonin_MS1.txt";
+    final String ms2Path = "bisnoryangonin_MS2.txt";
+    final int candidatesAmount = 7;
+
+    final SiriusIdentificationMethod.ConstraintsGenerator generator = new SiriusIdentificationMethod.ConstraintsGenerator();
+
+    final MolecularFormulaRange range = new MolecularFormulaRange();
+    IsotopeFactory iFac = Isotopes.getInstance();
+    range.addIsotope(iFac.getMajorIsotope("S"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("B"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Br"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Cl"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("F"), 0, Integer.MAX_VALUE);
+    range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
+
+    final FormulaConstraints constraints = generator.generateConstraint(range);
+
+
+    File ms1File = getResourcePath(ms1Path).toFile();
+    File ms2File = getResourcePath(ms2Path).toFile();
+
+    MsSpectrum ms1Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms1File, "\t");
+    MsSpectrum ms2Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms2File, "\t");
+    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1Spectrum,
+        ms2Spectrum,
+        precursorMass,
+        ion,
+        candidatesAmount,
+        constraints,
+        deviation);
+
+    List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
+
+    String[] results = new String[7];
+    int i = 0;
+
     for (IdentificationResult r : list) {
       results[i++] = r.getMolecularFormula().toString();
     }
