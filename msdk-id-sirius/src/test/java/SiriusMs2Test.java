@@ -11,6 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
+import com.google.common.collect.Range;
 import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import io.github.msdk.MSDKException;
@@ -49,8 +50,23 @@ public class SiriusMs2Test {
   }
 
   @Test
-  public void testMsSpectrumReading() {
+  public void testMsSpectrumReading() throws IOException, MSDKException {
+    final int expectedSize = 19;
+    final double expectedMin = 68.9978, expectedMax = 231.0653;
+    final String filename = "query.txt";
+    final File inputFile = getResourcePath(filename).toFile();
 
+    MsSpectrum msSpectrum = SiriusIdentificationMethod.readCustomMsFile(inputFile, "\t");
+
+    int size = msSpectrum.getNumberOfDataPoints();
+    Assert.assertEquals(expectedSize, size);
+
+    Range<Double> range = msSpectrum.getMzRange();
+    double min = range.lowerEndpoint();
+    double max = range.upperEndpoint();
+
+    Assert.assertEquals(expectedMin, min, 0.005);
+    Assert.assertEquals(expectedMax, max, 0.005);
   }
 
 
@@ -142,7 +158,7 @@ public class SiriusMs2Test {
 
     List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
 
-    String[] results = new String[10];
+    String[] results = new String[candidatesAmount];
     int i = 0;
 
     for (IdentificationResult r : list) {
@@ -201,7 +217,7 @@ public class SiriusMs2Test {
 
     List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
 
-    String[] results = new String[7];
+    String[] results = new String[candidatesAmount];
     int i = 0;
 
     for (IdentificationResult r : list) {

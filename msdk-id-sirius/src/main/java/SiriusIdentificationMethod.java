@@ -77,9 +77,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     }
   }
 
-
-
-
   private static final Logger logger = LoggerFactory.getLogger(SiriusIdentificationMethod.class);
   private final Sirius sirius;
   private final MsSpectrum ms1;
@@ -195,7 +192,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   }
 
   /**
-   * This function is left here for custom spectrum files (just columns of mz and intensity values)
+   * This method allows to read custom spectrum files (just columns of mz and intensity values)
    * Does similar to mgf parser functionality
    */
   public static MsSpectrum readCustomMsFile(File file, String delimeter)
