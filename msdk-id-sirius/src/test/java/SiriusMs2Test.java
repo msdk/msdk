@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -93,8 +94,11 @@ public class SiriusMs2Test {
 
     MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, size);
     MsSpectrum ms2 = new SimpleMsSpectrum(mz, intensity, size, type);
+
+    LinkedList<MsSpectrum> ms2list = new LinkedList<>();
+    ms2list.add(ms2);
     SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(null,
-        ms2,
+        ms2list,
         parentMass,
         ion,
         amount,
@@ -152,8 +156,14 @@ public class SiriusMs2Test {
 
     MsSpectrum ms1Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms1File, "\t");
     MsSpectrum ms2Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms2File, "\t");
-    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1Spectrum,
-        ms2Spectrum,
+
+    LinkedList<MsSpectrum> ms1list = new LinkedList<>();
+    LinkedList<MsSpectrum> ms2list = new LinkedList<>();
+    ms1list.add(ms1Spectrum);
+    ms2list.add(ms2Spectrum);
+
+    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1list,
+        ms2list,
         precursorMass,
         ion,
         candidatesAmount,
@@ -211,8 +221,14 @@ public class SiriusMs2Test {
 
     MsSpectrum ms1Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms1File, "\t");
     MsSpectrum ms2Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms2File, "\t");
-    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1Spectrum,
-        ms2Spectrum,
+
+    LinkedList<MsSpectrum> ms1list = new LinkedList<>();
+    LinkedList<MsSpectrum> ms2list = new LinkedList<>();
+    ms1list.add(ms1Spectrum);
+    ms2list.add(ms2Spectrum);
+
+    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1list,
+        ms2list,
         precursorMass,
         ion,
         candidatesAmount,
