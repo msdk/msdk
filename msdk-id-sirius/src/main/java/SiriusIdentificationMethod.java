@@ -17,7 +17,9 @@ import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
 import de.unijena.bioinf.ChemistryBase.chem.PeriodicTable;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
 import de.unijena.bioinf.ChemistryBase.ms.Deviation;
+import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Experiment;
+import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Spectrum;
 import de.unijena.bioinf.ChemistryBase.ms.Peak;
 import de.unijena.bioinf.ChemistryBase.ms.Spectrum;
 import de.unijena.bioinf.ChemistryBase.ms.utils.SimpleSpectrum;
@@ -49,6 +51,7 @@ import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.java2d.pipe.SpanShapeRenderer.Simple;
 
 /**
  * <p> SiriusIdentificationMethod class. </p>
@@ -79,8 +82,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
 
   private static final Logger logger = LoggerFactory.getLogger(SiriusIdentificationMethod.class);
   private final Sirius sirius;
-  private final MsSpectrum ms1;
-  private final MsSpectrum ms2;
+  private final List<MsSpectrum> ms1;
+  private final List<MsSpectrum> ms2;
   private final Double parentMass;
   private final IonType ion;
   private final int numberOfCandidates;
@@ -88,6 +91,9 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private final Deviation deviation;
   private boolean cancelled = false;
   private List<IonAnnotation> result;
+
+  /* Set to be class elements for performance */
+  private double mz[], intensity[];
 
   /**
    * <p> Constructor for SiriusIdentificationMethod class. </p>
@@ -100,7 +106,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * @param constraints - FormulaConstraints provided by the end user. Can be created using ConstraintsGenerator
    * @param deviation - float value of possible mass deviation
    */
-  public SiriusIdentificationMethod(@Nullable MsSpectrum ms1, @Nonnull MsSpectrum ms2, Double parentMass,
+  public SiriusIdentificationMethod(@Nullable List<MsSpectrum> ms1, @Nonnull List<MsSpectrum> ms2, Double parentMass,
       IonType ion, int numberOfCandidates, @Nullable FormulaConstraints constraints, Double deviation) {
     sirius = new Sirius();
     this.ms1 = ms1;
@@ -179,11 +185,11 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     return ion;
   }
 
-  public MsSpectrum getMsSpectrum() {
+  public List<MsSpectrum> getMsSpectra() {
     return ms1;
   }
 
-  public MsSpectrum getMs2Spectrum() {
+  public List<MsSpectrum> getMs2Spectra() {
     return ms2;
   }
 
@@ -232,25 +238,21 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * Method is left to be protected for test coverage
    */
   protected List<IdentificationResult> siriusProcessSpectra() throws MSDKException {
-    Spectrum<Peak> siriusMs1 = null, siriusMs2;
-    double mz[] = ms2.getMzValues();
-    double intensity[] = LocalArrayUtil.convertToDoubles(ms2.getIntensityValues());
+    Spectrum<Peak> siriusMs2;
+    MsSpectrum msdkSpectrumMs2 = ms2.remove(0);
+
+    double mz[] = msdkSpectrumMs2.getMzValues();
+    double intensity[] = LocalArrayUtil.convertToDoubles(msdkSpectrumMs2.getIntensityValues());
 
     siriusMs2 = sirius.wrapSpectrum(mz, intensity);
     String ionization = ion.getName();
     PrecursorIonType precursor = sirius.getPrecursorIonType(ionization);
 
     /* MutableMs2Experiment allows to specify additional fields and it is exactly what comes from .getMs2Experiment */
-    MutableMs2Experiment experiment = (MutableMs2Experiment) sirius.getMs2Experiment(parentMass, precursor, siriusMs1, siriusMs2);
+    MutableMs2Experiment experiment = (MutableMs2Experiment) sirius.getMs2Experiment(parentMass, precursor, null, siriusMs2);
 
-    /* Method above does not use Ms1 spectrum anyway, I have to add it manually if exists */
-    if (ms1 != null) {
-      mz = ms1.getMzValues();
-      intensity = LocalArrayUtil.convertToDoubles(ms1.getIntensityValues());
-      siriusMs1 = sirius.wrapSpectrum(mz, intensity);
-      /* MutableMs2Experiment does not accept Ms1 as a Spectrum<Peak>, so there is a new object */
-      experiment.getMs1Spectra().add(new SimpleSpectrum(siriusMs1));
-    }
+    loadSpectra(experiment);
+
 
     /* Manual setting up annotations, because sirius.identify does not use some of the fields */
     sirius.setAllowedMassDeviation(experiment, deviation);
@@ -265,6 +267,44 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     logger.debug("Sirius finished processing and returned {} results", siriusResults.size());
 
     return siriusResults;
+  }
+
+  /**
+   * <p> Method for transformation of MsSpectrum into Spectrum<Peak></p>
+   * Method transforms MSDK object into Sirius object
+   * @param msdkSpectrum - non-null MsSpectrum object.
+   * @return new Spectrum<Peak>
+   */
+  private Spectrum<Peak> transformSpectrum(@Nonnull MsSpectrum msdkSpectrum) {
+    mz = msdkSpectrum.getMzValues();
+    intensity = LocalArrayUtil.convertToDoubles(msdkSpectrum.getIntensityValues());
+    return sirius.wrapSpectrum(mz, intensity);
+  }
+
+  /**
+   * <p> Method for loading MS & MS/MS spectra</p>
+   * Method loads MS and MS/MS spectra into Ms2Experiment object
+   * @param experiment - experiment Sirius works with and where to load spectra
+   */
+  private void loadSpectra(MutableMs2Experiment experiment) {
+    List<MutableMs2Spectrum> ms2spectra = experiment.getMs2Spectra();
+    List<SimpleSpectrum> ms1spectra = experiment.getMs1Spectra();
+
+    if (ms1 != null) {
+      for (MsSpectrum msdkSpectrum : ms1) {
+        Spectrum<Peak> peaks = transformSpectrum(msdkSpectrum);
+        ms1spectra.add(new SimpleSpectrum(peaks));
+      }
+    }
+
+    if (ms2.size() > 0) {
+      for (MsSpectrum msdkSpectrum : ms2) {
+        Spectrum<Peak> peaks = transformSpectrum(msdkSpectrum);
+      /* MutableMs2Experiment does not accept Ms1 as a Spectrum<Peak>, so there is a new object */
+        MutableMs2Spectrum siriusMs2 = new MutableMs2Spectrum(peaks);
+        ms2spectra.add(siriusMs2);
+      }
+    }
   }
 
   @Nullable
