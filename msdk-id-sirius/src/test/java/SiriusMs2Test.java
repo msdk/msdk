@@ -246,4 +246,65 @@ public class SiriusMs2Test {
 
     Assert.assertArrayEquals(expectedResults, results);
   }
+
+  @Test
+  public void testMultipleMs2Spectra() throws MSDKException, IOException {
+    final double deviation = 13d;
+    final double precursorMass = 233.1175;
+    final IonType ion = IonTypeUtil.createIonType("[M+H]+");
+    final String[] expectedResults = {
+        "C14H16O3",
+        "C11H17FO4",
+        "C9H15FN3O3",
+        "C12H14N3O2",
+        "C6H16F2N3O4"
+    };
+    final String ms1Path = "marindinin_MS1.txt";
+    final String ms2Path = "marindinin_MS2.txt";
+    final int candidatesAmount = 5;
+
+    final SiriusIdentificationMethod.ConstraintsGenerator generator = new SiriusIdentificationMethod.ConstraintsGenerator();
+
+    final MolecularFormulaRange range = new MolecularFormulaRange();
+    IsotopeFactory iFac = Isotopes.getInstance();
+    range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
+    range.addIsotope(iFac.getMajorIsotope("B"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Br"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Cl"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("F"), 0, Integer.MAX_VALUE);
+    range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
+
+    final FormulaConstraints constraints = generator.generateConstraint(range);
+
+
+    File ms1File = getResourcePath(ms1Path).toFile();
+    File ms2File = getResourcePath(ms2Path).toFile();
+
+    MsSpectrum ms2Spectrum1 = SiriusIdentificationMethod.readCustomMsFile(ms1File, "\t");
+    MsSpectrum ms2Spectrum2 = SiriusIdentificationMethod.readCustomMsFile(ms2File, "\t");
+
+    LinkedList<MsSpectrum> ms2list = new LinkedList<>();
+    ms2list.add(ms2Spectrum1);
+    ms2list.add(ms2Spectrum2);
+
+    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(null,
+        ms2list,
+        precursorMass,
+        ion,
+        candidatesAmount,
+        constraints,
+        deviation);
+
+    List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
+
+    String[] results = new String[candidatesAmount];
+    int i = 0;
+
+    for (IdentificationResult r : list) {
+      results[i++] = r.getMolecularFormula().toString();
+    }
+
+    Assert.assertArrayEquals(expectedResults, results);
+  }
 }
