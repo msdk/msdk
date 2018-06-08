@@ -51,7 +51,7 @@ public class NativeLibraryLoader {
 
   /**
    * Public method for external usage, copies all files from `folder`
-   * Loads libraries in order specified by `libs` array
+   * <p>Loads libraries from `folder` in order specified by `libs` array</p>
    *
    * The folder structure is strict
    * folder
@@ -107,6 +107,7 @@ public class NativeLibraryLoader {
   }
 
   /**
+   * <p>Method for updating java.library.path</p>
    * Method for updating the java.library.path with a new temp folder for native libraries
    * System.setProperty(path) does not make any sense because JVM sets it during initialization
    * Altering library path requires additional code
@@ -119,8 +120,6 @@ public class NativeLibraryLoader {
     tempDir.deleteOnExit();
 
     String absPath = tempDir.getAbsolutePath();
-    String oldProperty = System.getProperty("java.library.path");
-    String newPath = oldProperty + ";" + absPath;
 
     try {
       addLibraryPath(absPath);
@@ -133,7 +132,7 @@ public class NativeLibraryLoader {
   }
 
   /**
-   * Adds the specified path to the java library path w/o reinitialization
+   * <p>Adds the specified path to the java library path w/o reinitialization of a variable</p>
    *
    * @param pathToAdd the path to add
    * @throws Exception if any
@@ -161,7 +160,7 @@ public class NativeLibraryLoader {
 
 
   /**
-   * Moves library from .jar to temporary folder and loads it
+   * <p>Method moves library from .jar to temporary folder and loads it</p>
    * Temp folder previously should be added to java.library.path
    *
    * @param tempDirectory - directory to store file at

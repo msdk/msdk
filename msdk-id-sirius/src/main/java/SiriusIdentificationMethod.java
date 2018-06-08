@@ -17,7 +17,6 @@ import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
 import de.unijena.bioinf.ChemistryBase.chem.PeriodicTable;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
 import de.unijena.bioinf.ChemistryBase.ms.Deviation;
-import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Spectrum;
 import de.unijena.bioinf.ChemistryBase.ms.Peak;
@@ -51,7 +50,6 @@ import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.java2d.pipe.SpanShapeRenderer.Simple;
 
 /**
  * <p> SiriusIdentificationMethod class. </p>
@@ -93,7 +91,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private List<IonAnnotation> result;
 
   /* Set to be class elements for performance */
-  private double mz[], intensity[];
 
   /**
    * <p> Constructor for SiriusIdentificationMethod class. </p>
@@ -198,7 +195,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   }
 
   /**
-   * This method allows to read custom spectrum files (just columns of mz and intensity values)
+   *
+   * <p> Method for reading custom MS files (just 2 columns with mz & intentsity values </p>
    * Does similar to mgf parser functionality
    */
   public static MsSpectrum readCustomMsFile(File file, String delimeter)
@@ -234,6 +232,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   }
 
   /**
+   * <p> Method for processing spectra by Sirius module </p>
    * Transformation of MSDK data structures into Sirius structures and processing by Sirius
    * Method is left to be protected for test coverage
    */
@@ -276,6 +275,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * @return new Spectrum<Peak>
    */
   private Spectrum<Peak> transformSpectrum(@Nonnull MsSpectrum msdkSpectrum) {
+    double mz[], intensity[];
     mz = msdkSpectrum.getMzValues();
     intensity = LocalArrayUtil.convertToDoubles(msdkSpectrum.getIntensityValues());
     return sirius.wrapSpectrum(mz, intensity);
