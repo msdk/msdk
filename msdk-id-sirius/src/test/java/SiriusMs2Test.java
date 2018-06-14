@@ -136,7 +136,7 @@ public class SiriusMs2Test {
     final String ms2Path = "flavokavainA_MS2.txt";
     final int candidatesAmount = 10;
 
-    final SiriusIdentificationMethod.ConstraintsGenerator generator = new SiriusIdentificationMethod.ConstraintsGenerator();
+    final ConstraintsGenerator generator = new ConstraintsGenerator();
 
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
@@ -201,7 +201,7 @@ public class SiriusMs2Test {
     final String ms2Path = "bisnoryangonin_MS2.txt";
     final int candidatesAmount = 7;
 
-    final SiriusIdentificationMethod.ConstraintsGenerator generator = new SiriusIdentificationMethod.ConstraintsGenerator();
+    final ConstraintsGenerator generator = new ConstraintsGenerator();
 
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
@@ -263,7 +263,7 @@ public class SiriusMs2Test {
     final String ms2Path = "marindinin_MS2.txt";
     final int candidatesAmount = 5;
 
-    final SiriusIdentificationMethod.ConstraintsGenerator generator = new SiriusIdentificationMethod.ConstraintsGenerator();
+    final ConstraintsGenerator generator = new ConstraintsGenerator();
 
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
