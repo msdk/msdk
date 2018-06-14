@@ -37,6 +37,7 @@ import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgo
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -81,6 +82,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private final FormulaConstraints constraints;
   private final Deviation deviation;
   private boolean cancelled = false;
+  private List<MsSpectrum> ms2Copy;
   private List<IonAnnotation> result;
 
   /* Set to be class elements for performance */
@@ -172,7 +174,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    */
   protected List<IdentificationResult> siriusProcessSpectra() throws MSDKException {
     Spectrum<Peak> siriusMs2;
-    MsSpectrum msdkSpectrumMs2 = ms2.remove(0);
+    ms2Copy = new LinkedList<>(ms2);
+    MsSpectrum msdkSpectrumMs2 = ms2Copy.remove(0);
 
     double mz[] = msdkSpectrumMs2.getMzValues();
     double intensity[] = LocalArrayUtil.convertToDoubles(msdkSpectrumMs2.getIntensityValues());
@@ -185,7 +188,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     MutableMs2Experiment experiment = (MutableMs2Experiment) sirius.getMs2Experiment(parentMass, precursor, null, siriusMs2);
 
     loadSpectra(experiment);
-
 
     /* Manual setting up annotations, because sirius.identify does not use some of the fields */
     sirius.setAllowedMassDeviation(experiment, deviation);
@@ -232,8 +234,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
       }
     }
 
-    if (ms2.size() > 0) {
-      for (MsSpectrum msdkSpectrum : ms2) {
+    if (ms2Copy.size() > 0) {
+      for (MsSpectrum msdkSpectrum : ms2Copy) {
         Spectrum<Peak> peaks = transformSpectrum(msdkSpectrum);
       /* MutableMs2Experiment does not accept Ms1 as a Spectrum<Peak>, so there is a new object */
         MutableMs2Spectrum siriusMs2 = new MutableMs2Spectrum(peaks);
