@@ -307,4 +307,62 @@ public class SiriusMs2Test {
 
     Assert.assertArrayEquals(expectedResults, results);
   }
+
+  @Test
+  public void testOnlyMs1Spectra() throws MSDKException, IOException {
+    final double deviation = 10d;
+    final double precursorMass = 233.1175;
+    final IonType ion = IonTypeUtil.createIonType("[M+H]+");
+    final String[] expectedResults = {
+        "C14H16O3",
+        "C10H12N6O",
+        "C8H17N4O2P",
+        "C12H14N3O2",
+        "C10H19NO3P",
+        "C6H15N7OP"
+    };
+    final String ms1Path = "marindinin_MS1.txt";
+    final int candidatesAmount = 6;
+
+    final ConstraintsGenerator generator = new ConstraintsGenerator();
+
+    final MolecularFormulaRange range = new MolecularFormulaRange();
+    IsotopeFactory iFac = Isotopes.getInstance();
+    range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
+    range.addIsotope(iFac.getMajorIsotope("B"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Br"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Cl"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("F"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
+
+    final FormulaConstraints constraints = generator.generateConstraint(range);
+
+
+    File ms1File = getResourcePath(ms1Path).toFile();
+
+    MsSpectrum ms2Spectrum1 = SiriusIdentificationMethod.readCustomMsFile(ms1File, "\t");
+
+    LinkedList<MsSpectrum> ms1list = new LinkedList<>();
+    ms1list.add(ms2Spectrum1);
+
+    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1list,
+        null,
+        precursorMass,
+        ion,
+        candidatesAmount,
+        constraints,
+        deviation);
+
+    List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
+
+    String[] results = new String[candidatesAmount];
+    int i = 0;
+
+    for (IdentificationResult r : list) {
+      results[i++] = r.getMolecularFormula().toString();
+    }
+
+    Assert.assertArrayEquals(expectedResults, results);
+  }
 }
