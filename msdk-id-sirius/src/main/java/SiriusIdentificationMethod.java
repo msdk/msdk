@@ -62,17 +62,12 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * Dynamic loading of native libraries
    */
   static {
-    try {
-      System.load("glpk_4_60");
-      System.load("glpk_4_60_java");
-    } catch (UnsatisfiedLinkError e) {
       try {
-        // GLPK requires two libraries
-        String[] libs = {"glpk_4_60", "glpk_4_60_java"};
-        NativeLibraryLoader.loadLibraryFromJar("glpk-4.60", libs);
-      } catch (Exception e1) {
-        throw new RuntimeException(e1);
-      }
+      // GLPK requires two libraries
+      String[] libs = {"glpk_4_60", "glpk_4_60_java"};
+      NativeLibraryLoader.loadLibraryFromJar("glpk-4.60", libs);
+    } catch (Exception ex) {
+      throw new MSDKRuntimeException(ex);
     }
   }
 

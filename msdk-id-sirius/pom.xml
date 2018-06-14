@@ -9,7 +9,6 @@
 
   <properties>
     <sirius.version>4.0</sirius.version>
-    <slf4j.version>1.7.25</slf4j.version>
     <glpk.version>1.7.0</glpk.version>
   </properties>
 
