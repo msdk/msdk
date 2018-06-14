@@ -11,10 +11,7 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-import de.unijena.bioinf.ChemistryBase.chem.ChemicalAlphabet;
-import de.unijena.bioinf.ChemistryBase.chem.Element;
 import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
-import de.unijena.bioinf.ChemistryBase.chem.PeriodicTable;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
 import de.unijena.bioinf.ChemistryBase.ms.Deviation;
 import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Experiment;
@@ -25,6 +22,7 @@ import de.unijena.bioinf.ChemistryBase.ms.utils.SimpleSpectrum;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import de.unijena.bioinf.sirius.IsotopePatternHandling;
 import de.unijena.bioinf.sirius.Sirius;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKRuntimeException;
@@ -35,19 +33,20 @@ import io.github.msdk.datamodel.MsSpectrumType;
 import io.github.msdk.datamodel.SimpleIonAnnotation;
 import io.github.msdk.datamodel.SimpleMsSpectrum;
 import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.openscience.cdk.formula.MolecularFormulaRange;
-import org.openscience.cdk.interfaces.IIsotope;
+
 import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +55,6 @@ import org.slf4j.LoggerFactory;
  *
  * This class wraps the Sirius module and transforms its results into MSDK data structures
  * Transformation of IdentificationResult (Sirius) into IonAnnatation (MSDK)
- * Containts sub-class for generating FormulaConstraints for Sirius from MolecularFormulaRange object
  */
 public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation>> {
 
@@ -113,65 +111,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     this.numberOfCandidates = numberOfCandidates;
     this.constraints = constraints;
     this.deviation = new Deviation(deviation);
-  }
-
-  /**
-   * <p> Class ConstraintsGenerator. </p>
-   * This class allows to construct a Sirius object FormulaConstraints using MolecularFormulaRange object
-    */
-  public static class ConstraintsGenerator {
-    private final String[] defaultElementSymbols = new String[]{"C", "H", "N", "O", "P"};
-    private final Element[] defaultElements;
-    private final PeriodicTable periodicTable = PeriodicTable.getInstance();
-    private final int maxNumberOfOneElements = 20;
-
-    /**
-     * <p>Constructor for ConstraintsGenerator class</p>
-     * Initializes array of Elements `defaultElements`
-     */
-    public ConstraintsGenerator() {
-      defaultElements = new Element[defaultElementSymbols.length];
-      for (int i = 0; i < defaultElementSymbols.length; i++)
-        defaultElements[i] = periodicTable.getByName(defaultElementSymbols[i]);
-    }
-
-    /**
-     * <p> Method for generating FormulaConstraints from user-defined search space</p>
-     * Parses isotopes from input parameter and transforms it into Element objects and sets their range value
-     * @param range - User defined search space of possible elements
-     * @return new Constraint to be used in Sirius
-     */
-    public FormulaConstraints generateConstraint(MolecularFormulaRange range) {
-      logger.debug("ConstraintsGenerator started procesing");
-      int size = range.getIsotopeCount();
-      Element elements[] = Arrays.copyOf(defaultElements, defaultElements.length + size);
-      int k = 0;
-
-      // Add items from `range` into array with default elements
-      for (IIsotope isotope: range.isotopes()) {
-        int atomicNumber = isotope.getAtomicNumber();
-        final Element element = periodicTable.get(atomicNumber);
-        elements[defaultElements.length + k++] = element;
-      }
-
-      // Generate initial constraint w/o concrete Element range
-      FormulaConstraints constraints = new FormulaConstraints(new ChemicalAlphabet(elements));
-
-      // Specify each Element range
-      for (IIsotope isotope: range.isotopes()) {
-        int atomicNumber = isotope.getAtomicNumber();
-        final Element element = periodicTable.get(atomicNumber);
-        int min = range.getIsotopeCountMin(isotope);
-        int max = range.getIsotopeCountMax(isotope);
-
-        constraints.setLowerbound(element, min);
-        if (max!= maxNumberOfOneElements) constraints.setUpperbound(element, max);
-      }
-
-      logger.debug("ConstraintsGenerator finished");
-      return constraints;
-    }
-
   }
 
   public double getParentMass() {
@@ -259,6 +198,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     sirius.setIsotopeMode(experiment, IsotopePatternHandling.both);
     if (constraints != null)
       sirius.setFormulaConstraints(experiment, constraints);
+
 
     logger.debug("Sirius starts processing MsSpectrums");
     List<IdentificationResult> siriusResults  = sirius.identify(experiment,
