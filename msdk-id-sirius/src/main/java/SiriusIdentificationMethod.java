@@ -82,7 +82,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private final FormulaConstraints constraints;
   private final Deviation deviation;
   private boolean cancelled = false;
-  private List<MsSpectrum> ms2Copy;
   private List<IonAnnotation> result;
 
   /* Set to be class elements for performance */
@@ -98,8 +97,10 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * @param constraints - FormulaConstraints provided by the end user. Can be created using ConstraintsGenerator
    * @param deviation - float value of possible mass deviation
    */
-  public SiriusIdentificationMethod(@Nullable List<MsSpectrum> ms1, @Nonnull List<MsSpectrum> ms2, Double parentMass,
+  public SiriusIdentificationMethod(@Nullable List<MsSpectrum> ms1, @Nullable List<MsSpectrum> ms2, Double parentMass,
       IonType ion, int numberOfCandidates, @Nullable FormulaConstraints constraints, Double deviation) {
+    if (ms1 == null && ms2 == null) throw new MSDKRuntimeException("Only one of MS && MS/MS can be null at a time");
+
     sirius = new Sirius();
     this.ms1 = ms1;
     this.ms2 = ms2;
@@ -173,29 +174,9 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * Method is left to be protected for test coverage
    */
   protected List<IdentificationResult> siriusProcessSpectra() throws MSDKException {
-    Spectrum<Peak> siriusMs2;
-    ms2Copy = new LinkedList<>(ms2);
-    MsSpectrum msdkSpectrumMs2 = ms2Copy.remove(0);
-
-    double mz[] = msdkSpectrumMs2.getMzValues();
-    double intensity[] = LocalArrayUtil.convertToDoubles(msdkSpectrumMs2.getIntensityValues());
-
-    siriusMs2 = sirius.wrapSpectrum(mz, intensity);
-    String ionization = ion.getName();
-    PrecursorIonType precursor = sirius.getPrecursorIonType(ionization);
-
-    /* MutableMs2Experiment allows to specify additional fields and it is exactly what comes from .getMs2Experiment */
-    MutableMs2Experiment experiment = (MutableMs2Experiment) sirius.getMs2Experiment(parentMass, precursor, null, siriusMs2);
-
+    MutableMs2Experiment experiment = loadInitialExperiment();
     loadSpectra(experiment);
-
-    /* Manual setting up annotations, because sirius.identify does not use some of the fields */
-    sirius.setAllowedMassDeviation(experiment, deviation);
-    sirius.enableRecalibration(experiment, true);
-    sirius.setIsotopeMode(experiment, IsotopePatternHandling.both);
-    if (constraints != null)
-      sirius.setFormulaConstraints(experiment, constraints);
-
+    configureExperiment(experiment);
 
     logger.debug("Sirius starts processing MsSpectrums");
     List<IdentificationResult> siriusResults  = sirius.identify(experiment,
@@ -203,6 +184,43 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     logger.debug("Sirius finished processing and returned {} results", siriusResults.size());
 
     return siriusResults;
+  }
+
+  /**
+   * <p>Method for configuration of the Sirius experiment</p>
+   * Method loads several paramenters with sirius object, such as:
+   * Deviation - mass deviation
+   * Recalibrarion - flag of object recalibration after processing
+   * Constraints - user-defined search-space for the formula
+   * @param experiment - instance of Ms2Experiment with loaded MS & MS/MS spectra
+   */
+  private void configureExperiment(MutableMs2Experiment experiment) {
+    /* Manual setting up annotations, because sirius.identify does not use some of the fields */
+    sirius.setAllowedMassDeviation(experiment, deviation);
+    sirius.enableRecalibration(experiment, true);
+    sirius.setIsotopeMode(experiment, IsotopePatternHandling.both);
+
+    /* Constraints are loaded twice (here and in .identify method), because .identify method does not notice it */
+    if (constraints != null)
+      sirius.setFormulaConstraints(experiment, constraints);
+  }
+
+  /**
+   * <p>Method for initialization of empty Ms2Experiment</p>
+   * There is a trick for initialization of empty experiment, it is done for cases when there is only ms1 spectra
+   * It loads an empty Spectrum<Peak> into experiment and removes it after initialization.
+   * @return
+   */
+  private MutableMs2Experiment loadInitialExperiment() {
+    String ionization = ion.getName();
+    PrecursorIonType precursor = sirius.getPrecursorIonType(ionization);
+    /* Initialization of empty Sirius spectrum */
+    Spectrum<Peak> emptySiriusMs2 = new MutableMs2Spectrum();
+
+    /* MutableMs2Experiment allows to specify additional fields and it is exactly what comes from .getMs2Experiment */
+    MutableMs2Experiment experiment = (MutableMs2Experiment) sirius.getMs2Experiment(parentMass, precursor, null, emptySiriusMs2);
+    experiment.getMs2Spectra().clear();
+    return experiment;
   }
 
   /**
@@ -234,8 +252,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
       }
     }
 
-    if (ms2Copy.size() > 0) {
-      for (MsSpectrum msdkSpectrum : ms2Copy) {
+    if (ms2!= null && ms2.size() > 0) {
+      for (MsSpectrum msdkSpectrum : ms2) {
         Spectrum<Peak> peaks = transformSpectrum(msdkSpectrum);
       /* MutableMs2Experiment does not accept Ms1 as a Spectrum<Peak>, so there is a new object */
         MutableMs2Spectrum siriusMs2 = new MutableMs2Spectrum(peaks);
