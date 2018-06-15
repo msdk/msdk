@@ -55,27 +55,6 @@ public class SiriusMs2Test {
   }
 
   @Test
-  public void testMsSpectrumReading() throws IOException, MSDKException {
-    final int expectedSize = 19;
-    final double expectedMin = 68.9978, expectedMax = 231.0653;
-    final String filename = "query.txt";
-    final File inputFile = getResourcePath(filename).toFile();
-
-    MsSpectrum msSpectrum = TxtImportAlgorithm.parseMsSpectrum(new FileReader(inputFile));
-
-    int size = msSpectrum.getNumberOfDataPoints();
-    Assert.assertEquals(expectedSize, size);
-
-    Range<Double> range = msSpectrum.getMzRange();
-    double min = range.lowerEndpoint();
-    double max = range.upperEndpoint();
-
-    Assert.assertEquals(expectedMin, min, 0.005);
-    Assert.assertEquals(expectedMax, max, 0.005);
-  }
-
-
-  @Test
   public void testCreateMs2ExperimentMsp() throws MSDKException, IOException {
     final String ms2Msp = "sample.msp";
     final FormulaConstraints constraints = null;
