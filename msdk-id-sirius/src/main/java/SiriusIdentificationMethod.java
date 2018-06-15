@@ -29,17 +29,10 @@ import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.IonAnnotation;
 import io.github.msdk.datamodel.IonType;
 import io.github.msdk.datamodel.MsSpectrum;
-import io.github.msdk.datamodel.MsSpectrumType;
 import io.github.msdk.datamodel.SimpleIonAnnotation;
-import io.github.msdk.datamodel.SimpleMsSpectrum;
-import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -129,43 +122,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
 
   public int getNumberOfCandidates() {
     return numberOfCandidates;
-  }
-
-  /**
-   *
-   * <p> Method for reading custom MS files (just 2 columns with mz & intentsity values </p>
-   * Does similar to mgf parser functionality
-   */
-  public static MsSpectrum readCustomMsFile(File file, String delimeter)
-      throws IOException, MSDKRuntimeException {
-    logger.info("Started reading {}", file.getName());
-
-    Scanner sc = new Scanner(file);
-    ArrayList<String> strings = new ArrayList<>();
-    while (sc.hasNext()) {
-      strings.add(sc.nextLine());
-    }
-    sc.close();
-
-    int size = strings.size();
-    double mz[] = new double[size];
-    float intensity[] = new float[size];
-
-    int index = 0;
-    for (String s : strings) {
-      String[] splitted = s.split(delimeter);
-      if (splitted.length == 2) {
-        mz[index] = Double.parseDouble(splitted[0]);
-        intensity[index++] = Float.parseFloat(splitted[1]);
-      } else {
-        throw new MSDKRuntimeException("Incorrect spectrum structure");
-      }
-    }
-
-    MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, size);
-    logger.info("Finished reading {}", file.getName());
-
-    return new SimpleMsSpectrum(mz, intensity, size, type);
   }
 
   /**

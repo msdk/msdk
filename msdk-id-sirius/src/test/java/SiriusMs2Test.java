@@ -23,7 +23,9 @@ import io.github.msdk.io.msp.MspImportAlgorithm;
 import io.github.msdk.io.msp.MspSpectrum;
 import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.IonTypeUtil;
+import io.github.msdk.io.txt.TxtImportAlgorithm;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -59,7 +61,7 @@ public class SiriusMs2Test {
     final String filename = "query.txt";
     final File inputFile = getResourcePath(filename).toFile();
 
-    MsSpectrum msSpectrum = SiriusIdentificationMethod.readCustomMsFile(inputFile, "\t");
+    MsSpectrum msSpectrum = TxtImportAlgorithm.parseMsSpectrum(new FileReader(inputFile));
 
     int size = msSpectrum.getNumberOfDataPoints();
     Assert.assertEquals(expectedSize, size);
@@ -87,6 +89,7 @@ public class SiriusMs2Test {
 
 
     File inputFile = getResourcePath(ms2Msp).toFile();
+
     MspSpectrum mspSpectrum = MspImportAlgorithm.parseMspFromFile(inputFile);
     double mz[] = mspSpectrum.getMzValues();
     float intensity[] = mspSpectrum.getIntensityValues();
@@ -153,9 +156,8 @@ public class SiriusMs2Test {
 
     File ms1File = getResourcePath(ms1Path).toFile();
     File ms2File = getResourcePath(ms2Path).toFile();
-
-    MsSpectrum ms1Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms1File, "\t");
-    MsSpectrum ms2Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms2File, "\t");
+    MsSpectrum ms1Spectrum = TxtImportAlgorithm.parseMsSpectrum(new FileReader(ms1File));
+    MsSpectrum ms2Spectrum = TxtImportAlgorithm.parseMsSpectrum(new FileReader(ms2File));
 
     LinkedList<MsSpectrum> ms1list = new LinkedList<>();
     LinkedList<MsSpectrum> ms2list = new LinkedList<>();
@@ -219,8 +221,8 @@ public class SiriusMs2Test {
     File ms1File = getResourcePath(ms1Path).toFile();
     File ms2File = getResourcePath(ms2Path).toFile();
 
-    MsSpectrum ms1Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms1File, "\t");
-    MsSpectrum ms2Spectrum = SiriusIdentificationMethod.readCustomMsFile(ms2File, "\t");
+    MsSpectrum ms1Spectrum = TxtImportAlgorithm.parseMsSpectrum(new FileReader(ms1File));
+    MsSpectrum ms2Spectrum = TxtImportAlgorithm.parseMsSpectrum(new FileReader(ms2File));
 
     LinkedList<MsSpectrum> ms1list = new LinkedList<>();
     LinkedList<MsSpectrum> ms2list = new LinkedList<>();
@@ -281,8 +283,9 @@ public class SiriusMs2Test {
     File ms1File = getResourcePath(ms1Path).toFile();
     File ms2File = getResourcePath(ms2Path).toFile();
 
-    MsSpectrum ms2Spectrum1 = SiriusIdentificationMethod.readCustomMsFile(ms1File, "\t");
-    MsSpectrum ms2Spectrum2 = SiriusIdentificationMethod.readCustomMsFile(ms2File, "\t");
+    MsSpectrum ms2Spectrum1 = TxtImportAlgorithm.parseMsSpectrum(new FileReader(ms1File));
+    MsSpectrum ms2Spectrum2 = TxtImportAlgorithm.parseMsSpectrum(new FileReader(ms2File));
+
 
     LinkedList<MsSpectrum> ms2list = new LinkedList<>();
     ms2list.add(ms2Spectrum1);
@@ -341,10 +344,10 @@ public class SiriusMs2Test {
 
     File ms1File = getResourcePath(ms1Path).toFile();
 
-    MsSpectrum ms2Spectrum1 = SiriusIdentificationMethod.readCustomMsFile(ms1File, "\t");
+    MsSpectrum ms2Spectrum = TxtImportAlgorithm.parseMsSpectrum(new FileReader(ms1File));
 
     LinkedList<MsSpectrum> ms1list = new LinkedList<>();
-    ms1list.add(ms2Spectrum1);
+    ms1list.add(ms2Spectrum);
 
     SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1list,
         null,

@@ -129,6 +129,12 @@
       <artifactId>cdk-silent</artifactId>
       <version>${cdk.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.github.msdk</groupId>
+      <artifactId>msdk-io-txt</artifactId>
+      <version>0.0.12-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 
