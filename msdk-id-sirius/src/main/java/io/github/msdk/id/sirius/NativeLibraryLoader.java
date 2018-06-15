@@ -1,4 +1,4 @@
-/*
+package io.github.msdk.id.sirius;/*
  * (C) Copyright 2015-2018 by MSDK Development Team
  *
  * This software is dual-licensed under either
@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p> Class NativeLibraryLoader </p> This class allows to dynamically load native libraries from
+ * <p> Class io.github.msdk.id.sirius.NativeLibraryLoader </p> This class allows to dynamically load native libraries from
  * .jar files with updating java.library.path variable
  */
 public class NativeLibraryLoader {

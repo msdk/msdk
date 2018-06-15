@@ -1,4 +1,4 @@
-/*
+package io.github.msdk.id.sirius;/*
  * (C) Copyright 2015-2018 by MSDK Development Team
  *
  * This software is dual-licensed under either
@@ -45,7 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p> SiriusIdentificationMethod class. </p>
+ * <p> io.github.msdk.id.sirius.SiriusIdentificationMethod class. </p>
  *
  * This class wraps the Sirius module and transforms its results into MSDK data structures
  * Transformation of IdentificationResult (Sirius) into IonAnnatation (MSDK)
@@ -80,14 +80,14 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   /* Set to be class elements for performance */
 
   /**
-   * <p> Constructor for SiriusIdentificationMethod class. </p>
+   * <p> Constructor for io.github.msdk.id.sirius.SiriusIdentificationMethod class. </p>
    *
    * @param ms1 - can be null! MsSpectrum level 1
    * @param ms2 - MsSpectrum level 2
    * @param parentMass - Most intensive usually or specified
    * @param ion - Ionization
    * @param numberOfCandidates - amount of IdentificationResults to be returned from Sirius
-   * @param constraints - FormulaConstraints provided by the end user. Can be created using ConstraintsGenerator
+   * @param constraints - FormulaConstraints provided by the end user. Can be created using io.github.msdk.id.sirius.ConstraintsGenerator
    * @param deviation - float value of possible mass deviation
    */
   public SiriusIdentificationMethod(@Nullable List<MsSpectrum> ms1, @Nullable List<MsSpectrum> ms2, Double parentMass,
@@ -227,7 +227,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   @Nullable
   @Override
   public List<IonAnnotation> execute() throws MSDKException {
-    logger.info("Started execution of SiriusIdentificationMethod");
+    logger.info("Started execution of io.github.msdk.id.sirius.SiriusIdentificationMethod");
 
     result = new ArrayList<>();
     List<IdentificationResult> siriusSpectra = siriusProcessSpectra();
@@ -243,7 +243,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
       result.add(ionAnnotation);
     }
 
-    logger.info("Finished execution of SiriusIdentificationMethod");
+    logger.info("Finished execution of io.github.msdk.id.sirius.SiriusIdentificationMethod");
     return result;
   }
 

@@ -1,4 +1,4 @@
-/*
+package io.github.msdk.id.sirius;/*
  * (C) Copyright 2015-2017 by MSDK Development Team
  *
  * This software is dual-licensed under either
@@ -11,7 +11,6 @@
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-import com.google.common.collect.Range;
 import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import io.github.msdk.MSDKException;
