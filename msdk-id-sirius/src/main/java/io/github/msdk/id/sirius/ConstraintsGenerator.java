@@ -1,4 +1,4 @@
-package io.github.msdk.id.sirius;/*
+/*
  * (C) Copyright 2015-2018 by MSDK Development Team
  *
  * This software is dual-licensed under either
@@ -10,6 +10,8 @@ package io.github.msdk.id.sirius;/*
  *
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
+
+package io.github.msdk.id.sirius;
 
 import de.unijena.bioinf.ChemistryBase.chem.ChemicalAlphabet;
 import de.unijena.bioinf.ChemistryBase.chem.Element;
@@ -25,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p> Class io.github.msdk.id.sirius.ConstraintsGenerator. </p>
+ * <p> Class ConstraintsGenerator. </p>
  * This class allows to construct a Sirius object FormulaConstraints using MolecularFormulaRange object
  */
 public class ConstraintsGenerator {
@@ -37,7 +39,7 @@ public class ConstraintsGenerator {
   private final int maxNumberOfOneElements = 20;
 
   /**
-   * <p>Constructor for io.github.msdk.id.sirius.ConstraintsGenerator class</p>
+   * <p>Constructor for ConstraintsGenerator class</p>
    * Initializes array of Elements `defaultElements`
    */
   public ConstraintsGenerator() {
@@ -53,7 +55,7 @@ public class ConstraintsGenerator {
    * @return new Constraint to be used in Sirius
    */
   public FormulaConstraints generateConstraint(MolecularFormulaRange range) {
-    logger.debug("io.github.msdk.id.sirius.ConstraintsGenerator started processing");
+    logger.debug("ConstraintsGenerator started processing");
     int size = range.getIsotopeCount();
     Element elements[] = Arrays.copyOf(defaultElements, defaultElements.length + size);
     int k = 0;
@@ -79,7 +81,7 @@ public class ConstraintsGenerator {
       if (max!= maxNumberOfOneElements) constraints.setUpperbound(element, max);
     }
 
-    logger.debug("io.github.msdk.id.sirius.ConstraintsGenerator finished");
+    logger.debug("ConstraintsGenerator finished");
     return constraints;
   }
 
