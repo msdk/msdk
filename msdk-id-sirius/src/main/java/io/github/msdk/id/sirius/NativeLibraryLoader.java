@@ -18,6 +18,7 @@ import io.github.msdk.MSDKException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -51,6 +52,10 @@ public class NativeLibraryLoader {
     }
   }
 
+  private static InputStream getResourceStream(String resource) {
+    return NativeLibraryLoader.class.getResourceAsStream(resource);
+  }
+
   /**
    * Public method for external usage, copies all files from `folder`
    * <p>Loads libraries from `folder` in order specified by `libs` array</p>
@@ -78,29 +83,17 @@ public class NativeLibraryLoader {
       throws MSDKException, IOException {
     logger.info("Started loading libraries from {} folder", folder);
 
-    String realPath, subfolder = "";
-    String arch = System.getProperty("os.arch");
-    if (arch == null)
-      throw new MSDKException("Can not identify os.arch property");
-    arch = arch.toLowerCase().endsWith("64") ? "64" : "32";
-
-    String osname = System.getProperty("os.name");
-    if (osname == null)
-      throw new MSDKException("Can not identify os.name property");
-    osname = osname.toLowerCase();
-
-    if (osname.contains("linux")) {
-      subfolder = "linux";
-    } else if (osname.contains("mac")) {
-      if (arch.equals("32"))
-        throw new MSDKException("There are no native libraries for x32 mac systems");
-      subfolder = "mac";
-    } else if (osname.contains("windows")) {
-      subfolder = "windows";
-    }
+    String realPath;
+    String arch = getArch();
+    String osname = getOsName();
+    String subfolder = getSubfolder(arch, osname);
 
     logger.info("OS type = {} and OS arch = {}", subfolder, arch);
-    realPath = getResourcePath(folder) + "/" + subfolder + arch + "/";
+
+    folder += "/" + subfolder + arch + "/";
+    realPath = getResourcePath(folder).toString();
+
+
 
     // Make new java.library.path
     File temporaryDir = createLibraryPath();
@@ -172,6 +165,7 @@ public class NativeLibraryLoader {
    */
   private static void moveLibraries(File tempDirectory, String realFolder, String[] libs)
       throws IOException, MSDKException {
+
     File[] files = (new File(realFolder)).listFiles();
     File temp;
 
@@ -190,5 +184,37 @@ public class NativeLibraryLoader {
         logger.info("Successfully loaded {} library", lib);
       }
     }
+  }
+
+  private static String getSubfolder(String arch, String osname) throws MSDKException {
+    String subfolder;
+    if (osname.contains("linux")) {
+      subfolder = "linux";
+    } else if (osname.contains("mac")) {
+      if (arch.equals("32"))
+        throw new MSDKException("There are no native libraries for x32 mac systems");
+      subfolder = "mac";
+    } else if (osname.contains("windows")) {
+      subfolder = "windows";
+    } else
+      throw new MSDKException("Could not determine the system parameters properly");
+
+    return subfolder;
+  }
+
+  private static String getArch() throws  MSDKException {
+    String arch = System.getProperty("os.arch");
+    if (arch == null)
+      throw new MSDKException("Can not identify os.arch property");
+
+    return arch.toLowerCase().endsWith("64") ? "64" : "32";
+  }
+
+  private static String getOsName() throws MSDKException {
+    String osname = System.getProperty("os.name");
+    if (osname == null)
+      throw new MSDKException("Can not identify os.name property");
+
+    return osname.toLowerCase();
   }
 }
