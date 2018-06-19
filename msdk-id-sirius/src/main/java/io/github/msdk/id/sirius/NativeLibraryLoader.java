@@ -17,14 +17,24 @@ import com.google.common.io.Files;
 import io.github.msdk.MSDKException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,15 +100,49 @@ public class NativeLibraryLoader {
 
     logger.info("OS type = {} and OS arch = {}", subfolder, arch);
 
-    folder += "/" + subfolder + arch + "/";
-    realPath = getResourcePath(folder).toString();
-
-
-
     // Make new java.library.path
     File temporaryDir = createLibraryPath();
-    // Load native libraries
-    moveLibraries(temporaryDir, realPath, libs);
+
+    folder += "/" + subfolder + arch + "/";
+
+    final File jarFile = new File(NativeLibraryLoader.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+    final Map<String, InputStream> libraries = new TreeMap<>();
+
+    if(jarFile.isFile()) {  // Run with JAR file
+      Set<JarEntry> entriesSet = new HashSet<>();
+
+      final JarFile jar = new JarFile(jarFile);
+      String name;
+      JarEntry entry;
+
+      final Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
+      while(entries.hasMoreElements()) {
+        entry = entries.nextElement();
+        name = entry.getName();
+        if (name.contains(folder)) { //filter according to the path
+          do {
+            if (!entry.isDirectory()) entriesSet.add(entry);
+            entry = entries.nextElement();
+            name = entry.getName();
+          } while (name.contains(folder));
+          break;
+        }
+      }
+
+      for (final JarEntry libFile: entriesSet) {
+        String filename = libFile.getName();
+        filename = filename.substring(filename.lastIndexOf('/') + 1);
+        InputStream iStream = jar.getInputStream(libFile);
+        libraries.put(filename, iStream);
+      }
+
+      moveLibraries(libraries, temporaryDir, libs);
+      jar.close();
+    } else { // Run with IDE
+      realPath = getResourcePath(folder).toString();
+      // Load native libraries
+      moveLibraries(temporaryDir, realPath, libs);
+    }
   }
 
   /**
@@ -179,10 +223,38 @@ public class NativeLibraryLoader {
           Files.copy(f, temp);
         }
       }
-      for (String lib: libs) {
-        System.loadLibrary(lib);
-        logger.info("Successfully loaded {} library", lib);
+
+      loadLibraries(libs);
+    }
+  }
+
+  private static void moveLibraries(Map<String, InputStream> fileStreams, File tempDirectory, String[] libNames) throws FileNotFoundException, IOException {
+    if (tempDirectory == null || !tempDirectory.exists())
+      throw new FileNotFoundException("Temporary directory was not created");
+
+    OutputStream outputStream;
+    byte buffer[] = new byte[4096];
+    int bytes;
+
+    for (Map.Entry<String, InputStream> pair: fileStreams.entrySet()) {
+      File temp = new File(tempDirectory, pair.getKey());
+      final InputStream iStream = pair.getValue();
+      outputStream = new FileOutputStream(temp);
+
+      while ((bytes = iStream.read(buffer)) > 0) {
+        outputStream.write(buffer, 0, bytes);
       }
+      iStream.close();
+      outputStream.close();
+    }
+
+    loadLibraries(libNames);
+  }
+
+  private static void loadLibraries(String[] libraryNames) {
+    for (String lib: libraryNames) {
+      System.loadLibrary(lib);
+      logger.info("Successfully loaded {} library", lib);
     }
   }
 
