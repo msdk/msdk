@@ -237,16 +237,43 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     for (IdentificationResult r : siriusSpectra) {
       if (cancelled)
         return null;
-      SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
-      IMolecularFormula formula = MolecularFormulaManipulator
-          .getMolecularFormula(r.getMolecularFormula().toString(),
-              SilentChemObjectBuilder.getInstance());
-      ionAnnotation.setFormula(formula);
+      IonAnnotation ionAnnotation = createIonAnnotation(r);
       result.add(ionAnnotation);
     }
 
     logger.info("Finished execution of SiriusIdentificationMethod");
     return result;
+  }
+
+  /**
+   * <p>Method configures the IonAnnotation according to IdentificationResult object</p>
+   * @param siriusResult - IdentificationResult object from Sirius
+   * @return configured instance of SimpleIonAnnotation
+   */
+  private IonAnnotation createIonAnnotation(IdentificationResult siriusResult) {
+    SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
+    IMolecularFormula formula = generateFormula(siriusResult);
+    ionAnnotation.setFormula(formula);
+    ionAnnotation.setIdentificationMethod("Sirius");
+    ionAnnotation.setIonType(ion);
+
+    return ionAnnotation;
+  }
+
+  /**
+   * <p>Method generates IMolecularFormula according to IdentificationResult object</p>
+   * @param siriusResult - IdentificationResult object from Sirius
+   * @return new IMolecularFormula instance
+   */
+  private IMolecularFormula generateFormula(IdentificationResult siriusResult) {
+    int charge = siriusResult.getResolvedTree().getAnnotationOrThrow(PrecursorIonType.class).getCharge();
+    String formula = siriusResult.getMolecularFormula().toString();
+    IMolecularFormula iFormula = MolecularFormulaManipulator
+        .getMolecularFormula(formula,
+            SilentChemObjectBuilder.getInstance());
+    iFormula.setCharge(charge);
+
+    return iFormula;
   }
 
   @Nullable
