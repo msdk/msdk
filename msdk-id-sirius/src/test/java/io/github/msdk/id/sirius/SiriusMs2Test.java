@@ -14,6 +14,7 @@ package io.github.msdk.id.sirius;/*
 import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import io.github.msdk.MSDKException;
+import io.github.msdk.datamodel.IonAnnotation;
 import io.github.msdk.datamodel.IonType;
 import io.github.msdk.datamodel.MsSpectrum;
 import io.github.msdk.datamodel.MsSpectrumType;
@@ -37,6 +38,8 @@ import org.junit.Test;
 import org.openscience.cdk.config.IsotopeFactory;
 import org.openscience.cdk.config.Isotopes;
 import org.openscience.cdk.formula.MolecularFormulaRange;
+import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
 public class SiriusMs2Test {
   public SiriusMs2Test() throws MSDKException {
@@ -345,5 +348,61 @@ public class SiriusMs2Test {
     }
 
     Assert.assertArrayEquals(expectedResults, results);
+  }
+
+
+  @Test
+  public void testIonAnnotation() throws IOException, MSDKException {
+    final double deviation = 10d;
+    final double precursorMass = 233.1175;
+    final IonType ion = IonTypeUtil.createIonType("[M+H]+");
+    final String[] expectedResults = {
+        "C14H16O3",
+        "C12H14N3O2",
+        "C10H19NO3P",
+        "C9H18N3O2S",
+        "C8H17N4O2P"
+    };
+    final int expectedCharge = 1;
+    final String ms2Path = "marindinin_MS2.txt";
+    final int candidatesAmount = 5;
+
+    final ConstraintsGenerator generator = new ConstraintsGenerator();
+    final MolecularFormulaRange range = new MolecularFormulaRange();
+    IsotopeFactory iFac = Isotopes.getInstance();
+    range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
+    range.addIsotope(iFac.getMajorIsotope("B"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Br"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Cl"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("F"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
+
+    final FormulaConstraints constraints = generator.generateConstraint(range);
+    File ms2File = getResourcePath(ms2Path).toFile();
+
+    MsSpectrum ms2Spectrum2 = TxtImportAlgorithm.parseMsSpectrum(new FileReader(ms2File));
+
+    LinkedList<MsSpectrum> ms2list = new LinkedList<>();
+    ms2list.add(ms2Spectrum2);
+
+    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(null,
+        ms2list,
+        precursorMass,
+        ion,
+        candidatesAmount,
+        constraints,
+        deviation);
+
+    List<IonAnnotation> list = siriusMethod.execute();
+    int i = 0;
+    for (IonAnnotation annotation: list) {
+      int charge = annotation.getFormula().getCharge();
+      String formula = MolecularFormulaManipulator.getString(annotation.getFormula());
+
+      Assert.assertEquals(expectedCharge, charge);
+      Assert.assertEquals(expectedResults[i++], formula);
+    }
+
   }
 }
