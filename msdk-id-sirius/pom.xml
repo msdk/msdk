@@ -10,10 +10,21 @@
   <properties>
     <sirius.version>4.0</sirius.version>
     <glpk.version>1.7.0</glpk.version>
+    <fingerId.version>1.1.2</fingerId.version>
   </properties>
 
 
   <repositories>
+    <repository>
+      <id>glpk</id>
+      <name>GLPK</name>
+      <url>https://www.xypron.de/repository</url>
+    </repository>
+    <repository>
+      <id>ebi</id>
+      <name>ebi.co.uk</name>
+      <url>http://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
+    </repository>
     <repository>
       <id>bioinf-jena-main</id>
       <name>bioinf-jena-release</name>
@@ -23,17 +34,6 @@
       <id>bioinf-jena</id>
       <name>bioinf-jena-release</name>
       <url>https://bio.informatik.uni-jena.de/repository/local</url>
-    </repository>
-    <repository>
-      <id>ebi</id>
-      <name>ebi.co.uk</name>
-      <url>http://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
-    </repository>
-
-    <repository>
-      <id>glpk</id>
-      <name>GLPK</name>
-      <url>https://www.xypron.de/repository</url>
     </repository>
 
   </repositories>
@@ -112,6 +112,78 @@
       <artifactId>mass_decomposer</artifactId>
       <version>${sirius.version}</version>
     </dependency>
+
+    <!-- FingerId -->
+    <dependency>
+      <groupId>de.unijena.bioinf.utils</groupId>
+      <artifactId>error-reporter</artifactId>
+      <version>0.9.2</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>fingerid</artifactId>
+      <version>${fingerId.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>fingerid_db</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>fingerid_utils_oss</artifactId>
+      <version>${fingerId.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>chemdb_file_oss</artifactId>
+      <version>${fingerId.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>chemdb_rest_oss</artifactId>
+      <version>${fingerId.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>chemdb_sql_oss</artifactId>
+      <version>${fingerId.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>chemical_db_oss</artifactId>
+      <version>${fingerId.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>canopus_predict_oss</artifactId>
+      <version>${fingerId.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>fingerblast_oss</artifactId>
+      <version>${fingerId.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>fingerprint_pvalues_oss</artifactId>
+      <version>${fingerId.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.unijena.bioinf.ms</groupId>
+      <artifactId>fingerprinter_oss</artifactId>
+      <version>${fingerId.version}</version>
+    </dependency>
+
+
     <dependency>
       <groupId>io.github.msdk</groupId>
       <artifactId>msdk-io-msp</artifactId>
@@ -135,6 +207,23 @@
       <version>0.0.12-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
+      <version>4.4.6</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.6.2</version>
+    </dependency>
+
+
   </dependencies>
 
 
