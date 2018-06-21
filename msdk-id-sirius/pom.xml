@@ -16,26 +16,20 @@
 
   <repositories>
     <repository>
-      <id>glpk</id>
-      <name>GLPK</name>
-      <url>https://www.xypron.de/repository</url>
-    </repository>
-    <repository>
       <id>ebi</id>
       <name>ebi.co.uk</name>
       <url>http://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
     </repository>
     <repository>
-      <id>bioinf-jena-main</id>
-      <name>bioinf-jena-release</name>
-      <url>https://bio.informatik.uni-jena.de/repository/libs-release-local</url>
+      <id>glpk</id>
+      <name>GLPK</name>
+      <url>https://www.xypron.de/repository</url>
     </repository>
     <repository>
-      <id>bioinf-jena</id>
-      <name>bioinf-jena-release</name>
-      <url>https://bio.informatik.uni-jena.de/repository/local</url>
+      <id>bioinf-jena-new</id>
+      <name>Test repository</name>
+      <url>https://bio.informatik.uni-jena.de/repository/libs-release-oss</url>
     </repository>
-
   </repositories>
 
   <dependencies>
@@ -120,17 +114,6 @@
       <version>0.9.2</version>
     </dependency>
 
-
-    <dependency>
-      <groupId>de.unijena.bioinf.ms</groupId>
-      <artifactId>fingerid</artifactId>
-      <version>${fingerId.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>de.unijena.bioinf.ms</groupId>
-      <artifactId>fingerid_db</artifactId>
-    </dependency>
 
     <dependency>
       <groupId>de.unijena.bioinf.ms</groupId>
