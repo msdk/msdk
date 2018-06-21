@@ -1,5 +1,5 @@
 package io.github.msdk.id.sirius;/*
- * (C) Copyright 2015-2017 by MSDK Development Team
+ * (C) Copyright 2015-2018 by MSDK Development Team
  *
  * This software is dual-licensed under either
  *
@@ -12,26 +12,27 @@ package io.github.msdk.id.sirius;/*
  */
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
+import de.unijena.bioinf.ChemistryBase.fp.CdkFingerprintVersion;
 import de.unijena.bioinf.ChemistryBase.fp.MaskedFingerprintVersion;
 import de.unijena.bioinf.ChemistryBase.fp.ProbabilityFingerprint;
 import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.ft.FTree;
 import de.unijena.bioinf.babelms.json.FTJsonWriter;
 import de.unijena.bioinf.babelms.ms.JenaMsWriter;
+import de.unijena.bioinf.babelms.utils.Base64;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import de.unijena.bioinf.utils.systemInfo.SystemInformation;
+import gnu.trove.list.array.TDoubleArrayList;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
-import java.util.EnumSet;
-
 import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 import org.apache.http.NameValuePair;
@@ -51,8 +52,25 @@ public class FingerIdProcess {
   private CloseableHttpClient client = HttpClients.createSystem();
   private final BasicNameValuePair UID = new BasicNameValuePair("uid", SystemInformation.generateSystemKey());
 
-  public FingerIdProcess(final Ms2Experiment experiment, final IdentificationResult result, final FTree tree, final MaskedFingerprintVersion version, final EnumSet<PredictorType> predicors) {
+  public FingerIdProcess() {
 
+  }
+
+  public ProbabilityFingerprint useThis(Ms2Experiment experiment, IdentificationResult result) {
+    CdkFingerprintVersion version = CdkFingerprintVersion.withECFP();
+    MaskedFingerprintVersion.Builder maskedBuiled = MaskedFingerprintVersion.buildMaskFor(version);
+    maskedBuiled.disableAll();
+
+    ProbabilityFingerprint print = null;
+
+    try {
+      FingerIdJob job = submitJob(experiment, result, maskedBuiled.toMask());
+      print = processFingerIdJob(job);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return print;
   }
 
 
@@ -70,11 +88,10 @@ public class FingerIdProcess {
     return "1.1.2";
   }
 
-  public ProbabilityFingerprint 
-
-  public FingerIdJob submitJob(final Ms2Experiment experiment, final IdentificationResult result, final FTree ftree, final MaskedFingerprintVersion version, final EnumSet<PredictorType> types) throws IOException, URISyntaxException{
+  public FingerIdJob submitJob(final Ms2Experiment experiment, final IdentificationResult result, final MaskedFingerprintVersion version) throws IOException, URISyntaxException{
     final HttpPost post = new HttpPost(getFingerIdURI("/webapi/predict.json").build());
     final String stringMs, jsonTree;
+    final FTree ftree = result.getResolvedTree();
     {
       final JenaMsWriter writer = new JenaMsWriter();
       final StringWriter sw = new StringWriter();
@@ -120,13 +137,10 @@ public class FingerIdProcess {
         throw re;
       }
     } finally {
-
     }
-
-    return null;
   }
 
-  public ProbabilityFingerprint processFingerIdJob(FingerIdJob job) throws URISyntaxException, InterruptedException, TimeoutException {
+  public ProbabilityFingerprint processFingerIdJob(FingerIdJob job) throws URISyntaxException, InterruptedException, TimeoutException, IOException {
     // RECEIVE RESULTS
     new HttpGet(getFingerIdURI("/webapi/job.json").setParameter("jobId", String.valueOf(job.jobId)).setParameter("securityToken", job.securityToken).build());
     for (int k = 0; k < 600; ++k) {
@@ -140,6 +154,49 @@ public class FingerIdProcess {
     throw new TimeoutException("Reached timeout");
   }
 
+  private boolean updateJobStatus(FingerIdJob job) throws URISyntaxException, IOException {
+    final HttpGet get = new HttpGet(getFingerIdURI("/webapi/job.json").setParameter("jobId", String.valueOf(job.jobId)).setParameter("securityToken", job.securityToken).build());
+    try (CloseableHttpResponse response = client.execute(get)) {
+      Gson gson = new Gson();
+      try {
+        GetResponse getResponse = gson.fromJson(new BufferedReader(new InputStreamReader(response.getEntity().getContent(), ContentType.getOrDefault(response.getEntity()).getCharset())), GetResponse.class);
+        if (getResponse.prediction != null){
+          getResponse.plattBytes = Base64.decode(getResponse.prediction);
+          final double[] platts = parseBinaryToDoubles(getResponse.plattBytes);
+          job.prediction = new ProbabilityFingerprint(job.v, platts);
+
+          if (getResponse.iokrVector != null) {
+            getResponse.iokrBytes = Base64.decode(getResponse.iokrVector);
+            job.iokrVector = parseBinaryToDoubles(getResponse.iokrBytes);
+          }
+
+          return true;
+        } else {
+          job.state = getResponse.state != null ? getResponse.state : "SUBMITTED";
+        }
+        if (getResponse.errors != null) {
+          job.errorMessage = getResponse.errors;
+        }
+      } finally {
+        //TODO: stuff
+      }
+    } catch (Throwable t) {
+      LoggerFactory.getLogger(this.getClass()).error("Error when updating job #" + job.jobId, t);
+      throw (t);
+    }
+    return false;
+  }
+
+  double[] parseBinaryToDoubles(byte[] bytes) {
+    final TDoubleArrayList data = new TDoubleArrayList(2000);
+    final ByteBuffer buf = ByteBuffer.wrap(bytes);
+    buf.order(ByteOrder.LITTLE_ENDIAN);
+    while (buf.position() < buf.limit()) {
+      data.add(buf.getDouble());
+    }
+    return data.toArray();
+  }
+
   /* MAGIC CONSTATNS  */
   private String getPredictor(PrecursorIonType precursorIonType) {
     int charge = precursorIonType.getIonization().getCharge();
@@ -151,6 +208,13 @@ public class FingerIdProcess {
   class GetResponse {
     public String securityToken;
     public int jobId;
+    byte[]  plattBytes;
+    byte[] iokrBytes;
+
+    String iokrVector;
+    String prediction;
+    String errors;
+    String state;
   }
 
   class FingerIdJob {
@@ -159,6 +223,8 @@ public class FingerIdProcess {
     public MaskedFingerprintVersion v;
     public ProbabilityFingerprint prediction;
     public String errorMessage;
+    public String state;
+    public double[] iokrVector;
 
     public FingerIdJob(long jobId, String securityToken, MaskedFingerprintVersion version) {
       this.jobId = jobId;
