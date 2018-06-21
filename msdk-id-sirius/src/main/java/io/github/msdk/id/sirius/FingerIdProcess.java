@@ -35,6 +35,7 @@ import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.TimeoutException;
+import javax.print.URIException;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -74,11 +75,11 @@ public class FingerIdProcess {
   }
 
 
-  private URIBuilder getFingerIdURI(String path) {
+  private URIBuilder getFingerIdURI(String path) throws URISyntaxException {
     if (path == null)
       path = "";
-    URIBuilder builder = null;
-    builder.setPath("/csi-finger-id-" + FingerIdProcess.fingeridVersion() + path);
+    URIBuilder builder = new URIBuilder("https://www.csi-fingerid.uni-jena.de");
+    builder.setPath("/csi-fingerid-" + FingerIdProcess.fingeridVersion() + path);
 
     return builder;
   }
@@ -112,8 +113,7 @@ public class FingerIdProcess {
 
     final NameValuePair predictor = new BasicNameValuePair("predictors", getPredictor(experiment.getPrecursorIonType()));
 
-    final UrlEncodedFormEntity params = new UrlEncodedFormEntity(
-        Arrays.asList(ms, tree, predictor, UID));
+    final UrlEncodedFormEntity params = new UrlEncodedFormEntity(Arrays.asList(ms, tree, predictor, UID));
     post.setEntity(params);
 
     final String securityToken;

@@ -15,6 +15,7 @@ package io.github.msdk.id.sirius;
 
 import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
+import de.unijena.bioinf.ChemistryBase.fp.ProbabilityFingerprint;
 import de.unijena.bioinf.ChemistryBase.ms.Deviation;
 import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Spectrum;
@@ -139,6 +140,12 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     logger.debug("Sirius starts processing MsSpectrums");
     List<IdentificationResult> siriusResults  = sirius.identify(experiment,
         numberOfCandidates, true, IsotopePatternHandling.both, constraints);
+
+    FingerIdProcess fingerId = new FingerIdProcess();
+    ProbabilityFingerprint pr = fingerId.useThis(experiment, siriusResults.get(0));
+    siriusResults.get(0).setAnnotation(ProbabilityFingerprint.class, pr);
+
+
     logger.debug("Sirius finished processing and returned {} results", siriusResults.size());
 
     return siriusResults;
@@ -237,6 +244,11 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     for (IdentificationResult r : siriusSpectra) {
       if (cancelled)
         return null;
+
+
+
+
+
       IonAnnotation ionAnnotation = createIonAnnotation(r);
       result.add(ionAnnotation);
     }
