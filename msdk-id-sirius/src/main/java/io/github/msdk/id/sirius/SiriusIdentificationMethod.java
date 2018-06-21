@@ -142,7 +142,13 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
         numberOfCandidates, true, IsotopePatternHandling.both, constraints);
 
     FingerIdProcess fingerId = new FingerIdProcess();
-    ProbabilityFingerprint pr = fingerId.useThis(experiment, siriusResults.get(0));
+    ProbabilityFingerprint pr = null;
+    try {
+      pr = fingerId.useThis(experiment, siriusResults.get(0));
+    } catch (Exception e) {
+      e.printStackTrace();
+      System.out.println("Panic");
+    }
     siriusResults.get(0).setAnnotation(ProbabilityFingerprint.class, pr);
 
 

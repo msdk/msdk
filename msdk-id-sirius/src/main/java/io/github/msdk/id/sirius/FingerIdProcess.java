@@ -15,15 +15,18 @@ import com.google.gson.Gson;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
 import de.unijena.bioinf.ChemistryBase.fp.CdkFingerprintVersion;
 import de.unijena.bioinf.ChemistryBase.fp.MaskedFingerprintVersion;
+import de.unijena.bioinf.ChemistryBase.fp.PredictionPerformance;
 import de.unijena.bioinf.ChemistryBase.fp.ProbabilityFingerprint;
 import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.ft.FTree;
 import de.unijena.bioinf.babelms.json.FTJsonWriter;
 import de.unijena.bioinf.babelms.ms.JenaMsWriter;
 import de.unijena.bioinf.babelms.utils.Base64;
+import de.unijena.bioinf.fingerid.predictor_types.PredictorType;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import de.unijena.bioinf.utils.systemInfo.SystemInformation;
 import gnu.trove.list.array.TDoubleArrayList;
+import gnu.trove.list.array.TIntArrayList;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -32,10 +35,12 @@ import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 import javax.print.URIException;
+import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -57,15 +62,69 @@ public class FingerIdProcess {
 
   }
 
-  public ProbabilityFingerprint useThis(Ms2Experiment experiment, IdentificationResult result) {
+  private PredictionPerformance[] getStatistics(PredictorType predictorType, final TIntArrayList fingerprintIndizes) throws IOException {
+    fingerprintIndizes.clear();
+    final HttpGet get;
+    try {
+      get = new HttpGet(getFingerIdURI("/webapi/statistics.csv").setParameter("predictor", predictorType.toBitsAsString()).build());
+    } catch (URISyntaxException e) {
+      LoggerFactory.getLogger(this.getClass()).error(e.getMessage(), e);
+      throw new RuntimeException(e);
+    }
+    final TIntArrayList[] lists = new TIntArrayList[5];
+    ArrayList<PredictionPerformance> performances = new ArrayList<>();
+    try (CloseableHttpResponse response = client.execute(get)) {
+      HttpEntity e = response.getEntity();
+      final BufferedReader br = new BufferedReader(new InputStreamReader(e.getContent(), ContentType.getOrDefault(e).getCharset()));
+      String line; //br.readLine();
+      while ((line = br.readLine()) != null) {
+        String[] tabs = line.split("\t");
+        final int index = Integer.parseInt(tabs[0]);
+        PredictionPerformance p = new PredictionPerformance(
+            Double.parseDouble(tabs[1]),
+            Double.parseDouble(tabs[2]),
+            Double.parseDouble(tabs[3]),
+            Double.parseDouble(tabs[4])
+        );
+        performances.add(p);
+        fingerprintIndizes.add(index);
+      }
+    }
+    return performances.toArray(new PredictionPerformance[performances.size()]);
+  }
+
+
+  public ProbabilityFingerprint useThis(Ms2Experiment experiment, IdentificationResult result) throws IOException {
+    //TODO: fails on size of version
     CdkFingerprintVersion version = CdkFingerprintVersion.withECFP();
+
+
+
     MaskedFingerprintVersion.Builder maskedBuiled = MaskedFingerprintVersion.buildMaskFor(version);
     maskedBuiled.disableAll();
 
+    final TIntArrayList list = new TIntArrayList(4096);
+    int charge = experiment.getPrecursorIonType().getCharge();
+    PredictorType type = (charge > 0) ? PredictorType.CSI_FINGERID_POSITIVE : PredictorType.CSI_FINGERID_NEGATIVE;
+    PredictionPerformance[] perf = getStatistics(type, list);
+
+
+    int[] fingerprintIndizes = list.toArray();
+
+    for (int index : fingerprintIndizes) {
+      maskedBuiled.enable(index);
+    }
+
+
     ProbabilityFingerprint print = null;
 
+    MaskedFingerprintVersion maskedVersion = maskedBuiled.toMask();
+
+
+
+
     try {
-      FingerIdJob job = submitJob(experiment, result, maskedBuiled.toMask());
+      FingerIdJob job = submitJob(experiment, result, maskedVersion);
       print = processFingerIdJob(job);
     } catch (Exception e) {
       e.printStackTrace();
