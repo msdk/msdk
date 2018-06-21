@@ -403,6 +403,5 @@ public class SiriusMs2Test {
       Assert.assertEquals(expectedCharge, charge);
       Assert.assertEquals(expectedResults[i++], formula);
     }
-
   }
 }

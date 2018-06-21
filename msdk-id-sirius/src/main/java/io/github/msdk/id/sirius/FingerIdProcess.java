@@ -12,8 +12,11 @@ package io.github.msdk.id.sirius;/*
  */
 
 import com.google.gson.Gson;
+import de.unijena.bioinf.ChemistryBase.algorithm.Scored;
+import de.unijena.bioinf.ChemistryBase.chem.MolecularFormula;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
 import de.unijena.bioinf.ChemistryBase.fp.CdkFingerprintVersion;
+import de.unijena.bioinf.ChemistryBase.fp.FingerprintVersion;
 import de.unijena.bioinf.ChemistryBase.fp.MaskedFingerprintVersion;
 import de.unijena.bioinf.ChemistryBase.fp.PredictionPerformance;
 import de.unijena.bioinf.ChemistryBase.fp.ProbabilityFingerprint;
@@ -22,6 +25,14 @@ import de.unijena.bioinf.ChemistryBase.ms.ft.FTree;
 import de.unijena.bioinf.babelms.json.FTJsonWriter;
 import de.unijena.bioinf.babelms.ms.JenaMsWriter;
 import de.unijena.bioinf.babelms.utils.Base64;
+import de.unijena.bioinf.chemdb.CompoundCandidateChargeLayer;
+import de.unijena.bioinf.chemdb.CompoundCandidateChargeState;
+import de.unijena.bioinf.chemdb.FingerprintCandidate;
+import de.unijena.bioinf.fingerid.blast.CovarianceScoring;
+import de.unijena.bioinf.fingerid.blast.Fingerblast;
+import de.unijena.bioinf.fingerid.blast.FingerblastScoringMethod;
+import de.unijena.bioinf.fingerid.blast.ScoringMethodFactory;
+import de.unijena.bioinf.fingerid.blast.ScoringMethodFactory.CSIFingerIdScoringMethod;
 import de.unijena.bioinf.fingerid.predictor_types.PredictorType;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import de.unijena.bioinf.utils.systemInfo.SystemInformation;
@@ -37,6 +48,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 import javax.print.URIException;
@@ -51,6 +63,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.slf4j.LoggerFactory;
 
 public class FingerIdProcess {
@@ -93,6 +106,23 @@ public class FingerIdProcess {
     return performances.toArray(new PredictionPerformance[performances.size()]);
   }
 
+  public CovarianceScoring getCovarianceScoring(FingerprintVersion fpVersion, double alpha) throws IOException {
+    final HttpGet get;
+    try {
+      get = new HttpGet(getFingerIdURI("/webapi/covariancetree.csv").build());
+    } catch (URISyntaxException e) {
+      LoggerFactory.getLogger(this.getClass()).error(e.getMessage(), e);
+      throw new RuntimeException(e);
+    }
+    CovarianceScoring covarianceScoring;
+    try (CloseableHttpResponse response = client.execute(get)) {
+      if (!isSuccessful(response)) throw new IOException("Cannot get covariance scoring tree information.");
+      HttpEntity e = response.getEntity();
+      covarianceScoring = CovarianceScoring.readScoring(e.getContent(), ContentType.getOrDefault(e).getCharset(), fpVersion, alpha);
+    }
+    return covarianceScoring;
+  }
+
 
   public ProbabilityFingerprint useThis(Ms2Experiment experiment, IdentificationResult result) throws IOException {
     //TODO: fails on size of version
@@ -120,17 +150,45 @@ public class FingerIdProcess {
 
     MaskedFingerprintVersion maskedVersion = maskedBuiled.toMask();
 
+    FingerblastScoringMethod method = (charge < 0) ? new ScoringMethodFactory.CSIFingerIdScoringMethod(perf) : getCovarianceScoring(maskedVersion, 1d / perf[0].withPseudoCount(0.25).numberOfSamples());
+    Fingerblast blast = new Fingerblast(method, null);
 
-
-
+    List<FingerprintCandidate> candidates = null;
     try {
       FingerIdJob job = submitJob(experiment, result, maskedVersion);
       print = processFingerIdJob(job);
+      candidates = getCandidates(experiment, result)result);
     } catch (Exception e) {
       e.printStackTrace();
     }
 
+    final List<Scored<FingerprintCandidate>> scored = blast.score(candidates, print);
     return print;
+  }
+
+  private List<FingerprintCandidate> getCandidates(Ms2Experiment experiment, IdentificationResult result) {
+    PrecursorIonType ionType = experiment.getPrecursorIonType();
+    MolecularFormula formula = experiment.getMolecularFormula();
+
+    //db это видимо Pubchem и тд.
+    FingerblastSearchEngine searchDatabase = new FingerblastSearchEngine(this, db);
+
+    final CompoundCandidateChargeState chargeState = CompoundCandidateChargeState.getFromPrecursorIonType(ionType);
+    if (chargeState != CompoundCandidateChargeState.NEUTRAL_CHARGE) {
+      final List<FingerprintCandidate> intrinsic = searchDatabase.lookupStructuresAndFingerprintsByFormula(formula);
+      intrinsic.removeIf((f)->!f.hasChargeState(CompoundCandidateChargeLayer.Q_LAYER, chargeState));
+      // all intrinsic formulas have to contain a p layer?
+      final MolecularFormula hydrogen = MolecularFormula.parse("H");
+      final List<FingerprintCandidate> protonated = searchDatabase.lookupStructuresAndFingerprintsByFormula(ionType.getCharge()>0 ? formula.subtract(hydrogen) : formula.add(hydrogen));
+      protonated.removeIf((f)->!f.hasChargeState(CompoundCandidateChargeLayer.P_LAYER, chargeState));
+
+      intrinsic.addAll(protonated);
+      return intrinsic;
+    } else {
+      final List<FingerprintCandidate> candidates = searchDatabase.lookupStructuresAndFingerprintsByFormula(formula);
+      candidates.removeIf((f)->!f.hasChargeState(CompoundCandidateChargeLayer.P_LAYER, CompoundCandidateChargeState.NEUTRAL_CHARGE));
+      return candidates;
+    }
   }
 
 
