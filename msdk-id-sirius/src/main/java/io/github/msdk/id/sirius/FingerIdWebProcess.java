@@ -42,6 +42,7 @@ import gnu.trove.list.array.TDoubleArrayList;
 import gnu.trove.list.array.TIntArrayList;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKRuntimeException;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -77,6 +78,7 @@ public class FingerIdWebProcess {
   private final static String FINGERID_SOURCE = "https://www.csi-fingerid.uni-jena.de";
   private final static String FINGERID_VERSION = "1.1.2";
   private final static SearchStructureByFormula searchDB = new RESTDatabase(BioFilter.ALL);
+  private final static Gson gson = new Gson();
 
   private final Ms2Experiment experiment;
   private final IdentificationResult siriusResult;
@@ -85,6 +87,10 @@ public class FingerIdWebProcess {
   public FingerIdWebProcess(Ms2Experiment experiment, IdentificationResult siriusResult) {
     this.experiment = experiment;
     this.siriusResult = siriusResult;
+  }
+
+  private static String fingerIdVersion() {
+    return FINGERID_VERSION;
   }
 
   private URIBuilder getFingerIdURI(String path) throws URISyntaxException {
@@ -132,7 +138,7 @@ public class FingerIdWebProcess {
     try (CloseableHttpResponse response = client.execute(get)) {
       HttpEntity e = response.getEntity();
       final BufferedReader br = new BufferedReader(new InputStreamReader(e.getContent(), ContentType.getOrDefault(e).getCharset()));
-      String line; //br.readLine();
+      String line;
       while ((line = br.readLine()) != null) {
         String[] tabs = line.split("\t");
         final int index = Integer.parseInt(tabs[0]);
@@ -172,52 +178,73 @@ public class FingerIdWebProcess {
 
 
 
-  public List<Scored<FingerprintCandidate>> useThis(Ms2Experiment experiment, IdentificationResult result) throws IOException {
-    //TODO: fails on size of version
-    CdkFingerprintVersion version = CdkFingerprintVersion.withECFP();
+  public List<Scored<FingerprintCandidate>> useThis(Ms2Experiment experiment, IdentificationResult result) throws MSDKException, MSDKRuntimeException {
+    PredictionPerformance[] perf;
+    MaskedFingerprintVersion version;
+    ProbabilityFingerprint print;
+    List<Scored<FingerprintCandidate>> scored;
+    Fingerblast blaster;
 
-
-
-    MaskedFingerprintVersion.Builder maskedBuiled = MaskedFingerprintVersion.buildMaskFor(version);
-    maskedBuiled.disableAll();
-
-    final TIntArrayList list = new TIntArrayList(4096);
-    int charge = experiment.getPrecursorIonType().getCharge();
-    PredictionPerformance[] perf = getStatistics(getType(experiment), list);
-    int[] fingerprintIndizes = list.toArray();
-
-    for (int index : fingerprintIndizes) {
-      maskedBuiled.enable(index);
-    }
-
-
-    ProbabilityFingerprint print = null;
-
-    MaskedFingerprintVersion maskedVersion = maskedBuiled.toMask();
-
-    FingerblastScoringMethod method = (charge < 0) ? new ScoringMethodFactory.CSIFingerIdScoringMethod(perf) : getCovarianceScoring(maskedVersion, 1d / perf[0].withPseudoCount(0.25).numberOfSamples());
-    Fingerblast blast = new Fingerblast(method, null);
-
-    List<FingerprintCandidate> candidates = null;
     try {
-      FingerIdJob job = submitJob(experiment, result, maskedVersion);
-      print = processFingerIdJob(job);
-      candidates = getCandidates(experiment, result);
-    } catch (de.unijena.bioinf.chemdb.DatabaseException e) {
-      logger.info("Connection with PubChem DB failed.");
-      throw new MSDKRuntimeException(e);
+      final TIntArrayList list = new TIntArrayList(4096);
+      perf = getStatistics(getType(experiment), list);
+      version = buildFingerprintVersion(list);
+      blaster = createBlaster(perf, version);
+    } catch (IOException e) {
+      throw new MSDKException(e);
     }
 
-    final List<Scored<FingerprintCandidate>> scored = blast.score(candidates, print);
+
+    List<FingerprintCandidate> candidates;
+    try {
+      FingerIdJob job = submitJob(experiment, result, version);
+      print = processFingerIdJob(job);
+      candidates = getCandidates();
+      scored = blaster.score(candidates, print);
+    } catch (de.unijena.bioinf.chemdb.DatabaseException e) {
+      logger.error("Connection with PubChem DB failed.");
+      throw new MSDKRuntimeException(e);
+    } catch (URISyntaxException t) {
+      logger.error("Failed to construct URI");
+      throw new MSDKException(t);
+    } catch (IOException f) {
+      throw new MSDKException(f);
+    } catch (TimeoutException time) {
+      logger.error("Timeout on job status update has expired!");
+      throw new MSDKRuntimeException(time);
+    } catch (InterruptedException i) {
+      throw new MSDKRuntimeException(i);
+    }
+
     return scored;
   }
 
-  //TODO: make it better
-  private static String fingerIdVersion() {
-    return FINGERID_VERSION;
+  private MaskedFingerprintVersion buildFingerprintVersion(final TIntArrayList predictionIndizes) throws IOException {
+    CdkFingerprintVersion version = CdkFingerprintVersion.withECFP();
+    MaskedFingerprintVersion.Builder maskedBuiled = MaskedFingerprintVersion.buildMaskFor(version);
+    maskedBuiled.disableAll();
+
+    int[] indizes = predictionIndizes.toArray();
+    for (int index : indizes) {
+      maskedBuiled.enable(index);
+    }
+
+    return maskedBuiled.toMask();
   }
 
-  private static PredictorType getType(Ms2Experiment experiment) {
+  private Fingerblast createBlaster(PredictionPerformance[] perf, MaskedFingerprintVersion version) throws IOException {
+    FingerblastScoringMethod method = null;
+    PredictorType type = getType(experiment);
+    if (type == PredictorType.CSI_FINGERID_NEGATIVE)
+      method = new ScoringMethodFactory.CSIFingerIdScoringMethod(perf);
+    else
+      method = getCovarianceScoring(version, 1d / perf[0].withPseudoCount(0.25).numberOfSamples());
+
+    return new Fingerblast(method, null);
+  }
+
+
+  private static PredictorType getType(final Ms2Experiment experiment) {
     int charge = experiment.getPrecursorIonType().getCharge();
     if (charge > 0)
       return PredictorType.CSI_FINGERID_POSITIVE;
@@ -226,30 +253,9 @@ public class FingerIdWebProcess {
 
   public FingerIdJob submitJob(final Ms2Experiment experiment, final IdentificationResult result, final MaskedFingerprintVersion version) throws IOException, URISyntaxException{
     final HttpPost post = new HttpPost(getFingerIdURI("/webapi/predict.json").build());
-    final String stringMs, jsonTree;
     final FTree ftree = result.getResolvedTree();
-    {
-      final JenaMsWriter writer = new JenaMsWriter();
-      final StringWriter sw = new StringWriter();
-      try (final BufferedWriter bw = new BufferedWriter(sw)) {
-        writer.write(bw, experiment);
-      }
-      stringMs = sw.toString();
-    }
-    {
-      final FTJsonWriter writer = new FTJsonWriter();
-      final StringWriter sw = new StringWriter();
-      writer.writeTree(sw, ftree);
-      jsonTree = sw.toString();
-    }
 
-    final NameValuePair ms = new BasicNameValuePair("ms", stringMs);
-    final NameValuePair tree = new BasicNameValuePair("ft", jsonTree);
-
-    final NameValuePair predictor = new BasicNameValuePair("predictors", PredictorType.getBitsAsString(getType(experiment)));
-
-    final UrlEncodedFormEntity params = new UrlEncodedFormEntity(Arrays.asList(ms, tree, predictor, UID));
-    post.setEntity(params);
+    post.setEntity(buildParams(ftree, getType(experiment)));
 
     final String securityToken;
     final long jobId;
@@ -275,9 +281,40 @@ public class FingerIdWebProcess {
     }
   }
 
+  private UrlEncodedFormEntity buildParams(FTree ftree, PredictorType type) throws IOException {
+    final String stringMs = getExperimentAsString();
+    final String jsonTree = getTreeAsString(ftree);
+
+    final NameValuePair ms = new BasicNameValuePair("ms", stringMs);
+    final NameValuePair tree = new BasicNameValuePair("ft", jsonTree);
+    final NameValuePair predictor = new BasicNameValuePair("predictors", PredictorType.getBitsAsString(getType(experiment)));
+
+    final UrlEncodedFormEntity params = new UrlEncodedFormEntity(Arrays.asList(ms, tree, predictor, UID));
+    return params;
+  }
+
+  private String getTreeAsString(FTree ftree) throws IOException {
+    final FTJsonWriter writer = new FTJsonWriter();
+    final StringWriter sw = new StringWriter();
+    writer.writeTree(sw, ftree);
+    return sw.toString();
+  }
+
+  private String getExperimentAsString() throws  IOException {
+    final JenaMsWriter writer = new JenaMsWriter();
+    final StringWriter sw = new StringWriter();
+    try (final BufferedWriter bw = new BufferedWriter(sw)) {
+      writer.write(bw, experiment);
+    }
+    return sw.toString();
+  }
+
   private ProbabilityFingerprint processFingerIdJob(FingerIdJob job) throws URISyntaxException, InterruptedException, TimeoutException, IOException {
     // RECEIVE RESULTS
-    new HttpGet(getFingerIdURI("/webapi/job.json").setParameter("jobId", String.valueOf(job.jobId)).setParameter("securityToken", job.securityToken).build());
+    new HttpGet(getFingerIdURI("/webapi/job.json")
+        .setParameter("jobId", String.valueOf(job.jobId))
+        .setParameter("securityToken", job.securityToken)
+        .build());
     for (int k = 0; k < 600; ++k) {
       Thread.sleep(3000 + 30 * k);
       if (updateJobStatus(job)) {
@@ -289,40 +326,39 @@ public class FingerIdWebProcess {
     throw new TimeoutException("Reached timeout");
   }
 
-  private boolean updateJobStatus(FingerIdJob job) throws URISyntaxException, IOException {
-    final HttpGet get = new HttpGet(getFingerIdURI("/webapi/job.json").setParameter("jobId", String.valueOf(job.jobId)).setParameter("securityToken", job.securityToken).build());
+  private boolean updateJobStatus(FingerIdJob job) throws URISyntaxException {
+    final HttpGet get = new HttpGet(getFingerIdURI("/webapi/job.json")
+        .setParameter("jobId", String.valueOf(job.jobId))
+        .setParameter("securityToken", job.securityToken)
+        .build());
     try (CloseableHttpResponse response = client.execute(get)) {
-      Gson gson = new Gson();
-      try {
-        GetResponse getResponse = gson.fromJson(new BufferedReader(new InputStreamReader(response.getEntity().getContent(), ContentType.getOrDefault(response.getEntity()).getCharset())), GetResponse.class);
-        if (getResponse.prediction != null){
-          getResponse.plattBytes = Base64.decode(getResponse.prediction);
-          final double[] platts = parseBinaryToDoubles(getResponse.plattBytes);
-          job.prediction = new ProbabilityFingerprint(job.v, platts);
+      BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), ContentType.getOrDefault(response.getEntity()).getCharset()));
+      GetResponse getResponse = gson.fromJson(reader, GetResponse.class);
+      if (getResponse.prediction != null){
+        getResponse.plattBytes = Base64.decode(getResponse.prediction);
+        final double[] platts = parseBinaryToDoubles(getResponse.plattBytes);
+        job.prediction = new ProbabilityFingerprint(job.v, platts);
 
-          if (getResponse.iokrVector != null) {
-            getResponse.iokrBytes = Base64.decode(getResponse.iokrVector);
-            job.iokrVector = parseBinaryToDoubles(getResponse.iokrBytes);
-          }
+        if (getResponse.iokrVector != null) {
+          getResponse.iokrBytes = Base64.decode(getResponse.iokrVector);
+          job.iokrVector = parseBinaryToDoubles(getResponse.iokrBytes);
+        }
 
-          return true;
-        } else {
-          job.state = getResponse.state != null ? getResponse.state : "SUBMITTED";
-        }
-        if (getResponse.errors != null) {
-          job.errorMessage = getResponse.errors;
-        }
-      } finally {
-        //TODO: stuff
+        return true;
+      } else {
+        job.state = getResponse.state != null ? getResponse.state : "SUBMITTED";
+      }
+      if (getResponse.errors != null) {
+        job.errorMessage = getResponse.errors;
       }
     } catch (Throwable t) {
-      LoggerFactory.getLogger(this.getClass()).error("Error when updating job #" + job.jobId, t);
-      throw (t);
+      logger.error("Error when updating job #" + job.jobId, t);
+      throw new MSDKRuntimeException(t);
     }
     return false;
   }
 
-  private static double[] parseBinaryToDoubles(byte[] bytes) {
+  private double[] parseBinaryToDoubles(byte[] bytes) {
     final TDoubleArrayList data = new TDoubleArrayList(2000);
     final ByteBuffer buf = ByteBuffer.wrap(bytes);
     buf.order(ByteOrder.LITTLE_ENDIAN);
@@ -332,18 +368,12 @@ public class FingerIdWebProcess {
     return data.toArray();
   }
 
-  /* MAGIC CONSTATNS  */
-  private String getPredictor(PrecursorIonType precursorIonType) {
-    int charge = precursorIonType.getIonization().getCharge();
-    if (charge > 0)
-      return "1";
-    return "4";
-  }
+
 
   class GetResponse {
     public String securityToken;
     public int jobId;
-    byte[]  plattBytes;
+    byte[] plattBytes;
     byte[] iokrBytes;
 
     String iokrVector;
@@ -369,3 +399,4 @@ public class FingerIdWebProcess {
   }
 
 }
+
