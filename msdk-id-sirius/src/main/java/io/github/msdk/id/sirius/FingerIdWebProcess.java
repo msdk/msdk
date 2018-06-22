@@ -25,19 +25,23 @@ import de.unijena.bioinf.ChemistryBase.ms.ft.FTree;
 import de.unijena.bioinf.babelms.json.FTJsonWriter;
 import de.unijena.bioinf.babelms.ms.JenaMsWriter;
 import de.unijena.bioinf.babelms.utils.Base64;
+import de.unijena.bioinf.chemdb.BioFilter;
 import de.unijena.bioinf.chemdb.CompoundCandidateChargeLayer;
 import de.unijena.bioinf.chemdb.CompoundCandidateChargeState;
 import de.unijena.bioinf.chemdb.FingerprintCandidate;
+import de.unijena.bioinf.chemdb.RESTDatabase;
+import de.unijena.bioinf.chemdb.SearchStructureByFormula;
 import de.unijena.bioinf.fingerid.blast.CovarianceScoring;
 import de.unijena.bioinf.fingerid.blast.Fingerblast;
 import de.unijena.bioinf.fingerid.blast.FingerblastScoringMethod;
 import de.unijena.bioinf.fingerid.blast.ScoringMethodFactory;
-import de.unijena.bioinf.fingerid.blast.ScoringMethodFactory.CSIFingerIdScoringMethod;
 import de.unijena.bioinf.fingerid.predictor_types.PredictorType;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import de.unijena.bioinf.utils.systemInfo.SystemInformation;
 import gnu.trove.list.array.TDoubleArrayList;
 import gnu.trove.list.array.TIntArrayList;
+import io.github.msdk.MSDKException;
+import io.github.msdk.MSDKRuntimeException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -51,7 +55,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeoutException;
-import javax.print.URIException;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -63,16 +66,56 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FingerIdProcess {
+public class FingerIdWebProcess {
 
-  private CloseableHttpClient client = HttpClients.createSystem();
-  private final BasicNameValuePair UID = new BasicNameValuePair("uid", SystemInformation.generateSystemKey());
+  private final static CloseableHttpClient client = HttpClients.createSystem(); // Threadsafe
+  private final static Logger logger = LoggerFactory.getLogger(FingerIdWebProcess.class);
+  private final static BasicNameValuePair UID = new BasicNameValuePair("uid", SystemInformation.generateSystemKey());
+  private final static String FINGERID_SOURCE = "https://www.csi-fingerid.uni-jena.de";
+  private final static String FINGERID_VERSION = "1.1.2";
+  private final static SearchStructureByFormula searchDB = new RESTDatabase(BioFilter.ALL);
 
-  public FingerIdProcess() {
+  private final Ms2Experiment experiment;
+  private final IdentificationResult siriusResult;
 
+
+  public FingerIdWebProcess(Ms2Experiment experiment, IdentificationResult siriusResult) {
+    this.experiment = experiment;
+    this.siriusResult = siriusResult;
+  }
+
+  private URIBuilder getFingerIdURI(String path) throws URISyntaxException {
+    if (path == null)
+      path = "";
+    URIBuilder builder = new URIBuilder(FINGERID_SOURCE);
+    builder.setPath("/csi-fingerid-" + FingerIdWebProcess.fingerIdVersion() + path);
+
+    return builder;
+  }
+
+  private List<FingerprintCandidate> getCandidates() throws de.unijena.bioinf.chemdb.DatabaseException {
+    PrecursorIonType ionType = experiment.getPrecursorIonType();
+    MolecularFormula formula = siriusResult.getMolecularFormula();
+
+    final CompoundCandidateChargeState chargeState = CompoundCandidateChargeState.getFromPrecursorIonType(ionType);
+    if (chargeState != CompoundCandidateChargeState.NEUTRAL_CHARGE) {
+      final List<FingerprintCandidate> intrinsic = searchDB.lookupStructuresAndFingerprintsByFormula(formula);
+      intrinsic.removeIf((f)->!f.hasChargeState(CompoundCandidateChargeLayer.Q_LAYER, chargeState));
+      // all intrinsic formulas have to contain a p layer?
+      final MolecularFormula hydrogen = MolecularFormula.parse("H");
+      final List<FingerprintCandidate> protonated = searchDB.lookupStructuresAndFingerprintsByFormula(ionType.getCharge()>0 ? formula.subtract(hydrogen) : formula.add(hydrogen));
+      protonated.removeIf((f)->!f.hasChargeState(CompoundCandidateChargeLayer.P_LAYER, chargeState));
+
+      intrinsic.addAll(protonated);
+      return intrinsic;
+    } else {
+      final List<FingerprintCandidate> candidates = searchDB.lookupStructuresAndFingerprintsByFormula(formula);
+      candidates.removeIf((f)->!f.hasChargeState(CompoundCandidateChargeLayer.P_LAYER, CompoundCandidateChargeState.NEUTRAL_CHARGE));
+      return candidates;
+    }
   }
 
   private PredictionPerformance[] getStatistics(PredictorType predictorType, final TIntArrayList fingerprintIndizes) throws IOException {
@@ -106,7 +149,7 @@ public class FingerIdProcess {
     return performances.toArray(new PredictionPerformance[performances.size()]);
   }
 
-  public CovarianceScoring getCovarianceScoring(FingerprintVersion fpVersion, double alpha) throws IOException {
+  private CovarianceScoring getCovarianceScoring(FingerprintVersion fpVersion, double alpha) throws IOException {
     final HttpGet get;
     try {
       get = new HttpGet(getFingerIdURI("/webapi/covariancetree.csv").build());
@@ -123,8 +166,13 @@ public class FingerIdProcess {
     return covarianceScoring;
   }
 
+  private boolean isSuccessful(CloseableHttpResponse response) {
+    return response.getStatusLine().getStatusCode() < 400;
+  }
 
-  public ProbabilityFingerprint useThis(Ms2Experiment experiment, IdentificationResult result) throws IOException {
+
+
+  public List<Scored<FingerprintCandidate>> useThis(Ms2Experiment experiment, IdentificationResult result) throws IOException {
     //TODO: fails on size of version
     CdkFingerprintVersion version = CdkFingerprintVersion.withECFP();
 
@@ -135,10 +183,7 @@ public class FingerIdProcess {
 
     final TIntArrayList list = new TIntArrayList(4096);
     int charge = experiment.getPrecursorIonType().getCharge();
-    PredictorType type = (charge > 0) ? PredictorType.CSI_FINGERID_POSITIVE : PredictorType.CSI_FINGERID_NEGATIVE;
-    PredictionPerformance[] perf = getStatistics(type, list);
-
-
+    PredictionPerformance[] perf = getStatistics(getType(experiment), list);
     int[] fingerprintIndizes = list.toArray();
 
     for (int index : fingerprintIndizes) {
@@ -157,53 +202,26 @@ public class FingerIdProcess {
     try {
       FingerIdJob job = submitJob(experiment, result, maskedVersion);
       print = processFingerIdJob(job);
-      candidates = getCandidates(experiment, result)result);
-    } catch (Exception e) {
-      e.printStackTrace();
+      candidates = getCandidates(experiment, result);
+    } catch (de.unijena.bioinf.chemdb.DatabaseException e) {
+      logger.info("Connection with PubChem DB failed.");
+      throw new MSDKRuntimeException(e);
     }
 
     final List<Scored<FingerprintCandidate>> scored = blast.score(candidates, print);
-    return print;
-  }
-
-  private List<FingerprintCandidate> getCandidates(Ms2Experiment experiment, IdentificationResult result) {
-    PrecursorIonType ionType = experiment.getPrecursorIonType();
-    MolecularFormula formula = experiment.getMolecularFormula();
-
-    //db это видимо Pubchem и тд.
-    FingerblastSearchEngine searchDatabase = new FingerblastSearchEngine(this, db);
-
-    final CompoundCandidateChargeState chargeState = CompoundCandidateChargeState.getFromPrecursorIonType(ionType);
-    if (chargeState != CompoundCandidateChargeState.NEUTRAL_CHARGE) {
-      final List<FingerprintCandidate> intrinsic = searchDatabase.lookupStructuresAndFingerprintsByFormula(formula);
-      intrinsic.removeIf((f)->!f.hasChargeState(CompoundCandidateChargeLayer.Q_LAYER, chargeState));
-      // all intrinsic formulas have to contain a p layer?
-      final MolecularFormula hydrogen = MolecularFormula.parse("H");
-      final List<FingerprintCandidate> protonated = searchDatabase.lookupStructuresAndFingerprintsByFormula(ionType.getCharge()>0 ? formula.subtract(hydrogen) : formula.add(hydrogen));
-      protonated.removeIf((f)->!f.hasChargeState(CompoundCandidateChargeLayer.P_LAYER, chargeState));
-
-      intrinsic.addAll(protonated);
-      return intrinsic;
-    } else {
-      final List<FingerprintCandidate> candidates = searchDatabase.lookupStructuresAndFingerprintsByFormula(formula);
-      candidates.removeIf((f)->!f.hasChargeState(CompoundCandidateChargeLayer.P_LAYER, CompoundCandidateChargeState.NEUTRAL_CHARGE));
-      return candidates;
-    }
-  }
-
-
-  private URIBuilder getFingerIdURI(String path) throws URISyntaxException {
-    if (path == null)
-      path = "";
-    URIBuilder builder = new URIBuilder("https://www.csi-fingerid.uni-jena.de");
-    builder.setPath("/csi-fingerid-" + FingerIdProcess.fingeridVersion() + path);
-
-    return builder;
+    return scored;
   }
 
   //TODO: make it better
-  private static String fingeridVersion() {
-    return "1.1.2";
+  private static String fingerIdVersion() {
+    return FINGERID_VERSION;
+  }
+
+  private static PredictorType getType(Ms2Experiment experiment) {
+    int charge = experiment.getPrecursorIonType().getCharge();
+    if (charge > 0)
+      return PredictorType.CSI_FINGERID_POSITIVE;
+    return PredictorType.CSI_FINGERID_NEGATIVE;
   }
 
   public FingerIdJob submitJob(final Ms2Experiment experiment, final IdentificationResult result, final MaskedFingerprintVersion version) throws IOException, URISyntaxException{
@@ -228,7 +246,7 @@ public class FingerIdProcess {
     final NameValuePair ms = new BasicNameValuePair("ms", stringMs);
     final NameValuePair tree = new BasicNameValuePair("ft", jsonTree);
 
-    final NameValuePair predictor = new BasicNameValuePair("predictors", getPredictor(experiment.getPrecursorIonType()));
+    final NameValuePair predictor = new BasicNameValuePair("predictors", PredictorType.getBitsAsString(getType(experiment)));
 
     final UrlEncodedFormEntity params = new UrlEncodedFormEntity(Arrays.asList(ms, tree, predictor, UID));
     post.setEntity(params);
@@ -257,7 +275,7 @@ public class FingerIdProcess {
     }
   }
 
-  public ProbabilityFingerprint processFingerIdJob(FingerIdJob job) throws URISyntaxException, InterruptedException, TimeoutException, IOException {
+  private ProbabilityFingerprint processFingerIdJob(FingerIdJob job) throws URISyntaxException, InterruptedException, TimeoutException, IOException {
     // RECEIVE RESULTS
     new HttpGet(getFingerIdURI("/webapi/job.json").setParameter("jobId", String.valueOf(job.jobId)).setParameter("securityToken", job.securityToken).build());
     for (int k = 0; k < 600; ++k) {
@@ -304,7 +322,7 @@ public class FingerIdProcess {
     return false;
   }
 
-  double[] parseBinaryToDoubles(byte[] bytes) {
+  private static double[] parseBinaryToDoubles(byte[] bytes) {
     final TDoubleArrayList data = new TDoubleArrayList(2000);
     final ByteBuffer buf = ByteBuffer.wrap(bytes);
     buf.order(ByteOrder.LITTLE_ENDIAN);

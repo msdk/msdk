@@ -16,6 +16,16 @@
 
   <repositories>
     <repository>
+      <id>bioinf-jena-new</id>
+      <name>Test repository</name>
+      <url>https://bio.informatik.uni-jena.de/repository/libs-release-oss/</url>
+    </repository>
+    <!--<repository>-->
+      <!--<id>maven-main-repo</id>-->
+      <!--<name>Maven main repository</name>-->
+      <!--<url>http://repo.maven.apache.org/maven2/</url>-->
+    <!--</repository>-->
+    <repository>
       <id>ebi</id>
       <name>ebi.co.uk</name>
       <url>http://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
@@ -25,11 +35,7 @@
       <name>GLPK</name>
       <url>https://www.xypron.de/repository</url>
     </repository>
-    <repository>
-      <id>bioinf-jena-new</id>
-      <name>Test repository</name>
-      <url>https://bio.informatik.uni-jena.de/repository/libs-release-oss</url>
-    </repository>
+
   </repositories>
 
   <dependencies>
@@ -209,6 +215,20 @@
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
       <version>2.6.2</version>
+    </dependency>
+
+
+    <!-- RESTDB pom.xml кажется забыл это -->
+    <dependency>
+      <groupId>javax.json</groupId>
+      <artifactId>javax.json-api</artifactId>
+      <version>1.1.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.json</artifactId>
+      <version>1.1.2</version>
     </dependency>
 
 

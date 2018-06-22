@@ -22,10 +22,6 @@ import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Spectrum;
 import de.unijena.bioinf.ChemistryBase.ms.Peak;
 import de.unijena.bioinf.ChemistryBase.ms.Spectrum;
 import de.unijena.bioinf.ChemistryBase.ms.utils.SimpleSpectrum;
-import de.unijena.bioinf.chemdb.FingerprintCandidate;
-import de.unijena.bioinf.fingerid.blast.Fingerblast;
-import de.unijena.bioinf.fingerid.blast.FingerblastScoringMethod;
-import de.unijena.bioinf.fingerid.blast.ScoringMethodFactory.CSIFingerIdScoringMethod;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import de.unijena.bioinf.sirius.IsotopePatternHandling;
 import de.unijena.bioinf.sirius.Sirius;
@@ -145,7 +141,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     List<IdentificationResult> siriusResults  = sirius.identify(experiment,
         numberOfCandidates, true, IsotopePatternHandling.both, constraints);
 
-    FingerIdProcess fingerId = new FingerIdProcess();
+    FingerIdWebProcess fingerId = new FingerIdWebProcess();
     ProbabilityFingerprint pr = null;
     try {
       pr = fingerId.useThis(experiment, siriusResults.get(0));
@@ -254,12 +250,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     for (IdentificationResult r : siriusSpectra) {
       if (cancelled)
         return null;
-
-
-
-
-
       IonAnnotation ionAnnotation = createIonAnnotation(r);
+
       result.add(ionAnnotation);
     }
 

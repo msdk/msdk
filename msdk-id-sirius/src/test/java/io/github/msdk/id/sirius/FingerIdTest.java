@@ -40,6 +40,12 @@ import org.openscience.cdk.config.Isotopes;
 import org.openscience.cdk.formula.MolecularFormulaRange;
 
 public class FingerIdTest {
+
+  public FingerIdTest() throws MSDKException {
+    String loggingProperties = getResourcePath("logging.properties").toString();
+    System.setProperty("java.util.logging.config.file", loggingProperties);
+  }
+
   private Path getResourcePath(String resource) throws MSDKException {
     final URL url = SiriusMs2Test.class.getClassLoader().getResource(resource);
     try {
