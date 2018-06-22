@@ -16,6 +16,7 @@ import de.unijena.bioinf.ChemistryBase.algorithm.Scored;
 import de.unijena.bioinf.ChemistryBase.chem.MolecularFormula;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
 import de.unijena.bioinf.ChemistryBase.fp.CdkFingerprintVersion;
+import de.unijena.bioinf.ChemistryBase.fp.Fingerprint;
 import de.unijena.bioinf.ChemistryBase.fp.FingerprintVersion;
 import de.unijena.bioinf.ChemistryBase.fp.MaskedFingerprintVersion;
 import de.unijena.bioinf.ChemistryBase.fp.PredictionPerformance;
@@ -38,11 +39,15 @@ import de.unijena.bioinf.fingerid.blast.ScoringMethodFactory;
 import de.unijena.bioinf.fingerid.predictor_types.PredictorType;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import de.unijena.bioinf.utils.systemInfo.SystemInformation;
+
 import gnu.trove.list.array.TDoubleArrayList;
 import gnu.trove.list.array.TIntArrayList;
 import io.github.msdk.MSDKException;
+import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKRuntimeException;
-import java.io.BufferedInputStream;
+import io.github.msdk.datamodel.IonAnnotation;
+
+import io.github.msdk.datamodel.SimpleIonAnnotation;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -53,9 +58,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeoutException;
+
+import javax.annotation.Nullable;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -67,13 +75,16 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+
+import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FingerIdWebProcess {
+public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
 
   private final static CloseableHttpClient client = HttpClients.createSystem(); // Threadsafe
-  private final static Logger logger = LoggerFactory.getLogger(FingerIdWebProcess.class);
+  private final static Logger logger = LoggerFactory.getLogger(FingerIdWebMethod.class);
   private final static BasicNameValuePair UID = new BasicNameValuePair("uid", SystemInformation.generateSystemKey());
   private final static String FINGERID_SOURCE = "https://www.csi-fingerid.uni-jena.de";
   private final static String FINGERID_VERSION = "1.1.2";
@@ -81,12 +92,25 @@ public class FingerIdWebProcess {
   private final static Gson gson = new Gson();
 
   private final Ms2Experiment experiment;
-  private final IdentificationResult siriusResult;
+  private final List<IonAnnotation> annotations;
+  private final PredictionPerformance[] perf;
+  private final MaskedFingerprintVersion version;
+  private final Fingerblast blaster;
 
 
-  public FingerIdWebProcess(Ms2Experiment experiment, IdentificationResult siriusResult) {
+
+  public FingerIdWebMethod(Ms2Experiment experiment, List<IonAnnotation> ionAnnotations) throws MSDKException {
     this.experiment = experiment;
-    this.siriusResult = siriusResult;
+    this.annotations = ionAnnotations;
+
+    try {
+      final TIntArrayList list = new TIntArrayList(4096);
+      perf = getStatistics(getType(), list);
+      version = buildFingerprintVersion(list);
+      blaster = createBlaster(perf);
+    } catch (IOException e) {
+      throw new MSDKException(e);
+    }
   }
 
   private static String fingerIdVersion() {
@@ -97,14 +121,17 @@ public class FingerIdWebProcess {
     if (path == null)
       path = "";
     URIBuilder builder = new URIBuilder(FINGERID_SOURCE);
-    builder.setPath("/csi-fingerid-" + FingerIdWebProcess.fingerIdVersion() + path);
+    builder.setPath("/csi-fingerid-" + FingerIdWebMethod.fingerIdVersion() + path);
 
     return builder;
   }
 
-  private List<FingerprintCandidate> getCandidates() throws de.unijena.bioinf.chemdb.DatabaseException {
+  private List<FingerprintCandidate> getCandidates(IonAnnotation ionAnnotation) throws de.unijena.bioinf.chemdb.DatabaseException {
     PrecursorIonType ionType = experiment.getPrecursorIonType();
-    MolecularFormula formula = siriusResult.getMolecularFormula();
+    IMolecularFormula iFormula = ionAnnotation.getFormula();
+    MolecularFormula formula = MolecularFormula.parse(MolecularFormulaManipulator.getString(iFormula));
+
+
 
     final CompoundCandidateChargeState chargeState = CompoundCandidateChargeState.getFromPrecursorIonType(ionType);
     if (chargeState != CompoundCandidateChargeState.NEUTRAL_CHARGE) {
@@ -178,28 +205,15 @@ public class FingerIdWebProcess {
 
 
 
-  public List<Scored<FingerprintCandidate>> useThis(Ms2Experiment experiment, IdentificationResult result) throws MSDKException, MSDKRuntimeException {
-    PredictionPerformance[] perf;
-    MaskedFingerprintVersion version;
+  private List<Scored<FingerprintCandidate>> processSiriusResult(IonAnnotation annotation) throws MSDKException, MSDKRuntimeException {
     ProbabilityFingerprint print;
     List<Scored<FingerprintCandidate>> scored;
-    Fingerblast blaster;
-
-    try {
-      final TIntArrayList list = new TIntArrayList(4096);
-      perf = getStatistics(getType(experiment), list);
-      version = buildFingerprintVersion(list);
-      blaster = createBlaster(perf, version);
-    } catch (IOException e) {
-      throw new MSDKException(e);
-    }
-
 
     List<FingerprintCandidate> candidates;
     try {
-      FingerIdJob job = submitJob(experiment, result, version);
+      FingerIdJob job = submitJob(result); //TODO: There is need of FTree, create new SimpleIonAnnotation
       print = processFingerIdJob(job);
-      candidates = getCandidates();
+      candidates = getCandidates(annotation);
       scored = blaster.score(candidates, print);
     } catch (de.unijena.bioinf.chemdb.DatabaseException e) {
       logger.error("Connection with PubChem DB failed.");
@@ -232,9 +246,9 @@ public class FingerIdWebProcess {
     return maskedBuiled.toMask();
   }
 
-  private Fingerblast createBlaster(PredictionPerformance[] perf, MaskedFingerprintVersion version) throws IOException {
+  private Fingerblast createBlaster(PredictionPerformance[] perf) throws IOException {
     FingerblastScoringMethod method = null;
-    PredictorType type = getType(experiment);
+    PredictorType type = getType();
     if (type == PredictorType.CSI_FINGERID_NEGATIVE)
       method = new ScoringMethodFactory.CSIFingerIdScoringMethod(perf);
     else
@@ -244,18 +258,18 @@ public class FingerIdWebProcess {
   }
 
 
-  private static PredictorType getType(final Ms2Experiment experiment) {
-    int charge = experiment.getPrecursorIonType().getCharge();
+  private PredictorType getType() {
+    int charge = this.experiment.getPrecursorIonType().getCharge();
     if (charge > 0)
       return PredictorType.CSI_FINGERID_POSITIVE;
     return PredictorType.CSI_FINGERID_NEGATIVE;
   }
 
-  public FingerIdJob submitJob(final Ms2Experiment experiment, final IdentificationResult result, final MaskedFingerprintVersion version) throws IOException, URISyntaxException{
+  public FingerIdJob submitJob(final IdentificationResult result) throws IOException, URISyntaxException{
     final HttpPost post = new HttpPost(getFingerIdURI("/webapi/predict.json").build());
     final FTree ftree = result.getResolvedTree();
 
-    post.setEntity(buildParams(ftree, getType(experiment)));
+    post.setEntity(buildParams(ftree));
 
     final String securityToken;
     final long jobId;
@@ -281,13 +295,13 @@ public class FingerIdWebProcess {
     }
   }
 
-  private UrlEncodedFormEntity buildParams(FTree ftree, PredictorType type) throws IOException {
+  private UrlEncodedFormEntity buildParams(FTree ftree) throws IOException {
     final String stringMs = getExperimentAsString();
     final String jsonTree = getTreeAsString(ftree);
 
     final NameValuePair ms = new BasicNameValuePair("ms", stringMs);
     final NameValuePair tree = new BasicNameValuePair("ft", jsonTree);
-    final NameValuePair predictor = new BasicNameValuePair("predictors", PredictorType.getBitsAsString(getType(experiment)));
+    final NameValuePair predictor = new BasicNameValuePair("predictors", PredictorType.getBitsAsString(getType()));
 
     final UrlEncodedFormEntity params = new UrlEncodedFormEntity(Arrays.asList(ms, tree, predictor, UID));
     return params;
@@ -368,6 +382,48 @@ public class FingerIdWebProcess {
     return data.toArray();
   }
 
+  @Nullable
+  @Override
+  public Float getFinishedPercentage() { //TODO: make it
+    return null;
+  }
+
+  @Nullable
+  @Override
+  public List<IonAnnotation> execute() throws MSDKException { //TODO: make it
+    List<IonAnnotation> newAnnotations = new LinkedList<>();
+    for (IonAnnotation annotation: annotations) {
+      List<Scored<FingerprintCandidate>> candidates = processSiriusResult(annotation);
+      List<IonAnnotation> updatedAnnotations = extendAnnotation(annotation, candidates);
+      newAnnotations.addAll(updatedAnnotations); //TODO: think about how to make it better, bcs later how to divide it???
+    }
+
+    return newAnnotations;
+  }
+
+  private List<IonAnnotation> extendAnnotation(final IonAnnotation annotation, final List<Scored<FingerprintCandidate>> candidates) {
+    final SimpleIonAnnotation simpleAnnotation = (SimpleIonAnnotation) annotation;
+    List<IonAnnotation> annotations = new LinkedList<>();
+    for (Scored<FingerprintCandidate> scoredCandidate: candidates) { //TODO: add stop flag (Ex. MAX == 50 elems)
+      //TODO: Create ScoredCandidate subclass
+      SimpleIonAnnotation extendedAnnotation = new SimpleIonAnnotation();
+      //TODO: extendedAnnotation.addStuff();
+      annotations.add(extendedAnnotation);
+    }
+
+    return annotations;
+  }
+
+  @Nullable
+  @Override
+  public List<IonAnnotation> getResult() { //TODO: make it
+    return null;
+  }
+
+  @Override
+  public void cancel() { //TODO: make it
+
+  }
 
 
   class GetResponse {

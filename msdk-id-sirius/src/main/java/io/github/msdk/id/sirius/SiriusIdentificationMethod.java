@@ -14,7 +14,10 @@
 package io.github.msdk.id.sirius;
 
 import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
+import de.unijena.bioinf.ChemistryBase.chem.MolecularFormula;
+import de.unijena.bioinf.ChemistryBase.chem.MutableMolecularFormula;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
+import de.unijena.bioinf.ChemistryBase.chem.utils.MolecularFormulaPacker;
 import de.unijena.bioinf.ChemistryBase.fp.ProbabilityFingerprint;
 import de.unijena.bioinf.ChemistryBase.ms.Deviation;
 import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Experiment;
@@ -140,18 +143,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     logger.debug("Sirius starts processing MsSpectrums");
     List<IdentificationResult> siriusResults  = sirius.identify(experiment,
         numberOfCandidates, true, IsotopePatternHandling.both, constraints);
-
-    FingerIdWebProcess fingerId = new FingerIdWebProcess();
-    ProbabilityFingerprint pr = null;
-    try {
-      pr = fingerId.useThis(experiment, siriusResults.get(0));
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.out.println("Panic");
-    }
-    siriusResults.get(0).setAnnotation(ProbabilityFingerprint.class, pr);
-
-
     logger.debug("Sirius finished processing and returned {} results", siriusResults.size());
 
     return siriusResults;
@@ -251,7 +242,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
       if (cancelled)
         return null;
       IonAnnotation ionAnnotation = createIonAnnotation(r);
-
       result.add(ionAnnotation);
     }
 
@@ -270,6 +260,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     ionAnnotation.setFormula(formula);
     ionAnnotation.setIdentificationMethod("Sirius");
     ionAnnotation.setIonType(ion);
+
+    ionAnnotation.
 
     return ionAnnotation;
   }
