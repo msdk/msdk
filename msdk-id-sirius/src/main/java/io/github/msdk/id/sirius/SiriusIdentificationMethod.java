@@ -16,6 +16,7 @@ package io.github.msdk.id.sirius;
 import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
 import de.unijena.bioinf.ChemistryBase.ms.Deviation;
+import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Experiment;
 import de.unijena.bioinf.ChemistryBase.ms.MutableMs2Spectrum;
 import de.unijena.bioinf.ChemistryBase.ms.Peak;
@@ -31,7 +32,6 @@ import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.IonAnnotation;
 import io.github.msdk.datamodel.IonType;
 import io.github.msdk.datamodel.MsSpectrum;
-import io.github.msdk.datamodel.SimpleIonAnnotation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +78,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private final Deviation deviation;
   private boolean cancelled = false;
   private List<IonAnnotation> result;
+  private MutableMs2Experiment experiment;
 
   /* Set to be class elements for performance */
 
@@ -132,7 +133,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * Method is left to be protected for test coverage
    */
   protected List<IdentificationResult> siriusProcessSpectra() throws MSDKException {
-    MutableMs2Experiment experiment = loadInitialExperiment();
+    experiment = loadInitialExperiment();
     loadSpectra(experiment);
     configureExperiment(experiment);
 
@@ -251,11 +252,12 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * @return configured instance of SimpleIonAnnotation
    */
   private IonAnnotation createIonAnnotation(IdentificationResult siriusResult) {
-    SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
+    SiriusIonAnnotation ionAnnotation = new SiriusIonAnnotation();
     IMolecularFormula formula = generateFormula(siriusResult);
     ionAnnotation.setFormula(formula);
     ionAnnotation.setIdentificationMethod("Sirius");
     ionAnnotation.setIonType(ion);
+    ionAnnotation.setFTree(siriusResult.getResolvedTree());
 
     return ionAnnotation;
   }
@@ -285,5 +287,9 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   @Override
   public void cancel() {
     cancelled = true;
+  }
+
+  public Ms2Experiment getExperiment() {
+    return experiment;
   }
 }
