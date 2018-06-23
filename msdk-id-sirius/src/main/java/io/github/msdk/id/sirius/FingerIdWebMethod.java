@@ -59,6 +59,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeoutException;
 
 import javax.annotation.Nullable;
@@ -404,6 +406,7 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
   @Override
   public List<IonAnnotation> execute() throws MSDKException {
     List<Scored<FingerprintCandidate>> candidates = processSiriusAnnotation();
+    Set<String> visitedSMILES = new TreeSet<>();
 
     for (Scored<FingerprintCandidate> scoredCandidate: candidates) {
       if (cancelled)
@@ -412,19 +415,17 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
       final FingerprintCandidate candidate = scoredCandidate.getCandidate();
 
 
-      DBLink[] links = candidate.getLinks();
-      if (links != null && links.length > 0) {
-        String id = links[0].id;
-        System.out.println("What?"); //todo: make magic here
-//        extendedAnnotation.setAccessionURL();
-      }
+
 
       synchronized (smp) {
         try {
           String smilesString = candidate.getSmiles();
+          if (visitedSMILES.contains(smilesString))
+            continue;
           IAtomContainer container = smp.parseSmiles(smilesString);
           extendedAnnotation.setChemicalStructure(container);
           extendedAnnotation.setSMILES(smilesString);
+          visitedSMILES.add(smilesString);
         } catch(org.openscience.cdk.exception.InvalidSmilesException e){
           logger.error("Incorrect SMILES string");
           throw new MSDKException(e);
@@ -433,7 +434,7 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
       extendedAnnotation.setInchiKey(candidate.getInchiKey2D());
       extendedAnnotation.setDatabase("Pubchem"); //TODO: not sure
       extendedAnnotation.setDescription(candidate.getName());
-
+//      extendedAnnotation.setDBLinks(candidate.getLinks()); // TODO: make it clear, links to weird stuff???
       newAnnotations.add(extendedAnnotation);
       finishedItems++;
       if (finishedItems == candidatesAmount)

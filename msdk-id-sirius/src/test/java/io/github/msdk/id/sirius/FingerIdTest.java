@@ -63,7 +63,7 @@ public class FingerIdTest {
     final double deviation = 10d;
     final double precursorMass = 315.1230;
     final IonType ion = IonTypeUtil.createIonType("[M+H]+");
-    final String[] expectedResults = {"C18H18O5"};
+    final String expectedSiriusResult = "C18H18O5";
     final int siriusCandidates = 1;
     final int fingerCandidates = 3;
     final String ms1Path = "flavokavainA_MS1.txt";
@@ -104,7 +104,7 @@ public class FingerIdTest {
     List<IonAnnotation> siriusAnnotations = siriusMethod.execute();
     IonAnnotation siriusAnnotation = siriusAnnotations.get(0);
     String formula = MolecularFormulaManipulator.getString(siriusAnnotation.getFormula());
-    Assert.assertEquals(formula, siriusAnnotation);
+    Assert.assertEquals(formula, expectedSiriusResult);
 
     final String[] candidateNames = {"Flavokavain A", "4''-Hydroxy-2'',4,6''-trimethoxychalcone", null};
     final String[] inchis = {"CGIBCVBDFUTMPT", "FQZORWOCAANBNC", "JGYYVILPBDGMNE"};

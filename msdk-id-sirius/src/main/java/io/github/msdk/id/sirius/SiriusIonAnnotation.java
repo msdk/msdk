@@ -15,12 +15,16 @@ package io.github.msdk.id.sirius;
 
 import de.unijena.bioinf.ChemistryBase.chem.Smiles;
 import de.unijena.bioinf.ChemistryBase.ms.ft.FTree;
+import de.unijena.bioinf.chemdb.DBLink;
 import io.github.msdk.datamodel.SimpleIonAnnotation;
-import org.openscience.cdk.smiles.SmilesParser;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class SiriusIonAnnotation extends SimpleIonAnnotation {
   private FTree ftree;
   private String smilesString;
+  private DBLink[] dblinks;
 
   public SiriusIonAnnotation(SiriusIonAnnotation master) {
     super();
@@ -68,5 +72,22 @@ public class SiriusIonAnnotation extends SimpleIonAnnotation {
 
   public String getSMILES() {
     return smilesString;
+  }
+
+  public void setDBLinks(DBLink[] links) {
+    Set<DBLink> linksSet = new HashSet<>();
+    for (DBLink link: links)
+      linksSet.add(link);
+    this.dblinks = new DBLink[linksSet.size()];
+
+    // So dirty bcs problems with
+    int i = 0;
+    for (Iterator<DBLink> it = linksSet.iterator(); it.hasNext(); ) {
+      dblinks[i++] = it.next();
+    }
+  }
+
+  public DBLink[] getDBLinks() {
+    return dblinks;
   }
 }
