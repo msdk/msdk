@@ -12,8 +12,10 @@ package io.github.msdk.id.sirius;/*
  */
 
 import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
+import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import de.unijena.bioinf.sirius.IdentificationResult;
 import io.github.msdk.MSDKException;
+import io.github.msdk.datamodel.IonAnnotation;
 import io.github.msdk.datamodel.IonType;
 import io.github.msdk.datamodel.MsSpectrum;
 import io.github.msdk.datamodel.MsSpectrumType;
@@ -38,6 +40,7 @@ import org.junit.Test;
 import org.openscience.cdk.config.IsotopeFactory;
 import org.openscience.cdk.config.Isotopes;
 import org.openscience.cdk.formula.MolecularFormulaRange;
+import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
 public class FingerIdTest {
 
@@ -58,13 +61,13 @@ public class FingerIdTest {
   @Test
   public void testPredictedFingerprint() throws MSDKException, IOException {
     final double deviation = 10d;
-    final double precursorMass = 233.1175;
+    final double precursorMass = 315.1230;
     final IonType ion = IonTypeUtil.createIonType("[M+H]+");
-//    final String[] expectedResults = {"C13H10O4", "C11H8N3O3", "C9H13NO4P", "C7H11N4O3P",
-//        "C6H10N6O2S"};
-    final int candidatesAmount = 5;
-
-
+    final String[] expectedResults = {"C18H18O5"};
+    final int siriusCandidates = 1;
+    final int fingerCandidates = 3;
+    final String ms1Path = "flavokavainA_MS1.txt";
+    final String ms2Path = "flavokavainA_MS2.txt";
 
     final ConstraintsGenerator generator = new ConstraintsGenerator();
 
@@ -79,24 +82,47 @@ public class FingerIdTest {
     range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
 
     final FormulaConstraints constraints = generator.generateConstraint(range);
-    final String ms2Path = "flavokavainA_MS2.txt";
 
+    File ms1File = getResourcePath(ms1Path).toFile();
     File ms2File = getResourcePath(ms2Path).toFile();
+    MsSpectrum ms1Spectrum = TxtImportAlgorithm.parseMsSpectrum(new FileReader(ms1File));
     MsSpectrum ms2Spectrum = TxtImportAlgorithm.parseMsSpectrum(new FileReader(ms2File));
 
+    List<MsSpectrum> ms1list = new ArrayList<>();
     List<MsSpectrum> ms2list = new ArrayList<>();
     ms2list.add(ms2Spectrum);
+    ms1list.add(ms1Spectrum);
 
-    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(null,
+    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1list,
         ms2list,
         precursorMass,
         ion,
-        candidatesAmount,
+        siriusCandidates,
         constraints,
         deviation);
 
-    List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
-    System.out.println("TADA");
+    List<IonAnnotation> siriusAnnotations = siriusMethod.execute();
+    IonAnnotation siriusAnnotation = siriusAnnotations.get(0);
+    String formula = MolecularFormulaManipulator.getString(siriusAnnotation.getFormula());
+    Assert.assertEquals(formula, siriusAnnotation);
+
+    final String[] candidateNames = {"Flavokavain A", "4''-Hydroxy-2'',4,6''-trimethoxychalcone", null};
+    final String[] inchis = {"CGIBCVBDFUTMPT", "FQZORWOCAANBNC", "JGYYVILPBDGMNE"};
+    final String[] SMILES = {"COC1=CC=C(C=C1)C=CC(=O)C2=C(C=C(C=C2O)OC)OC", "COC1=CC=C(C=C1)C=CC(=O)C2=C(C=C(C=C2OC)O)OC", "COC1=CC=C(C=C1)C=CC(=O)C2=CC=C(C(=C2O)OC)OC"};
+
+    Ms2Experiment experiment = siriusMethod.getExperiment();
+    FingerIdWebMethod fingerMethod = new FingerIdWebMethod(experiment, siriusAnnotation, fingerCandidates);
+    List<IonAnnotation> annotations = fingerMethod.execute();
+    for (int i = 0; i < annotations.size(); i++) {
+      SiriusIonAnnotation fingeridAnnotation = (SiriusIonAnnotation) annotations.get(i);
+      String smiles = fingeridAnnotation.getSMILES();
+      String inchi = fingeridAnnotation.getInchiKey();
+      String name = fingeridAnnotation.getDescription();
+
+      Assert.assertEquals(smiles, SMILES[i]);
+      Assert.assertEquals(inchi, inchis[i]);
+      Assert.assertEquals(name, candidateNames[i]);
+    }
   }
 
 }

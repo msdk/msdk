@@ -13,11 +13,15 @@
 
 package io.github.msdk.id.sirius;
 
+import de.unijena.bioinf.ChemistryBase.chem.Smiles;
 import de.unijena.bioinf.ChemistryBase.ms.ft.FTree;
 import io.github.msdk.datamodel.SimpleIonAnnotation;
+import org.openscience.cdk.smiles.SmilesParser;
 
 public class SiriusIonAnnotation extends SimpleIonAnnotation {
   private FTree ftree;
+  private String smilesString;
+
   public SiriusIonAnnotation(SiriusIonAnnotation master) {
     super();
     copyInternal(this, master);
@@ -55,5 +59,14 @@ public class SiriusIonAnnotation extends SimpleIonAnnotation {
 
   public FTree getFTree() {
     return ftree;
+  }
+
+  //TODO: check SMILES string somehow!
+  public void setSMILES(String SMILES) {
+    smilesString = SMILES;
+  }
+
+  public String getSMILES() {
+    return smilesString;
   }
 }

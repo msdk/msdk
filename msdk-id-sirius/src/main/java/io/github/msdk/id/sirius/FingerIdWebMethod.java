@@ -412,12 +412,19 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
       final FingerprintCandidate candidate = scoredCandidate.getCandidate();
 
 
-//      DBLink[] links = candidate.getLinks();
+      DBLink[] links = candidate.getLinks();
+      if (links != null && links.length > 0) {
+        String id = links[0].id;
+        System.out.println("What?"); //todo: make magic here
+//        extendedAnnotation.setAccessionURL();
+      }
 
       synchronized (smp) {
         try {
-          IAtomContainer container = smp.parseSmiles(candidate.getSmiles());
+          String smilesString = candidate.getSmiles();
+          IAtomContainer container = smp.parseSmiles(smilesString);
           extendedAnnotation.setChemicalStructure(container);
+          extendedAnnotation.setSMILES(smilesString);
         } catch(org.openscience.cdk.exception.InvalidSmilesException e){
           logger.error("Incorrect SMILES string");
           throw new MSDKException(e);
