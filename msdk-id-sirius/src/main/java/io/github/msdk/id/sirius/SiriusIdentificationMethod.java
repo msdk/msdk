@@ -255,13 +255,12 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * @return configured instance of SimpleIonAnnotation
    */
   private IonAnnotation createIonAnnotation(IdentificationResult siriusResult) {
-    SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
+    SiriusIonAnnotation ionAnnotation = new SiriusIonAnnotation();
     IMolecularFormula formula = generateFormula(siriusResult);
     ionAnnotation.setFormula(formula);
     ionAnnotation.setIdentificationMethod("Sirius");
     ionAnnotation.setIonType(ion);
-
-    ionAnnotation.
+    ionAnnotation.setFTree(siriusResult.getResolvedTree());
 
     return ionAnnotation;
   }

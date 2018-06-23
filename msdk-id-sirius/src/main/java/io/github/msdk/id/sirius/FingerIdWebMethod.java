@@ -16,7 +16,6 @@ import de.unijena.bioinf.ChemistryBase.algorithm.Scored;
 import de.unijena.bioinf.ChemistryBase.chem.MolecularFormula;
 import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
 import de.unijena.bioinf.ChemistryBase.fp.CdkFingerprintVersion;
-import de.unijena.bioinf.ChemistryBase.fp.Fingerprint;
 import de.unijena.bioinf.ChemistryBase.fp.FingerprintVersion;
 import de.unijena.bioinf.ChemistryBase.fp.MaskedFingerprintVersion;
 import de.unijena.bioinf.ChemistryBase.fp.PredictionPerformance;
@@ -29,6 +28,7 @@ import de.unijena.bioinf.babelms.utils.Base64;
 import de.unijena.bioinf.chemdb.BioFilter;
 import de.unijena.bioinf.chemdb.CompoundCandidateChargeLayer;
 import de.unijena.bioinf.chemdb.CompoundCandidateChargeState;
+import de.unijena.bioinf.chemdb.DBLink;
 import de.unijena.bioinf.chemdb.FingerprintCandidate;
 import de.unijena.bioinf.chemdb.RESTDatabase;
 import de.unijena.bioinf.chemdb.SearchStructureByFormula;
@@ -37,7 +37,6 @@ import de.unijena.bioinf.fingerid.blast.Fingerblast;
 import de.unijena.bioinf.fingerid.blast.FingerblastScoringMethod;
 import de.unijena.bioinf.fingerid.blast.ScoringMethodFactory;
 import de.unijena.bioinf.fingerid.predictor_types.PredictorType;
-import de.unijena.bioinf.sirius.IdentificationResult;
 import de.unijena.bioinf.utils.systemInfo.SystemInformation;
 
 import gnu.trove.list.array.TDoubleArrayList;
@@ -47,7 +46,6 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.IonAnnotation;
 
-import io.github.msdk.datamodel.SimpleIonAnnotation;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -76,13 +74,17 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 
+import org.openscience.cdk.DefaultChemObjectBuilder;
+import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.openscience.cdk.smiles.SmilesParser;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
 
+  private final static SmilesParser smp = new SmilesParser(DefaultChemObjectBuilder.getInstance());
   private final static CloseableHttpClient client = HttpClients.createSystem(); // Threadsafe
   private final static Logger logger = LoggerFactory.getLogger(FingerIdWebMethod.class);
   private final static BasicNameValuePair UID = new BasicNameValuePair("uid", SystemInformation.generateSystemKey());
@@ -92,16 +94,22 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
   private final static Gson gson = new Gson();
 
   private final Ms2Experiment experiment;
-  private final List<IonAnnotation> annotations;
+  private final SiriusIonAnnotation ionAnnotation;
   private final PredictionPerformance[] perf;
   private final MaskedFingerprintVersion version;
   private final Fingerblast blaster;
+  private final int candidatesAmount;
+  private boolean cancelled;
+  private List<IonAnnotation> newAnnotations;
+  private int finishedItems;
 
 
-
-  public FingerIdWebMethod(Ms2Experiment experiment, List<IonAnnotation> ionAnnotations) throws MSDKException {
+  public FingerIdWebMethod(Ms2Experiment experiment, IonAnnotation ionAnnotation, int candidatesAmount) throws MSDKException {
     this.experiment = experiment;
-    this.annotations = ionAnnotations;
+    if (ionAnnotation instanceof SiriusIonAnnotation)
+      this.ionAnnotation = (SiriusIonAnnotation) ionAnnotation;
+    else
+      throw new MSDKException("Provided IonAnnotation is not from Sirius module");
 
     try {
       final TIntArrayList list = new TIntArrayList(4096);
@@ -111,6 +119,10 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     } catch (IOException e) {
       throw new MSDKException(e);
     }
+
+    newAnnotations = new LinkedList<>();
+    this.candidatesAmount = candidatesAmount;
+    finishedItems = 0;
   }
 
   private static String fingerIdVersion() {
@@ -126,7 +138,7 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     return builder;
   }
 
-  private List<FingerprintCandidate> getCandidates(IonAnnotation ionAnnotation) throws de.unijena.bioinf.chemdb.DatabaseException {
+  private List<FingerprintCandidate> getCandidates() throws de.unijena.bioinf.chemdb.DatabaseException {
     PrecursorIonType ionType = experiment.getPrecursorIonType();
     IMolecularFormula iFormula = ionAnnotation.getFormula();
     MolecularFormula formula = MolecularFormula.parse(MolecularFormulaManipulator.getString(iFormula));
@@ -205,15 +217,15 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
 
 
 
-  private List<Scored<FingerprintCandidate>> processSiriusResult(IonAnnotation annotation) throws MSDKException, MSDKRuntimeException {
+  private List<Scored<FingerprintCandidate>> processSiriusAnnotation() throws MSDKException, MSDKRuntimeException {
     ProbabilityFingerprint print;
     List<Scored<FingerprintCandidate>> scored;
 
     List<FingerprintCandidate> candidates;
     try {
-      FingerIdJob job = submitJob(result); //TODO: There is need of FTree, create new SimpleIonAnnotation
+      FingerIdJob job = submitJob(); //TODO: There is need of FTree, create new SimpleIonAnnotation
       print = processFingerIdJob(job);
-      candidates = getCandidates(annotation);
+      candidates = getCandidates();
       scored = blaster.score(candidates, print);
     } catch (de.unijena.bioinf.chemdb.DatabaseException e) {
       logger.error("Connection with PubChem DB failed.");
@@ -265,9 +277,9 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     return PredictorType.CSI_FINGERID_NEGATIVE;
   }
 
-  public FingerIdJob submitJob(final IdentificationResult result) throws IOException, URISyntaxException{
+  public FingerIdJob submitJob() throws IOException, URISyntaxException{
     final HttpPost post = new HttpPost(getFingerIdURI("/webapi/predict.json").build());
-    final FTree ftree = result.getResolvedTree();
+    final FTree ftree = ionAnnotation.getFTree();
 
     post.setEntity(buildParams(ftree));
 
@@ -384,45 +396,56 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
 
   @Nullable
   @Override
-  public Float getFinishedPercentage() { //TODO: make it
-    return null;
+  public Float getFinishedPercentage() {
+    return 1f * finishedItems / candidatesAmount;
   }
 
   @Nullable
   @Override
-  public List<IonAnnotation> execute() throws MSDKException { //TODO: make it
-    List<IonAnnotation> newAnnotations = new LinkedList<>();
-    for (IonAnnotation annotation: annotations) {
-      List<Scored<FingerprintCandidate>> candidates = processSiriusResult(annotation);
-      List<IonAnnotation> updatedAnnotations = extendAnnotation(annotation, candidates);
-      newAnnotations.addAll(updatedAnnotations); //TODO: think about how to make it better, bcs later how to divide it???
+  public List<IonAnnotation> execute() throws MSDKException {
+    List<Scored<FingerprintCandidate>> candidates = processSiriusAnnotation();
+
+    for (Scored<FingerprintCandidate> scoredCandidate: candidates) {
+      if (cancelled)
+        return null;
+      final SiriusIonAnnotation extendedAnnotation = new SiriusIonAnnotation(ionAnnotation);
+      final FingerprintCandidate candidate = scoredCandidate.getCandidate();
+
+
+//      DBLink[] links = candidate.getLinks();
+
+      synchronized (smp) {
+        try {
+          IAtomContainer container = smp.parseSmiles(candidate.getSmiles());
+          extendedAnnotation.setChemicalStructure(container);
+        } catch(org.openscience.cdk.exception.InvalidSmilesException e){
+          logger.error("Incorrect SMILES string");
+          throw new MSDKException(e);
+        }
+      }
+      extendedAnnotation.setInchiKey(candidate.getInchiKey2D());
+      extendedAnnotation.setDatabase("Pubchem"); //TODO: not sure
+      extendedAnnotation.setDescription(candidate.getName());
+
+      newAnnotations.add(extendedAnnotation);
+      finishedItems++;
+      if (finishedItems == candidatesAmount)
+        break;
     }
+
 
     return newAnnotations;
   }
 
-  private List<IonAnnotation> extendAnnotation(final IonAnnotation annotation, final List<Scored<FingerprintCandidate>> candidates) {
-    final SimpleIonAnnotation simpleAnnotation = (SimpleIonAnnotation) annotation;
-    List<IonAnnotation> annotations = new LinkedList<>();
-    for (Scored<FingerprintCandidate> scoredCandidate: candidates) { //TODO: add stop flag (Ex. MAX == 50 elems)
-      //TODO: Create ScoredCandidate subclass
-      SimpleIonAnnotation extendedAnnotation = new SimpleIonAnnotation();
-      //TODO: extendedAnnotation.addStuff();
-      annotations.add(extendedAnnotation);
-    }
-
-    return annotations;
-  }
-
   @Nullable
   @Override
-  public List<IonAnnotation> getResult() { //TODO: make it
-    return null;
+  public List<IonAnnotation> getResult() {
+    return newAnnotations;
   }
 
   @Override
   public void cancel() { //TODO: make it
-
+    cancelled = true;
   }
 
 
