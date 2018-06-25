@@ -20,6 +20,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * <p>Class SiriusIonAnnotation</p>
+ * This class extends SimpleIonAnnotation and adds several fields
+ * FTree - the result tree provided by Sirius experiment processed
+ * SMILES - the result string provided by FingerIdWebMethod, after computation of FingerprintCandidates
+ * DBLinks - map of DB name->id, shows where corresponding result element can be found (ex.: Pubchem: 3123)
+ */
 public class SiriusIonAnnotation extends SimpleIonAnnotation {
   private FTree ftree;
   private String smilesString;
@@ -77,16 +84,7 @@ public class SiriusIonAnnotation extends SimpleIonAnnotation {
   }
 
   public void setDBLinks(DBLink[] links) {
-    Set<DBLink> linksSet = new HashSet<>();
-    for (DBLink link: links)
-      linksSet.add(link);
-    this.dblinks = new DBLink[linksSet.size()];
-
-    // So dirty bcs problems with
-    int i = 0;
-    for (Iterator<DBLink> it = linksSet.iterator(); it.hasNext(); ) {
-      dblinks[i++] = it.next();
-    }
+    this.dblinks = links;
   }
 
   public DBLink[] getDBLinks() {

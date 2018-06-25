@@ -102,7 +102,7 @@ public class FingerIdTest {
         deviation);
 
     List<IonAnnotation> siriusAnnotations = siriusMethod.execute();
-    IonAnnotation siriusAnnotation = siriusAnnotations.get(0);
+    SiriusIonAnnotation siriusAnnotation = (SiriusIonAnnotation) siriusAnnotations.get(0);
     String formula = MolecularFormulaManipulator.getString(siriusAnnotation.getFormula());
     Assert.assertEquals(formula, expectedSiriusResult);
 

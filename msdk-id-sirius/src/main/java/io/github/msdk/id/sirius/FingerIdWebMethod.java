@@ -1,4 +1,4 @@
-package io.github.msdk.id.sirius;/*
+/*
  * (C) Copyright 2015-2018 by MSDK Development Team
  *
  * This software is dual-licensed under either
@@ -10,6 +10,8 @@ package io.github.msdk.id.sirius;/*
  *
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
+
+package io.github.msdk.id.sirius;
 
 import com.google.gson.Gson;
 import de.unijena.bioinf.ChemistryBase.algorithm.Scored;
@@ -83,6 +85,11 @@ import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <p>Class FingerIdWebMethod</p>
+ * This class wraps the FingerId API provided by boecker-labs
+ * Uses the results of SiriusIdentificationMethod and returns exteneded IonAnnotations
+ */
 public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
 
   private final static SmilesParser smp = new SmilesParser(DefaultChemObjectBuilder.getInstance());
@@ -90,6 +97,7 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
   private final static Logger logger = LoggerFactory.getLogger(FingerIdWebMethod.class);
   private final static BasicNameValuePair UID = new BasicNameValuePair("uid", SystemInformation.generateSystemKey());
   private final static String FINGERID_SOURCE = "https://www.csi-fingerid.uni-jena.de";
+  /* TODO: This field must be altered whenever boecker-labs updates its API!!! */
   private final static String FINGERID_VERSION = "1.1.2";
   private final static SearchStructureByFormula searchDB = new RESTDatabase(BioFilter.ALL);
   private final static Gson gson = new Gson();
@@ -100,17 +108,21 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
   private final MaskedFingerprintVersion version;
   private final Fingerblast blaster;
   private final int candidatesAmount;
-  private boolean cancelled;
   private List<IonAnnotation> newAnnotations;
   private int finishedItems;
+  private boolean cancelled;
 
 
-  public FingerIdWebMethod(Ms2Experiment experiment, IonAnnotation ionAnnotation, int candidatesAmount) throws MSDKException {
+  /**
+   * <p>Constructor for a FingerIdWebMethod</p>
+   * @param experiment - Ms2Experiment that was used to get ionAnnotation
+   * @param ionAnnotation - SiriusIonAnnotation returned from SiriusIdentificationMethod with FTree field specified
+   * @param candidatesAmount - amount of candidates to be returned from this method
+   * @throws MSDKException if any
+   */
+  public FingerIdWebMethod(Ms2Experiment experiment, SiriusIonAnnotation ionAnnotation, int candidatesAmount) throws MSDKException {
     this.experiment = experiment;
-    if (ionAnnotation instanceof SiriusIonAnnotation)
-      this.ionAnnotation = (SiriusIonAnnotation) ionAnnotation;
-    else
-      throw new MSDKException("Provided IonAnnotation is not from Sirius module");
+    this.ionAnnotation = ionAnnotation;
 
     try {
       final TIntArrayList list = new TIntArrayList(4096);
@@ -122,14 +134,38 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     }
 
     newAnnotations = new LinkedList<>();
-    this.candidatesAmount = candidatesAmount;
     finishedItems = 0;
+    if (candidatesAmount == 0)
+      this.candidatesAmount = version.size();
+    else
+      this.candidatesAmount = candidatesAmount;
   }
 
+  /**
+   * <p>Simplified FingerIdWebMethod constructor</p>
+   * In this case, FingerId will return unspecified amount of compounds (500-7000)
+   * @param experiment - Ms2Experiment object
+   * @param ionAnnotation - SiriusIonAnnotation with FTree specified
+   * @throws MSDKException if any
+   */
+  public FingerIdWebMethod(Ms2Experiment experiment, SiriusIonAnnotation ionAnnotation) throws MSDKException {
+    this(experiment, ionAnnotation, 0);
+  }
+
+  /**
+   * <p>Method returns FingerIdVersion</p>
+   * @return version
+   */
   private static String fingerIdVersion() {
     return FINGERID_VERSION;
   }
 
+  /**
+   * <p>Method returns URIBuilder for the Web server</p>
+   * @param path API functionality you are interested in
+   * @return builder
+   * @throws URISyntaxException if any
+   */
   private URIBuilder getFingerIdURI(String path) throws URISyntaxException {
     if (path == null)
       path = "";
@@ -139,12 +175,16 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     return builder;
   }
 
+  /**
+   * <p>Method returns possible FingerprintCandidates according to MolecularFormula</p>
+   * Method makes a request to the remote DB
+   * @return List of FingerprintCandidates
+   * @throws de.unijena.bioinf.chemdb.DatabaseException if any
+   */
   private List<FingerprintCandidate> getCandidates() throws de.unijena.bioinf.chemdb.DatabaseException {
     PrecursorIonType ionType = experiment.getPrecursorIonType();
     IMolecularFormula iFormula = ionAnnotation.getFormula();
     MolecularFormula formula = MolecularFormula.parse(MolecularFormulaManipulator.getString(iFormula));
-
-
 
     final CompoundCandidateChargeState chargeState = CompoundCandidateChargeState.getFromPrecursorIonType(ionType);
     if (chargeState != CompoundCandidateChargeState.NEUTRAL_CHARGE) {
@@ -164,13 +204,21 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     }
   }
 
+  /**
+   *<p>Method builds PredictionPerformance array</p>
+   * Method is copied from boecker-lab
+   * @param predictorType PredictorType object (CSI_FINGERID_POSITIVE or CSI_FINGERID_NEGATIVE)
+   * @param fingerprintIndizes list to be filled
+   * @return new PredictionPerformance array used to configure MaskedFingerprintVersion
+   * @throws IOException if any
+   */
   private PredictionPerformance[] getStatistics(PredictorType predictorType, final TIntArrayList fingerprintIndizes) throws IOException {
     fingerprintIndizes.clear();
     final HttpGet get;
     try {
       get = new HttpGet(getFingerIdURI("/webapi/statistics.csv").setParameter("predictor", predictorType.toBitsAsString()).build());
     } catch (URISyntaxException e) {
-      LoggerFactory.getLogger(this.getClass()).error(e.getMessage(), e);
+      logger.error(e.getMessage(), e);
       throw new RuntimeException(e);
     }
     final TIntArrayList[] lists = new TIntArrayList[5];
@@ -195,12 +243,20 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     return performances.toArray(new PredictionPerformance[performances.size()]);
   }
 
+  /**
+   * <p>Method builds a Scoring method according to FingerprintVersion & alpha of your data</p>
+   * Method is copied from boecker-lab
+   * @param fpVersion FingerprintVersion object
+   * @param alpha value of your data
+   * @return new Scoring method
+   * @throws IOException if any
+   */
   private CovarianceScoring getCovarianceScoring(FingerprintVersion fpVersion, double alpha) throws IOException {
     final HttpGet get;
     try {
       get = new HttpGet(getFingerIdURI("/webapi/covariancetree.csv").build());
     } catch (URISyntaxException e) {
-      LoggerFactory.getLogger(this.getClass()).error(e.getMessage(), e);
+      logger.error(e.getMessage(), e);
       throw new RuntimeException(e);
     }
     CovarianceScoring covarianceScoring;
@@ -212,21 +268,34 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     return covarianceScoring;
   }
 
+  /**
+   * <p>Method checks status of the response</p>
+   * @param response to be checked
+   * @return status code < 400
+   */
   private boolean isSuccessful(CloseableHttpResponse response) {
     return response.getStatusLine().getStatusCode() < 400;
   }
 
-
-
+  /**
+   * <p>Method processes SiriusAnnotations</p>
+   * @return sorted list of possible candidates
+   * @throws MSDKException if any
+   * @throws MSDKRuntimeException if thread for updating job status was interrupted
+   */
   private List<Scored<FingerprintCandidate>> processSiriusAnnotation() throws MSDKException, MSDKRuntimeException {
     ProbabilityFingerprint print;
     List<Scored<FingerprintCandidate>> scored;
 
     List<FingerprintCandidate> candidates;
     try {
+      // Initiate the job
       FingerIdJob job = submitJob();
+      // Get ProbabilityFingerprint
       print = processFingerIdJob(job);
+      // Get List<FingerprintCandidates>
       candidates = getCandidates();
+      // Sort candidates
       scored = blaster.score(candidates, print);
     } catch (de.unijena.bioinf.chemdb.DatabaseException e) {
       logger.error("Connection with PubChem DB failed.");
@@ -246,19 +315,31 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     return scored;
   }
 
-  private MaskedFingerprintVersion buildFingerprintVersion(final TIntArrayList predictionIndizes) throws IOException {
+  /**
+   * <p>Constructs MaskedFingerprintVersion</p>
+   * @param predictionIndiсes list with indiсes returned from API according to PredictorType
+   * @return new MaskedFingerprintVersion object
+   * @throws IOException
+   */
+  private MaskedFingerprintVersion buildFingerprintVersion(final TIntArrayList predictionIndiсes) throws IOException {
     CdkFingerprintVersion version = CdkFingerprintVersion.withECFP();
     MaskedFingerprintVersion.Builder maskedBuiled = MaskedFingerprintVersion.buildMaskFor(version);
     maskedBuiled.disableAll();
 
-    int[] indizes = predictionIndizes.toArray();
-    for (int index : indizes) {
+    int[] indiсes = predictionIndiсes.toArray();
+    for (int index : indiсes) {
       maskedBuiled.enable(index);
     }
 
     return maskedBuiled.toMask();
   }
 
+  /**
+   *<p>Method creates Fingerblast object that will score FingerprintCandidates</p>
+   * @param perf values returned from Web API
+   * @return new Fingerblast object
+   * @throws IOException
+   */
   private Fingerblast createBlaster(PredictionPerformance[] perf) throws IOException {
     FingerblastScoringMethod method = null;
     PredictorType type = getType();
@@ -270,7 +351,11 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     return new Fingerblast(method, null);
   }
 
-
+  /**
+   * <p>Method returns PredictorType</p>
+   * As there were no access to boecker-lab code, this solution was used
+   * @return type
+   */
   private PredictorType getType() {
     int charge = this.experiment.getPrecursorIonType().getCharge();
     if (charge > 0)
@@ -278,10 +363,15 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     return PredictorType.CSI_FINGERID_NEGATIVE;
   }
 
-  public FingerIdJob submitJob() throws IOException, URISyntaxException{
+  /**
+   * <p>Method submits job to the Web server and returns its id, securityToken</p>
+   * @return new FingerIdJob
+   * @throws IOException if any
+   * @throws URISyntaxException if any
+   */
+  private FingerIdJob submitJob() throws IOException, URISyntaxException{
     final HttpPost post = new HttpPost(getFingerIdURI("/webapi/predict.json").build());
     final FTree ftree = ionAnnotation.getFTree();
-
     post.setEntity(buildParams(ftree));
 
     final String securityToken;
@@ -289,28 +379,29 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     // SUBMIT JOB
     try (CloseableHttpResponse response = client.execute(post)) {
       if (response.getStatusLine().getStatusCode() == 200) {
-        try {
-          GetResponse getResponse;
-          synchronized (gson) {
-            getResponse = gson.fromJson(new BufferedReader(
-                new InputStreamReader(response.getEntity().getContent(), ContentType
-                    .getOrDefault(response.getEntity()).getCharset())), GetResponse.class);
-          }
-          securityToken = getResponse.securityToken;
-          jobId = getResponse.jobId;
-          return new FingerIdJob(jobId, securityToken, version);
-        } finally {
-
+        GetResponse getResponse;
+        synchronized (gson) {
+          BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), ContentType.getOrDefault(response.getEntity()).getCharset()));
+          getResponse = gson.fromJson(reader, GetResponse.class);
         }
+        securityToken = getResponse.securityToken;
+        jobId = getResponse.jobId;
+        return new FingerIdJob(jobId, securityToken, version);
       } else {
         RuntimeException re = new RuntimeException(response.getStatusLine().getReasonPhrase());
-        LoggerFactory.getLogger(this.getClass()).debug("Submitting Job failed", re);
+        logger.debug("Submitting Job failed", re);
         throw re;
       }
     } finally {
     }
   }
 
+  /**
+   * <p>Method creates params for Web request</p>
+   * @param ftree tree to be encoded as a string
+   * @return new params
+   * @throws IOException if any
+   */
   private UrlEncodedFormEntity buildParams(FTree ftree) throws IOException {
     final String stringMs = getExperimentAsString();
     final String jsonTree = getTreeAsString(ftree);
@@ -323,6 +414,12 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     return params;
   }
 
+  /**
+   * <p>Method for transformation of FTree into a param in web request</p>
+   * @param ftree FTree 0bject
+   * @return FTree in form of string
+   * @throws IOException if any
+   */
   private String getTreeAsString(FTree ftree) throws IOException {
     final FTJsonWriter writer = new FTJsonWriter();
     final StringWriter sw = new StringWriter();
@@ -330,6 +427,11 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     return sw.toString();
   }
 
+  /**
+   * <p>Method for transformation of Ms2Experiment into a param in web request</p>
+   * @return Ms2Experiment in form of string
+   * @throws IOException if any
+   */
   private String getExperimentAsString() throws  IOException {
     final JenaMsWriter writer = new JenaMsWriter();
     final StringWriter sw = new StringWriter();
@@ -339,13 +441,24 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     return sw.toString();
   }
 
+  /**
+   * <p>Method receives results of the FingerIdJob</p>
+   * Method periodically checks the state of the job on a Webserver and, if ready, returns the result
+   * @param job - FingerIdJob for identifying ProbabilityFingerprint
+   * @return ProbabilityFingerprint returned from Web API
+   * @throws URISyntaxException if any
+   * @throws InterruptedException if any
+   * @throws TimeoutException if any
+   * @throws IOException if any
+   */
   private ProbabilityFingerprint processFingerIdJob(FingerIdJob job) throws URISyntaxException, InterruptedException, TimeoutException, IOException {
-    // RECEIVE RESULTS
     new HttpGet(getFingerIdURI("/webapi/job.json")
         .setParameter("jobId", String.valueOf(job.jobId))
         .setParameter("securityToken", job.securityToken)
         .build());
     for (int k = 0; k < 600; ++k) {
+      if (cancelled)
+        return null;
       Thread.sleep(3000 + 30 * k);
       if (updateJobStatus(job)) {
         return job.prediction;
@@ -356,6 +469,13 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     throw new TimeoutException("Reached timeout");
   }
 
+  /**
+   * <p>Method for updating the status of FingerIdJob</p>
+   * Method makes a get request with Job id, token and returns its status or its results
+   * @param job - FingerIdJob object
+   * @return true if job is done, false if job is still not ready
+   * @throws URISyntaxException if any
+   */
   private boolean updateJobStatus(FingerIdJob job) throws URISyntaxException {
     final HttpGet get = new HttpGet(getFingerIdURI("/webapi/job.json")
         .setParameter("jobId", String.valueOf(job.jobId))
@@ -391,6 +511,11 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     return false;
   }
 
+  /**
+   * <p>Method parses binary values into doubles</p>
+   * @param bytes - array of bytes
+   * @return new double array
+   */
   private double[] parseBinaryToDoubles(byte[] bytes) {
     final TDoubleArrayList data = new TDoubleArrayList(2000);
     final ByteBuffer buf = ByteBuffer.wrap(bytes);
@@ -418,9 +543,6 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
         return null;
       final SiriusIonAnnotation extendedAnnotation = new SiriusIonAnnotation(ionAnnotation);
       final FingerprintCandidate candidate = scoredCandidate.getCandidate();
-
-
-
 
       synchronized (smp) {
         try {
@@ -462,7 +584,20 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
   }
 
 
-  class GetResponse {
+  /**
+   * <p>Class GetResponse</p>
+   * Used as a container for Get responses from WebAPI
+   * #securityToken - generated string by server during first POST (when you register your job on a server)
+   * #jobId - the same, as securityToken
+   * Both parameters are used later to identify the job later.
+   *
+   * #prediction - the PredictedFingerprint in form of String (Base64)
+   * #errors - String with error message
+   * #state - the state of the task (updated during updateJob method)
+   * ------------------------------------
+   * #plakkBytes & iokrBytes are not currently used
+   */
+  private class GetResponse {
     public String securityToken;
     public int jobId;
     byte[] plattBytes;
@@ -474,7 +609,18 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     String state;
   }
 
-  class FingerIdJob {
+  /**
+   * <p>Class FingerIdJob</p>
+   * Class-container for results of the request to get ProbabilityFingerprint
+   * #jobId - the id of the task on the Webserver (API)
+   * #securityToken - generated string by server during first POST (when you register your job on a server)
+   * #MaskedFingerprintVersion - used for generating ProbabilityFingerprint
+   * #state - status of the job on Webserver
+   * #errorMessage - the error received from GetResponse
+   * ------------------------------------
+   * #iokrVector - currently not used
+   */
+  private class FingerIdJob {
     public long jobId;
     public String securityToken;
     public MaskedFingerprintVersion v;

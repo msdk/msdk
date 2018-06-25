@@ -257,6 +257,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     ionAnnotation.setFormula(formula);
     ionAnnotation.setIdentificationMethod("Sirius");
     ionAnnotation.setIonType(ion);
+    /* Set the FTree from IdentificationResult (later used by FingerIdWebMethod) */
     ionAnnotation.setFTree(siriusResult.getResolvedTree());
 
     return ionAnnotation;
