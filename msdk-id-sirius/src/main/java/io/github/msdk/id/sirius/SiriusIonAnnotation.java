@@ -13,7 +13,6 @@
 
 package io.github.msdk.id.sirius;
 
-import de.unijena.bioinf.ChemistryBase.chem.Smiles;
 import de.unijena.bioinf.ChemistryBase.ms.ft.FTree;
 import de.unijena.bioinf.chemdb.DBLink;
 import io.github.msdk.datamodel.SimpleIonAnnotation;
@@ -55,6 +54,9 @@ public class SiriusIonAnnotation extends SimpleIonAnnotation {
     target.setInchiKey(master.getInchiKey());
     target.setIdentificationMethod(master.getIdentificationMethod());
     target.setFormula(master.getFormula());
+    target.setFTree(master.getFTree());
+    target.setDBLinks(master.getDBLinks());
+    target.setSMILES(master.getSMILES());
   }
 
   public void setFTree(FTree ftree) {

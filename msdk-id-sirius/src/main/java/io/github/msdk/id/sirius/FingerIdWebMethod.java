@@ -28,7 +28,6 @@ import de.unijena.bioinf.babelms.utils.Base64;
 import de.unijena.bioinf.chemdb.BioFilter;
 import de.unijena.bioinf.chemdb.CompoundCandidateChargeLayer;
 import de.unijena.bioinf.chemdb.CompoundCandidateChargeState;
-import de.unijena.bioinf.chemdb.DBLink;
 import de.unijena.bioinf.chemdb.FingerprintCandidate;
 import de.unijena.bioinf.chemdb.RESTDatabase;
 import de.unijena.bioinf.chemdb.SearchStructureByFormula;
@@ -225,7 +224,7 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
 
     List<FingerprintCandidate> candidates;
     try {
-      FingerIdJob job = submitJob(); //TODO: There is need of FTree, create new SimpleIonAnnotation
+      FingerIdJob job = submitJob();
       print = processFingerIdJob(job);
       candidates = getCandidates();
       scored = blaster.score(candidates, print);
@@ -290,10 +289,13 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     // SUBMIT JOB
     try (CloseableHttpResponse response = client.execute(post)) {
       if (response.getStatusLine().getStatusCode() == 200) {
-        final Gson gson = new Gson();
         try {
-          GetResponse getResponse = gson.fromJson(new BufferedReader(new InputStreamReader(response.getEntity().getContent(), ContentType
-              .getOrDefault(response.getEntity()).getCharset())), GetResponse.class);
+          GetResponse getResponse;
+          synchronized (gson) {
+            getResponse = gson.fromJson(new BufferedReader(
+                new InputStreamReader(response.getEntity().getContent(), ContentType
+                    .getOrDefault(response.getEntity()).getCharset())), GetResponse.class);
+          }
           securityToken = getResponse.securityToken;
           jobId = getResponse.jobId;
           return new FingerIdJob(jobId, securityToken, version);
@@ -360,8 +362,11 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
         .setParameter("securityToken", job.securityToken)
         .build());
     try (CloseableHttpResponse response = client.execute(get)) {
+      GetResponse getResponse;
       BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), ContentType.getOrDefault(response.getEntity()).getCharset()));
-      GetResponse getResponse = gson.fromJson(reader, GetResponse.class);
+      synchronized (gson) {
+        getResponse = gson.fromJson(reader, GetResponse.class);
+      }
       if (getResponse.prediction != null){
         getResponse.plattBytes = Base64.decode(getResponse.prediction);
         final double[] platts = parseBinaryToDoubles(getResponse.plattBytes);
@@ -432,9 +437,9 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
         }
       }
       extendedAnnotation.setInchiKey(candidate.getInchiKey2D());
-      extendedAnnotation.setDatabase("Pubchem"); //TODO: not sure
+//      extendedAnnotation.setDatabase("Pubchem"); //TODO: not sure
       extendedAnnotation.setDescription(candidate.getName());
-//      extendedAnnotation.setDBLinks(candidate.getLinks()); // TODO: make it clear, links to weird stuff???
+      extendedAnnotation.setDBLinks(candidate.getLinks());
       newAnnotations.add(extendedAnnotation);
       finishedItems++;
       if (finishedItems == candidatesAmount)
