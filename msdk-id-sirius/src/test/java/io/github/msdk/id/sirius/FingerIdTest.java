@@ -11,19 +11,14 @@ package io.github.msdk.id.sirius;/*
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
 import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
 import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
-import de.unijena.bioinf.sirius.IdentificationResult;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.IonAnnotation;
 import io.github.msdk.datamodel.IonType;
 import io.github.msdk.datamodel.MsSpectrum;
-import io.github.msdk.datamodel.MsSpectrumType;
-import io.github.msdk.datamodel.SimpleMsSpectrum;
-import io.github.msdk.io.msp.MspImportAlgorithm;
-import io.github.msdk.io.msp.MspSpectrum;
 import io.github.msdk.io.txt.TxtImportAlgorithm;
-import io.github.msdk.spectra.centroidprofiledetection.SpectrumTypeDetectionAlgorithm;
 import io.github.msdk.util.IonTypeUtil;
 import java.io.File;
 import java.io.FileReader;
@@ -35,6 +30,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openscience.cdk.config.IsotopeFactory;
@@ -122,6 +118,153 @@ public class FingerIdTest {
       Assert.assertEquals(smiles, SMILES[i]);
       Assert.assertEquals(inchi, inchis[i]);
       Assert.assertEquals(name, candidateNames[i]);
+    }
+  }
+
+  @Test
+  public void testMultithreaded() throws MSDKException, IOException, InterruptedException {
+    final double deviation = 10d;
+    final double precursorMass = 233.1175;
+    final IonType ion = IonTypeUtil.createIonType("[M+H]+");
+    final String[] expectedSiriusResults = {"C14H16O3", "C12H14N3O2", "C10H19NO3P", "C8H17N4O2P"};
+    final int siriusCandidates = 4;
+    final int fingerCandidates = 3;
+    final String ms1Path = "marindinin_MS1.txt";
+    final String ms2Path = "marindinin_MS2.txt";
+
+    final ConstraintsGenerator generator = new ConstraintsGenerator();
+
+    final MolecularFormulaRange range = new MolecularFormulaRange();
+    IsotopeFactory iFac = Isotopes.getInstance();
+    range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
+    range.addIsotope(iFac.getMajorIsotope("B"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Br"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Cl"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("F"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
+
+    final FormulaConstraints constraints = generator.generateConstraint(range);
+
+    File ms1File = getResourcePath(ms1Path).toFile();
+    File ms2File = getResourcePath(ms2Path).toFile();
+    MsSpectrum ms1Spectrum = TxtImportAlgorithm.parseMsSpectrum(new FileReader(ms1File));
+    MsSpectrum ms2Spectrum = TxtImportAlgorithm.parseMsSpectrum(new FileReader(ms2File));
+
+    List<MsSpectrum> ms1list = new ArrayList<>();
+    List<MsSpectrum> ms2list = new ArrayList<>();
+    ms2list.add(ms2Spectrum);
+    ms1list.add(ms1Spectrum);
+
+    final SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1list,
+        ms2list,
+        precursorMass,
+        ion,
+        siriusCandidates,
+        constraints,
+        deviation);
+
+    final List<IonAnnotation> siriusAnnotations = siriusMethod.execute();
+    List<SiriusIonAnnotation> siriusAnnotationsList = new LinkedList<>();
+    int i = 0;
+    for (IonAnnotation ann: siriusAnnotations) {
+      String formula = MolecularFormulaManipulator.getString(ann.getFormula());
+      Assert.assertEquals(formula, expectedSiriusResults[i++]);
+      if (i == 3) // Ignore C10H19NO3P, as it does not have FingerprintCandidates in future
+        continue;
+      SiriusIonAnnotation t = (SiriusIonAnnotation) ann;
+      siriusAnnotationsList.add(t);
+    }
+
+    List<IonAnnotation>[] fingerResults = new List[3];
+    final Ms2Experiment experiment = siriusMethod.getExperiment();
+
+    CountDownLatch finishLatch = new CountDownLatch(3);
+    CountDownLatch initLatch = new CountDownLatch(3);
+
+    for (int k = 0; k < 3; k++) {
+      FingerIdConcurrent thread = new FingerIdConcurrent(experiment, siriusAnnotationsList.get(k), fingerCandidates, initLatch, finishLatch);
+      thread.run();
+      fingerResults[k] = thread.getResults();
+    }
+
+
+    final String[] firstSMILES = {"COC1=CC(=O)OC(CCC2=CC=CC=C2)C1", "COC=C(CC=CC1=CC=CC=C1)C(=O)OC", "COC(=O)C=CCC(C=CC1=CC=CC=C1)O"};
+    final String[] firstInchis = {"VOOYTQRREPYRIW", "CIKOXPINNQLUNR", "VUILPHNRZJUSCY"};
+    final String[] firstNames = {"Marindinin", null, "methyl (2Z,5R,6E)-5-hydroxy-7-phenylhepta-2,6-dienoate"};
+
+    final String[] secondSMILES = {"CC1=C(C(=NC2=CC=CC=C2)O)N([CH]N1C)O", "CCOC(=O)C([CH]NNC1=CC=CC=C1)[N+]#[C-]", "C1=C[CH]C(=C1)CNC(CC2=CN=CN2)C(=O)O"};
+    final String[] secondInchis = {"WHKHVKOFMPKDPZ", "KFRMPWTUGNWZNC", "RIHSCMQGAIZEPT"};
+    final String[] secondNames = {null, null, null};
+
+    final String[] thirdSMILES = {"CCCNC1CCN(C(=O)C1(N)P=O)N"};
+    final String[] thirdInchis = {"RIBGFYNNMUNNPJ"};
+    final String[] thirdNames = {null};
+
+    finishLatch.await();
+
+    String[][] SMILES = new String[3][];
+    String[][] INCHI = new String[3][];
+    String[][] names = new String[3][];
+
+    for (int k = 0; k < 3; k++) {
+      SMILES[k] = new String[fingerResults[k].size()];
+      names[k] = new String[fingerResults[k].size()];
+      INCHI[k] = new String[fingerResults[k].size()];
+      i = 0;
+      for (IonAnnotation ann: fingerResults[k]) {
+        SiriusIonAnnotation fingeridAnnotation = (SiriusIonAnnotation) ann;
+        String smiles = fingeridAnnotation.getSMILES();
+        String inchi = fingeridAnnotation.getInchiKey();
+        String name = fingeridAnnotation.getDescription();
+
+        SMILES[k][i] = smiles;
+        INCHI[k][i] = inchi;
+        names[k][i] = name;
+        i++;
+      }
+    }
+
+    Assert.assertArrayEquals(firstSMILES, SMILES[0]);
+    Assert.assertArrayEquals(firstNames, names[0]);
+    Assert.assertArrayEquals(firstInchis, INCHI[0]);
+
+    Assert.assertArrayEquals(secondSMILES, SMILES[1]);
+    Assert.assertArrayEquals(secondNames, names[1]);
+    Assert.assertArrayEquals(secondInchis, INCHI[1]);
+
+    Assert.assertArrayEquals(thirdSMILES, SMILES[2]);
+    Assert.assertArrayEquals(thirdNames, names[2]);
+    Assert.assertArrayEquals(thirdInchis, INCHI[2]);
+
+  }
+
+
+
+  public class FingerIdConcurrent implements Runnable {
+    private FingerIdWebMethod method;
+    private CountDownLatch initLatch;
+    private CountDownLatch finishLatch;
+
+    FingerIdConcurrent(Ms2Experiment experiment, SiriusIonAnnotation siriusIonAnnotation, int candidates, CountDownLatch initLatch, CountDownLatch finishLatch) throws MSDKException {
+      method = new FingerIdWebMethod(experiment, siriusIonAnnotation, candidates);
+      this.finishLatch = finishLatch;
+      this.initLatch = initLatch;
+    }
+
+    public List<IonAnnotation> getResults() {
+      return method.getResult();
+    }
+
+    @Override
+    public void run() {
+      initLatch.countDown();
+      try {
+        method.execute();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      finishLatch.countDown();
     }
   }
 }
