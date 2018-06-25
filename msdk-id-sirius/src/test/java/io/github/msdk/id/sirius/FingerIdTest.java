@@ -124,5 +124,4 @@ public class FingerIdTest {
       Assert.assertEquals(name, candidateNames[i]);
     }
   }
-
 }

@@ -187,6 +187,8 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     MolecularFormula formula = MolecularFormula.parse(MolecularFormulaManipulator.getString(iFormula));
 
     final CompoundCandidateChargeState chargeState = CompoundCandidateChargeState.getFromPrecursorIonType(ionType);
+    if (cancelled)
+      return null;
     if (chargeState != CompoundCandidateChargeState.NEUTRAL_CHARGE) {
       final List<FingerprintCandidate> intrinsic = searchDB.lookupStructuresAndFingerprintsByFormula(formula);
       intrinsic.removeIf((f)->!f.hasChargeState(CompoundCandidateChargeLayer.Q_LAYER, chargeState));
@@ -296,6 +298,8 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
       // Get List<FingerprintCandidates>
       candidates = getCandidates();
       // Sort candidates
+      if (cancelled)
+        return null;
       scored = blaster.score(candidates, print);
     } catch (de.unijena.bioinf.chemdb.DatabaseException e) {
       logger.error("Connection with PubChem DB failed.");
@@ -378,6 +382,8 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     final long jobId;
     // SUBMIT JOB
     try (CloseableHttpResponse response = client.execute(post)) {
+      if (cancelled)
+        return null;
       if (response.getStatusLine().getStatusCode() == 200) {
         GetResponse getResponse;
         synchronized (gson) {
