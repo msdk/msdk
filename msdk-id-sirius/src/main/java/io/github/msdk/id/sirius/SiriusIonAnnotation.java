@@ -16,9 +16,6 @@ package io.github.msdk.id.sirius;
 import de.unijena.bioinf.ChemistryBase.ms.ft.FTree;
 import de.unijena.bioinf.chemdb.DBLink;
 import io.github.msdk.datamodel.SimpleIonAnnotation;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 /**
  * <p>Class SiriusIonAnnotation</p>

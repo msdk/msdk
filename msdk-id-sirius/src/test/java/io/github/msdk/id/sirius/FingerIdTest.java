@@ -11,7 +11,6 @@ package io.github.msdk.id.sirius;/*
  * (b) the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation.
  */
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
 import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
 import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import io.github.msdk.MSDKException;
