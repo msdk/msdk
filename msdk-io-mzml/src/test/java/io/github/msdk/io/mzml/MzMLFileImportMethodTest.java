@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2015-2016 by MSDK Development Team
  *
