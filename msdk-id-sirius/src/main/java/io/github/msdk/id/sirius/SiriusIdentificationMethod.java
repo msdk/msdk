@@ -80,8 +80,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private List<IonAnnotation> result;
   private MutableMs2Experiment experiment;
 
-  /* Set to be class elements for performance */
-
   /**
    * <p> Constructor for SiriusIdentificationMethod class. </p>
    *
@@ -93,8 +91,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * @param constraints - FormulaConstraints provided by the end user. Can be created using ConstraintsGenerator
    * @param deviation - float value of possible mass deviation
    */
-  public SiriusIdentificationMethod(@Nullable List<MsSpectrum> ms1, @Nullable List<MsSpectrum> ms2, Double parentMass,
-      IonType ion, int numberOfCandidates, @Nullable FormulaConstraints constraints, Double deviation) {
+  public SiriusIdentificationMethod(@Nullable List<MsSpectrum> ms1, @Nullable List<MsSpectrum> ms2, @Nonnull Double parentMass,
+     @Nonnull IonType ion, @Nullable Integer numberOfCandidates, @Nullable FormulaConstraints constraints, @Nullable Double deviation) {
     if (ms1 == null && ms2 == null) throw new MSDKRuntimeException("Only one of MS && MS/MS can be null at a time");
 
     sirius = new Sirius();
@@ -102,9 +100,17 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     this.ms2 = ms2;
     this.parentMass = parentMass;
     this.ion = ion;
-    this.numberOfCandidates = numberOfCandidates;
     this.constraints = constraints;
-    this.deviation = new Deviation(deviation);
+
+    if (numberOfCandidates == null)
+      this.numberOfCandidates = 10;
+    else
+      this.numberOfCandidates = numberOfCandidates;
+
+    if (deviation == null)
+      this.deviation = new Deviation(10);
+    else
+      this.deviation = new Deviation(deviation);
   }
 
   public double getParentMass() {

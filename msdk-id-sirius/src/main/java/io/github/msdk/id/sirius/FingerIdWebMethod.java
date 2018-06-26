@@ -64,6 +64,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeoutException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -120,7 +121,7 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
    * @param candidatesAmount - amount of candidates to be returned from this method
    * @throws MSDKException if any
    */
-  public FingerIdWebMethod(Ms2Experiment experiment, SiriusIonAnnotation ionAnnotation, int candidatesAmount) throws MSDKException {
+  public FingerIdWebMethod(@Nonnull Ms2Experiment experiment, @Nonnull SiriusIonAnnotation ionAnnotation, @Nonnull Integer candidatesAmount) throws MSDKException {
     this.experiment = experiment;
     this.ionAnnotation = ionAnnotation;
 
@@ -148,16 +149,8 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
    * @param ionAnnotation - SiriusIonAnnotation with FTree specified
    * @throws MSDKException if any
    */
-  public FingerIdWebMethod(Ms2Experiment experiment, SiriusIonAnnotation ionAnnotation) throws MSDKException {
+  public FingerIdWebMethod(@Nonnull Ms2Experiment experiment, @Nonnull SiriusIonAnnotation ionAnnotation) throws MSDKException {
     this(experiment, ionAnnotation, 0);
-  }
-
-  /**
-   * <p>Method returns FingerIdVersion</p>
-   * @return version
-   */
-  private static String fingerIdVersion() {
-    return FINGERID_VERSION;
   }
 
   /**
@@ -170,7 +163,7 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     if (path == null)
       path = "";
     URIBuilder builder = new URIBuilder(FINGERID_SOURCE);
-    builder.setPath("/csi-fingerid-" + FingerIdWebMethod.fingerIdVersion() + path);
+    builder.setPath("/csi-fingerid-" + FINGERID_VERSION + path);
 
     return builder;
   }

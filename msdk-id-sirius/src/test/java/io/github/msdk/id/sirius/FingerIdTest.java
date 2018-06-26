@@ -31,6 +31,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
 import org.junit.Assert;
 import org.junit.Test;
@@ -167,14 +169,22 @@ public class FingerIdTest {
 
     final List<IonAnnotation> siriusAnnotations = siriusMethod.execute();
     List<SiriusIonAnnotation> siriusAnnotationsList = new LinkedList<>();
+
+    Set<String> testFormulas = new TreeSet<>();
+    testFormulas.add(expectedSiriusResults[0]);
+    testFormulas.add(expectedSiriusResults[1]);
+    testFormulas.add(expectedSiriusResults[3]);
+
     int i = 0;
     for (IonAnnotation ann: siriusAnnotations) {
       String formula = MolecularFormulaManipulator.getString(ann.getFormula());
       Assert.assertEquals(formula, expectedSiriusResults[i++]);
-      if (i == 3) // Ignore C10H19NO3P, as it does not have FingerprintCandidates in future
-        continue;
-      SiriusIonAnnotation t = (SiriusIonAnnotation) ann;
-      siriusAnnotationsList.add(t);
+
+      // Ignore C10H19NO3P, as it does not have FingerprintCandidates in future
+      if (testFormulas.contains(formula)) {
+        SiriusIonAnnotation t = (SiriusIonAnnotation) ann;
+        siriusAnnotationsList.add(t);
+      }
     }
 
     List<IonAnnotation>[] fingerResults = new List[3];
