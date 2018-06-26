@@ -1,0 +1,30 @@
+Name: 1-Naphthylamine
+Synonym: 1-Naphthylamine
+Synonym: 1-Aminonaphthalene
+Synonym: naphthalen-1-amine
+DB#: SM800201
+InChIKey: RUFPHBVGCFYCNW-UHFFFAOYSA-N
+MW: 143.073499288
+Formula: C10H9N
+PrecursorMZ: 144.0808
+Comments: "accession=SM800201" "author=Krauss M, Schymanski EL, Weidauer C, Schupke H, UFZ and Eawag" "license=CC BY" "copyright=Copyright (C) 2016 UFZ/Eawag" "publication=Schymanski, EL et al. Critical Assessment of Small Molecule Identification 2016 - Automated Methods. Submitted." "exact mass=143.0735" "instrument=Q Exactive Plus Orbitrap Thermo Scientific" "instrument type=LC-ESI-QFT" "ms level=MS2" "ionization=ESI" "fragmentation mode=HCD" "collision energy=35  (nominal)" "resolution=35000" "column=Kinetex C18 EVO 2.6 um, 2.1x50 mm, precolumn 2.1x5 mm, Phenomenex" "flow gradient=95/5 at 0 min, 95/5 at 1 min, 0/100 at 13 min, 0/100 at 24 min" "flow rate=300 uL/min" "retention time=2.789 min" "solvent a=water with 0.1% formic acid" "solvent b=methanol with 0.1% formic acid" "precursor m/z=144.0808" "precursor type=[M+H]+" "ionization mode=positive" "mass accuracy=0.17151487239617405" "mass error=2.471200002673868E-5" "Last Auto-Curation=1495237476505" "SMILES=NC1=CC=CC2=CC=CC=C12" "cas=134-32-7" "chebi=50450" "kegg=C14790" "pubchem cid=8640" "chemspider=8319" "InChI=InChI=1S/C10H9N/c11-10-7-3-5-8-4-1-2-6-9(8)10/h1-7H,11H2" "InChIKey=RUFPHBVGCFYCNW-UHFFFAOYSA-N" "molecular formula=C10H9N" "total exact mass=143.073499288" "SMILES=[H]N([H])C1=C([H])C([H])=C([H])C=2C([H])=C([H])C([H])=C([H])C12"
+Num Peaks: 19
+68.9978	17901740
+119.0493	2879156.8
+121.065	8247017.5
+129.0701	2558055.5
+135.0803	2717087.3
+145.0649	5450512.5
+147.0441	75661672
+148.0475	7837938.5
+157.0648	18124664
+161.0597	2760458.8
+171.0441	10442116
+175.0753	2500566.8
+185.0599	16306306
+186.0631	2704196.8
+195.0424	2348870.8
+203.0704	28272708
+204.0738	4397439.5
+213.0549	12411591
+231.0653	92944656
