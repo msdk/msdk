@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.github.msdk</groupId>
         <artifactId>msdk</artifactId>
-        <version>0.0.12-SNAPSHOT</version>
+        <version>0.0.12</version>
     </parent>
     <artifactId>msdk-spectra-peakinvestigator</artifactId>
     <description>Package for PeakInvestigator centroiding algorithm</description>

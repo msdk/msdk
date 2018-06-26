@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.msdk</groupId>
 	<artifactId>msdk</artifactId>
-	<version>0.0.12-SNAPSHOT</version>
+	<version>0.0.12</version>
 	<packaging>pom</packaging>
 
 	<name>MSDK - Mass Spectrometry Development Kit</name>
@@ -30,7 +30,7 @@
 		<module>msdk-id-sirius</module>
 		<module>msdk-io-filetypedetection</module>
 		<module>msdk-io-mzml</module>
-        <module>msdk-io-mzdb</module>
+		<module>msdk-io-mzdb</module>
 		<module>msdk-io-mztab</module>
 		<module>msdk-io-netcdf</module>
 		<module>msdk-io-mzxml</module>

@@ -4,12 +4,8 @@
 
   <groupId>io.github.msdk</groupId>
   <artifactId>msdk-io-mzdb</artifactId>
-  <version>0.0.12-SNAPSHOT</version>
+  <version>0.0.12</version>
   <packaging>jar</packaging>
-  <prerequisites>
-    <maven>3.0.5</maven>
-  </prerequisites>
-
   <name>msdk-io-mzdb</name>
   <url>http://maven.apache.org</url>
 
