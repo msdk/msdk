@@ -28,6 +28,8 @@ public class SiriusIonAnnotation extends SimpleIonAnnotation {
   private FTree ftree;
   private String smilesString;
   private DBLink[] dblinks;
+  private Double siriusScore;
+  private Double fingerIdScore;
 
   public SiriusIonAnnotation(SiriusIonAnnotation master) {
     super();
@@ -61,6 +63,8 @@ public class SiriusIonAnnotation extends SimpleIonAnnotation {
     target.setFTree(master.getFTree());
     target.setDBLinks(master.getDBLinks());
     target.setSMILES(master.getSMILES());
+    target.setFingerIdScore(master.getFingerIdScore());
+    target.setSiriusScore(master.getSiriusScore());
   }
 
   public void setFTree(FTree ftree) {
@@ -86,5 +90,21 @@ public class SiriusIonAnnotation extends SimpleIonAnnotation {
 
   public DBLink[] getDBLinks() {
     return dblinks;
+  }
+
+  public void setSiriusScore(Double score) {
+    siriusScore = score;
+  }
+
+  public Double getSiriusScore() {
+    return siriusScore;
+  }
+
+  public void setFingerIdScore(Double score) {
+    fingerIdScore = score;
+  }
+
+  public Double getFingerIdScore() {
+    return fingerIdScore;
   }
 }

@@ -558,7 +558,7 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
         }
       }
       extendedAnnotation.setInchiKey(candidate.getInchiKey2D());
-//      extendedAnnotation.setDatabase("Pubchem"); //TODO: not sure
+      extendedAnnotation.setFingerIdScore(scoredCandidate.getScore());
       extendedAnnotation.setDescription(candidate.getName());
       extendedAnnotation.setDBLinks(candidate.getLinks());
       newAnnotations.add(extendedAnnotation);
