@@ -23,6 +23,7 @@ import io.github.msdk.datamodel.SimpleIonAnnotation;
  * FTree - the result tree provided by Sirius experiment processed
  * SMILES - the result string provided by FingerIdWebMethod, after computation of FingerprintCandidates
  * DBLinks - map of DB name->id, shows where corresponding result element can be found (ex.: Pubchem: 3123)
+ * Score fields - score value from Sirius result or FingerId result objects
  */
 public class SiriusIonAnnotation extends SimpleIonAnnotation {
   private FTree ftree;

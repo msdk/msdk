@@ -37,6 +37,7 @@
 Use the following sequence of commands to build and deploy a new MSDK release.
 
 ```
+
 # Cleanup 
 mvn clean
 
@@ -48,6 +49,10 @@ mvn -Pmsdk-release package
 
 # Deploy after successful build
 mvn -Pmsdk-release -DskipTests deploy
+
+# Create a tag in the git repo
+git tag vX.Y.Z
+git push origin --tags
 
 # To generate complete JavaDoc documentation and upload it to http://msdk.github.io/api/
 mvn -Pmsdk-release -DskipTests package javadoc:aggregate scm-publish:publish-scm
