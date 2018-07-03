@@ -23,11 +23,14 @@ import io.github.msdk.datamodel.SimpleIonAnnotation;
  * FTree - the result tree provided by Sirius experiment processed
  * SMILES - the result string provided by FingerIdWebMethod, after computation of FingerprintCandidates
  * DBLinks - map of DB name->id, shows where corresponding result element can be found (ex.: Pubchem: 3123)
+ * Score fields - score value from Sirius result or FingerId result objects
  */
 public class SiriusIonAnnotation extends SimpleIonAnnotation {
   private FTree ftree;
   private String smilesString;
   private DBLink[] dblinks;
+  private Double siriusScore;
+  private Double fingerIdScore;
 
   public SiriusIonAnnotation(SiriusIonAnnotation master) {
     super();
@@ -61,6 +64,8 @@ public class SiriusIonAnnotation extends SimpleIonAnnotation {
     target.setFTree(master.getFTree());
     target.setDBLinks(master.getDBLinks());
     target.setSMILES(master.getSMILES());
+    target.setFingerIdScore(master.getFingerIdScore());
+    target.setSiriusScore(master.getSiriusScore());
   }
 
   public void setFTree(FTree ftree) {
@@ -86,5 +91,21 @@ public class SiriusIonAnnotation extends SimpleIonAnnotation {
 
   public DBLink[] getDBLinks() {
     return dblinks;
+  }
+
+  public void setSiriusScore(Double score) {
+    siriusScore = score;
+  }
+
+  public Double getSiriusScore() {
+    return siriusScore;
+  }
+
+  public void setFingerIdScore(Double score) {
+    fingerIdScore = score;
+  }
+
+  public Double getFingerIdScore() {
+    return fingerIdScore;
   }
 }
