@@ -39,7 +39,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
 import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
@@ -143,8 +142,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     experiment = loadInitialExperiment();
     loadSpectra(experiment);
     configureExperiment(experiment);
-
-    long d = ObjectSizeCalculator.getObjectSize(this);
 
     logger.debug("Sirius starts processing MsSpectrums");
     List<IdentificationResult> siriusResults  = sirius.identify(experiment,
