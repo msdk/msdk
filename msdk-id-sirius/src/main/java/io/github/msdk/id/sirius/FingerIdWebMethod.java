@@ -528,6 +528,8 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
   @Nullable
   @Override
   public Float getFinishedPercentage() {
+    if (newAnnotations != null && newAnnotations.size() == 0) // Fixes issue with empty result list
+      return 1f;
     return 1f * finishedItems / candidatesAmount;
   }
 

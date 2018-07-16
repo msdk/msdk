@@ -32,21 +32,18 @@ import org.slf4j.LoggerFactory;
  */
 public class ConstraintsGenerator {
   private static final Logger logger = LoggerFactory.getLogger(ConstraintsGenerator.class);
+  private static final String[] defaultElementSymbols = new String[]{"C", "H", "N", "O", "P"};
+  private static final Element[] defaultElements;
+  private static final PeriodicTable periodicTable = PeriodicTable.getInstance();
+  private static final int maxNumberOfOneElements = 20;
 
-  private final String[] defaultElementSymbols = new String[]{"C", "H", "N", "O", "P"};
-  private final Element[] defaultElements;
-  private final PeriodicTable periodicTable = PeriodicTable.getInstance();
-  private final int maxNumberOfOneElements = 20;
-
-  /**
-   * <p>Constructor for ConstraintsGenerator class</p>
-   * Initializes array of Elements `defaultElements`
-   */
-  public ConstraintsGenerator() {
+  static {
     defaultElements = new Element[defaultElementSymbols.length];
     for (int i = 0; i < defaultElementSymbols.length; i++)
       defaultElements[i] = periodicTable.getByName(defaultElementSymbols[i]);
   }
+
+  private ConstraintsGenerator() {}
 
   /**
    * <p> Method for generating FormulaConstraints from user-defined search space</p>
@@ -54,7 +51,7 @@ public class ConstraintsGenerator {
    * @param range - User defined search space of possible elements
    * @return new Constraint to be used in Sirius
    */
-  public FormulaConstraints generateConstraint(MolecularFormulaRange range) {
+  public static FormulaConstraints generateConstraint(MolecularFormulaRange range) {
     logger.debug("ConstraintsGenerator started processing");
     int size = range.getIsotopeCount();
     Element elements[] = Arrays.copyOf(defaultElements, defaultElements.length + size);
@@ -70,19 +67,21 @@ public class ConstraintsGenerator {
     // Generate initial constraint w/o concrete Element range
     FormulaConstraints constraints = new FormulaConstraints(new ChemicalAlphabet(elements));
 
-    // Specify each Element range
-    for (IIsotope isotope: range.isotopes()) {
-      int atomicNumber = isotope.getAtomicNumber();
-      final Element element = periodicTable.get(atomicNumber);
-      int min = range.getIsotopeCountMin(isotope);
-      int max = range.getIsotopeCountMax(isotope);
+    synchronized (periodicTable) {
+      // Specify each Element range
+      for (IIsotope isotope : range.isotopes()) {
+        int atomicNumber = isotope.getAtomicNumber();
+        final Element element = periodicTable.get(atomicNumber);
+        int min = range.getIsotopeCountMin(isotope);
+        int max = range.getIsotopeCountMax(isotope);
 
-      constraints.setLowerbound(element, min);
-      if (max!= maxNumberOfOneElements) constraints.setUpperbound(element, max);
+        constraints.setLowerbound(element, min);
+        if (max != maxNumberOfOneElements)
+          constraints.setUpperbound(element, max);
+      }
     }
 
     logger.debug("ConstraintsGenerator finished");
     return constraints;
   }
-
 }

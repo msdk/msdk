@@ -40,7 +40,6 @@ import org.junit.Test;
 import org.openscience.cdk.config.IsotopeFactory;
 import org.openscience.cdk.config.Isotopes;
 import org.openscience.cdk.formula.MolecularFormulaRange;
-import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
 public class SiriusMs2Test {
@@ -122,8 +121,6 @@ public class SiriusMs2Test {
     final String ms2Path = "flavokavainA_MS2.txt";
     final int candidatesAmount = 10;
 
-    final ConstraintsGenerator generator = new ConstraintsGenerator();
-
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
     range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
@@ -134,7 +131,7 @@ public class SiriusMs2Test {
     range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
     range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
 
-    final FormulaConstraints constraints = generator.generateConstraint(range);
+    final FormulaConstraints constraints = ConstraintsGenerator.generateConstraint(range);
 
 
     File ms1File = getResourcePath(ms1Path).toFile();
@@ -186,8 +183,6 @@ public class SiriusMs2Test {
     final String ms2Path = "bisnoryangonin_MS2.txt";
     final int candidatesAmount = 7;
 
-    final ConstraintsGenerator generator = new ConstraintsGenerator();
-
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
     range.addIsotope(iFac.getMajorIsotope("S"), 0, 0);
@@ -198,7 +193,7 @@ public class SiriusMs2Test {
     range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
     range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
 
-    final FormulaConstraints constraints = generator.generateConstraint(range);
+    final FormulaConstraints constraints = ConstraintsGenerator.generateConstraint(range);
 
 
     File ms1File = getResourcePath(ms1Path).toFile();
@@ -248,8 +243,6 @@ public class SiriusMs2Test {
     final String ms2Path = "marindinin_MS2.txt";
     final int candidatesAmount = 5;
 
-    final ConstraintsGenerator generator = new ConstraintsGenerator();
-
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
     range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
@@ -260,7 +253,7 @@ public class SiriusMs2Test {
     range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
     range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
 
-    final FormulaConstraints constraints = generator.generateConstraint(range);
+    final FormulaConstraints constraints = ConstraintsGenerator.generateConstraint(range);
 
 
     File ms1File = getResourcePath(ms1Path).toFile();
@@ -310,8 +303,6 @@ public class SiriusMs2Test {
     final String ms1Path = "marindinin_MS1.txt";
     final int candidatesAmount = 6;
 
-    final ConstraintsGenerator generator = new ConstraintsGenerator();
-
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
     range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
@@ -322,7 +313,7 @@ public class SiriusMs2Test {
     range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
     range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
 
-    final FormulaConstraints constraints = generator.generateConstraint(range);
+    final FormulaConstraints constraints = ConstraintsGenerator.generateConstraint(range);
 
 
     File ms1File = getResourcePath(ms1Path).toFile();
@@ -369,7 +360,6 @@ public class SiriusMs2Test {
     final String ms2Path = "marindinin_MS2.txt";
     final int candidatesAmount = 5;
 
-    final ConstraintsGenerator generator = new ConstraintsGenerator();
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
     range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
@@ -380,7 +370,7 @@ public class SiriusMs2Test {
     range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
     range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
 
-    final FormulaConstraints constraints = generator.generateConstraint(range);
+    final FormulaConstraints constraints = ConstraintsGenerator.generateConstraint(range);
     File ms2File = getResourcePath(ms2Path).toFile();
 
     MsSpectrum ms2Spectrum2 = TxtImportAlgorithm.parseMsSpectrum(new FileReader(ms2File));

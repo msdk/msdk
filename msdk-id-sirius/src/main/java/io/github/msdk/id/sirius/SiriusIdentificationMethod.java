@@ -39,6 +39,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
 import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
@@ -68,7 +69,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   }
 
   private static final Logger logger = LoggerFactory.getLogger(SiriusIdentificationMethod.class);
-  private final Sirius sirius;
   private final List<MsSpectrum> ms1;
   private final List<MsSpectrum> ms2;
   private final Double parentMass;
@@ -76,6 +76,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private final int numberOfCandidates;
   private final FormulaConstraints constraints;
   private final Deviation deviation;
+  private final Sirius sirius;
   private boolean cancelled = false;
   private List<IonAnnotation> result;
   private MutableMs2Experiment experiment;
@@ -95,12 +96,12 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
      @Nonnull IonType ion, @Nullable Integer numberOfCandidates, @Nullable FormulaConstraints constraints, @Nullable Double deviation) {
     if (ms1 == null && ms2 == null) throw new MSDKRuntimeException("Only one of MS && MS/MS can be null at a time");
 
-    sirius = new Sirius();
     this.ms1 = ms1;
     this.ms2 = ms2;
     this.parentMass = parentMass;
     this.ion = ion;
     this.constraints = constraints;
+    sirius = new Sirius();
 
     if (numberOfCandidates == null)
       this.numberOfCandidates = 10;
@@ -142,6 +143,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     experiment = loadInitialExperiment();
     loadSpectra(experiment);
     configureExperiment(experiment);
+
+    long d = ObjectSizeCalculator.getObjectSize(this);
 
     logger.debug("Sirius starts processing MsSpectrums");
     List<IdentificationResult> siriusResults  = sirius.identify(experiment,

@@ -279,20 +279,16 @@ public class NativeLibraryLoader {
 
     /* Get ALL entries in .jar file */
     final Enumeration<JarEntry> entries = jar.entries();
+    int items = 0;
     while(entries.hasMoreElements()) {
       entry = entries.nextElement();
       name = entry.getName();
       /* Find the folder with required pattern i.e. /glpk-4.60/mac64/ */
       if (name.contains(folder)) {
-
         /* Process ONLY found directory and ignore other entries*/
-        do {
-          if (!entry.isDirectory()) entriesSet.add(entry);
-          entry = entries.nextElement();
-          name = entry.getName();
-        } while (name.contains(folder));
-
-        break; // Finish processing entries
+        if (!entry.isDirectory()) {
+          entriesSet.add(entry);
+        }
       }
     }
 

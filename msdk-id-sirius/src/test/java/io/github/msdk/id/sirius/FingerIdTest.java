@@ -68,7 +68,6 @@ public class FingerIdTest {
     final String ms1Path = "flavokavainA_MS1.txt";
     final String ms2Path = "flavokavainA_MS2.txt";
 
-    final ConstraintsGenerator generator = new ConstraintsGenerator();
 
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
@@ -80,7 +79,7 @@ public class FingerIdTest {
     range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
     range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
 
-    final FormulaConstraints constraints = generator.generateConstraint(range);
+    final FormulaConstraints constraints = ConstraintsGenerator.generateConstraint(range);
 
     File ms1File = getResourcePath(ms1Path).toFile();
     File ms2File = getResourcePath(ms2Path).toFile();
@@ -135,8 +134,6 @@ public class FingerIdTest {
     final String ms1Path = "marindinin_MS1.txt";
     final String ms2Path = "marindinin_MS2.txt";
 
-    final ConstraintsGenerator generator = new ConstraintsGenerator();
-
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
     range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
@@ -147,7 +144,7 @@ public class FingerIdTest {
     range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
     range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
 
-    final FormulaConstraints constraints = generator.generateConstraint(range);
+    final FormulaConstraints constraints = ConstraintsGenerator.generateConstraint(range);
 
     File ms1File = getResourcePath(ms1Path).toFile();
     File ms2File = getResourcePath(ms2Path).toFile();
