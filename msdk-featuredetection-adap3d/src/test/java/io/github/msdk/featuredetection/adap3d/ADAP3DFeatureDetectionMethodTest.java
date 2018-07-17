@@ -16,7 +16,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -25,13 +24,12 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.Feature;
 import io.github.msdk.datamodel.RawDataFile;
-import io.github.msdk.featuredetection.adap3d.ADAP3DFeatureDetectionMethod;
-import io.github.msdk.featuredetection.adap3d.ADAP3DFeatureDetectionParameters;
 import io.github.msdk.io.mzxml.MzXMLFileImportMethod;
 
 public class ADAP3DFeatureDetectionMethodTest {
@@ -62,6 +60,7 @@ public class ADAP3DFeatureDetectionMethodTest {
   }
 
   @Test
+  @Ignore("Temporarily ignored, until ADAP3D work is resumed")
   public void testPeakDetection() throws MSDKException, IOException {
 
     ADAP3DFeatureDetectionMethod ob =
