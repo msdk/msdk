@@ -62,6 +62,12 @@
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>chemistry_base</artifactId>
       <version>${sirius.version}</version>
+      <exclusions>
+      	<exclusion>
+      		<groupId>org.slf4j</groupId>
+      		<artifactId>slf4j-jdk14</artifactId>
+      	</exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -173,6 +179,12 @@
       <groupId>de.unijena.bioinf.ms</groupId>
       <artifactId>canopus_predict_oss</artifactId>
       <version>${fingerId.version}</version>
+      <exclusions>
+      	<exclusion>
+      		<groupId>org.slf4j</groupId>
+      		<artifactId>slf4j-jdk14</artifactId>
+      	</exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
