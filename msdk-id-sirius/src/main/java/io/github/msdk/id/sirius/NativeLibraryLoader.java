@@ -255,7 +255,7 @@ public class NativeLibraryLoader {
    * @return OS name
    * @throws MSDKException - if any
    */
-  private static String getOsName() throws MSDKException {
+  public static String getOsName() throws MSDKException {
     String osname = System.getProperty("os.name");
     if (osname == null)
       throw new MSDKException("Can not identify os.name property");
