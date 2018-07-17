@@ -60,7 +60,15 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   static {
       try {
       // GLPK requires two libraries
-      String[] libs = {"glpk", "glpk_java"};
+      String[] libs = new String[2];
+      if (NativeLibraryLoader.getOsName().contains("win")) {
+        libs[0] = "glpk_4_60";
+        libs[1] = "glpk_4_60_java";
+      } else {
+        libs[0] = "glpk";
+        libs[1] = "glpk_java";
+      }
+
       NativeLibraryLoader.loadLibraryFromJar("glpk-4.60", libs);
     } catch (Exception ex) {
       throw new MSDKRuntimeException(ex);
