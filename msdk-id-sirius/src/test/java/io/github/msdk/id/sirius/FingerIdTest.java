@@ -16,6 +16,7 @@ package io.github.msdk.id.sirius;
 import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
 import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
 import io.github.msdk.MSDKException;
+import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.IonAnnotation;
 import io.github.msdk.datamodel.IonType;
 import io.github.msdk.datamodel.MsSpectrum;
@@ -34,14 +35,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
+import org.apache.http.conn.HttpHostConnectException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openscience.cdk.config.IsotopeFactory;
 import org.openscience.cdk.config.Isotopes;
 import org.openscience.cdk.formula.MolecularFormulaRange;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FingerIdTest {
+  private static final Logger logger = LoggerFactory.getLogger(FingerIdTest.class);
 
   public FingerIdTest() throws MSDKException {
     String loggingProperties = getResourcePath("logging.properties").toString();
@@ -109,17 +114,22 @@ public class FingerIdTest {
     final String[] SMILES = {"COC1=CC=C(C=C1)C=CC(=O)C2=C(C=C(C=C2O)OC)OC", "COC1=CC=C(C=C1)C=CC(=O)C2=C(C=C(C=C2OC)O)OC", "COC1=CC=C(C=C1)C=CC(=O)C2=CC=C(C(=C2O)OC)OC"};
 
     Ms2Experiment experiment = siriusMethod.getExperiment();
-    FingerIdWebMethod fingerMethod = new FingerIdWebMethod(experiment, siriusAnnotation, fingerCandidates);
-    List<IonAnnotation> annotations = fingerMethod.execute();
-    for (int i = 0; i < annotations.size(); i++) {
-      SiriusIonAnnotation fingeridAnnotation = (SiriusIonAnnotation) annotations.get(i);
-      String smiles = fingeridAnnotation.getSMILES();
-      String inchi = fingeridAnnotation.getInchiKey();
-      String name = fingeridAnnotation.getDescription();
+    try {
+      FingerIdWebMethod fingerMethod = new FingerIdWebMethod(experiment, siriusAnnotation,
+          fingerCandidates);
+      List<IonAnnotation> annotations = fingerMethod.execute();
+      for (int i = 0; i < annotations.size(); i++) {
+        SiriusIonAnnotation fingeridAnnotation = (SiriusIonAnnotation) annotations.get(i);
+        String smiles = fingeridAnnotation.getSMILES();
+        String inchi = fingeridAnnotation.getInchiKey();
+        String name = fingeridAnnotation.getDescription();
 
-      Assert.assertEquals(smiles, SMILES[i]);
-      Assert.assertEquals(inchi, inchis[i]);
-      Assert.assertEquals(name, candidateNames[i]);
+        Assert.assertEquals(smiles, SMILES[i]);
+        Assert.assertEquals(inchi, inchis[i]);
+        Assert.assertEquals(name, candidateNames[i]);
+      }
+    } catch (MSDKRuntimeException exception) {
+      logger.info("Connection with boecker-lab FingerId API failed");
     }
   }
 
@@ -190,61 +200,67 @@ public class FingerIdTest {
     CountDownLatch finishLatch = new CountDownLatch(3);
     CountDownLatch initLatch = new CountDownLatch(3);
 
-    for (int k = 0; k < 3; k++) {
-      FingerIdConcurrent thread = new FingerIdConcurrent(experiment, siriusAnnotationsList.get(k), fingerCandidates, initLatch, finishLatch);
-      thread.run();
-      fingerResults[k] = thread.getResults();
-    }
-
-
-    final String[] firstSMILES = {"COC1=CC(=O)OC(CCC2=CC=CC=C2)C1", "COC=C(CC=CC1=CC=CC=C1)C(=O)OC", "COC(=O)C=CCC(C=CC1=CC=CC=C1)O"};
-    final String[] firstInchis = {"VOOYTQRREPYRIW", "CIKOXPINNQLUNR", "VUILPHNRZJUSCY"};
-    final String[] firstNames = {"Marindinin", null, "methyl (2Z,5R,6E)-5-hydroxy-7-phenylhepta-2,6-dienoate"};
-
-    final String[] secondSMILES = {"CC1=C(C(=NC2=CC=CC=C2)O)N([CH]N1C)O", "CCOC(=O)C([CH]NNC1=CC=CC=C1)[N+]#[C-]", "C1=C[CH]C(=C1)CNC(CC2=CN=CN2)C(=O)O"};
-    final String[] secondInchis = {"WHKHVKOFMPKDPZ", "KFRMPWTUGNWZNC", "RIHSCMQGAIZEPT"};
-    final String[] secondNames = {null, null, null};
-
-    final String[] thirdSMILES = {"CCCNC1CCN(C(=O)C1(N)P=O)N"};
-    final String[] thirdInchis = {"RIBGFYNNMUNNPJ"};
-    final String[] thirdNames = {null};
-
-    finishLatch.await();
-
-    String[][] SMILES = new String[3][];
-    String[][] INCHI = new String[3][];
-    String[][] names = new String[3][];
-
-    for (int k = 0; k < 3; k++) {
-      SMILES[k] = new String[fingerResults[k].size()];
-      names[k] = new String[fingerResults[k].size()];
-      INCHI[k] = new String[fingerResults[k].size()];
-      i = 0;
-      for (IonAnnotation ann: fingerResults[k]) {
-        SiriusIonAnnotation fingeridAnnotation = (SiriusIonAnnotation) ann;
-        String smiles = fingeridAnnotation.getSMILES();
-        String inchi = fingeridAnnotation.getInchiKey();
-        String name = fingeridAnnotation.getDescription();
-
-        SMILES[k][i] = smiles;
-        INCHI[k][i] = inchi;
-        names[k][i] = name;
-        i++;
+    try {
+      for (int k = 0; k < 3; k++) {
+        FingerIdConcurrent thread = new FingerIdConcurrent(experiment, siriusAnnotationsList.get(k),
+            fingerCandidates, initLatch, finishLatch);
+        thread.run();
+        fingerResults[k] = thread.getResults();
       }
+
+      final String[] firstSMILES = {"COC1=CC(=O)OC(CCC2=CC=CC=C2)C1",
+          "COC=C(CC=CC1=CC=CC=C1)C(=O)OC", "COC(=O)C=CCC(C=CC1=CC=CC=C1)O"};
+      final String[] firstInchis = {"VOOYTQRREPYRIW", "CIKOXPINNQLUNR", "VUILPHNRZJUSCY"};
+      final String[] firstNames = {"Marindinin", null,
+          "methyl (2Z,5R,6E)-5-hydroxy-7-phenylhepta-2,6-dienoate"};
+
+      final String[] secondSMILES = {"CC1=C(C(=NC2=CC=CC=C2)O)N([CH]N1C)O",
+          "CCOC(=O)C([CH]NNC1=CC=CC=C1)[N+]#[C-]", "C1=C[CH]C(=C1)CNC(CC2=CN=CN2)C(=O)O"};
+      final String[] secondInchis = {"WHKHVKOFMPKDPZ", "KFRMPWTUGNWZNC", "RIHSCMQGAIZEPT"};
+      final String[] secondNames = {null, null, null};
+
+      final String[] thirdSMILES = {"CCCNC1CCN(C(=O)C1(N)P=O)N"};
+      final String[] thirdInchis = {"RIBGFYNNMUNNPJ"};
+      final String[] thirdNames = {null};
+
+      finishLatch.await();
+
+      String[][] SMILES = new String[3][];
+      String[][] INCHI = new String[3][];
+      String[][] names = new String[3][];
+
+      for (int k = 0; k < 3; k++) {
+        SMILES[k] = new String[fingerResults[k].size()];
+        names[k] = new String[fingerResults[k].size()];
+        INCHI[k] = new String[fingerResults[k].size()];
+        i = 0;
+        for (IonAnnotation ann : fingerResults[k]) {
+          SiriusIonAnnotation fingeridAnnotation = (SiriusIonAnnotation) ann;
+          String smiles = fingeridAnnotation.getSMILES();
+          String inchi = fingeridAnnotation.getInchiKey();
+          String name = fingeridAnnotation.getDescription();
+
+          SMILES[k][i] = smiles;
+          INCHI[k][i] = inchi;
+          names[k][i] = name;
+          i++;
+        }
+      }
+
+      Assert.assertArrayEquals(firstSMILES, SMILES[0]);
+      Assert.assertArrayEquals(firstNames, names[0]);
+      Assert.assertArrayEquals(firstInchis, INCHI[0]);
+
+      Assert.assertArrayEquals(secondSMILES, SMILES[1]);
+      Assert.assertArrayEquals(secondNames, names[1]);
+      Assert.assertArrayEquals(secondInchis, INCHI[1]);
+
+      Assert.assertArrayEquals(thirdSMILES, SMILES[2]);
+      Assert.assertArrayEquals(thirdNames, names[2]);
+      Assert.assertArrayEquals(thirdInchis, INCHI[2]);
+    } catch (MSDKRuntimeException e) {
+      logger.info("Connection with boecker-lab FingerId API failed");
     }
-
-    Assert.assertArrayEquals(firstSMILES, SMILES[0]);
-    Assert.assertArrayEquals(firstNames, names[0]);
-    Assert.assertArrayEquals(firstInchis, INCHI[0]);
-
-    Assert.assertArrayEquals(secondSMILES, SMILES[1]);
-    Assert.assertArrayEquals(secondNames, names[1]);
-    Assert.assertArrayEquals(secondInchis, INCHI[1]);
-
-    Assert.assertArrayEquals(thirdSMILES, SMILES[2]);
-    Assert.assertArrayEquals(thirdNames, names[2]);
-    Assert.assertArrayEquals(thirdInchis, INCHI[2]);
-
   }
 
 
