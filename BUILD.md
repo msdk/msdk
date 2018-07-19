@@ -43,6 +43,7 @@ mvn clean
 
 # Update version number of all modules (change X.Y.Z to new version number)
 mvn versions:set -DnewVersion=X.Y.Z versions:commit
+git commit -a
 
 # Build the whole project
 mvn -Pmsdk-release package
@@ -59,4 +60,6 @@ mvn -Pmsdk-release -DskipTests package javadoc:aggregate scm-publish:publish-scm
 
 # After a succesful release, set the versions to the next development version
 mvn versions:set -DnewVersion=X.Y.Z-SNAPSHOT versions:commit
+git commit -a
+
 ```
