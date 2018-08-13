@@ -38,7 +38,7 @@ public class MgfFileImportMethodTest {
   public void mgfImportTest() throws IOException, MSDKException {
     final int expectedSize = 2;
     final String expectedTitle[] = {"example.9.9.2", "negative_charge"};
-    final Integer expectedNumberDatapoints[] = {18, 15};
+    final Integer expectedNumberDatapoints[] = {19, 16};
     final int[] expectedCharges = {2, -3};
     final String file = "test_query.mgf";
 
@@ -80,7 +80,7 @@ public class MgfFileImportMethodTest {
         "PRIDE_Exp_mzData_Ac_9266.xml_id_9",
         "PRIDE_Exp_mzData_Ac_9266.xml_id_10"
     };
-    final long expectedNumberDatapoints[] = {53, 66, 13, 16, 9, 9, 9, 14, 18, 13};
+    final long expectedNumberDatapoints[] = {54, 67, 14, 17, 10, 10, 10, 15, 19, 14};
     final int expectedCharges[] = {2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
     final String file = "F001257.mgf";
 
