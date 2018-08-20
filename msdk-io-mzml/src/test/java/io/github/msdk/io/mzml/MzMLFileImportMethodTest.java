@@ -157,7 +157,7 @@ public class MzMLFileImportMethodTest {
     }
     System.out.println("  Done");
     // side effects so that the loop didn't get cut out by the compiler
-    System.out.printf("Total mz sum is %.4, ab sum is %.4ff\n", mzSum0, abSum0);
+    System.out.printf("Total mz sum is %.4f, ab sum is %.4ff\n", mzSum0, abSum0);
 
   }
 
