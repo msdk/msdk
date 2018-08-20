@@ -155,10 +155,10 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
 
 
   // Auto detect the type of spectrum and sort mz values
-    MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, index - 1);
-    DataPointSorter.sortDataPoints(mz, intensity, index - 1, SortingProperty.MZ, SortingDirection.ASCENDING);
+    MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, index);
+    DataPointSorter.sortDataPoints(mz, intensity, index, SortingProperty.MZ, SortingDirection.ASCENDING);
 
-    MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensity, index - 1, title, precursorCharge,
+    MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensity, index, title, precursorCharge,
         precursorMass, type);
 
     return spectrum;
