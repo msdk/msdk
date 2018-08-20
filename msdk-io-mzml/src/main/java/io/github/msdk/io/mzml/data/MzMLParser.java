@@ -178,9 +178,8 @@ public class MzMLParser {
       } else if (openingTagName.contentEquals(MzMLTags.TAG_BINARY)) {
         if (vars.spectrum != null && !vars.skipBinaryDataArray) {
           int bomOffset = xmlStreamReader.getLocation().getBomLength();
-          // TODO Fetch long value from getCharacterOffset()
           vars.binaryDataInfo
-              .setPosition(xmlStreamReader.getLocation().getCharacterOffset() + bomOffset);
+              .setPosition(xmlStreamReader.getLocation().getTotalCharsRead() + bomOffset);
         }
         if (!vars.skipBinaryDataArray) {
           if (MzMLCV.cvMzArray.equals(vars.binaryDataInfo.getArrayType().getAccession())) {
@@ -285,9 +284,8 @@ public class MzMLParser {
       } else if (openingTagName.contentEquals(MzMLTags.TAG_BINARY)) {
         if (vars.chromatogram != null && !vars.skipBinaryDataArray) {
           int bomOffset = xmlStreamReader.getLocation().getBomLength();
-          // TODO Fetch long value from getCharacterOffset()
           vars.binaryDataInfo
-              .setPosition(xmlStreamReader.getLocation().getCharacterOffset() + bomOffset);
+              .setPosition(xmlStreamReader.getLocation().getTotalCharsRead() + bomOffset);
         }
         if (!vars.skipBinaryDataArray) {
           if (MzMLCV.cvRetentionTimeArray
