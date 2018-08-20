@@ -13,6 +13,7 @@
 
 package io.github.msdk.io.mzml;
 
+import io.github.msdk.io.mzml.data.MzMLRawDataFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -117,6 +118,47 @@ public class MzMLFileImportMethodTest {
     Assert.assertEquals(Float.valueOf((float) (18.919083333333 * 60)), scan2.getRetentionTime());
 
     rawFile2.dispose();
+  }
+
+  /**
+   * Used for debugging to manually iterate over chromatograms and every 100th scan.
+   * @throws MSDKException
+   */
+  //@Test
+  public void testCustomFile() throws MSDKException {
+    //String file = ... "QC_Shew_12_02_SPE_Run-01_10Dec12_Eagle_12-12-10.mzml";
+    String file = "";
+    File f = new File(file);
+    MzMLFileImportMethod p = new MzMLFileImportMethod(f);
+    MzMLRawDataFile data = p.execute();
+    double mzSum0 = 0;
+    double abSum0 = 0;
+    System.out.println("Iterating over scans");
+
+    for (Chromatogram c : data.getChromatograms()) {
+      System.out.println("Chromatogram #" + c.getChromatogramNumber() + " type " + c.getChromatogramType());
+      System.out.printf("It has %d intensity points, %d retention time points", c.getIntensityValues().length, c.getRetentionTimes().length);
+    }
+
+    int count = 0;
+    int total = data.getScans().size();
+    for (MsScan scan : data.getScans()) {
+      if (count % 100 != 0) continue;
+      double[] mz = scan.getMzValues();
+      float[] ab = scan.getIntensityValues();
+      if (mz.length != ab.length)
+        throw new MSDKException("mz and intensity arrays of different lengths, scan #" + scan.getScanNumber());
+      if (mz.length > 0) {
+        // side effects so that the loop didn't get cut out by the compiler
+        mzSum0 += mz[0];
+        abSum0 += ab[0];
+      }
+      count++;
+    }
+    System.out.println("  Done");
+    // side effects so that the loop didn't get cut out by the compiler
+    System.out.printf("Total mz sum is %.4f, ab sum is %.4ff\n", mzSum0, abSum0);
+
   }
 
   @Test
