@@ -22,17 +22,19 @@ import io.github.msdk.util.ArrayUtil;
 import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.DataPointSorter.SortingDirection;
 import io.github.msdk.util.DataPointSorter.SortingProperty;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +47,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   private final Pattern PEPMASS_PATTERN = Pattern.compile("(?<=PEPMASS=)(\\d+\\.\\d+)");
   private final Pattern CHARGE_PATTERN = Pattern.compile("(?<=CHARGE=)(\\d+)\\+|(\\d+)-");
   private final Pattern TITLE_PATTERN = Pattern.compile("(?<=TITLE=).*");
+  private final Pattern LEVEL_PATTERN = Pattern.compile("(?<=MSLEVEL=).*");
   private final @Nonnull File target;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private boolean cancelled;
@@ -95,6 +98,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
    */
   private MgfMsSpectrum processSpectrum(BufferedReader reader) throws IOException, MSDKException {
     String title = "";
+    int mslevel = 2;
     int precursorCharge = 0;
     double precursorMass = 0;
     double mz[] = new double[16];
@@ -120,6 +124,9 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
           precursorMass = Double.parseDouble(matched);
         } else if (line.contains("TITLE")) {
           title = matchPattern(line, TITLE_PATTERN);
+        } else if (line.contains("MSLEVEL")) {
+          matched = matchPattern(line, LEVEL_PATTERN);
+          mslevel = Integer.parseInt(matched);
         } else if (line.contains("CHARGE")) {
           matched = matchPattern(line, CHARGE_PATTERN);
 
@@ -159,7 +166,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     DataPointSorter.sortDataPoints(mz, intensity, index, SortingProperty.MZ, SortingDirection.ASCENDING);
 
     MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensity, index, title, precursorCharge,
-        precursorMass, type);
+        precursorMass, type, mslevel);
 
     return spectrum;
   }

@@ -22,11 +22,13 @@ import io.github.msdk.datamodel.MsSpectrumType;
  *         This class extends AbstractMsSpectrum and stores additional fields
  *         title - name of the spectrum
  *         precursor ion charge and mass
+ *         level - MsLevel of the spectrum (1 or 2)
  */
 public class MgfMsSpectrum extends AbstractMsSpectrum {
   private String title;
   private int precursorCharge;
   private double precursorMass;
+  private int level;
 
   /**
    *  <p> Constructor for MgfMsSpectrum class.</p>
@@ -39,12 +41,13 @@ public class MgfMsSpectrum extends AbstractMsSpectrum {
    * @param type - type of the MsSpectrum
    */
   public MgfMsSpectrum(double[] mz, float[] intensity, int size, String title, int precursorCharge,
-      double precursorMass, MsSpectrumType type) {
+      double precursorMass, MsSpectrumType type, int mslevel) {
     setSpectrumType(type);
     setDataPoints(mz, intensity, size);
     this.precursorMass = precursorMass;
     this.precursorCharge = precursorCharge;
     this.title = title;
+    this.level = mslevel;
   }
 
   /**
@@ -53,6 +56,14 @@ public class MgfMsSpectrum extends AbstractMsSpectrum {
    */
   public double getPrecursorMass() {
     return precursorMass;
+  }
+
+  /**
+   * <p> Getter for MS level of spectrum </p>
+   * @return spectrum's ms level
+   */
+  public int getMsLevel() {
+    return level;
   }
 
   /**
