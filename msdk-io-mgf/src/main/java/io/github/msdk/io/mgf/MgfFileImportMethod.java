@@ -97,10 +97,10 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
    * @throws MSDKException if any
    */
   private MgfMsSpectrum processSpectrum(BufferedReader reader) throws IOException, MSDKException {
-    String title = "";
-    int mslevel = 2;
-    int precursorCharge = 0;
-    double precursorMass = 0;
+    String title = null;
+    Integer mslevel = null;
+    Integer precursorCharge = null;
+    Double precursorMass = null;
     double mz[] = new double[16];
     float intensity[] = new float[16];
 
@@ -142,17 +142,21 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
         } else {
           String[] floats = line.split(" ");
 
-          // In case of more than 2 columns only first and second are used
-          if (floats.length < 2) {
-            logger.debug("Failure on string :: {}", line);
-            throw new MSDKRuntimeException("Incorrect amount of columns in MGF file");
+          // Check that line is two columned
+          if (floats.length != 2) {
+            continue;
           }
 
-          double mzValue = Double.parseDouble(floats[0]);
-          float intensityValue = Float.parseFloat(floats[1]);
-          mz = ArrayUtil.addToArray(mz, mzValue, index);
-          intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
-          index++;
+          try { // Catch exception if tries to parse non-float
+            double mzValue = Double.parseDouble(floats[0]);
+            float intensityValue = Float.parseFloat(floats[1]);
+            mz = ArrayUtil.addToArray(mz, mzValue, index);
+            intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
+          } catch (NumberFormatException e) {
+            logger.debug("Failed to parse floats from string {}", index);
+          } finally {
+            index++;
+          }
         }
       } catch (IllegalStateException e) {
         logger.debug("Regex could not recognize the pattern :: {}", line);
@@ -165,8 +169,10 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, index);
     DataPointSorter.sortDataPoints(mz, intensity, index, SortingProperty.MZ, SortingDirection.ASCENDING);
 
-    MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensity, index, title, precursorCharge,
-        precursorMass, type, mslevel);
+    MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensity, index, type);
+    spectrum.setMsLevel(mslevel);
+    spectrum.setPrecursor(precursorMass, precursorCharge);
+    spectrum.setTitle(title);
 
     return spectrum;
   }
