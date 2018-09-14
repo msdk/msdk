@@ -33,17 +33,9 @@ import io.github.msdk.datamodel.IonAnnotation;
 import io.github.msdk.datamodel.IonType;
 import io.github.msdk.datamodel.MsSpectrum;
 
-import io.github.msdk.datamodel.MsSpectrumType;
-import io.github.msdk.datamodel.SimpleMsSpectrum;
-import io.github.msdk.util.DataPointSorter;
-import io.github.msdk.util.DataPointSorter.SortingDirection;
-import io.github.msdk.util.DataPointSorter.SortingProperty;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import java.util.Map.Entry;
-import java.util.TreeMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -85,6 +77,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
 
   private static final Logger logger = LoggerFactory.getLogger(SiriusIdentificationMethod.class);
   private final Integer MAX_DATAPOINTS = 300;
+  private final Integer MAX_SPECTRA = 15;
   private final List<MsSpectrum> ms1;
   private final List<MsSpectrum> ms2;
   private final Double parentMass;
@@ -112,8 +105,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
      @Nonnull IonType ion, @Nullable Integer numberOfCandidates, @Nullable FormulaConstraints constraints, @Nullable Double deviation) {
     if (ms1 == null && ms2 == null) throw new MSDKRuntimeException("Only one of MS && MS/MS can be null at a time");
 
-    this.ms1 = preprocessSpectra(ms1, MAX_DATAPOINTS);
-    this.ms2 = preprocessSpectra(ms2, MAX_DATAPOINTS);
+    this.ms1 = SpectrumPreprocessor.preprocessSpectra(ms1, MAX_SPECTRA, MAX_DATAPOINTS);
+    this.ms2 = SpectrumPreprocessor.preprocessSpectra(ms2, MAX_SPECTRA, MAX_DATAPOINTS);
     this.parentMass = parentMass;
     this.ion = ion;
     this.constraints = constraints;
@@ -128,60 +121,6 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
       this.deviation = new Deviation(10);
     else
       this.deviation = new Deviation(deviation);
-  }
-
-  /**
-   * Processes each spectrum in a list, filters with only 300 most intensive elements.
-   * If maxItems is null, default value will be used (initial amount of datapoints inside of a spectrum)
-   * @param spectra - list of spectrums
-   * @param maxItems - maximum amount of items in a new Spectrum
-   * @return
-   */
-  private List<MsSpectrum> preprocessSpectra(List<MsSpectrum> spectra, Integer maxItems) {
-    if (spectra == null)
-      return null;
-
-    Integer[]
-
-
-    List<MsSpectrum> filtered = new LinkedList<>();
-    TreeMap<Float, Double> intesityMzSorted = new TreeMap<>();
-
-    /* Purify each spectrum */
-    for (MsSpectrum ms: spectra) {
-      double mz[] = ms.getMzValues();
-      float intensity[] = ms.getIntensityValues();
-      if (mz.length > maxItems) {
-        double[] newMz = new double[maxItems];
-        float[] newIntensity = new float[maxItems];
-
-        /* Sort intensity pairs */
-        for (int i = 0; i < mz.length; i++) {
-          intesityMzSorted.put(intensity[i], mz[i]);
-        }
-
-        /* Create new arrays with filtered intensity pairs */
-        for (int i = 0; i < maxItems; i++) {
-          Entry<Float, Double> pair = intesityMzSorted.firstEntry();
-          intesityMzSorted.remove(pair.getKey());
-          newMz[i] = pair.getValue();
-          newIntensity[i] = pair.getKey();
-        }
-        intesityMzSorted.clear();
-
-        /* Sort ascending by mz */
-        DataPointSorter.sortDataPoints(newMz, newIntensity, maxItems, SortingProperty.MZ,
-            SortingDirection.ASCENDING);
-
-        /* Create new Spectrum object */
-        MsSpectrumType type = ms.getSpectrumType();
-        SimpleMsSpectrum filteredMs = new SimpleMsSpectrum(newMz, newIntensity, maxItems, type);
-        filtered.add(filteredMs);
-      } else {
-        filtered.add(ms);
-      }
-    }
-    return filtered;
   }
 
   public double getParentMass() {
