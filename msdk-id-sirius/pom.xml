@@ -244,6 +244,11 @@
       <artifactId>cdk-silent</artifactId>
       <version>${cdk.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.github.msdk</groupId>
+      <artifactId>msdk-io-mgf</artifactId>
+      <version>0.0.15-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
 
