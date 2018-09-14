@@ -26,6 +26,7 @@ import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.DataPointSorter.SortingDirection;
 import io.github.msdk.util.DataPointSorter.SortingProperty;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -47,10 +48,12 @@ public class SpectrumPreprocessor {
     if (spectra == null)
       return null;
 
+    /* Small optimization */
     if (spectra.size() > listLimit) {
       spectra = retrieveMostIntense(spectra, listLimit);
     }
 
+    /* Filter pairs of each spectrum */
     return filterSpectra(spectra, pairsLimit);
   }
 
@@ -61,7 +64,9 @@ public class SpectrumPreprocessor {
    * @return top N MsSpectra ordered by Intensity
    */
   private static List<MsSpectrum> retrieveMostIntense(List<MsSpectrum> spectra, int limit) {
-    TreeMap<Float, MsSpectrum> orderedSpectra = new TreeMap<>();
+    TreeMap<Float, MsSpectrum> orderedSpectra = new TreeMap<>(Comparator.reverseOrder());
+
+    /* Order by largest intensity value */
     for (MsSpectrum ms: spectra) {
       float biggest = 0;
       for (float temp: ms.getIntensityValues()) {
@@ -72,6 +77,7 @@ public class SpectrumPreprocessor {
       orderedSpectra.put(biggest, ms);
     }
 
+    /* Retrieve only top N items */
     List<MsSpectrum> ordered = new LinkedList<>();
     for (int i = 0; i < limit; i++) {
       Entry<Float, MsSpectrum> pair = orderedSpectra.firstEntry();
@@ -91,7 +97,7 @@ public class SpectrumPreprocessor {
    */
   private static List<MsSpectrum> filterSpectra(List<MsSpectrum> spectra, int pairsLimit) {
     List<MsSpectrum> filtered = new LinkedList<>();
-    TreeMap<Float, Double> intesityMzSorted = new TreeMap<>();
+    TreeMap<Float, Double> intesityMzSorted = new TreeMap<>(Comparator.reverseOrder());
 
     /* Purify each spectrum */
     for (MsSpectrum ms: spectra) {

@@ -77,7 +77,7 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
 
   private static final Logger logger = LoggerFactory.getLogger(SiriusIdentificationMethod.class);
   private final Integer MAX_DATAPOINTS = 300;
-  private final Integer MAX_SPECTRA = 15;
+  private final Integer MAX_SPECTRA = 30;
   private final List<MsSpectrum> ms1;
   private final List<MsSpectrum> ms2;
   private final Double parentMass;
