@@ -243,6 +243,21 @@ public class FingerIdTest {
 
   @Test
   public void testBigMgf() throws MSDKException, IOException {
+    final String[] expectedInchis = {
+      "SNICXCGAKADSCV",
+      "AQCRXZYYMOXFAN",
+      "DMRUVRQCQAKJTQ",
+      "UEIZUEWXLJOVLD",
+      "LSFQCPHPFYRFGQ"
+    };
+    final String[] expectedSmiles = {
+      "CN1CCCC1C2=CC=CN=C2",
+      "CN1CCCC1C2=NC=CC=C2",
+      "CN1CCCC1C2=CC=NC=C2",
+      "CN1CCC(C1)C2=CC=CN=C2",
+      "CC1CC(C2=CC=CN=C2)N1C"
+    };
+
     final String filename = "full_biglist.mgf";
     File file = getResourcePath(filename).toFile();
     MgfFileImportMethod mgfImporter = new MgfFileImportMethod(file);
@@ -271,7 +286,16 @@ public class FingerIdTest {
     SiriusIonAnnotation sann = (SiriusIonAnnotation) siriusSpectra.get(0);
     FingerIdWebMethod fingerMethod = new FingerIdWebMethod(experiment, sann, 5);
     List<IonAnnotation> fingerResults = fingerMethod.execute();
-    System.out.println();
+
+    String[] smiles = new String[expectedSmiles.length];
+    String[] inchis = new String[expectedInchis.length];
+    for (int i = 0; i < fingerResults.size(); i++) {
+      SiriusIonAnnotation fann = (SiriusIonAnnotation) fingerResults.get(i);
+      smiles[i] = fann.getSMILES();
+      inchis[i] = fann.getInchiKey();
+    }
+    Assert.assertArrayEquals(expectedInchis, inchis);
+    Assert.assertArrayEquals(expectedSmiles, smiles);
   }
 
   private FormulaConstraints generateDefaultConstraints() throws IOException {
