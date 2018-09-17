@@ -13,6 +13,12 @@
 
 package io.github.msdk.util;
 
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.Map.Entry;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -20,6 +26,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrumType;
+import io.github.msdk.datamodel.SimpleMsSpectrum;
+import io.github.msdk.util.DataPointSorter.SortingDirection;
+import io.github.msdk.util.DataPointSorter.SortingProperty;
 
 /**
  * <p>
@@ -272,6 +282,49 @@ public class MsSpectrumUtil {
 
     return b.toString();
 
+  }
+
+  /**
+   * Filters with only N most intense elements.
+   * 
+   * @param spectrum - ms spectrum
+   * @param pairsLimit - maximum amount of items in a new Spectrum
+   * @return
+   */
+  public static @Nonnull MsSpectrum filterMsSpectrum(@Nonnull MsSpectrum ms,
+      @Nonnull Integer pairsLimit) {
+
+    TreeMap<Float, Double> intesityMzSorted = new TreeMap<>(Comparator.reverseOrder());
+    double mz[] = ms.getMzValues();
+    float intensity[] = ms.getIntensityValues();
+    if (mz.length <= pairsLimit)
+      return ms;
+
+    double[] newMz = new double[pairsLimit];
+    float[] newIntensity = new float[pairsLimit];
+
+    /* Sort intensity pairs */
+    for (int i = 0; i < mz.length; i++) {
+      intesityMzSorted.put(intensity[i], mz[i]);
+    }
+
+    /* Create new arrays with filtered intensity pairs */
+    for (int i = 0; i < pairsLimit; i++) {
+      Entry<Float, Double> pair = intesityMzSorted.firstEntry();
+      intesityMzSorted.remove(pair.getKey());
+      newMz[i] = pair.getValue();
+      newIntensity[i] = pair.getKey();
+    }
+    intesityMzSorted.clear();
+
+    /* Sort ascending by mz */
+    DataPointSorter.sortDataPoints(newMz, newIntensity, pairsLimit, SortingProperty.MZ,
+        SortingDirection.ASCENDING);
+
+    /* Create new Spectrum object */
+    MsSpectrumType type = ms.getSpectrumType();
+    SimpleMsSpectrum filteredMs = new SimpleMsSpectrum(newMz, newIntensity, pairsLimit, type);
+    return filteredMs;
   }
 
 }
