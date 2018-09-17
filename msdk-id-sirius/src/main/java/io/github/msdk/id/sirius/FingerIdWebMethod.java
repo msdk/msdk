@@ -374,6 +374,7 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     final String securityToken;
     final long jobId;
     // SUBMIT JOB
+
     try (CloseableHttpResponse response = client.execute(post)) {
       if (cancelled)
         return null;
@@ -391,7 +392,6 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
         logger.debug("Submitting Job failed", re);
         throw re;
       }
-    } finally {
     }
   }
 
@@ -636,6 +636,5 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
       this.v = version;
     }
   }
-
 }
 

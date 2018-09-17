@@ -20,6 +20,8 @@ import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.IonAnnotation;
 import io.github.msdk.datamodel.IonType;
 import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.io.mgf.MgfFileImportMethod;
+import io.github.msdk.io.mgf.MgfMsSpectrum;
 import io.github.msdk.io.txt.TxtImportAlgorithm;
 import io.github.msdk.util.IonTypeUtil;
 import java.io.File;
@@ -35,7 +37,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
-import org.apache.http.conn.HttpHostConnectException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openscience.cdk.config.IsotopeFactory;
@@ -72,19 +73,7 @@ public class FingerIdTest {
     final int fingerCandidates = 3;
     final String ms1Path = "flavokavainA_MS1.txt";
     final String ms2Path = "flavokavainA_MS2.txt";
-
-
-    final MolecularFormulaRange range = new MolecularFormulaRange();
-    IsotopeFactory iFac = Isotopes.getInstance();
-    range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
-    range.addIsotope(iFac.getMajorIsotope("B"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("Br"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("Cl"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("F"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
-
-    final FormulaConstraints constraints = ConstraintsGenerator.generateConstraint(range);
+    final FormulaConstraints constraints = generateDefaultConstraints();
 
     File ms1File = getResourcePath(ms1Path).toFile();
     File ms2File = getResourcePath(ms2Path).toFile();
@@ -143,18 +132,7 @@ public class FingerIdTest {
     final int fingerCandidates = 3;
     final String ms1Path = "marindinin_MS1.txt";
     final String ms2Path = "marindinin_MS2.txt";
-
-    final MolecularFormulaRange range = new MolecularFormulaRange();
-    IsotopeFactory iFac = Isotopes.getInstance();
-    range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
-    range.addIsotope(iFac.getMajorIsotope("B"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("Br"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("Cl"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("F"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
-
-    final FormulaConstraints constraints = ConstraintsGenerator.generateConstraint(range);
+    final FormulaConstraints constraints = generateDefaultConstraints();
 
     File ms1File = getResourcePath(ms1Path).toFile();
     File ms2File = getResourcePath(ms2Path).toFile();
@@ -261,6 +239,77 @@ public class FingerIdTest {
     } catch (MSDKRuntimeException e) {
       logger.info("Connection with boecker-lab FingerId API failed");
     }
+  }
+
+  @Test
+  public void testBigMgf() throws MSDKException, IOException {
+    final String[] expectedInchis = {
+      "SNICXCGAKADSCV",
+      "AQCRXZYYMOXFAN",
+      "DMRUVRQCQAKJTQ",
+      "UEIZUEWXLJOVLD",
+      "LSFQCPHPFYRFGQ"
+    };
+    final String[] expectedSmiles = {
+      "CN1CCCC1C2=CC=CN=C2",
+      "CN1CCCC1C2=NC=CC=C2",
+      "CN1CCCC1C2=CC=NC=C2",
+      "CN1CCC(C1)C2=CC=CN=C2",
+      "CC1CC(C2=CC=CN=C2)N1C"
+    };
+
+    final String filename = "full_biglist.mgf";
+    File file = getResourcePath(filename).toFile();
+    MgfFileImportMethod mgfImporter = new MgfFileImportMethod(file);
+    final List<MgfMsSpectrum> mgfSpectra = mgfImporter.execute();
+
+    List<MsSpectrum> ms1 = new LinkedList<>();
+    List<MsSpectrum> ms2 = new LinkedList<>();
+    for (MgfMsSpectrum spectrum: mgfSpectra) {
+      if (spectrum.getMsLevel().equals(2))
+        ms2.add(spectrum);
+      else
+        ms1.add(spectrum);
+    }
+
+    final double parentMass = 163.1226;
+    final IonType ion = IonTypeUtil.createIonType("[M+H]+");
+    final double deviation = 10d;
+    final FormulaConstraints constraints = generateDefaultConstraints();
+
+
+    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1, ms2, parentMass,
+        ion, 1, constraints, deviation);
+    List<IonAnnotation> siriusSpectra = siriusMethod.execute();
+
+    final Ms2Experiment experiment = siriusMethod.getExperiment();
+    SiriusIonAnnotation sann = (SiriusIonAnnotation) siriusSpectra.get(0);
+    FingerIdWebMethod fingerMethod = new FingerIdWebMethod(experiment, sann, 5);
+    List<IonAnnotation> fingerResults = fingerMethod.execute();
+
+    String[] smiles = new String[expectedSmiles.length];
+    String[] inchis = new String[expectedInchis.length];
+    for (int i = 0; i < fingerResults.size(); i++) {
+      SiriusIonAnnotation fann = (SiriusIonAnnotation) fingerResults.get(i);
+      smiles[i] = fann.getSMILES();
+      inchis[i] = fann.getInchiKey();
+    }
+    Assert.assertArrayEquals(expectedInchis, inchis);
+    Assert.assertArrayEquals(expectedSmiles, smiles);
+  }
+
+  private FormulaConstraints generateDefaultConstraints() throws IOException {
+    final MolecularFormulaRange range = new MolecularFormulaRange();
+    IsotopeFactory iFac = Isotopes.getInstance();
+    range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
+    range.addIsotope(iFac.getMajorIsotope("B"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Br"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Cl"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("F"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
+    range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
+
+    return ConstraintsGenerator.generateConstraint(range);
   }
 
 

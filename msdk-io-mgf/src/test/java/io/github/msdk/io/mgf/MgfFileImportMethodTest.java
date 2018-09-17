@@ -108,6 +108,24 @@ public class MgfFileImportMethodTest {
     Assert.assertArrayEquals(expectedCharges, charges);
   }
 
+  @Test
+  public void levelsTest() throws MSDKException {
+    final String fname = "levels.mgf";
+    final File inputFile = getResourcePath(fname).toFile();
+    final Integer[] expectedLevels = {1, 2, null};
+
+    MgfFileImportMethod importMethod = new MgfFileImportMethod(inputFile);
+    List<MgfMsSpectrum> spectrums = importMethod.execute();
+
+    Integer[] levels = new Integer[expectedLevels.length];
+    for (int i = 0; i < spectrums.size(); i++) {
+      MgfMsSpectrum ms = spectrums.get(i);
+      levels[i] = ms.getMsLevel();
+    }
+
+    Assert.assertArrayEquals(expectedLevels, levels);
+  }
+
   @Test(expected = MSDKException.class)
   public void malformedInputRegexpTest() throws MSDKException {
     final String file = "malformed_query.mgf";

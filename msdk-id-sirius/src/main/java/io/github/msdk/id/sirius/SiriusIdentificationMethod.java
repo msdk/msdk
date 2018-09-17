@@ -76,6 +76,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   }
 
   private static final Logger logger = LoggerFactory.getLogger(SiriusIdentificationMethod.class);
+  private final Integer MAX_DATAPOINTS = 300;
+  private final Integer MAX_SPECTRA = 30;
   private final List<MsSpectrum> ms1;
   private final List<MsSpectrum> ms2;
   private final Double parentMass;
@@ -103,8 +105,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
      @Nonnull IonType ion, @Nullable Integer numberOfCandidates, @Nullable FormulaConstraints constraints, @Nullable Double deviation) {
     if (ms1 == null && ms2 == null) throw new MSDKRuntimeException("Only one of MS && MS/MS can be null at a time");
 
-    this.ms1 = ms1;
-    this.ms2 = ms2;
+    this.ms1 = SpectrumPreprocessor.preprocessSpectra(ms1, MAX_SPECTRA, MAX_DATAPOINTS);
+    this.ms2 = SpectrumPreprocessor.preprocessSpectra(ms2, MAX_SPECTRA, MAX_DATAPOINTS);
     this.parentMass = parentMass;
     this.ion = ion;
     this.constraints = constraints;

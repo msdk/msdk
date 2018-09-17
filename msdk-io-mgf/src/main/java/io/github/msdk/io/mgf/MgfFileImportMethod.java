@@ -22,17 +22,19 @@ import io.github.msdk.util.ArrayUtil;
 import io.github.msdk.util.DataPointSorter;
 import io.github.msdk.util.DataPointSorter.SortingDirection;
 import io.github.msdk.util.DataPointSorter.SortingProperty;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +47,7 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
   private final Pattern PEPMASS_PATTERN = Pattern.compile("(?<=PEPMASS=)(\\d+\\.\\d+)");
   private final Pattern CHARGE_PATTERN = Pattern.compile("(?<=CHARGE=)(\\d+)\\+|(\\d+)-");
   private final Pattern TITLE_PATTERN = Pattern.compile("(?<=TITLE=).*");
+  private final Pattern LEVEL_PATTERN = Pattern.compile("(?<=MSLEVEL=).*");
   private final @Nonnull File target;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private boolean cancelled;
@@ -94,9 +97,10 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
    * @throws MSDKException if any
    */
   private MgfMsSpectrum processSpectrum(BufferedReader reader) throws IOException, MSDKException {
-    String title = "";
-    int precursorCharge = 0;
-    double precursorMass = 0;
+    String title = null;
+    Integer mslevel = null;
+    Integer precursorCharge = null;
+    Double precursorMass = null;
     double mz[] = new double[16];
     float intensity[] = new float[16];
 
@@ -120,6 +124,9 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
           precursorMass = Double.parseDouble(matched);
         } else if (line.contains("TITLE")) {
           title = matchPattern(line, TITLE_PATTERN);
+        } else if (line.contains("MSLEVEL")) {
+          matched = matchPattern(line, LEVEL_PATTERN);
+          mslevel = Integer.parseInt(matched);
         } else if (line.contains("CHARGE")) {
           matched = matchPattern(line, CHARGE_PATTERN);
 
@@ -135,17 +142,21 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
         } else {
           String[] floats = line.split(" ");
 
-          // In case of more than 2 columns only first and second are used
-          if (floats.length < 2) {
-            logger.debug("Failure on string :: {}", line);
-            throw new MSDKRuntimeException("Incorrect amount of columns in MGF file");
+          // Check that line is two columned
+          if (floats.length != 2) {
+            continue;
           }
 
-          double mzValue = Double.parseDouble(floats[0]);
-          float intensityValue = Float.parseFloat(floats[1]);
-          mz = ArrayUtil.addToArray(mz, mzValue, index);
-          intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
-          index++;
+          try { // Catch exception if tries to parse non-float
+            double mzValue = Double.parseDouble(floats[0]);
+            float intensityValue = Float.parseFloat(floats[1]);
+            mz = ArrayUtil.addToArray(mz, mzValue, index);
+            intensity = ArrayUtil.addToArray(intensity, intensityValue, index);
+          } catch (NumberFormatException e) {
+            logger.debug("Failed to parse floats from string {}", index);
+          } finally {
+            index++;
+          }
         }
       } catch (IllegalStateException e) {
         logger.debug("Regex could not recognize the pattern :: {}", line);
@@ -158,8 +169,10 @@ public class MgfFileImportMethod implements MSDKMethod<List<MgfMsSpectrum>> {
     MsSpectrumType type = SpectrumTypeDetectionAlgorithm.detectSpectrumType(mz, intensity, index);
     DataPointSorter.sortDataPoints(mz, intensity, index, SortingProperty.MZ, SortingDirection.ASCENDING);
 
-    MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensity, index, title, precursorCharge,
-        precursorMass, type);
+    MgfMsSpectrum spectrum = new MgfMsSpectrum(mz, intensity, index, type);
+    spectrum.setMsLevel(mslevel);
+    spectrum.setPrecursor(precursorMass, precursorCharge);
+    spectrum.setTitle(title);
 
     return spectrum;
   }

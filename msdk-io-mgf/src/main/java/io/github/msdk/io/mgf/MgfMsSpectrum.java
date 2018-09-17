@@ -13,8 +13,10 @@
 
 package io.github.msdk.io.mgf;
 
+import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.AbstractMsSpectrum;
 import io.github.msdk.datamodel.MsSpectrumType;
+import javax.annotation.Nullable;
 
 /**
  * <p>MgfMsSpectrum class.</p>
@@ -22,29 +24,42 @@ import io.github.msdk.datamodel.MsSpectrumType;
  *         This class extends AbstractMsSpectrum and stores additional fields
  *         title - name of the spectrum
  *         precursor ion charge and mass
+ *         level - MsLevel of the spectrum (1 or 2)
  */
 public class MgfMsSpectrum extends AbstractMsSpectrum {
   private String title;
-  private int precursorCharge;
-  private double precursorMass;
+  private Integer precursorCharge;
+  private Double precursorMass;
+  private Integer level;
 
   /**
    *  <p> Constructor for MgfMsSpectrum class.</p>
    * @param mz - array of mz values (length of `size`)
    * @param intensity - array of intensity values (length of `size`)
    * @param size - size of the arrays (specifies amount of data points)
-   * @param title - string title of the MsSpectrum
-   * @param precursorCharge - charge of the precursor ion
-   * @param precursorMass - mass of the precursor ion
    * @param type - type of the MsSpectrum
    */
-  public MgfMsSpectrum(double[] mz, float[] intensity, int size, String title, int precursorCharge,
-      double precursorMass, MsSpectrumType type) {
+  public MgfMsSpectrum(double[] mz, float[] intensity, int size, MsSpectrumType type) {
     setSpectrumType(type);
     setDataPoints(mz, intensity, size);
-    this.precursorMass = precursorMass;
-    this.precursorCharge = precursorCharge;
+  }
+
+  /**
+   * <p>Setter for spectrum title</p>
+   * @param title
+   */
+  public void setTitle(String title) {
     this.title = title;
+  }
+
+  /**
+   * <p> Method configures params of Precursor Ion </p>
+   * @param mass
+   * @param charge
+   */
+  public void setPrecursor(Double mass, Integer charge) {
+    precursorCharge = charge;
+    precursorMass = mass;
   }
 
   /**
@@ -56,18 +71,38 @@ public class MgfMsSpectrum extends AbstractMsSpectrum {
   }
 
   /**
-   * <p> Getter of the precursor ion charge </p>
-   * @return charge of the precursor ion
+   * <p> Setter for MS level of spectrum </p>
+   * @param level
+   * @throws MSDKRuntimeException
    */
-  public int getPrecursorCharge() {
+  public void setMsLevel(Integer level) throws MSDKRuntimeException {
+    if (level != null && level <= 0)
+      throw new MSDKRuntimeException("Wrong MS level");
+    this.level = level;
+  }
+
+  /**
+   * <p> Getter of the precursor ion charge </p>
+   * @return charge of the precursor ion, null if not specified
+   */
+  public @Nullable Integer getPrecursorCharge() {
     return precursorCharge;
   }
 
   /**
    * <p> Getter of the MgfMsSpectrum title </p>
-   * @return the title of the MgfMsSpectrum
+   * @return the title of the MgfMsSpectrum, null if not specified
    */
-  public String getTitle() {
+  public @Nullable String getTitle() {
     return title;
+  }
+
+  /**
+   * <p> Getter for MS level of spectrum </p>
+   *
+   * @return spectrum's ms level, null if not specified
+   */
+  public @Nullable Integer getMsLevel() {
+    return level;
   }
 }
