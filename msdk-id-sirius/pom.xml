@@ -238,17 +238,19 @@
       <artifactId>cdk-interfaces</artifactId>
       <version>${cdk.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.openscience.cdk</groupId>
       <artifactId>cdk-silent</artifactId>
       <version>${cdk.version}</version>
     </dependency>
+    
     <dependency>
       <groupId>io.github.msdk</groupId>
       <artifactId>msdk-io-mgf</artifactId>
-      <version>0.0.15-SNAPSHOT</version>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
+    
   </dependencies>
 
 
