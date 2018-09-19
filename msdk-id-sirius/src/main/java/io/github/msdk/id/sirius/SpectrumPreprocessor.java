@@ -86,6 +86,7 @@ public class SpectrumPreprocessor {
     List<MsSpectrum> ordered = new LinkedList<>();
     for (int i = 0; i < limit; i++) {
       Entry<Float, MsSpectrum> pair = orderedSpectra.firstEntry();
+      if (pair == null) break;
       orderedSpectra.remove(pair.getKey());
       MsSpectrum ms = pair.getValue();
       ordered.add(ms);
