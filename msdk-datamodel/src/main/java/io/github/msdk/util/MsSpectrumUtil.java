@@ -13,6 +13,7 @@
 
 package io.github.msdk.util;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -327,4 +328,47 @@ public class MsSpectrumUtil {
     return filteredMs;
   }
 
+  /**
+   * Method preprocesses list of spectra, limits its amount
+   * Filtering of Spectrum objects is done by retrieving top N Spectrum objects with largest
+   * intensity values
+   *
+   * @param spectra - list of spectrum to be preprocessed
+   * @param listLimit - maximum amount of items to be in a new list
+   * @return filtered lists
+   */
+  public static List<MsSpectrum> filterMsSpectra(List<MsSpectrum> spectra, int listLimit) {
+    if (spectra == null)
+      return null;
+
+    /* Small optimization */
+    if (spectra.size() < listLimit) {
+      return spectra;
+    }
+
+    TreeMap<Float, MsSpectrum> orderedSpectra = new TreeMap<>(Comparator.reverseOrder());
+
+    /* Order by largest intensity value */
+    for (MsSpectrum ms : spectra) {
+      float biggest = 0;
+      for (float temp : ms.getIntensityValues()) {
+        if (temp > biggest)
+          biggest = temp;
+      }
+
+      orderedSpectra.put(biggest, ms);
+    }
+
+    /* Retrieve only top N items */
+    List<MsSpectrum> ordered = new LinkedList<>();
+    for (int i = 0; i < listLimit; i++) {
+      Entry<Float, MsSpectrum> pair = orderedSpectra.firstEntry();
+      if (pair == null) break;
+      orderedSpectra.remove(pair.getKey());
+      MsSpectrum ms = pair.getValue();
+      ordered.add(ms);
+    }
+
+    return ordered;
+  }
 }
