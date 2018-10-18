@@ -11,11 +11,11 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <scala.version>2.11</scala.version>
-    <scala-library.version>2.11.7</scala-library.version>
-    <jackson.version>2.7.2</jackson.version>
+    <scala.version>2.12</scala.version>
+    <scala-library.version>2.12.7</scala-library.version>
+    <jackson.version>2.9.7</jackson.version>
     <sqlite4java.version>1.0.392</sqlite4java.version>
-    <msgpack.version>0.8.3</msgpack.version>
+    <msgpack.version>0.8.16</msgpack.version>
   </properties>
 
   <dependencies>
@@ -47,7 +47,7 @@
     <dependency>
       <groupId>com.typesafe.scala-logging</groupId>
       <artifactId>scala-logging_${scala.version}</artifactId>
-      <version>3.1.0</version>
+      <version>3.9.0</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -159,7 +159,7 @@
     <dependency>
       <groupId>org.scalatest</groupId>
       <artifactId>scalatest_${scala.version}</artifactId>
-      <version>2.2.5</version>
+      <version>3.0.5</version>
       <scope>test</scope>
     </dependency>
     <dependency>
