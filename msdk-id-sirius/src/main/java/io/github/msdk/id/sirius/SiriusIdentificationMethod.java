@@ -33,7 +33,9 @@ import io.github.msdk.datamodel.IonAnnotation;
 import io.github.msdk.datamodel.IonType;
 import io.github.msdk.datamodel.MsSpectrum;
 
+import io.github.msdk.util.MsSpectrumUtil;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -105,8 +107,8 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
      @Nonnull IonType ion, @Nullable Integer numberOfCandidates, @Nullable FormulaConstraints constraints, @Nullable Double deviation) {
     if (ms1 == null && ms2 == null) throw new MSDKRuntimeException("Only one of MS && MS/MS can be null at a time");
 
-    this.ms1 = SpectrumPreprocessor.preprocessSpectra(ms1, MAX_SPECTRA, MAX_DATAPOINTS);
-    this.ms2 = SpectrumPreprocessor.preprocessSpectra(ms2, MAX_SPECTRA, MAX_DATAPOINTS);
+    this.ms1 = preprocessSpectra(ms1, MAX_SPECTRA, MAX_DATAPOINTS);
+    this.ms2 = preprocessSpectra(ms2, MAX_SPECTRA, MAX_DATAPOINTS);
     this.parentMass = parentMass;
     this.ion = ion;
     this.constraints = constraints;
@@ -121,6 +123,31 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
       this.deviation = new Deviation(10);
     else
       this.deviation = new Deviation(deviation);
+  }
+
+  /**
+   * Method select top N spectra and filters its datapoints (top M)
+   * Spectrum selection is done by largest Intensity value
+   * Datapoints selection is done through sorting pairs by intenisty
+   *
+   * @param spectra - initial list of spectra
+   * @param listLimit - maximum amount of spectra to be processed
+   * @param datapointsLimit - maximum amount of datapoints in each spectrum
+   * @return
+   */
+  private List<MsSpectrum> preprocessSpectra(@Nullable List<MsSpectrum> spectra,
+      int listLimit, int datapointsLimit) {
+    if (spectra == null)
+      return null;
+
+    List<MsSpectrum> mostIntenseSpectra = MsSpectrumUtil.filterMsSpectra(spectra, listLimit);
+    List<MsSpectrum> filteredSpectra = new LinkedList<>();
+    for (MsSpectrum ms: mostIntenseSpectra) {
+      MsSpectrum filtered = MsSpectrumUtil.filterMsSpectrum(ms, datapointsLimit);
+      filteredSpectra.add(filtered);
+    }
+
+    return filteredSpectra;
   }
 
   public double getParentMass() {
