@@ -8,9 +8,9 @@
   <artifactId>msdk-id-sirius</artifactId>
 
   <properties>
-    <sirius.version>4.0</sirius.version>
+    <sirius.version>4.0.1</sirius.version>
     <glpk.version>1.7.0</glpk.version>
-    <fingerId.version>1.1.2</fingerId.version>
+    <fingerId.version>1.1.3</fingerId.version>
     <commonts-math.version>3.6.1</commonts-math.version>
   </properties>
 
@@ -225,6 +225,11 @@
     <!-- CDK dependencies -->
     <dependency>
       <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-silent</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
       <artifactId>cdk-smiles</artifactId>
       <version>${cdk.version}</version>
     </dependency>
@@ -240,9 +245,75 @@
     </dependency>
     <dependency>
       <groupId>org.openscience.cdk</groupId>
-      <artifactId>cdk-silent</artifactId>
+      <artifactId>cdk-core</artifactId>
       <version>${cdk.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-dict</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-formula</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-inchi</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-hash</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-fragment</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-fingerprint</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-forcefield</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-reaction</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>    
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-charges</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-io</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-qsar</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>   
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-qsaratomic</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>   
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-qsarmolecular</artifactId>
+      <version>${cdk.version}</version>
+    </dependency>   
+    
     
     <dependency>
       <groupId>io.github.msdk</groupId>

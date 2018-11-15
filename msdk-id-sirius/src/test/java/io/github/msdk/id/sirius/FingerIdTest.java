@@ -68,7 +68,7 @@ public class FingerIdTest {
     final double deviation = 10d;
     final double precursorMass = 315.1230;
     final IonType ion = IonTypeUtil.createIonType("[M+H]+");
-    final String expectedSiriusResult = "C18H18O5";
+    final String expectedSiriusResult = "[C18H18O5]+";
     final int siriusCandidates = 1;
     final int fingerCandidates = 3;
     final String ms1Path = "flavokavainA_MS1.txt";
@@ -96,7 +96,7 @@ public class FingerIdTest {
     List<IonAnnotation> siriusAnnotations = siriusMethod.execute();
     SiriusIonAnnotation siriusAnnotation = (SiriusIonAnnotation) siriusAnnotations.get(0);
     String formula = MolecularFormulaManipulator.getString(siriusAnnotation.getFormula());
-    Assert.assertEquals(formula, expectedSiriusResult);
+    Assert.assertEquals(expectedSiriusResult, formula);
 
     final String[] candidateNames = {"Flavokavain A", "4''-Hydroxy-2'',4,6''-trimethoxychalcone", null};
     final String[] inchis = {"CGIBCVBDFUTMPT", "FQZORWOCAANBNC", "JGYYVILPBDGMNE"};
@@ -117,7 +117,8 @@ public class FingerIdTest {
         Assert.assertEquals(inchi, inchis[i]);
         Assert.assertEquals(name, candidateNames[i]);
       }
-    } catch (MSDKRuntimeException exception) {
+    } catch (MSDKRuntimeException e) {
+      e.printStackTrace();
       logger.info("Connection with boecker-lab FingerId API failed");
     }
   }
@@ -127,7 +128,7 @@ public class FingerIdTest {
     final double deviation = 10d;
     final double precursorMass = 233.1175;
     final IonType ion = IonTypeUtil.createIonType("[M+H]+");
-    final String[] expectedSiriusResults = {"C14H16O3", "C12H14N3O2", "C10H19NO3P", "C8H17N4O2P"};
+    final String[] expectedSiriusResults = {"[C14H16O3]+", "[C12H14N3O2]+", "[C10H19NO3P]+", "[C8H17N4O2P]+"};
     final int siriusCandidates = 4;
     final int fingerCandidates = 3;
     final String ms1Path = "marindinin_MS1.txt";
@@ -163,7 +164,7 @@ public class FingerIdTest {
     int i = 0;
     for (IonAnnotation ann: siriusAnnotations) {
       String formula = MolecularFormulaManipulator.getString(ann.getFormula());
-      Assert.assertEquals(formula, expectedSiriusResults[i++]);
+      Assert.assertEquals(expectedSiriusResults[i++], formula);
 
       // Ignore C10H19NO3P, as it does not have FingerprintCandidates in future
       if (testFormulas.contains(formula)) {
@@ -237,6 +238,7 @@ public class FingerIdTest {
       Assert.assertArrayEquals(thirdNames, names[2]);
       Assert.assertArrayEquals(thirdInchis, INCHI[2]);
     } catch (MSDKRuntimeException e) {
+      e.printStackTrace();
       logger.info("Connection with boecker-lab FingerId API failed");
     }
   }

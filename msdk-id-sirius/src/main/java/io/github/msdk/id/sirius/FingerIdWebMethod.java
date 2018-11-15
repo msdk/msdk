@@ -13,40 +13,6 @@
 
 package io.github.msdk.id.sirius;
 
-import com.google.gson.Gson;
-import de.unijena.bioinf.ChemistryBase.algorithm.Scored;
-import de.unijena.bioinf.ChemistryBase.chem.MolecularFormula;
-import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
-import de.unijena.bioinf.ChemistryBase.fp.CdkFingerprintVersion;
-import de.unijena.bioinf.ChemistryBase.fp.FingerprintVersion;
-import de.unijena.bioinf.ChemistryBase.fp.MaskedFingerprintVersion;
-import de.unijena.bioinf.ChemistryBase.fp.PredictionPerformance;
-import de.unijena.bioinf.ChemistryBase.fp.ProbabilityFingerprint;
-import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
-import de.unijena.bioinf.ChemistryBase.ms.ft.FTree;
-import de.unijena.bioinf.babelms.json.FTJsonWriter;
-import de.unijena.bioinf.babelms.ms.JenaMsWriter;
-import de.unijena.bioinf.babelms.utils.Base64;
-import de.unijena.bioinf.chemdb.BioFilter;
-import de.unijena.bioinf.chemdb.CompoundCandidateChargeLayer;
-import de.unijena.bioinf.chemdb.CompoundCandidateChargeState;
-import de.unijena.bioinf.chemdb.FingerprintCandidate;
-import de.unijena.bioinf.chemdb.RESTDatabase;
-import de.unijena.bioinf.chemdb.SearchStructureByFormula;
-import de.unijena.bioinf.fingerid.blast.CovarianceScoring;
-import de.unijena.bioinf.fingerid.blast.Fingerblast;
-import de.unijena.bioinf.fingerid.blast.FingerblastScoringMethod;
-import de.unijena.bioinf.fingerid.blast.ScoringMethodFactory;
-import de.unijena.bioinf.fingerid.predictor_types.PredictorType;
-import de.unijena.bioinf.utils.systemInfo.SystemInformation;
-
-import gnu.trove.list.array.TDoubleArrayList;
-import gnu.trove.list.array.TIntArrayList;
-import io.github.msdk.MSDKException;
-import io.github.msdk.MSDKMethod;
-import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.IonAnnotation;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -66,6 +32,7 @@ import java.util.concurrent.TimeoutException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -77,7 +44,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-
 import org.openscience.cdk.DefaultChemObjectBuilder;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IMolecularFormula;
@@ -85,6 +51,42 @@ import org.openscience.cdk.smiles.SmilesParser;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.gson.Gson;
+
+import de.unijena.bioinf.ChemistryBase.algorithm.Scored;
+import de.unijena.bioinf.ChemistryBase.chem.MolecularFormula;
+import de.unijena.bioinf.ChemistryBase.chem.PrecursorIonType;
+import de.unijena.bioinf.ChemistryBase.fp.CdkFingerprintVersion;
+import de.unijena.bioinf.ChemistryBase.fp.FingerprintVersion;
+import de.unijena.bioinf.ChemistryBase.fp.MaskedFingerprintVersion;
+import de.unijena.bioinf.ChemistryBase.fp.PredictionPerformance;
+import de.unijena.bioinf.ChemistryBase.fp.ProbabilityFingerprint;
+import de.unijena.bioinf.ChemistryBase.ms.Ms2Experiment;
+import de.unijena.bioinf.ChemistryBase.ms.ft.FTree;
+import de.unijena.bioinf.babelms.json.FTJsonWriter;
+import de.unijena.bioinf.babelms.ms.JenaMsWriter;
+import de.unijena.bioinf.babelms.utils.Base64;
+import de.unijena.bioinf.chemdb.BioFilter;
+import de.unijena.bioinf.chemdb.ChemicalDatabaseException;
+import de.unijena.bioinf.chemdb.CompoundCandidateChargeLayer;
+import de.unijena.bioinf.chemdb.CompoundCandidateChargeState;
+import de.unijena.bioinf.chemdb.FingerprintCandidate;
+import de.unijena.bioinf.chemdb.RESTDatabase;
+import de.unijena.bioinf.chemdb.SearchStructureByFormula;
+import de.unijena.bioinf.fingerid.blast.CovarianceScoring;
+import de.unijena.bioinf.fingerid.blast.Fingerblast;
+import de.unijena.bioinf.fingerid.blast.FingerblastScoringMethod;
+import de.unijena.bioinf.fingerid.blast.ScoringMethodFactory;
+import de.unijena.bioinf.fingerid.predictor_types.PredictorType;
+import de.unijena.bioinf.fingerid.utils.FingerIDProperties;
+import de.unijena.bioinf.utils.systemInfo.SystemInformation;
+import gnu.trove.list.array.TDoubleArrayList;
+import gnu.trove.list.array.TIntArrayList;
+import io.github.msdk.MSDKException;
+import io.github.msdk.MSDKMethod;
+import io.github.msdk.MSDKRuntimeException;
+import io.github.msdk.datamodel.IonAnnotation;
 
 /**
  * <p>Class FingerIdWebMethod</p>
@@ -99,7 +101,7 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
   private final static BasicNameValuePair UID = new BasicNameValuePair("uid", SystemInformation.generateSystemKey());
   private final static String FINGERID_SOURCE = "https://www.csi-fingerid.uni-jena.de";
   /* TODO: This field must be altered whenever boecker-labs updates its API!!! */
-  private final static String FINGERID_VERSION = "1.1.2";
+  private final static String FINGERID_VERSION = "1.1.3";
   private final static SearchStructureByFormula searchDB = new RESTDatabase(BioFilter.ALL);
   private final static Gson gson = new Gson();
 
@@ -172,9 +174,9 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
    * <p>Method returns possible FingerprintCandidates according to MolecularFormula</p>
    * Method makes a request to the remote DB
    * @return List of FingerprintCandidates
-   * @throws de.unijena.bioinf.chemdb.DatabaseException if any
+   * @throws ChemicalDatabaseException 
    */
-  private List<FingerprintCandidate> getCandidates() throws de.unijena.bioinf.chemdb.DatabaseException {
+  private List<FingerprintCandidate> getCandidates() throws ChemicalDatabaseException  {
     PrecursorIonType ionType = experiment.getPrecursorIonType();
     IMolecularFormula iFormula = ionAnnotation.getFormula();
     MolecularFormula formula = MolecularFormula.parse(MolecularFormulaManipulator.getString(iFormula));
@@ -294,7 +296,7 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
       if (cancelled)
         return null;
       scored = blaster.score(candidates, print);
-    } catch (de.unijena.bioinf.chemdb.DatabaseException e) {
+    } catch (ChemicalDatabaseException e) {
       logger.error("Connection with PubChem DB failed.");
       throw new MSDKRuntimeException(e);
     } catch (URISyntaxException t) {
