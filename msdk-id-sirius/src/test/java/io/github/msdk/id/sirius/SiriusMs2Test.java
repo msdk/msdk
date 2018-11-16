@@ -110,16 +110,12 @@ public class SiriusMs2Test {
         "C12H19N4O4P",
         "C14H21NO5P",
         "C16H16N3O4",
-        "C10H24N2O5P2",
         "C14H14N6O3",
-        "C11H23O8P",
         "C19H14N4O",
-        "C10H17N7O3P",
         "C13H15N8P"
     };
     final String ms1Path = "flavokavainA_MS1.txt";
     final String ms2Path = "flavokavainA_MS2.txt";
-    final int candidatesAmount = 10;
 
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
@@ -148,13 +144,13 @@ public class SiriusMs2Test {
         ms2list,
         precursorMass,
         ion,
-        candidatesAmount,
+        expectedResults.length,
         constraints,
         deviation);
 
     List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
 
-    String[] results = new String[candidatesAmount];
+    String[] results = new String[list.size()];
     int i = 0;
 
     for (IdentificationResult r : list) {
@@ -172,16 +168,12 @@ public class SiriusMs2Test {
     final IonType ion = IonTypeUtil.createIonType("[M+H]+");
     final String[] expectedResults = {
         "C13H10O4",
-        "C10H11FO5",
         "C8H9FN3O4",
         "C11H8N3O3",
-        "C9H13NO4P",
-        "C6H7FN6O3",
-        "C11H9F3O2"
+        "C9H5FN7",
     };
     final String ms1Path = "bisnoryangonin_MS1.txt";
     final String ms2Path = "bisnoryangonin_MS2.txt";
-    final int candidatesAmount = 7;
 
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
@@ -211,13 +203,13 @@ public class SiriusMs2Test {
         ms2list,
         precursorMass,
         ion,
-        candidatesAmount,
+        expectedResults.length,
         constraints,
         deviation);
 
     List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
 
-    String[] results = new String[candidatesAmount];
+    String[] results = new String[list.size()];
     int i = 0;
 
     for (IdentificationResult r : list) {
@@ -297,11 +289,9 @@ public class SiriusMs2Test {
         "C10H12N6O",
         "C8H17N4O2P",
         "C12H14N3O2",
-        "C10H19NO3P",
-        "C6H15N7OP"
+        "C10H19NO3P"
     };
     final String ms1Path = "marindinin_MS1.txt";
-    final int candidatesAmount = 6;
 
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
@@ -327,13 +317,13 @@ public class SiriusMs2Test {
         null,
         precursorMass,
         ion,
-        candidatesAmount,
+        10,
         constraints,
         deviation);
 
     List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
 
-    String[] results = new String[candidatesAmount];
+    String[] results = new String[list.size()];
     int i = 0;
 
     for (IdentificationResult r : list) {
@@ -350,15 +340,14 @@ public class SiriusMs2Test {
     final double precursorMass = 233.1175;
     final IonType ion = IonTypeUtil.createIonType("[M+H]+");
     final String[] expectedResults = {
-        "C14H16O3",
-        "C12H14N3O2",
-        "C10H19NO3P",
-        "C9H18N3O2S",
-        "C8H17N4O2P"
+        "[C14H16O3]+",
+        "[C12H14N3O2]+",
+        "[C10H19NO3P]+",
+        "[C9H18N3O2S]+",
+        "[C8H17N4O2P]+"
     };
     final int expectedCharge = 1;
     final String ms2Path = "marindinin_MS2.txt";
-    final int candidatesAmount = 5;
 
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
@@ -382,7 +371,7 @@ public class SiriusMs2Test {
         ms2list,
         precursorMass,
         ion,
-        candidatesAmount,
+        expectedResults.length,
         constraints,
         deviation);
 
