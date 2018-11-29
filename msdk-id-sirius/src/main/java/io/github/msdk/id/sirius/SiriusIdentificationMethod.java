@@ -101,10 +101,11 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
    * @param ion - Ionization
    * @param numberOfCandidates - amount of IdentificationResults to be returned from Sirius
    * @param constraints - FormulaConstraints provided by the end user. Can be created using ConstraintsGenerator
-   * @param deviation - float value of possible mass deviation
+   * @param deviation - float value of possible mass deviation in ppm
    */
   public SiriusIdentificationMethod(@Nullable List<MsSpectrum> ms1, @Nullable List<MsSpectrum> ms2, @Nonnull Double parentMass,
      @Nonnull IonType ion, @Nullable Integer numberOfCandidates, @Nullable FormulaConstraints constraints, @Nullable Double deviation) {
+    
     if (ms1 == null && ms2 == null) throw new MSDKRuntimeException("Only one of MS && MS/MS can be null at a time");
 
     this.ms1 = preprocessSpectra(ms1, MAX_SPECTRA, MAX_DATAPOINTS);
