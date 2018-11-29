@@ -108,7 +108,9 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
   private final static String FINGERID_VERSION = "1.1.3";
   private final SearchStructureByFormula searchDB;
   private final static Gson gson = new Gson();
-  private final static File siriusCacheLocation = new File(".sirius");
+  
+  // Do not use caching
+  private final static File siriusCacheLocation = null;
 
   private final Ms2Experiment experiment;
   private final SiriusIonAnnotation ionAnnotation;
