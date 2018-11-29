@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.github.msdk</groupId>
         <artifactId>msdk</artifactId>
-        <version>0.0.18</version>
+        <version>0.0.19-SNAPSHOT</version>
     </parent>
     <artifactId>msdk-spectra-centroiding</artifactId>
     <description>Package for MSDK centroiding algorithms</description>
