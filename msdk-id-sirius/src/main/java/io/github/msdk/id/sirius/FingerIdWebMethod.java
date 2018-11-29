@@ -108,6 +108,7 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
   private final static String FINGERID_VERSION = "1.1.3";
   private final SearchStructureByFormula searchDB;
   private final static Gson gson = new Gson();
+  private final static File siriusCacheLocation = new File(".sirius");
 
   private final Ms2Experiment experiment;
   private final SiriusIonAnnotation ionAnnotation;
@@ -137,12 +138,8 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
     this.experiment = experiment;
     this.ionAnnotation = ionAnnotation;
 
-    try {
-      this.searchDB =
-          new RESTDatabase(new File(".sirius"), BioFilter.ALL, new URI(FINGERID_SOURCE));
-    } catch (URISyntaxException e) {
-      throw new MSDKException(e);
-    }
+    this.searchDB =
+        new RESTDatabase(siriusCacheLocation, BioFilter.ALL, URI.create(FINGERID_SOURCE));
 
     try {
       final TIntArrayList list = new TIntArrayList(4096);
