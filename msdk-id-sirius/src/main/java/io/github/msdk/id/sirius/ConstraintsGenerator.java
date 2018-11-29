@@ -13,55 +13,47 @@
 
 package io.github.msdk.id.sirius;
 
+import org.openscience.cdk.formula.MolecularFormulaRange;
+import org.openscience.cdk.interfaces.IIsotope;
+
 import de.unijena.bioinf.ChemistryBase.chem.ChemicalAlphabet;
 import de.unijena.bioinf.ChemistryBase.chem.Element;
 import de.unijena.bioinf.ChemistryBase.chem.FormulaConstraints;
 import de.unijena.bioinf.ChemistryBase.chem.PeriodicTable;
 
-import java.util.Arrays;
-
-import org.openscience.cdk.formula.MolecularFormulaRange;
-import org.openscience.cdk.interfaces.IIsotope;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * <p> Class ConstraintsGenerator. </p>
- * This class allows to construct a Sirius object FormulaConstraints using MolecularFormulaRange object
+ * <p>
+ * Class ConstraintsGenerator.
+ * </p>
+ * This class allows to construct a Sirius object FormulaConstraints using MolecularFormulaRange
+ * object
  */
 public class ConstraintsGenerator {
-  private static final Logger logger = LoggerFactory.getLogger(ConstraintsGenerator.class);
-  private static final String[] defaultElementSymbols = new String[]{"C", "H", "N", "O", "P"};
-  private static final Element[] defaultElements;
-  private static final PeriodicTable periodicTable = PeriodicTable.getInstance();
-  private static final int maxNumberOfOneElements = 20;
 
-  static {
-    defaultElements = new Element[defaultElementSymbols.length];
-    for (int i = 0; i < defaultElementSymbols.length; i++)
-      defaultElements[i] = periodicTable.getByName(defaultElementSymbols[i]);
-  }
+  private static final PeriodicTable periodicTable = PeriodicTable.getInstance();
 
   private ConstraintsGenerator() {}
 
   /**
-   * <p> Method for generating FormulaConstraints from user-defined search space</p>
-   * Parses isotopes from input parameter and transforms it into Element objects and sets their range value
+   * <p>
+   * Method for generating FormulaConstraints from user-defined search space
+   * </p>
+   * Parses isotopes from input parameter and transforms it into Element objects and sets their
+   * range value
+   * 
    * @param range - User defined search space of possible elements
    * @return new Constraint to be used in Sirius
    */
   public static FormulaConstraints generateConstraint(MolecularFormulaRange range) {
-    logger.debug("ConstraintsGenerator started processing");
-    int size = range.getIsotopeCount();
-    Element elements[] = Arrays.copyOf(defaultElements, defaultElements.length + size);
+
+    Element elements[] = new Element[range.getIsotopeCount()];
     int k = 0;
 
-    // Add items from `range` into array with default elements
-    for (IIsotope isotope: range.isotopes()) {
+    // Add items from `range` into array
+    for (IIsotope isotope : range.isotopes()) {
       int atomicNumber = isotope.getAtomicNumber();
       final Element element = periodicTable.get(atomicNumber);
-      elements[defaultElements.length + k++] = element;
+      elements[k++] = element;
     }
 
     // Generate initial constraint w/o concrete Element range
@@ -70,18 +62,16 @@ public class ConstraintsGenerator {
     synchronized (periodicTable) {
       // Specify each Element range
       for (IIsotope isotope : range.isotopes()) {
-        int atomicNumber = isotope.getAtomicNumber();
+        Integer atomicNumber = isotope.getAtomicNumber();
         final Element element = periodicTable.get(atomicNumber);
         int min = range.getIsotopeCountMin(isotope);
         int max = range.getIsotopeCountMax(isotope);
 
         constraints.setLowerbound(element, min);
-        if (max != maxNumberOfOneElements)
-          constraints.setUpperbound(element, max);
+        constraints.setUpperbound(element, max);
       }
     }
 
-    logger.debug("ConstraintsGenerator finished");
     return constraints;
   }
 }
