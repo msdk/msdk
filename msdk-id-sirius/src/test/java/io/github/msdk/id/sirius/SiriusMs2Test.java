@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openscience.cdk.config.IsotopeFactory;
 import org.openscience.cdk.config.Isotopes;
@@ -387,7 +388,7 @@ public class SiriusMs2Test {
 
     final FormulaConstraints constraints = ConstraintsGenerator.generateConstraint(range);
 
-    // Generate candidatge formulas
+    // Generate candidate formulas
     SiriusIdentificationMethod siriusMethod =
         new SiriusIdentificationMethod(ms1, ms2, parentMass, ion, 20, constraints, deviation);
     List<IonAnnotation> siriusAnnotations = siriusMethod.execute();
@@ -398,6 +399,48 @@ public class SiriusMs2Test {
     String formula = MolecularFormulaManipulator.getString(firstAnnotation.getFormula());
     Assert.assertEquals("[C8H18N2O4S]+", formula);
 
+  }
+
+  @Ignore("SIRIUS includes additional elements like Cl and B automatically")
+  @Test
+  public void testUnexpectedElements() throws MSDKException, IOException {
+
+    String filename = "many_HEPES_MS1.mgf";
+    File file = getResourcePath(filename).toFile();
+    MgfFileImportMethod mgfImporter = new MgfFileImportMethod(file);
+    final List ms1 = mgfImporter.execute();
+
+    filename = "many_HEPES_MS2.mgf";
+    file = getResourcePath(filename).toFile();
+    mgfImporter = new MgfFileImportMethod(file);
+    final List ms2 = mgfImporter.execute();
+
+    final double parentMass = 239.1070709;
+    final IonType ion = IonTypeUtil.createIonType("[M+H]+");
+    final double deviation = 10;
+    final int maxResults = 5;
+
+    final MolecularFormulaRange range = new MolecularFormulaRange();
+    IsotopeFactory iFac = Isotopes.getInstance();
+    range.addIsotope(iFac.getMajorIsotope("C"), 0, 10);
+    range.addIsotope(iFac.getMajorIsotope("He"), 0, 10);
+    range.addIsotope(iFac.getMajorIsotope("H"), 0, 20);
+    range.addIsotope(iFac.getMajorIsotope("N"), 0, 10);
+    range.addIsotope(iFac.getMajorIsotope("O"), 0, 10);
+
+    final FormulaConstraints constraints = ConstraintsGenerator.generateConstraint(range);
+
+    // Generate candidate formulas
+    SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1, ms2, parentMass,
+        ion, maxResults, constraints, deviation);
+    List<IonAnnotation> siriusAnnotations = siriusMethod.execute();
+
+    // For some reason, SIRIUS always includes Cl and B elements in the search
+    for (IonAnnotation annotation : siriusAnnotations) {
+      String formula = MolecularFormulaManipulator.getString(annotation.getFormula());
+      Assert.assertFalse(formula.contains("Cl"));
+      Assert.assertFalse(formula.contains("B"));
+    }
   }
 
 }
