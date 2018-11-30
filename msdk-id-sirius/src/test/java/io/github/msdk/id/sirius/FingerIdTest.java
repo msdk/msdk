@@ -303,13 +303,12 @@ public class FingerIdTest {
   private FormulaConstraints generateDefaultConstraints() throws IOException {
     final MolecularFormulaRange range = new MolecularFormulaRange();
     IsotopeFactory iFac = Isotopes.getInstance();
+    range.addIsotope(iFac.getMajorIsotope("C"), 0, Integer.MAX_VALUE);
+    range.addIsotope(iFac.getMajorIsotope("H"), 0, Integer.MAX_VALUE);
+    range.addIsotope(iFac.getMajorIsotope("N"), 0, Integer.MAX_VALUE);
+    range.addIsotope(iFac.getMajorIsotope("O"), 0, Integer.MAX_VALUE);
+    range.addIsotope(iFac.getMajorIsotope("P"), 0, Integer.MAX_VALUE);
     range.addIsotope(iFac.getMajorIsotope("S"), 0, Integer.MAX_VALUE);
-    range.addIsotope(iFac.getMajorIsotope("B"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("Br"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("Cl"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("F"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
 
     return ConstraintsGenerator.generateConstraint(range);
   }
