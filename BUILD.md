@@ -53,7 +53,6 @@ mvn -Pmsdk-release -DskipTests deploy
 
 # Create a tag in the git repo
 git tag vX.Y.Z
-git push origin --tags
 
 # To generate complete JavaDoc documentation and upload it to http://msdk.github.io/api/
 mvn -Pmsdk-release -DskipTests package javadoc:aggregate scm-publish:publish-scm
@@ -61,5 +60,8 @@ mvn -Pmsdk-release -DskipTests package javadoc:aggregate scm-publish:publish-scm
 # After a succesful release, set the versions to the next development version
 mvn versions:set -DnewVersion=X.Y.Z-SNAPSHOT versions:commit
 git commit -a
+
+# Update github repo
+git push origin --tags
 
 ```
