@@ -62,6 +62,6 @@ mvn versions:set -DnewVersion=X.Y.Z-SNAPSHOT versions:commit
 git commit -a
 
 # Update github repo
-git push origin --tags
+git push --follow-tags
 
 ```
