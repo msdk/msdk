@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.msdk</groupId>
@@ -65,6 +66,12 @@
 		<slf4j.version>1.7.25</slf4j.version>
 		<jacoco.version>0.7.9</jacoco.version>
 		<findbugs.version>3.0.2</findbugs.version>
+		<scala.version>2.12</scala.version>
+		<scala-library.version>2.12.8</scala-library.version>
+		<jackson.version>2.9.8</jackson.version>
+		<sqlite4java.version>1.0.392</sqlite4java.version>
+		<msgpack.version>0.8.16</msgpack.version>
+		<hibernate.version>5.4.0.Final</hibernate.version>
 	</properties>
 
 	<licenses>
@@ -128,7 +135,7 @@
 			<email>dmitriy.avtonomov@gmail.com</email>
 		</developer>
 	</developers>
-	
+
 	<build>
 		<pluginManagement>
 			<plugins>

@@ -9,15 +9,6 @@
  
   <artifactId>msdk-io-mzdb</artifactId>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <scala.version>2.12</scala.version>
-    <scala-library.version>2.12.7</scala-library.version>
-    <jackson.version>2.9.7</jackson.version>
-    <sqlite4java.version>1.0.392</sqlite4java.version>
-    <msgpack.version>0.8.16</msgpack.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>io.github.msdk</groupId>
@@ -40,11 +31,6 @@
       <version>1.0.5</version>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.12</version>
-    </dependency>
-    <dependency>
       <groupId>com.typesafe.scala-logging</groupId>
       <artifactId>scala-logging_${scala.version}</artifactId>
       <version>3.9.0</version>
@@ -52,7 +38,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
-      <version>1.7.12</version>
+      <version>${slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
@@ -77,17 +63,12 @@
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
-      <version>5.2.13.Final</version>
+      <version>${hibernate.version}</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-c3p0</artifactId>
-      <version>4.3.11.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>com.mchange</groupId>
-      <artifactId>c3p0</artifactId>
-      <version>0.9.5.1</version>
+      <version>${hibernate.version}</version>
     </dependency>
     <dependency>
       <groupId>joda-time</groupId>
