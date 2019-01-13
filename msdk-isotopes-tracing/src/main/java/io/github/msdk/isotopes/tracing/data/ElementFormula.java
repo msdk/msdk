@@ -82,4 +82,12 @@ public class ElementFormula extends LinkedHashMap<Element, Integer> {
     return copy;
   }
 
+  public IsotopeFormula toIsotopeFormula() {
+    IsotopeFormula formula = new IsotopeFormula();
+    for (Entry<Element, Integer> entry : this.entrySet()) {
+      formula.put(entry.getKey().lightestIsotope(), entry.getValue());
+    }
+    return formula;
+  }
+
 }

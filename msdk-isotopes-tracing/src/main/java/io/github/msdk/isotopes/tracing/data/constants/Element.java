@@ -168,4 +168,8 @@ public enum Element {
     }
     return mostCommonIsotope;
   }
+
+  public Isotope lightestIsotope() {
+    return this.getIsotopes().get(0);
+  }
 }
