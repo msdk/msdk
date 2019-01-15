@@ -92,17 +92,19 @@ public class IsotopeSet extends HashMap<Isotope, Integer> {
     }
   }
 
-  /**
-   * If we imagine the collection of associated fragments, that can be composed by the isotopes of
-   * this set, this method returns all detectable fragment masses and their frequency as number of
-   * fragments with this mass.
-   * 
-   * The method randomly selects isotopes (weighted by abundance) from this set to recompose the
-   * fragment and measures its weight.
-   * 
-   * @param charge, absolute value of the (actually negative) charge of the ion
-   * @return fragment masses and their frequency
-   */
+    /**
+     * If we imagine the collection of associated fragments, that can be
+     * composed by the isotopes of this set, this method returns all detectable
+     * fragment masses and their intensity as number of fragments with this
+     * mass.
+     * 
+     * The method randomly selects isotopes (weighted by abundance) from this
+     * set to recompose the fragment and measures its weight.
+     * 
+     * @param charge,
+     *            absolute value of the (actually negative) charge of the ion
+     * @return fragment masses and their intensity
+     */
   public MassSpectrum simulateSpectrum(int charge) {
     ElementFormula fragmentComponents = fragmentAssociatedWithTheSet.getFormula();
     MassSpectrum spectrum = new MassSpectrum(IntensityType.ABSOLUTE);
@@ -123,6 +125,8 @@ public class IsotopeSet extends HashMap<Isotope, Integer> {
           numberOfIsotopicallyVariableElementsInFragment =
               numberOfIsotopicallyVariableElementsInFragment
                   - numberOfExperimentallyIncorporatedElements;
+          // TODO: improve! This could cause problems if the tracer is not the heaviest
+          // isotope.
           Isotope heaviestIsotope = elementInFragment.heaviestIsotope();
           Integer remainingNumberOfIsotopesInTheSet =
               Integer.valueOf(get(heaviestIsotope) - numberOfExperimentallyIncorporatedElements);
@@ -148,6 +152,8 @@ public class IsotopeSet extends HashMap<Isotope, Integer> {
         int numberOfAvailableIsotopes = availableIsotopes.size();
         if (numberOfAvailableIsotopes > 0) {
           for (int k = 1; k <= numberOfIsotopicallyVariableElementsInFragment; k++) {
+            // TODO: Check if the isotopeToChoose can be used to create a formula associated
+            // to the mass.
             Isotope isotopeToChoose = chooseIsotopeWeightedByAbundance(availableIsotopes);
             Integer remainingNumberOfIsotopesInTheSet = Integer.valueOf(get(isotopeToChoose) - 1);
             put(isotopeToChoose, remainingNumberOfIsotopesInTheSet);
