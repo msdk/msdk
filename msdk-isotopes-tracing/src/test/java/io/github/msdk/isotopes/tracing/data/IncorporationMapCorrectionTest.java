@@ -115,9 +115,15 @@ public class IncorporationMapCorrectionTest extends TestCase {
             formulaCN.put(Isotope.N_15, 1);
             LOGGER.debug("calculatedIncCN " + correctedMap.get(formulaCN));
             LOGGER.debug("expectedIncCN " + INC_CN);
-            Double actualCN = correctedMap.get(formulaCN) != null ? correctedMap.get(formulaCN) : 0;
-            Double actualC = correctedMap.get(formulaC) != null ? correctedMap.get(formulaC) : 0;
-            Double actualN = correctedMap.get(formulaN) != null ? correctedMap.get(formulaN) : 0;
+                        Double actualCN = correctedMap.get(formulaCN) != null
+                                ? correctedMap.get(formulaCN)
+                                : 0.0;
+                        Double actualC = correctedMap.get(formulaC) != null
+                                ? correctedMap.get(formulaC)
+                                : 0.0;
+                        Double actualN = correctedMap.get(formulaN) != null
+                                ? correctedMap.get(formulaN)
+                                : 0.0;
             /*
              * compare the recalculated with the start values
              */
@@ -173,7 +179,9 @@ public class IncorporationMapCorrectionTest extends TestCase {
       formulaC.put(Isotope.C_13, 1);
       LOGGER.debug("calculatedIncC " + correctedMap.get(formulaC));
       LOGGER.debug("expectedIncC " + INC_C);
-      Double actualC = correctedMap.get(formulaC) != null ? correctedMap.get(formulaC) : 0;
+            Double actualC = correctedMap.get(formulaC) != null
+                    ? correctedMap.get(formulaC)
+                    : 0.0;
       if (Math.abs(actualC - INC_C) > maxError) {
         maxError = Math.abs(actualC - INC_C);
       }
@@ -232,7 +240,9 @@ public class IncorporationMapCorrectionTest extends TestCase {
       LOGGER.debug("calculatedIncN " + correctedMap.get(formulaN));
       LOGGER.debug("expectedIncN " + INC_N);
 
-      Double actualN = correctedMap.get(formulaN) != null ? correctedMap.get(formulaN) : 0;
+            Double actualN = correctedMap.get(formulaN) != null
+                    ? correctedMap.get(formulaN)
+                    : 0.0;
       if (Math.abs(actualN - INC_N) > maxError) {
         maxError = Math.abs(actualN - INC_N);
       }
@@ -322,9 +332,15 @@ public class IncorporationMapCorrectionTest extends TestCase {
           LOGGER.debug("calculatedIncCN " + correctedMap.get(formulaCN));
           LOGGER.debug("expectedIncCN " + 0.0);
 
-          Double actualCN = correctedMap.get(formulaCN) != null ? correctedMap.get(formulaCN) : 0;
-          Double actualC = correctedMap.get(formulaC2) != null ? correctedMap.get(formulaC2) : 0;
-          Double actualN = correctedMap.get(formulaN) != null ? correctedMap.get(formulaN) : 0;
+                    Double actualCN = correctedMap.get(formulaCN) != null
+                            ? correctedMap.get(formulaCN)
+                            : 0.0;
+                    Double actualC = correctedMap.get(formulaC2) != null
+                            ? correctedMap.get(formulaC2)
+                            : 0.0;
+                    Double actualN = correctedMap.get(formulaN) != null
+                            ? correctedMap.get(formulaN)
+                            : 0.0;
           /*
            * compare the recalculated with the start values
            */
