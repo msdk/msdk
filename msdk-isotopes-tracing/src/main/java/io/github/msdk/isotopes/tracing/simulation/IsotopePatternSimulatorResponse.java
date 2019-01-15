@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import io.github.msdk.isotopes.tracing.data.ElementFormula;
+import io.github.msdk.isotopes.tracing.data.Fragment;
+import io.github.msdk.isotopes.tracing.data.FragmentList;
 import io.github.msdk.isotopes.tracing.data.IsotopeFormula;
 import io.github.msdk.isotopes.tracing.data.IsotopeListList;
 import io.github.msdk.isotopes.tracing.data.IsotopePattern;
@@ -55,7 +57,16 @@ public class IsotopePatternSimulatorResponse {
   public void setMsDatabaseList(MSDatabaseList msDatabaseList) {
     this.msDatabaseList = msDatabaseList;
   }
-
+  
+    /**
+     * 
+     * @param index
+     *            index of the {@link Fragment} in the {@link FragmentList} of
+     *            the {@link IsotopePatternSimulatorRequest} that corresponds to
+     *            the spectrum you want to get.
+     * @return Simulated spectrum with corresponding formulas. Attention! This
+     *         only works if analyzeMassShifts was set to true in the request.
+     */
   public IsotopePattern getIsotopePattern(int index) {
     // TODO: Ensure that MassShifts have been analyzed.
     MSShiftDatabase database = ((MSShiftDatabase) getMsDatabaseList().get(index));
@@ -89,12 +100,22 @@ public class IsotopePatternSimulatorResponse {
     return pattern;
   }
 
+    /**
+     * 
+     * @param index
+     *            index of the {@link Fragment} in the {@link FragmentList} of
+     *            the {@link IsotopePatternSimulatorRequest} that corresponds to
+     *            the spectrum you want to get.
+     * @return Simulated spectrum with corresponding formulas. Formulas only
+     *         represent the heavy isotopes that induced this peak. Attention!
+     *         This only works if analyzeMassShifts was set to true in the
+     *         request.
+     */
   public IsotopePattern getIsotopePatternWithReducedFormulas(int index) {
     // TODO: Ensure that MassShifts have been analyzed.
     MSShiftDatabase database = ((MSShiftDatabase) getMsDatabaseList().get(index));
     MassSpectrum mixedSpectrum = database.getMixedSpectrum();
     MassShiftDataSet mixedShifts = database.getMixedMassShifts();
-    ElementFormula compoundFormula = ElementFormula.fromString(database.getCompoundFormula());
     ArrayList<IsotopeFormula> isotopeFormulas = new ArrayList<IsotopeFormula>();
     for (Entry<MassShiftList, IsotopeListList> shiftEntry : mixedShifts.entrySet()) {
       isotopeFormulas.add(shiftEntry.getValue().toIsotopeFormula());
@@ -105,5 +126,21 @@ public class IsotopePatternSimulatorResponse {
     }
     return pattern;
   }
+
+    /**
+     * 
+     * @param index
+     *            index of the {@link Fragment} in the {@link FragmentList} of
+     *            the {@link IsotopePatternSimulatorRequest} that corresponds to
+     *            the spectrum you want to get.
+     * @return Simulated spectrum.
+     */
+    public MassSpectrum getSpectrum(int index) {
+        // TODO: Ensure that MassShifts have been analyzed.
+        MSShiftDatabase database = ((MSShiftDatabase) getMsDatabaseList()
+                .get(index));
+        MassSpectrum mixedSpectrum = database.getMixedSpectrum();
+        return mixedSpectrum;
+    }
 
 }
