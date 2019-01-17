@@ -22,6 +22,17 @@
 	    	<artifactId>commons-csv</artifactId>
 	    	<version>1.5</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.openscience.cdk</groupId>
+			<artifactId>cdk-silent</artifactId>
+			<version>${cdk.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openscience.cdk</groupId>
+			<artifactId>cdk-formula</artifactId>
+			<version>${cdk.version}</version>
+		</dependency>
 
 	</dependencies>
 </project>
