@@ -243,12 +243,6 @@
       <artifactId>msdk-featuredetection-adap3d</artifactId>
       <version>${project.version}</version>
     </dependency>
-    
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>msdk-isotopes-tracing</artifactId>
-      <version>${project.version}</version>
-    </dependency>
 
   </dependencies>
 </project>
