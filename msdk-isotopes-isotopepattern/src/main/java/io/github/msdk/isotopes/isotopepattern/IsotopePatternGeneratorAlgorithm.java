@@ -59,6 +59,8 @@ public class IsotopePatternGeneratorAlgorithm {
             tracer2Inc, tracerAllInc, minAbundance, intensityScale, mzTolerance, storeFormula);
     System.out.println(Arrays.toString(spectrum.getMzValues()));
     System.out.println(Arrays.toString(spectrum.getIntensityValues()));
+    System.out
+        .println(Arrays.toString(((ExtendedIsotopePattern) spectrum).getIsotopeComposition()));
   }
 
   public static @Nonnull MsSpectrum simulateMultiTracedPattern(@Nonnull String chemicalFormula,
@@ -95,6 +97,15 @@ public class IsotopePatternGeneratorAlgorithm {
         capacityFormula, null, tracer2);
     tracerBothReducedPattern = IsotopePatternGeneratorUtils.addTracerMass(tracerBothReducedPattern,
         capacityFormula, tracer1, tracer2);
+    if (storeFormula) {
+      tracer1ReducedPattern = IsotopePatternGeneratorUtils
+          .addTracerComposition(tracer1ReducedPattern, capacityFormula, tracer1, null);
+      tracer2ReducedPattern = IsotopePatternGeneratorUtils
+          .addTracerComposition(tracer2ReducedPattern, capacityFormula, null, tracer2);
+      tracerBothReducedPattern = IsotopePatternGeneratorUtils
+          .addTracerComposition(tracerBothReducedPattern, capacityFormula, tracer1, tracer2);
+
+    }
     MsSpectrum mergedSpectrum =
         IsotopePatternGeneratorUtils.merge(naturalPattern, tracer1ReducedPattern);
     mergedSpectrum = IsotopePatternGeneratorUtils.merge(mergedSpectrum, tracer2ReducedPattern);

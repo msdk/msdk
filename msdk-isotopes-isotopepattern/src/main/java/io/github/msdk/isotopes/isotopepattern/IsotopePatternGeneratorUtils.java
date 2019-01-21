@@ -27,6 +27,8 @@ public class IsotopePatternGeneratorUtils {
       Pattern.compile("^[\\[\\(]?(([A-Z][a-z]?[0-9]*)+)[\\]\\)]?$");
   public static final Pattern tracerPattern = Pattern.compile("^([0-9]+)([A-Z][a-z]?)$");
   public static final Pattern multiElementPattern = Pattern.compile("([A-Z][a-z]?)([0-9]*)");
+  public static final Pattern compositionPattern =
+      Pattern.compile("\\[([0-9]+)\\]([A-Z][a-z]?)([0-9]*)");
 
 
   public static String formatCDKString(String cdkString) {
@@ -77,7 +79,25 @@ public class IsotopePatternGeneratorUtils {
       }
     }
     return elementFormula;
+  }
 
+  public static LinkedHashMap<String, Integer> isotopeMap(String formula) {
+    LinkedHashMap<String, Integer> isotopeFormula = new LinkedHashMap<String, Integer>();
+    Matcher formulaMatcher = compositionPattern.matcher(formula);
+    ArrayList<String> isotopeTokens = new ArrayList<String>();
+    while (formulaMatcher.find()) {
+      isotopeTokens.add(formulaMatcher.group());
+    }
+    for (String isotopeToken : isotopeTokens) {
+      Matcher isotopeMatcher = compositionPattern.matcher(isotopeToken);
+      if (isotopeMatcher.matches()) {
+        String isotope = isotopeMatcher.group(1) + isotopeMatcher.group(2);
+        Integer quantity = isotopeMatcher.group(3).equals("") ? Integer.valueOf(1)
+            : Integer.valueOf(isotopeMatcher.group(3));
+        isotopeFormula.put(isotope, quantity);
+      }
+    }
+    return isotopeFormula;
   }
 
   public static String reduceFormula(String formula, String capacity, String tracer1,
@@ -113,6 +133,18 @@ public class IsotopePatternGeneratorUtils {
     return builder.toString();
   }
 
+  public static String toCompositionString(LinkedHashMap<String, Integer> isotopeFormula) {
+    StringBuilder builder = new StringBuilder();
+    for (Entry<String, Integer> entry : isotopeFormula.entrySet()) {
+      if (entry.getValue() != 0) {
+        String number = entry.getValue() > 1 ? String.valueOf(entry.getValue()) : "";
+        builder.append(
+            "[" + tracerMassNumber(entry.getKey()) + "]" + tracerElement(entry.getKey()) + number);
+      }
+    }
+    return builder.toString();
+  }
+
   public static MsSpectrum addTracerMass(MsSpectrum spectrum, String capacityFormula,
       String tracer1, String tracer2) throws IOException {
     Double massToAdd = 0.0;
@@ -122,8 +154,8 @@ public class IsotopePatternGeneratorUtils {
     if (tracer2 != null) {
       massToAdd = massToAdd + totalTracerMass(tracer2, capacityFormula);
     }
+    // TODO: also adapt compositions
     return addMass(spectrum, massToAdd);
-
   }
 
   private static MsSpectrum addMass(MsSpectrum spectrum, Double massToAdd) {
@@ -168,29 +200,54 @@ public class IsotopePatternGeneratorUtils {
     float[] intensityValues1 = spectrum1.getIntensityValues();
     double[] mzValues2 = spectrum2.getMzValues();
     float[] intensityValues2 = spectrum2.getIntensityValues();
-    LinkedHashMap<Double, Float> datapoints = new LinkedHashMap<Double, Float>();
+    LinkedHashMap<Double, Float> massIntensityMap = new LinkedHashMap<Double, Float>();
+    String[] compositions1 = new String[mzValues1.length];
+    String[] compositions2 = new String[mzValues2.length];
+    boolean extendedPattern =
+        spectrum1 instanceof ExtendedIsotopePattern && spectrum2 instanceof ExtendedIsotopePattern;
+    LinkedHashMap<Double, String> massCompositionMap = new LinkedHashMap<Double, String>();
+    if (extendedPattern) {
+      compositions1 = ((ExtendedIsotopePattern) spectrum1).getIsotopeComposition();
+      compositions2 = ((ExtendedIsotopePattern) spectrum2).getIsotopeComposition();
+    }
     for (int i = 0; i < mzValues1.length; i++) {
-      if (datapoints.get(mzValues1[i]) != null) {
-        datapoints.put(mzValues1[i], datapoints.get(mzValues1[i]) + intensityValues1[i]);
+      if (massIntensityMap.get(mzValues1[i]) != null) {
+        massIntensityMap.put(mzValues1[i],
+            massIntensityMap.get(mzValues1[i]) + intensityValues1[i]);
       } else {
-        datapoints.put(mzValues1[i], intensityValues1[i]);
+        massIntensityMap.put(mzValues1[i], intensityValues1[i]);
+      }
+      if (extendedPattern) {
+        massCompositionMap.put(mzValues1[i], compositions1[i]);
       }
     }
     for (int i = 0; i < mzValues2.length; i++) {
-      if (datapoints.get(mzValues2[i]) != null) {
-        datapoints.put(mzValues2[i], datapoints.get(mzValues2[i]) + intensityValues2[i]);
+      if (massIntensityMap.get(mzValues2[i]) != null) {
+        massIntensityMap.put(mzValues2[i],
+            massIntensityMap.get(mzValues2[i]) + intensityValues2[i]);
       } else {
-        datapoints.put(mzValues2[i], intensityValues2[i]);
+        massIntensityMap.put(mzValues2[i], intensityValues2[i]);
+      }
+      if (extendedPattern) {
+        massCompositionMap.put(mzValues2[i], compositions2[i]);
       }
     }
-    List<Entry<Double, Float>> datapointList = new ArrayList<>(datapoints.entrySet());
-    datapointList.sort(Entry.comparingByKey());
-    int size = datapointList.size();
+    List<Entry<Double, Float>> massIntensityList = new ArrayList<>(massIntensityMap.entrySet());
+    massIntensityList.sort(Entry.comparingByKey());
+    int size = massIntensityList.size();
     double[] newMzValues = new double[size];
     float[] newIntensityValues = new float[size];
+    String[] newCompositions = new String[size];
     for (int i = 0; i < size; i++) {
-      newMzValues[i] = datapointList.get(i).getKey();
-      newIntensityValues[i] = datapointList.get(i).getValue();
+      newMzValues[i] = massIntensityList.get(i).getKey();
+      newIntensityValues[i] = massIntensityList.get(i).getValue();
+      if (extendedPattern) {
+        newCompositions[i] = massCompositionMap.get(newMzValues[i]);
+      }
+    }
+    if (extendedPattern) {
+      return new ExtendedIsotopePattern(newMzValues, newIntensityValues, size,
+          spectrum1.getSpectrumType(), "", newCompositions);
     }
     // TODO: check how to handle the IsotopeCompositions
     return new SimpleMsSpectrum(newMzValues, newIntensityValues, size, spectrum1.getSpectrumType());
@@ -208,6 +265,43 @@ public class IsotopePatternGeneratorUtils {
     }
     return new SimpleMsSpectrum(mzValues, intensityValues, mzValues.length,
         spectrum.getSpectrumType());
+  }
+
+  public static MsSpectrum addTracerComposition(MsSpectrum spectrum, String capacityFormula,
+      String tracer1, String tracer2) {
+    if (!(spectrum instanceof ExtendedIsotopePattern)) {
+      return spectrum;
+    }
+    LinkedHashMap<String, Integer> capacity = formulaMap(capacityFormula);
+    Integer tracer1Count = 0;
+    if (tracer1 != null) {
+      tracer1Count = capacity.get(tracerElement(tracer1));
+    }
+    Integer tracer2Count = 0;
+    if (tracer2 != null) {
+      tracer2Count = capacity.get(tracerElement(tracer2));
+    }
+    String[] compositions = ((ExtendedIsotopePattern) spectrum).getIsotopeComposition();
+    for (int i = 0; i < compositions.length; i++) {
+      LinkedHashMap<String, Integer> compositionMap = isotopeMap(compositions[i]);
+      if (tracer1 != null) {
+        if (compositionMap.get(tracer1) != null) {
+          compositionMap.put(tracer1, compositionMap.get(tracer1) + tracer1Count);
+        } else {
+          compositionMap.put(tracer1, tracer1Count);
+        }
+      }
+      if (tracer2 != null) {
+        if (compositionMap.get(tracer2) != null) {
+          compositionMap.put(tracer2, compositionMap.get(tracer2) + tracer2Count);
+        } else {
+          compositionMap.put(tracer2, tracer2Count);
+        }
+      }
+      compositions[i] = toCompositionString(compositionMap);
+    }
+    ((ExtendedIsotopePattern) spectrum).setIsotopeComposition(compositions);
+    return spectrum;
   }
 
 }
