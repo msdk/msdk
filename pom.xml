@@ -71,7 +71,7 @@
 		<jackson.version>2.9.8</jackson.version>
 		<sqlite4java.version>1.0.392</sqlite4java.version>
 		<msgpack.version>0.8.16</msgpack.version>
-		<hibernate.version>5.4.0.Final</hibernate.version>
+		<hibernate.version>5.4.1.Final</hibernate.version>
 	</properties>
 
 	<licenses>
