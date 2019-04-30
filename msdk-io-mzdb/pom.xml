@@ -79,10 +79,10 @@
 		</dependency>
 		<dependency>
 			<groupId>com.mchange</groupId>
-			<!-- Included because hibernate 5.4.1 depends on c3p0 0.9.5.2, which has 
+			<!-- Included because hibernate 5.4.2 depends on c3p0 0.9.5.3, which has 
 				a security vulnerability. Can be removed later when hibernate is updated. -->
 			<artifactId>c3p0</artifactId>
-			<version>0.9.5.3</version>
+			<version>0.9.5.4</version>
 		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
