@@ -142,7 +142,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.0</version>
+					<version>3.8.1</version>
 					<configuration>
 						<source>${java.version}</source>
 						<target>${java.version}</target>
@@ -160,29 +160,29 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
-		      <plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-enforcer-plugin</artifactId>
-			<version>3.0.0-M2</version>
-			<executions>
-			  <execution>
-			    <id>enforce-versions</id>
-			    <goals>
-			      <goal>enforce</goal>
-			    </goals>
-			    <configuration>
-			      <rules>
-				<requireMavenVersion>
-				  <version>3.5.0</version>
-				</requireMavenVersion>
-				<requireJavaVersion>
-				  <version>1.8</version>
-				</requireJavaVersion>
-			      </rules>
-			    </configuration>
-			  </execution>
-			</executions>
-		      </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0-M2</version>
+				<executions>
+					<execution>
+						<id>enforce-versions</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>3.5.0</version>
+								</requireMavenVersion>
+								<requireJavaVersion>
+									<version>1.8</version>
+								</requireJavaVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -253,6 +253,8 @@
 						<configuration>
 							<excludePackageNames>io.github.msdk.db.mona.pojo</excludePackageNames>
 							<additionalparam>-Xdoclint:none</additionalparam>
+							<additionalOptions>-Xdoclint:none</additionalOptions>
+							<additionalJOption>-Xdoclint:none</additionalJOption>
 						</configuration>
 						<executions>
 							<execution>
@@ -295,7 +297,7 @@
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.7</version>
+						<version>1.6.8</version>
 						<extensions>true</extensions>
 						<configuration>
 							<serverId>ossrh</serverId>
@@ -307,7 +309,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-scm-publish-plugin</artifactId>
-						<version>1.1</version>
+						<version>3.0.0</version>
 						<configuration>
 							<checkoutDirectory>${project.build.directory}/apirepo</checkoutDirectory>
 							<checkinComment>Publishing javadoc for msdk:${project.version}</checkinComment>
