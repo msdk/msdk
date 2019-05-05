@@ -108,7 +108,7 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
   private final static String FINGERID_VERSION = "1.1.3";
   private final SearchStructureByFormula searchDB;
   private final static Gson gson = new Gson();
-  
+
   // Do not use caching
   private final static File siriusCacheLocation = null;
 
@@ -137,17 +137,24 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
   public FingerIdWebMethod(@Nonnull Ms2Experiment experiment,
       @Nonnull SiriusIonAnnotation ionAnnotation, @Nonnull Integer candidatesAmount)
       throws MSDKException {
+
+
     this.experiment = experiment;
     this.ionAnnotation = ionAnnotation;
 
     this.searchDB =
         new RESTDatabase(siriusCacheLocation, BioFilter.ALL, URI.create(FINGERID_SOURCE));
 
+    // This disables annoying logging dumps by Apache HTTP
+    RESTDatabase.SHUT_UP_STUPID_LOGGING();
+
     try {
       final TIntArrayList list = new TIntArrayList(4096);
       perf = getStatistics(getType(), list);
+
       version = buildFingerprintVersion(list);
       blaster = createBlaster(perf);
+
     } catch (IOException e) {
       throw new MSDKException(e);
     }
@@ -158,6 +165,7 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
       this.candidatesAmount = version.size();
     else
       this.candidatesAmount = candidatesAmount;
+
   }
 
   /**
