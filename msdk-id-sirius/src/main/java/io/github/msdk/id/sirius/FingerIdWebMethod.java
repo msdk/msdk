@@ -146,7 +146,8 @@ public class FingerIdWebMethod implements MSDKMethod<List<IonAnnotation>> {
         new RESTDatabase(siriusCacheLocation, BioFilter.ALL, URI.create(FINGERID_SOURCE));
 
     // This disables annoying logging dumps by Apache HTTP
-    RESTDatabase.SHUT_UP_STUPID_LOGGING();
+    java.util.logging.Logger.getLogger("org.apache.http.wire").setLevel(java.util.logging.Level.INFO);
+    java.util.logging.Logger.getLogger("org.apache.http.headers").setLevel(java.util.logging.Level.INFO);
 
     try {
       final TIntArrayList list = new TIntArrayList(4096);
