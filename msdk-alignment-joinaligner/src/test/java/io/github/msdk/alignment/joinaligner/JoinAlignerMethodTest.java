@@ -31,7 +31,6 @@ import io.github.msdk.util.tolerances.RTTolerance;
 public class JoinAlignerMethodTest {
 
   @Test
-  @Ignore
   public void testMzTab_Samples() throws Exception {
 
     // Import file 1
