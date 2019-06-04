@@ -118,7 +118,8 @@ public class MzDataFileImportMethodTest {
     float intensityBuffer[] = new float[10000];
 
     // Import the file
-    File inputFile = new File(this.getClass().getClassLoader().getResource("MSMSpos_Challenge0.mzData").toURI());
+    File inputFile =
+        new File(this.getClass().getClassLoader().getResource("MSMSpos_Challenge0.mzData").toURI());
     Assert.assertTrue(inputFile.canRead());
     MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile);
     RawDataFile rawFile = importer.execute();
@@ -143,6 +144,45 @@ public class MzDataFileImportMethodTest {
     Float scan1MaxInt =
         MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan1.getNumberOfDataPoints());
     Assert.assertEquals(2.36E3f, scan1MaxInt, 1E2f);
+
+    rawFile.dispose();
+
+  }
+
+
+  @Test
+  public void test1ppm1() throws Exception {
+
+    // Create the data structures
+    double mzBuffer[] = new double[10000];
+    float intensityBuffer[] = new float[10000];
+
+    // Import the file
+    File inputFile = new File(this.getClass().getClassLoader().getResource("1ppm1.trimmed.mzdata").toURI());
+    Assert.assertTrue(inputFile.canRead());
+    MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile);
+    RawDataFile rawFile = importer.execute();
+    Assert.assertNotNull(rawFile);
+    Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+    // The file has 112 scans
+    List<MsScan> scans = rawFile.getScans();
+    Assert.assertNotNull(scans);
+    Assert.assertEquals(3, scans.size());
+
+    // 1st scan, #1
+    MsScan scan1 = scans.get(0);
+    Assert.assertEquals(new Integer(1), scan1.getScanNumber());
+    Assert.assertEquals(MsSpectrumType.CENTROIDED, scan1.getSpectrumType());
+    Assert.assertEquals(new Integer(1), scan1.getMsLevel());
+    Assert.assertEquals(2.82f, scan1.getRetentionTime(), 0.01f);
+    Assert.assertEquals(PolarityType.POSITIVE, scan1.getPolarity());
+    mzBuffer = scan1.getMzValues();
+    intensityBuffer = scan1.getIntensityValues();
+    Assert.assertEquals(488, (int) scan1.getNumberOfDataPoints());
+    Float scan1MaxInt =
+        MsSpectrumUtil.getMaxIntensity(intensityBuffer, scan1.getNumberOfDataPoints());
+    Assert.assertEquals(1.5033831E4f, scan1MaxInt, 1E2f);
 
     rawFile.dispose();
 
