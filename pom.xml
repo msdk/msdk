@@ -70,7 +70,7 @@
 		<scala-library.version>2.12.8</scala-library.version>
 		<jackson.version>2.9.9</jackson.version>
 		<sqlite4java.version>1.0.392</sqlite4java.version>
-		<msgpack.version>0.8.16</msgpack.version>
+		<msgpack.version>0.8.17</msgpack.version>
 		<hibernate.version>5.4.2.Final</hibernate.version>
 	</properties>
 
