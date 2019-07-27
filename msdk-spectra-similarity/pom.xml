@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.github.msdk</groupId>
 		<artifactId>msdk</artifactId>
-		<version>0.0.23-SNAPSHOT</version>
+		<version>0.0.23</version>
 	</parent>
 	<artifactId>msdk-spectra-similarity</artifactId>
 	<description>MSDK module for calculating spectra similarity scores</description>
