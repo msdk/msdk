@@ -44,36 +44,10 @@ public class NativeLibraryLoader {
   private NativeLibraryLoader() {}
 
   /**
-   * Returns path to requested resource
+   * GLPK java wrapper is a bit stupid and REQUIRES the glpk libs to be present on the
+   * java.library.path, otherwise it will crash during initialization. So this method will copy
+   * those libraries from resources into the first writable folder in java.library.path
    * 
-   * @param resource - file to find Path to
-   * @return Path
-   * @throws MSDKException if any
-   */
-  private static Path getResourcePath(String resource) throws MSDKException {
-    final URL url = NativeLibraryLoader.class.getClassLoader().getResource(resource);
-    try {
-      return Paths.get(url.toURI()).toAbsolutePath();
-    } catch (URISyntaxException e) {
-      throw new MSDKException(e);
-    }
-  }
-
-
-
-  /**
-   * Public method for external usage, copies all files from `folder`
-   * <p>
-   * Loads libraries from `folder` in order specified by `libs` array
-   * </p>
-   *
-   * The folder structure is strict folder -windows64 --lib1 --lib2 -windows32 -- lib -linux64 --
-   * lib1 ... -linux32" -- lib1 ... -mac64 --lib1 ...
-   *
-   * @param folder - specify the name of the library to be loaded (example - glpk_4_60)
-   * @param libs - array of exact names of libraries (without extensions)
-   * @throws MSDKException if any
-   * @throws IOException if any
    */
   public static void loadNativeGLPKLibriaries() throws MSDKException, IOException {
 
@@ -95,7 +69,7 @@ public class NativeLibraryLoader {
 
     // Could not find a suitable library path
     throw new MSDKException(
-        "The java.library.path system property does not contain any writable folders, cannot copy GLPK libraries (cjava.library.path = "
+        "The java.library.path system property does not contain any writable folders, cannot copy GLPK libraries (java.library.path = "
             + javaLibPath + ")");
   }
 
