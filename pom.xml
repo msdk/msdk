@@ -155,6 +155,9 @@
 					<version>3.0.0-M3</version>
 					<configuration>
 						<argLine>-Xmx1024m</argLine>
+						<systemPropertyVariables>
+							<java.library.path>.</java.library.path>
+						</systemPropertyVariables>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -255,8 +258,8 @@
 							<additionalparam>-Xdoclint:none</additionalparam>
 							<additionalOptions>-Xdoclint:none</additionalOptions>
 							<additionalJOption>-Xdoclint:none</additionalJOption>
-						    <source>${java.version}</source>
-						    <target>${java.version}</target>
+							<source>${java.version}</source>
+							<target>${java.version}</target>
 						</configuration>
 						<executions>
 							<execution>
