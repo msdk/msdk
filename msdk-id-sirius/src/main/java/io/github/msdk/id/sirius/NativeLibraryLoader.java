@@ -16,11 +16,9 @@ package io.github.msdk.id.sirius;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 import org.slf4j.Logger;
@@ -107,7 +105,8 @@ public class NativeLibraryLoader {
       if (inFileStream == null)
         throw new MSDKException("Failed to open resource " + libResourcePath);
 
-      final Path targetPath = Path.of(libraryPath, libName);
+      // Target filename where the library will be copied 
+      final Path targetPath = FileSystems.getDefault().getPath(libraryPath, libName);
 
       // Copy the library file
       logger.debug("Copying library file " + libResourcePath + " to " + targetPath);
