@@ -154,10 +154,7 @@
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>3.0.0-M3</version>
 					<configuration>
-						<argLine>-Xmx1024m</argLine>
-						<systemPropertyVariables>
-							<java.library.path>.</java.library.path>
-						</systemPropertyVariables>
+						<argLine>-Xmx1024m -Djava.library.path=.</argLine>
 					</configuration>
 				</plugin>
 			</plugins>
