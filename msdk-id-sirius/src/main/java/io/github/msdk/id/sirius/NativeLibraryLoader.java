@@ -56,7 +56,7 @@ public class NativeLibraryLoader {
       throw new MSDKException("Cannot read java.library.path system property");
     logger.debug("java.library.path = " + javaLibPath);
 
-    final String javaLibPathSplit[] = javaLibPath.split(":");
+    final String javaLibPathSplit[] = javaLibPath.split(File.pathSeparator);
     for (String libPath : javaLibPathSplit) {
       final File libPathFile = new File(libPath);
       if (libPathFile.exists() && libPathFile.canWrite()) {
