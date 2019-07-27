@@ -13,41 +13,39 @@
 
 package io.github.msdk.id.sirius;
 
-import com.google.common.io.Files;
-import io.github.msdk.MSDKException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.nio.file.StandardCopyOption;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.msdk.MSDKException;
+
 /**
- * <p> Class NativeLibraryLoader </p> This class allows to dynamically load native libraries from
- * .jar files (also works with IDE) with updating java.library.path variable
+ * <p>
+ * Class NativeLibraryLoader
+ * </p>
+ * This class allows to dynamically load native libraries from .jar files (also works with IDE) with
+ * updating java.library.path variable
  */
 public class NativeLibraryLoader {
+
   private static final Logger logger = LoggerFactory.getLogger(NativeLibraryLoader.class);
+
+  private static final String GLPK_RESOURCES_FOLDER = "glpk-4.60";
+
   private NativeLibraryLoader() {}
 
   /**
    * Returns path to requested resource
+   * 
    * @param resource - file to find Path to
    * @return Path
    * @throws MSDKException if any
@@ -61,263 +59,136 @@ public class NativeLibraryLoader {
     }
   }
 
+
+
   /**
    * Public method for external usage, copies all files from `folder`
-   * <p>Loads libraries from `folder` in order specified by `libs` array</p>
+   * <p>
+   * Loads libraries from `folder` in order specified by `libs` array
+   * </p>
    *
-   * The folder structure is strict
-   * folder
-   * -windows64
-   * --lib1
-   * --lib2
-   * -windows32
-   * -- lib
-   * -linux64
-   * -- lib1 ...
-   * -linux32"
-   * -- lib1 ...
-   * -mac64
-   * --lib1 ...
+   * The folder structure is strict folder -windows64 --lib1 --lib2 -windows32 -- lib -linux64 --
+   * lib1 ... -linux32" -- lib1 ... -mac64 --lib1 ...
    *
    * @param folder - specify the name of the library to be loaded (example - glpk_4_60)
    * @param libs - array of exact names of libraries (without extensions)
    * @throws MSDKException if any
    * @throws IOException if any
    */
-  public static void loadLibraryFromJar(String folder, String[] libs)
-      throws MSDKException, IOException {
-    logger.info("Started loading libraries from {} folder", folder);
+  public static void loadNativeGLPKLibriaries() throws MSDKException, IOException {
 
-    String arch = getArch();
-    String osname = getOsName();
-    String subfolder = getSubfolder(arch, osname);
+    logger.debug("Started loading GLPK libraries");
 
-    logger.info("OS type = {} and OS arch = {}", subfolder, arch);
+    final String javaLibPath = System.getProperty("java.library.path");
+    if (javaLibPath == null)
+      throw new MSDKException("Cannot read java.library.path system property");
+    logger.debug("java.library.path = " + javaLibPath);
 
-    // Make new java.library.path
-    File temporaryDir = createLibraryPath();
-
-    folder += "/" + subfolder + arch + "/";
-
-    final File jarFile = new File(NativeLibraryLoader.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-    Map<String, InputStream> libraries;
-
-    if(jarFile.isFile()) {  // Run with JAR file
-      logger.info("Loading libraries from JAR");
-      final JarFile jar = new JarFile(jarFile);
-      libraries = getJarStreams(jar, folder);
-      moveLibraries(libraries, temporaryDir);
-      jar.close();
-    } else { // Run with IDE
-      logger.info("Loading libraries from IDE level");
-      String realPath = getResourcePath(folder).toString();
-      libraries = getIdeStreams(realPath);
-      moveLibraries(libraries, temporaryDir);
-    }
-
-    loadLibraries(libs);
-  }
-
-  /**
-   * <p>Method for updating java.library.path</p>
-   * Method for updating the java.library.path with a new temp folder for native libraries
-   * System.setProperty(path) does not make any sense because JVM sets it during initialization
-   * Altering library path requires additional code
-   *
-   * @return temporary folder file
-   * @throws MSDKException if any
-   */
-  private static File createLibraryPath() throws MSDKException {
-    File tempDir = Files.createTempDir();
-    tempDir.deleteOnExit();
-
-    String absPath = tempDir.getAbsolutePath();
-
-    try {
-      addLibraryPath(absPath);
-      logger.debug("Successfully added temp folder to java.library.path [{}]", absPath);
-    } catch (Exception e) {
-      throw new MSDKException(e);  //Catches NoSuchFieldException & IllegalAccessException
-    }
-
-    return tempDir;
-  }
-
-  /**
-   * <p>Adds the specified path to the java library path w/o reinitialization of a variable</p>
-   *
-   * @param pathToAdd the path to add
-   * @throws Exception if any
-   */
-  private static void addLibraryPath(String pathToAdd)
-      throws NoSuchFieldException, IllegalAccessException {
-    final Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
-    usrPathsField.setAccessible(true);
-
-    //get array of paths
-    final String[] paths = (String[]) usrPathsField.get(null);
-
-    //check if the path to add is already present
-    for (String path : paths) {
-      if (path.equals(pathToAdd)) {
+    final String javaLibPathSplit[] = javaLibPath.split(":");
+    for (String libPath : javaLibPathSplit) {
+      final File libPathFile = new File(libPath);
+      if (libPathFile.exists() && libPathFile.canWrite()) {
+        copyGLPKLibraryFiles(libPath);
         return;
       }
     }
 
-    //add the new path
-    final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
-    newPaths[newPaths.length - 1] = pathToAdd;
-    usrPathsField.set(null, newPaths);
+    // Could not find a suitable library path
+    throw new MSDKException(
+        "The java.library.path system property does not contain any writable folders, cannot copy GLPK libraries (cjava.library.path = "
+            + javaLibPath + ")");
   }
 
-  /**
-   * * <p>Method moves library from .jar to temporary folder and loads it</p>
-   * Temp folder previously should be added to java.library.path
-   *
-   * @param fileStreams - map of <filename, inputStream> pairs, used for interoperability between loading from JAR and loading from IDE
-   * @param tempDirectory - temp directory for libraries
-   * @throws FileNotFoundException - in case of troubleshoot with temporary folder.
-   * @throws IOException - in case of incorrect InputStreams or inproper `temp` file created
-   */
-  private static void moveLibraries(Map<String, InputStream> fileStreams, File tempDirectory) throws FileNotFoundException, IOException {
-    if (tempDirectory == null || !tempDirectory.exists())
-      throw new FileNotFoundException("Temporary directory was not created");
+  public static void copyGLPKLibraryFiles(String libraryPath) throws MSDKException, IOException {
 
-    OutputStream outputStream;
-    byte buffer[] = new byte[4096];
-    int bytes;
+    final String arch = getArch();
+    final String osname = getOsName();
+    logger.debug("OS type = {} and OS arch = {}", osname, arch);
 
-    for (Map.Entry<String, InputStream> pair: fileStreams.entrySet()) {
-      logger.debug("Started copying {}", pair.getKey());
-      File temp = new File(tempDirectory, pair.getKey());
-      final InputStream iStream = pair.getValue();
-      outputStream = new FileOutputStream(temp);
-
-      while ((bytes = iStream.read(buffer)) > 0) {
-        outputStream.write(buffer, 0, bytes);
-      }
-      iStream.close();
-      outputStream.close();
-
-      logger.debug("Finished copying {}", pair.getKey());
+    // GLPK requires two libraries
+    final String[] requiredLibraryFiles = new String[2];
+    switch (osname) {
+      case "win":
+        requiredLibraryFiles[0] = "glpk_4_60.dll";
+        requiredLibraryFiles[1] = "glpk_4_60_java.dll";
+        break;
+      case "linux":
+        requiredLibraryFiles[0] = "libglpk.so";
+        requiredLibraryFiles[1] = "libglpk_java.so";
+        break;
+      case "mac":
+        requiredLibraryFiles[0] = "libglpk.dylib";
+        requiredLibraryFiles[1] = "libglpk_java.dylib";
+        break;
+      default:
+        throw new MSDKException("Unsupported OS (" + osname + "), cannot load GLPK libraries");
     }
-  }
 
-  /**
-   * <p> Method for calling OS to load native libraries stored in java.library.path </p>
-   * @param libraryNames
-   */
-  private static void loadLibraries(String[] libraryNames) {
-    for (String lib: libraryNames) {
-      System.loadLibrary(lib);
-      logger.info("Successfully loaded {} library", lib);
+    for (String libName : requiredLibraryFiles) {
+      final String libResourcePath =
+          GLPK_RESOURCES_FOLDER + File.separator + osname + arch + File.separator + libName;
+
+      InputStream inFileStream =
+          NativeLibraryLoader.class.getClassLoader().getResourceAsStream(libResourcePath);
+      if (inFileStream == null)
+        throw new MSDKException("Failed to open resource " + libResourcePath);
+
+      final Path targetPath = Path.of(libraryPath, libName);
+
+      // Copy the library file
+      logger.debug("Copying library file " + libResourcePath + " to " + targetPath);
+      Files.copy(inFileStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+      inFileStream.close();
+
     }
+
   }
 
-  /**
-   * <p>Method returns proper subfolder of a native library</p>
-   * @param arch - architecture of the computer
-   * @param osname - name of the OS (formatted)
-   * @return appropriate folder with native libraries
-   * @throws MSDKException - if system parameters were not determined
-   */
-  private static String getSubfolder(String arch, String osname) throws MSDKException {
-    String subfolder;
-    if (osname.contains("linux")) {
-      subfolder = "linux";
-    } else if (osname.contains("mac")) {
-      if (arch.equals("32"))
-        throw new MSDKException("There are no native libraries for x32 mac systems");
-      subfolder = "mac";
-    } else if (osname.contains("windows")) {
-      subfolder = "windows";
-    } else
-      throw new MSDKException("Could not determine the system parameters properly");
 
-    return subfolder;
-  }
 
   /**
-   * <p>Method returns architecture of the computer</p>
+   * <p>
+   * Method returns architecture of the computer
+   * </p>
+   * 
    * @return formatted architecture
    * @throws MSDKException - if any
    */
-  private static String getArch() throws  MSDKException {
+  private static String getArch() throws MSDKException {
     String arch = System.getProperty("os.arch");
     if (arch == null)
       throw new MSDKException("Can not identify os.arch property");
 
-    return arch.toLowerCase().endsWith("64") ? "64" : "32";
+    return arch.endsWith("64") ? "64" : "32";
   }
 
   /**
-   * <p>Method returns formatted OS name</p>
+   * <p>
+   * Method returns formatted OS name
+   * </p>
+   * 
    * @return OS name
    * @throws MSDKException - if any
    */
   public static String getOsName() throws MSDKException {
     String osname = System.getProperty("os.name");
+
     if (osname == null)
-      throw new MSDKException("Can not identify os.name property");
+      return "unknown";
 
-    return osname.toLowerCase();
-  }
-
-  /**
-   * <p>Method loads files inside jar from specified folder</p>
-   * @param jar\ - JarFile object
-   * @param folder - appropriate resource folder (i.e. /glpk-4.60/mac64/)
-   * @return map of Filenames & InputStreams
-   * @throws IOException if jarFile was specified wrong
-   */
-  private static Map<String,InputStream> getJarStreams(JarFile jar, String folder) throws IOException {
-    TreeMap<String, InputStream> jarStreams = new TreeMap<>();
-    Set<JarEntry> entriesSet = new HashSet<>();
-
-    String name;
-    JarEntry entry;
-
-    /* Get ALL entries in .jar file */
-    final Enumeration<JarEntry> entries = jar.entries();
-    int items = 0;
-    while(entries.hasMoreElements()) {
-      entry = entries.nextElement();
-      name = entry.getName();
-      /* Find the folder with required pattern i.e. /glpk-4.60/mac64/ */
-      if (name.contains(folder)) {
-        /* Process ONLY found directory and ignore other entries*/
-        if (!entry.isDirectory()) {
-          entriesSet.add(entry);
-        }
-      }
+    if (osname.toLowerCase().contains("win")) {
+      return "windows";
+    }
+    if (osname.toLowerCase().contains("linux")) {
+      return "linux";
+    }
+    if (osname.toLowerCase().contains("mac")) {
+      return "mac";
     }
 
-    /* Transform JarEntries into pairs of Filename & InputStream to that file */
-    for (final JarEntry libFile: entriesSet) {
-      String filename = libFile.getName();
-      filename = filename.substring(filename.lastIndexOf('/') + 1);
-      InputStream iStream = jar.getInputStream(libFile);
-      jarStreams.put(filename, iStream);
-    }
-
-    return jarStreams;
+    return "unknown";
   }
 
-  /**
-   * <p>Method loads files from specified folder </p>
-   * @param folder - folder with native libraries
-   * @return map of Filenames & InputStreams
-   * @throws FileNotFoundException - if any
-   */
-  private static Map<String,InputStream> getIdeStreams(String folder) throws FileNotFoundException {
-    Map<String, InputStream> ideStreams = new TreeMap<>();
-    File files[] = (new File(folder)).listFiles();
-    for (File lib: files) {
-      String libName = lib.getName();
-      InputStream iStream = new FileInputStream(lib);
-      ideStreams.put(libName, iStream);
-    }
 
-    return ideStreams;
-  }
 }

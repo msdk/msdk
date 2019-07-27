@@ -49,7 +49,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p> SiriusIdentificationMethod class. </p>
+ * <p>
+ * SiriusIdentificationMethod class.
+ * </p>
  *
  * This class wraps the Sirius module and transforms its results into MSDK data structures
  * Transformation of IdentificationResult (Sirius) into IonAnnatation (MSDK)
@@ -57,27 +59,18 @@ import org.slf4j.LoggerFactory;
 public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation>> {
 
   /**
-   * Dynamic loading of native libraries
+   * Dynamic loading of GLPK native libraries
    */
   static {
-      try {
-      // GLPK requires two libraries
-      String[] libs = new String[2];
-      if (NativeLibraryLoader.getOsName().contains("win")) {
-        libs[0] = "glpk_4_60";
-        libs[1] = "glpk_4_60_java";
-      } else {
-        libs[0] = "glpk";
-        libs[1] = "glpk_java";
-      }
-
-      NativeLibraryLoader.loadLibraryFromJar("glpk-4.60", libs);
-    } catch (Exception ex) {
-      throw new MSDKRuntimeException(ex);
+    try {
+      NativeLibraryLoader.loadNativeGLPKLibriaries();
+    } catch (Throwable t) {
+      throw new MSDKRuntimeException(t);
     }
   }
 
   private static final Logger logger = LoggerFactory.getLogger(SiriusIdentificationMethod.class);
+
   private final Integer MAX_DATAPOINTS = 300;
   private final Integer MAX_SPECTRA = 30;
   private final List<MsSpectrum> ms1;
@@ -93,20 +86,25 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   private MutableMs2Experiment experiment;
 
   /**
-   * <p> Constructor for SiriusIdentificationMethod class. </p>
+   * <p>
+   * Constructor for SiriusIdentificationMethod class.
+   * </p>
    *
    * @param ms1 - can be null! MsSpectrum level 1
    * @param ms2 - MsSpectrum level 2
    * @param parentMass - Most intensive usually or specified
    * @param ion - Ionization
    * @param numberOfCandidates - amount of IdentificationResults to be returned from Sirius
-   * @param constraints - FormulaConstraints provided by the end user. Can be created using ConstraintsGenerator
+   * @param constraints - FormulaConstraints provided by the end user. Can be created using
+   *        ConstraintsGenerator
    * @param deviation - float value of possible mass deviation in ppm
    */
-  public SiriusIdentificationMethod(@Nullable List<MsSpectrum> ms1, @Nullable List<MsSpectrum> ms2, @Nonnull Double parentMass,
-     @Nonnull IonType ion, @Nullable Integer numberOfCandidates, @Nullable FormulaConstraints constraints, @Nullable Double deviation) {
-    
-    if (ms1 == null && ms2 == null) throw new MSDKRuntimeException("Only one of MS && MS/MS can be null at a time");
+  public SiriusIdentificationMethod(@Nullable List<MsSpectrum> ms1, @Nullable List<MsSpectrum> ms2,
+      @Nonnull Double parentMass, @Nonnull IonType ion, @Nullable Integer numberOfCandidates,
+      @Nullable FormulaConstraints constraints, @Nullable Double deviation) {
+
+    if (ms1 == null && ms2 == null)
+      throw new MSDKRuntimeException("Only one of MS && MS/MS can be null at a time");
 
     this.ms1 = preprocessSpectra(ms1, MAX_SPECTRA, MAX_DATAPOINTS);
     this.ms2 = preprocessSpectra(ms2, MAX_SPECTRA, MAX_DATAPOINTS);
@@ -127,23 +125,22 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   }
 
   /**
-   * Method select top N spectra and filters its datapoints (top M)
-   * Spectrum selection is done by largest Intensity value
-   * Datapoints selection is done through sorting pairs by intenisty
+   * Method select top N spectra and filters its datapoints (top M) Spectrum selection is done by
+   * largest Intensity value Datapoints selection is done through sorting pairs by intenisty
    *
    * @param spectra - initial list of spectra
    * @param listLimit - maximum amount of spectra to be processed
    * @param datapointsLimit - maximum amount of datapoints in each spectrum
    * @return
    */
-  private List<MsSpectrum> preprocessSpectra(@Nullable List<MsSpectrum> spectra,
-      int listLimit, int datapointsLimit) {
+  private List<MsSpectrum> preprocessSpectra(@Nullable List<MsSpectrum> spectra, int listLimit,
+      int datapointsLimit) {
     if (spectra == null)
       return null;
 
     List<MsSpectrum> mostIntenseSpectra = MsSpectrumUtil.filterMsSpectra(spectra, listLimit);
     List<MsSpectrum> filteredSpectra = new LinkedList<>();
-    for (MsSpectrum ms: mostIntenseSpectra) {
+    for (MsSpectrum ms : mostIntenseSpectra) {
       MsSpectrum filtered = MsSpectrumUtil.filterMsSpectrum(ms, datapointsLimit);
       filteredSpectra.add(filtered);
     }
@@ -172,9 +169,11 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   }
 
   /**
-   * <p> Method for processing spectra by Sirius module </p>
-   * Transformation of MSDK data structures into Sirius structures and processing by Sirius
-   * Method is left to be protected for test coverage
+   * <p>
+   * Method for processing spectra by Sirius module
+   * </p>
+   * Transformation of MSDK data structures into Sirius structures and processing by Sirius Method
+   * is left to be protected for test coverage
    */
   protected List<IdentificationResult> siriusProcessSpectra() throws MSDKException {
     experiment = loadInitialExperiment();
@@ -182,19 +181,21 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     configureExperiment(experiment);
 
     logger.debug("Sirius starts processing MsSpectrums");
-    List<IdentificationResult> siriusResults  = sirius.identify(experiment,
-        numberOfCandidates, true, IsotopePatternHandling.both, constraints);
+    List<IdentificationResult> siriusResults = sirius.identify(experiment, numberOfCandidates, true,
+        IsotopePatternHandling.both, constraints);
     logger.debug("Sirius finished processing and returned {} results", siriusResults.size());
 
     return siriusResults;
   }
 
   /**
-   * <p>Method for configuration of the Sirius experiment</p>
-   * Method loads several paramenters with sirius object, such as:
-   * Deviation - mass deviation
-   * Recalibrarion - flag of object recalibration after processing
-   * Constraints - user-defined search-space for the formula
+   * <p>
+   * Method for configuration of the Sirius experiment
+   * </p>
+   * Method loads several paramenters with sirius object, such as: Deviation - mass deviation
+   * Recalibrarion - flag of object recalibration after processing Constraints - user-defined
+   * search-space for the formula
+   * 
    * @param experiment - instance of Ms2Experiment with loaded MS & MS/MS spectra
    */
   private void configureExperiment(MutableMs2Experiment experiment) {
@@ -203,15 +204,22 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     sirius.enableRecalibration(experiment, true);
     sirius.setIsotopeMode(experiment, IsotopePatternHandling.both);
 
-    /* Constraints are loaded twice (here and in .identify method), because .identify method does not notice it */
+    /*
+     * Constraints are loaded twice (here and in .identify method), because .identify method does
+     * not notice it
+     */
     if (constraints != null)
       sirius.setFormulaConstraints(experiment, constraints);
   }
 
   /**
-   * <p>Method for initialization of empty Ms2Experiment</p>
-   * There is a trick for initialization of empty experiment, it is done for cases when there is only ms1 spectra
-   * It loads an empty Spectrum<Peak> into experiment and removes it after initialization.
+   * <p>
+   * Method for initialization of empty Ms2Experiment
+   * </p>
+   * There is a trick for initialization of empty experiment, it is done for cases when there is
+   * only ms1 spectra It loads an empty Spectrum<Peak> into experiment and removes it after
+   * initialization.
+   * 
    * @return
    */
   private MutableMs2Experiment loadInitialExperiment() {
@@ -220,15 +228,22 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     /* Initialization of empty Sirius spectrum */
     Spectrum<Peak> emptySiriusMs2 = new MutableMs2Spectrum();
 
-    /* MutableMs2Experiment allows to specify additional fields and it is exactly what comes from .getMs2Experiment */
-    MutableMs2Experiment experiment = (MutableMs2Experiment) sirius.getMs2Experiment(parentMass, precursor, null, emptySiriusMs2);
+    /*
+     * MutableMs2Experiment allows to specify additional fields and it is exactly what comes from
+     * .getMs2Experiment
+     */
+    MutableMs2Experiment experiment =
+        (MutableMs2Experiment) sirius.getMs2Experiment(parentMass, precursor, null, emptySiriusMs2);
     experiment.getMs2Spectra().clear();
     return experiment;
   }
 
   /**
-   * <p> Method for transformation of MsSpectrum into Spectrum<Peak></p>
+   * <p>
+   * Method for transformation of MsSpectrum into Spectrum<Peak>
+   * </p>
    * Method transforms MSDK object into Sirius object
+   * 
    * @param msdkSpectrum - non-null MsSpectrum object.
    * @return new Spectrum<Peak>
    */
@@ -240,8 +255,11 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   }
 
   /**
-   * <p> Method for loading MS & MS/MS spectra</p>
+   * <p>
+   * Method for loading MS & MS/MS spectra
+   * </p>
    * Method loads MS and MS/MS spectra into Ms2Experiment object
+   * 
    * @param experiment - experiment Sirius works with and where to load spectra
    */
   private void loadSpectra(MutableMs2Experiment experiment) {
@@ -255,10 +273,10 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
       }
     }
 
-    if (ms2!= null && ms2.size() > 0) {
+    if (ms2 != null && ms2.size() > 0) {
       for (MsSpectrum msdkSpectrum : ms2) {
         Spectrum<Peak> peaks = transformSpectrum(msdkSpectrum);
-      /* MutableMs2Experiment does not accept Ms1 as a Spectrum<Peak>, so there is a new object */
+        /* MutableMs2Experiment does not accept Ms1 as a Spectrum<Peak>, so there is a new object */
         MutableMs2Spectrum siriusMs2 = new MutableMs2Spectrum(peaks);
         ms2spectra.add(siriusMs2);
       }
@@ -291,7 +309,10 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   }
 
   /**
-   * <p>Method configures the IonAnnotation according to IdentificationResult object</p>
+   * <p>
+   * Method configures the IonAnnotation according to IdentificationResult object
+   * </p>
+   * 
    * @param siriusResult - IdentificationResult object from Sirius
    * @return configured instance of SimpleIonAnnotation
    */
@@ -309,16 +330,19 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
   }
 
   /**
-   * <p>Method generates IMolecularFormula according to IdentificationResult object</p>
+   * <p>
+   * Method generates IMolecularFormula according to IdentificationResult object
+   * </p>
+   * 
    * @param siriusResult - IdentificationResult object from Sirius
    * @return new IMolecularFormula instance
    */
   private IMolecularFormula generateFormula(IdentificationResult siriusResult) {
-    int charge = siriusResult.getResolvedTree().getAnnotationOrThrow(PrecursorIonType.class).getCharge();
+    int charge =
+        siriusResult.getResolvedTree().getAnnotationOrThrow(PrecursorIonType.class).getCharge();
     String formula = siriusResult.getMolecularFormula().toString();
-    IMolecularFormula iFormula = MolecularFormulaManipulator
-        .getMolecularFormula(formula,
-            SilentChemObjectBuilder.getInstance());
+    IMolecularFormula iFormula = MolecularFormulaManipulator.getMolecularFormula(formula,
+        SilentChemObjectBuilder.getInstance());
     iFormula.setCharge(charge);
 
     return iFormula;
