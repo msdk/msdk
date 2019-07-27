@@ -56,7 +56,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
+		<java.version>8</java.version>
 		<cdk.version>2.2</cdk.version>
 		<junit.version>4.12</junit.version>
 		<mockito.version>2.27.0</mockito.version>
@@ -255,6 +255,8 @@
 							<additionalparam>-Xdoclint:none</additionalparam>
 							<additionalOptions>-Xdoclint:none</additionalOptions>
 							<additionalJOption>-Xdoclint:none</additionalJOption>
+						    <source>${java.version}</source>
+						    <target>${java.version}</target>
 						</configuration>
 						<executions>
 							<execution>
