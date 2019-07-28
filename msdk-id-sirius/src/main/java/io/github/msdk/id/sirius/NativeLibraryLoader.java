@@ -125,14 +125,14 @@ public class NativeLibraryLoader {
 
   /**
    * <p>
-   * Method returns architecture of the computer
+   * Method returns architecture of the computer, 32 or 64
    * </p>
    * 
    * @return formatted architecture
    * @throws MSDKException - if any
    */
   private static String getArch() throws MSDKException {
-    String arch = System.getProperty("os.arch");
+    final String arch = System.getProperty("os.arch");
     if (arch == null)
       throw new MSDKException("Can not identify os.arch property");
 
@@ -141,14 +141,14 @@ public class NativeLibraryLoader {
 
   /**
    * <p>
-   * Method returns formatted OS name
+   * Method returns formatted OS name - windows, linux, mac, or unknown
    * </p>
    * 
    * @return OS name
    * @throws MSDKException - if any
    */
   public static String getOsName() throws MSDKException {
-    String osname = System.getProperty("os.name");
+    final String osname = System.getProperty("os.name");
 
     if (osname == null)
       return "unknown";
