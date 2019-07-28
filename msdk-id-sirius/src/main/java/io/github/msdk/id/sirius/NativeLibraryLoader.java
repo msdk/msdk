@@ -71,7 +71,8 @@ public class NativeLibraryLoader {
             + javaLibPath + ")");
   }
 
-  public static void copyGLPKLibraryFiles(final String libraryPath) throws MSDKException, IOException {
+  public static void copyGLPKLibraryFiles(final String libraryPath)
+      throws MSDKException, IOException {
 
     final String arch = getArch();
     final String osname = getOsName();
@@ -105,13 +106,15 @@ public class NativeLibraryLoader {
       if (inFileStream == null)
         throw new MSDKException("Failed to open resource " + libResourcePath);
 
-      // Target filename where the library will be copied 
-      final Path targetPath = FileSystems.getDefault().getPath(libraryPath, libName).toAbsolutePath();
+      // Target filename where the library will be copied
+      final Path targetPath =
+          FileSystems.getDefault().getPath(libraryPath, libName).toAbsolutePath();
 
       // Copy the library file
       logger.debug("Copying library file " + libResourcePath + " to " + targetPath);
       Files.copy(inFileStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
 
+      // Close the input
       inFileStream.close();
 
     }
