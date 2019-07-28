@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 import org.slf4j.Logger;
@@ -57,10 +58,14 @@ public class NativeLibraryLoader {
     logger.debug("java.library.path = " + javaLibPath);
 
     final String javaLibPathSplit[] = javaLibPath.split(File.pathSeparator);
-    for (String libPath : javaLibPathSplit) {
-      final File libPathFile = new File(libPath);
-      if (libPathFile.exists() && libPathFile.canWrite()) {
-        copyGLPKLibraryFiles(libPath);
+    
+    // Find the first writable folder
+    for (String libDirectory : javaLibPathSplit) {
+      final Path libPath = Paths.get(libDirectory);
+      // Files.isWritable is more reliable then File.canWrite()
+      // See https://bugs.openjdk.java.net/browse/JDK-8148211
+      if (Files.exists(libPath) && Files.isWritable(libPath)) {
+        copyGLPKLibraryFiles(libDirectory);
         return;
       }
     }
