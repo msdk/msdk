@@ -71,7 +71,7 @@ public class NativeLibraryLoader {
             + javaLibPath + ")");
   }
 
-  public static void copyGLPKLibraryFiles(String libraryPath) throws MSDKException, IOException {
+  public static void copyGLPKLibraryFiles(final String libraryPath) throws MSDKException, IOException {
 
     final String arch = getArch();
     final String osname = getOsName();
@@ -80,7 +80,7 @@ public class NativeLibraryLoader {
     // GLPK requires two libraries
     final String[] requiredLibraryFiles = new String[2];
     switch (osname) {
-      case "win":
+      case "windows":
         requiredLibraryFiles[0] = "glpk_4_60.dll";
         requiredLibraryFiles[1] = "glpk_4_60_java.dll";
         break;
@@ -106,7 +106,7 @@ public class NativeLibraryLoader {
         throw new MSDKException("Failed to open resource " + libResourcePath);
 
       // Target filename where the library will be copied 
-      final Path targetPath = FileSystems.getDefault().getPath(libraryPath, libName);
+      final Path targetPath = FileSystems.getDefault().getPath(libraryPath, libName).toAbsolutePath();
 
       // Copy the library file
       logger.debug("Copying library file " + libResourcePath + " to " + targetPath);
