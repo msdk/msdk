@@ -98,9 +98,11 @@ public class NativeLibraryLoader {
     }
 
     for (String libName : requiredLibraryFiles) {
-      final String libResourcePath =
-          GLPK_RESOURCES_FOLDER + File.separator + osname + arch + File.separator + libName;
 
+      // Resources are always separated by "/", even on Windows
+      final String libResourcePath = GLPK_RESOURCES_FOLDER + "/" + osname + arch + "/" + libName;
+
+      // Open library file as InputStream
       InputStream inFileStream =
           NativeLibraryLoader.class.getClassLoader().getResourceAsStream(libResourcePath);
       if (inFileStream == null)
