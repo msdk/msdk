@@ -4,4 +4,5 @@ jdk:
   - oraclejdk8
   - openjdk11
 
-script: mvn -e test
+script: LD_LIBRARY_PATH=. mvn -e test
+
