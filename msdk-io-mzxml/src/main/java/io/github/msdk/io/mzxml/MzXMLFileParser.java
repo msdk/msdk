@@ -143,7 +143,11 @@ public class MzXMLFileParser implements MSDKMethod<RawDataFile> {
                 CharArray peaksCount = getRequiredAttribute(xmlStreamReader, "peaksCount");
 
                 int scanNumberInt = scanNumber.toInt();
-                int msLevelInt = msLevel.toInt();
+                
+                // mzXML files with empty msLevel attribute do exist, so we use 1 as default
+                int msLevelInt = 1;
+                if (!msLevel.toString().isEmpty()) msLevelInt = msLevel.toInt();
+                
                 vars.peaksCount = peaksCount.toInt();
 
                 CharArray msFuncName = xmlStreamReader.getAttributeValue(null, "scanType");

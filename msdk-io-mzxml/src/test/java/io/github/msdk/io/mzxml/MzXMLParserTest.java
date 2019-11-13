@@ -125,4 +125,34 @@ public class MzXMLParserTest {
     rawFile.dispose();
 
   }
+  
+  @Test
+  public void testEmptyMSLevelTag() throws MSDKException {
+
+    // Import the file
+    String file = "empty_msLevel_tag.mzXML";
+    File inputFile = getResourcePath(file).toFile();
+    Assert.assertTrue(inputFile.canRead());
+    MzXMLFileParser parser = new MzXMLFileParser(inputFile);
+    RawDataFile rawFile = parser.execute();
+    Assert.assertNotNull(rawFile);
+    Assert.assertEquals(1.0, parser.getFinishedPercentage(), 0.0001);
+
+    // The file has 10 scans
+    List<MsScan> scans = rawFile.getScans();
+    Assert.assertNotNull(scans);
+    Assert.assertEquals(10, scans.size());
+
+    // 1st scan, #1
+    MsScan scan1 = scans.get(0);
+    Assert.assertEquals(new Integer(1), scan1.getMsLevel());
+
+    // 4th scan, #4
+    MsScan scan4 = scans.get(3);
+    Assert.assertEquals(new Integer(2), scan4.getMsLevel());
+    
+    rawFile.dispose();
+
+  }
+  
 }
