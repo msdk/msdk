@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -181,7 +182,6 @@ public class SiriusMs2Test {
 
     final FormulaConstraints constraints = ConstraintsGenerator.generateConstraint(range);
 
-
     File ms1File = getResourcePath(ms1Path).toFile();
     File ms2File = getResourcePath(ms2Path).toFile();
 
@@ -204,6 +204,11 @@ public class SiriusMs2Test {
     for (IdentificationResult r : list) {
       results[i++] = r.getMolecularFormula().toString();
     }
+    
+    System.out.println("Expected results:");
+    System.out.println(Arrays.toString(expectedResults));
+    System.out.println("Actual results:");
+    System.out.println(Arrays.toString(results));
 
     Assert.assertArrayEquals(expectedResults, results);
   }
