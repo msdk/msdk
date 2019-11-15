@@ -178,16 +178,16 @@ public class SiriusIdentificationMethod implements MSDKMethod<List<IonAnnotation
     loadSpectra(experiment);
     configureExperiment(experiment);
 
-    logger.debug("Sirius starts processing MsSpectrums");
-    logger.debug("experiment ion mass: " + experiment.getIonMass());
-    logger.debug("numberOfCandidates: " + numberOfCandidates);
-    logger.debug("constraints: " + constraints);
+    logger.info("Sirius starts processing MsSpectrums");
+    logger.info("experiment ion mass: " + experiment.getIonMass());
+    logger.info("numberOfCandidates: " + numberOfCandidates);
+    logger.info("constraints: " + constraints);
 
     List<IdentificationResult> siriusResults = sirius.identify(experiment, numberOfCandidates, true,
         IsotopePatternHandling.both, constraints);
     
-    logger.debug("Sirius finished processing and returned {} results", siriusResults.size());
-    logger.debug("siriusResults: " + siriusResults);
+    logger.info("Sirius finished processing and returned {} results", siriusResults.size());
+    logger.info("siriusResults: " + siriusResults);
     
     return siriusResults;
   }
