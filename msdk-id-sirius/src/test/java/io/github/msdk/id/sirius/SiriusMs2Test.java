@@ -158,7 +158,7 @@ public class SiriusMs2Test {
 
   @Test
   public void testBisnoryagoninDataSet() throws MSDKException, IOException {
-    final double deviation = 14d;
+    final double deviation = 10d;
     final double precursorMass = 231.0647;
     final IonType ion = IonTypeUtil.createIonType("[M+H]+");
     final String[] expectedResults = {"C13H10O4", "C8H9FN3O4", "C11H8N3O3", "C9H5FN7",};
@@ -172,13 +172,7 @@ public class SiriusMs2Test {
     range.addIsotope(iFac.getMajorIsotope("N"), 0, Integer.MAX_VALUE);
     range.addIsotope(iFac.getMajorIsotope("O"), 0, Integer.MAX_VALUE);
     range.addIsotope(iFac.getMajorIsotope("P"), 0, Integer.MAX_VALUE);
-    range.addIsotope(iFac.getMajorIsotope("S"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("B"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("Br"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("Cl"), 0, 0);
     range.addIsotope(iFac.getMajorIsotope("F"), 0, Integer.MAX_VALUE);
-    range.addIsotope(iFac.getMajorIsotope("I"), 0, 0);
-    range.addIsotope(iFac.getMajorIsotope("Se"), 0, 0);
 
     final FormulaConstraints constraints = ConstraintsGenerator.generateConstraint(range);
 
@@ -194,7 +188,7 @@ public class SiriusMs2Test {
     ms2list.add(ms2Spectrum);
 
     SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1list, ms2list,
-        precursorMass, ion, expectedResults.length, constraints, deviation);
+        precursorMass, ion, 10, constraints, deviation);
 
     List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
 
