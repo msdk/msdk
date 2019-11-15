@@ -161,7 +161,6 @@ public class SiriusMs2Test {
     final double deviation = 10d;
     final double precursorMass = 231.0647;
     final IonType ion = IonTypeUtil.createIonType("[M+H]+");
-    final String[] expectedResults = {"C13H10O4", "C8H9FN3O4", "C11H8N3O3", "C9H5FN7",};
     final String ms1Path = "bisnoryangonin_MS1.txt";
     final String ms2Path = "bisnoryangonin_MS2.txt";
 
@@ -190,21 +189,13 @@ public class SiriusMs2Test {
     SiriusIdentificationMethod siriusMethod = new SiriusIdentificationMethod(ms1list, ms2list,
         precursorMass, ion, 10, constraints, deviation);
 
-    List<IdentificationResult> list = siriusMethod.siriusProcessSpectra();
+    List<IdentificationResult> results = siriusMethod.siriusProcessSpectra();
 
-    String[] results = new String[list.size()];
-    int i = 0;
-
-    for (IdentificationResult r : list) {
-      results[i++] = r.getMolecularFormula().toString();
-    }
+    Assert.assertTrue(results.size() > 0);
     
-    System.out.println("Expected results:");
-    System.out.println(Arrays.toString(expectedResults));
-    System.out.println("Actual results:");
-    System.out.println(Arrays.toString(results));
-
-    Assert.assertArrayEquals(expectedResults, results);
+    String bestFormula =results.get(0).getMolecularFormula().toString();    
+    Assert.assertEquals("C13H10O4", bestFormula);
+    
   }
 
   @Test
