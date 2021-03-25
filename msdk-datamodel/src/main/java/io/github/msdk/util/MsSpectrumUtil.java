@@ -295,28 +295,21 @@ public class MsSpectrumUtil {
   public static @Nonnull MsSpectrum filterMsSpectrum(@Nonnull MsSpectrum ms,
       @Nonnull Integer pairsLimit) {
 
-    TreeMap<Float, Double> intesityMzSorted = new TreeMap<>(Comparator.reverseOrder());
     double mz[] = ms.getMzValues();
     float intensity[] = ms.getIntensityValues();
     if (mz.length <= pairsLimit)
       return ms;
 
+    // sort by descending intensity
+    DataPointSorter.sortDataPoints(mz, intensity, mz.length, SortingProperty.INTENSITY,
+        SortingDirection.DESCENDING);
+
     double[] newMz = new double[pairsLimit];
     float[] newIntensity = new float[pairsLimit];
 
-    /* Sort intensity pairs */
-    for (int i = 0; i < mz.length; i++) {
-      intesityMzSorted.put(intensity[i], mz[i]);
-    }
-
-    /* Create new arrays with filtered intensity pairs */
-    for (int i = 0; i < pairsLimit; i++) {
-      Entry<Float, Double> pair = intesityMzSorted.firstEntry();
-      intesityMzSorted.remove(pair.getKey());
-      newMz[i] = pair.getValue();
-      newIntensity[i] = pair.getKey();
-    }
-    intesityMzSorted.clear();
+    // copy desired values
+    System.arraycopy(mz, 0, newMz, 0, pairsLimit);
+    System.arraycopy(intensity, 0, newIntensity, 0, pairsLimit);
 
     /* Sort ascending by mz */
     DataPointSorter.sortDataPoints(newMz, newIntensity, pairsLimit, SortingProperty.MZ,
