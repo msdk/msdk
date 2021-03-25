@@ -295,7 +295,14 @@ public class MsSpectrumUtil {
   public static @Nonnull MsSpectrum filterMsSpectrum(@Nonnull MsSpectrum ms,
       @Nonnull Integer pairsLimit) {
 
-    TreeMap<Float, Double> intesityMzSorted = new TreeMap<>(Comparator.reverseOrder());
+    TreeMap<Float, Double> intesityMzSorted = new TreeMap<>((o1, o2) -> {
+      // only return -1 or 1, hack to allow equal intensities and not filter them out.
+      if(o1 > o2) {
+        return -1;
+      }
+      return 1;
+    });
+
     double mz[] = ms.getMzValues();
     float intensity[] = ms.getIntensityValues();
     if (mz.length <= pairsLimit)
